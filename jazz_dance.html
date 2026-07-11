@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jazz 'n' Dance — AELITA PRODUCTION</title>
+<meta name="description" content="Цирк, джаз и танцы в одном концерте. Шоу Ксении Шамариной.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1180px}
+  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:var(--ink)}
+  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
+  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone);text-decoration:none}
+  .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover{color:var(--gold)}
+  @media(max-width:760px){.nav-links{display:none}}
+  .page-hero{padding:160px 0 80px;border-bottom:1px solid rgba(232,230,225,.08);animation:rise 1s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .page-hero .eyebrow{margin-bottom:16px}
+  .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
+  .page-hero .sub{color:var(--sand);font-size:16px;max-width:52ch;margin-bottom:10px}
+  .page-hero .dir{font-size:14px;color:rgba(201,184,163,.65);margin-bottom:36px}
+  .page-hero .dir strong{color:var(--bone);font-weight:400}
+  .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+  .age{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 10px;font-size:10px;letter-spacing:.3em;font-family:'Montserrat',sans-serif;display:inline-block;margin-left:14px;vertical-align:middle}
+  section{padding:80px 0}
+  .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
+  .sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
+  .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
+  .desc{color:var(--sand);font-size:16px;line-height:1.85;max-width:68ch}
+  .no-shows{background:var(--coal);padding:40px 44px;text-align:center}
+  .no-shows p{color:var(--sand);margin-bottom:20px}
+  .other-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .other-card{background:var(--coal);padding:32px 26px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .3s}
+  .other-card:hover{border-color:rgba(214,181,122,.35)}
+  .other-card .tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+  .other-card h3{font-size:16px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
+  .other-card p{color:var(--sand);font-size:13px}
+  @media(max-width:760px){.other-grid{grid-template-columns:1fr}}
+  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
+  footer a:hover{color:var(--bone)}
+  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="index.html">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
+      <a href="tickets.html">Афиша</a>
+      <a href="projects.html">Проекты</a>
+      <a href="collab.html">Сотрудничество</a>
+      <a href="contacts.html">Контакты</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Шоу<span class="age">6+</span></p>
+    <h1>Jazz 'n' Dance</h1>
+    <p class="dir">Шоу <strong>Ксении Шамариной</strong></p>
+    <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a class="btn-outline" href="index.html#subscribe">Узнать о новых датах</a>
+      <a class="btn-outline" href="projects.html">Все проекты</a>
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>О проекте</h2></div>
+    <p class="desc reveal">Цирк, джаз и танцы в одном концерте. Шоу Ксении Шамариной — взрывная смесь жанров, живая музыка и акробатика.</p>
+  </div>
+</section>
+
+<section style="background:var(--coal);padding:70px 0" id="afisha">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
+    <div class="no-shows reveal">
+      <p>Ближайших показов пока нет. Подпишитесь — сообщим о новых датах первыми.</p>
+      <a class="btn-outline" href="index.html#subscribe">Узнать о новых датах</a>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--coal);padding:70px 0">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Другие проекты</h2></div>
+    <div class="other-grid reveal">
+      <a class="other-card" href="iov.html"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Екатерины Абдуловой. 12+</p></a>
+      <a class="other-card" href="gogol.html"><span class="tag">Саунд-драма</span><h3>Гоголь.Сюита</h3><p>Спектакль Дмитрия Туркова. 6+</p></a>
+      <a class="other-card" href="projects.html"><span class="tag">Все проекты</span><h3>Портфель компании</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><h4>AELITA PRODUCTION</h4><a href="tel:+79605151690">+7 960 515-16-90</a><a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></div>
+      <div><h4>Соцсети</h4><a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a><a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a><a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a></div>
+      <div><h4>Разделы</h4><a href="index.html">Главная</a><a href="tickets.html">Афиша</a><a href="projects.html">Проекты</a><a href="collab.html">Сотрудничество</a></div>
+    </div>
+    <div class="requisites">ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION</div>
+  </div>
+</footer>
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
