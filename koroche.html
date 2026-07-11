@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Танцевальная компания «Короче» — AELITA PRODUCTION</title>
+<meta name="description" content="Неорганизованная танцевальная компания «Короче». Художественный руководитель Юлия Бычкова. Спектакли в жанре contemporary с 2020 года.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1180px}
+  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:var(--ink)}
+  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
+  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone);text-decoration:none}
+  .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover{color:var(--gold)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  /* HERO */
+  .hero{min-height:80svh;position:relative;display:flex;align-items:flex-end;padding-bottom:80px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background-image:url('https://thb.tildacdn.com/tild6361-3535-4566-b535-303261323139/-/empty/1000008529.jpg');background-size:cover;background-position:center;filter:brightness(.3)}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.1) 0%,rgba(11,11,13,.85) 75%,var(--ink) 100%)}
+  .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .4s}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .hero-title{font-size:clamp(48px,10vw,110px);letter-spacing:.08em;line-height:1;margin-bottom:10px}
+  .hero-sub{font-family:'Montserrat',sans-serif;font-size:clamp(12px,1.6vw,16px);letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:8px}
+  .hero-dir{font-size:14px;color:rgba(201,184,163,.7);margin-bottom:36px}
+  .hero-dir strong{color:var(--bone);font-weight:400}
+  .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s}
+  .btn-gold:hover{opacity:.85}
+  .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+  section{padding:90px 0}
+  .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:50px}
+  .sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
+  .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 340px;gap:70px;align-items:start}
+  .about-text p{color:var(--sand);font-size:16px;line-height:1.85;margin-bottom:18px}
+  .about-text p strong{color:var(--bone);font-weight:400}
+  .about-text a{color:var(--gold);text-decoration:none}
+  .about-stats{background:var(--coal);padding:36px}
+  .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+  .stat-row:last-child{border-bottom:none}
+  .stat-row .lbl{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--sand)}
+  .stat-row .val{font-size:14px;color:var(--bone);text-align:right;max-width:58%}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding-left:24px}
+  .timeline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),transparent)}
+  .tl-item{padding:0 0 44px 32px;position:relative}
+  .tl-item::before{content:"";position:absolute;left:-5px;top:6px;width:10px;height:10px;border:1px solid var(--gold);background:var(--ink);border-radius:50%}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-year{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .tl-title{font-size:17px;letter-spacing:.1em;font-weight:300;margin-bottom:6px;font-family:'Montserrat',sans-serif;text-transform:uppercase}
+  .tl-desc{color:var(--sand);font-size:14px;line-height:1.7}
+  .tl-link{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.3);padding-bottom:2px}
+
+  /* REVIEWS */
+  .reviews{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+  .review{background:var(--coal);padding:36px 32px}
+  .review-text{font-size:14px;color:var(--bone);line-height:1.8;margin-bottom:20px;font-style:italic}
+  .review-author{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+  .review-show{font-size:12px;color:var(--sand);margin-top:4px}
+  @media(max-width:760px){.reviews{grid-template-columns:1fr}}
+
+  /* SHOWS */
+  .shows-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  .show-card{background:var(--coal);padding:32px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
+  .show-card:hover{border-color:rgba(214,181,122,.35)}
+  .show-card .tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+  .show-card h3{font-size:16px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
+  .show-card p{color:var(--sand);font-size:13px}
+  @media(max-width:760px){.shows-grid{grid-template-columns:1fr}}
+
+  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
+  footer a:hover{color:var(--bone)}
+  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="index.html">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
+      <a href="tickets.html">Афиша</a>
+      <a href="projects.html">Проекты</a>
+      <a href="rezidents.html">Резиденты</a>
+      <a href="collab.html">Сотрудничество</a>
+      <a href="contacts.html">Контакты</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="wrap hero-content">
+    <p class="eyebrow">Партнёр AELITA PRODUCTION</p>
+    <h1 class="hero-title">Короче</h1>
+    <p class="hero-sub">Неорганизованная танцевальная компания</p>
+    <p class="hero-dir">Художественный руководитель — <strong>Юлия Бычкова</strong> &nbsp;·&nbsp; Основана в 2020</p>
+    <div>
+      <a class="btn-gold" href="#shows">Спектакли в AELITA PRODUCTION</a>
+      <a class="btn-outline" href="#history">История постановок</a>
+    </div>
+  </div>
+</div>
+
+<!-- О КОМПАНИИ -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>О компании</h2></div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Основала компанию <strong>Юлия Бычкова</strong> в 2020 году. В репертуаре уже больше пяти названий — все постановки созданы в жанре contemporary.</p>
+        <p>Молодая и динамично развивающаяся компания недавно съездила на свои первые гастроли в Санкт-Петербург. Спектакль <a href="stories.html">«Сюжеты. О земном и небесном»</a> был с успехом сыгран на Новой сцене Александринского театра.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-row"><span class="lbl">Основана</span><span class="val">2020</span></div>
+        <div class="stat-row"><span class="lbl">Жанр</span><span class="val">Contemporary dance</span></div>
+        <div class="stat-row"><span class="lbl">Постановок</span><span class="val">8+</span></div>
+        <div class="stat-row"><span class="lbl">Худ. руководитель</span><span class="val">Юлия Бычкова</span></div>
+        <div class="stat-row"><span class="lbl">Гастроли</span><span class="val">Санкт-Петербург, Новая сцена Александринки</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ИСТОРИЯ -->
+<section style="background:var(--coal)" id="history">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>История постановок</h2></div>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <p class="tl-year">2020</p>
+        <h3 class="tl-title">Гоголь — это снится</h3>
+        <p class="tl-desc">Лёгкие намёки на известные сюжеты Николая Васильевича.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2021</p>
+        <h3 class="tl-title">Серебряные облака</h3>
+        <p class="tl-desc">Уорхол</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2022</p>
+        <h3 class="tl-title">БалалайкМи</h3>
+        <p class="tl-desc">Сторидэнсинг</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2022</p>
+        <h3 class="tl-title">Причитания по себе</h3>
+        <p class="tl-desc">Плакальщица в архетипических женских образах: от Русалочки до Жанны Дарк, от невест на выданье до первых феминисток.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2023</p>
+        <h3 class="tl-title">Техника воздухоплавания</h3>
+        <p class="tl-desc">Премьера 2023.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2023</p>
+        <h3 class="tl-title">Послушайте!</h3>
+        <p class="tl-desc">Интерактивное путешествие по просторам личных чувств, эмоций и наблюдений.</p>
+        <a class="tl-link" href="listen.html">Подробности и афиша →</a>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2024</p>
+        <h3 class="tl-title">Сюжеты. О земном и небесном</h3>
+        <p class="tl-desc">Пластический спектакль, в котором переплетаются лёгкость и тяжесть, традиции и современность, реальность и метафора.</p>
+        <a class="tl-link" href="stories.html">Подробности и афиша →</a>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2025</p>
+        <h3 class="tl-title">Инструкция для начинающих странников</h3>
+        <p class="tl-desc">Танцевальный спектакль для тех, кто в пути, кто уже прошёл часть дороги, и тех, кто только собирается идти.</p>
+        <a class="tl-link" href="instruction.html">Подробности и афиша →</a>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2026</p>
+        <h3 class="tl-title">Археология человеческого</h3>
+        <p class="tl-desc">Яркое и откровенное высказывание о человеческой природе, где главный инструмент — танец. Готовится к премьере.</p>
+        <a class="tl-link" href="human.html">Подробности →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- СПЕКТАКЛИ В AELITA -->
+<section id="shows">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Спектакли в AELITA PRODUCTION</h2></div>
+    <div class="shows-grid reveal">
+      <a class="show-card" href="listen.html">
+        <span class="tag">Танцевальный спектакль · 2023</span>
+        <h3>Послушайте!</h3>
+        <p>Терапевтическое путешествие по просторам личных чувств и эмоций. Спектакль Юлии Бычковой.</p>
+      </a>
+      <a class="show-card" href="human.html">
+        <span class="tag">Современный балет · 2026</span>
+        <h3>Археология человеческого</h3>
+        <p>Яркое и откровенное высказывание о человеческой природе. Спектакль Юлии Бычковой и Ивана Сачкова.</p>
+      </a>
+      <a class="show-card" href="stories.html">
+        <span class="tag">Пластический спектакль · 2024</span>
+        <h3>Сюжеты. О земном и небесном</h3>
+        <p>Переплетение лёгкости и тяжести, традиций и современности, реальности и метафоры.</p>
+      </a>
+      <a class="show-card" href="instruction.html">
+        <span class="tag">Танцевальный спектакль · 2025</span>
+        <h3>Инструкция для начинающих странников</h3>
+        <p>Проект Юлии Бычковой и Елены Иноземцевой. Танцевальная компания «Забава».</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ОТЗЫВЫ -->
+<section style="padding-top:0" id="reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Отзывы</h2></div>
+    <div class="reviews reveal">
+      <div class="review">
+        <p class="review-text">«Если бы была возможность, я бы точно пришла ещё раз, особенно пересмотреть многое после обсуждения. Спасибо за такую работу и пережитые эмоции.»</p>
+        <p class="review-author">Анна Гераськина</p>
+        <p class="review-show">«Сюжеты. О земном и небесном»</p>
+      </div>
+      <div class="review">
+        <p class="review-text">«Танцевальное действие не прекращается на протяжении всего спектакля, нет провисаний, смотрится цельной работой. В нём есть и ритуальность, и нарратив, и исследование гендерных ролей.»</p>
+        <p class="review-author">Наталья Жильцова</p>
+        <p class="review-show">FAUN CONTEMPORARY · «Сюжеты. О земном и небесном»</p>
+      </div>
+      <div class="review">
+        <p class="review-text">«Второй раз смотрим, как в первый. Режиссёру удалось довести до слёз очень многих зрителей. И, как всегда, долго не отпускает послевкусие.»</p>
+        <p class="review-author">Светлана Вартанова</p>
+        <p class="review-show">«Инструкция для начинающих странников»</p>
+      </div>
+      <div class="review">
+        <p class="review-text">«Мне нравится творчество Юлии Бычковой и «Короче» — оно глубокое и со смыслом. В этот раз для меня всё сложилось: музыка, танец, свет, костюмы, декорации, идея.»</p>
+        <p class="review-author">Луиза Миронова</p>
+        <p class="review-show">«Сюжеты. О земном и небесном»</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="rezidents.html" style="margin-top:14px">Резиденты компании</a>
+        <a href="partners.html">Партнёры</a>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+        <a href="https://www.facebook.com/aelitaproduction" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="index.html">Главная</a>
+        <a href="tickets.html">Афиша</a>
+        <a href="projects.html">Проекты</a>
+        <a href="collab.html">Сотрудничество</a>
+        <a href="creativity.html">— для творческих</a>
+        <a href="event.html">— для организаторов</a>
+        <a href="business.html">— для бизнеса</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
