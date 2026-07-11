@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сотрудничество — AELITA PRODUCTION</title>
+<meta name="description" content="Сотрудничество с AELITA PRODUCTION: гастроли и прокат спектаклей, партнёрство, инвестиции, питчинг проектов.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1180px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:var(--ink)}
+  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
+  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone);text-decoration:none}
+  .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  .page-header{padding:140px 0 70px;border-bottom:1px solid rgba(232,230,225,.08)}
+  .page-header h1{font-size:clamp(28px,5vw,52px);letter-spacing:.18em;margin-top:16px}
+  .page-header .sub{color:var(--sand);font-size:16px;margin-top:16px;max-width:56ch;letter-spacing:.04em}
+
+  .blocks{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:70px 0}
+  .block{background:var(--coal);padding:52px 44px}
+  .block .num{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:200;color:rgba(214,181,122,.2);line-height:1;margin-bottom:20px}
+  .block h2{font-size:clamp(17px,2vw,22px);letter-spacing:.2em;margin-bottom:18px}
+  .block p{color:var(--sand);font-size:15px;line-height:1.8;margin-bottom:14px}
+  .block ul{list-style:none;margin-top:16px}
+  .block ul li{color:var(--sand);font-size:14px;padding:8px 0;border-bottom:1px solid rgba(232,230,225,.06);display:flex;gap:12px}
+  .block ul li::before{content:"—";color:var(--gold);flex-shrink:0}
+  @media(max-width:760px){.blocks{grid-template-columns:1fr}}
+
+  .form-sec{background:var(--coal);padding:80px 0}
+  .form-sec h2{font-size:clamp(20px,2.8vw,30px);letter-spacing:.22em;margin-bottom:10px}
+  .form-sec .sub{color:var(--sand);margin-bottom:44px;font-size:15px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field.full{grid-column:1/-1}
+  .field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand)}
+  .field input,.field select,.field textarea{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+  .field select{-webkit-appearance:none;cursor:pointer}
+  .field select option{background:var(--coal)}
+  .field textarea{resize:vertical;min-height:120px}
+  .submit-btn{margin-top:8px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:16px 36px;cursor:pointer;transition:opacity .3s}
+  .submit-btn:hover{opacity:.85}
+  .form-note{margin-top:14px;font-size:12px;color:rgba(201,184,163,.5)}
+  @media(max-width:760px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:1}}
+
+  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
+  footer a:hover{color:var(--bone)}
+  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="index.html">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
+      <a href="tickets.html">Афиша</a>
+      <a href="projects.html">Проекты</a>
+      <a href="collab.html" class="active">Сотрудничество</a>
+      <a href="contacts.html">Контакты</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Работаем вместе</p>
+    <h1>Сотрудничество</h1>
+    <p class="sub">Открыты к площадкам, партнёрам, инвесторам и авторам. Пишите — отвечаем на каждое письмо.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="blocks">
+    <div class="block reveal">
+      <div class="num">01</div>
+      <h2>Площадкам</h2>
+      <p>Привозим спектакли на гастроли: от камерных форматов до большой сцены. Работаем по всей России.</p>
+      <ul>
+        <li>Готовые к прокату спектакли</li>
+        <li>Техрайдер и райдер по запросу</li>
+        <li>Гибкие форматы сотрудничества</li>
+        <li>Сопровождение команды на гастролях</li>
+      </ul>
+    </div>
+    <div class="block reveal">
+      <div class="num">02</div>
+      <h2>Партнёрам</h2>
+      <p>Партнёрство с событием, специальные показы для сотрудников, коллаборации с брендами.</p>
+      <ul>
+        <li>Спонсорство фестиваля или показа</li>
+        <li>Именные показы и корпоративные события</li>
+        <li>Совместные коммуникации</li>
+        <li>Интеграция в программу фестиваля</li>
+      </ul>
+    </div>
+    <div class="block reveal">
+      <div class="num">03</div>
+      <h2>Инвесторам</h2>
+      <p>Развиваем портфель постановок и фестивальных проектов. Отправим презентацию компании и планы сезонов по запросу.</p>
+      <ul>
+        <li>Оригинальные проекты с нуля</li>
+        <li>Гастрольный прокат в регионах</li>
+        <li>Фестивальные форматы</li>
+      </ul>
+    </div>
+    <div class="block reveal">
+      <div class="num">04</div>
+      <h2>Режиссёрам и артистам</h2>
+      <p>Ищем яркие таланты и смелые идеи. Если у вас есть проект — расскажите о нём, мы читаем всё.</p>
+      <ul>
+        <li>Питчинг проектов — всегда открыт</li>
+        <li>Совместное продюсирование</li>
+        <li>Поддержка дебютантов в режиссуре</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="form-sec" id="form">
+  <div class="wrap reveal">
+    <span class="eyebrow">Написать нам</span>
+    <h2 style="margin-top:14px">Форма обратной связи</h2>
+    <p class="sub">Заполните — мы свяжемся в течение рабочего дня. Или пишите напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+    <div class="form-grid">
+      <div class="field">
+        <label>Имя</label>
+        <input type="text" placeholder="Ваше имя">
+      </div>
+      <div class="field">
+        <label>Кто вы</label>
+        <select>
+          <option value="">Выберите...</option>
+          <option>Площадка или организатор гастролей</option>
+          <option>Партнёр или спонсор</option>
+          <option>Инвестор</option>
+          <option>Режиссёр или артист</option>
+          <option>Пресса</option>
+          <option>Другое</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Почта</label>
+        <input type="email" placeholder="email@example.com">
+      </div>
+      <div class="field">
+        <label>Телефон (необязательно)</label>
+        <input type="tel" placeholder="+7 ...">
+      </div>
+      <div class="field full">
+        <label>Сообщение</label>
+        <textarea placeholder="Расскажите о вашем запросе..."></textarea>
+      </div>
+      <div class="field full">
+        <button class="submit-btn" onclick="handleSubmit()">Отправить</button>
+        <p class="form-note">Нажимая кнопку, вы соглашаетесь с <a href="#" style="color:var(--gold)">политикой обработки персональных данных</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+        <a href="https://www.facebook.com/aelitaproduction" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="index.html">Главная</a>
+        <a href="tickets.html">Афиша</a>
+        <a href="projects.html">Проекты</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(){
+    alert('Форма пока в демо-режиме. Пишите напрямую: aelita.production@yandex.ru');
+  }
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
