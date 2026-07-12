@@ -330,8 +330,8 @@
   footer a:hover{color:var(--bone)}
 
   /* Запрет горизонтального скролла */
-  html, body{overflow-x:hidden}
-  img, video, iframe{max-width:100%}
+  body{max-width:100vw}
+  img, video, iframe{max-width:100%;height:auto}
   @media(max-width:760px){
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
@@ -706,6 +706,16 @@
       }
     }
   });
+
+  // Fallback: показываем всё через 700ms если IO не сработал
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
 </script>
 
 <div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
