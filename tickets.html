@@ -338,11 +338,6 @@
     document.getElementById('subOk').style.display='block';
     document.getElementById('subEmail').value='';
   }
-    const v=document.getElementById('subEmail').value.trim();
-    if(!v||!v.includes('@'))return;
-    document.getElementById('subOk').style.display='block';
-    document.getElementById('subEmail').value='';
-  }
   function filter(city,btn){
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');

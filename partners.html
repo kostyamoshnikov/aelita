@@ -428,19 +428,6 @@
     document.getElementById('fmsg').value='';
     document.getElementById('ftype').value='';
   }
-    const email = document.getElementById('femail').value.trim();
-    const name = document.getElementById('fname').value.trim();
-    if(!email || !email.includes('@') || !name){
-      alert('Пожалуйста, заполните имя и почту');
-      return;
-    }
-    document.getElementById('formOk').style.display = 'block';
-    document.getElementById('fname').value = '';
-    document.getElementById('femail').value = '';
-    document.getElementById('fphone').value = '';
-    document.getElementById('fmsg').value = '';
-    document.getElementById('ftype').value = '';
-  }
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
   },{threshold:.1});

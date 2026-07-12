@@ -506,12 +506,6 @@
     document.getElementById('joinForm').style.display='none';
     document.getElementById('joinOk').style.display='block';
   }
-    const name = document.getElementById('j-name').value.trim();
-    const contact = document.getElementById('j-contact').value.trim();
-    if(!name || !contact){alert('Укажите имя и контакт');return;}
-    document.getElementById('joinForm').style.display='none';
-    document.getElementById('joinOk').style.display='block';
-  }
 
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
