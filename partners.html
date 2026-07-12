@@ -502,22 +502,23 @@
     }
   });
 
-  const TG_TOKEN = '8998283066:AAH-FTlLDF1rkfdLFPRJmMfm3XzDJFHHA-o';
-  const TG_CHATS = ['844138527', '685798799'];
+  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
   async function sendTelegram(formName, fields) {
-    let text = '📋 <b>Новая заявка — ' + formName + '</b>\n\n';
+    let text = '📋 <b>Новая заявка — ' + formName + '</b>
+
+';
     for (const [label, value] of Object.entries(fields)) {
-      if (value && value.trim()) text += '<b>' + label + ':</b> ' + value.trim() + '\n';
+      if (value && String(value).trim()) text += '<b>' + label + ':</b> ' + String(value).trim() + '
+';
     }
-    text += '\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
-    await Promise.all(TG_CHATS.map(chat_id =>
-      fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id, text, parse_mode:'HTML'})
-      })
-    ));
+    text += '
+🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+    await fetch(TG_WORKER, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text})
+    });
   }
 </script>
 
