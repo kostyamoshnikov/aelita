@@ -223,6 +223,37 @@
     letter-spacing:.24em;color:rgba(201,184,163,.45);
     text-transform:uppercase;
   }
+
+  .m-menu-close{
+    position:absolute;top:28px;right:24px;
+    background:none;border:none;cursor:pointer;
+    width:36px;height:36px;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .m-menu-close::before,.m-menu-close::after{
+    content:"";position:absolute;
+    width:18px;height:1px;background:var(--sand);
+    transition:background .3s,transform .3s;
+  }
+  .m-menu-close::before{transform:rotate(45deg)}
+  .m-menu-close::after{transform:rotate(-45deg)}
+  .m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+
+  /* Убираем синий цвет со всех ссылок */
+  a{color:inherit}
+  a:not([class]):not([style]){color:var(--gold)}
+  nav a, footer a{color:var(--sand)}
+  nav a:hover, nav a.active{color:var(--gold)}
+  footer a:hover{color:var(--bone)}
+
+  /* Запрет горизонтального скролла */
+  html, body{overflow-x:hidden}
+  img, video, iframe{max-width:100%}
+  @media(max-width:760px){
+    .wrap{padding:0 16px}
+    table{width:100%;display:block;overflow-x:auto}
+  }
 </style>
 </head>
 <body>

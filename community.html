@@ -222,6 +222,37 @@
     letter-spacing:.24em;color:rgba(201,184,163,.45);
     text-transform:uppercase;
   }
+
+  .m-menu-close{
+    position:absolute;top:28px;right:24px;
+    background:none;border:none;cursor:pointer;
+    width:36px;height:36px;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .m-menu-close::before,.m-menu-close::after{
+    content:"";position:absolute;
+    width:18px;height:1px;background:var(--sand);
+    transition:background .3s,transform .3s;
+  }
+  .m-menu-close::before{transform:rotate(45deg)}
+  .m-menu-close::after{transform:rotate(-45deg)}
+  .m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+
+  /* Убираем синий цвет со всех ссылок */
+  a{color:inherit}
+  a:not([class]):not([style]){color:var(--gold)}
+  nav a, footer a{color:var(--sand)}
+  nav a:hover, nav a.active{color:var(--gold)}
+  footer a:hover{color:var(--bone)}
+
+  /* Запрет горизонтального скролла */
+  html, body{overflow-x:hidden}
+  img, video, iframe{max-width:100%}
+  @media(max-width:760px){
+    .wrap{padding:0 16px}
+    table{width:100%;display:block;overflow-x:auto}
+  }
 </style>
 </head>
 <body>
@@ -348,7 +379,7 @@
         <p class="author">Мераб Мамардашвили</p>
         <h3>Беседы о мышлении</h3>
         <p>Философ, который думал вслух — и учил мыслить тех, кто слушал. Мамардашвили говорил о сознании, времени, усилии понимания. О том, что мышление — это не то, что само собой происходит. Это работа.</p>
-        <p class="chapters">Начинаем с первых двух глав</p>
+        <p class="chapters">Беседы о мышлении · В процессе чтения</p>
         <div class="deco">М</div>
       </div>
       <div class="book-card">
@@ -371,17 +402,14 @@
       <div class="review wide">
         <p class="review-text">Катя, это походу ты... Помню фразу твою о том, что от Берна каждый возьмёт столько, сколько сможет взять. По факту — каждый вокруг вчерашнего костра и тебя, как нашего огонька, берёт столько, сколько может взять. Как будто мы можем много читать и говорить, но ценность в тебе, Кать. И в наших встречах. Спасибо.</p>
         <p class="review-author">Участница клуба</p>
-        <p class="review-context">После встречи у костра</p>
       </div>
       <div class="review">
         <p class="review-text">Благодарю за встречу! После остаётся долгое послевкусие из инсайтов, пересматриваю ситуации, осмысливаю услышанное. Приходит понимание чего нового, на что можно взглянуть по-другому.</p>
         <p class="review-author">Участница клуба</p>
-        <p class="review-context">Книжная встреча, Берн</p>
       </div>
       <div class="review">
         <p class="review-text">Рада знакомству с каждым! От всех беру себе по чуть-чуть, примеряю — и приходит понимание, как жить дальше. По крайней мере, пробовать.</p>
         <p class="review-author">Участница клуба</p>
-        <p class="review-context">Книжная встреча</p>
       </div>
     </div>
   </div>
@@ -400,12 +428,12 @@
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Группа</h3>
-        <p>Интимный формат — все знают друг друга. Новые участники появляются редко.</p>
+        <p>Интимный формат — все знают друг друга.</p>
       </div>
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Правила</h3>
-        <p>Каждый <strong>читает и пишет конспекты</strong>, приносит вопросы. Не лекция — разговор. Прочие посиделки к чтению не причастны.</p>
+        <p>Каждый <strong>читает и пишет конспекты</strong>, приносит вопросы.. Не лекция — разговор.</p>
       </div>
       <div class="format-item">
         <div class="icon">◈</div>
@@ -467,7 +495,17 @@
 </footer>
 
 <script>
-  function joinClub(){
+  async function joinClub(){
+    const name = document.getElementById('j-name').value.trim();
+    const contact = document.getElementById('j-contact').value.trim();
+    if(!name || !contact){alert('Укажите имя и контакт');return;}
+    await sendTelegram('AELITA COMMUNITY — вступление', {
+      'Имя': name,
+      'Контакт': contact,
+    });
+    document.getElementById('joinForm').style.display='none';
+    document.getElementById('joinOk').style.display='block';
+  }
     const name = document.getElementById('j-name').value.trim();
     const contact = document.getElementById('j-contact').value.trim();
     if(!name || !contact){alert('Укажите имя и контакт');return;}
@@ -511,9 +549,28 @@
       }
     }
   });
+
+  const TG_TOKEN = '8998283066:AAFIiINYCeJBYmiU8XoWaHHG9Z0EVdmuO3E';
+  const TG_CHATS = ['844138527', '685798799'];
+
+  async function sendTelegram(formName, fields) {
+    let text = '📋 <b>Новая заявка — ' + formName + '</b>\n\n';
+    for (const [label, value] of Object.entries(fields)) {
+      if (value && value.trim()) text += '<b>' + label + ':</b> ' + value.trim() + '\n';
+    }
+    text += '\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+    await Promise.all(TG_CHATS.map(chat_id =>
+      fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id, text, parse_mode:'HTML'})
+      })
+    ));
+  }
 </script>
 
 <div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
+  <button class="m-menu-close" onclick="toggleMenu()" aria-label="Закрыть меню"></button>
   <nav class="m-menu-links">
     <a href="tickets.html" onclick="toggleMenu()">Афиша</a>
     <a href="projects.html" onclick="toggleMenu()">Проекты</a>

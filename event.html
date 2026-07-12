@@ -195,6 +195,37 @@
     letter-spacing:.24em;color:rgba(201,184,163,.45);
     text-transform:uppercase;
   }
+
+  .m-menu-close{
+    position:absolute;top:28px;right:24px;
+    background:none;border:none;cursor:pointer;
+    width:36px;height:36px;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .m-menu-close::before,.m-menu-close::after{
+    content:"";position:absolute;
+    width:18px;height:1px;background:var(--sand);
+    transition:background .3s,transform .3s;
+  }
+  .m-menu-close::before{transform:rotate(45deg)}
+  .m-menu-close::after{transform:rotate(-45deg)}
+  .m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+
+  /* Убираем синий цвет со всех ссылок */
+  a{color:inherit}
+  a:not([class]):not([style]){color:var(--gold)}
+  nav a, footer a{color:var(--sand)}
+  nav a:hover, nav a.active{color:var(--gold)}
+  footer a:hover{color:var(--bone)}
+
+  /* Запрет горизонтального скролла */
+  html, body{overflow-x:hidden}
+  img, video, iframe{max-width:100%}
+  @media(max-width:760px){
+    .wrap{padding:0 16px}
+    table{width:100%;display:block;overflow-x:auto}
+  }
 </style>
 </head>
 <body>
@@ -319,10 +350,18 @@
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-  function handleForm(id){
+  async function handleForm(id){
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
     if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
+    const sel=document.querySelector('#form_'+id+' select');
+    const msg=document.querySelector('#form_'+id+' textarea');
+    await sendTelegram('Для организаторов — заявка', {
+      'Имя': n.value,
+      'Email': e.value,
+      'Кто вы': sel ? sel.value : '',
+      'Сообщение': msg ? msg.value : '',
+    });
     document.getElementById('ok_'+id).style.display='block';
     document.querySelectorAll('#form_'+id+' input, #form_'+id+' textarea, #form_'+id+' select').forEach(f=>f.value='');
   }
@@ -382,4 +421,22 @@
       }
     }
   });
+
+  const TG_TOKEN = '8998283066:AAFIiINYCeJBYmiU8XoWaHHG9Z0EVdmuO3E';
+  const TG_CHATS = ['844138527', '685798799'];
+
+  async function sendTelegram(formName, fields) {
+    let text = '📋 <b>Новая заявка — ' + formName + '</b>\n\n';
+    for (const [label, value] of Object.entries(fields)) {
+      if (value && value.trim()) text += '<b>' + label + ':</b> ' + value.trim() + '\n';
+    }
+    text += '\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+    await Promise.all(TG_CHATS.map(chat_id =>
+      fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id, text, parse_mode:'HTML'})
+      })
+    ));
+  }
 </script>
