@@ -44,6 +44,38 @@
   .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
   .sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
   .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
+  /* Портретная сетка резидентов */
+  .persons-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+  .person-card{text-decoration:none;display:block;position:relative;overflow:hidden;color:inherit}
+  .person-card img{
+    width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
+    filter:brightness(.75) saturate(.9);
+    transition:filter .5s ease, transform .6s ease;
+  }
+  .person-card:hover img{filter:brightness(.55) saturate(.7);transform:scale(1.03)}
+  .person-overlay{
+    position:absolute;bottom:0;left:0;right:0;
+    padding:24px 20px 20px;
+    background:linear-gradient(to top,rgba(11,11,13,.95) 0%,rgba(11,11,13,.6) 60%,transparent 100%);
+    transition:transform .4s ease;
+  }
+  .person-role{
+    font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;
+  }
+  .person-name{
+    font-family:'Montserrat',sans-serif;font-size:clamp(14px,1.4vw,18px);
+    letter-spacing:.1em;font-weight:300;color:var(--bone);line-height:1.2;
+  }
+  .person-desc{
+    font-size:12px;color:var(--sand);margin-top:6px;line-height:1.5;
+    opacity:0;transform:translateY(8px);
+    transition:opacity .4s ease .1s,transform .4s ease .1s;
+  }
+  .person-card:hover .person-desc{opacity:1;transform:translateY(0)}
+  @media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr)}}
+
   .career-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
   .career-item{background:var(--coal);padding:30px 28px}
   .career-item .period{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
@@ -218,50 +250,50 @@
 </div>
 <section>
   <div class="wrap">
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2px" class="reveal">
+    <div class="persons-grid reveal">
 
-      <a href="abdulova.html" style="background:var(--coal);padding:52px 44px;text-decoration:none;display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
-        <img src="https://thb.tildacdn.com/tild6430-3235-4361-b231-353739656535/-/empty/IMG_9990.JPG" alt="Екатерина Абдулова" style="width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(.8)">
-        <div>
-          <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Основательница · Гендиректор</p>
-          <h3 style="font-size:22px;letter-spacing:.1em;font-weight:300;color:var(--bone);margin-bottom:8px">Екатерина Абдулова</h3>
-          <p style="color:var(--sand);font-size:13px">Продюсер и режиссёр. 10+ проектов. Основательница <a href="community.html" style="color:var(--gold);text-decoration:none">AELITA COMMUNITY</a>.</p>
+      <a href="abdulova.html" class="person-card">
+        <img src="https://thb.tildacdn.com/tild6430-3235-4361-b231-353739656535/-/empty/IMG_9990.JPG" alt="Екатерина Абдулова">
+        <div class="person-overlay">
+          <span class="person-role">Основательница · Гендиректор</span>
+          <div class="person-name">Екатерина<br>Абдулова</div>
+          <p class="person-desc">Продюсер, режиссёр, основательница AELITA COMMUNITY</p>
         </div>
       </a>
 
-      <a href="bychkova.html" style="background:var(--coal);padding:52px 44px;text-decoration:none;display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
-        <img src="https://thb.tildacdn.com/tild3064-6534-4463-b532-666261366237/-/empty/EECA4FEE-DC0C-479E-B.jpeg" alt="Юлия Бычкова" style="width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(.8)">
-        <div>
-          <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Режиссёр · Хореограф</p>
-          <h3 style="font-size:22px;letter-spacing:.1em;font-weight:300;color:var(--bone);margin-bottom:8px">Юлия Бычкова</h3>
-          <p style="color:var(--sand);font-size:13px">Основательница танцевальной компании «Короче». Стипендиат правительства РФ.</p>
+      <a href="bychkova.html" class="person-card">
+        <img src="https://thb.tildacdn.com/tild3064-6534-4463-b532-666261366237/-/empty/EECA4FEE-DC0C-479E-B.jpeg" alt="Юлия Бычкова">
+        <div class="person-overlay">
+          <span class="person-role">Режиссёр · Хореограф</span>
+          <div class="person-name">Юлия<br>Бычкова</div>
+          <p class="person-desc">Основательница «Короче». Стипендиат правительства РФ</p>
         </div>
       </a>
 
-      <a href="ilyina.html" style="background:var(--coal);padding:52px 44px;text-decoration:none;display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
-        <img src="https://thb.tildacdn.com/tild6664-3937-4366-b433-663138356464/-/empty/6900.jpg" alt="Екатерина Ильина" style="width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(.8)">
-        <div>
-          <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Фото / видео-художник</p>
-          <h3 style="font-size:22px;letter-spacing:.1em;font-weight:300;color:var(--bone);margin-bottom:8px">Екатерина Ильина</h3>
-          <p style="color:var(--sand);font-size:13px">Тизеры спектаклей, фотовыставки, концептуальная фотография.</p>
+      <a href="ilyina.html" class="person-card">
+        <img src="https://thb.tildacdn.com/tild6664-3937-4366-b433-663138356464/-/empty/6900.jpg" alt="Екатерина Ильина">
+        <div class="person-overlay">
+          <span class="person-role">Фото / видео-художник</span>
+          <div class="person-name">Екатерина<br>Ильина</div>
+          <p class="person-desc">Тизеры спектаклей, фотовыставки, концептуальная фотография</p>
         </div>
       </a>
 
-      <a href="sachkov.html" style="background:var(--coal);padding:52px 44px;text-decoration:none;display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
-        <img src="https://thb.tildacdn.com/tild3232-6362-4165-b864-376337623831/-/empty/sachkov-full.jpg" alt="Иван Сачков" style="width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(.8)">
-        <div>
-          <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Хореограф · Танцдраматург</p>
-          <h3 style="font-size:22px;letter-spacing:.1em;font-weight:300;color:var(--bone);margin-bottom:8px">Иван Сачков</h3>
-          <p style="color:var(--sand);font-size:13px">Преподаватель АРБ Вагановой, СПб консерватории. Авиньонский фестиваль.</p>
+      <a href="sachkov.html" class="person-card">
+        <img src="https://thb.tildacdn.com/tild3232-6362-4165-b864-376337623831/-/empty/sachkov-full.jpg" alt="Иван Сачков">
+        <div class="person-overlay">
+          <span class="person-role">Хореограф · Танцдраматург</span>
+          <div class="person-name">Иван<br>Сачков</div>
+          <p class="person-desc">АРБ Вагановой, СПб консерватория, Авиньонский фестиваль</p>
         </div>
       </a>
 
-      <a href="dyba.html" style="background:var(--coal);padding:52px 44px;text-decoration:none;display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
-        <img src="https://thb.tildacdn.com/tild3931-6239-4332-b036-623438313763/-/empty/1000009182.jpg" alt="Ваня Дыба" style="width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(.8)">
-        <div>
-          <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Стендап-комик · Артист</p>
-          <h3 style="font-size:22px;letter-spacing:.1em;font-weight:300;color:var(--bone);margin-bottom:8px">Ваня Дыба</h3>
-          <p style="color:var(--sand);font-size:13px">Три тура по России, ТНТ, лейбл ТОЛК, «Виноградный Подкаст».</p>
+      <a href="dyba.html" class="person-card">
+        <img src="https://thb.tildacdn.com/tild3931-6239-4332-b036-623438313763/-/empty/1000009182.jpg" alt="Ваня Дыба">
+        <div class="person-overlay">
+          <span class="person-role">Стендап-комик · Артист</span>
+          <div class="person-name">Ваня<br>Дыба</div>
+          <p class="person-desc">Три тура по России, ТНТ, лейбл ТОЛК, подкаст</p>
         </div>
       </a>
 
