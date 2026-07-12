@@ -469,11 +469,9 @@
 
 ';
     for (const [label, value] of Object.entries(fields)) {
-      if (value && String(value).trim()) text += '<b>' + label + ':</b> ' + String(value).trim() + '
-';
+      if (value && String(value).trim()) text += '<b>' + label + ':</b> ' + String(value).trim() + '\n';
     }
-    text += '
-🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+    text += '\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
     await fetch(TG_WORKER, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
