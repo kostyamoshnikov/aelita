@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест Telegram бота</title>
+<style>
+  body{background:#0B0B0D;color:#E8E6E1;font-family:sans-serif;padding:40px;max-width:600px;margin:0 auto}
+  button{background:#D6B57A;color:#0B0B0D;border:none;padding:14px 28px;font-size:16px;cursor:pointer;margin:10px 0;width:100%}
+  .result{background:#1A1A1F;padding:20px;margin-top:20px;border-left:2px solid #D6B57A;white-space:pre-wrap;font-size:13px;word-break:break-all}
+  .ok{border-color:#4CAF50;color:#4CAF50}
+  .err{border-color:#f44336;color:#f44336}
+</style>
+</head>
+<body>
+<h2>Тест Telegram бота</h2>
+<p>Нажми кнопку — придёт тестовое сообщение обоим получателям</p>
+
+<button onclick="test1()">Тест → получатель 1 (844138527)</button>
+<button onclick="test2()">Тест → получатель 2 (685798799)</button>
+<button onclick="testBoth()">Тест → оба сразу</button>
+
+<div id="result" class="result" style="display:none"></div>
+
+<script>
+const TOKEN = '8998283066:AAH-FTlLDF1rkfdLFPRJmMfm3XzDJFHHA-o';
+
+async function send(chat_id) {
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      chat_id,
+      text: '✅ Тест формы AELITA PRODUCTION\n\nБот работает! Заявки будут приходить сюда.',
+      parse_mode: 'HTML'
+    })
+  });
+  return await res.json();
+}
+
+async function test1() {
+  showResult('Отправляю на 844138527...');
+  try {
+    const r = await send('844138527');
+    showResult(JSON.stringify(r, null, 2), r.ok);
+  } catch(e) {
+    showResult('Ошибка: ' + e.message, false);
+  }
+}
+
+async function test2() {
+  showResult('Отправляю на 685798799...');
+  try {
+    const r = await send('685798799');
+    showResult(JSON.stringify(r, null, 2), r.ok);
+  } catch(e) {
+    showResult('Ошибка: ' + e.message, false);
+  }
+}
+
+async function testBoth() {
+  showResult('Отправляю обоим...');
+  try {
+    const [r1, r2] = await Promise.all([send('844138527'), send('685798799')]);
+    showResult('Получатель 1: ' + JSON.stringify(r1, null, 2) + '\n\nПолучатель 2: ' + JSON.stringify(r2, null, 2), r1.ok && r2.ok);
+  } catch(e) {
+    showResult('Ошибка: ' + e.message, false);
+  }
+}
+
+function showResult(text, ok) {
+  const el = document.getElementById('result');
+  el.style.display = 'block';
+  el.textContent = text;
+  el.className = 'result ' + (ok === true ? 'ok' : ok === false ? 'err' : '');
+}
+</script>
+</body>
+</html>
