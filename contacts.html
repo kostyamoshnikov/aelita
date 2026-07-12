@@ -66,6 +66,48 @@
   @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
 
   a.card,a.work-card,a.other-card,a.show-card,a.proj-card,a.partner-card{color:inherit;text-decoration:none}
+
+  /* ── АНИМАЦИИ ──────────────────────────── */
+
+  /* 1. Линия sec-head рисуется */
+  .sec-head::after{
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .9s cubic-bezier(.4,0,.2,1) .2s;
+  }
+  .sec-head.line-on::after{transform:scaleX(1)}
+
+  /* 3. Карточки со стаггером */
+  .grid .reveal:nth-child(1),.projects-grid .reveal:nth-child(1),.shows-grid .reveal:nth-child(1),
+  .other-grid .reveal:nth-child(1),.works-grid .reveal:nth-child(1),.team-grid .reveal:nth-child(1),
+  .cast-grid .reveal:nth-child(1),.collab-grid .reveal:nth-child(1){transition-delay:.0s}
+  .grid .reveal:nth-child(2),.projects-grid .reveal:nth-child(2),.shows-grid .reveal:nth-child(2),
+  .other-grid .reveal:nth-child(2),.works-grid .reveal:nth-child(2),.team-grid .reveal:nth-child(2),
+  .cast-grid .reveal:nth-child(2),.collab-grid .reveal:nth-child(2){transition-delay:.1s}
+  .grid .reveal:nth-child(3),.projects-grid .reveal:nth-child(3),.shows-grid .reveal:nth-child(3),
+  .other-grid .reveal:nth-child(3),.works-grid .reveal:nth-child(3),.team-grid .reveal:nth-child(3),
+  .cast-grid .reveal:nth-child(3),.collab-grid .reveal:nth-child(3){transition-delay:.2s}
+  .grid .reveal:nth-child(4),.projects-grid .reveal:nth-child(4),.shows-grid .reveal:nth-child(4),
+  .other-grid .reveal:nth-child(4),.works-grid .reveal:nth-child(4),.team-grid .reveal:nth-child(4),
+  .cast-grid .reveal:nth-child(4),.collab-grid .reveal:nth-child(4){transition-delay:.3s}
+  .grid .reveal:nth-child(5){transition-delay:.15s}
+  .grid .reveal:nth-child(6){transition-delay:.25s}
+
+  /* Текстовые ссылки в контенте */
+  p a, li a, .desc a, .bio-info a, .about-text a, .bio-text a,
+  .desc-text a, .physics-text a, .tl-desc a, .career-item p a,
+  .review-show a, .vendor-address a{
+    color:var(--gold);
+    text-decoration:none;
+    transition:opacity .3s;
+  }
+  p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
+  /* Footer и nav — оставляем их собственные цвета */
+  footer a{color:var(--sand)}
+  footer a:hover{color:var(--bone)}
+  nav a{color:var(--sand)}
+  nav a:hover,nav a.active{color:var(--gold)}
+  /* Hero элементы */
+  .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
 </style>
 </head>
 <body>
@@ -201,6 +243,12 @@
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Линия sec-head
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
 </script>
 </body>
 </html>
