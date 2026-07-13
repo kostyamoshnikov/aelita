@@ -3,37 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тест Worker</title>
+<title>Тест связки</title>
 <style>
-  body{background:#0B0B0D;color:#E8E6E1;font-family:sans-serif;padding:40px;max-width:600px;margin:0 auto}
-  button{background:#D6B57A;color:#0B0B0D;border:none;padding:14px 28px;font-size:16px;cursor:pointer;margin:10px 0;width:100%;border-radius:2px}
-  .result{background:#1A1A1F;padding:20px;margin-top:20px;border-left:2px solid #D6B57A;white-space:pre-wrap;font-size:13px}
-  .ok{border-color:#4CAF50;color:#4CAF50}
-  .err{border-color:#f44336;color:#f44336}
+  body{background:#0B0B0D;color:#E8E6E1;font-family:sans-serif;padding:30px;max-width:500px;margin:0 auto}
+  h2{color:#D6B57A;margin-bottom:20px}
+  button{background:#D6B57A;color:#0B0B0D;border:none;padding:14px 20px;font-size:15px;cursor:pointer;width:100%;margin:8px 0;border-radius:2px;font-weight:600}
+  .result{background:#1A1A1F;padding:16px;margin-top:16px;border-radius:2px;font-size:13px;white-space:pre-wrap;word-break:break-all;min-height:60px}
+  .ok{border-left:3px solid #4CAF50;color:#4CAF50}
+  .err{border-left:3px solid #f44336;color:#f44336}
+  .info{border-left:3px solid #D6B57A;color:#C9B8A3}
+  p{color:#C9B8A3;font-size:14px;margin:8px 0}
 </style>
 </head>
 <body>
-<h2>Тест через Cloudflare Worker</h2>
-<button onclick="testWorker()">Отправить тест обоим →</button>
-<div id="result" class="result" style="display:none"></div>
+<h2>Тест связки Cloudflare → Telegram</h2>
+
+<p>Шаг 1: Проверяем Worker</p>
+<button onclick="testWorker()">1. Проверить Worker (GET)</button>
+
+<p>Шаг 2: Отправляем тестовое сообщение</p>
+<button onclick="testPost()">2. Отправить POST через Worker</button>
+
+<p>Шаг 3: Напрямую к боту (если Worker не работает)</p>
+<button onclick="testDirect()">3. Напрямую в Telegram API</button>
+
+<div id="result" class="result info">Нажми кнопку для теста...</div>
+
 <script>
-async function testWorker() {
+const WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+const TOKEN = '8998283066:AAH-FTlLDF1rkfdLFPRJmMfm3XzDJFHHA-o';
+const CHATS = ['844138527', '685798799'];
+
+function show(text, type) {
   const el = document.getElementById('result');
-  el.style.display = 'block';
-  el.className = 'result';
-  el.textContent = 'Отправляю...';
+  el.textContent = text;
+  el.className = 'result ' + (type || 'info');
+}
+
+async function testWorker() {
+  show('Проверяю Worker...', 'info');
   try {
-    const res = await fetch('https://withered-glade-64b6.kostyamoshnikov.workers.dev', {
+    const r = await fetch(WORKER);
+    const t = await r.text();
+    show('Worker ответил: ' + t + '\nСтатус: ' + r.status, r.ok ? 'ok' : 'err');
+  } catch(e) {
+    show('ОШИБКА: ' + e.message, 'err');
+  }
+}
+
+async function testPost() {
+  show('Отправляю POST через Worker...', 'info');
+  try {
+    const r = await fetch(WORKER, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({text: '✅ <b>Тест AELITA PRODUCTION</b>\n\nWorker работает! Заявки будут приходить сюда.\n\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'})})
+      body: JSON.stringify({text: '[TEST] Тест формы AELITA\n\nWorker работает!\n' + new Date().toLocaleString('ru-RU')})
     });
-    const text = await res.text();
-    el.className = 'result ok';
-    el.textContent = 'Успешно! Ответ: ' + text + '\n\nПроверь Telegram — сообщение должно прийти обоим.';
+    const t = await r.text();
+    show('Ответ Worker: ' + t + '\nСтатус: ' + r.status + '\n\nПроверь Telegram!', r.ok ? 'ok' : 'err');
   } catch(e) {
-    el.className = 'result err';
-    el.textContent = 'Ошибка: ' + e.message;
+    show('ОШИБКА: ' + e.message, 'err');
+  }
+}
+
+async function testDirect() {
+  show('Отправляю напрямую в Telegram API...', 'info');
+  try {
+    const results = [];
+    for (const chat_id of CHATS) {
+      const r = await fetch('https://api.telegram.org/bot' + TOKEN + '/sendMessage', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({chat_id, text: '[DIRECT TEST] ' + new Date().toLocaleString('ru-RU'), parse_mode: 'HTML'})
+      });
+      const data = await r.json();
+      results.push('chat ' + chat_id + ': ' + JSON.stringify(data).slice(0, 100));
+    }
+    show(results.join('\n\n'), 'ok');
+  } catch(e) {
+    show('ОШИБКА: ' + e.message, 'err');
   }
 }
 </script>
