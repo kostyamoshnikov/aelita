@@ -628,9 +628,32 @@
 
 <script>
   // подписка (демо: в прототипе письмо никуда не уходит)
-  function subscribe(){
+  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+
+  async function sendTelegram(formName, fields) {
+    var lines = ['[AELITA] ' + formName, ''];
+    var keys = Object.keys(fields);
+    for (var i = 0; i < keys.length; i++) {
+      var label = keys[i];
+      var value = String(fields[label] || '').trim();
+      if (value) lines.push('<b>' + label + ':</b> ' + value);
+    }
+    lines.push('');
+    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
+    var msgText = lines.join('\n');
+    try {
+      await fetch(TG_WORKER, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: msgText})
+      });
+    } catch(e) { console.log('TG error:', e); }
+  }
+
+  async function subscribe(){
     const v = document.getElementById('subEmail').value.trim();
     if(!v || !v.includes('@')) return;
+    await sendTelegram('Главная — подписка на показы', {'Email': v});
     document.getElementById('subOk').style.display = 'block';
     document.getElementById('subEmail').value = '';
   }
