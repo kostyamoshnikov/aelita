@@ -547,18 +547,23 @@
   const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
   async function sendTelegram(formName, fields) {
-    let text = '📋 <b>Новая заявка — ' + formName + '</b>
-
-';
-    for (const [label, value] of Object.entries(fields)) {
-      if (value && String(value).trim()) text += '<b>' + label + ':</b> ' + String(value).trim() + '\n';
+    var lines = ['[AELITA] ' + formName, ''];
+    var keys = Object.keys(fields);
+    for (var i = 0; i < keys.length; i++) {
+      var label = keys[i];
+      var value = String(fields[label] || '').trim();
+      if (value) lines.push('<b>' + label + ':</b> ' + value);
     }
-    text += '\n🕐 ' + new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
-    await fetch(TG_WORKER, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({text})
-    });
+    lines.push('');
+    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
+    var msgText = lines.join('\n');
+    try {
+      await fetch(TG_WORKER, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: msgText})
+      });
+    } catch(e) { console.log('TG error:', e); }
   }
 
   // Fallback: показываем всё через 700ms если IO не сработал
