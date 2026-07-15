@@ -216,6 +216,15 @@
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
   }
+
+  /* фото и видео */
+  .photo-drive{background:var(--coal);border:1px solid rgba(201,184,163,.15);padding:36px;text-align:center;margin-top:24px}
+  .photo-drive p{color:var(--sand);font-size:14px;margin-bottom:20px}
+  .photo-drive a.btn-drive{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 28px;text-decoration:none;transition:opacity .3s}
+  .photo-drive a.btn-drive:hover{opacity:.85}
+  .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
+  .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+  .video-label{margin-top:14px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand)}
 </style>
 </head>
 <body>
@@ -261,6 +270,31 @@
     <div class="no-shows reveal">
       <p>Ближайших показов пока нет. Подпишитесь — сообщим о новых датах первыми.</p>
       <a class="btn-outline" href="index.html#subscribe">Узнать о новых датах</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ФОТО -->
+<section id="photos" style="padding:80px 0">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Фотографии</h2></div>
+    <div class="photo-drive reveal">
+      <p>Фотоматериалы со спектакля доступны в нашем архиве.</p>
+      <a class="btn-drive" href="https://drive.google.com/drive/folders/1mX2l8e-30k--eEMz8uOf5-Sq22H5ofMT" target="_blank" rel="noopener">Открыть фотоархив →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ВИДЕО -->
+<section style="background:var(--coal);padding:80px 0" id="video">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Смотреть</h2></div>
+    <div class="reveal" style="max-width:720px">
+      <div class="video-wrap">
+        <iframe src="about:blank" data-src="https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239074&hd=2&js_api=1" title="Тизер спектакля «JAZZ'n'DANCE»" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <p class="video-label">Тизер спектакля «JAZZ'n'DANCE»</p>
     </div>
   </div>
 </section>
