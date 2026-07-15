@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Команда — AELITA PRODUCTION</title>
+<meta name="description" content="Команда AELITA PRODUCTION — Екатерина Абдулова (founder, генеральный директор) и Константин Мошников (co-founder, продюсер).">
+<meta property="og:title" content="Команда — AELITA PRODUCTION">
+<meta property="og:description" content="Основатели AELITA PRODUCTION — Екатерина Абдулова и Константин Мошников.">
+<meta property="og:image" content="https://res.cloudinary.com/bakremkv/image/upload/w_1200,q_auto,f_auto/iov-photo-1_pzpokh.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1180px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;max-width:100%}
+body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone)}
+.logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+.nav-links{display:flex;gap:34px}
+.nav-links a{color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+@media(max-width:760px){.nav-links{display:none}}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.burger span{display:block;width:22px;height:1px;background:var(--bone);transition:all .3s}
+.burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);background:var(--gold)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);background:var(--gold)}
+@media(max-width:760px){.burger{display:flex}}
+.m-menu{position:fixed;top:0;right:0;bottom:0;width:min(340px,100vw);background:var(--coal);z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);padding:80px 40px 40px}
+.m-menu.open{transform:translateX(0)}
+.m-menu::before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:-1;opacity:0;transition:opacity .4s;pointer-events:none}
+.m-menu.open::before{opacity:1}
+.m-menu-links{display:flex;flex-direction:column;gap:4px}
+.m-menu-links a{font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);padding:14px 0;border-bottom:1px solid rgba(232,230,225,.06);transform:translateX(20px);opacity:0;transition:transform .4s,opacity .4s,color .3s}
+.m-menu.open .m-menu-links a{transform:translateX(0);opacity:1}
+.m-menu-links a:hover{color:var(--gold)}
+.m-menu-links a:nth-child(1){transition-delay:.18s}
+.m-menu-links a:nth-child(2){transition-delay:.26s}
+.m-menu-links a:nth-child(3){transition-delay:.34s}
+.m-menu-links a:nth-child(4){transition-delay:.42s}
+.m-menu-links a:nth-child(5){transition-delay:.50s}
+.m-menu-close{position:absolute;top:28px;right:24px;background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0}
+.m-menu-close::before,.m-menu-close::after{content:"";position:absolute;width:18px;height:1px;background:var(--sand);transition:background .3s}
+.m-menu-close::before{transform:rotate(45deg)}
+.m-menu-close::after{transform:rotate(-45deg)}
+.m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+.m-menu-contacts{margin-top:32px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.24em;color:rgba(201,184,163,.45);text-transform:uppercase}
+.page-hero{padding:140px 0 70px;border-bottom:1px solid rgba(232,230,225,.08)}
+.eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(28px,5vw,52px);letter-spacing:.18em}
+.hero-sub{color:var(--sand);font-size:16px;margin-top:14px;max-width:54ch}
+.team-section{padding:80px 0}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(max-width:760px){.team-grid{grid-template-columns:1fr}}
+.member-card{background:var(--coal);overflow:hidden;display:block;color:inherit;transition:opacity .3s}
+.member-card:hover{opacity:.9}
+.member-photo{position:relative;aspect-ratio:3/4;overflow:hidden}
+.member-photo img{width:100%;height:100%;object-fit:cover;object-position:top;filter:brightness(.85);transition:transform .6s ease}
+.member-card:hover .member-photo img{transform:scale(1.03)}
+.member-info{padding:36px 40px 44px}
+.member-role{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.member-name{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,3vw,32px);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.member-title{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(232,230,225,.08)}
+.member-bio{color:var(--sand);font-size:14px;line-height:1.8}
+.member-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.member-tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;border:1px solid rgba(214,181,122,.3);color:var(--sand);padding:6px 12px}
+.member-link{display:inline-block;margin-top:24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(214,181,122,.4);padding-bottom:2px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:none}
+.sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
+.sec-head h2{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
+.sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
+.values-section{background:var(--coal);padding:80px 0}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+@media(max-width:760px){.values-grid{grid-template-columns:1fr}}
+.value-item{background:var(--ink);padding:40px 32px}
+.value-num{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.4em;color:var(--gold);margin-bottom:16px}
+.value-item h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:18px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.value-item p{color:var(--sand);font-size:14px;line-height:1.75}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
+footer h4{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand);margin-bottom:20px}
+footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:10px;transition:color .3s}
+footer a:hover{color:var(--bone)}
+.requisites{border-top:1px solid rgba(232,230,225,.06);padding-top:24px;color:rgba(201,184,163,.35);font-size:12px;line-height:1.9}
+img,video,iframe{max-width:100%;height:auto}
+@media(max-width:760px){.wrap{padding:0 16px}}
+#cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(11,11,13,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(214,181,122,.2);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;transform:translateY(0);transition:transform .4s ease}
+#cookie-banner.hidden{transform:translateY(110%)}
+#cookie-banner p{color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0}
+#cookie-banner a{color:var(--gold)}
+.cookie-actions{display:flex;gap:12px;flex-shrink:0}
+.cookie-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
+.cookie-btn-accept{background:var(--gold);color:var(--ink)}
+.cookie-btn-accept:hover{opacity:.85}
+.cookie-btn-more{background:transparent;color:var(--sand);border:1px solid rgba(201,184,163,.3)}
+.cookie-btn-more:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:600px){#cookie-banner{flex-direction:column;align-items:flex-start;gap:14px}.cookie-actions{width:100%}.cookie-btn{flex:1;text-align:center}}
+</style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+   ym(104681911, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6KZFGH86NJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6KZFGH86NJ');
+</script>
+<!-- /Google Analytics -->
+</head>
+<body>
+<nav>
+<div class="nav-in">
+  <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+  <div class="nav-links">
+    <a href="/tickets">Афиша</a>
+    <a href="/projects">Проекты</a>
+    <a href="/rezidents">Резиденты</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
+  </div>
+  <button class="burger" aria-label="Меню" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+</nav>
+
+<div id="mMenu" class="m-menu" role="dialog" aria-modal="true" onclick="handleOverlayClick(event)">
+  <button class="m-menu-close" onclick="toggleMenu()" aria-label="Закрыть меню"></button>
+  <div class="m-menu-links">
+    <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/rezidents" onclick="toggleMenu()">Резиденты</a>
+    <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
+    <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+  </div>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+</div>
+
+<div class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">AELITA PRODUCTION</p>
+    <h1>Команда</h1>
+    <p class="hero-sub">Основатели компании — люди, которые создали AELITA PRODUCTION и определяют её развитие.</p>
+  </div>
+</div>
+
+<section class="team-section">
+  <div class="wrap">
+    <div class="team-grid reveal">
+
+      <a href="/abdulova" class="member-card">
+        <div class="member-photo">
+          <img src="https://thb.tildacdn.com/tild6430-3235-4361-b231-353739656535/-/empty/IMG_9990.JPG" alt="Екатерина Абдулова — founder AELITA PRODUCTION" loading="lazy">
+        </div>
+        <div class="member-info">
+          <p class="member-role">Founder</p>
+          <div class="member-name">Екатерина<br>Абдулова</div>
+          <p class="member-title">Генеральный директор · Продюсер · Режиссёр</p>
+          <p class="member-bio">Основательница AELITA PRODUCTION. Десять успешно реализованных проектов за неполный год существования компании. Режиссёр спектакля «ИОВ:материал».</p>
+          <div class="member-tags">
+            <span class="member-tag">Продюсирование</span>
+            <span class="member-tag">Режиссура</span>
+            <span class="member-tag">Калуга</span>
+          </div>
+          <span class="member-link">Подробнее →</span>
+        </div>
+      </a>
+
+      <a href="/moshnikov" class="member-card">
+        <div class="member-photo">
+          <img src="https://res.cloudinary.com/bakremkv/image/upload/w_800,q_auto,f_auto/kostyamoshnikov_tuweho.jpg" alt="Константин Мошников — co-founder AELITA PRODUCTION" loading="lazy">
+        </div>
+        <div class="member-info">
+          <p class="member-role">Co-founder</p>
+          <div class="member-name">Константин<br>Мошников</div>
+          <p class="member-title">Продюсер · SMM · Артист цирка</p>
+          <p class="member-bio">Более 15 лет артист цирка. Организатор фестивалей «Точка Кюри» и БУФЕСТ 2026. Знает индустрию культуры изнутри — от организации гастролей до работы с государственными площадками.</p>
+          <div class="member-tags">
+            <span class="member-tag">Продюсирование</span>
+            <span class="member-tag">SMM</span>
+            <span class="member-tag">Санкт-Петербург</span>
+          </div>
+          <span class="member-link">Подробнее →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section class="values-section">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Принципы компании</h2></div>
+    <div class="values-grid reveal">
+      <div class="value-item">
+        <p class="value-num">01</p>
+        <h3>Искусство прежде всего</h3>
+        <p>Каждый проект начинается с художественной идеи, а не с коммерческого расчёта. Качество — наш главный приоритет.</p>
+      </div>
+      <div class="value-item">
+        <p class="value-num">02</p>
+        <h3>Знание изнутри</h3>
+        <p>Мы сами — часть театральной индустрии. Это позволяет находить решения, недоступные тем, кто смотрит снаружи.</p>
+      </div>
+      <div class="value-item">
+        <p class="value-num">03</p>
+        <h3>Долгосрочные отношения</h3>
+        <p>Работаем не разово, а выстраиваем партнёрства. Каждый проект — начало чего-то большего.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
+        <a href="/team">Команда</a>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="/">Главная</a>
+        <a href="/tickets">Афиша</a>
+        <a href="/projects">Проекты</a>
+        <a href="/collaboration">Сотрудничество</a>
+        <a href="/contacts">Контакты</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br>
+      <a href="/oferta" style="color:rgba(201,184,163,.5)">Договор публичной оферты</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика конфиденциальности</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<div id="cookie-banner">
+  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+
+<script>
+  (function(){
+    if(localStorage.getItem('cookies_accepted')){
+      var b=document.getElementById('cookie-banner');
+      if(b) b.style.display='none';
+    }
+  })();
+  function acceptCookies(){
+    localStorage.setItem('cookies_accepted','1');
+    var b=document.getElementById('cookie-banner');
+    if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
+  }
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const lineIO=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('line-on')})},{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+  function toggleMenu(){
+    const btn=document.querySelector('.burger');
+    const menu=document.getElementById('mMenu');
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow=menu.classList.contains('open')?'hidden':'';
+  }
+  function handleOverlayClick(e){
+    if(!e.target.closest('.m-menu-links')&&!e.target.closest('.m-menu-contacts')) toggleMenu();
+  }
+</script>
+</body>
+</html>
