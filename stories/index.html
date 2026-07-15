@@ -227,6 +227,17 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
   .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
   .video-label{margin-top:14px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand)}
+
+  /* ── Мобильная сетка (глобальный фикс) ── */
+  @media(max-width:760px){
+    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
+    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
+    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
+    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
+    .flag{grid-template-columns:1fr !important}
+    .gallery{grid-template-columns:1fr 1fr !important}
+    .grid{grid-template-columns:1fr 1fr !important}
+  }
 </style>
 </head>
 <body>

@@ -217,6 +217,20 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
   }
+
+  .collab-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  @media(max-width:760px){.collab-cards-grid{grid-template-columns:1fr}}
+
+  /* ── Мобильная сетка (глобальный фикс) ── */
+  @media(max-width:760px){
+    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
+    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
+    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
+    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
+    .flag{grid-template-columns:1fr !important}
+    .gallery{grid-template-columns:1fr 1fr !important}
+    .grid{grid-template-columns:1fr 1fr !important}
+  }
 </style>
 </head>
 <body>
@@ -294,11 +308,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <section style="background:var(--coal);padding:70px 0">
   <div class="wrap">
-    <div style="display:flex;align-items:baseline;gap:26px;margin-bottom:48px">
+    <div style="display:flex;align-items:baseline;gap:26px;margin-bottom:48px;flex-wrap:wrap">
       <span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)">Специальные разделы</span>
       <h2 style="font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em">Выберите своё направление</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px">
+    <div class="collab-cards-grid">
       <a href="/creativity" style="background:var(--ink);padding:44px 36px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(214,181,122,.4)'" onmouseout="this.style.borderColor='transparent'">
         <p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Для творческих</p>
         <h3 style="font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:20px;letter-spacing:.14em;color:var(--bone);margin-bottom:12px">Перезапуск для творческих</h3>

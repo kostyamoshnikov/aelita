@@ -214,6 +214,17 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
   }
+
+  /* ── Мобильная сетка (глобальный фикс) ── */
+  @media(max-width:760px){
+    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
+    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
+    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
+    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
+    .flag{grid-template-columns:1fr !important}
+    .gallery{grid-template-columns:1fr 1fr !important}
+    .grid{grid-template-columns:1fr 1fr !important}
+  }
 </style>
 </head>
 <body>

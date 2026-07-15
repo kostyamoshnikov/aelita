@@ -154,7 +154,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .ev-cta:hover{border-color:var(--gold);color:var(--gold)}
   @media(max-width:760px){
     .event{grid-template-columns:1fr;gap:12px}
-    .ev-cta{justify-self:start}
+    .ev-cta{justify-self:start;white-space:normal;text-align:center}
   }
 
   /* флагман */
@@ -414,6 +414,17 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   @media(max-width:760px){
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
+  }
+
+  /* ── Мобильная сетка (глобальный фикс) ── */
+  @media(max-width:760px){
+    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
+    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
+    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
+    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
+    .flag{grid-template-columns:1fr !important}
+    .gallery{grid-template-columns:1fr 1fr !important}
+    .grid{grid-template-columns:1fr 1fr !important}
   }
 </style>
 </head>
