@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Проекты — AELITA PRODUCTION</title>
+<meta name="description" content="Проекты AELITA PRODUCTION: мистерия «ИОВ:материал» и другие постановки компании. Описания, составы и ближайшие показы.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1180px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:var(--ink)}
+  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
+  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone);text-decoration:none}
+  .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  .page-header{padding:140px 0 70px;border-bottom:1px solid rgba(232,230,225,.08)}
+  .page-header h1{font-size:clamp(28px,5vw,52px);letter-spacing:.18em;margin-top:16px}
+
+  /* Флагман */
+  .flagship{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:70px 0;background:var(--coal)}
+  .flagship-img{min-height:420px;background-image:url('https://static.tildacdn.com/tild3438-3461-4564-b239-303634636236/6627.jpg');background-size:cover;background-position:center;position:relative;filter:brightness(.7)}
+  .flagship-img::after{content:"";position:absolute;right:0;top:0;bottom:0;width:40%;background:linear-gradient(to right,transparent,var(--coal))}
+  .flagship-body{padding:52px 48px;display:flex;flex-direction:column;justify-content:center}
+  .flagship-body .badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.4);display:inline-block;padding:6px 14px;margin-bottom:22px}
+  .flagship-body h2{font-size:clamp(24px,3.5vw,38px);letter-spacing:.1em;margin-bottom:18px;line-height:1.3}
+  .flagship-body p{color:var(--sand);font-size:15px;margin-bottom:28px;max-width:42ch}
+  .flagship-body .meta{font-size:13px;color:rgba(201,184,163,.6);margin-bottom:28px;letter-spacing:.06em}
+  .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s}
+  .btn-gold:hover{opacity:.85}
+  @media(max-width:900px){.flagship{grid-template-columns:1fr}.flagship-img{min-height:260px}}
+
+  /* Категории */
+  .cat-label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.44em;text-transform:uppercase;color:rgba(201,184,163,.5);padding:40px 0 20px;border-bottom:1px solid rgba(232,230,225,.06);margin-bottom:24px}
+
+  /* Сетка */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:60px}
+  .card{background:var(--coal);padding:34px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
+  .card:hover{border-color:rgba(214,181,122,.35)}
+  .card .tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+  .card h3{font-size:17px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
+  .card p{color:var(--sand);font-size:13px;line-height:1.6}
+  .card .card-meta{margin-top:18px;font-size:12px;color:rgba(201,184,163,.5);letter-spacing:.06em}
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
+  footer a:hover{color:var(--bone)}
+  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+
+  a.card,a.work-card,a.other-card,a.show-card,a.proj-card,a.partner-card{color:inherit;text-decoration:none}
+
+  /* ── АНИМАЦИИ ──────────────────────────── */
+
+  /* 1. Линия sec-head рисуется */
+  .sec-head::after{
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .9s cubic-bezier(.4,0,.2,1) .2s;
+  }
+  .sec-head.line-on::after{transform:scaleX(1)}
+
+  /* 3. Карточки со стаггером */
+  .grid .reveal:nth-child(1),.projects-grid .reveal:nth-child(1),.shows-grid .reveal:nth-child(1),
+  .other-grid .reveal:nth-child(1),.works-grid .reveal:nth-child(1),.team-grid .reveal:nth-child(1),
+  .cast-grid .reveal:nth-child(1),.collab-grid .reveal:nth-child(1){transition-delay:.0s}
+  .grid .reveal:nth-child(2),.projects-grid .reveal:nth-child(2),.shows-grid .reveal:nth-child(2),
+  .other-grid .reveal:nth-child(2),.works-grid .reveal:nth-child(2),.team-grid .reveal:nth-child(2),
+  .cast-grid .reveal:nth-child(2),.collab-grid .reveal:nth-child(2){transition-delay:.1s}
+  .grid .reveal:nth-child(3),.projects-grid .reveal:nth-child(3),.shows-grid .reveal:nth-child(3),
+  .other-grid .reveal:nth-child(3),.works-grid .reveal:nth-child(3),.team-grid .reveal:nth-child(3),
+  .cast-grid .reveal:nth-child(3),.collab-grid .reveal:nth-child(3){transition-delay:.2s}
+  .grid .reveal:nth-child(4),.projects-grid .reveal:nth-child(4),.shows-grid .reveal:nth-child(4),
+  .other-grid .reveal:nth-child(4),.works-grid .reveal:nth-child(4),.team-grid .reveal:nth-child(4),
+  .cast-grid .reveal:nth-child(4),.collab-grid .reveal:nth-child(4){transition-delay:.3s}
+  .grid .reveal:nth-child(5){transition-delay:.15s}
+  .grid .reveal:nth-child(6){transition-delay:.25s}
+
+  /* Текстовые ссылки в контенте */
+  p a, li a, .desc a, .bio-info a, .about-text a, .bio-text a,
+  .desc-text a, .physics-text a, .tl-desc a, .career-item p a,
+  .review-show a, .vendor-address a{
+    color:var(--gold);
+    text-decoration:none;
+    transition:opacity .3s;
+  }
+  p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
+  /* Footer и nav — оставляем их собственные цвета */
+  footer a{color:var(--sand)}
+  footer a:hover{color:var(--bone)}
+  nav a{color:var(--sand)}
+  nav a:hover,nav a.active{color:var(--gold)}
+  /* Hero элементы */
+  .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
+
+  /* ── МОБИЛЬНОЕ МЕНЮ ──────────────────── */
+  .burger{
+    display:none;flex-direction:column;gap:6px;cursor:pointer;
+    padding:8px;background:none;border:none;
+    position:fixed;top:18px;right:20px;z-index:200;
+  }
+  .burger span{
+    display:block;width:22px;height:1px;background:var(--bone);
+    transition:all .45s cubic-bezier(.4,0,.2,1);transform-origin:center;
+  }
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--gold)}
+  .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--gold)}
+  @media(max-width:760px){.burger{display:flex}}
+
+  .m-menu{
+    position:fixed;inset:0;z-index:150;
+    background:var(--ink);
+    display:flex;flex-direction:column;justify-content:center;
+    padding:80px 40px 60px;
+    transform:translateX(100%);
+    transition:transform .65s cubic-bezier(.77,0,.18,1);
+    overflow:hidden;
+  }
+  .m-menu.open{transform:translateX(0)}
+  .m-menu::before{
+    content:"";position:absolute;
+    top:-5%;left:65%;width:1px;height:80%;
+    background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);
+    transform:rotate(10deg);
+    box-shadow:0 0 18px 3px rgba(214,181,122,.45),0 0 60px 15px rgba(214,181,122,.12);
+    opacity:0;transition:opacity .6s ease .3s;
+  }
+  .m-menu.open::before{opacity:1}
+
+  .m-menu-links{display:flex;flex-direction:column;gap:4px}
+  .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-weight:200;
+    font-size:clamp(26px,8vw,42px);
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--sand);text-decoration:none;
+    display:block;padding:10px 0;
+    border-bottom:1px solid rgba(232,230,225,.06);
+    transform:translateX(28px);opacity:0;
+    transition:color .3s,transform .5s ease,opacity .5s ease;
+  }
+  .m-menu.open .m-menu-links a{transform:translateX(0);opacity:1}
+  .m-menu-links a:last-child{border-bottom:none}
+  .m-menu-links a:hover{color:var(--gold)}
+  .m-menu-links a:nth-child(1){transition-delay:.18s}
+  .m-menu-links a:nth-child(2){transition-delay:.26s}
+  .m-menu-links a:nth-child(3){transition-delay:.34s}
+  .m-menu-links a:nth-child(4){transition-delay:.42s}
+  .m-menu-links a:nth-child(5){transition-delay:.50s}
+  .m-menu-links a:nth-child(6){transition-delay:.58s}
+  .m-menu-footer{
+    position:absolute;bottom:40px;left:40px;
+    font-family:'Montserrat',sans-serif;font-size:9px;
+    letter-spacing:.5em;text-transform:uppercase;
+    color:rgba(201,184,163,.3);
+  }
+  .m-menu-contacts{
+    margin-top:32px;
+    font-family:'Montserrat',sans-serif;font-size:11px;
+    letter-spacing:.24em;color:rgba(201,184,163,.45);
+    text-transform:uppercase;
+  }
+
+  .m-menu-close{
+    position:absolute;top:28px;right:24px;
+    background:none;border:none;cursor:pointer;
+    width:36px;height:36px;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .m-menu-close::before,.m-menu-close::after{
+    content:"";position:absolute;
+    width:18px;height:1px;background:var(--sand);
+    transition:background .3s,transform .3s;
+  }
+  .m-menu-close::before{transform:rotate(45deg)}
+  .m-menu-close::after{transform:rotate(-45deg)}
+  .m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+
+  /* Убираем синий цвет со всех ссылок */
+  a{color:inherit}
+  a:not([class]):not([style]){color:var(--gold)}
+  nav a, footer a{color:var(--sand)}
+  nav a:hover, nav a.active{color:var(--gold)}
+  footer a:hover{color:var(--bone)}
+
+  /* Запрет горизонтального скролла */
+  body{max-width:100vw}
+  img, video, iframe{max-width:100%;height:auto}
+  @media(max-width:760px){
+    .wrap{padding:0 16px}
+    table{width:100%;display:block;overflow-x:auto}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
+      <a href="/tickets">Афиша</a>
+      <a href="/projects" class="active">Проекты</a>
+      <a href="/rezidents">Резиденты</a>
+      <a href="/collab">Сотрудничество</a>
+      <a href="/contacts">Контакты</a>
+    </div>
+    <button class="burger" aria-label="Меню" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Каталог</p>
+    <h1>Проекты компании</h1>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- ФЛАГМАН -->
+  <div class="flagship reveal">
+    <div class="flagship-img"></div>
+    <div class="flagship-body">
+      <span class="badge">Флагманский проект · В прокате</span>
+      <h2>ИОВ:материал</h2>
+      <p>Современная мистерия Екатерины Абдуловой. Мэшап из библейских текстов, Кьеркегора, Кафки, Достоевского.</p>
+      <p class="meta">12+ · 1 ч 35 мин · Пушкинская карта</p>
+      <a class="btn-gold" href="/iov">Подробнее о спектакле</a>
+    </div>
+  </div>
+
+  <!-- ФЕСТИВАЛЬ -->
+  <div class="cat-label reveal">Фестивали</div>
+  <div class="grid reveal">
+    <a class="card" href="/tochkakuri" style="color:inherit;text-decoration:none">
+      <span class="tag">Октябрь 2026 · Старый Оскол</span>
+      <h3>«Точка Кюри»</h3>
+      <p>Фестиваль в ЦСИ «Быль». 22–25 октября 2026.</p>
+      <p class="card-meta">Организатор: AELITA PRODUCTION</p>
+    </a>
+    <a class="card" href="/budu" style="color:inherit;text-decoration:none">
+      <span class="tag">Архив · Калуга</span>
+      <h3>«БудуТанцы»</h3>
+      <p>Главное танцевальное событие лета в Калуге. Участники: Забава, ДисТанцы-Я, Огни.</p>
+    </a>
+  </div>
+
+  <!-- СПЕКТАКЛИ -->
+  <div class="cat-label reveal">Спектакли</div>
+  <div class="grid reveal">
+
+    <a class="card" href="/porfiriy" style="color:inherit;text-decoration:none">
+      <span class="tag">Медитативный детектив</span>
+      <h3>Порфирий</h3>
+      <p>Спектакль Александра Панова. Мэшап по «Преступлению и наказанию» Достоевского и новеллам Акутагавы.</p>
+    </a>
+    <a class="card" href="/human" style="color:inherit;text-decoration:none">
+      <span class="tag">Современный балет</span>
+      <h3>Археология человеческого</h3>
+      <p>Яркое и откровенное высказывание о человеческой природе.</p>
+    </a>
+    <a class="card" href="/listen" style="color:inherit;text-decoration:none">
+      <span class="tag">Танцевальный спектакль</span>
+      <h3>Послушайте!</h3>
+      <p>Спектакль Юлии Бычковой. Интерактивное путешествие по просторам личных чувств и эмоций.</p>
+    </a>
+    <a class="card" href="/jazz_dance" style="color:inherit;text-decoration:none">
+      <span class="tag">Шоу</span>
+      <h3>Jazz 'n' Dance</h3>
+      <p>Шоу Ксении Шамариной: цирк, джаз и танцы в одном концерте.</p>
+    </a>
+    <a class="card" href="/stories" style="color:inherit;text-decoration:none">
+      <span class="tag">Пластический спектакль</span>
+      <h3>Сюжеты. О земном и небесном</h3>
+      <p>Спектакль Юлии Бычковой и танцевальной компании «Короче».</p>
+    </a>
+    <a class="card" href="/instruction" style="color:inherit;text-decoration:none">
+      <span class="tag">Танцевальный спектакль</span>
+      <h3>Инструкция для начинающих странников</h3>
+      <p>Спектакль Юлии Бычковой и Елены Иноземцевой. Проект танцевальной компании «Забава».</p>
+    </a>
+    <a class="card" href="/corner" style="color:inherit;text-decoration:none">
+      <span class="tag">Stand-up</span>
+      <h3>Stand-up «Живой уголок»</h3>
+      <p>Исторический вечер легенд калужского юмора. После 15 лет — возвращение на сцену.</p>
+    </a>
+  </div>
+  <!-- АРХИВ -->
+  <div class="cat-label reveal">Архив</div>
+  <div class="grid reveal" style="margin-bottom:60px">
+    <a class="card reveal" href="/gogol" style="color:inherit;text-decoration:none;opacity:.7">
+      <span class="tag">Архив · Саунд-драма</span>
+      <h3>Гоголь.Сюита</h3>
+      <p>Спектакль Дмитрия Туркова по повести Н.В. Гоголя. Показы завершены.</p>
+    </a>
+  </div>
+
+  <!-- СРЕДА -->
+  <div class="cat-label reveal">Среда</div>
+  <div class="grid reveal" style="margin-bottom:60px">
+    <a class="card" href="/community" style="color:inherit;text-decoration:none">
+      <span class="tag">Книжный клуб</span>
+      <h3>AELITA COMMUNITY</h3>
+      <p>Пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой — для тех, кто хочет думать самостоятельно.</p>
+    </a>
+    <a class="card" href="/rezidents" style="color:inherit;text-decoration:none">
+      <span class="tag">Команда</span>
+      <h3>Резиденты</h3>
+      <p>Режиссёры, хореографы, художники и артисты — люди, которые создают искусство AELITA PRODUCTION.</p>
+    </a>
+    <a class="card" href="/partners" style="color:inherit;text-decoration:none">
+      <span class="tag">Партнёры</span>
+      <h3>Экосистема</h3>
+      <p>Площадки, компании и организации, с которыми мы создаём современное искусство.</p>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
+        <a href="/partners">Партнёры</a>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="/">Главная</a>
+        <a href="/tickets">Афиша</a>
+        <a href="/projects">Проекты</a>
+        <a href="/community">AELITA COMMUNITY</a>
+        <a href="/collab">Сотрудничество</a>
+        <a href="/creativity">— для творческих</a>
+        <a href="/event">— для организаторов</a>
+        <a href="/business">— для бизнеса</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br><a href="/oferta" style="color:rgba(201,184,163,.5)">Договор публичной оферты</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика обработки персональных данных</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Линия sec-head
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  function handleOverlayClick(e){
+    if(!e.target.closest('.m-menu-links')&&!e.target.closest('.m-menu-contacts')){
+      toggleMenu();
+    }
+  }
+  function toggleMenu(){
+    const btn = document.querySelector('.burger');
+    const menu = document.getElementById('mMenu');
+    if(!btn||!menu) return;
+    const isOpen = menu.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  // Закрыть по Escape
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){
+      const menu = document.getElementById('mMenu');
+      const btn = document.querySelector('.burger');
+      if(menu&&menu.classList.contains('open')){
+        menu.classList.remove('open');
+        btn&&btn.classList.remove('open');
+        document.body.style.overflow='';
+      }
+    }
+  });
+
+  // Fallback: показываем всё через 700ms если IO не сработал
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
+  <button class="m-menu-close" onclick="toggleMenu()" aria-label="Закрыть меню"></button>
+  <nav class="m-menu-links">
+    <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/rezidents" onclick="toggleMenu()">Резиденты</a>
+    <a href="/collab" onclick="toggleMenu()">Сотрудничество</a>
+    <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+</body>
+</html>
