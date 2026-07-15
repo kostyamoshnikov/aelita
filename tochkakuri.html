@@ -82,7 +82,7 @@
 
   /* PHYSICS */
   .physics{background:var(--coal);padding:60px;margin-top:2px;display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center}
-  .physics-temp{font-family:'Montserrat',sans-serif;font-size:clamp(52px,8vw,90px);font-weight:200;color:var(--gold);line-height:1;white-space:nowrap}
+  .physics-temp{font-family:'Montserrat',sans-serif;font-size:clamp(28px,6vw,90px);font-weight:200;color:var(--gold);line-height:1;white-space:nowrap;overflow:hidden;max-width:100%}
   .physics-text p{color:var(--sand);font-size:15px;line-height:1.8;margin-bottom:10px}
   .physics-text p strong{color:var(--bone);font-weight:400}
   @media(max-width:760px){.physics{grid-template-columns:1fr;padding:40px 28px}}
@@ -100,7 +100,7 @@
   .prog-right .age{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:4px 10px}
   .prog-right .dur{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--sand)}
   .prog-note{background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:18px 24px;margin-top:2px;font-size:14px;color:var(--sand)}
-  @media(max-width:760px){.prog-item{grid-template-columns:1fr;gap:12px}.prog-right{align-items:flex-start;flex-direction:row}}
+  @media(max-width:760px){.prog-item{grid-template-columns:1fr;gap:12px}.prog-right{align-items:flex-start;flex-direction:row;white-space:normal;flex-wrap:wrap}}
 
   /* SCHEDULE */
   .sched{background:var(--coal)}

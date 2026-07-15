@@ -12,7 +12,7 @@
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:900px}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
-body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased}
+body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100vw}
 ::selection{background:var(--gold);color:var(--ink)}
 a{color:var(--gold);text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
@@ -34,6 +34,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .back-link:hover{border-color:var(--gold);color:var(--gold)}
 footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
 footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
+
+/* ── Запрет горизонтального скролла (глобально) ── */
+html, body { max-width: 100%; overflow-x: hidden; }
+img, video, iframe, svg { max-width: 100%; height: auto; }
+@media(max-width:760px) {
+  .wrap { padding: 0 16px; }
+  table { width: 100%; display: block; overflow-x: auto; }
+  pre, code { white-space: pre-wrap; word-break: break-all; }
+}
 </style>
 </head>
 <body>
