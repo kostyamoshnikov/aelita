@@ -266,6 +266,38 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .gallery{grid-template-columns:1fr 1fr !important}
     .grid{grid-template-columns:1fr 1fr !important}
   }
+
+  /* ── Cookie banner ── */
+  #cookie-banner{
+    position:fixed;bottom:0;left:0;right:0;z-index:999;
+    background:rgba(11,11,13,.97);backdrop-filter:blur(8px);
+    border-top:1px solid rgba(214,181,122,.2);
+    padding:16px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    font-family:'Inter',system-ui,sans-serif;
+    transform:translateY(0);transition:transform .4s ease;
+  }
+  #cookie-banner.hidden{transform:translateY(110%)}
+  #cookie-banner p{
+    color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0;
+  }
+  #cookie-banner a{color:var(--gold);text-decoration:none}
+  #cookie-banner a:hover{text-decoration:underline}
+  .cookie-actions{display:flex;gap:12px;flex-shrink:0}
+  .cookie-btn{
+    font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;
+    text-transform:uppercase;padding:10px 20px;cursor:pointer;
+    border:none;transition:all .3s;white-space:nowrap;
+  }
+  .cookie-btn-accept{background:var(--gold);color:var(--ink)}
+  .cookie-btn-accept:hover{opacity:.85}
+  .cookie-btn-more{background:transparent;color:var(--sand);border:1px solid rgba(201,184,163,.3)}
+  .cookie-btn-more:hover{border-color:var(--gold);color:var(--gold)}
+  @media(max-width:600px){
+    #cookie-banner{flex-direction:column;align-items:flex-start;gap:14px}
+    .cookie-actions{width:100%}
+    .cookie-btn{flex:1;text-align:center}
+  }
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -549,5 +581,28 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
 </div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+<script>
+  (function(){
+    if(localStorage.getItem('cookies_accepted')){
+      var b=document.getElementById('cookie-banner');
+      if(b) b.style.display='none';
+    }
+  })();
+  function acceptCookies(){
+    localStorage.setItem('cookies_accepted','1');
+    var b=document.getElementById('cookie-banner');
+    if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
+  }
+</script>
+<!-- /Cookie Banner -->
 </body>
 </html>
