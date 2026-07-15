@@ -329,11 +329,11 @@
     <div class="form-grid">
       <div class="field">
         <label>Имя</label>
-        <input type="text" placeholder="Ваше имя">
+        <input id="cf-name" type="text" placeholder="Ваше имя">
       </div>
       <div class="field">
         <label>Кто вы</label>
-        <select>
+        <select id="cf-who">
           <option value="">Выберите...</option>
           <option>Площадка или организатор гастролей</option>
           <option>Партнёр или спонсор</option>
@@ -345,15 +345,15 @@
       </div>
       <div class="field">
         <label>Почта</label>
-        <input type="email" placeholder="email@example.com">
+        <input id="cf-email" type="email" placeholder="email@example.com">
       </div>
       <div class="field">
         <label>Телефон (необязательно)</label>
-        <input type="tel" placeholder="+7 ...">
+        <input id="cf-tel" type="tel" placeholder="+7 ...">
       </div>
       <div class="field full">
         <label>Сообщение</label>
-        <textarea placeholder="Расскажите о вашем запросе..."></textarea>
+        <textarea id="cf-msg" placeholder="Расскажите о вашем запросе..."></textarea>
       </div>
       <div class="field full">
         <button class="submit-btn" onclick="handleSubmit()">Отправить</button>
@@ -400,8 +400,20 @@
 </footer>
 
 <script>
-  function handleSubmit(){
-    alert('Форма пока в демо-режиме. Пишите напрямую: aelita.production@yandex.ru');
+  async function handleSubmit(){
+    const name  = (document.getElementById('cf-name')?.value || '').trim();
+    const who   = (document.getElementById('cf-who')?.value || '').trim();
+    const email = (document.getElementById('cf-email')?.value || '').trim();
+    const tel   = (document.getElementById('cf-tel')?.value || '').trim();
+    const msg   = (document.getElementById('cf-msg')?.value || '').trim();
+    if(!name || !email || !msg){ alert('Заполните имя, почту и сообщение.'); return; }
+    const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Сообщение': msg};
+    await Promise.all([
+      sendTelegram('Сотрудничество — заявка', fields),
+      sendFormspree('Сотрудничество — заявка', fields)
+    ]);
+    const btn = document.querySelector('.submit-btn');
+    if(btn){ btn.textContent = 'Отправлено'; btn.disabled = true; btn.style.opacity = '.6'; }
   }
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
@@ -463,6 +475,24 @@
   });
 
   const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+
+  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  async function sendFormspree(formName, fields) {
+    try {
+      var data = new FormData();
+      data.append('_subject', '[AELITA] ' + formName);
+      var keys = Object.keys(fields);
+      for (var i = 0; i < keys.length; i++) {
+        data.append(keys[i], String(fields[keys[i]] || '').trim());
+      }
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: data,
+        headers: {'Accept': 'application/json'}
+      });
+    } catch(e) { console.log('Formspree error:', e); }
+  }
 
   async function sendTelegram(formName, fields) {
     var lines = ['[AELITA] ' + formName, ''];

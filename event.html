@@ -362,6 +362,12 @@
       'Кто вы': sel ? sel.value : '',
       'Сообщение': msg ? msg.value : '',
     });
+    await sendFormspree('Для организаторов — заявка', {
+      'Имя': n.value,
+      'Email': e.value,
+      'Кто вы': sel ? sel.value : '',
+      'Сообщение': msg ? msg.value : '',
+    });
     document.getElementById('ok_'+id).style.display='block';
     document.querySelectorAll('#form_'+id+' input, #form_'+id+' textarea, #form_'+id+' select').forEach(f=>f.value='');
   }
@@ -423,6 +429,24 @@
   });
 
   const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+
+  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  async function sendFormspree(formName, fields) {
+    try {
+      var data = new FormData();
+      data.append('_subject', '[AELITA] ' + formName);
+      var keys = Object.keys(fields);
+      for (var i = 0; i < keys.length; i++) {
+        data.append(keys[i], String(fields[keys[i]] || '').trim());
+      }
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: data,
+        headers: {'Accept': 'application/json'}
+      });
+    } catch(e) { console.log('Formspree error:', e); }
+  }
 
   async function sendTelegram(formName, fields) {
     var lines = ['[AELITA] ' + formName, ''];
