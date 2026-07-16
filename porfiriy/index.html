@@ -339,6 +339,18 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         accurateTrackBounce:true,
         webvisor:true
    });
+
+  // Lazy load images
+  const imgObs = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        const img=e.target;
+        if(img.dataset.src){img.src=img.dataset.src;}
+        imgObs.unobserve(img);
+      }
+    });
+  },{rootMargin:'300px'});
+  document.querySelectorAll('img[data-src]').forEach(el=>imgObs.observe(el));
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -468,7 +480,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <div class="sec-head reveal"><h2>Смотреть</h2></div>
     <div class="reveal" style="max-width:720px">
       <div class="video-wrap">
-        <iframe src="about:blank" data-src="https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239086&hd=2&js_api=1" title="Тизер спектакля «Порфирий»" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        <iframe src="https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239086&hd=2" title="Тизер спектакля «Порфирий»" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
       </div>
       <p class="video-label">Тизер спектакля «Порфирий»</p>
     </div>
