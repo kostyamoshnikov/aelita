@@ -35,12 +35,22 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .contact-body{padding:80px 0}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:2px}
   .contact-block{background:var(--coal);padding:52px 44px}
-  .contact-block h2{font-size:clamp(16px,1.8vw,20px);letter-spacing:.22em;margin-bottom:28px}
-  .contact-line{display:flex;align-items:baseline;gap:20px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+  .contact-block h2{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(14px,1.6vw,17px);letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:32px}
+  .contact-line{display:flex;align-items:center;gap:20px;padding:18px 0;border-bottom:1px solid rgba(232,230,225,.07);transition:background .3s}
   .contact-line:last-child{border-bottom:none}
-  .contact-line .label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);min-width:80px;flex-shrink:0}
-  .contact-line a,.contact-line span{color:var(--bone);text-decoration:none;font-size:15px;transition:color .3s}
+  .contact-line .label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:rgba(201,184,163,.45);min-width:100px;flex-shrink:0}
+  .contact-line a,.contact-line span{color:var(--bone);text-decoration:none;font-size:15px;transition:color .3s;font-weight:300}
   .contact-line a:hover{color:var(--gold)}
+  /* Ссылки сотрудничества — крупнее */
+  .contact-block.collab .contact-line{padding:20px 0}
+  .contact-block.collab .contact-line a{font-family:'Montserrat',sans-serif;font-size:clamp(14px,1.8vw,17px);letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:8px}
+  .contact-block.collab .contact-line a::after{content:"→";font-size:12px;transition:transform .3s}
+  .contact-block.collab .contact-line a:hover::after{transform:translateX(4px)}
+  .contact-block.collab .contact-line a:hover{color:var(--bone)}
+  @media(max-width:760px){
+    .contact-block{padding:36px 24px}
+    .contact-line .label{min-width:80px}
+  }
 
   .socials-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:2px}
   .social-item{background:var(--coal);padding:34px 28px;text-decoration:none;display:block;transition:background .3s}
@@ -323,23 +333,23 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
           <a href="https://t.me/aelita_production" target="_blank" rel="noopener">@aelita_production</a>
         </div>
       </div>
-      <div class="contact-block">
+      <div class="contact-block collab">
         <h2>Сотрудничество</h2>
         <div class="contact-line">
           <span class="label">Творческим</span>
-          <a href="/creativity">Для режиссёров и артистов →</a>
+          <a href="/creativity">Для режиссёров и артистов</a>
         </div>
         <div class="contact-line">
           <span class="label">Бизнесу</span>
-          <a href="/business">Искусство для компаний →</a>
+          <a href="/business">Искусство для компаний</a>
         </div>
         <div class="contact-line">
           <span class="label">Организаторам</span>
-          <a href="/event">Продюсирование событий →</a>
+          <a href="/event">Продюсирование событий</a>
         </div>
         <div class="contact-line">
           <span class="label">Партнёрам</span>
-          <a href="/partners">Экосистема AELITA →</a>
+          <a href="/partners">Экосистема AELITA</a>
         </div>
       </div>
     </div>
