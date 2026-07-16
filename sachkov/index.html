@@ -158,6 +158,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     overflow:hidden;
   }
   .m-menu.open{transform:translateX(0)}
+  /* Оверлей за меню */
+  .m-overlay{
+    position:fixed;inset:0;z-index:99;
+    background:rgba(0,0,0,.6);
+    opacity:0;pointer-events:none;
+    transition:opacity .35s ease;
+  }
+  .m-overlay.open{opacity:1;pointer-events:all}
   .m-menu::before{
     content:"";position:absolute;
     top:-5%;left:65%;width:1px;height:80%;

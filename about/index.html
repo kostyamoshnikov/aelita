@@ -425,8 +425,10 @@ footer a:hover{color:var(--bone)}
   function toggleMenu(){
     const btn=document.querySelector('.burger');
     const menu=document.getElementById('mMenu');
+    const overlay=document.getElementById('m-overlay');
     btn.classList.toggle('open');
     menu.classList.toggle('open');
+    if(overlay) overlay.classList.toggle('open');
     document.body.style.overflow=menu.classList.contains('open')?'hidden':'';
   }
   function handleOverlayClick(e){
