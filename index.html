@@ -261,7 +261,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     color:rgba(201,184,163,.55);font-size:12px;line-height:1.9;
     border-top:1px solid rgba(232,230,225,.06);padding-top:30px;
   }
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+  
+  @media(max-width:760px){
+    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .foot-grid>div:first-child{grid-column:1/3}
+    footer h4{margin-bottom:12px}
+    footer a{margin-bottom:8px;font-size:13px}
+  }
+  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
 
   /* scroll reveal */
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease}
@@ -458,6 +465,22 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .cookie-actions{width:100%}
     .cookie-btn{flex:1;text-align:center}
   }
+
+  /* Кнопка наверх */
+  #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
+  #back-to-top.visible{opacity:1;transform:translateY(0)}
+  #back-to-top:hover{background:rgba(214,181,122,.25)}
+
+  /* ── Модальное окно Спасибо ── */
+  .thanks-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
+  .thanks-modal.open{opacity:1;pointer-events:all}
+  .thanks-box{background:var(--coal);border:1px solid rgba(214,181,122,.2);padding:52px 44px;max-width:440px;width:90%;text-align:center;transform:translateY(20px);transition:transform .4s}
+  .thanks-modal.open .thanks-box{transform:translateY(0)}
+  .thanks-icon{font-size:32px;margin-bottom:20px}
+  .thanks-box h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:20px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+  .thanks-box p{color:var(--sand);font-size:14px;line-height:1.7;margin-bottom:28px}
+  .thanks-close{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:13px 28px;cursor:pointer;transition:opacity .3s}
+  .thanks-close:hover{opacity:.85}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -472,6 +495,21 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         accurateTrackBounce:true,
         webvisor:true
    });
+
+  // Активное состояние навигации
+  (function(){
+    const path = window.location.pathname.replace(/\/$/,'') || '/';
+    document.querySelectorAll('.nav-links a, .m-menu-links a').forEach(a => {
+      const href = a.getAttribute('href').replace(/\/$/,'') || '/';
+      if(href === path) a.classList.add('active');
+    });
+  })();
+
+  // Показываем модальное окно после отправки формы
+  function showThanks(){
+    const m=document.getElementById('thanks-modal');
+    if(m){m.classList.add('open');setTimeout(()=>m.classList.remove('open'),5000);}
+  }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -484,6 +522,87 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   gtag('config', 'G-6KZFGH86NJ');
 </script>
 <!-- /Google Analytics -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "AELITA PRODUCTION",
+      "alternateName": "АЭЛИТА ПРОДАКШЕН",
+      "url": "https://aelita-production.ru",
+      "logo": "https://aelita-production.ru/logo.png",
+      "description": "Театральная продюсерская компания. Создаём искусство, после которого невозможно смотреть на мир так же.",
+      "email": "aelita.production@yandex.ru",
+      "telephone": "+79605151690",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ул. Ленина, д. 51",
+        "addressLocality": "Калуга",
+        "addressRegion": "Калужская область",
+        "postalCode": "248016",
+        "addressCountry": "RU"
+      },
+      "sameAs": [
+        "https://vk.com/aelita_production",
+        "https://t.me/aelita_production",
+        "https://www.youtube.com/@aelita_production",
+        "https://dzen.ru/aelita_production"
+      ]
+    },
+    {
+      "@type": "Event",
+      "name": "«ИОВ:материал» — современная мистерия",
+      "description": "Современная мистерия Екатерины Абдуловой. Человек как материал, который искусство переплавляет в новую форму. 12+",
+      "startDate": "2026-10-01",
+      "endDate": "2026-10-31",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "PerformingArtsTheater",
+        "name": "Новая сцена Александринского театра",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Санкт-Петербург",
+          "addressCountry": "RU"
+        }
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      },
+      "url": "https://aelita-production.ru/iov",
+      "image": "https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/iov-photo-1_pzpokh.jpg"
+    },
+    {
+      "@type": "Event",
+      "name": "Фестиваль «Точка Кюри»",
+      "description": "Фестиваль современного искусства в ЦСИ «Быль». 22–25 октября 2026, Старый Оскол.",
+      "startDate": "2026-10-22",
+      "endDate": "2026-10-25",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": "ЦСИ «Быль»",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Старый Оскол",
+          "addressCountry": "RU"
+        }
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      },
+      "url": "https://aelita-production.ru/tochkacuiri"
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -645,7 +764,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       </a>
       <a href="/collaboration" class="card reveal" style="color:inherit;text-decoration:none;display:block">
         <h3>Инвесторам</h3>
-        <p>Портфель постановок и фестивальные проекты. Пришлём презентацию и планы сезонов.</p>
+        <p>Каталог постановок и фестивальные проекты. Пришлём презентацию и планы сезонов.</p>
       </a>
       <a href="/creativity" class="card reveal" style="color:inherit;text-decoration:none;display:block">
         <h3>Режиссёрам и артистам</h3>
@@ -708,7 +827,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br>
-      <a href="/oferta" style="color:rgba(201,184,163,.5)">Договор публичной оферты</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика обработки персональных данных</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      <a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a>
     </div>
   </div>
 </footer>
@@ -818,6 +937,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/rezidents" onclick="toggleMenu()">Резиденты</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
@@ -849,5 +969,23 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 </script>
 <!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+  window.addEventListener('scroll',()=>{
+    const btn=document.getElementById('back-to-top');
+    if(btn) btn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+
+<!-- Модальное окно Спасибо -->
+<div class="thanks-modal" id="thanks-modal">
+  <div class="thanks-box">
+    <div class="thanks-icon">✦</div>
+    <h3>Спасибо</h3>
+    <p>Ваше сообщение получено. Мы свяжемся с вами в течение рабочего дня.</p>
+    <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Закрыть</button>
+  </div>
+</div>
 </body>
 </html>

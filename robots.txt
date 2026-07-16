@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Юридические страницы — не индексировать
+Disallow: /oferta
+Disallow: /privacy
+Disallow: /cookies
+Disallow: /tg-test
+
+Sitemap: https://aelita-production.ru/sitemap.xml

@@ -56,7 +56,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
   footer a:hover{color:var(--bone)}
   .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
+  @media(max-width:760px){
+    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .foot-grid>div:first-child{grid-column:1/3}
+    footer h4{margin-bottom:12px}
+    footer a{margin-bottom:8px;font-size:13px}
+  }
+  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
   .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
   .reveal.on{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
@@ -261,6 +268,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .cookie-actions{width:100%}
     .cookie-btn{flex:1;text-align:center}
   }
+
+  /* Кнопка наверх */
+  #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
+  #back-to-top.visible{opacity:1;transform:translateY(0)}
+  #back-to-top:hover{background:rgba(214,181,122,.25)}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -275,6 +287,15 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         accurateTrackBounce:true,
         webvisor:true
    });
+
+  // Активное состояние навигации
+  (function(){
+    const path = window.location.pathname.replace(/\/$/,'') || '/';
+    document.querySelectorAll('.nav-links a, .m-menu-links a').forEach(a => {
+      const href = a.getAttribute('href').replace(/\/$/,'') || '/';
+      if(href === path) a.classList.add('active');
+    });
+  })();
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -312,7 +333,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <h1>Археология человеческого</h1>
     <p class="dir">Вечер современного балета</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
-      <a class="btn-outline" href="index.html#subscribe">Узнать о новых датах</a>
+      <a class="btn-outline" href="/#subscribe">Узнать о новых датах</a>
       <a class="btn-outline" href="/projects">Все проекты</a>
     </div>
   </div>
@@ -330,7 +351,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
     <div class="no-shows reveal">
       <p>Ближайших показов пока нет. Подпишитесь — сообщим о новых датах первыми.</p>
-      <a class="btn-outline" href="index.html#subscribe">Узнать о новых датах</a>
+      <a class="btn-outline" href="/#subscribe">Узнать о новых датах</a>
     </div>
   </div>
 </section>
@@ -341,7 +362,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <div class="other-grid reveal">
       <a class="other-card" href="/iov" style="color:inherit;text-decoration:none"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Екатерины Абдуловой. 12+</p></a>
       <a class="other-card" href="/community" style="color:inherit;text-decoration:none"><span class="tag">Книжный клуб</span><h3>AELITA COMMUNITY</h3><p>Книжные встречи — пространство, наполненное смыслом.</p></a>
-      <a class="other-card" href="/projects" style="color:inherit;text-decoration:none"><span class="tag">Все проекты</span><h3>Портфель компании</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
+      <a class="other-card" href="/projects" style="color:inherit;text-decoration:none"><span class="tag">Все проекты</span><h3>Каталог проектов</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
     </div>
   </div>
 </section>
@@ -379,7 +400,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
-      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br><a href="/oferta" style="color:rgba(201,184,163,.5)">Договор публичной оферты</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика обработки персональных данных</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
   </div>
 </footer>
@@ -464,6 +485,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/rezidents" onclick="toggleMenu()">Резиденты</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
@@ -495,5 +517,13 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 </script>
 <!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+  window.addEventListener('scroll',()=>{
+    const btn=document.getElementById('back-to-top');
+    if(btn) btn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
 </body>
 </html>

@@ -193,7 +193,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
   footer a:hover{color:var(--bone)}
   .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
+  @media(max-width:760px){
+    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .foot-grid>div:first-child{grid-column:1/3}
+    footer h4{margin-bottom:12px}
+    footer a{margin-bottom:8px;font-size:13px}
+  }
+  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
 
   .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
   .reveal.on{opacity:1;transform:none}
@@ -365,6 +372,41 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .cookie-actions{width:100%}
     .cookie-btn{flex:1;text-align:center}
   }
+
+  /* Кнопка наверх */
+  #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
+  #back-to-top.visible{opacity:1;transform:translateY(0)}
+  #back-to-top:hover{background:rgba(214,181,122,.25)}
+
+  /* ── Мобильный CTA-бар ── */
+  .mob-cta{display:none}
+  @media(max-width:760px){
+    .mob-cta{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      position:fixed;bottom:0;left:0;right:0;z-index:45;
+      background:rgba(11,11,13,.97);backdrop-filter:blur(8px);
+      border-top:1px solid rgba(214,181,122,.2);
+      padding:14px 20px;
+      transform:translateY(0);transition:transform .3s;
+    }
+    .mob-cta.hidden{transform:translateY(110%)}
+    .mob-cta-title{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);flex-shrink:0}
+    .mob-cta-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:11px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;flex-shrink:0}
+    .mob-cta-btn.gold{background:var(--gold);color:var(--ink)}
+    .mob-cta-btn.gold:hover{opacity:.85}
+    .mob-cta-btn.outline{border:1px solid rgba(201,184,163,.35);color:var(--sand)}
+  }
+
+  /* ── Модальное окно Спасибо ── */
+  .thanks-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
+  .thanks-modal.open{opacity:1;pointer-events:all}
+  .thanks-box{background:var(--coal);border:1px solid rgba(214,181,122,.2);padding:52px 44px;max-width:440px;width:90%;text-align:center;transform:translateY(20px);transition:transform .4s}
+  .thanks-modal.open .thanks-box{transform:translateY(0)}
+  .thanks-icon{font-size:32px;margin-bottom:20px}
+  .thanks-box h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:20px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+  .thanks-box p{color:var(--sand);font-size:14px;line-height:1.7;margin-bottom:28px}
+  .thanks-close{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:13px 28px;cursor:pointer;transition:opacity .3s}
+  .thanks-close:hover{opacity:.85}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -379,6 +421,21 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         accurateTrackBounce:true,
         webvisor:true
    });
+
+  // Активное состояние навигации
+  (function(){
+    const path = window.location.pathname.replace(/\/$/,'') || '/';
+    document.querySelectorAll('.nav-links a, .m-menu-links a').forEach(a => {
+      const href = a.getAttribute('href').replace(/\/$/,'') || '/';
+      if(href === path) a.classList.add('active');
+    });
+  })();
+
+  // Показываем модальное окно после отправки формы
+  function showThanks(){
+    const m=document.getElementById('thanks-modal');
+    if(m){m.classList.add('open');setTimeout(()=>m.classList.remove('open'),5000);}
+  }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -737,7 +794,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН» · Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
-      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br><a href="/oferta" style="color:rgba(201,184,163,.5)">Договор публичной оферты</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика обработки персональных данных</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      ОГРН 1254000006644 · ИНН 4000027320 · © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
   </div>
 </footer>
@@ -899,6 +956,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/rezidents" onclick="toggleMenu()">Резиденты</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
@@ -930,5 +988,44 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 </script>
 <!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+  window.addEventListener('scroll',()=>{
+    const btn=document.getElementById('back-to-top');
+    if(btn) btn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">«Точка Кюри»</span>
+  
+  <a class="mob-cta-btn gold" href="#tickets">22–25 октября · Старый Оскол</a>
+</div>
+<script>
+  // Скрываем CTA-бар когда пользователь у формы/афиши
+  (function(){
+    const bar = document.getElementById('mob-cta');
+    if(!bar) return;
+    const targets = document.querySelectorAll('#afisha, #subscribe, #contacts, .contact-sec');
+    if(!targets.length) return;
+    const obs = new IntersectionObserver(es=>{
+      const visible = es.some(e=>e.isIntersecting);
+      bar.classList.toggle('hidden', visible);
+    }, {threshold:0.1});
+    targets.forEach(t=>obs.observe(t));
+  })();
+</script>
+
+<!-- Модальное окно Спасибо -->
+<div class="thanks-modal" id="thanks-modal">
+  <div class="thanks-box">
+    <div class="thanks-icon">✦</div>
+    <h3>Спасибо</h3>
+    <p>Ваше сообщение получено. Мы свяжемся с вами в течение рабочего дня.</p>
+    <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Закрыть</button>
+  </div>
+</div>
 </body>
 </html>

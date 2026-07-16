@@ -91,6 +91,11 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     .cookie-actions{width:100%}
     .cookie-btn{flex:1;text-align:center}
   }
+
+  /* Кнопка наверх */
+  #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
+  #back-to-top.visible{opacity:1;transform:translateY(0)}
+  #back-to-top:hover{background:rgba(214,181,122,.25)}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -105,6 +110,15 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
         accurateTrackBounce:true,
         webvisor:true
    });
+
+  // Активное состояние навигации
+  (function(){
+    const path = window.location.pathname.replace(/\/$/,'') || '/';
+    document.querySelectorAll('.nav-links a, .m-menu-links a').forEach(a => {
+      const href = a.getAttribute('href').replace(/\/$/,'') || '/';
+      if(href === path) a.classList.add('active');
+    });
+  })();
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -173,14 +187,14 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     <p>6.2. Рекомендуем периодически просматривать эту страницу для получения актуальной информации.</p>
 
     <h2>7. Контактная информация</h2>
-    <p>По всем вопросам, связанным с настоящим Соглашением, вы можете обратиться по адресу: <a href="mailto:aelita_production@mail.ru">aelita_production@mail.ru</a>.</p>
+    <p>По всем вопросам, связанным с настоящим Соглашением, вы можете обратиться по адресу: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>.</p>
 
     <div class="req">
       <strong>ООО «АЭЛИТА ПРОДАКШЕН»</strong><br>
       ИНН 4000027320 · КПП 400001001 · ОГРН 1254000006644<br>
       Юридический адрес: 248016, Россия, Калужская обл., г. Калуга, ул. Ленина, д. 51<br>
       Сайт: https://aelita-production.ru<br>
-      Email: <a href="mailto:aelita_production@mail.ru">aelita_production@mail.ru</a>
+      Email: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
     </div>
 
     <p style="margin-top:28px">См. также: <a href="/oferta">Договор публичной оферты</a> · <a href="/privacy">Политика обработки персональных данных</a></p>
@@ -216,5 +230,13 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
   }
 </script>
 <!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+  window.addEventListener('scroll',()=>{
+    const btn=document.getElementById('back-to-top');
+    if(btn) btn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
 </body>
 </html>
