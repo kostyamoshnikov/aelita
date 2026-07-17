@@ -237,16 +237,18 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 
   .m-menu-close{
-    position:absolute;top:28px;right:24px;
-    background:none;border:none;cursor:pointer;
-    width:36px;height:36px;
+    position:absolute;top:18px;right:18px;
+    background:rgba(214,181,122,.12);
+    border:1px solid rgba(214,181,122,.3);
+    cursor:pointer;width:44px;height:44px;
     display:flex;align-items:center;justify-content:center;
-    padding:0;
+    padding:0;transition:background .3s,border-color .3s;
   }
+  .m-menu-close:hover{background:rgba(214,181,122,.25);border-color:rgba(214,181,122,.6)}
   .m-menu-close::before,.m-menu-close::after{
     content:"";position:absolute;
-    width:18px;height:1px;background:var(--sand);
-    transition:background .3s,transform .3s;
+    width:18px;height:1px;background:var(--bone);
+    transition:background .3s;
   }
   .m-menu-close::before{transform:rotate(45deg)}
   .m-menu-close::after{transform:rotate(-45deg)}
