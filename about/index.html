@@ -38,13 +38,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);background:var(--gold)}
 @media(max-width:760px){.burger{display:flex}}
-.m-menu{position:fixed;top:0;right:0;bottom:0;width:min(340px,100vw);background:var(--coal);z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);padding:80px 40px 40px}
+.m-menu{
+    position:fixed;inset:0;z-index:150;
+    background:var(--ink);
+    display:flex;flex-direction:column;justify-content:center;
+    padding:80px 40px 60px;
+    transform:translateX(100%);
+    transition:transform .5s cubic-bezier(.16,1,.3,1);
+  }
+  .m-menu.open{transform:translateX(0)}
 .m-menu.open{transform:translateX(0)}
 .m-menu::before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:-1;opacity:0;transition:opacity .4s;pointer-events:none}
 .m-menu.open::before{opacity:1}
 .m-menu-links{display:flex;flex-direction:column;gap:4px}
-.m-menu-links a{font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);padding:14px 0;border-bottom:1px solid rgba(232,230,225,.06);transform:translateX(20px);opacity:0;transition:transform .4s,opacity .4s,color .3s}
-.m-menu.open .m-menu-links a{transform:translateX(0);opacity:1}
+.m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
+.m-menu.open .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
 .m-menu-links a:hover,.m-menu-links a.active{color:var(--gold)}
 .m-menu-links a:nth-child(1){transition-delay:.1s}
 .m-menu-links a:nth-child(2){transition-delay:.18s}
@@ -52,11 +76,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
 .m-menu-links a:nth-child(4){transition-delay:.34s}
 .m-menu-links a:nth-child(5){transition-delay:.42s}
 .m-menu-links a:nth-child(6){transition-delay:.50s}
-.m-menu-close{position:absolute;top:28px;right:24px;background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
-.m-menu-close::before,.m-menu-close::after{content:"";position:absolute;width:18px;height:1px;background:var(--sand);transition:background .3s}
-.m-menu-close::before{transform:rotate(45deg)}
-.m-menu-close::after{transform:rotate(-45deg)}
-.m-menu-close:hover::before,.m-menu-close:hover::after{background:var(--gold)}
+
+
+
+
+
 .m-menu-contacts{margin-top:32px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.24em;color:rgba(201,184,163,.45);text-transform:uppercase}
 
 /* Hero */
@@ -171,7 +195,15 @@ footer a:hover{color:var(--bone)}
     nav .logo small{font-size:7px;letter-spacing:.4em}
     section{padding:60px 0}
     .m-menu{padding:70px 24px 40px}
-    .m-menu-links a{font-size:12px;letter-spacing:.18em;padding:12px 0}
+    .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
     .stat-num{font-size:clamp(36px,9vw,52px)}
     .ev-date{font-size:clamp(24px,7vw,34px)}
     .bio-grid{gap:24px}
@@ -194,7 +226,15 @@ footer a:hover{color:var(--bone)}
     .nav-in{padding:16px 14px}
     nav .logo{font-size:11px;letter-spacing:.26em}
     .m-menu{padding:64px 20px 36px}
-    .m-menu-links a{font-size:11px;padding:11px 0}
+    .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
     section{padding:50px 0}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:clamp(32px,10vw,44px)}
@@ -207,6 +247,17 @@ footer a:hover{color:var(--bone)}
     .mob-cta{padding:12px 16px}
     .mob-cta-btn{font-size:9px;padding:10px 14px}
   }
+  .m-menu-close{
+    position:absolute;top:20px;right:20px;
+    width:48px;height:48px;
+    background:rgba(214,181,122,.12);
+    border:1px solid rgba(214,181,122,.35);
+    color:var(--bone);font-size:22px;line-height:1;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .3s,border-color .3s;
+    z-index:10;
+  }
+  .m-menu-close:hover{background:rgba(214,181,122,.25);border-color:var(--gold);color:var(--gold)}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -250,7 +301,7 @@ footer a:hover{color:var(--bone)}
 </nav>
 
 <div id="mMenu" class="m-menu" onclick="handleOverlayClick(event)">
-  <button class="m-menu-close" onclick="toggleMenu()" aria-label="Закрыть"></button>
+  <button class="m-menu-close" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
   <div class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
@@ -481,10 +532,10 @@ footer a:hover{color:var(--bone)}
   function toggleMenu(){
     const btn=document.querySelector('.burger');
     const menu=document.getElementById('mMenu');
-    const overlay=document.getElementById('m-overlay');
+    
     btn.classList.toggle('open');
     menu.classList.toggle('open');
-    if(overlay) overlay.classList.toggle('open');
+    
     document.body.style.overflow=menu.classList.contains('open')?'hidden':'';
   }
   function handleOverlayClick(e){

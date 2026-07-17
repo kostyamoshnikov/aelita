@@ -113,7 +113,15 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     nav .logo small{font-size:7px;letter-spacing:.4em}
     section{padding:60px 0}
     .m-menu{padding:70px 24px 40px}
-    .m-menu-links a{font-size:12px;letter-spacing:.18em;padding:12px 0}
+    .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
     .stat-num{font-size:clamp(36px,9vw,52px)}
     .ev-date{font-size:clamp(24px,7vw,34px)}
     .bio-grid{gap:24px}
@@ -136,7 +144,15 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     .nav-in{padding:16px 14px}
     nav .logo{font-size:11px;letter-spacing:.26em}
     .m-menu{padding:64px 20px 36px}
-    .m-menu-links a{font-size:11px;padding:11px 0}
+    .m-menu-links a{
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sand);padding:16px 0;
+    border-bottom:1px solid rgba(232,230,225,.07);
+    transform:translateX(20px);opacity:0;
+    transition:transform .4s,opacity .4s,color .3s;
+    display:block;
+  }
     section{padding:50px 0}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:clamp(32px,10vw,44px)}
@@ -149,6 +165,17 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     .mob-cta{padding:12px 16px}
     .mob-cta-btn{font-size:9px;padding:10px 14px}
   }
+  .m-menu-close{
+    position:absolute;top:20px;right:20px;
+    width:48px;height:48px;
+    background:rgba(214,181,122,.12);
+    border:1px solid rgba(214,181,122,.35);
+    color:var(--bone);font-size:22px;line-height:1;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .3s,border-color .3s;
+    z-index:10;
+  }
+  .m-menu-close:hover{background:rgba(214,181,122,.25);border-color:var(--gold);color:var(--gold)}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
