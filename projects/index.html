@@ -641,11 +641,13 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   function toggleMenu(){
     const btn = document.querySelector('.burger');
     const menu = document.getElementById('mMenu');
+    const close = document.getElementById('close-btn');
     if(!btn||!menu) return;
     const isOpen = menu.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
     btn.setAttribute('aria-expanded', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : '';
+    if(close) close.classList.toggle('visible', isOpen);
   }
   // Закрыть по Escape
   document.addEventListener('keydown', e=>{
