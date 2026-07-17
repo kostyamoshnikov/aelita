@@ -169,16 +169,18 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     .mob-cta-btn{font-size:9px;padding:10px 14px}
   }
   .m-menu-close{
-    position:absolute;top:20px;right:20px;
+    position:fixed;top:16px;right:16px;
     width:48px;height:48px;
-    background:rgba(214,181,122,.12);
-    border:1px solid rgba(214,181,122,.35);
-    color:var(--bone);font-size:22px;line-height:1;
+    background:rgba(11,11,13,.9);
+    border:1px solid rgba(214,181,122,.5);
+    color:var(--gold);font-size:24px;line-height:1;
     cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:background .3s,border-color .3s;
-    z-index:10;
+    transition:all .3s;
+    z-index:300;
+    opacity:0;pointer-events:none;
   }
-  .m-menu-close:hover{background:rgba(214,181,122,.25);border-color:var(--gold);color:var(--gold)}
+  .m-menu-close.visible{opacity:1;pointer-events:all}
+  .m-menu-close:hover{background:rgba(214,181,122,.15);border-color:var(--gold)}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -321,5 +323,7 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
     if(btn) btn.classList.toggle('visible', window.scrollY > 400);
   });
 </script>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 </body>
 </html>
