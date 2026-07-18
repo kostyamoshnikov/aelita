@@ -531,9 +531,19 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   /* ── Тизер ── */
   .teaser-section{position:relative;width:100%;background:#000;overflow:hidden}
-  .teaser-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
-  .teaser-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-  .teaser-label{text-align:center;margin-top:16px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(201,184,163,.5)}
+  .teaser-video-wrap{position:relative;width:100%;padding-bottom:56.25%;overflow:hidden}
+  .teaser-video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+  .teaser-sound-btn{
+    position:absolute;bottom:24px;right:24px;z-index:10;
+    display:flex;align-items:center;gap:8px;
+    background:rgba(11,11,13,.7);backdrop-filter:blur(4px);
+    border:1px solid rgba(214,181,122,.4);color:var(--sand);
+    font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    padding:10px 16px;cursor:pointer;transition:all .3s;
+  }
+  .teaser-sound-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .mute-line{display:block}
+  .teaser-sound-btn.on .mute-line{display:none}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -557,6 +567,21 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       if(href === path) a.classList.add('active');
     });
   })();
+
+  // Кнопка звука тизера
+  function toggleTeaserSound(btn) {
+    const iframe = document.querySelector('.teaser-video-wrap iframe');
+    if (!iframe) return;
+    const isOn = btn.classList.toggle('on');
+    const src = iframe.src;
+    if (isOn) {
+      iframe.src = src.replace('muted=true', 'muted=false');
+      btn.querySelector('span').textContent = 'Без звука';
+    } else {
+      iframe.src = src.replace('muted=false', 'muted=true');
+      btn.querySelector('span').textContent = 'Звук';
+    }
+  }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -635,6 +660,27 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     </button>
   </div>
 </nav>
+
+<!-- ТИЗЕР -->
+<section class="teaser-section" id="teaser">
+  <div class="teaser-video-wrap">
+    <iframe
+      src="https://player.cloudinary.com/embed/?cloud_name=kostyamoshnikov&public_id=IOV%3Amaterial%20TEASER&autoplay=true&muted=true&loop=true&controls=false&background=true"
+      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+      allowfullscreen
+      frameborder="0"
+      title="Тизер спектакля «ИОВ:материал»">
+    </iframe>
+    <button class="teaser-sound-btn" id="teaser-sound-btn" onclick="toggleTeaserSound(this)" aria-label="Включить звук">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+        <line x1="23" y1="9" x2="17" y2="15" class="mute-line"/>
+        <line x1="17" y1="9" x2="23" y2="15" class="mute-line"/>
+      </svg>
+      <span>Звук</span>
+    </button>
+  </div>
+</section>
 
 <!-- HERO -->
 <div class="hero">
