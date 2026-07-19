@@ -228,7 +228,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .photo-drive a.btn-drive{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 28px;text-decoration:none;transition:opacity .3s}
   .photo-drive a.btn-drive:hover{opacity:.85}
   .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
-  .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+  .video-wrap iframe,.video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%;border:0;object-fit:cover}
   .video-label{margin-top:14px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand)}
 
   /* ── Мобильная сетка (глобальный фикс) ── */
@@ -463,6 +463,24 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   gtag('config', 'G-6KZFGH86NJ');
 </script>
 <!-- /Google Analytics -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "Тизер спектакля «Инструкция для начинающих странников»",
+  "description": "Тизер танцевального спектакля Юлии Бычковой и Елены Иноземцевой, проект компании «Забава». AELITA PRODUCTION.",
+  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784388247/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%A2%D0%A0%D0%95%D0%99%D0%9B%D0%95%D0%A0_2025_AELITA_PRODUCTION_tsymbu.jpg",
+  "uploadDate": "2026-07-18",
+  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784388247/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%A2%D0%A0%D0%95%D0%99%D0%9B%D0%95%D0%A0_2025_AELITA_PRODUCTION_tsymbu.mp4",
+  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239073&hd=2",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AELITA PRODUCTION",
+    "url": "https://aelita-production.ru"
+  }
+}
+</script>
 </head>
 <body>
 <div class="curtain" aria-hidden="true"><div class="curtain-l"></div><div class="curtain-r"></div></div>
@@ -531,9 +549,12 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <div class="sec-head reveal"><h2>Смотреть</h2></div>
     <div class="reveal" style="max-width:720px">
       <div class="video-wrap">
-        <iframe src="https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239073&hd=2&js_api=1" title="Тизер спектакля «Инструкция для начинающих странников»" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        <video controls playsinline preload="metadata" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784388247/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%A2%D0%A0%D0%95%D0%99%D0%9B%D0%95%D0%A0_2025_AELITA_PRODUCTION_tsymbu.jpg">
+          <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784388247/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%A2%D0%A0%D0%95%D0%99%D0%9B%D0%95%D0%A0_2025_AELITA_PRODUCTION_tsymbu.mp4" type="video/mp4">
+        </video>
       </div>
       <p class="video-label">Тизер спектакля «Инструкция для начинающих странников»</p>
+      <p class="video-label"><a href="https://vkvideo.ru/video-229246987_456239073" target="_blank" rel="noopener">Смотреть в ВКонтакте →</a></p>
     </div>
   </div>
 </section>
