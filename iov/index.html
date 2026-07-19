@@ -43,7 +43,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   @media(max-width:760px){.nav-links{display:none}}
 
   /* ── hero ── */
-  .hero{height:70vw;max-height:85vh;min-height:280px;position:relative;display:flex;align-items:flex-end;padding-bottom:40px;overflow:hidden}
+  .hero{height:70vw;max-height:85vh;min-height:440px;position:relative;display:flex;align-items:flex-end;padding-bottom:40px;overflow:hidden}
   .hero-bg{position:absolute;inset:0;background-image:url('https://static.tildacdn.com/tild3438-3461-4564-b239-303634636236/6627.jpg');background-size:cover;background-position:center top;filter:brightness(.38)}
   .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.2) 0%,rgba(11,11,13,.0) 40%,rgba(11,11,13,.85) 80%,var(--ink) 100%)}
   .hero-beam{position:absolute;inset:0;pointer-events:none}
@@ -57,7 +57,12 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .hero-badge .age{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 10px;font-size:10px;letter-spacing:.3em}
   .hero-title{font-size:clamp(42px,9vw,100px);letter-spacing:.06em;line-height:1;margin-bottom:6px}
   .hero-title span{color:var(--gold)}
-  @media(max-width:480px){.hero-title{font-size:clamp(26px,10vw,90px);letter-spacing:.02em}}
+  @media(max-width:480px){
+    .hero{min-height:560px}
+    .hero-title{font-size:clamp(26px,10vw,90px);letter-spacing:.02em}
+    .hero-badge{margin-bottom:16px}
+    .hero-dir{margin-bottom:24px}
+  }
   .hero-sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(13px,1.6vw,17px);letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:8px}
   .hero-dir{font-size:14px;color:rgba(201,184,163,.7);letter-spacing:.1em;margin-bottom:40px}
   .hero-dir strong{color:var(--bone);font-weight:400}
