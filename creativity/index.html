@@ -31,6 +31,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .page-hero h1{font-size:clamp(26px,5vw,54px);letter-spacing:.14em;margin-bottom:18px;line-height:1.2}
   .page-hero .sub{color:var(--sand);font-size:16px;max-width:58ch;margin-bottom:36px}
   .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s}
+  .notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+  .notify-tab{background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s ease}
+  .notify-tab.active{border-color:var(--gold);color:var(--gold)}
+  .notify-tab:hover{border-color:var(--gold);color:var(--gold)}
+  .notify-bot-note{color:var(--sand);font-size:13px;margin-top:16px}
+  .btn-tg{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:15px 26px;text-decoration:none;transition:all .3s}
+  .btn-tg:hover{background:var(--gold);color:var(--ink)}
+
   .btn-gold:hover{opacity:.85}
   .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;display:inline-block;transition:all .3s}
   .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
@@ -506,7 +514,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 <div class="form-sec" id="form">
   <div class="wrap reveal">
     <div class="sec-head"><h2>Подать заявку</h2></div>
-    <p style="color:var(--sand);margin-bottom:36px;font-size:15px">Отправьте заявку — подберём оптимальное решение и свяжемся с вами. Или сразу: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+    <p style="color:var(--sand);margin-bottom:36px;font-size:15px">Оставьте заявку так, как удобнее — на сайте или в Telegram-боте. Или сразу: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+
+    <div class="notify-tabs" id="notifyTabs_c">
+      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_c('site', this)">Через сайт</button>
+      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_c('bot', this)">Через Telegram-бота</button>
+    </div>
+
+    <div id="formSite_c">
     <div class="form-grid" id="form_c">
       <div class="field"><label>Имя и фамилия</label><input type="text" id="name_c" placeholder="Иван Иванов"></div>
       <div class="field"><label>Электронная почта</label><input type="email" id="email_c" placeholder="email@example.com"></div>
@@ -523,8 +538,24 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <p class="form-ok" id="ok_c">Спасибо! Мы изучим вашу заявку и свяжемся в течение 2 рабочих дней.</p>
       </div>
     </div>
+    </div>
+
+    <div id="formBot_c" style="display:none">
+      <a class="btn-tg" href="https://t.me/aelita_production_bot?start=creativity" target="_blank" rel="noopener">Открыть бота и оставить заявку</a>
+      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
+    </div>
   </div>
 </div>
+
+<script>
+  function switchFormTab_c(tab, btn){
+    document.querySelectorAll('#notifyTabs_c .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_c').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_c').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+</script>
+
 <footer>
   <div class="wrap">
     <div class="foot-grid">

@@ -48,6 +48,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .form-sec .sub{color:var(--sand);margin-bottom:44px;font-size:15px}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .field{display:flex;flex-direction:column;gap:8px}
+  .notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+  .notify-tab{background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s ease}
+  .notify-tab.active{border-color:var(--gold);color:var(--gold)}
+  .notify-tab:hover{border-color:var(--gold);color:var(--gold)}
+  .notify-bot-note{color:var(--sand);font-size:13px;margin-top:16px}
+  .btn-tg{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:15px 26px;text-decoration:none;transition:all .3s}
+  .btn-tg:hover{background:var(--gold);color:var(--ink)}
+
   .field.full{grid-column:1/-1}
   .field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand)}
   .field input,.field select,.field textarea{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
@@ -552,7 +560,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="wrap reveal">
     <span class="eyebrow">Написать нам</span>
     <h2 style="margin-top:14px">Форма обратной связи</h2>
-    <p class="sub">Заполните — мы свяжемся в течение рабочего дня. Или пишите напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+    <p class="sub">Оставьте заявку так, как удобнее — на сайте или в Telegram-боте. Или пишите напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+
+    <div class="notify-tabs" id="notifyTabs_cl">
+      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_cl('site', this)">Через сайт</button>
+      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_cl('bot', this)">Через Telegram-бота</button>
+    </div>
+
+    <div id="formSite_cl">
     <div class="form-grid">
       <div class="field">
         <label>Имя</label>
@@ -587,8 +602,23 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <p class="form-note">Нажимая кнопку, вы соглашаетесь с <a href="/privacy" style="color:var(--gold)">политикой обработки персональных данных</a></p>
       </div>
     </div>
+    </div>
+
+    <div id="formBot_cl" style="display:none">
+      <a class="btn-tg" href="https://t.me/aelita_production_bot?start=collaboration" target="_blank" rel="noopener">Открыть бота и оставить заявку</a>
+      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
+    </div>
   </div>
 </div>
+
+<script>
+  function switchFormTab_cl(tab, btn){
+    document.querySelectorAll('#notifyTabs_cl .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_cl').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_cl').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+</script>
 
 <footer>
   <div class="wrap">

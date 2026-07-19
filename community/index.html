@@ -54,6 +54,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
   .hero-meta-item .val{font-size:15px;color:var(--bone)}
   .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer}
+  .notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+  .notify-tab{background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s ease}
+  .notify-tab.active{border-color:var(--gold);color:var(--gold)}
+  .notify-tab:hover{border-color:var(--gold);color:var(--gold)}
+  .notify-bot-note{color:var(--sand);font-size:13px;margin-top:16px}
+  .btn-tg{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:15px 26px;text-decoration:none;transition:all .3s}
+  .btn-tg:hover{background:var(--gold);color:var(--ink)}
+
   .btn-gold:hover{opacity:.85}
   .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px}
   .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
@@ -674,6 +682,13 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <span class="eyebrow">Присоединиться</span>
     <h2 style="margin-top:14px">Хочу в клуб</h2>
     <p>Напишите — расскажем о ближайшей встрече и как попасть в группу.</p>
+
+    <div class="notify-tabs" id="notifyTabs_j">
+      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Через сайт</button>
+      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_j('bot', this)">Через Telegram-бота</button>
+    </div>
+
+    <div id="formSite_j">
     <div class="join-form" id="joinForm">
       <div class="join-field"><label>Имя</label><input type="text" id="j-name" placeholder="Как вас зовут"></div>
       <div class="join-field"><label>Телефон или Telegram</label><input type="text" id="j-contact" placeholder="+7 ... или @username"></div>
@@ -682,8 +697,23 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
     </div>
     <div class="join-ok" id="joinOk">Спасибо! Катя свяжется с вами и расскажет о ближайшей встрече.</div>
+    </div>
+
+    <div id="formBot_j" style="display:none">
+      <a class="btn-tg" href="https://t.me/aelita_production_bot?start=community" target="_blank" rel="noopener">Открыть бота и оставить заявку</a>
+      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
+    </div>
   </div>
 </div>
+
+<script>
+  function switchFormTab_j(tab, btn){
+    document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_j').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_j').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+</script>
 
 <footer>
   <div class="wrap">
