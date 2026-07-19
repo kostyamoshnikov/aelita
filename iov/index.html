@@ -531,10 +531,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   /* ── Hero видео-фон ── */
   .hero-video-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:#000}
-  .hero-video-bg iframe{position:absolute;top:50%;left:50%;
+  .hero-video-bg video{position:absolute;top:50%;left:50%;
     width:177.78vh;height:56.25vw;
     min-width:100%;min-height:100%;
-    transform:translate(-50%,-50%);border:0}
+    transform:translate(-50%,-50%);
+    object-fit:cover;}
   .teaser-sound-btn{
     position:absolute;bottom:32px;right:24px;z-index:10;
     display:flex;align-items:center;gap:8px;
@@ -572,17 +573,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   // Кнопка звука тизера
   function toggleTeaserSound(btn) {
-    const iframe = document.querySelector('.teaser-video-wrap iframe');
-    if (!iframe) return;
+    const video = document.getElementById('hero-video');
+    if (!video) return;
     const isOn = btn.classList.toggle('on');
-    const src = iframe.src;
-    if (isOn) {
-      iframe.src = src.replace('muted=true', 'muted=false');
-      btn.querySelector('span').textContent = 'Без звука';
-    } else {
-      iframe.src = src.replace('muted=false', 'muted=true');
-      btn.querySelector('span').textContent = 'Звук';
-    }
+    video.muted = !isOn;
+    btn.querySelector('span').textContent = isOn ? 'Без звука' : 'Звук';
   }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
@@ -667,13 +662,9 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 <div class="hero">
   <!-- Тизер как фон -->
   <div class="hero-video-bg">
-    <iframe
-      src="https://player.cloudinary.com/embed/?cloud_name=kostyamoshnikov&public_id=IOV%3Amaterial%20TEASER&autoplay=true&muted=true&loop=true&controls=false&background=true"
-      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-      allowfullscreen
-      frameborder="0"
-      title="Тизер спектакля «ИОВ:материал»">
-    </iframe>
+    <video autoplay muted loop playsinline preload="auto" id="hero-video">
+      <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385407/IOV:material%20TEASER.mp4" type="video/mp4">
+    </video>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-beam" aria-hidden="true"></div>
