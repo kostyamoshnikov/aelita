@@ -27,7 +27,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
   .nav-links a:hover{color:var(--gold)}
   @media(max-width:760px){.nav-links{display:none}}
-  .hero{min-height:90svh;position:relative;display:flex;align-items:flex-end;padding-bottom:80px;overflow:hidden}
+  .hero{height:70vw;max-height:85vh;min-height:280px;position:relative;display:flex;align-items:flex-end;padding-bottom:40px;overflow:hidden}
   .hero-bg{position:absolute;inset:0;background-image:url('https://thb.tildacdn.com/tild3965-3934-4964-b236-346463333335/-/empty/4639.jpg');background-size:cover;background-position:center top;filter:brightness(.32)}
   .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.1) 0%,rgba(11,11,13,.0) 30%,rgba(11,11,13,.9) 78%,var(--ink) 100%)}
   .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both 1s}
@@ -472,6 +472,25 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .tg-widget{bottom:70px;left:16px}
     .tg-bubble{max-width:180px;font-size:12px}
   }
+
+  /* ── Hero видео-фон ── */
+  .hero-video-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:#000}
+  .hero-video-bg video{position:absolute;top:50%;left:50%;
+    width:177.78vh;height:56.25vw;
+    min-width:100%;min-height:100%;
+    transform:translate(-50%,-50%);
+    object-fit:cover;object-position:center top;}
+  .teaser-sound-btn{
+    position:absolute;bottom:24px;right:24px;z-index:10;
+    display:flex;align-items:center;gap:8px;
+    background:rgba(11,11,13,.65);backdrop-filter:blur(4px);
+    border:1px solid rgba(214,181,122,.4);color:var(--sand);
+    font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    padding:10px 16px;cursor:pointer;transition:all .3s;
+  }
+  .teaser-sound-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .mute-line{display:block}
+  .teaser-sound-btn.on .mute-line{display:none}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -507,6 +526,14 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       if(href === path) a.classList.add('active');
     });
   })();
+
+  function toggleTeaserSound(btn) {
+    const video = document.getElementById('hero-video');
+    if (!video) return;
+    const isOn = btn.classList.toggle('on');
+    video.muted = !isOn;
+    btn.querySelector('span').textContent = isOn ? 'Без звука' : 'Звук';
+  }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -539,8 +566,20 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 </nav>
 
 <div class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-video-bg">
+    <video autoplay muted loop playsinline preload="auto" id="hero-video" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg">
+      <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="hero-overlay"></div>
+  <button class="teaser-sound-btn" id="teaser-sound-btn" onclick="toggleTeaserSound(this)" aria-label="Включить звук">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <line x1="23" y1="9" x2="17" y2="15" class="mute-line"/>
+      <line x1="17" y1="9" x2="23" y2="15" class="mute-line"/>
+    </svg>
+    <span>Звук</span>
+  </button>
   <div class="wrap hero-content">
     <div class="hero-badge"><span class="eyebrow">Медитативный детектив</span><span class="age">16+</span></div>
     <h1 class="hero-title">Порфирий</h1>
