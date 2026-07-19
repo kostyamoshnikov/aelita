@@ -63,6 +63,18 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .sub-ok{color:var(--gold);margin-top:18px;display:none;font-size:14px}
   @media(max-width:560px){.sub-form{flex-direction:column}.sub-form input{border-right:1px solid rgba(201,184,163,.35)}}
 
+  .notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+  .notify-tab{
+    background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--sand);
+    font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    padding:12px 20px;cursor:pointer;transition:all .3s ease;
+  }
+  .notify-tab.active{border-color:var(--gold);color:var(--gold)}
+  .notify-tab:hover{border-color:var(--gold);color:var(--gold)}
+  .notify-bot-note{color:var(--sand);font-size:13px;margin-top:16px}
+  .btn-tg{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:15px 26px;text-decoration:none;transition:all .3s}
+  .btn-tg:hover{background:var(--gold);color:var(--ink)}
+
   footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
   .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
   footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
@@ -519,14 +531,36 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="wrap reveal">
     <span class="eyebrow">Не пропустить</span>
     <h2 style="margin-top:14px">Узнайте о старте продаж первыми</h2>
-    <p>Оставьте почту — напишем, как только откроются билеты на нужный вам показ.</p>
-    <div class="sub-form">
-      <input type="email" id="subEmail" placeholder="Ваша почта" aria-label="Электронная почта">
-      <button onclick="subscribe()">Подписаться</button>
+    <p>Оставьте заявку так, как удобнее — на сайте или в Telegram-боте.</p>
+
+    <div class="notify-tabs" id="notifyTabs">
+      <button type="button" class="notify-tab active" data-tab="site" onclick="switchNotifyTab('site', this)">Через сайт</button>
+      <button type="button" class="notify-tab" data-tab="bot" onclick="switchNotifyTab('bot', this)">Через Telegram-бота</button>
     </div>
-    <p class="sub-ok" id="subOk">Готово — напишем о старте продаж.</p>
+
+    <div id="notifySite">
+      <div class="sub-form">
+        <input type="email" id="subEmail" placeholder="Ваша почта" aria-label="Электронная почта">
+        <button onclick="subscribe()">Подписаться</button>
+      </div>
+      <p class="sub-ok" id="subOk">Готово — напишем о старте продаж.</p>
+    </div>
+
+    <div id="notifyBot" style="display:none">
+      <a class="btn-tg" href="https://t.me/aelita_production_bot?start=tickets" target="_blank" rel="noopener">Открыть бота и оставить заявку</a>
+      <p class="notify-bot-note">Бот задаст пару вопросов о показе и передаст заявку нам напрямую.</p>
+    </div>
   </div>
 </div>
+
+<script>
+  function switchNotifyTab(tab, btn){
+    document.querySelectorAll('.notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('notifySite').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('notifyBot').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+</script>
 
 <footer>
   <div class="wrap">
