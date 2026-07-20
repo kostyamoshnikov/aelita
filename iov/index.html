@@ -406,7 +406,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   /* Кнопка наверх */
   #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
-  @media(max-width:760px){#back-to-top{bottom:78px}}
+  @media(max-width:760px){#back-to-top{bottom:150px}}
+  @media(max-width:430px){#back-to-top{bottom:128px}}
   #back-to-top.visible{opacity:1;transform:translateY(0)}
   #back-to-top:hover{background:rgba(214,181,122,.25)}
 
@@ -414,17 +415,16 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .mob-cta{display:none}
   @media(max-width:760px){
     .mob-cta{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      display:flex;flex-direction:column;align-items:stretch;gap:8px;
       position:fixed;bottom:0;left:0;right:0;z-index:45;
       background:rgba(11,11,13,.97);backdrop-filter:blur(8px);
       border-top:1px solid rgba(214,181,122,.2);
       padding:14px 20px;
       transform:translateY(0);transition:transform .3s;
-      flex-wrap:wrap;
     }
     .mob-cta.hidden{transform:translateY(110%)}
-    .mob-cta-title{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);flex-shrink:0}
-    .mob-cta-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:11px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;flex-shrink:1;min-width:0}
+    .mob-cta-title{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);text-align:center;margin-bottom:2px}
+    .mob-cta-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:13px 18px;text-decoration:none;white-space:nowrap;transition:all .3s;width:100%;text-align:center}
     .mob-cta-btn.gold{background:var(--gold);color:var(--ink)}
     .mob-cta-btn.gold:hover{opacity:.85}
     .mob-cta-btn.outline{border:1px solid rgba(201,184,163,.35);color:var(--sand)}
@@ -549,10 +549,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .tg-btn svg{width:16px;height:16px;flex-shrink:0;opacity:.7}
   .tg-btn:hover svg{opacity:1}
   @media(max-width:760px){
-    .tg-widget{bottom:70px}
+    .tg-widget{bottom:150px}
   }
   @media(max-width:430px){
-    .tg-widget{left:16px}
+    .tg-widget{left:16px;bottom:128px}
     .tg-bubble{max-width:180px;font-size:12px}
   }
 
