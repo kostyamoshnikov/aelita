@@ -8,24 +8,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
 <style>
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
-  :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--maxw:1320px}
+  :root{--maxw:1320px}
   *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
   body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--gold);color:var(--ink)}
   h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
   .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95);backdrop-filter:blur(4px)}
-  .nav-in{max-width:var(--maxw);margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
-  .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px;color:var(--bone);text-decoration:none}
-  .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
-  .nav-links{display:flex;gap:34px}
-  .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
-  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
-  @media(max-width:760px){.nav-links{display:none}}
+  
+  
+  
+  
+  
+  
+  
+  
+  
   .bio-hero{padding:140px 0 80px}
   .bio-grid{display:grid;grid-template-columns:360px 1fr;gap:70px;align-items:start}
   .bio-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;filter:brightness(.85)}
@@ -129,82 +130,41 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   /* Footer и nav — оставляем их собственные цвета */
   footer a{color:var(--sand)}
   footer a:hover{color:var(--bone)}
-  nav a{color:var(--sand)}
-  nav a:hover,nav a.active{color:var(--gold)}
+  
+  
   /* Hero элементы */
   .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
 
   /* ── МОБИЛЬНОЕ МЕНЮ ──────────────────── */
-  .burger{
-    display:none;flex-direction:column;gap:6px;cursor:pointer;
-    padding:8px;background:none;border:none;
-    position:fixed;top:18px;right:20px;z-index:200;
-  }
-  .burger span{
-    display:block;width:22px;height:1px;background:var(--bone);
-    transition:all .45s cubic-bezier(.4,0,.2,1);transform-origin:center;
-  }
-  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--gold)}
-  .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
-  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--gold)}
-  @media(max-width:760px){.burger{display:flex}}
+  
+  
+  
+  
+  
+  
 
-  .m-menu{
-    position:fixed;inset:0;z-index:150;
-    background:var(--ink);
-    display:flex;flex-direction:column;justify-content:center;
-    padding:80px 40px 60px;
-    transform:translateX(100%);
-    transition:transform .5s cubic-bezier(.16,1,.3,1);
-  }
-  .m-menu.open{transform:translateX(0)}
-  .m-menu.open{transform:translateX(0)}
+  
+  
+  
   /* Оверлей за меню */
   
   
-  .m-menu::before{
-    content:"";position:absolute;
-    top:-5%;left:65%;width:1px;height:80%;
-    background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);
-    transform:rotate(10deg);
-    box-shadow:0 0 18px 3px rgba(214,181,122,.45),0 0 60px 15px rgba(214,181,122,.12);
-    opacity:0;transition:opacity .6s ease .3s;
-  }
-  .m-menu.open::before{opacity:1}
+  
+  
 
-  .m-menu-links{display:flex;flex-direction:column;gap:4px}
-  .m-menu-links a{
-    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
-    letter-spacing:.2em;text-transform:uppercase;
-    color:var(--sand);padding:16px 0;
-    border-bottom:1px solid rgba(232,230,225,.07);
-    transform:translateX(20px);opacity:0;
-    transition:transform .4s,opacity .4s,color .3s;
-    display:block;text-decoration:none;
-  }
-  .m-menu.open .m-menu-links a{
-    transform:translateX(0);opacity:1;
-  }
-  .m-menu-links a:last-child{border-bottom:none}
-  .m-menu-links a:hover{color:var(--gold)}
-  .m-menu-links a:nth-child(1){transition-delay:.18s}
-  .m-menu-links a:nth-child(2){transition-delay:.26s}
-  .m-menu-links a:nth-child(3){transition-delay:.34s}
-  .m-menu-links a:nth-child(4){transition-delay:.42s}
-  .m-menu-links a:nth-child(5){transition-delay:.50s}
-  .m-menu-links a:nth-child(6){transition-delay:.58s}
-  .m-menu-footer{
-    position:absolute;bottom:40px;left:40px;
-    font-family:'Montserrat',sans-serif;font-size:9px;
-    letter-spacing:.5em;text-transform:uppercase;
-    color:rgba(201,184,163,.3);
-  }
-  .m-menu-contacts{
-    margin-top:32px;
-    font-family:'Montserrat',sans-serif;font-size:11px;
-    letter-spacing:.24em;color:rgba(201,184,163,.45);
-    text-transform:uppercase;
-  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   
   
@@ -218,7 +178,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   a{color:inherit}
   a:not([class]):not([style]){color:var(--gold)}
   nav a, footer a{color:var(--sand)}
-  nav a:hover, nav a.active{color:var(--gold)}
+  
   footer a:hover{color:var(--bone)}
 
   /* Запрет горизонтального скролла */
@@ -241,41 +201,23 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 
   /* ── Cookie banner ── */
-  #cookie-banner{
-    position:fixed;bottom:0;left:0;right:0;z-index:999;
-    background:rgba(11,11,13,.97);backdrop-filter:blur(8px);
-    border-top:1px solid rgba(214,181,122,.2);
-    padding:16px 24px;
-    display:flex;align-items:center;justify-content:space-between;gap:20px;
-    font-family:'Inter',system-ui,sans-serif;
-    transform:translateY(0);transition:transform .4s ease;
-  }
-  #cookie-banner.hidden{transform:translateY(110%)}
-  #cookie-banner p{
-    color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0;
-  }
-  #cookie-banner a{color:var(--gold);text-decoration:none}
-  #cookie-banner a:hover{text-decoration:underline}
-  .cookie-actions{display:flex;gap:12px;flex-shrink:0}
-  .cookie-btn{
-    font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;
-    text-transform:uppercase;padding:10px 20px;cursor:pointer;
-    border:none;transition:all .3s;white-space:nowrap;
-  }
-  .cookie-btn-accept{background:var(--gold);color:var(--ink)}
-  .cookie-btn-accept:hover{opacity:.85}
-  .cookie-btn-more{background:transparent;color:var(--sand);border:1px solid rgba(201,184,163,.3)}
-  .cookie-btn-more:hover{border-color:var(--gold);color:var(--gold)}
-  @media(max-width:600px){
-    #cookie-banner{flex-direction:column;align-items:flex-start;gap:14px}
-    .cookie-actions{width:100%}
-    .cookie-btn{flex:1;text-align:center}
-  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   /* Кнопка наверх */
-  #back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
-  #back-to-top.visible{opacity:1;transform:translateY(0)}
-  #back-to-top:hover{background:rgba(214,181,122,.25)}
+  
+  
+  
 
   /* ── Адаптация под разные экраны ── */
 
@@ -292,19 +234,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     h2{font-size:clamp(15px,5vw,20px)}
     .wrap{padding:0 16px}
     .eyebrow{font-size:10px;letter-spacing:.3em}
-    nav .logo{font-size:12px;letter-spacing:.3em}
-    nav .logo small{font-size:7px;letter-spacing:.4em}
+    
+    
     section{padding:60px 0}
-    .m-menu{padding:70px 24px 40px}
-    .m-menu-links a{
-    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
-    letter-spacing:.2em;text-transform:uppercase;
-    color:var(--sand);padding:16px 0;
-    border-bottom:1px solid rgba(232,230,225,.07);
-    transform:translateX(20px);opacity:0;
-    transition:transform .4s,opacity .4s,color .3s;
-    display:block;text-decoration:none;
-  }
+    
+    
     .stat-num{font-size:clamp(36px,9vw,52px)}
     .ev-date{font-size:clamp(24px,7vw,34px)}
     .bio-grid{gap:24px}
@@ -323,79 +257,37 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     h2{font-size:clamp(14px,5.5vw,18px);letter-spacing:.2em}
     .wrap{padding:0 14px}
     .eyebrow{font-size:9px;letter-spacing:.26em}
-    nav{padding:0}
-    .nav-in{padding:16px 14px}
-    nav .logo{font-size:11px;letter-spacing:.26em}
-    .m-menu{padding:64px 20px 36px}
-    .m-menu-links a{
-    font-family:'Montserrat',sans-serif;font-size:clamp(18px,5vw,28px);
-    letter-spacing:.2em;text-transform:uppercase;
-    color:var(--sand);padding:16px 0;
-    border-bottom:1px solid rgba(232,230,225,.07);
-    transform:translateX(20px);opacity:0;
-    transition:transform .4s,opacity .4s,color .3s;
-    display:block;text-decoration:none;
-  }
+    
+    
+    
+    
+    
     section{padding:50px 0}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:clamp(32px,10vw,44px)}
     .stat-label{font-size:9px;letter-spacing:.22em}
     .member-info{padding:24px 20px 32px}
     .bio-photo{height:260px}
-    .cookie-actions{flex-direction:column}
-    .cookie-btn{width:100%;text-align:center}
-    #cookie-banner{padding:14px 16px}
-    .mob-cta{padding:12px 16px}
-    .mob-cta-btn{font-size:9px;padding:10px 14px}
+    
+    
+    
+    
+    
   }
-  .m-menu-close{
-    position:fixed;top:16px;right:16px;
-    width:48px;height:48px;
-    background:rgba(11,11,13,.9);
-    border:1px solid rgba(214,181,122,.5);
-    color:var(--gold);font-size:24px;line-height:1;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:all .3s;
-    z-index:300;
-    opacity:0;pointer-events:none;
-  }
-  .m-menu-close.visible{opacity:1;pointer-events:all}
-  .m-menu-close:hover{background:rgba(214,181,122,.15);border-color:var(--gold)}
+  
+  
+  
 
   /* ── Telegram виджет ── */
-  .tg-widget{
-    position:fixed;bottom:28px;left:24px;z-index:45;
-    display:flex;flex-direction:column;align-items:flex-start;gap:10px;
-    opacity:0;transform:translateY(10px);pointer-events:none;
-    transition:opacity .4s,transform .4s;
-  }
-  .tg-widget.visible{opacity:1;transform:translateY(0);pointer-events:all}
-  .tg-bubble{
-    background:var(--coal);border:1px solid rgba(214,181,122,.2);
-    padding:12px 16px;max-width:220px;
-    font-size:13px;color:var(--sand);line-height:1.5;
-    opacity:0;transform:translateY(8px);
-    transition:opacity .3s,transform .3s;
-    pointer-events:none;
-  }
-  .tg-bubble.visible{opacity:1;transform:translateY(0)}
-  .tg-btn{
-    display:flex;align-items:center;gap:10px;
-    background:rgba(11,11,13,.95);
-    border:1px solid rgba(214,181,122,.4);
-    color:var(--sand);
-    padding:13px 22px;text-decoration:none;
-    font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;
-    transition:all .3s;
-    backdrop-filter:blur(4px);
-  }
-  .tg-btn:hover{border-color:var(--gold);color:var(--gold)}
-  .tg-btn svg{width:16px;height:16px;flex-shrink:0;opacity:.7}
-  .tg-btn:hover svg{opacity:1}
-  @media(max-width:430px){
-    .tg-widget{bottom:70px;left:16px}
-    .tg-bubble{max-width:180px;font-size:12px}
-  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -412,13 +304,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
    });
 
   // Активное состояние навигации
-  (function(){
-    const path = window.location.pathname.replace(/\/$/,'') || '/';
-    document.querySelectorAll('.nav-links a, .m-menu-links a').forEach(a => {
-      const href = a.getAttribute('href').replace(/\/$/,'') || '/';
-      if(href === path) a.classList.add('active');
-    });
-  })();
+  
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -548,34 +434,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   },{threshold:.2});
   document.querySelectorAll('.bio-photo,.bio-photo-sq').forEach(el=>photoIO.observe(el));
 
-  function handleOverlayClick(e){
-    if(!e.target.closest('.m-menu-links')&&!e.target.closest('.m-menu-contacts')){
-      toggleMenu();
-    }
-  }
-  function toggleMenu(){
-    const btn = document.querySelector('.burger');
-    const menu = document.getElementById('mMenu');
-    const close = document.getElementById('close-btn');
-    if(!btn||!menu) return;
-    const isOpen = menu.classList.toggle('open');
-    btn.classList.toggle('open', isOpen);
-    btn.setAttribute('aria-expanded', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    if(close) close.classList.toggle('visible', isOpen);
-  }
+  
+  
   // Закрыть по Escape
-  document.addEventListener('keydown', e=>{
-    if(e.key==='Escape'){
-      const menu = document.getElementById('mMenu');
-      const btn = document.querySelector('.burger');
-      if(menu&&menu.classList.contains('open')){
-        menu.classList.remove('open');
-        btn&&btn.classList.remove('open');
-        document.body.style.overflow='';
-      }
-    }
-  });
+  
 
   // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
@@ -610,28 +472,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
   </div>
 </div>
-<script>
-  (function(){
-    if(localStorage.getItem('cookies_accepted')){
-      var b=document.getElementById('cookie-banner');
-      if(b) b.style.display='none';
-    }
-  })();
-  function acceptCookies(){
-    localStorage.setItem('cookies_accepted','1');
-    var b=document.getElementById('cookie-banner');
-    if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
-  }
-</script>
+
 <!-- /Cookie Banner -->
 
 <button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<script>
-  window.addEventListener('scroll',()=>{
-    const btn=document.getElementById('back-to-top');
-    if(btn) btn.classList.toggle('visible', window.scrollY > 400);
-  });
-</script>
 
 <!-- Telegram виджет -->
 <div class="tg-widget" id="tg-widget">
@@ -641,29 +485,9 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     Написать нам
   </a>
 </div>
-<script>
-  // Показываем виджет после прокрутки 400px
-  window.addEventListener('scroll', function(){
-    const widget = document.getElementById('tg-widget');
-    if(!widget) return;
-    if(window.scrollY > 400){
-      widget.classList.add('visible');
-      // Пузырь через 1 сек после появления виджета
-      const bubble = document.getElementById('tg-bubble');
-      if(bubble && !bubble.dataset.shown){
-        bubble.dataset.shown = '1';
-        setTimeout(function(){
-          bubble.classList.add('visible');
-          setTimeout(function(){ bubble.classList.remove('visible'); }, 4000);
-        }, 1000);
-      }
-    } else {
-      widget.classList.remove('visible');
-    }
-  });
-</script>
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js"></script>
 </body>
 </html>
