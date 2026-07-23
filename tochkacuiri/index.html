@@ -21,20 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
-<style>
-html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
-*,*::before,*::after{box-sizing:inherit}
-  :root{--maxw:1320px}
-  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
-  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  ::selection{background:var(--gold);color:var(--ink)}
-  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
-  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
-  
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
-  a.card,a.work-card,a.other-card,a.show-card,a.proj-card,a.partner-card{color:inherit;text-decoration:none}
-
-  /* NAV */
+<style>/* NAV */
   
   
   
@@ -46,389 +33,133 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   /* HERO */
   .hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;overflow:hidden}
-  .hero-bg{position:absolute;inset:0;background-image:url('https://cuire-fest.ru/assets/photo/p06.jpg');background-size:cover;background-position:center;filter:brightness(.28);will-change:transform}
-  .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.2) 0%,rgba(11,11,13,.0) 30%,rgba(11,11,13,.88) 78%,var(--ink) 100%)}
-  .hero-beam{position:absolute;inset:0;pointer-events:none}
-  .hero-beam::before{content:"";position:absolute;top:0;left:58%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.9) 35%,var(--gold) 65%,transparent);transform:rotate(12deg);transform-origin:top center;box-shadow:0 0 20px 4px rgba(214,181,122,.5),0 0 80px 20px rgba(214,181,122,.15);animation:beam-in 2s ease both}
-  @keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:70%}}
-  .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both 1s}
-  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-  .hero-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:min(340px,55vw);opacity:.18;pointer-events:none;z-index:1;animation:orb-pulse 4s ease-in-out infinite}
-  @keyframes orb-pulse{0%,100%{opacity:.18;transform:translate(-50%,-52%) scale(1)}50%{opacity:.25;transform:translate(-50%,-52%) scale(1.04)}}
-  .hero-badge{display:inline-flex;gap:18px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
-  .hero-badge span{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand)}
-  .hero-badge .ed{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 12px;font-size:10px;letter-spacing:.3em}
-  .hero-title{font-size:clamp(44px,10vw,120px);letter-spacing:.04em;line-height:1;margin-bottom:10px}
-  .hero-sub{font-family:'Montserrat',sans-serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:30px}
-  .hero-meta{font-size:15px;color:rgba(201,184,163,.7);margin-bottom:38px;letter-spacing:.06em}
-  .hero-meta strong{color:var(--bone);font-weight:400}
-  .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
-  .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer}
-  .btn-gold:hover{opacity:.85}
-  .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s}
-  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-
-  /* COUNTDOWN */
+.hero-bg{position:absolute;inset:0;background-image:url('https://cuire-fest.ru/assets/photo/p06.jpg');background-size:cover;background-position:center;filter:brightness(.28);will-change:transform}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.2) 0%,rgba(11,11,13,.0) 30%,rgba(11,11,13,.88) 78%,var(--ink) 100%)}
+.hero-beam::before{content:"";position:absolute;top:0;left:58%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.9) 35%,var(--gold) 65%,transparent);transform:rotate(12deg);transform-origin:top center;box-shadow:0 0 20px 4px rgba(214,181,122,.5),0 0 80px 20px rgba(214,181,122,.15);animation:beam-in 2s ease both}
+@keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:70%}}
+.hero-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:min(340px,55vw);opacity:.18;pointer-events:none;z-index:1;animation:orb-pulse 4s ease-in-out infinite}
+@keyframes orb-pulse{0%,100%{opacity:.18;transform:translate(-50%,-52%) scale(1)}50%{opacity:.25;transform:translate(-50%,-52%) scale(1.04)}}
+.hero-badge{display:inline-flex;gap:18px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.hero-badge .ed{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 12px;font-size:10px;letter-spacing:.3em}
+.hero-title{font-size:clamp(44px,10vw,120px);letter-spacing:.04em;line-height:1;margin-bottom:10px}
+.hero-sub{font-family:'Montserrat',sans-serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:30px}
+.hero-meta{font-size:15px;color:rgba(201,184,163,.7);margin-bottom:38px;letter-spacing:.06em}
+.hero-meta strong{color:var(--bone);font-weight:400}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer}
+/* COUNTDOWN */
   .countdown{display:flex;gap:2px;margin:40px 0 0}
-  .cd-item{background:var(--coal);padding:20px 24px;text-align:center;min-width:80px;flex:1;max-width:120px}
-  .cd-num{font-family:'Montserrat',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:200;color:var(--gold);line-height:1}
-  .cd-lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand);margin-top:6px}
-  @media(max-width:480px){.cd-item{padding:14px 12px;min-width:60px}.cd-num{font-size:28px}}
-
-  section{padding:90px 0}
-  .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:50px}
-  .sec-head h2{font-size:clamp(17px,2.4vw,26px);letter-spacing:.24em}
-  .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
-  .sec-head.line-on::after{transform:scaleX(1)}
-
-  /* ABOUT */
+.cd-item{background:var(--coal);padding:20px 24px;text-align:center;min-width:80px;flex:1;max-width:120px}
+.cd-num{font-family:'Montserrat',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:200;color:var(--gold);line-height:1}
+.cd-lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand);margin-top:6px}
+@media(max-width:480px){.cd-item{padding:14px 12px;min-width:60px}.cd-num{font-size:28px}}
+.sec-head h2{font-size:clamp(17px,2.4vw,26px);letter-spacing:.24em}
+/* ABOUT */
   .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-  .about-text p{color:var(--sand);font-size:16px;line-height:1.85;margin-bottom:18px}
-  .about-text p strong{color:var(--bone);font-weight:400}
-  .about-pillars{display:flex;flex-direction:column;gap:2px}
-  .pillar{background:var(--coal);padding:32px 28px}
-  .pillar .pnum{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-  .pillar h3{font-size:16px;letter-spacing:.16em;font-weight:300;margin-bottom:8px}
-  .pillar p{color:var(--sand);font-size:13px;line-height:1.7}
-  @media(max-width:760px){.about-grid{grid-template-columns:1fr}}
-
-  /* PHYSICS */
+.about-pillars{display:flex;flex-direction:column;gap:2px}
+.pillar{background:var(--coal);padding:32px 28px}
+.pillar .pnum{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.pillar h3{font-size:16px;letter-spacing:.16em;font-weight:300;margin-bottom:8px}
+.pillar p{color:var(--sand);font-size:13px;line-height:1.7}
+@media(max-width:760px){.about-grid{grid-template-columns:1fr}}
+/* PHYSICS */
   .physics{background:var(--coal);padding:60px;margin-top:2px;display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center}
-  .physics-temp{font-family:'Montserrat',sans-serif;font-size:clamp(28px,6vw,90px);font-weight:200;color:var(--gold);line-height:1;white-space:nowrap;overflow:hidden;max-width:100%}
-  .physics-text p{color:var(--sand);font-size:15px;line-height:1.8;margin-bottom:10px}
-  .physics-text p strong{color:var(--bone);font-weight:400}
-  @media(max-width:760px){.physics{grid-template-columns:1fr;padding:40px 28px}}
-
-  /* PROGRAMME */
+.physics-temp{font-family:'Montserrat',sans-serif;font-size:clamp(28px,6vw,90px);font-weight:200;color:var(--gold);line-height:1;white-space:nowrap;overflow:hidden;max-width:100%}
+.physics-text p{color:var(--sand);font-size:15px;line-height:1.8;margin-bottom:10px}
+.physics-text p strong{color:var(--bone);font-weight:400}
+@media(max-width:760px){.physics{grid-template-columns:1fr;padding:40px 28px}}
+/* PROGRAMME */
   .prog-grid{display:flex;flex-direction:column;gap:2px}
-  .prog-item{background:var(--coal);padding:32px 36px;display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:center;text-decoration:none;color:inherit;border:1px solid transparent;transition:border-color .3s}
-  .prog-item:hover{border-color:rgba(214,181,122,.35)}
-  .prog-left .badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px}
-  .prog-left .hall{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin-top:6px}
-  .prog-title h3{font-size:18px;letter-spacing:.1em;font-weight:300;margin-bottom:6px;color:var(--bone)}
-  .prog-title .genre{color:var(--sand);font-size:13px}
-  .prog-title .desc{color:rgba(201,184,163,.7);font-size:13px;margin-top:8px;line-height:1.6}
-  .prog-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;white-space:nowrap}
-  .prog-right .age{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:4px 10px}
-  .prog-right .dur{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--sand)}
-  .prog-note{background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:18px 24px;margin-top:2px;font-size:14px;color:var(--sand)}
-  @media(max-width:760px){.prog-item{grid-template-columns:1fr;gap:12px}.prog-right{align-items:flex-start;flex-direction:row;white-space:normal;flex-wrap:wrap}}
-
-  /* SCHEDULE */
+.prog-item{background:var(--coal);padding:32px 36px;display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:center;text-decoration:none;color:inherit;border:1px solid transparent;transition:border-color .3s}
+.prog-item:hover{border-color:rgba(214,181,122,.35)}
+.prog-left .badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px}
+.prog-left .hall{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin-top:6px}
+.prog-title h3{font-size:18px;letter-spacing:.1em;font-weight:300;margin-bottom:6px;color:var(--bone)}
+.prog-title .genre{color:var(--sand);font-size:13px}
+.prog-title .desc{color:rgba(201,184,163,.7);font-size:13px;margin-top:8px;line-height:1.6}
+.prog-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;white-space:nowrap}
+.prog-right .age{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:4px 10px}
+.prog-right .dur{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--sand)}
+.prog-note{background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:18px 24px;margin-top:2px;font-size:14px;color:var(--sand)}
+@media(max-width:760px){.prog-item{grid-template-columns:1fr;gap:12px}.prog-right{align-items:flex-start;flex-direction:row;white-space:normal;flex-wrap:wrap}}
+/* SCHEDULE */
   .sched{background:var(--coal)}
-  .days-tabs{display:flex;gap:2px;margin-bottom:2px}
-  .day-tab{background:rgba(232,230,225,.05);padding:20px 24px;cursor:pointer;transition:background .3s;border:none;color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;flex:1;text-align:left}
-  .day-tab:hover,.day-tab.active{background:var(--ink);color:var(--gold)}
-  .day-tab .day-num{font-size:32px;font-weight:200;display:block;line-height:1;margin-bottom:4px;color:var(--bone)}
-  .day-tab.active .day-num{color:var(--gold)}
-  .day-content{display:none;background:var(--ink);padding:40px}
-  .day-content.active{display:block}
-  .time-item{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.06)}
-  .time-item:last-child{border-bottom:none}
-  .time-item .time{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);font-weight:300}
-  .time-item .event{font-size:15px;color:var(--bone)}
-  .time-item .event small{display:block;font-size:12px;color:var(--sand);margin-top:3px}
-  @media(max-width:760px){.days-tabs{flex-direction:column}.day-content{padding:28px 20px}}
-
-  /* FREE EVENTS */
+.days-tabs{display:flex;gap:2px;margin-bottom:2px}
+.day-tab{background:rgba(232,230,225,.05);padding:20px 24px;cursor:pointer;transition:background .3s;border:none;color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;flex:1;text-align:left}
+.day-tab:hover,.day-tab.active{background:var(--ink);color:var(--gold)}
+.day-tab .day-num{font-size:32px;font-weight:200;display:block;line-height:1;margin-bottom:4px;color:var(--bone)}
+.day-tab.active .day-num{color:var(--gold)}
+.day-content{display:none;background:var(--ink);padding:40px}
+.day-content.active{display:block}
+.time-item{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.06)}
+.time-item:last-child{border-bottom:none}
+.time-item .time{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);font-weight:300}
+.time-item .event{font-size:15px;color:var(--bone)}
+.time-item .event small{display:block;font-size:12px;color:var(--sand);margin-top:3px}
+@media(max-width:760px){.days-tabs{flex-direction:column}.day-content{padding:28px 20px}}
+/* FREE EVENTS */
   .free-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
-  .free-card{background:var(--coal);padding:36px 28px}
-  .free-card .icon{font-size:24px;margin-bottom:14px}
-  .free-card h3{font-size:15px;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
-  .free-card p{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:14px}
-  .free-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
-  @media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
-  @media(max-width:480px){.free-grid{grid-template-columns:1fr}}
-
-  /* EXHIBITIONS */
+.free-card{background:var(--coal);padding:36px 28px}
+.free-card .icon{font-size:24px;margin-bottom:14px}
+.free-card h3{font-size:15px;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
+.free-card p{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:14px}
+.free-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
+@media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.free-grid{grid-template-columns:1fr}}
+/* EXHIBITIONS */
   .exh-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-  .exh-item{position:relative;overflow:hidden;min-height:320px}
-  .exh-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.4);transition:filter .5s}
-  .exh-item:hover img{filter:brightness(.55)}
-  .exh-body{position:absolute;inset:0;padding:36px;display:flex;flex-direction:column;justify-content:flex-end}
-  .exh-body .dates{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-  .exh-body h3{font-size:20px;letter-spacing:.12em;font-weight:300;margin-bottom:8px}
-  .exh-body p{color:var(--sand);font-size:14px;line-height:1.6}
-  .exh-free{display:inline-block;margin-top:14px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:6px 12px}
-  @media(max-width:760px){.exh-grid{grid-template-columns:1fr}}
-
-  /* PHOTO GALLERY */
+.exh-item{position:relative;overflow:hidden;min-height:320px}
+.exh-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.4);transition:filter .5s}
+.exh-item:hover img{filter:brightness(.55)}
+.exh-body{position:absolute;inset:0;padding:36px;display:flex;flex-direction:column;justify-content:flex-end}
+.exh-body .dates{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.exh-body h3{font-size:20px;letter-spacing:.12em;font-weight:300;margin-bottom:8px}
+.exh-body p{color:var(--sand);font-size:14px;line-height:1.6}
+.exh-free{display:inline-block;margin-top:14px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:6px 12px}
+@media(max-width:760px){.exh-grid{grid-template-columns:1fr}}
+/* PHOTO GALLERY */
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-  .gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:brightness(.7);transition:filter .4s}
-  .gallery img:hover{filter:brightness(1)}
-  .gallery img{cursor:zoom-in}
-  @media(max-width:560px){.gallery{grid-template-columns:1fr 1fr}}
-
-  /* ── Лайтбокс ── */
-  .lightbox{position:fixed;inset:0;background:rgba(11,11,13,.96);z-index:300;display:none;align-items:center;justify-content:center;padding:60px 24px}
-  .lightbox.open{display:flex}
-  .lightbox img{max-width:100%;max-height:100%;object-fit:contain}
-  .lightbox-close{position:absolute;top:20px;right:24px;background:none;border:1px solid rgba(201,184,163,.3);color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;padding:10px 18px;cursor:pointer;transition:color .3s,border-color .3s}
-  .lightbox-close:hover{color:var(--gold);border-color:var(--gold)}
-  .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--sand);font-size:34px;line-height:1;cursor:pointer;padding:16px;transition:color .3s}
-  .lightbox-nav:hover{color:var(--gold)}
-  .lightbox-prev{left:6px}
-  .lightbox-next{right:6px}
-  @media(max-width:600px){.lightbox-nav{font-size:26px;padding:10px}}
-
-  /* VENUE */
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:brightness(.7);transition:filter .4s}
+.gallery img:hover{filter:brightness(1)}
+.gallery img{cursor:zoom-in}
+@media(max-width:560px){.gallery{grid-template-columns:1fr 1fr}}
+/* VENUE */
   .venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-  .venue-img{aspect-ratio:4/3;overflow:hidden}
-  .venue-img img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.75)}
-  .venue-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:28px 0}
-  .vstat{background:var(--coal);padding:28px 24px;text-align:center}
-  .vstat .vnum{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:200;color:var(--gold);line-height:1}
-  .vstat .vlbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);margin-top:8px}
-  .venue-address{background:var(--coal);padding:24px 28px;font-size:14px;color:var(--sand);line-height:1.9}
-  .venue-address strong{color:var(--bone);font-weight:400}
-  .venue-address a{color:var(--gold);text-decoration:none}
-  @media(max-width:760px){.venue-grid{grid-template-columns:1fr}}
-
-  /* TICKETS */
+.venue-img{aspect-ratio:4/3;overflow:hidden}
+.venue-img img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.75)}
+.venue-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:28px 0}
+.vstat{background:var(--coal);padding:28px 24px;text-align:center}
+.vstat .vnum{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:200;color:var(--gold);line-height:1}
+.vstat .vlbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);margin-top:8px}
+.venue-address{background:var(--coal);padding:24px 28px;font-size:14px;color:var(--sand);line-height:1.9}
+.venue-address strong{color:var(--bone);font-weight:400}
+.venue-address a{color:var(--gold);text-decoration:none}
+@media(max-width:760px){.venue-grid{grid-template-columns:1fr}}
+/* TICKETS */
   .tickets-sec{background:var(--coal)}
-  .tickets-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-  .ticket-box{background:var(--ink);padding:52px 44px}
-  .ticket-price{font-family:'Montserrat',sans-serif;font-size:clamp(48px,7vw,72px);font-weight:200;color:var(--gold);line-height:1;margin-bottom:8px}
-  .ticket-per{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
-  .ticket-list{list-style:none;display:flex;flex-direction:column;gap:12px}
-  .ticket-list li{font-size:14px;color:var(--sand);display:flex;gap:12px;align-items:baseline;line-height:1.5}
-  .ticket-list li::before{content:"✓";color:var(--gold);flex-shrink:0;font-size:13px}
-  .ticket-list li.star::before{content:"✦";color:rgba(214,181,122,.5)}
-  .form-box{background:var(--ink);padding:52px 44px}
-  .form-box h3{font-size:18px;letter-spacing:.18em;font-weight:300;margin-bottom:8px;text-transform:uppercase}
-  .form-box p{color:var(--sand);font-size:14px;margin-bottom:28px}
-  .form-col{display:flex;flex-direction:column;gap:12px}
-  .field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-  .field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
-  .field input:focus{outline:none;border-color:var(--gold)}
-  .form-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:8px}
-  .form-ok{color:var(--gold);font-size:14px;display:none;padding:20px;background:rgba(214,181,122,.08);border-left:2px solid var(--gold)}
-  @media(max-width:760px){.tickets-grid{grid-template-columns:1fr}.ticket-box,.form-box{padding:36px 28px}}
-
-  /* EXTERNAL LINK BANNER */
+.tickets-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.ticket-box{background:var(--ink);padding:52px 44px}
+.ticket-price{font-family:'Montserrat',sans-serif;font-size:clamp(48px,7vw,72px);font-weight:200;color:var(--gold);line-height:1;margin-bottom:8px}
+.ticket-per{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
+.ticket-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ticket-list li{font-size:14px;color:var(--sand);display:flex;gap:12px;align-items:baseline;line-height:1.5}
+.ticket-list li::before{content:"✓";color:var(--gold);flex-shrink:0;font-size:13px}
+.ticket-list li.star::before{content:"✦";color:rgba(214,181,122,.5)}
+.form-box{background:var(--ink);padding:52px 44px}
+.form-box h3{font-size:18px;letter-spacing:.18em;font-weight:300;margin-bottom:8px;text-transform:uppercase}
+.form-box p{color:var(--sand);font-size:14px;margin-bottom:28px}
+.form-col{display:flex;flex-direction:column;gap:12px}
+.field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.field input:focus{outline:none;border-color:var(--gold)}
+.form-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:8px}
+.form-ok{color:var(--gold);font-size:14px;display:none;padding:20px;background:rgba(214,181,122,.08);border-left:2px solid var(--gold)}
+@media(max-width:760px){.tickets-grid{grid-template-columns:1fr}.ticket-box,.form-box{padding:36px 28px}}
+/* EXTERNAL LINK BANNER */
   .ext-banner{background:linear-gradient(135deg, rgba(214,181,122,.15), rgba(214,181,122,.05));border:1px solid rgba(214,181,122,.3);padding:40px 44px;display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:50px;flex-wrap:wrap}
-  .ext-banner p{color:var(--sand);font-size:15px}
-  .ext-banner p strong{color:var(--bone);font-weight:400;display:block;margin-bottom:4px}
-
-  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
-  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
-  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
-  footer a:hover{color:var(--bone)}
-  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
-  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
-  @media(max-width:760px){
-    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .foot-grid>div:first-child{grid-column:1/3}
-    footer h4{margin-bottom:12px}
-    footer a{margin-bottom:8px;font-size:13px}
-  }
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}.foot-grid>div:first-child{grid-column:1/3}}
-  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
-
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
-  .reveal.on{opacity:1;transform:none}
-
-  /* Линия sec-head */
-  .sec-head::after{transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
-  .sec-head.line-on::after{transform:scaleX(1)}
-
-  /* Параллакс */
-  .hero-bg{will-change:transform}
-
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
-
-  /* Текстовые ссылки в контенте */
-  p a, li a, .desc a, .bio-info a, .about-text a, .bio-text a,
-  .desc-text a, .physics-text a, .tl-desc a, .career-item p a,
-  .review-show a, .vendor-address a{
-    color:var(--gold);
-    text-decoration:none;
-    transition:opacity .3s;
-  }
-  p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
-  /* Footer и nav — оставляем их собственные цвета */
-  footer a{color:var(--sand)}
-  footer a:hover{color:var(--bone)}
-  
-  
-  /* Hero элементы */
-  .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
-
-  /* ── МОБИЛЬНОЕ МЕНЮ ──────────────────── */
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  /* Оверлей за меню */
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-
-  /* Убираем синий цвет со всех ссылок */
-  a{color:inherit}
-  a:not([class]):not([style]){color:var(--gold)}
-  nav a, footer a{color:var(--sand)}
-  
-  footer a:hover{color:var(--bone)}
-
-  /* Запрет горизонтального скролла */
-  body{max-width:100vw}
-  img, video, iframe{max-width:100%;height:auto}
-  @media(max-width:760px){
-    .wrap{padding:0 16px}
-    table{width:100%;display:block;overflow-x:auto}
-  }
-
-  /* ── Мобильная сетка (глобальный фикс) ── */
-  @media(max-width:760px){
-    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
-    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
-    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
-    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
-    .flag{grid-template-columns:1fr !important}
-    .gallery{grid-template-columns:1fr 1fr !important}
-    .grid{grid-template-columns:1fr !important}
-  }
-
-  /* ── Cookie banner ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  /* Кнопка наверх */
-  
-  
-  
-  
-
-  /* ── Мобильный CTA-бар ── */
-  
-  
-
-  /* ── Модальное окно Спасибо ── */
-  .thanks-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
-  .thanks-modal.open{opacity:1;pointer-events:all}
-  .thanks-box{background:var(--coal);border:1px solid rgba(214,181,122,.2);padding:52px 44px;max-width:440px;width:90%;text-align:center;transform:translateY(20px);transition:transform .4s}
-  .thanks-modal.open .thanks-box{transform:translateY(0)}
-  .thanks-icon{font-size:32px;margin-bottom:20px}
-  .thanks-box h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:20px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
-  .thanks-box p{color:var(--sand);font-size:14px;line-height:1.7;margin-bottom:28px}
-  .thanks-close{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:13px 28px;cursor:pointer;transition:opacity .3s}
-  .thanks-close:hover{opacity:.85}
-
-  /* ── Адаптация под разные экраны ── */
-
-  /* Большие телефоны 431–600px */
-  @media(max-width:600px) and (min-width:431px){
-    h1{letter-spacing:.08em}
-    .wrap{padding:0 20px}
-    .stat-num,.ev-date{font-size:clamp(28px,7vw,40px)}
-  }
-
-  /* Средние телефоны 376–430px */
-  @media(max-width:430px){
-    
-    
-    
-    h1{font-size:clamp(22px,8vw,32px);letter-spacing:.06em}
-    h2{font-size:clamp(15px,5vw,20px)}
-    .wrap{padding:0 16px}
-    .eyebrow{font-size:10px;letter-spacing:.3em}
-    
-    
-    section{padding:60px 0}
-    
-    
-    .stat-num{font-size:clamp(36px,9vw,52px)}
-    .ev-date{font-size:clamp(24px,7vw,34px)}
-    .bio-grid{gap:24px}
-    .bio-info h1{font-size:clamp(22px,7vw,30px)}
-    .career-grid{grid-template-columns:1fr}
-    .team-grid{grid-template-columns:1fr}
-    .foot-grid{grid-template-columns:1fr}
-    .foot-grid>div:first-child{grid-column:1}
-    footer h4{font-size:10px}
-    footer a{font-size:13px}
-  }
-
-  /* Маленькие телефоны до 375px */
-  @media(max-width:375px){
-    h1{font-size:clamp(20px,9vw,28px);letter-spacing:.04em}
-    h2{font-size:clamp(14px,5.5vw,18px);letter-spacing:.2em}
-    .wrap{padding:0 14px}
-    .eyebrow{font-size:9px;letter-spacing:.26em}
-    
-    
-    
-    
-    
-    section{padding:50px 0}
-    .stat-item{padding:28px 20px}
-    .stat-num{font-size:clamp(32px,10vw,44px)}
-    .stat-label{font-size:9px;letter-spacing:.22em}
-    .member-info{padding:24px 20px 32px}
-    .bio-photo{height:260px}
-    
-    
-    
-    
-    
-  }
-  
-  
-  
-
-  /* ── Telegram виджет ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</style>
+.ext-banner p{color:var(--sand);font-size:15px}
+.ext-banner p strong{color:var(--bone);font-weight:400;display:block;margin-bottom:4px}
+/* Линия sec-head */
+  .sec-head::after{transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}</style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};

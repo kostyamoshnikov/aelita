@@ -18,318 +18,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
-<style>
-html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
-*,*::before,*::after{box-sizing:inherit}
-  :root{--maxw:1320px}
-  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
-  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  ::selection{background:var(--gold);color:var(--ink)}
-  h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
-  .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  .bio-hero{padding:140px 0 80px}
-  .bio-grid{display:grid;grid-template-columns:360px 1fr;gap:70px;align-items:start}
-  .bio-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;filter:brightness(.85)}
-  .bio-info .eyebrow{margin-bottom:16px}
-  .bio-info h1{font-size:clamp(28px,5vw,54px);letter-spacing:.1em;line-height:1.1;margin-bottom:10px}
-  .bio-role{font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
-  .bio-info p{color:var(--sand);font-size:15px;line-height:1.85;margin-bottom:14px}
-  .bio-info p strong{color:var(--bone);font-weight:400}
-  .bio-quote{border-left:1px solid var(--gold);padding-left:20px;margin:24px 0;font-size:15px;color:var(--bone);line-height:1.7;font-style:italic}
-  .bio-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-  .bio-tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:7px 14px}
-  .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:14px 28px;text-decoration:none;display:inline-block;transition:all .3s;margin-top:24px}
-  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-  .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px}
-  .btn-gold:hover{opacity:.85}
-  @media(max-width:900px){.bio-grid{grid-template-columns:1fr}.bio-photo{max-width:320px}}
-  section{padding:80px 0}
-  .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
-  .sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
-  .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
-  /* Портретная сетка резидентов */
+<style>/* Портретная сетка резидентов */
   .persons-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
-  .person-card{text-decoration:none;display:block;position:relative;overflow:hidden;color:inherit}
-  .person-card img{
+.person-card{text-decoration:none;display:block;position:relative;overflow:hidden;color:inherit}
+.person-card img{
     width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
     filter:brightness(.75) saturate(.9);
     transition:filter .5s ease, transform .6s ease;
   }
-  .person-card:hover img{filter:brightness(.55) saturate(.7);transform:scale(1.03)}
-  .person-overlay{
+.person-card:hover img{filter:brightness(.55) saturate(.7);transform:scale(1.03)}
+.person-overlay{
     position:absolute;bottom:0;left:0;right:0;
     padding:24px 20px 20px;
     background:linear-gradient(to top,rgba(11,11,13,.95) 0%,rgba(11,11,13,.6) 60%,transparent 100%);
     transition:transform .4s ease;
   }
-  .person-role{
+.person-role{
     font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;
     text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;
   }
-  .person-name{
+.person-name{
     font-family:'Montserrat',sans-serif;font-size:clamp(14px,1.4vw,18px);
     letter-spacing:.1em;font-weight:300;color:var(--bone);line-height:1.2;
   }
-  .person-desc{
+.person-desc{
     font-size:12px;color:var(--sand);margin-top:6px;line-height:1.5;
     opacity:0;transform:translateY(8px);
     transition:opacity .4s ease .1s,transform .4s ease .1s;
   }
-  .person-card:hover .person-desc{opacity:1;transform:translateY(0)}
-  @media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr)}}
-  @media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr)}}
-
-  .career-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-  .career-item{background:var(--coal);padding:30px 28px}
-  .career-item .period{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-  .career-item h3{font-size:15px;letter-spacing:.1em;font-weight:300;margin-bottom:6px}
-  .career-item p{color:var(--sand);font-size:13px}
-  .career-item.hl{border-left:2px solid var(--gold)}
-  @media(max-width:760px){.career-grid{grid-template-columns:1fr}}
-  .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-  .work-card{background:var(--coal);padding:32px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
-  .work-card:hover{border-color:rgba(214,181,122,.35)}
-  .work-card .tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
-  .work-card h3{font-size:16px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
-  .work-card p{color:var(--sand);font-size:13px}
-  @media(max-width:760px){.works-grid{grid-template-columns:1fr}}
-  .tour-list{display:flex;flex-wrap:wrap;gap:8px}
-  .tour-tag{font-size:13px;color:var(--sand);border:1px solid rgba(201,184,163,.15);padding:8px 14px}
-  footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
-  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
-  footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
-  footer a:hover{color:var(--bone)}
-  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
-  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
-  @media(max-width:760px){
-    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .foot-grid>div:first-child{grid-column:1/3}
-    footer h4{margin-bottom:12px}
-    footer a{margin-bottom:8px;font-size:13px}
-  }
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}.foot-grid>div:first-child{grid-column:1/3}}
-  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
-  .reveal.on{opacity:1;transform:none}
-  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
-
-  a.card,a.work-card,a.other-card,a.show-card,a.proj-card,a.partner-card{color:inherit;text-decoration:none}
-
-  /* ── АНИМАЦИИ ──────────────────────────── */
-
-  /* 1. Линия sec-head рисуется */
-  .sec-head::after{
-    transform:scaleX(0);transform-origin:left;
-    transition:transform .9s cubic-bezier(.4,0,.2,1) .2s;
-  }
-  .sec-head.line-on::after{transform:scaleX(1)}
-
-  /* 3. Карточки со стаггером */
-  .grid .reveal:nth-child(1),.projects-grid .reveal:nth-child(1),.shows-grid .reveal:nth-child(1),
-  .other-grid .reveal:nth-child(1),.works-grid .reveal:nth-child(1),.team-grid .reveal:nth-child(1),
-  .cast-grid .reveal:nth-child(1),.collab-grid .reveal:nth-child(1){transition-delay:.0s}
-  .grid .reveal:nth-child(2),.projects-grid .reveal:nth-child(2),.shows-grid .reveal:nth-child(2),
-  .other-grid .reveal:nth-child(2),.works-grid .reveal:nth-child(2),.team-grid .reveal:nth-child(2),
-  .cast-grid .reveal:nth-child(2),.collab-grid .reveal:nth-child(2){transition-delay:.1s}
-  .grid .reveal:nth-child(3),.projects-grid .reveal:nth-child(3),.shows-grid .reveal:nth-child(3),
-  .other-grid .reveal:nth-child(3),.works-grid .reveal:nth-child(3),.team-grid .reveal:nth-child(3),
-  .cast-grid .reveal:nth-child(3),.collab-grid .reveal:nth-child(3){transition-delay:.2s}
-  .grid .reveal:nth-child(4),.projects-grid .reveal:nth-child(4),.shows-grid .reveal:nth-child(4),
-  .other-grid .reveal:nth-child(4),.works-grid .reveal:nth-child(4),.team-grid .reveal:nth-child(4),
-  .cast-grid .reveal:nth-child(4),.collab-grid .reveal:nth-child(4){transition-delay:.3s}
-  .grid .reveal:nth-child(5){transition-delay:.15s}
-  .grid .reveal:nth-child(6){transition-delay:.25s}
-
-  /* 4. Проявка фотографии */
-  .bio-photo img,.bio-photo-sq img{
-    filter:blur(12px) brightness(.5) saturate(.3);
-    transition:filter 1.4s ease .4s;
-  }
-  .bio-photo.revealed img,.bio-photo-sq.revealed img{
-    filter:blur(0) brightness(.85) saturate(1);
-  }
-
-  /* Текстовые ссылки в контенте */
-  p a, li a, .desc a, .bio-info a, .about-text a, .bio-text a,
-  .desc-text a, .physics-text a, .tl-desc a, .career-item p a,
-  .review-show a, .vendor-address a{
-    color:var(--gold);
-    text-decoration:none;
-    transition:opacity .3s;
-  }
-  p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
-  /* Footer и nav — оставляем их собственные цвета */
-  footer a{color:var(--sand)}
-  footer a:hover{color:var(--bone)}
-  
-  
-  /* Hero элементы */
-  .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
-
-  /* ── МОБИЛЬНОЕ МЕНЮ ──────────────────── */
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  /* Оверлей за меню */
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-
-  /* Убираем синий цвет со всех ссылок */
-  a{color:inherit}
-  a:not([class]):not([style]){color:var(--gold)}
-  nav a, footer a{color:var(--sand)}
-  
-  footer a:hover{color:var(--bone)}
-
-  /* Запрет горизонтального скролла */
-  body{max-width:100vw}
-  img, video, iframe{max-width:100%;height:auto}
-  @media(max-width:760px){
-    .wrap{padding:0 16px}
-    table{width:100%;display:block;overflow-x:auto}
-  }
-
-  /* ── Мобильная сетка (глобальный фикс) ── */
-  @media(max-width:760px){
-    .foot-grid,.form-grid,.career-grid,.career,.team-grid,.cast-grid,
-    .reviews,.reviews-grid,.mars-grid,.reading-grid,.format-grid,
-    .about-grid,.free-grid,.exh-grid,.venue-grid,.venue-stats,
-    .tickets-grid,.photos-grid,.video-grid,.stats,.collab-cards-grid,
-    .flag{grid-template-columns:1fr !important}
-    .gallery{grid-template-columns:1fr 1fr !important}
-    .grid{grid-template-columns:1fr !important}
-  }
-
-  /* ── Cookie banner ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  /* Кнопка наверх */
-  
-  
-  
-
-  /* ── Адаптация под разные экраны ── */
-
-  /* Большие телефоны 431–600px */
-  @media(max-width:600px) and (min-width:431px){
-    h1{letter-spacing:.08em}
-    .wrap{padding:0 20px}
-    .stat-num,.ev-date{font-size:clamp(28px,7vw,40px)}
-  }
-
-  /* Средние телефоны 376–430px */
-  @media(max-width:430px){
-    h1{font-size:clamp(22px,8vw,32px);letter-spacing:.06em}
-    h2{font-size:clamp(15px,5vw,20px)}
-    .wrap{padding:0 16px}
-    .eyebrow{font-size:10px;letter-spacing:.3em}
-    
-    
-    section{padding:60px 0}
-    
-    
-    .stat-num{font-size:clamp(36px,9vw,52px)}
-    .ev-date{font-size:clamp(24px,7vw,34px)}
-    .bio-grid{gap:24px}
-    .bio-info h1{font-size:clamp(22px,7vw,30px)}
-    .career-grid{grid-template-columns:1fr}
-    .team-grid{grid-template-columns:1fr}
-    .foot-grid{grid-template-columns:1fr}
-    .foot-grid>div:first-child{grid-column:1}
-    footer h4{font-size:10px}
-    footer a{font-size:13px}
-  }
-
-  /* Маленькие телефоны до 375px */
-  @media(max-width:375px){
-    h1{font-size:clamp(20px,9vw,28px);letter-spacing:.04em}
-    h2{font-size:clamp(14px,5.5vw,18px);letter-spacing:.2em}
-    .wrap{padding:0 14px}
-    .eyebrow{font-size:9px;letter-spacing:.26em}
-    
-    
-    
-    
-    
-    section{padding:50px 0}
-    .stat-item{padding:28px 20px}
-    .stat-num{font-size:clamp(32px,10vw,44px)}
-    .stat-label{font-size:9px;letter-spacing:.22em}
-    .member-info{padding:24px 20px 32px}
-    .bio-photo{height:260px}
-    
-    
-    
-    
-    
-  }
-  
-  
-  
-
-  /* ── Telegram виджет ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</style>
+.person-card:hover .person-desc{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr)}}</style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
