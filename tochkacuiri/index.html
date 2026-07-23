@@ -32,7 +32,7 @@
   
 
   /* HERO */
-  .hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;overflow:hidden}
+  .hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px}
 .hero-bg{position:absolute;inset:0;background-image:url('https://cuire-fest.ru/assets/photo/p06.jpg');background-size:cover;background-position:center;filter:brightness(.28);will-change:transform}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.2) 0%,rgba(11,11,13,.0) 30%,rgba(11,11,13,.88) 78%,var(--ink) 100%)}
 .hero-beam::before{content:"";position:absolute;top:0;left:58%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.9) 35%,var(--gold) 65%,transparent);transform:rotate(12deg);transform-origin:top center;box-shadow:0 0 20px 4px rgba(214,181,122,.5),0 0 80px 20px rgba(214,181,122,.15);animation:beam-in 2s ease both}
@@ -95,7 +95,12 @@
 .time-item .time{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);font-weight:300}
 .time-item .event{font-size:15px;color:var(--bone)}
 .time-item .event small{display:block;font-size:12px;color:var(--sand);margin-top:3px}
-@media(max-width:760px){.days-tabs{flex-direction:column}.day-content{padding:28px 20px}}
+@media(max-width:760px){
+  .days-tabs{display:flex;flex-direction:row;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch}
+  .day-tab{flex:0 0 auto;min-width:84px;padding:14px 12px;text-align:center}
+  .day-tab .day-num{font-size:22px;margin-bottom:2px}
+  .day-content{padding:28px 20px}
+}
 /* FREE EVENTS */
   .free-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
 .free-card{background:var(--coal);padding:36px 28px}
@@ -513,7 +518,7 @@
     <div class="foot-grid">
       <div>
         <h4>AELITA PRODUCTION</h4>
-        <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Продюсеры: <a href="/abdulova" style="color:var(--gold)">Екатерина Абдулова</a>, <a href="/moshnikov" style="color:var(--gold)">Константин Мошников</a></p>
+        <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Продюсеры: <a href="/abdulova" style="color:var(--gold)">Екатерина Абдулова,</a> <a href="/moshnikov" style="color:var(--gold)">Константин Мошников</a></p>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
         <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
