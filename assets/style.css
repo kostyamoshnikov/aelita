@@ -140,7 +140,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
 .burger{
   display:none;flex-direction:column;gap:6px;cursor:pointer;
   padding:8px;background:none;border:none;
-  position:fixed;top:18px;right:20px;z-index:200;
+  z-index:200;
 }
 .burger span{
   display:block;width:22px;height:1px;background:var(--bone);
@@ -420,7 +420,7 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
    ============================================================ */
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
 a{color:inherit;text-decoration:none}
-nav{padding:20px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+nav{padding:20px 0}
 .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px}
 .logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
