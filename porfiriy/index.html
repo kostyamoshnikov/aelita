@@ -430,7 +430,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     const video = document.getElementById('hero-video');
     if (!video) return;
     const isOn = btn.classList.toggle('on');
-    video.muted = !isOn;
+    video.muted = true;
     btn.querySelector('span').textContent = isOn ? 'Без звука' : 'Звук';
   }
 </script>
@@ -478,14 +478,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     </video>
   </div>
   <div class="hero-overlay"></div>
-  <button class="teaser-sound-btn" id="teaser-sound-btn" onclick="toggleTeaserSound(this)" aria-label="Включить звук">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-      <line x1="23" y1="9" x2="17" y2="15" class="mute-line"/>
-      <line x1="17" y1="9" x2="23" y2="15" class="mute-line"/>
-    </svg>
-    <span>Звук</span>
-  </button>
   <div class="wrap hero-content">
     <div class="hero-badge"><span class="eyebrow">Медитативный детектив</span><span class="age">16+</span></div>
     <h1 class="hero-title">Порфирий</h1>

@@ -467,16 +467,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
    });
 
   // Активное состояние навигации
-  
-
-  // Кнопка звука тизера
-  function toggleTeaserSound(btn) {
-    const video = document.getElementById('hero-video');
-    if (!video) return;
-    const isOn = btn.classList.toggle('on');
-    video.muted = !isOn;
-    btn.querySelector('span').textContent = isOn ? 'Без звука' : 'Звук';
-  }
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -555,14 +545,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-beam" aria-hidden="true"></div>
-  <button class="teaser-sound-btn" id="teaser-sound-btn" onclick="toggleTeaserSound(this)" aria-label="Включить звук">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-      <line x1="23" y1="9" x2="17" y2="15" class="mute-line"/>
-      <line x1="17" y1="9" x2="23" y2="15" class="mute-line"/>
-    </svg>
-    <span>Звук</span>
-  </button>
   <div class="wrap hero-content">
     <div class="hero-badge">
       <span class="eyebrow">Мистерия</span>

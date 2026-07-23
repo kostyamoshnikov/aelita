@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приложение — AELITA PRODUCTION</title>
+<meta name="description" content="Установите приложение AELITA PRODUCTION на телефон — афиша, спектакли и новости прямо на экране.">
+<meta property="og:title" content="Приложение AELITA PRODUCTION">
+<meta property="og:description" content="Установите приложение — афиша и спектакли всегда под рукой.">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="АЭЛИТА">
+<meta name="theme-color" content="#0B0B0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%;overflow-x:hidden}
+body{background:var(--ink);color:var(--bone);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+
+/* Nav */
+nav{padding:20px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+.nav-in{max-width:680px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px}
+.logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+.nav-back{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);transition:color .3s}
+.nav-back:hover{color:var(--gold)}
+
+/* Hero */
+.hero{padding:64px 0 48px;text-align:center}
+.app-icon{width:120px;height:120px;border-radius:26px;margin:0 auto 32px;overflow:hidden;box-shadow:0 8px 40px rgba(214,181,122,.2)}
+.app-icon img{width:100%;height:100%;object-fit:cover}
+.eyebrow{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(24px,6vw,36px);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.subtitle{color:var(--sand);font-size:15px;max-width:36ch;margin:0 auto 40px}
+
+/* Кнопка установки */
+.install-btn{display:inline-flex;align-items:center;gap:12px;background:var(--gold);color:var(--ink);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;padding:16px 32px;cursor:pointer;border:none;transition:opacity .3s;margin-bottom:12px}
+.install-btn:hover{opacity:.85}
+.install-btn.hidden{display:none}
+.install-hint{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.16em;color:rgba(201,184,163,.5);text-transform:uppercase}
+.already-installed{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--gold);display:none}
+.already-installed.show{display:block}
+
+/* Разделитель */
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(214,181,122,.3),transparent);margin:48px 0}
+
+/* Возможности */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:48px}
+.feature{background:var(--coal);padding:28px 24px}
+.feature-icon{font-size:20px;margin-bottom:12px}
+.feature h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.feature p{font-size:13px;color:var(--sand);line-height:1.6}
+@media(max-width:480px){.features{grid-template-columns:1fr}}
+
+/* Инструкция */
+.instructions{margin-bottom:48px}
+.instructions h2{font-family:'Montserrat',sans-serif;font-weight:200;font-size:14px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:24px}
+
+.tabs{display:flex;gap:2px;margin-bottom:24px}
+.tab{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;padding:10px 20px;background:var(--coal);color:var(--sand);cursor:pointer;border:none;transition:all .3s;flex:1}
+.tab.active{background:rgba(214,181,122,.12);color:var(--gold);border-bottom:1px solid var(--gold)}
+
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step-num{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--gold);background:rgba(214,181,122,.1);border:1px solid rgba(214,181,122,.2);width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-text{font-size:14px;color:var(--sand);padding-top:6px;line-height:1.6}
+.step-text strong{color:var(--bone)}
+
+/* Footer */
+footer{padding:32px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
+footer p{font-size:12px;color:rgba(201,184,163,.4)}
+footer a{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <a class="nav-back" href="/">← На сайт</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="app-icon">
+      <img src="/icons/icon-192x192.png" alt="AELITA PRODUCTION">
+    </div>
+    <p class="eyebrow">Приложение</p>
+    <h1>AELITA<br>PRODUCTION</h1>
+    <p class="subtitle">Афиша, спектакли и новости компании — всегда под рукой, даже без интернета</p>
+
+    <button class="install-btn" id="install-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      </svg>
+      Установить
+    </button>
+    <p class="install-hint" id="install-hint">Бесплатно · Без магазина приложений</p>
+    <p class="already-installed" id="already-installed">✓ Приложение уже установлено</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🎭</div>
+      <h3>Афиша</h3>
+      <p>Ближайшие показы и новые даты — моментально</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📡</div>
+      <h3>Офлайн</h3>
+      <p>Основные страницы работают без интернета</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Быстро</h3>
+      <p>Мгновенный запуск прямо с экрана телефона</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔕</div>
+      <h3>Без рекламы</h3>
+      <p>Никаких уведомлений и трекинга</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="instructions">
+    <h2>Как установить</h2>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('android', this)">Android</button>
+      <button class="tab" onclick="switchTab('ios', this)">iPhone / iPad</button>
+    </div>
+
+    <div class="tab-content active" id="tab-android">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Откройте сайт в браузере <strong>Google Chrome</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Нажмите кнопку <strong>«Установить»</strong> выше — или найдите в меню Chrome пункт <strong>«Добавить на главный экран»</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">Подтвердите установку в появившемся диалоге</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">Иконка <strong>АЭЛИТА</strong> появится на рабочем столе</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-ios">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Откройте сайт в браузере <strong>Safari</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Нажмите кнопку <strong>«Поделиться»</strong> <span style="font-size:16px">⎙</span> внизу экрана</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">Выберите <strong>«На экран Домой»</strong> в списке действий</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">Нажмите <strong>«Добавить»</strong> в правом верхнем углу</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p style="text-align:center;margin-bottom:48px">
+    <a href="/tickets" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)">Смотреть афишу →</a>
+  </p>
+</div>
+
+<footer>
+  <p>© 2026 AELITA PRODUCTION · <a href="/">aelita-production.ru</a></p>
+</footer>
+
+<script>
+  // Перехватываем событие установки PWA
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-btn').classList.remove('hidden');
+    document.getElementById('install-hint').style.display = 'block';
+  });
+
+  document.getElementById('install-btn').addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      // iOS или уже установлено — показываем инструкцию
+      document.getElementById('tab-ios').classList.add('active');
+      document.getElementById('tab-android').classList.remove('active');
+      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===1));
+      document.querySelector('.instructions').scrollIntoView({behavior:'smooth'});
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('install-btn').classList.add('hidden');
+      document.getElementById('install-hint').style.display = 'none';
+      document.getElementById('already-installed').classList.add('show');
+    }
+    deferredPrompt = null;
+  });
+
+  // Если уже установлено
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    document.getElementById('install-btn').classList.add('hidden');
+    document.getElementById('install-hint').style.display = 'none';
+    document.getElementById('already-installed').classList.add('show');
+  }
+
+  // Переключение вкладок инструкции
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  // Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
+</body>
+</html>
