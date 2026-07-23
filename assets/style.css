@@ -59,7 +59,7 @@
   .mob-cta{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     position:fixed;bottom:0;left:0;right:0;z-index:45;
-    background:rgba(11,11,13,.97);backdrop-filter:blur(8px);
+    background:var(--ink);backdrop-filter:blur(8px);
     border-top:1px solid rgba(214,181,122,.2);
     padding:14px 20px;
     transform:translateY(0);transition:transform .3s;
@@ -698,3 +698,12 @@ footer a{color:rgba(201,184,163,.5)}
 .show-card:hover{border-color:rgba(214,181,122,.35)}
 .show-card .tag{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
 @media(max-width:760px){.shows-grid{grid-template-columns:1fr}}
+
+/* Запас под футером на мобильных — чтобы фикс. нижняя плашка (.mob-cta)
+   не перекрывала реквизиты/ссылки в самом низу страницы при докрутке до конца */
+@media(max-width:760px){
+  footer{padding-bottom:132px}
+}
+@media(max-width:430px){
+  footer{padding-bottom:150px}
+}

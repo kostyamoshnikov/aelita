@@ -64,7 +64,11 @@
 .filter-btn:hover{border-color:var(--gold);color:var(--gold)}
 .filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(214,181,122,.08)}
 .cat-section{transition:opacity .3s}
-.cat-section.hidden{display:none}</style>
+.cat-section.hidden{display:none}
+/* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:760px){.grid{grid-template-columns:1fr !important}}
+</style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};

@@ -48,7 +48,11 @@
   .shows-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .show-card{background:var(--coal);padding:32px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
 .show-card h3{font-size:16px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
-.show-card p{color:var(--sand);font-size:13px}</style>
+.show-card p{color:var(--sand);font-size:13px}
+/* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.shows-grid{grid-template-columns:1fr}}
+</style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
