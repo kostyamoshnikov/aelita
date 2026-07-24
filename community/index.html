@@ -53,9 +53,10 @@ p a:hover{opacity:.75}
 .hero-beam::before{content:"";position:absolute;top:-5%;left:55%;width:1.5px;height:80%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);transform:rotate(10deg);transform-origin:top center;box-shadow:0 0 18px 4px rgba(214,181,122,.45),0 0 70px 18px rgba(214,181,122,.15);animation:beam-in 2s ease both}
 @keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:80%}}
 .hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:16px}
+.hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
 @media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
-.hero-sub{font-size:15px;color:var(--sand);max-width:52ch;margin-bottom:36px;line-height:1.7}
+.hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
+.hero-sub{font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
 .hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
@@ -192,6 +193,7 @@ p a:hover{opacity:.75}
   <div class="wrap hero-content">
     <p class="hero-community">AELITA COMMUNITY</p>
     <h1 class="hero-title">Пространство,<br>наполненное<br>смыслом</h1>
+    <div class="hero-divider"></div>
     <p class="hero-sub">Книжные встречи, где не читают лекций. Здесь учатся отделять свои желания от чужих — и находят смелость жить без оглядки на «всех».</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
