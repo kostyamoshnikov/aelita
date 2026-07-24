@@ -14,6 +14,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AELITA COMMUNITY — книжный клуб Екатерины Абдуловой</title>
 <meta name="description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
+<link rel="canonical" href="https://aelita-production.ru/community/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/community/">
+<meta property="og:title" content="AELITA COMMUNITY — книжный клуб Екатерины Абдуловой">
+<meta property="og:description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AELITA COMMUNITY — книжный клуб Екатерины Абдуловой">
+<meta name="twitter:description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -46,7 +55,7 @@ p a:hover{opacity:.75}
 .hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:16px}
 @media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
-.hero-sub{font-size:17px;color:var(--sand);max-width:52ch;margin-bottom:36px;line-height:1.75}
+.hero-sub{font-size:15px;color:var(--sand);max-width:52ch;margin-bottom:36px;line-height:1.7}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
 .hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
@@ -141,7 +150,10 @@ p a:hover{opacity:.75}
         clickmap:true,
         trackLinks:true,
         accurateTrackBounce:true,
-        webvisor:true
+        webvisor:true,
+        ecommerce:"dataLayer",
+        referrer: document.referrer,
+        url: location.href
    });
 
   // Активное состояние навигации
@@ -156,6 +168,7 @@ p a:hover{opacity:.75}
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter --></head>
 <body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
   <div class="nav-in">
@@ -171,6 +184,8 @@ p a:hover{opacity:.75}
     </button>
   </div>
 </nav>
+
+<main id="main">
 
 <div class="hero">
   <div class="hero-beam" aria-hidden="true"></div>
@@ -381,6 +396,8 @@ p a:hover{opacity:.75}
     document.getElementById('formBot_j').style.display = (tab === 'bot') ? 'block' : 'none';
   }
 </script>
+
+</main>
 
 <footer>
   <div class="wrap">

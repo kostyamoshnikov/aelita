@@ -14,11 +14,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>АЭЛИТА ПРОДАКШЕН — искусство, изменяющее состояние</title>
 <meta name="description" content="AELITA PRODUCTION — театральная продюсерская компания. Спектакли, фестивали, гастроли: афиша, билеты, новости и закулисье.">
+<link rel="canonical" href="https://aelita-production.ru/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/">
+<meta property="og:title" content="АЭЛИТА ПРОДАКШЕН — искусство, изменяющее состояние">
+<meta property="og:description" content="AELITA PRODUCTION — театральная продюсерская компания. Спектакли, фестивали, гастроли: афиша, билеты, новости и закулисье.">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="АЭЛИТА ПРОДАКШЕН — искусство, изменяющее состояние">
+<meta name="twitter:description" content="AELITA PRODUCTION — театральная продюсерская компания. Спектакли, фестивали, гастроли: афиша, билеты, новости и закулисье.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
 <style>body{max-width:100vw}
+.ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
 section{padding:110px 0}
 body{
     background:var(--ink);
@@ -244,7 +254,10 @@ footer p{color:var(--sand);font-size:14px}
         clickmap:true,
         trackLinks:true,
         accurateTrackBounce:true,
-        webvisor:true
+        webvisor:true,
+        ecommerce:"dataLayer",
+        referrer: document.referrer,
+        url: location.href
    });
 
   // Активное состояние навигации
@@ -340,6 +353,7 @@ footer p{color:var(--sand);font-size:14px}
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
   <div class="nav-in">
@@ -356,6 +370,8 @@ footer p{color:var(--sand);font-size:14px}
     </button>
   </div>
 </nav>
+
+<main id="main">
 
 <header id="top">
   <div class="hero-mark" aria-hidden="true">
@@ -389,6 +405,16 @@ footer p{color:var(--sand);font-size:14px}
 <section id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">01</span><h2>Афиша</h2></div>
+
+    <div class="event reveal">
+      <div class="ev-date">22–25.10<small>Старый Оскол</small></div>
+      <div class="ev-info">
+        <h3><a href="/tochkacuiri" style="color:var(--gold);text-decoration:none">«Точка Кюри»</a></h3>
+        <p>Ежегодный фестиваль современного искусства · ЦСИ «Быль»</p>
+        <span class="badge">Первое издание</span>
+      </div>
+      <a class="ev-cta" href="/tochkacuiri">О фестивале</a>
+    </div>
 
     <div class="event reveal">
       <div class="ev-date">22–25.10<small>Старый Оскол</small></div>
@@ -535,6 +561,8 @@ footer p{color:var(--sand);font-size:14px}
     <p class="sub-ok" id="subOk">Готово — напишем, как только откроются продажи.</p>
   </div>
 </section>
+
+</main>
 
 <footer id="contacts">
   <div class="wrap">

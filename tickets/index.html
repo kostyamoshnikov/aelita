@@ -14,6 +14,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Афиша и билеты — AELITA PRODUCTION</title>
 <meta name="description" content="Афиша AELITA PRODUCTION: ближайшие спектакли, даты, города и билеты. Полное расписание показов и премьер.">
+<link rel="canonical" href="https://aelita-production.ru/tickets/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/tickets/">
+<meta property="og:title" content="Афиша и билеты — AELITA PRODUCTION">
+<meta property="og:description" content="Афиша AELITA PRODUCTION: ближайшие спектакли, даты, города и билеты. Полное расписание показов и премьер.">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Афиша и билеты — AELITA PRODUCTION">
+<meta name="twitter:description" content="Афиша AELITA PRODUCTION: ближайшие спектакли, даты, города и билеты. Полное расписание показов и премьер.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -68,7 +77,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         clickmap:true,
         trackLinks:true,
         accurateTrackBounce:true,
-        webvisor:true
+        webvisor:true,
+        ecommerce:"dataLayer",
+        referrer: document.referrer,
+        url: location.href
    });
 
   // Активное состояние навигации
@@ -83,6 +95,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 <noscript><div><img src="https://mc.yandex.ru/watch/104681911" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter --></head>
 <body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
   <div class="nav-in">
@@ -98,6 +111,8 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
     </button>
   </div>
 </nav>
+
+<main id="main">
 
 <div class="page-header">
   <div class="wrap">
@@ -188,6 +203,8 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
     document.getElementById('notifyBot').style.display = (tab === 'bot') ? 'block' : 'none';
   }
 </script>
+
+</main>
 
 <footer>
   <div class="wrap">
