@@ -263,26 +263,7 @@ p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
   .hero-dir a, .hero-meta a{color:inherit;text-decoration:none}
 a:not([class]):not([style]){color:var(--gold)}
 nav a, footer a{color:var(--sand)}
-/* ── Cookie banner ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  /* Кнопка наверх */
-  
-  
-  
-
-  /* ── Модальное окно Спасибо ── */
+/* ── Модальное окно Спасибо ── */
   .thanks-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
 .thanks-modal.open{opacity:1;pointer-events:all}
 .thanks-box{background:var(--coal);border:1px solid rgba(214,181,122,.2);padding:52px 44px;max-width:440px;width:90%;text-align:center;transform:translateY(20px);transition:transform .4s}
@@ -306,11 +287,7 @@ nav a, footer a{color:var(--sand)}
     h2{font-size:clamp(15px,5vw,20px)}
     .wrap{padding:0 16px}
     .eyebrow{font-size:10px;letter-spacing:.3em}
-    
-    
     section{padding:60px 0}
-    
-    
     .stat-num{font-size:clamp(36px,9vw,52px)}
     .ev-date{font-size:clamp(24px,7vw,34px)}
     .bio-grid{gap:24px}
@@ -328,22 +305,12 @@ nav a, footer a{color:var(--sand)}
     h2{font-size:clamp(14px,5.5vw,18px);letter-spacing:.2em}
     .wrap{padding:0 14px}
     .eyebrow{font-size:9px;letter-spacing:.26em}
-    
-    
-    
-    
-    
     section{padding:50px 0}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:clamp(32px,10vw,44px)}
     .stat-label{font-size:9px;letter-spacing:.22em}
     .member-info{padding:24px 20px 32px}
     .bio-photo{height:260px}
-    
-    
-    
-    
-    
   }
 h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
 .notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
@@ -417,11 +384,8 @@ img, video, iframe, svg { max-width: 100%; height: auto; }
    только форматированием (пробелы/переносы), значение то же самое.
    Объединено в канонический вариант.
    ============================================================ */
-:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
 a{color:inherit}
 nav{padding:20px 0}
-.logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px}
-.logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 :root{--maxw:1320px}
 html{scroll-behavior:smooth}
@@ -438,59 +402,10 @@ footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px
     footer h4{margin-bottom:12px}
     footer a{margin-bottom:8px;font-size:13px}
   }
-@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}.foot-grid>div:first-child{grid-column:1/3}}
 /* ── АНИМАЦИИ ──────────────────────────── */
 
-  /* 1. Линия sec-head рисуется */
-  .sec-head::after{
-    transform:scaleX(0);transform-origin:left;
-    transition:transform .9s cubic-bezier(.4,0,.2,1) .2s;
-  }
 /* Footer и nav — оставляем их собственные цвета */
   footer a{color:var(--sand)}
-/* ── МОБИЛЬНОЕ МЕНЮ ──────────────────── */
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  /* Оверлей за меню */
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-
-  /* Убираем синий цвет со всех ссылок */
-  a{color:inherit}
-/* Запрет горизонтального скролла */
-  body{max-width:100vw}
 @media(max-width:760px){
     .wrap{padding:0 16px}
     table{width:100%;display:block;overflow-x:auto}
@@ -506,12 +421,11 @@ footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px
     .grid{grid-template-columns:1fr !important}
   }
 body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* Запрет горизонтального скролла */
 body{max-width:100vw}
 .eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
 .hero-beam{position:absolute;inset:0;pointer-events:none}
-@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .notify-tab{background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--sand);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s ease}
-.sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
 .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
 .about-text p strong{color:var(--bone);font-weight:400}
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
@@ -523,7 +437,6 @@ footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;let
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 section{padding:80px 0}
 .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
-.sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
 @media(max-width:760px){.career-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.works-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
@@ -538,17 +451,6 @@ section{padding:80px 0}
   .hero-bg{will-change:transform}
 .page-header h1{font-size:clamp(28px,5vw,52px);letter-spacing:.18em;margin-top:16px}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s}
-/* ── Telegram виджет ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
   /* ── Hero видео ── */
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,13,.3) 0%,rgba(11,11,13,.0) 35%,rgba(11,11,13,.85) 72%,var(--ink) 100%)}
 .teaser-sound-btn{
@@ -559,7 +461,6 @@ section{padding:80px 0}
     font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
     padding:10px 16px;cursor:pointer;transition:all .3s;
   }
-html{overflow-x:hidden;max-width:100%}
 .sec-head h2{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
 @media(max-width:760px){.wrap{padding:0 16px}}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both 1s}
@@ -590,20 +491,6 @@ html{overflow-x:hidden;max-width:100%}
 .review-author{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
 .review-src{font-size:12px;color:var(--sand);margin-top:4px}
 @media(max-width:760px){.reviews{grid-template-columns:1fr}}
-/* ── Cookie banner ── */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
   .ev-date{font-family:'Montserrat',sans-serif;font-weight:200;font-size:30px;color:var(--gold);line-height:1.15}
 .ev-date small{display:block;font-size:10px;letter-spacing:.3em;color:var(--sand);text-transform:uppercase;margin-top:4px}
 .ph{overflow:hidden;background:var(--coal)}
