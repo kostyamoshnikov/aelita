@@ -1,6 +1,6 @@
 # AELITA PRODUCTION — сайт
 
-**Версия: `aelita-v2`**
+**Версия: `aelita-v3`**
 
 Статический сайт театральной продюсерской компании AELITA PRODUCTION.
 Домен: **aelita-production.ru** (GitHub Pages, см. `CNAME`).
