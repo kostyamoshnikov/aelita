@@ -1,14 +1,11 @@
 // === Отслеживание конверсионных действий (AELITA PRODUCTION) ===
-// Событие уходит и в Яндекс.Метрику (reachGoal), и в GA4 (gtag event) —
-// без необходимости заранее создавать цели в интерфейсах.
+// Событие уходит в Яндекс.Метрику (reachGoal) — без необходимости
+// заранее создавать цели в интерфейсе.
 (function () {
   function track(goal, params) {
     params = params || {};
     if (window.ym) {
       try { window.ym(104681911, 'reachGoal', goal, params); } catch (e) {}
-    }
-    if (window.gtag) {
-      try { window.gtag('event', goal, params); } catch (e) {}
     }
   }
 

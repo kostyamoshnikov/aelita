@@ -578,3 +578,10 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 /* Skip-link для доступности — скрыт до получения фокуса с клавиатуры */
 .skip-link{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--bone);padding:12px 18px;z-index:1000}
 .skip-link:focus{left:12px;top:12px}
+
+/* Галерея фото спектакля — масонри через CSS-колонки, фото разных пропорций не обрезаются */
+.photo-gallery{column-count:3;column-gap:12px}
+.photo-gallery img{width:100%;display:block;margin-bottom:12px;border-radius:2px;filter:brightness(.9);transition:filter .3s ease}
+.photo-gallery img:hover{filter:brightness(1)}
+@media(max-width:900px){.photo-gallery{column-count:2}}
+@media(max-width:560px){.photo-gallery{column-count:1}}
