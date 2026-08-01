@@ -1,8 +1,18 @@
 // ── AELITA PRODUCTION · Service Worker ──────────────────────────
 // Стратегия: Cache First для статики, Network First для HTML страниц
+//
+// ⚠️ При каждой правке сайта (новый aelita-vN) — бампать номер версии
+// в CACHE_NAME/STATIC_CACHE ниже на тот же N. Раньше это правило не
+// соблюдалось (CACHE_NAME оставался 'aelita-v1' с самого первого
+// релиза) — из-за этого cache-first для style.css/main.js не имел
+// реального механизма инвалидации, и вернувшиеся пользователи могли
+// сколько угодно долго видеть старые стили. Теперь стили/скрипты
+// подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
+// синхронизирована с этим же N.
 
-const CACHE_NAME = 'aelita-v1';
-const STATIC_CACHE = 'aelita-static-v1';
+const SITE_VERSION = 15;
+const CACHE_NAME = `aelita-v${SITE_VERSION}`;
+const STATIC_CACHE = `aelita-static-v${SITE_VERSION}`;
 
 // Страницы и ресурсы для предварительного кэширования при установке
 const PRECACHE_URLS = [
@@ -11,7 +21,7 @@ const PRECACHE_URLS = [
   '/projects/',
   '/iov/',
   '/porfiriy/',
-  '/tochkacuiri/',
+  '/tochkacuire/',
   '/about/',
   '/contacts/',
   '/offline.html',
@@ -19,8 +29,8 @@ const PRECACHE_URLS = [
   '/favicon.ico',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/assets/style.css',
-  '/assets/main.js',
+  `/assets/style.css?v=${SITE_VERSION}`,
+  `/assets/main.js?v=${SITE_VERSION}`,
 ];
 
 // ── Установка: кэшируем ключевые страницы ───────────────────────
