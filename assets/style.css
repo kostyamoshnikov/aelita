@@ -374,6 +374,9 @@ h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppe
 .field select option{background:var(--coal)}
 .doc-head{padding:140px 0 50px;border-bottom:1px solid rgba(232,230,225,.08)}
 .doc-meta{color:var(--sand);font-size:14px;margin-top:12px}
+.pdf-download{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:4px;transition:border-color .3s}
+.pdf-download:hover{border-color:var(--gold)}
+.pdf-download svg{width:13px;height:13px;flex-shrink:0}
 .back-link{display:inline-block;margin-top:40px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);border:1px solid rgba(201,184,163,.3);padding:13px 24px;transition:all .3s}
 .back-link:hover{border-color:var(--gold);color:var(--gold)}
 /* ── Запрет горизонтального скролла (глобально) ── */

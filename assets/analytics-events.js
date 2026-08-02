@@ -30,6 +30,10 @@
     if (/\/tickets\/?($|[?#])/.test(href)) {
       track('tickets_page_click', { link_url: href });
     }
+    if (/\/documents-pdf\/.+\.pdf$/.test(href)) {
+      track('legal_pdf_download', { link_url: href });
+      return;
+    }
   }, true);
 
   // Клик по кнопке отправки форм (handleForm/subscribe/joinClub/handleSubmit и т.п.)
