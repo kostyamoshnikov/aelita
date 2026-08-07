@@ -32,6 +32,14 @@
     }
     if (/\/documents-pdf\/.+\.pdf$/.test(href)) {
       track('legal_pdf_download', { link_url: href });
+      // CV — не юридический документ, но лежит в той же папке (см.
+      // CHANGELOG, pack-v39); отдельное событие поверх старого, чтобы
+      // скачивания CV было видно отдельно в Метрике, ничего не ломая
+      // для уже настроенных целей на legal_pdf_download.
+      const cvMatch = href.match(/\/documents-pdf\/(moshnikov|abdulova)-cv\.pdf$/);
+      if (cvMatch) {
+        track('cv_download', { link_url: href, person: cvMatch[1] });
+      }
       return;
     }
   }, true);

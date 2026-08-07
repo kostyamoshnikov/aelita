@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AELITA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porfiry — AELITA PRODUCTION production</title>
+<meta name="description" content="A meditative detective mashup based on Dostoevsky’s “Crime and Punishment” and Akutagawa’s novellas. 16+.">
+<link rel="canonical" href="https://aelita-production.ru/en/porfiriy/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/porfiriy/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/porfiriy/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/porfiriy/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/porfiriy/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/porfiriy/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/porfiriy/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/en/porfiriy/">
+<meta property="og:title" content="Porfiry — AELITA PRODUCTION production">
+<meta property="og:description" content="A meditative detective mashup based on Dostoevsky’s “Crime and Punishment” and Akutagawa’s novellas. 16+.">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Porfiry — AELITA PRODUCTION production">
+<meta name="twitter:description" content="A meditative detective mashup based on Dostoevsky’s “Crime and Punishment” and Akutagawa’s novellas. 16+.">
+  <meta name="twitter:image" content="https://thb.tildacdn.com/tild3965-3934-4964-b236-346463333335/-/empty/4639.jpg">
+<meta property="og:image" content="https://thb.tildacdn.com/tild3965-3934-4964-b236-346463333335/-/empty/4639.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=18">
+<style>body{max-width:100vw}
+section{padding:90px 0}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;transition:all .3s}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s}
+.sec-head{margin-bottom:48px}
+.hero{height:100svh;max-height:100svh;min-height:400px;position:relative;display:flex;align-items:flex-end;padding-bottom:60px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('https://thb.tildacdn.com/tild3965-3934-4964-b236-346463333335/-/empty/4639.jpg');background-size:cover;background-position:center top;filter:brightness(.32)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.3) 0%,rgba(11,11,13,.0) 35%,rgba(11,11,13,.85) 72%,var(--ink) 100%)}
+.hero-title{font-size:clamp(52px,11vw,120px);letter-spacing:.06em;line-height:1;margin-bottom:6px}
+.review-text{font-size:14px;color:var(--bone);line-height:1.75;margin-bottom:20px;font-style:italic}
+.photo-drive a{display:inline-block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 28px;text-decoration:none;transition:opacity .3s}
+.photo-drive a:hover{opacity:.85}
+/* ── Фотосетка Порфирий (мозаика) ── */
+  .photos-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:8px}
+.ph-1{grid-column:1/7;grid-row:1;height:320px}
+.ph-2{grid-column:7/10;grid-row:1;height:320px}
+.ph-3{grid-column:10/13;grid-row:1;height:320px}
+.ph-4{grid-column:1/5;grid-row:2;height:240px}
+.ph-5{grid-column:5/9;grid-row:2;height:240px}
+.ph-6{grid-column:9/13;grid-row:2;height:240px}
+.ph-7{grid-column:1/4;grid-row:3;height:280px}
+.ph-8{grid-column:4/7;grid-row:3;height:280px}
+.ph-9{grid-column:7/13;grid-row:3;height:280px}
+.ph-10{grid-column:1/13;grid-row:4;height:300px}
+@media(max-width:760px){
+    .photos-grid{grid-template-columns:1fr 1fr !important;gap:4px}
+    .ph-1,.ph-2,.ph-3,.ph-4,.ph-5,.ph-6,.ph-7,.ph-8,.ph-9,.ph-10{grid-column:auto !important;grid-row:auto !important;height:180px}
+  }
+@media(max-width:480px){
+    .photos-grid{grid-template-columns:1fr !important}
+    .ph-1,.ph-2,.ph-3,.ph-4,.ph-5,.ph-6,.ph-7,.ph-8,.ph-9,.ph-10{height:220px}
+  }.btn-outline{display:inline-block}
+@media(max-width:430px){section{padding:60px 0}}
+@media(max-width:375px){section{padding:50px 0}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "Тизер спектакля «Порфирий»",
+  "description": "Тизер медитативно-детективного мэшапа по мотивам «Преступления и наказания» Достоевского и новелл Акутагавы. AELITA PRODUCTION.",
+  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg",
+  "uploadDate": "2026-07-18",
+  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4",
+  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239086&hd=2",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AELITA PRODUCTION",
+    "url": "https://aelita-production.ru"
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="curtain" aria-hidden="true"><div class="curtain-l"></div><div class="curtain-r"></div></div>
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+    <div class="nav-links">
+      <a href="/en/tickets">Schedule</a>
+      <a href="/en/projects" class="active">Productions</a>
+      <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/contacts">Contact</a>
+    </div>
+    <a class="lang-switch" href="/en/porfiriy/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <button class="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<div class="hero">
+  <div class="hero-video-bg">
+    <video autoplay muted loop playsinline preload="auto" id="hero-video" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg">
+      <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4" type="video/mp4">
+    </source></video>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="wrap hero-content">
+    <div class="hero-badge"><span class="eyebrow">Meditative detective piece</span><span class="age">16+</span></div>
+    <h1 class="hero-title">Porfiry</h1>
+    <p class="hero-sub">A mashup of Dostoevsky and Akutagawa</p>
+    <p class="hero-dir">Director &amp; performer — <strong>Alexander Panov</strong></p>
+    <div class="hero-btns">
+      <a class="btn-gold" href="#afisha">Upcoming performances</a>
+      
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>About the production</h2></div>
+    <div class="desc-grid reveal">
+      <div class="desc-text">
+        <p>The murder of the old moneylender. No evidence. Motive unknown. The suspects have scattered through a bamboo grove, mingling with young officers.</p>
+        <blockquote class="desc-quote">Meditation. Ikigai. Bushido. Only this will help Porfiry solve the most sinister crime in Russian literature.</blockquote>
+      </div>
+      <div>
+        <div class="meta-box">
+          <div class="meta-row"><span class="lbl">Genre</span><span class="val">Meditative detective piece</span></div>
+          <div class="meta-row"><span class="lbl">Age rating</span><span class="val">16+</span></div>
+          <div class="meta-row"><span class="lbl">Director</span><span class="val">Alexander Panov</span></div>
+          <div class="meta-row"><span class="lbl">Source material</span><span class="val">Dostoevsky, Akutagawa</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--coal);padding:70px 0" id="afisha">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Upcoming performances</h2></div>
+    <p style="color:var(--sand)">New dates to be confirmed.</p>
+    <a class="btn-outline" href="/#subscribe" style="display:inline-block;margin-top:20px">Be the first to know about dates</a>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section id="photos" style="padding:80px 0">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Production photos</h2></div>
+    <div class="photos-grid reveal">
+      <div class="ph ph-1"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02253_panuag.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02253_panuag.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-2"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02133_wxp9sa.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02133_wxp9sa.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-3"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02248_rvgnf2.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02248_rvgnf2.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-4"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02237_db7wwx.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02237_db7wwx.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-5"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02192_rl7ing.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02192_rl7ing.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-6"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02147_pugyi5.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02147_pugyi5.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-7"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02131_zovrqz.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02131_zovrqz.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-8"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02088_m5rogy.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02088_m5rogy.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-9"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01951_vufgxu.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01951_vufgxu.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-10"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01890_y2gt43.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01890_y2gt43.jpg" alt="Scene from “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+    </div>
+  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Photo: Ekaterina Ilyina</p>
+  </div>
+</section>
+
+<!-- PROMO PHOTOS -->
+<section style="padding:0 0 80px" id="promo">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Promotional photos</h2></div>
+    <div class="photos-grid reveal">
+      <div class="ph ph-1"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01355_du9wi8.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01355_du9wi8.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-2"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01649_th2zvp.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01649_th2zvp.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-3"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01404-2_q4ytl4.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01404-2_q4ytl4.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-4"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01590_gxre6e.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01590_gxre6e.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-5"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01454_bkgxse.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01454_bkgxse.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-6"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01685_b1o7un.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01685_b1o7un.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-7"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01599_nxq1kt.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01599_nxq1kt.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-8"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01523-2_uae7ih.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01523-2_uae7ih.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-9"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01475_knnvgb.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01475_knnvgb.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+      <div class="ph ph-10"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01454-2_s7ojnm.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01454-2_s7ojnm.jpg" alt="Promo photo for “Porfiry”, AELITA PRODUCTION" loading="lazy"></div>
+    </div>
+  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Photo: Ekaterina Ilyina</p>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section style="background:var(--coal);padding:80px 0" id="video">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Watch</h2></div>
+    <div class="reveal" style="max-width:720px">
+      <div class="video-wrap">
+        <video controls playsinline preload="metadata" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg">
+          <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4" type="video/mp4">
+        </source></video>
+      </div>
+      <p class="video-label">Teaser for “Porfiry”</p>
+      <p class="video-label"><a href="https://vkvideo.ru/video-229246987_456239086" target="_blank" rel="noopener">Watch on VKontakte →</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Team</h2></div>
+    <div class="team-grid reveal">
+      <div class="member"><p class="role">Director &amp; actor</p><h3>Alexander Panov</h3></div>
+      <div class="member"><p class="role">Assistant director</p><h3>Svetlana Nikiforova</h3></div>
+      <div class="member"><p class="role">Set designer</p><h3>Alexey Vasilyev</h3></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Reviews</h2></div>
+    <div class="reviews reveal">
+      <div class="review">
+        <p class="review-text">The production "Porfiry" was a wonderful intellectual game, filled with memes and beloved quotes.</p>
+        <p class="review-author">Pyotr Semak</p>
+        <p class="review-src">MDT actor</p>
+      </div>
+      <div class="review">
+        <p class="review-text">“For an hour the audience revelled in a triumph of postmodernism and irony, where everything coexists: Dostoevsky and memes, Zen and detective fiction.”</p>
+        <p class="review-author">Yulia Batalina</p>
+        <p class="review-src">publication “Novy Kompanyon”</p>
+      </div>
+      <div class="review">
+        <p class="review-text">This production should be shown to young people — something many Dostoevsky productions lack.</p>
+        <p class="review-author">Tatyana Tikhonovets</p>
+        <p class="review-src">Honoured Cultural Worker of Russia</p>
+      </div>
+      <div class="review">
+        <p class="review-text">Witty social media meme quotes, an actor clearly loving every moment on stage — then switching to sudden depth in an instant.</p>
+        <p class="review-author">Mila Deneva</p>
+        <p class="review-src">St Petersburg Theatre Journal</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--coal);padding:70px 0">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Other productions</h2></div>
+    <div class="other-grid reveal">
+      <a class="other-card" href="/en/iov" style="color:inherit;text-decoration:none"><span class="tag">Mystery Play · In Repertoire</span><h3>IOV: Material</h3><p>Ekaterina Abdulova's contemporary mystery. 12+</p></a>
+      <a class="other-card" href="/en/community" style="color:inherit;text-decoration:none"><span class="tag">Book club</span><h3>AELITA COMMUNITY</h3><p>Book meetings — a space filled with meaning.</p></a>
+      <a class="other-card" href="/en/projects" style="color:inherit;text-decoration:none"><span class="tag">All productions</span><h3>Productions catalogue</h3><p>All AELITA PRODUCTION shows and festivals.</p></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+      </div>
+      <div>
+        <h4>Social media</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/community">AELITA COMMUNITY</a>
+        <a href="/en/collaboration">Collaborate</a>
+      </div>
+    </div>
+    <div class="requisites">
+      LLC “AELITA PRODUCTION”<br>
+      Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
+      OGRN 1254000006644 · TIN 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Линия sec-head
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  // Театральный занавес
+  const curtain = document.querySelector('.curtain');
+  if(curtain){
+    setTimeout(()=>{
+      curtain.classList.add('open');
+      // После завершения анимации принудительно показываем все reveal-элементы
+      setTimeout(()=>{
+        curtain.style.display = 'none';
+        document.querySelectorAll('.reveal:not(.on)').forEach(el => el.classList.add('on'));
+      }, 1200);
+    }, 80);
+  }
+
+  // Параллакс
+  const heroBg = document.querySelector('.hero-bg');
+  if(heroBg){
+    let ticking = false;
+    window.addEventListener('scroll',()=>{
+      if(!ticking){
+        requestAnimationFrame(()=>{
+          heroBg.style.transform = 'translateY('+window.scrollY*.28+'px)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  
+  
+  // Закрыть по Escape
+  
+
+  // Fallback: показываем всё через 700ms если IO не сработал
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+<!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Mobile CTA bar -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">“Porfiry”</span>
+  
+  <a class="mob-cta-btn gold" href="/#subscribe">Get notified about dates</a>
+</div>
+
+<!-- Telegram widget -->
+<div class="tg-widget" id="tg-widget">
+  <div class="tg-bubble" id="tg-bubble">Write to us — our bot responds instantly</div>
+  <a class="tg-btn" href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" aria-label="Message us on Telegram">
+    <svg viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"></path></svg>
+    Write to us
+  </a>
+</div>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
+
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">Close ✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();navLightbox(-1)" aria-label="Previous photo">‹</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();navLightbox(1)" aria-label="Next photo">›</button>
+</div>
+<script>
+  (function(){
+    var lbImages = [];
+    var lbIndex = 0;
+    var lb = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lightbox-img');
+    var thumbs = document.querySelectorAll('.photos-grid img');
+    lbImages = Array.prototype.map.call(thumbs, function(img){ return img.getAttribute('data-src') || img.src; });
+    thumbs.forEach(function(img, i){
+      img.addEventListener('click', function(){ openLightbox(i); });
+    });
+    window.openLightbox = function(i){
+      lbIndex = i;
+      lbImg.src = lbImages[lbIndex];
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    window.closeLightbox = function(){
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    window.navLightbox = function(dir){
+      lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+      lbImg.src = lbImages[lbIndex];
+    };
+    document.addEventListener('keydown', function(e){
+      if(!lb.classList.contains('open')) return;
+      if(e.key === 'Escape') closeLightbox();
+      if(e.key === 'ArrowLeft') navLightbox(-1);
+      if(e.key === 'ArrowRight') navLightbox(1);
+    });
+  })();
+</script>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=18"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW зарегистрирован:', reg.scope))
+        .catch(err => console.error('SW ошибка:', err));
+    });
+  }
+</script>
+</body>
+</html>

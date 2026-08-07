@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AELITA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AELITA COMMUNITY — Ekaterina Abdulova's book club</title>
+<meta name="description" content="AELITA COMMUNITY — a space filled with meaning. Ekaterina Abdulova’s book meetings. Currently reading Mamardashvili’s “Conversations about Thinking”.">
+<link rel="canonical" href="https://aelita-production.ru/en/community/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/community/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/community/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/community/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/community/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/community/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/community/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/en/community/">
+<meta property="og:title" content="AELITA COMMUNITY — Ekaterina Abdulova's book club">
+<meta property="og:description" content="AELITA COMMUNITY — a space filled with meaning. Ekaterina Abdulova’s book meetings. Currently reading Mamardashvili’s “Conversations about Thinking”.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AELITA COMMUNITY — Ekaterina Abdulova's book club">
+<meta name="twitter:description" content="AELITA COMMUNITY — a space filled with meaning. Ekaterina Abdulova’s book meetings. Currently reading Mamardashvili’s “Conversations about Thinking”.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=18">
+<style>body{max-width:100vw}
+section{padding:90px 0}
+.hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer}
+.sec-head{margin-bottom:50px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
+/* Текстовые ссылки */
+  p a,.bio-info a,.desc-text a{color:var(--gold);text-decoration:none;transition:opacity .3s}
+p a:hover{opacity:.75}
+/* NAV */
+  
+  
+  
+  
+  
+  
+  
+  
+
+  /* HERO */
+  .hero{min-height:90svh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:90px;padding-top:120px;position:relative;overflow:hidden}
+.hero-beam::before{content:"";position:absolute;top:-5%;left:55%;width:1.5px;height:80%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);transform:rotate(10deg);transform-origin:top center;box-shadow:0 0 18px 4px rgba(214,181,122,.45),0 0 70px 18px rgba(214,181,122,.15);animation:beam-in 2s ease both}
+@keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:80%}}
+.hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
+@media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
+.hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
+.hero-meta-item{display:flex;flex-direction:column;gap:4px}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:15px;color:var(--bone)}
+/* О КЛУБЕ */
+  .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
+.about-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:18px}
+.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:18px;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
+.katya-card{background:var(--coal);padding:44px 36px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
+.katya-credentials{margin-top:24px;border-top:1px solid rgba(232,230,225,.07);padding-top:20px;display:flex;flex-direction:column;gap:8px}
+.katya-cred{font-size:12px;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
+/* МАРСИАНСКИЙ */
+  .mars{background:var(--coal);padding:80px 0}
+.mars-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.mars-text h2{font-size:clamp(22px,3.5vw,38px);letter-spacing:.1em;margin-bottom:24px;line-height:1.3}
+.mars-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:16px}
+.mars-text p strong{color:var(--bone);font-weight:400}
+.mars-diagram{display:flex;flex-direction:column;gap:2px}
+.mars-step{background:var(--ink);padding:28px 24px;display:flex;gap:18px;align-items:start}
+.mars-step .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
+.mars-step h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.mars-step p{color:var(--sand);font-size:13px;line-height:1.7}
+@media(max-width:760px){.mars-grid{grid-template-columns:1fr}}
+/* ЧТЕНИЕ */
+  .reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.book-card{background:var(--coal);padding:44px 36px;position:relative;overflow:hidden}
+.book-card.current{border-left:2px solid var(--gold)}
+.book-card .status{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.book-card .author{font-size:13px;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
+.book-card h3{font-size:clamp(18px,2.4vw,24px);letter-spacing:.1em;font-weight:300;margin-bottom:16px;line-height:1.3}
+.book-card p{color:var(--sand);font-size:14px;line-height:1.75}
+.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
+.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
+@media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
+/* ОТЗЫВЫ */
+  .reviews-sec{background:var(--coal)}
+.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.review{background:var(--ink);padding:40px 36px}
+.review-text{font-size:15px;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
+.review-text::before{content:"«";color:var(--gold);font-size:24px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
+.review-author{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.review-context{font-size:12px;color:var(--sand);margin-top:5px}
+.review.wide{grid-column:1/-1}
+@media(max-width:760px){.reviews-grid{grid-template-columns:1fr}.review.wide{grid-column:1}}
+/* ИНСАЙТ */
+  .insight{padding:70px 0}
+.insight-box{background:var(--coal);padding:60px;position:relative;overflow:hidden}
+.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
+.insight-box h2{font-size:clamp(18px,2.8vw,28px);letter-spacing:.16em;margin-bottom:28px;line-height:1.4}
+.insight-box p{color:var(--sand);font-size:16px;line-height:1.9;max-width:72ch;margin-bottom:16px}
+.insight-box p strong{color:var(--bone);font-weight:400}
+@media(max-width:760px){.insight-box{padding:40px 28px}}
+/* ФОРМАТ */
+  .format-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.format-item{background:var(--coal);padding:36px 28px}
+.format-item .icon{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.format-item h3{font-size:14px;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
+.format-item p{color:var(--sand);font-size:14px;line-height:1.7}
+.format-item strong{color:var(--bone);font-weight:400}
+@media(max-width:900px){.format-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.format-grid{grid-template-columns:1fr}}
+/* ВСТУПИТЬ */
+  .join-sec{background:var(--coal);padding:80px 0;text-align:center}
+.join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
+.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
+.join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
+.join-field textarea{min-height:90px;resize:vertical}
+.join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
+.join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+/* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+@media(max-width:430px){section{padding:60px 0}}
+@media(max-width:375px){section{padding:50px 0}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+    <div class="nav-links">
+      <a href="/en/tickets">Schedule</a>
+      <a href="/en/projects">Productions</a>
+      <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/contacts">Contact</a>
+    </div>
+    <a class="lang-switch" href="/en/community/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <button class="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<div class="hero">
+  <div class="hero-beam" aria-hidden="true"></div>
+  <div class="wrap hero-content">
+    <p class="hero-community">AELITA COMMUNITY</p>
+    <h1 class="hero-title">A space,<br>filled with<br>meaning</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">Book meetings without lectures. A place to learn to separate your desires from others' — and find the courage to live without looking over your shoulder.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="lbl">Currently reading</span>
+        <span class="val">Mamardashvili</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn-gold" href="#join">I want to join</a>
+      <a class="btn-outline" href="#reading" style="margin-left:0">What we're reading</a>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT THE CLUB -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">About the club</span><h2>Not lectures. Architecture</h2></div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Some people explain. Others <strong>create the conditions for understanding</strong>. Katya is the second type. She calls herself an architect, not a lecturer. Her task is to build a space where understanding happens by itself.</p>
+        <p>AELITA COMMUNITY — <strong>language environment</strong>. A place where people grow into big ideas, then into their own. She doesn't over-explain — she sets a direction.</p>
+        <blockquote class="about-quote">You truly exist only where you think, feel, experience, want and act differently. But for that you need the right environment — safe, honest, rich.</blockquote>
+        <p>To think differently, you need to rebuild yourself. More than once. <strong>Constantly. Ceaselessly. Every minute.</strong></p>
+        <p>For over 13 years Katya has been reading books and leading meetings. The book here is a tool, not a syllabus.</p>
+      </div>
+      <div>
+        <div class="katya-card">
+          <p class="role">Founder · Space Architect</p>
+          <h3>Ekaterina Abdulova</h3>
+          <p>Psychologist, certified transactional analyst (ITAA), coach (ACSTH), director. <a href="/en/abdulova">AELITA PRODUCTION</a>.</p>
+          <p>Speaks “Martian” — and knows how to translate it back into human. With patience and without rush.</p>
+          <a class="katya-link" href="/en/abdulova">More about Katya →</a>
+          <div class="katya-credentials">
+            <span class="katya-cred">HSP — Psychologist, 2010</span>
+            <span class="katya-cred">MBA — project management</span>
+            <span class="katya-cred">ITAA — transactional analysis, 2018</span>
+            <span class="katya-cred">P.G. Shchedrovitsky methodology, 2022</span>
+            <span class="katya-cred">RGISI — Directing, 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE MARTIAN LANGUAGE -->
+<div class="mars">
+  <div class="wrap">
+    <div class="mars-grid reveal">
+      <div class="mars-text">
+        <span class="eyebrow" style="display:block;margin-bottom:18px">On Martian</span>
+        <h2>How we speak the same language and still don't understand each other</h2>
+        <p>At one of the meetings an important question came up: is it enough simply to know Russian to speak it? <strong>broken telephone</strong>, where one person says one thing, another sees it through their own prism and understands something different, responds — and the conversation flows.</p>
+        <p>Katya speaks “Martian” — the language of meanings that don't lie on the surface. <strong>translate Martian into plain language</strong>, while preserving each participant's rhythm. This requires patience and vision — and this is precisely what Katya does masterfully.</p>
+        <p>How quickly can people tune their languages to the same wavelength? After all, it's not one language — it's at least three.</p>
+      </div>
+      <div class="mars-diagram">
+        <div class="mars-step">
+          <span class="num">01</span>
+          <div><h3>Speaks</h3><p>One participant transmits — like a radio station on its own frequency.</p></div>
+        </div>
+        <div class="mars-step">
+          <span class="num">02</span>
+          <div><h3>Hears</h3><p>The second receives the signal through their own prism — and understands it their own way.</p></div>
+        </div>
+        <div class="mars-step">
+          <span class="num">03</span>
+          <div><h3>Compares</h3><p>The third sees both sources and names their own — without bias.</p></div>
+        </div>
+        <div class="mars-step">
+          <span class="num">✦</span>
+          <div><h3>Katya</h3><p>She holds all three languages simultaneously. Translates. Doesn't explain — creates a space.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHT -->
+<div class="insight">
+  <div class="wrap reveal">
+    <div class="insight-box">
+      <h2>Chaos first.<br>Then — an aftertaste of insights</h2>
+      <p>At meetings <strong>it's not always clear what is happening</strong>. Sometimes it seems you're just talking — and then you realise you've introduced your chaos into someone else's picture of the world.</p>
+      <p>It leaves a lasting aftertaste. You revisit situations. You process what you heard. You come to conclusions.</p>
+      <p>Katya doesn't heal and doesn't teach. She — <strong>a little flame from which you can take as much as you can carry</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- READING -->
+<section id="reading" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Library</span><h2>What we're reading</h2></div>
+    <div class="reading-grid reveal">
+      <div class="book-card current">
+        <p class="status">Currently reading</p>
+        <p class="author">Merab Mamardashvili</p>
+        <h3>Conversations about thinking</h3>
+        <p>A philosopher who thought aloud — and taught those who listened to think. Mamardashvili spoke about consciousness, freedom and what it means to be human.</p>
+        <p class="chapters">Conversations about thinking · While reading</p>
+        <div class="deco">M</div>
+      </div>
+      <div class="book-card">
+        <p class="status">Previously read</p>
+        <p class="author">Eric Berne</p>
+        <h3>People who play games. Games that people play</h3>
+        <p>A universal tool that addresses fundamental mental challenges. Transactional analysis in everyday practice.</p>
+        <p class="chapters">Completed · Moved on to Mamardashvili</p>
+        <div class="deco">B</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-sec" id="reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Voices</span><h2>What participants say</h2></div>
+    <div class="reviews-grid reveal">
+      <div class="review wide">
+        <p class="review-text">Katya, that's you, I think... I remember what you said — that everyone takes from Berne exactly as much as they can take. In practice — everyone around yesterday's fire and you, as our little flame, takes as much as they can. Thank you, Katya. Thank you for our meetings.</p>
+        <p class="review-author">Club member</p>
+      </div>
+      <div class="review">
+        <p class="review-text">Thank you for the meeting! It leaves a lasting aftertaste of insights — I revisit situations and apply what I learnt.</p>
+        <p class="review-author">Club member</p>
+      </div>
+      <div class="review">
+        <p class="review-text">Delighted to meet everyone! I take a little from each person, try it on — and come back to myself.</p>
+        <p class="review-author">Club member</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAT -->
+<section id="format">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Format</span><h2>How it works</h2></div>
+    <div class="format-grid reveal">
+      <div class="format-item">
+        <div class="icon">◈</div>
+        <h3>Meetings</h3>
+        <p><strong>4 meetings per month</strong><br>Intimate format — up to 10 people. Dates are announced in advance with rare exceptions.</p>
+      </div>
+      <div class="format-item">
+        <div class="icon">◈</div>
+        <h3>Group</h3>
+        <p>Intimate format — everyone knows each other.</p>
+      </div>
+      <div class="format-item">
+        <div class="icon">◈</div>
+        <h3>Rules</h3>
+        <p>Everyone <strong>reads and takes notes</strong>, brings questions. Not a lecture — a conversation.</p>
+      </div>
+      <div class="format-item">
+        <div class="icon">◈</div>
+        <h3>Result</h3>
+        <p><strong>A different consciousness on the way out.</strong><br>An honest answer to yourself: “Why did I come?” And a pinch of courage to keep living without looking back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<div class="join-sec" id="join">
+  <div class="wrap">
+    <span class="eyebrow">Join</span>
+    <h2 style="margin-top:14px">I want to join</h2>
+    <p>Write to us — we'll tell you about the next meeting and how to join the group.</p>
+
+    <div class="notify-tabs" id="notifyTabs_j">
+      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Via website</button>
+      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_j('bot', this)">Via Telegram bot</button>
+    </div>
+
+    <div id="formSite_j">
+    <div class="join-form" id="joinForm">
+      <div class="join-field"><label>Name</label><input type="text" id="j-name" placeholder="Your name"></div>
+      <div class="join-field"><label>Phone or Telegram</label><input type="text" id="j-contact" placeholder="+7 ... or @username"></div>
+      <div class="join-field"><label>A few words about yourself — optional</label><textarea placeholder="What brings you here, what are you looking for..."></textarea></div>
+      <button class="btn-gold" onclick="joinClub()">Write to Katya →</button>
+      <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+    </div>
+    <div class="join-ok" id="joinOk">Thank you! Katya will get in touch and tell you about the next meeting.</div>
+    </div>
+
+    <div id="formBot_j" style="display:none">
+      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community" target="_blank" rel="noopener">I want to join</a>
+      <p class="notify-bot-note">The bot will ask the same questions as the website form and forward your request to us directly.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchFormTab_j(tab, btn){
+    document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_j').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_j').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+</script>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+      </div>
+      <div>
+        <h4>Social media</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/community">AELITA COMMUNITY</a>
+        <a href="/en/collaboration">Collaborate</a>
+      </div>
+    </div>
+    <div class="requisites">
+      LLC “AELITA PRODUCTION”<br>
+      Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
+      OGRN 1254000006644 · TIN 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  async function joinClub(){
+    const name = document.getElementById('j-name').value.trim();
+    const contact = document.getElementById('j-contact').value.trim();
+    if(!name || !contact){alert('Укажите имя и контакт');return;}
+    await sendTelegram('AELITA COMMUNITY — вступление', {
+      'Имя': name,
+      'Контакт': contact,
+    });
+    await sendFormspree('AELITA COMMUNITY — вступление', {
+      'Имя': name,
+      'Контакт': contact,
+    });
+    document.getElementById('joinForm').style.display='none';
+    document.getElementById('joinOk').style.display='block';
+  }
+
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
+  },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting) e.target.classList.add('line-on')})
+  },{threshold:.4});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  
+  
+  // Закрыть по Escape
+  
+
+  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+
+  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  async function sendFormspree(formName, fields) {
+    try {
+      var data = new FormData();
+      data.append('_subject', '[AELITA] ' + formName);
+      var keys = Object.keys(fields);
+      for (var i = 0; i < keys.length; i++) {
+        data.append(keys[i], String(fields[keys[i]] || '').trim());
+      }
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: data,
+        headers: {'Accept': 'application/json'}
+      });
+    } catch(e) { console.log('Formspree error:', e); }
+  }
+
+  async function sendTelegram(formName, fields) {
+    var lines = ['[AELITA] ' + formName, ''];
+    var keys = Object.keys(fields);
+    for (var i = 0; i < keys.length; i++) {
+      var label = keys[i];
+      var value = String(fields[label] || '').trim();
+      if (value) lines.push('<b>' + label + ':</b> ' + value);
+    }
+    lines.push('');
+    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
+    var msgText = lines.join('\n');
+    try {
+      await fetch(TG_WORKER, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: msgText})
+      });
+    } catch(e) { console.log('TG error:', e); }
+  }
+
+  // Fallback: показываем всё через 700ms если IO не сработал
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+<!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Thank you modal -->
+<div class="thanks-modal" id="thanks-modal">
+  <div class="thanks-box">
+    <div class="thanks-icon">✦</div>
+    <h3>Thank you</h3>
+    <p>Your message has been received. We will get in touch within one working day.</p>
+    <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<!-- Telegram widget -->
+<div class="tg-widget" id="tg-widget">
+  <div class="tg-bubble" id="tg-bubble">Write to us — our bot responds instantly</div>
+  <a class="tg-btn" href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" aria-label="Message us on Telegram">
+    <svg viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"></path></svg>
+    Write to us
+  </a>
+</div>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=18"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW зарегистрирован:', reg.scope))
+        .catch(err => console.error('SW ошибка:', err));
+    });
+  }
+</script>
+</body>
+</html>

@@ -6,10 +6,38 @@
    ============================================================ */
 
 // Cookie-баннер
+var YM_ID = 104681911;
+var ymLoaded = false;
+
+function loadMetrika(){
+  if(ymLoaded) return;
+  ymLoaded = true;
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  ym(YM_ID, "init", {
+       clickmap:true,
+       trackLinks:true,
+       accurateTrackBounce:true,
+       webvisor:true,
+       ecommerce:"dataLayer",
+       referrer: document.referrer,
+       url: location.href
+  });
+  // Пиксель <noscript> сюда специально не добавлен: он рассчитан на
+  // пользователей без JS, а эта функция и так вызывается только из JS —
+  // для них она просто никогда не сработает. Итог: без JS теперь нет
+  // трекинга совсем, что для соответствия закону лучше, чем безусловный
+  // пиксель без согласия.
+}
+
 (function(){
   if(localStorage.getItem('cookies_accepted')){
     var b=document.getElementById('cookie-banner');
     if(b) b.style.display='none';
+    loadMetrika();
   }
 })();
 
@@ -25,6 +53,7 @@ function acceptCookies(){
   localStorage.setItem('cookies_accepted','1');
   var b=document.getElementById('cookie-banner');
   if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
+  loadMetrika();
   updateFixedWidgets();
   updateCtaBar();
 }
