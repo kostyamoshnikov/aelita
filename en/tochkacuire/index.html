@@ -129,6 +129,17 @@ section{padding:90px 0}
 .free-card .icon{font-size:24px;margin-bottom:14px}
 .free-card h3{font-size:15px;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
 .free-card p{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:14px}
+.speaker-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.speaker-card{background:var(--coal);padding:32px 32px 36px;display:flex;flex-direction:column}
+.speaker-card img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:16px;background:#000}
+.speaker-meta{font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.speaker-kicker{font-size:11px;color:var(--sand);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.speaker-card h3{font-size:18px;font-weight:400;color:var(--bone);margin-bottom:12px;line-height:1.3}
+.speaker-name{font-size:14px;color:var(--bone);font-weight:500;margin-bottom:2px}
+.speaker-role{font-size:12.5px;color:var(--sand);margin-bottom:14px;line-height:1.5}
+.speaker-card p.bio{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:10px}
+.speaker-quote{margin-top:auto;padding-top:14px;border-top:1px solid rgba(232,230,225,.1);color:var(--bone);font-size:13px;font-style:italic;line-height:1.6}
+@media(max-width:760px){.speaker-grid{grid-template-columns:1fr}}
 .free-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
 @media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.free-grid{grid-template-columns:1fr}}
@@ -279,97 +290,136 @@ section{padding:90px 0}
 <!-- PROGRAMME -->
 <section id="program" style="background:var(--coal)">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Programme</span><h2>The full AELITA repertoire — on one stage</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Nine productions over four days: from the flagship mystery to dance evenings, sound drama and stand-up.</p>
+    <div class="sec-head reveal"><span class="eyebrow">Programme</span><h2>The full spectrum of contemporary art on one stage</h2></div>
+    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Fifteen productions over 4 days: from the flagship mystery to physical theatre, performances and a promenade show. Part of the festival programme is still being finalised and will be announced as we go.</p>
 
     <div class="prog-grid reveal">
       <a class="prog-item" href="/en/iov">
-        <div class="prog-left"><span class="badge">Opening · Flagship</span><span class="hall">Main Hall</span></div>
-        <div class="prog-title"><h3>IOV: Material</h3><p class="genre">A contemporary mystery play</p><p class="desc">AELITA's flagship mystery: the human being as material that art reforges into a new form.</p></div>
+        <div class="prog-left"><span class="badge">Opening · Flagship</span><span class="hall">Blue Hall</span></div>
+        <div class="prog-title"><h3>IOV: Material</h3><p class="genre">A contemporary mystery play</p><p class="desc">AELITA's flagship mystery: the human being as material that art reforges into a new form. The festival's opening show.</p></div>
         <div class="prog-right"><span class="age">12+</span><span class="dur">1:35</span></div>
       </a>
 
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/prorochestva.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Red Hall · Oct 23</span></div>
+        <div class="prog-title"><h3>Prophecies of Migratory Birds</h3><p class="genre">Site-specific performance · company “OMUT”</p><p class="desc">Eight performers in animal-inspired costumes and a choreographic score about birds that return to Alexandria Park every summer. Audiences are handed theatre binoculars.</p></div>
+        <div class="prog-right"><span class="dur">~45 min</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/meydey.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Gallery · Oct 25</span></div>
+        <div class="prog-title"><h3>Mayday</h3><p class="genre">Physical theatre performance · OMYT</p><p class="desc">A distress signal is sent — but the disaster never comes. A performance-reflection on getting lost inside time without losing touch with your real self.</p></div>
+        <div class="prog-right"><span class="dur">~45 min</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/rasyomon.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Red Hall · Oct 25</span></div>
+        <div class="prog-title"><h3>The Rashomon Effect</h3><p class="genre">A physical theatre piece by Nadezhda Kokhanova</p><p class="desc">Several truths about one event — through the imagery of Akutagawa and Kurosawa. A reflection on the nature of vice and where it grows from.</p></div>
+        <div class="prog-right"><span class="dur">~45 min</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/rozovoe-maslo.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Oct 24</span></div>
+        <div class="prog-title"><h3>The Scent of Rose Oil</h3><p class="genre">Physical theatre sketch · OMYT residents</p><p class="desc">Power or peace — and the price paid for the choice. A reflective sketch on the biblical thread of “The Master and Margarita”.</p></div>
+        <div class="prog-right"><span class="dur">~45 min</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/mozgi.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Interactive · 16+</span><span class="hall">Date to be announced</span></div>
+        <div class="prog-title"><h3>Do You Have a Brain?</h3><p class="genre">Interactive mono-performance · dir. Dmitry Turkov</p><p class="desc">The hall becomes now a laboratory, now a jury room: real research, rebel scientists, and a test of how easily a person can be made to believe the impossible.</p></div>
+        <div class="prog-right"><span class="dur">Mono-performance</span></div>
+      </a>
+
       <a class="prog-item" href="/en/porfiriy">
-        <div class="prog-left"><span class="badge">For Young Audiences</span><span class="hall">Small Hall</span></div>
-        <div class="prog-title"><h3>Porfiry</h3><p class="genre">Meditative detective piece</p><p class="desc">A solo performance with interactive elements — for those who love to look closely and draw connections. Only 50 seats.</p></div>
+        <div class="prog-left"><span class="badge">For Young Audiences</span><span class="hall">Red Hall</span></div>
+        <div class="prog-title"><h3>Porfiry</h3><p class="genre">A meditative detective mono-performance</p><p class="desc">A solo performance with interactive elements — for those who love to look closely and draw connections. A quiet detective story of an inner investigation.</p></div>
         <div class="prog-right"><span class="age">16+</span><span class="dur">~1:00</span></div>
       </a>
-      <a class="prog-item" href="/en/human">
-        <div class="prog-left"><span class="badge">Dance Evening</span><span class="hall">Main Hall</span></div>
-        <div class="prog-title"><h3>Archaeology of the Human</h3><p class="genre">Contemporary dance short forms evening · company “Koroche”</p><p class="desc">Excavating the human through contemporary dance: layer by layer — exploring what we are made of.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:10</span></div>
-      </a>
-      <a class="prog-item" href="/en/stories">
-        <div class="prog-left"><span class="badge">Matinee</span><span class="hall">Small Hall</span></div>
-        <div class="prog-title"><h3>Stories. Of the Earthly and the Heavenly</h3><p class="genre">Physical theatre fashion show</p><p class="desc">A physical fashion show on the boundary of the earthly and the heavenly. Weekend matinee for families.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:10</span></div>
-      </a>
-      <a class="prog-item" href="/en/listen">
-        <div class="prog-left"><span class="badge">Dance slot · Interactive</span><span class="hall">Small Hall</span></div>
-        <div class="prog-title"><h3>Listen!</h3><p class="genre">Dance Performance</p><p class="desc">A dance address to the audience: movement instead of words. A lively, open, daytime dance slot.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:00</span></div>
-      </a>
-      <a class="prog-item" href="/en/instruction">
-        <div class="prog-left"><span class="badge">Backup · Touring</span><span class="hall">Small Hall</span></div>
-        <div class="prog-title"><h3>A Guide for Novice Wanderers</h3><p class="genre">Dance Performance</p><p class="desc">A dance guide for those on the journey. Intimate format — a portable and touring show.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:00</span></div>
-      </a>
-      <a class="prog-item" href="/en/corner">
-        <div class="prog-left"><span class="badge">Light format</span><span class="hall">Small Hall</span></div>
-        <div class="prog-title"><h3>Stand-up "Living Corner"</h3><p class="genre">Stand-up evening</p><p class="desc">A light crowd-pleasing stand-up — breathe out and laugh after a packed festival day.</p></div>
-        <div class="prog-right"><span class="age">16+</span><span class="dur">~1:30</span></div>
-      </a>
-      <a class="prog-item" href="/en/jazz_dance">
-        <div class="prog-left"><span class="badge">Gala closing</span><span class="hall">Main Hall</span></div>
-        <div class="prog-title"><h3>JAZZ'n'DANCE</h3><p class="genre">Show: circus + jazz + dance</p><p class="desc">Circus, live jazz and dance in one show. Festival gala closing in an expanded format.</p></div>
-        <div class="prog-right"><span class="age">6+</span><span class="dur">~1:30</span></div>
-      </a>
     </div>
-    <div class="prog-note reveal">✸ Ticket — 1,000 ₽ per show. All off-stage events — exhibitions, lectures, workshops — free entry.</div>
+    <div class="prog-note reveal">✸ Ticket for the opening show “IOV: Material” — 5,000 ₽, on sale now. Other shows — 1,000 ₽, sales open later. All off-stage events — exhibitions, lectures, workshops and the kids' happening — free entry. Assignment across the two halls is still being finalised.</div>
   </div>
 </section>
 
 <!-- SCHEDULE -->
 <section id="schedule" class="sched">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Schedule</span><h2>Four days of festival</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Schedule</span><h2>Four days of the festival</h2></div>
     <div class="reveal">
       <div class="days-tabs">
         <button class="day-tab active" onclick="showDay(0,this)"><span class="day-num">22</span>Thu · Opening</button>
         <button class="day-tab" onclick="showDay(1,this)"><span class="day-num">23</span>Fri</button>
-        <button class="day-tab" onclick="showDay(2,this)"><span class="day-num">24</span>Sat · Family</button>
+        <button class="day-tab" onclick="showDay(2,this)"><span class="day-num">24</span>Sat · Family &amp; Dance</button>
         <button class="day-tab" onclick="showDay(3,this)"><span class="day-num">25</span>Sun · Closing</button>
       </div>
       <div class="day-content active" id="day-0">
-        <div class="time-item"><span class="time">17:00</span><div class="event">Press preview, guest gathering</div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">“The Theatre of the Future in Frame” — stage photography of AELITA productions. Opening 22 October.</div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Opening ceremony + <a href="/en/iov">“IOV: Material”</a><small>Main Hall · 12+</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event">Informal networking</div></div>
+        <div class="time-item"><span class="time">17:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Fashion-show performance</div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">Ekaterina Abdulova's mystery play <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small></div></div>
       </div>
       <div class="day-content" id="day-1">
-        <div class="time-item"><span class="time">14:00</span><div class="event">Lecture series: “The Theatre of the Future” + “How to Watch Contemporary Dance”<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Workshop (adults): contemporary dance / physical movement<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event"><a href="/en/porfiriy">“Porfiry”</a><small>Small Hall · 16+</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Lecture series opens<small>Red Hall</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “Prophecies of Migratory Birds” — dance company “OMUT”, Saint Petersburg<small>Red Hall</small></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small></div></div>
       </div>
       <div class="day-content" id="day-2">
-        <div class="time-item"><span class="time">12:00</span><div class="event">Children's happening + children's workshops<small>Free entry · 0+/6+</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Family workshops, exhibition tours<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">15:00</span><div class="event">Lectures: “Classics on the Contemporary Stage”<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Daytime dance slot: <a href="/en/listen">“Listen!”</a> / “A Guide…”<small>Small Hall · 12+</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event"><a href="/en/human">“Archaeology of the Human”</a><small>Main Hall · 12+</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event"><a href="/en/corner">Stand-up "Living Corner"</a><small>Small Hall · 16+</small></div></div>
+        <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Market zone open</div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event">“Pushkin. The Shot. The Blizzard” — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga</div></div>
+        <div class="time-item"><span class="time">12:00</span><div class="event">Lecture<small>Gallery</small></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: quest</div></div>
+        <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Workshops for children and adults<small>Free entry</small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Physical theatre piece<small>Red Hall</small></div></div>
+        <div class="time-item"><span class="time">15:00</span><div class="event">Choir performance “Singing Is Easy”<small>Blue Hall</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Meditative-detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>16+</small></div></div>
       </div>
       <div class="day-content" id="day-3">
-        <div class="time-item"><span class="time">13:00</span><div class="event">Workshops / children's programme<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">15:00</span><div class="event"><a href="/en/stories">“Stories. Of the Earthly and the Heavenly”</a><small>Small Hall · 12+</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Gala closing: <a href="/en/jazz_dance">“JAZZ'n'DANCE”</a><small>Main Hall · 6+</small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event">Wrap-up, acknowledgements, announcement of the 2027 edition</div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event">“Cagliostro” — project “Extracurricular Classics”, Kaluga</div></div>
+        <div class="time-item"><span class="time">12:00</span><div class="event">Lecture<small>Gallery</small></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery</small></div></div>
+        <div class="time-item"><span class="time">daytime</span><div class="event">Daytime slot: two shows<small>Programme to be announced</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">“The Rashomon Effect” — dance company “OMUT”, Saint Petersburg</div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">Closing slot<small>Programme to be announced</small></div></div>
       </div>
     </div>
     <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:14px;color:var(--sand)">
-      <strong style="color:var(--bone);display:block;margin-bottom:6px">8 October — prologue</strong>
-      The exhibition “TOCHKA CUIRE. Prologue” opens two weeks ahead and runs until 4 November.
+      <strong style="color:var(--bone);display:block;margin-bottom:6px">October 8 — prologue</strong>
+      The exhibition “TOCHKA CUIRE. Prologue” opens two weeks early and runs through November 4. Free entry.
     </div>
+  </div>
+</section>
+
+<!-- BUSINESS PROGRAMME -->
+<section id="business">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Business programme</span><h2>Conversations about how it all works</h2></div>
+    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Talks and open meetings for people who make culture and products: how contemporary dance survives in the real economy, and what artificial intelligence is changing in the profession. Free entry.</p>
+
+    <div class="speaker-grid reveal">
+      <div class="speaker-card">
+        <img src="https://cuire-fest.ru/assets/speakers/kazmiruk.jpg" alt="Mikhail Kazmiruk" loading="lazy">
+        <div class="speaker-meta">October 23 · 18:00 · Red Hall</div>
+        <div class="speaker-kicker">Talk · lecture series opening</div>
+        <h3>How dance is born and lives in the real world</h3>
+        <div class="speaker-name">Mikhail Kazmiruk</div>
+        <div class="speaker-role">Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage</div>
+        <p class="bio">In three years, the “New Dance” programme has produced more than 150 projects — among them the show “A Place That Didn't Exist Yet”, a Golden Mask laureate, and the Saint Petersburg premiere of Ohad Naharin's “Choir”.</p>
+        <p class="bio">Behind the artistic instinct is a rare technical background: as technical director of the imarussia agency he builds hybrid conferences and ceremonies for major corporations — SGK, “Vkusno — i tochka”, IBS — and as producer of the ODYSSEY festival he runs four stages for 10,000 spectators.</p>
+        <div class="speaker-quote">A “symbiosis of director and event engineer” — on the bridges between the poetry of movement and hard logistics, between an intimate performance and a large-scale open-air.</div>
+      </div>
+
+      <div class="speaker-card">
+        <img src="https://cuire-fest.ru/assets/speakers/lecture-ai.svg" alt="Talk on artificial intelligence" loading="lazy">
+        <div class="speaker-meta">Date to be announced · gallery</div>
+        <div class="speaker-kicker">Talk</div>
+        <h3>Artificial intelligence: what it can already do, and where it gets it wrong</h3>
+        <div class="speaker-name">Alexey Tsymlov</div>
+        <div class="speaker-role">CEO and founder of the IT company <a href="https://syntropic.ru" target="_blank" rel="noopener" style="color:var(--gold)">Syntropic</a></div>
+        <p class="bio">Machines have learned to write, draw and talk — their own Curie point has already happened here too. No hype: what neural networks do today, where they get it wrong, and how they're already used in theatre, design and production.</p>
+        <p class="bio">With live examples and audience Q&A — from how AI assistants work to what changes in a profession once a machine takes over part of the job.</p>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--steel);font-size:12.5px;margin-top:20px">The business programme's speaker line-up is still growing.</p>
   </div>
 </section>
 
@@ -381,7 +431,7 @@ section{padding:90px 0}
       <div class="free-card">
         <div class="icon">◈</div>
         <h3>Lecture series</h3>
-        <p>3–5 talks in plain language: “The Theatre of the Future”, “How to Watch Contemporary Dance”, “The Classics Differently”.</p>
+        <p>“Artificial Intelligence” — led by Alexey Tsymlov, CEO of “Syntropic”: what neural networks can do today and how they're already used in theatre. Plus 3–5 talks in plain language: “The Theatre of the Future”, “How to Watch Contemporary Dance”, “The Classics Differently”, “Making a Festival in the Regions”.</p>
         <span class="free-badge">Free admission</span>
       </div>
       <div class="free-card">
@@ -392,14 +442,14 @@ section{padding:90px 0}
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3>Children's happening</h3>
-        <p>A collective art object assembled by the participants themselves — through movement, sound and material.</p>
+        <h3>Art Maze Quest</h3>
+        <p>The festival has been taken over by “Grey Screens” that steal colour and emotion. Kids have 60 minutes to reboot the art objects and bring back the joy. Kids' workshops are held alongside. 0+/6+.</p>
         <span class="free-badge">Free admission</span>
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3>Photo exhibition</h3>
-        <p>“The Theatre of the Future in Frame” — stage photography of AELITA productions. Opening 22 October.</p>
+        <h3>Photo lab</h3>
+        <p>“Point of Origin: an Archaeology of the Self” — shame, duty, guilt and fear, brought into the light. Opening 22 October, through 4 November.</p>
         <span class="free-badge">Free admission</span>
       </div>
     </div>
@@ -421,11 +471,11 @@ section{padding:90px 0}
         </div>
       </div>
       <div class="exh-item">
-        <img src="https://cuire-fest.ru/assets/photo/p07.jpg" alt="The Theatre of the Future in Frame exhibition" loading="lazy">
+        <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Point of Origin photo lab exhibition" loading="lazy">
         <div class="exh-body">
-          <p class="dates">22 October – 4 November · Photos</p>
-          <h3>The Theatre of the Future in Frame</h3>
-          <p>Stage photography of AELITA productions: the body in motion, long exposure, light.</p>
+          <p class="dates">22 October – 4 November · Photo lab</p>
+          <h3>Point of Origin: an Archaeology of the Self</h3>
+          <p>SHAME, DUTY, GUILT and FEAR, brought into the light: frozen form under coarse fabric and tools for reflection on the 1st floor of CSI “Byl”. Opening — 22 October.</p>
           <span class="exh-free">Free admission</span>
         </div>
       </div>
@@ -446,9 +496,15 @@ section{padding:90px 0}
   <div class="wrap">
     <div class="ext-banner reveal">
       <div>
-        <p><strong>Open call for artists · season theme “Transition”</strong>The “Tochka Cuire” curatorial project invites artists. Exhibition — October 2026, CSI “Byl”.</p>
+        <p><strong>For theatre companies: selection for the performance programme</strong>The festival is looking for drama and physical theatre productions and performances — regardless of a company's status or experience. Shows run October 22–25; travel and accommodation are covered by the festival. Applications — through August 31, 2026.</p>
       </div>
-      <a class="btn-outline" href="https://cuire-fest.ru/opencall/" target="_blank" rel="noopener">Submit an enquiry ↗</a>
+      <a class="btn-outline" href="https://cuire-fest.ru/opencall-teatr/" target="_blank" rel="noopener">Submit an application ↗</a>
+    </div>
+    <div class="ext-banner reveal" style="margin-top:2px">
+      <div>
+        <p><strong>Open call for artists · season theme “Transition”</strong>Applications closed on August 15, 2026. Everyone who applied will get a response by August 31. Terms for the next season will be announced on the project's page.</p>
+      </div>
+      <a class="btn-outline" href="https://cuire-fest.ru/opencall/" target="_blank" rel="noopener">View terms ↗</a>
     </div>
   </div>
 </section>
@@ -461,15 +517,15 @@ section{padding:90px 0}
       <div>
         <p style="color:var(--sand);font-size:15px;margin-bottom:24px">The first contemporary arts centre in the Belgorod region, opened in 2023 in a restored former factory building.</p>
         <div class="venue-stats">
-          <div class="vstat"><div class="vnum">530</div><div class="vlbl">seats · main hall</div></div>
-          <div class="vstat"><div class="vnum">250</div><div class="vlbl">seats · small hall</div></div>
-          <div class="vstat"><div class="vnum">2</div><div class="vlbl">floors of exhibitions</div></div>
+          <div class="vstat"><div class="vnum">496</div><div class="vlbl">seats · Blue Hall</div></div>
+          <div class="vstat"><div class="vnum">168</div><div class="vlbl">seats · Red Hall</div></div>
+          <div class="vstat"><div class="vnum">2</div><div class="vlbl">floors of exhibitions and lobby</div></div>
           <div class="vstat"><div class="vnum">11–20</div><div class="vlbl">opening hours · Tue–Sun</div></div>
         </div>
         <div class="venue-address">
           <strong>Centre for Contemporary Art “Byl”</strong><br>
           Stary Oskol, Zhukova district, 38<br>
-          <a href="tel:+79511485036">+7 951 148-50-36</a> · вт–вс, 11:00–20:00
+          <a href="tel:+79511485036">+7 951 148-50-36</a> · Tue–Sun, 11:00–20:00
         </div>
       </div>
       <div class="venue-img">
@@ -485,18 +541,20 @@ section{padding:90px 0}
     <div class="sec-head reveal"><span class="eyebrow">Tickets</span><h2>One ticket — one performance</h2></div>
     <div class="tickets-grid reveal">
       <div class="ticket-box">
-        <div class="ticket-price">1 000 ₽</div>
-        <div class="ticket-per">per performance</div>
+        <div class="ticket-price">5,000 ₽</div>
+        <div class="ticket-per">“IOV: Material” · opening show</div>
         <ul class="ticket-list">
-          <li>One ticket price for any festival performance</li>
-          <li class="star">Exhibitions, lectures, workshops and a children's happening — free entry</li>
-          <li class="star">Art exhibition prologue open from 8 October</li>
-          <li>Sales start in September 2026</li>
+          <li>Thu, October 22 · 19:00 · Blue Hall · 12+ · 1h 35m</li>
+          <li>E-ticket with QR code by email. No service fee. Pay by card or SBP.</li>
+          <li class="star">Other festival shows — 1,000 ₽, sales open later</li>
+          <li class="star">Exhibitions, lectures, workshops and the kids' happening — free entry</li>
+          <li>Purchase and refund terms — in the <a href="https://cuire-fest.ru/oferta/" target="_blank" rel="noopener" style="color:var(--gold)">public offer</a> (Russian)</li>
         </ul>
+        <a class="btn-gold" href="https://cuire-fest.ru/bilety/" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Buy a ticket →</a>
       </div>
       <div class="form-box">
-        <h3>Notify about ticket sales launch</h3>
-        <p>Leave your contact — we'll write as soon as ticket sales open and send you the programme.</p>
+        <h3>Notify me when the other shows go on sale</h3>
+        <p>Tickets for “IOV: Material” are already on sale. Leave your contact — we'll write as soon as tickets for the rest of the festival's shows go on sale, and send you the programme.</p>
         <div class="form-col" id="subscribeForm">
           <div class="field"><label>Name</label><input type="text" id="sub-name" placeholder="Your name"></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
@@ -545,6 +603,7 @@ section{padding:90px 0}
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
         <a href="/en/collaboration">Collaborate</a>
+        <a href="/en/faq">FAQ</a>
       </div>
     </div>
     <div class="requisites">
@@ -693,6 +752,7 @@ section{padding:90px 0}
     <a href="/en/about" onclick="toggleMenu()">About the company</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
     <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>

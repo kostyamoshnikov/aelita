@@ -101,6 +101,15 @@
   </div>
 </section>
 
+
+<section style="padding:80px 0" id="audience-reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Отзывы зрителей</h2></div>
+    <div id="aud-reviews-list"></div>
+    <div id="aud-reviews-form-host"></div>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -128,6 +137,7 @@
         <a href="/projects">Проекты</a>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/collaboration">Сотрудничество</a>
+        <a href="/faq">Частые вопросы</a>
       </div>
     </div>
     <div class="requisites">
@@ -199,6 +209,7 @@
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
     <a href="/contacts" onclick="toggleMenu()">Контакты</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
@@ -230,6 +241,9 @@
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/main.js?v=18"></script>
+
+<script src="/assets/reviews.js"></script>
+<script>AelitaReviews.init('corner');</script>
 
 <script>
   if ('serviceWorker' in navigator) {

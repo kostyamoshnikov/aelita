@@ -588,3 +588,36 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 .photo-gallery img:hover{filter:brightness(1)}
 @media(max-width:900px){.photo-gallery{column-count:2}}
 @media(max-width:560px){.photo-gallery{column-count:1}}
+
+/* ── Отзывы зрителей (aelita-v16) ──────────────────────────────────
+   Новые классы (aud- = «audience»), не пересекаются с уже существующим
+   .reviews/.review-text/.review-author/.review-src — те держат
+   статичные цитаты прессы (см. /porfiriy), это другая, отдельная штука:
+   пользовательские отзывы, собираемые формой, см. Site/assets/reviews.js
+   и _tools/Reviews/. */
+.aud-reviews-empty{color:var(--sand);font-size:14px}
+.aud-reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:56px}
+.aud-review-card{background:var(--coal);padding:28px 26px;border:1px solid rgba(232,230,225,.06)}
+.aud-review-text{color:var(--bone);font-size:14.5px;line-height:1.7;margin:12px 0 16px}
+.aud-review-name{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--sand);display:flex;justify-content:space-between;align-items:baseline}
+.aud-review-date{color:rgba(201,184,163,.5);font-size:11px}
+.aud-stars{letter-spacing:2px}
+.aud-star{color:rgba(232,230,225,.2);font-size:15px}
+.aud-star.on{color:var(--gold)}
+
+.aud-review-form{max-width:520px}
+.aud-review-form h3{font-size:17px;font-weight:400;letter-spacing:.02em;color:var(--bone);margin-bottom:18px}
+.aud-stars-input{margin-bottom:16px}
+.aud-star-btn{font-size:26px;color:rgba(232,230,225,.2);cursor:pointer;transition:color .15s;margin-right:4px;display:inline-block}
+.aud-star-btn.on{color:var(--gold)}
+.aud-input,.aud-textarea{width:100%;background:var(--coal);border:1px solid rgba(232,230,225,.12);color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;padding:13px 16px;margin-bottom:14px;resize:vertical}
+.aud-input:focus,.aud-textarea:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.aud-consent{display:flex;align-items:flex-start;gap:10px;color:var(--sand);font-size:13px;margin-bottom:18px;cursor:pointer;line-height:1.5}
+.aud-consent input{margin-top:3px;flex-shrink:0}
+.aud-error{color:#C98B6B;font-size:13px;margin-bottom:14px}
+.aud-thanks{color:var(--bone);font-size:14px;line-height:1.7;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:18px 22px}
+.aud-thanks strong{color:var(--gold)}
+
+@media(max-width:760px){
+  .aud-reviews-grid{grid-template-columns:1fr}
+}

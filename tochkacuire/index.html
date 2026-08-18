@@ -126,6 +126,17 @@ section{padding:90px 0}
 .free-card .icon{font-size:24px;margin-bottom:14px}
 .free-card h3{font-size:15px;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
 .free-card p{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:14px}
+.speaker-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.speaker-card{background:var(--coal);padding:32px 32px 36px;display:flex;flex-direction:column}
+.speaker-card img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:16px;background:#000}
+.speaker-meta{font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.speaker-kicker{font-size:11px;color:var(--sand);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.speaker-card h3{font-size:18px;font-weight:400;color:var(--bone);margin-bottom:12px;line-height:1.3}
+.speaker-name{font-size:14px;color:var(--bone);font-weight:500;margin-bottom:2px}
+.speaker-role{font-size:12.5px;color:var(--sand);margin-bottom:14px;line-height:1.5}
+.speaker-card p.bio{color:var(--sand);font-size:13px;line-height:1.7;margin-bottom:10px}
+.speaker-quote{margin-top:auto;padding-top:14px;border-top:1px solid rgba(232,230,225,.1);color:var(--bone);font-size:13px;font-style:italic;line-height:1.6}
+@media(max-width:760px){.speaker-grid{grid-template-columns:1fr}}
 .free-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
 @media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.free-grid{grid-template-columns:1fr}}
@@ -276,53 +287,53 @@ section{padding:90px 0}
 <!-- ПРОГРАММА -->
 <section id="program" style="background:var(--coal)">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Программа</span><h2>Весь репертуар AELITA — на одной сцене</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Девять постановок за четыре дня: от флагманской мистерии до танцевальных вечеров, саунд-драмы и стендапа.</p>
+    <div class="sec-head reveal"><span class="eyebrow">Программа</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
+    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Пятнадцать постановок за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада. Часть программы фестиваля ещё уточняется и будет объявляться по ходу подготовки.</p>
 
     <div class="prog-grid reveal">
       <a class="prog-item" href="/iov">
-        <div class="prog-left"><span class="badge">Открытие · Флагман</span><span class="hall">Большой зал</span></div>
+        <div class="prog-left"><span class="badge">Открытие · Флагман</span><span class="hall">Синий зал</span></div>
         <div class="prog-title"><h3>ИОВ:материал</h3><p class="genre">Современная мистерия</p><p class="desc">Флагманская мистерия AELITA: человек как материал, который искусство переплавляет в новую форму. Спектакль-открытие фестиваля.</p></div>
         <div class="prog-right"><span class="age">12+</span><span class="dur">1:35</span></div>
       </a>
 
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/prorochestva.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Красный зал · 23 октября</span></div>
+        <div class="prog-title"><h3>Пророчества перелётных птиц</h3><p class="genre">Сайт-специфик перформанс · компания «ОМУТ»</p><p class="desc">Восемь перформерок в анималистичных костюмах и хореографическая партитура о птицах, которые каждое лето возвращаются в парк Александрия. Зрителям вручают театральные бинокли.</p></div>
+        <div class="prog-right"><span class="dur">~45 мин</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/meydey.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Галерея · 25 октября</span></div>
+        <div class="prog-title"><h3>Мэйдэй</h3><p class="genre">Пластический перформанс · OMYT</p><p class="desc">Сигнал бедствия подан — а бедствие не случается. Перформанс-рефлексия о том, как потеряться внутри времени и не перестать слышать реального себя.</p></div>
+        <div class="prog-right"><span class="dur">~45 мин</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/rasyomon.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Красный зал · 25 октября</span></div>
+        <div class="prog-title"><h3>Эффект Расёмон</h3><p class="genre">Пластический спектакль Надежды Кохановой</p><p class="desc">Несколько правд об одном событии — через образы Акутагавы и Куросавы. Размышление о природе порока и о том, из чего он растёт.</p></div>
+        <div class="prog-right"><span class="dur">~45 мин</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/rozovoe-maslo.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">24 октября</span></div>
+        <div class="prog-title"><h3>Запах розового масла</h3><p class="genre">Пластическая зарисовка · резиденты OMYT</p><p class="desc">Власть или покой — и цена, которую платят за выбор. Зарисовка-рефлексия на библейскую линию «Мастера и Маргариты».</p></div>
+        <div class="prog-right"><span class="dur">~45 мин</span></div>
+      </a>
+
+      <a class="prog-item" href="https://cuire-fest.ru/spektakli/mozgi.html" target="_blank" rel="noopener">
+        <div class="prog-left"><span class="badge">Интерактив · 16+</span><span class="hall">Дата уточняется</span></div>
+        <div class="prog-title"><h3>Есть ли у вас мозги?</h3><p class="genre">Интерактивный моноспектакль · реж. Дмитрий Турков</p><p class="desc">Зал становится то лабораторией, то судом присяжных: реальные исследования, учёные-бунтари и проверка, легко ли заставить человека поверить в невозможное.</p></div>
+        <div class="prog-right"><span class="dur">Моноспектакль</span></div>
+      </a>
+
       <a class="prog-item" href="/porfiriy">
-        <div class="prog-left"><span class="badge">Для молодёжи</span><span class="hall">Малый зал</span></div>
-        <div class="prog-title"><h3>Порфирий</h3><p class="genre">Медитативный детектив</p><p class="desc">Моноспектакль с интерактивом — для тех, кто любит вглядываться и сопоставлять. Тихий детектив о внутреннем следствии.</p></div>
+        <div class="prog-left"><span class="badge">Для молодёжи</span><span class="hall">Красный зал</span></div>
+        <div class="prog-title"><h3>Порфирий</h3><p class="genre">Медитативно-детективный моноспектакль</p><p class="desc">Моноспектакль с интерактивом — для тех, кто любит вглядываться и сопоставлять. Тихий детектив о внутреннем следствии.</p></div>
         <div class="prog-right"><span class="age">16+</span><span class="dur">~1:00</span></div>
       </a>
-      <a class="prog-item" href="/human">
-        <div class="prog-left"><span class="badge">Танцевальный вечер</span><span class="hall">Большой зал</span></div>
-        <div class="prog-title"><h3>Археология человеческого</h3><p class="genre">Вечер малых форм современного танца · компания «Короче»</p><p class="desc">Раскопки человеческого через современный танец: слой за слоем — о том, из чего мы состоим.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:10</span></div>
-      </a>
-      <a class="prog-item" href="/stories">
-        <div class="prog-left"><span class="badge">Дневной показ</span><span class="hall">Малый зал</span></div>
-        <div class="prog-title"><h3>Сюжеты. О земном и небесном</h3><p class="genre">Пластический спектакль-дефиле</p><p class="desc">Пластическое дефиле на грани земного и небесного. Дневной показ выходного дня для всей семьи.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:10</span></div>
-      </a>
-      <a class="prog-item" href="/listen">
-        <div class="prog-left"><span class="badge">Танц-слот · Интерактив</span><span class="hall">Малый зал</span></div>
-        <div class="prog-title"><h3>Послушайте!</h3><p class="genre">Танцевальный спектакль</p><p class="desc">Танцевальное обращение к зрителю: движение вместо слов. Громкий, живой, дневной танц-слот.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:00</span></div>
-      </a>
-      <a class="prog-item" href="/instruction">
-        <div class="prog-left"><span class="badge">Резерв · Выезд</span><span class="hall">Малый зал</span></div>
-        <div class="prog-title"><h3>Инструкция для начинающих странников</h3><p class="genre">Танцевальный спектакль</p><p class="desc">Танцевальная инструкция для тех, кто в пути. Камерный показ — резервный и выездной слот фестиваля.</p></div>
-        <div class="prog-right"><span class="age">12+</span><span class="dur">~1:00</span></div>
-      </a>
-      <a class="prog-item" href="/corner">
-        <div class="prog-left"><span class="badge">Лёгкий формат</span><span class="hall">Малый зал</span></div>
-        <div class="prog-title"><h3>Stand-up «Живой уголок»</h3><p class="genre">Стендап-вечер</p><p class="desc">Лёгкий кассовый стендап — выдохнуть и посмеяться после насыщенного фестивального дня.</p></div>
-        <div class="prog-right"><span class="age">16+</span><span class="dur">~1:30</span></div>
-      </a>
-      <a class="prog-item" href="/jazz_dance">
-        <div class="prog-left"><span class="badge">Гала-закрытие</span><span class="hall">Большой зал</span></div>
-        <div class="prog-title"><h3>JAZZ'n'DANCE</h3><p class="genre">Шоу: цирк + джаз + танец</p><p class="desc">Цирк, живой джаз и танец в одном шоу. Гала-закрытие фестиваля в расширенном сценарии.</p></div>
-        <div class="prog-right"><span class="age">6+</span><span class="dur">~1:30</span></div>
-      </a>
     </div>
-    <div class="prog-note reveal">✸ Билет — 1 000 ₽ на каждый показ. Все события вне залов — выставки, лекторий, мастер-классы и детский хэппенинг — бесплатные.</div>
+    <div class="prog-note reveal">✸ Билет на спектакль-открытие «ИОВ:материал» — 5 000 ₽, продажи открыты. Остальные показы — 1 000 ₽, продажи откроются позже. Все события вне залов — выставки, лекторий, мастер-классы и детский хэппенинг — бесплатные. Распределение по двум залам уточняется.</div>
   </div>
 </section>
 
@@ -334,39 +345,78 @@ section{padding:90px 0}
       <div class="days-tabs">
         <button class="day-tab active" onclick="showDay(0,this)"><span class="day-num">22</span>Чт · Открытие</button>
         <button class="day-tab" onclick="showDay(1,this)"><span class="day-num">23</span>Пт</button>
-        <button class="day-tab" onclick="showDay(2,this)"><span class="day-num">24</span>Сб · Семья</button>
+        <button class="day-tab" onclick="showDay(2,this)"><span class="day-num">24</span>Сб · Семья и танец</button>
         <button class="day-tab" onclick="showDay(3,this)"><span class="day-num">25</span>Вс · Закрытие</button>
       </div>
       <div class="day-content active" id="day-0">
-        <div class="time-item"><span class="time">17:00</span><div class="event">Пресс-подход, сбор гостей</div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Вернисаж фотовыставки «Театр будущего в кадре»</div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Церемония открытия + <a href="/iov">«ИОВ:материал»</a><small>Большой зал · 12+</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event">Неформальный нетворкинг</div></div>
+        <div class="time-item"><span class="time">17:00</span><div class="event">Пресс-подход, сбор гостей, открытие фестиваля</div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Выставочный вернисаж, открытие выставочной программы</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Показ-дефиле</div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">Спектакль-мистерия Екатерины Абдуловой <a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+</small></div></div>
       </div>
       <div class="day-content" id="day-1">
-        <div class="time-item"><span class="time">14:00</span><div class="event">Лекторий: «Театр будущего» + «Как смотреть современный танец»<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Мастер-класс (взрослые): современный танец / пластика<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event"><a href="/porfiriy">«Порфирий»</a><small>Малый зал · 16+</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Открытие лекториев<small>Красный зал</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль «Пророчества перелётных птиц» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Красный зал</small></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+</small></div></div>
       </div>
       <div class="day-content" id="day-2">
-        <div class="time-item"><span class="time">12:00</span><div class="event">Детский хэппенинг + детские мастер-классы<small>Вход свободный · 0+/6+</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Семейные мастер-классы, экскурсии по выставкам<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">15:00</span><div class="event">Лекторий: «Классика на современной сцене»<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Дневной танц-слот: <a href="/listen">«Послушайте!»</a> / «Инструкция…»<small>Малый зал · 12+</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event"><a href="/human">«Археология человеческого»</a><small>Большой зал · 12+</small></div></div>
-        <div class="time-item"><span class="time">21:00</span><div class="event"><a href="/corner">Stand-up «Живой уголок»</a><small>Малый зал · 16+</small></div></div>
+        <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Работа зоны маркетов</div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event">«Пушкин. Выстрел. Метель» — проект «Внеклассная классика», реж. С. Никифорова, Калуга</div></div>
+        <div class="time-item"><span class="time">12:00</span><div class="event">Лекторий<small>Галерея</small></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Детская программа: квест</div></div>
+        <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Мастер-классы для детей и взрослых<small>Вход свободный</small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Пластический спектакль<small>Красный зал</small></div></div>
+        <div class="time-item"><span class="time">15:00</span><div class="event">Спектакль хора «Петь просто»<small>Синий зал</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Пластический спектакль «Запах розового масла» — танцевальная группа «ОМУТ», Санкт-Петербург</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Медитативно-детективный мэшап <a href="/porfiriy">«Порфирий»</a>, реж. Александр Панов<small>16+</small></div></div>
       </div>
       <div class="day-content" id="day-3">
-        <div class="time-item"><span class="time">13:00</span><div class="event">Мастер-классы / детский блок<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">15:00</span><div class="event"><a href="/stories">«Сюжеты. О земном и небесном»</a><small>Малый зал · 12+</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Гала-закрытие: <a href="/jazz_dance">«JAZZ'n'DANCE»</a><small>Большой зал · 6+</small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event">Итоги, благодарности, анонс второго издания 2027</div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event">«Калиостро» — проект «Внеклассная классика», Калуга</div></div>
+        <div class="time-item"><span class="time">12:00</span><div class="event">Лекторий<small>Галерея</small></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс «Мэйдэй-3» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея</small></div></div>
+        <div class="time-item"><span class="time">днём</span><div class="event">Дневной слот: два спектакля<small>Программа уточняется</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">«Эффект Расёмон» — танцевальная группа «ОМУТ», Санкт-Петербург</div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">Слот-закрытие<small>Программа уточняется</small></div></div>
       </div>
     </div>
     <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:14px;color:var(--sand)">
       <strong style="color:var(--bone);display:block;margin-bottom:6px">8 октября — пролог</strong>
       Выставка «ТОЧКА КЮРИ. Пролог» открывается за две недели и работает до 4 ноября. Вход свободный.
     </div>
+  </div>
+</section>
+
+<!-- ДЕЛОВАЯ ПРОГРАММА -->
+<section id="business">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Деловая программа</span><h2>Разговоры о том, как всё устроено</h2></div>
+    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:15px">Лекции и открытые встречи для тех, кто делает культуру и продукты: как живёт современный танец в реальной экономике и что меняет искусственный интеллект в профессии. Вход свободный.</p>
+
+    <div class="speaker-grid reveal">
+      <div class="speaker-card">
+        <img src="https://cuire-fest.ru/assets/speakers/kazmiruk.jpg" alt="Михаил Казмирук" loading="lazy">
+        <div class="speaker-meta">23 октября · 18:00 · Красный зал</div>
+        <div class="speaker-kicker">Лекция · открытие лектория</div>
+        <h3>Как рождается и живёт танец в реальном мире</h3>
+        <div class="speaker-name">Михаил Казмирук</div>
+        <div class="speaker-role">Куратор программы «Новый танец» Новой сцены Александринского театра</div>
+        <p class="bio">За три года в программе «Новый танец» выпущено более 150 проектов — среди них спектакль «Место, которого ещё не было», лауреат «Золотой маски», и петербургская премьера «Хоры» Охада Нахарина.</p>
+        <p class="bio">За художественным чутьём стоит редкий технический бэкграунд: как технический директор агентства imarussia он собирает гибридные конференции и церемонии для крупных корпораций — СГК, «Вкусно — и точка», IBS, — а как продюсер фестиваля ODYSSEY управляет четырьмя сценами для 10 000 зрителей.</p>
+        <div class="speaker-quote">«Симбиоз режиссёра и инженера события» — про мосты между поэзией движения и жёсткой логистикой, между камерным перформансом и масштабным open-air.</div>
+      </div>
+
+      <div class="speaker-card">
+        <img src="https://cuire-fest.ru/assets/speakers/lecture-ai.svg" alt="Лекция об искусственном интеллекте" loading="lazy">
+        <div class="speaker-meta">Дата уточняется · галерея</div>
+        <div class="speaker-kicker">Лекция</div>
+        <h3>Искусственный интеллект: что он уже умеет и где ошибается</h3>
+        <div class="speaker-name">Алексей Цымлов</div>
+        <div class="speaker-role">CEO и основатель ИТ-компании <a href="https://syntropic.ru" target="_blank" rel="noopener" style="color:var(--gold)">СИНТРОПИК</a></div>
+        <p class="bio">Машина научилась писать, рисовать и говорить — своя точка Кюри случилась и здесь. Без хайпа: что нейросети делают сегодня, где ошибаются и как их уже применяют в театре, дизайне и продюсировании.</p>
+        <p class="bio">С живыми примерами и ответами на вопросы зала — от того, как устроены ИИ-ассистенты, до того, что меняется в профессии, когда часть работы берёт на себя машина.</p>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--steel);font-size:12.5px;margin-top:20px">Состав спикеров деловой программы пополняется.</p>
   </div>
 </section>
 
@@ -378,7 +428,7 @@ section{padding:90px 0}
       <div class="free-card">
         <div class="icon">◈</div>
         <h3>Лекторий</h3>
-        <p>3–5 встреч простым языком: «Театр будущего», «Как смотреть современный танец», «Классика на современной сцене», «Сделать фестиваль в регионе».</p>
+        <p>«Искусственный интеллект» — ведёт Алексей Цымлов, CEO компании «Синтропик»: что нейросети умеют сегодня и как их уже применяют в театре. Плюс 3–5 встреч простым языком: «Театр будущего», «Как смотреть современный танец», «Классика на современной сцене», «Сделать фестиваль в регионе».</p>
         <span class="free-badge">Вход свободный</span>
       </div>
       <div class="free-card">
@@ -389,14 +439,14 @@ section{padding:90px 0}
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3>Детский хэппенинг</h3>
-        <p>Коллективный арт-объект, который собирают сами участники — через движение, звук и творчество. 0+/6+.</p>
+        <h3>Квест по лабиринтам искусства</h3>
+        <p>Фестиваль захвачен «Серыми Экранами», которые крадут краски и эмоции. У детей 60 минут, чтобы перезагрузить арт-объекты и вернуть радость. Рядом — детские мастер-классы. 0+/6+.</p>
         <span class="free-badge">Вход свободный</span>
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3>Фотовыставка</h3>
-        <p>«Театр будущего в кадре» — сценическая фотография спектаклей AELITA. Вернисаж 22 октября, до 4 ноября.</p>
+        <h3>Фото-лаборатория</h3>
+        <p>«Точка отсчёта: археология своего „Я“» — стыд, долг, вина и страх, извлечённые на свет. Вернисаж 22 октября, до 4 ноября.</p>
         <span class="free-badge">Вход свободный</span>
       </div>
     </div>
@@ -418,11 +468,11 @@ section{padding:90px 0}
         </div>
       </div>
       <div class="exh-item">
-        <img src="https://cuire-fest.ru/assets/photo/p07.jpg" alt="Выставка Театр будущего в кадре" loading="lazy">
+        <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Фото-лаборатория Точка отсчёта" loading="lazy">
         <div class="exh-body">
-          <p class="dates">22 октября – 4 ноября · Фото</p>
-          <h3>Театр будущего в кадре</h3>
-          <p>Сценическая фотография спектаклей AELITA: тело в движении, длинная выдержка, световые следы. Вернисаж — 22 октября.</p>
+          <p class="dates">22 октября – 4 ноября · Фото-лаборатория</p>
+          <h3>Точка отсчёта: археология своего «Я»</h3>
+          <p>СТЫД, ДОЛГ, ВИНА и СТРАХ, извлечённые на свет: застывшая форма под грубой тканью и инструменты рефлексии на 1-м этаже ЦСИ «Быль». Вернисаж — 22 октября.</p>
           <span class="exh-free">Вход свободный</span>
         </div>
       </div>
@@ -443,9 +493,15 @@ section{padding:90px 0}
   <div class="wrap">
     <div class="ext-banner reveal">
       <div>
-        <p><strong>Open call для художников · тема сезона «Переход»</strong>Кураторский проект «Точка Кюри» приглашает художников. Выставка — октябрь 2026, ЦСИ «Быль». Приём заявок — до 15 августа 2026, ответ получат все подавшие.</p>
+        <p><strong>Театрам и командам: отбор в программу показов</strong>Фестиваль ищет драматические и пластические спектакли и перформансы — независимо от статуса и опыта команды. Показы — 22–25 октября, проживание и питание за счёт фестиваля. Заявки — до 31 августа 2026.</p>
       </div>
-      <a class="btn-outline" href="https://cuire-fest.ru/opencall/" target="_blank" rel="noopener">Подать заявку ↗</a>
+      <a class="btn-outline" href="https://cuire-fest.ru/opencall-teatr/" target="_blank" rel="noopener">Подать заявку ↗</a>
+    </div>
+    <div class="ext-banner reveal" style="margin-top:2px">
+      <div>
+        <p><strong>Open call для художников · тема сезона «Переход»</strong>Приём заявок завершён 15 августа 2026. Ответ получат все подавшие — до 31 августа. Условия следующего сезона будут объявлены на странице проекта.</p>
+      </div>
+      <a class="btn-outline" href="https://cuire-fest.ru/opencall/" target="_blank" rel="noopener">Смотреть условия ↗</a>
     </div>
   </div>
 </section>
@@ -458,9 +514,9 @@ section{padding:90px 0}
       <div>
         <p style="color:var(--sand);font-size:15px;margin-bottom:24px">Первый центр современного искусства в Белгородской области, открыт в 2023 году в отреставрированном здании бывшего кинотеатра «Быль» (1982). Два зрительных зала позволяют вести параллельные показы.</p>
         <div class="venue-stats">
-          <div class="vstat"><div class="vnum">530</div><div class="vlbl">мест · большой зал</div></div>
-          <div class="vstat"><div class="vnum">250</div><div class="vlbl">мест · малый зал</div></div>
-          <div class="vstat"><div class="vnum">2</div><div class="vlbl">этажа выставок</div></div>
+          <div class="vstat"><div class="vnum">496</div><div class="vlbl">мест · Синий зал</div></div>
+          <div class="vstat"><div class="vnum">168</div><div class="vlbl">мест · Красный зал</div></div>
+          <div class="vstat"><div class="vnum">2</div><div class="vlbl">этажа выставок и фойе</div></div>
           <div class="vstat"><div class="vnum">11–20</div><div class="vlbl">часы работы · вт–вс</div></div>
         </div>
         <div class="venue-address">
@@ -482,18 +538,20 @@ section{padding:90px 0}
     <div class="sec-head reveal"><span class="eyebrow">Билеты</span><h2>Один билет — один показ</h2></div>
     <div class="tickets-grid reveal">
       <div class="ticket-box">
-        <div class="ticket-price">1 000 ₽</div>
-        <div class="ticket-per">за один показ</div>
+        <div class="ticket-price">5 000 ₽</div>
+        <div class="ticket-per">«ИОВ:материал» · спектакль-открытие</div>
         <ul class="ticket-list">
-          <li>Единая цена на любой спектакль фестиваля</li>
+          <li>Чт, 22 октября · 19:00 · Синий зал · 12+ · 1 час 35 минут</li>
+          <li>Электронный билет с QR-кодом на e-mail. Сервисный сбор не взимается. Оплата картой или через СБП.</li>
+          <li class="star">Остальные показы фестиваля — 1 000 ₽, продажи откроются позже</li>
           <li class="star">Выставки, лекторий, мастер-классы и детский хэппенинг — бесплатно</li>
-          <li class="star">Художественная выставка-пролог открыта с 8 октября</li>
-          <li>Продажи стартуют в сентябре 2026</li>
+          <li>Условия покупки и возврата — в <a href="https://cuire-fest.ru/oferta/" target="_blank" rel="noopener" style="color:var(--gold)">публичной оферте</a></li>
         </ul>
+        <a class="btn-gold" href="https://cuire-fest.ru/bilety/" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Купить билет →</a>
       </div>
       <div class="form-box">
-        <h3>Сообщить о старте продаж</h3>
-        <p>Оставьте контакты — напишем, как только откроются продажи билетов, и пришлём программу.</p>
+        <h3>Сообщить о старте продаж на остальные показы</h3>
+        <p>Билеты на «ИОВ:материал» уже продаются. Оставьте контакты — напишем, как только откроются продажи на остальные спектакли фестиваля, и пришлём программу.</p>
         <div class="form-col" id="subscribeForm">
           <div class="field"><label>Имя</label><input type="text" id="sub-name" placeholder="Ваше имя"></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
@@ -542,6 +600,7 @@ section{padding:90px 0}
         <a href="/projects">Проекты</a>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/collaboration">Сотрудничество</a>
+        <a href="/faq">Частые вопросы</a>
       </div>
     </div>
     <div class="requisites">
@@ -690,6 +749,7 @@ section{padding:90px 0}
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
     <a href="/contacts" onclick="toggleMenu()">Контакты</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
