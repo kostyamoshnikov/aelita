@@ -10,11 +10,105 @@
 // cuire-fest.ru») перехватит клик раньше специфичного
 // («ссылка на билеты cuire-fest.ru»).
 (function () {
+  // === Собственная статистика (pack-v110) — дополняет Метрику, не ===
+  // === заменяет её. См. Site/README.md, раздел «Аналитика».       ===
+  // ⚠️ ЗАПОЛНИТЬ после деплоя _tools/Analytics/worker.js — URL
+  // воркера выглядит как https://aelita-analytics.ВАШ-SUBDOMAIN.workers.dev
+  // Пока пусто — сбор просто не отправляется никуда, ошибок нет.
+  const OWN_ANALYTICS_URL = '';
+
+  let ownBuffer = [];
+  let ownFlushTimer = null;
+
+  function ownConsent() {
+    try { return !!localStorage.getItem('cookies_accepted'); } catch (e) { return false; }
+  }
+
+  function sessionId() {
+    try {
+      let id = sessionStorage.getItem('aelita_sid');
+      if (!id) {
+        id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        sessionStorage.setItem('aelita_sid', id);
+      }
+      return id;
+    } catch (e) { return ''; }
+  }
+
+  function deviceType() {
+    return window.matchMedia && window.matchMedia('(max-width: 760px)').matches ? 'mobile' : 'desktop';
+  }
+
+  function pageLang() {
+    return /^\/en\//.test(location.pathname) ? 'en' : 'ru';
+  }
+
+  function utmParam(name) {
+    try { return new URLSearchParams(location.search).get(name) || ''; } catch (e) { return ''; }
+  }
+
+  function ownFlush(useBeacon) {
+    if (!ownBuffer.length || !OWN_ANALYTICS_URL) { ownBuffer = []; return; }
+    const payload = JSON.stringify({ events: ownBuffer });
+    ownBuffer = [];
+    if (useBeacon && navigator.sendBeacon) {
+      try {
+        navigator.sendBeacon(OWN_ANALYTICS_URL, new Blob([payload], { type: 'application/json' }));
+        return;
+      } catch (e) { /* падаем на fetch ниже */ }
+    }
+    try {
+      fetch(OWN_ANALYTICS_URL, { method: 'POST', body: payload, keepalive: true }).catch(function () {});
+    } catch (e) { /* тихо игнорируем — статистика никогда не должна ломать сайт */ }
+  }
+
+  function ownTrack(eventName, extra) {
+    if (!ownConsent() || !OWN_ANALYTICS_URL) return;
+    ownBuffer.push(Object.assign({
+      event: eventName,
+      page: location.pathname,
+      ref: document.referrer || '',
+      utm_source: utmParam('utm_source'),
+      utm_medium: utmParam('utm_medium'),
+      utm_campaign: utmParam('utm_campaign'),
+      device: deviceType(),
+      lang: pageLang(),
+      session: sessionId(),
+      ts: Date.now(),
+    }, extra || {}));
+    // Раз в ~8 секунд, если накопилось что отправить — не по одному
+    // запросу на каждое событие. Финальная отправка при уходе со
+    // страницы — через pagehide/visibilitychange ниже, sendBeacon'ом.
+    if (!ownFlushTimer) {
+      ownFlushTimer = setTimeout(function () { ownFlushTimer = null; ownFlush(false); }, 8000);
+    }
+  }
+
+  // Вызывается из main.js в двух точках — как и loadMetrika(): если
+  // согласие уже было дано раньше (при заходе на новую страницу) и
+  // сразу в момент нажатия «Принять» на баннере. До согласия — не
+  // фиксируем вообще ничего, ни один просмотр страницы.
+  window.AELITA_initOwnStats = function () {
+    if (!ownConsent()) return;
+    ownTrack('pageview', {});
+  };
+  // Сама инициализация — не здесь, а из main.js (см. вызовы
+  // window.AELITA_initOwnStats() рядом с loadMetrika()) — та же схема,
+  // что и у Метрики: этот файл только определяет функцию, запускает
+  // её main.js в двух точках (уже принято раньше / только что нажали
+  // «Принять»), чтобы не запускать дважды.
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') ownFlush(true);
+  });
+  window.addEventListener('pagehide', function () { ownFlush(true); });
+
   function track(goal, params) {
     params = params || {};
     if (window.ym) {
       try { window.ym(104681911, 'reachGoal', goal, params); } catch (e) {}
     }
+    ownTrack(goal, params);
   }
 
   // Достаёт слаг страницы из внутренней ссылки вида /slug/ или /en/slug/.

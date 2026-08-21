@@ -38,6 +38,7 @@ function loadMetrika(){
     var b=document.getElementById('cookie-banner');
     if(b) b.style.display='none';
     loadMetrika();
+    if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
   }
 })();
 
@@ -54,6 +55,7 @@ function acceptCookies(){
   var b=document.getElementById('cookie-banner');
   if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
   loadMetrika();
+  if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
   updateFixedWidgets();
   updateCtaBar();
 }

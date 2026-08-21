@@ -15,6 +15,52 @@
   // см. _tools/Reviews/README.md, шаг 4.
   var REVIEWS_API_URL = 'https://script.google.com/macros/s/ВСТАВЬТЕ_ID_ПОСЛЕ_ДЕПЛОЯ/exec';
 
+  // ── Подстраховка на случай недоступности Apps Script (pack-v111) ──
+  // Ответ Apps Script Web App непрозрачен для fetch() без preflight
+  // (см. комментарий у самой отправки ниже) — отличить «дошло, но
+  // Apps Script упал внутри» от «дошло и всё нормально» с клиента
+  // нельзя. НО полный сетевой отказ (adres недоступен, DNS, оффлайн)
+  // — отличим: fetch() в этом случае РЕЖЕКТИТСЯ, не просто даёт
+  // непрозрачный ответ. Именно эту, самую частую причину «таблица не
+  // подключена» (опечатка в URL, деплой ещё не сделан, временно
+  // недоступен) и подстраховываем: при сетевом отказе — сохраняем
+  // отзыв в localStorage вместо того, чтобы потерять его молча;
+  // при следующем заходе на любую страницу спектакля с отзывами —
+  // пробуем дослать то, что скопилось (до 10 последних).
+  var REVIEWS_BACKLOG_KEY = 'aelita_reviews_backlog';
+  var REVIEWS_BACKLOG_MAX = 10;
+
+  function reviewsBacklogGet() {
+    try { return JSON.parse(localStorage.getItem(REVIEWS_BACKLOG_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+  function reviewsBacklogSet(list) {
+    try { localStorage.setItem(REVIEWS_BACKLOG_KEY, JSON.stringify(list)); }
+    catch (e) { /* localStorage может быть недоступен (приватный режим и т.п.) — тихо игнорируем */ }
+  }
+  function reviewsBacklogPush(payload) {
+    var list = reviewsBacklogGet();
+    list.push({ payload: payload, ts: Date.now() });
+    while (list.length > REVIEWS_BACKLOG_MAX) list.shift();
+    reviewsBacklogSet(list);
+  }
+  // Пробует дослать всё, что скопилось, старое → новое, останавливаясь
+  // на первом же сетевом отказе (значит по-прежнему недоступно — нет
+  // смысла долбить остальное в эту же попытку).
+  function reviewsBacklogFlush() {
+    var list = reviewsBacklogGet();
+    if (!list.length) return;
+    var i = 0;
+    function next() {
+      if (i >= list.length) { reviewsBacklogSet([]); return; }
+      fetch(REVIEWS_API_URL, { method: 'POST', body: JSON.stringify(list[i].payload) })
+        .then(function () { i++; next(); })
+        .catch(function () { reviewsBacklogSet(list.slice(i)); }); // недосланное — оставляем в очереди
+    }
+    next();
+  }
+  reviewsBacklogFlush(); // пробуем при каждой загрузке страницы с отзывами
+
   // Тот же вебхук, что уже использует сайт для остальных форм —
   // мгновенное уведомление админам прямо с фронтенда (Code.gs шлёт то
   // же самое вторым, серверным путём, см. комментарий в Code.gs).
@@ -149,8 +195,11 @@
       // Fire-and-forget к Apps Script: ответ CORS-непрозрачный при
       // простом fetch без preflight, но данные долетают и пишутся в
       // таблицу — это нормальный, ожидаемый режим для Apps Script
-      // Web App, не ошибка.
-      fetch(REVIEWS_API_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function () {});
+      // Web App, не ошибка. Полный сетевой отказ (не «непрозрачно», а
+      // именно упавший fetch) — не теряем отзыв молча, кладём в
+      // localStorage-бэклог (см. reviewsBacklogPush выше).
+      fetch(REVIEWS_API_URL, { method: 'POST', body: JSON.stringify(payload) })
+        .catch(function () { reviewsBacklogPush(payload); });
 
       // Резервное уведомление напрямую с фронтенда — тот же паттерн,
       // что и у остальных форм сайта (см. sendTelegram в tickets/index.html).
