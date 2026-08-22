@@ -158,6 +158,7 @@ p a:hover{opacity:.75}
       <a href="/en/tickets">Schedule</a>
       <a href="/en/projects">Productions</a>
       <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/account">Account</a>
       <a href="/en/contacts">Contact</a>
     </div>
     <a class="lang-switch" href="https://aelita-production.ru/gift-card/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
@@ -274,6 +275,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Your phone or Telegram</label><input type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
       <div class="join-field"><label>Who is it for — optional</label><textarea id="j-message" placeholder="What to write on the certificate"></textarea></div>
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">A personal message — optional</button>
+      <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register before payment.</p>
       <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
     </div>
   </div>
