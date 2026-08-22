@@ -274,6 +274,7 @@ p a:hover{opacity:.75}
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">Оплатить →</button>
       <p class="join-note">Для оплаты нужен вход в <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не входили, попросим войти или зарегистрироваться перед оплатой.</p>
       <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <div class="join-ok" id="paymentReturnMsg">Если оплата прошла успешно — мы получили уведомление и свяжемся с вами, чтобы оформить сертификат. Если что-то пошло не так или остались вопросы — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
   </div>
 </div>
@@ -391,6 +392,22 @@ p a:hover{opacity:.75}
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
 <script src="/assets/main.js?v=19"></script>
+<script>
+  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
+  // aelita_paid в return_url). Не подтверждение самой оплаты (это
+  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
+  // ждали», без чего человек после реальной оплаты видел бы ту же
+  // форму и не понимал, получилось ли.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('aelita_paid') !== '1') return;
+    var el = document.getElementById('paymentReturnMsg');
+    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    params.delete('aelita_paid');
+    var qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+  })();
+</script>
 
 <script>
   if ('serviceWorker' in navigator) {

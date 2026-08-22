@@ -17,7 +17,41 @@
   // поломки, сайт при этом не ломается.
   var CREATE_PAYMENT_URL = '';
 
+  var DRAFT_KEY = 'aelita_form_draft:' + location.pathname;
+
+  // Раз оплата теперь ВСЕГДА требует входа, человек без аккаунта
+  // заполняет форму (иногда длинную — см. book-concierge), жмёт
+  // «Оплатить» и тут же улетает на /account регистрироваться — без
+  // этого он вернулся бы на чистую форму и вводил всё заново. То же
+  // самое нужно и при 401 ниже (истёкший токен посреди оплаты) — не
+  // только при изначальном отсутствии токена.
+  function saveFormDraft() {
+    try {
+      var data = {};
+      document.querySelectorAll('input[id], textarea[id]').forEach(function (el) {
+        if (el.type === 'password') return; // на этих страницах их нет, но на всякий случай
+        data[el.id] = el.value;
+      });
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    } catch (e) { /* приватный режим и т.п. — просто не восстановится, форма не сломается */ }
+  }
+
+  function restoreFormDraft() {
+    try {
+      var raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      Object.keys(data).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.value = data[id];
+      });
+      sessionStorage.removeItem(DRAFT_KEY);
+    } catch (e) {}
+  }
+  restoreFormDraft(); // при каждой загрузке страницы — так работает и после регистрации, и просто при возврате назад
+
   function goToLogin() {
+    saveFormDraft();
     location.href = '/account?next=' + encodeURIComponent(location.pathname + location.hash);
   }
 
@@ -61,16 +95,26 @@
     var originalText = buttonEl ? buttonEl.textContent : '';
     if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = 'Переходим к оплате…'; }
 
+    // Метка в return_url — чтобы страница, на которую ЮKassa вернёт
+    // человека, могла показать понятное «мы вас ждали» вместо тишины
+    // (см. handlePaymentReturn на страницах с оплатой). Это не
+    // подтверждение самой оплаты — та подтверждается асинхронно через
+    // webhook.js на сервере, фронтенд об этом узнать в моменте не
+    // может — поэтому и текст сообщения формулируется без гарантий.
+    var returnUrl = new URL(location.href);
+    returnUrl.searchParams.set('aelita_paid', '1');
+
     try {
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, comment: comment, return_url: location.href }),
+        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, comment: comment, return_url: returnUrl.toString() }),
       });
       if (res.status === 401) {
         // Токен был, но сервер его не принял (истёк/подделан/аккаунт
         // удалён) — с точки зрения человека это то же самое «нужно
-        // войти», а не общая ошибка оплаты.
+        // войти», а не общая ошибка оплаты. Форму тоже сохраняем —
+        // это могло случиться посреди заполнения длинной анкеты.
         try { localStorage.removeItem('aelita_account_token'); } catch (e) {}
         goToLogin();
         return;

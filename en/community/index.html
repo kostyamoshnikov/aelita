@@ -379,6 +379,7 @@ p a:hover{opacity:.75}
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Ask Katya first</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register before payment.</p>
       <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <div class="join-ok" id="paymentReturnMsg">If your payment went through, we've received the notification and Katya will get in touch to tell you about the next meeting. If something went wrong or you have questions — write to us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
     <div class="join-ok" id="joinOk">Thank you! Katya will get in touch and tell you about the next meeting.</div>
     </div>
@@ -573,6 +574,23 @@ p a:hover{opacity:.75}
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
 <script src="/assets/main.js?v=19"></script>
+
+<script>
+  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
+  // aelita_paid в return_url). Не подтверждение самой оплаты (это
+  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
+  // ждали», без чего человек после реальной оплаты видел бы ту же
+  // форму и не понимал, получилось ли.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('aelita_paid') !== '1') return;
+    var el = document.getElementById('paymentReturnMsg');
+    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    params.delete('aelita_paid');
+    var qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+  })();
+</script>
 
 <script>
   if ('serviceWorker' in navigator) {

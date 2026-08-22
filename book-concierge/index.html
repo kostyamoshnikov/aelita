@@ -315,6 +315,7 @@ p a:hover{opacity:.75}
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Только отправить анкету</button>
       <p class="join-note">Для оплаты нужен вход в <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не входили, попросим войти или зарегистрироваться перед оплатой.</p>
       <p class="join-note">Заполните анкету выше перед оплатой — так Катя сразу увидит ваши предпочтения. Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <div class="join-ok" id="paymentReturnMsg">Если оплата прошла успешно — мы получили уведомление, Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку. Если что-то пошло не так или остались вопросы — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
     <div class="join-ok" id="joinOk">Спасибо! Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку.</div>
     </div>
@@ -517,6 +518,23 @@ p a:hover{opacity:.75}
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
 <script src="/assets/main.js?v=19"></script>
+
+<script>
+  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
+  // aelita_paid в return_url). Не подтверждение самой оплаты (это
+  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
+  // ждали», без чего человек после реальной оплаты видел бы ту же
+  // форму и не понимал, получилось ли.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('aelita_paid') !== '1') return;
+    var el = document.getElementById('paymentReturnMsg');
+    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    params.delete('aelita_paid');
+    var qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+  })();
+</script>
 
 <script>
   if ('serviceWorker' in navigator) {
