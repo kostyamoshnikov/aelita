@@ -3,7 +3,7 @@
    (--maxw остаётся локальным на каждой странице — он осознанно
    разный: 900px у юридических страниц, 1320px у остальных)
    ============================================================ */
-:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 /* ============================================================
    Общие мобильные виджеты AELITA PRODUCTION
@@ -444,7 +444,7 @@ section{padding:80px 0}
 @media(max-width:760px){.works-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer;font-weight:inherit}
 .age{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 10px;font-size:10px;letter-spacing:.3em;font-family:'Montserrat',sans-serif;display:inline-block;margin-left:14px;vertical-align:middle}
 .other-card{background:var(--coal);padding:32px 26px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .3s}
 .other-card:hover{border-color:rgba(214,181,122,.35)}
@@ -453,7 +453,7 @@ section{padding:80px 0}
 /* 6. Параллакс */
   .hero-bg{will-change:transform}
 .page-header h1{font-size:clamp(28px,5vw,52px);letter-spacing:.18em;margin-top:16px}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;-webkit-appearance:none;appearance:none;cursor:pointer;font-weight:inherit}
   /* ── Hero видео ── */
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,13,.3) 0%,rgba(11,11,13,.0) 35%,rgba(11,11,13,.85) 72%,var(--ink) 100%)}
 .teaser-sound-btn{

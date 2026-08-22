@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{min-height:100%;overflow-x:hidden}
 body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -75,12 +75,44 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 
 .cust{display:flex;flex-direction:column;gap:1px;background:rgba(201,184,163,.15)}
 .cust-item{background:var(--ink);padding:20px 22px}
-.cust-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.cust-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .cust-email{font-family:'Montserrat',sans-serif;font-size:14px;word-break:break-all}
 .cust-meta{color:var(--sand);font-size:12px}
 .cust-total{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);white-space:nowrap}
 .purchase-row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--sand);margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,184,163,.1)}
 .purchase-row .name{color:var(--bone)}
+.cust-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mini-btn{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;border:1px solid rgba(214,181,122,.3);color:var(--gold);background:none;cursor:pointer;white-space:nowrap}
+.mini-btn:hover{background:rgba(214,181,122,.08)}
+.mini-btn-danger{border-color:rgba(224,138,110,.4);color:#e08a6e}
+.mini-btn-danger:hover{background:rgba(224,138,110,.08)}
+
+/* Модальное окно (подтверждение удаления, форма ручной покупки) */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--coal);padding:32px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-box h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;letter-spacing:.04em;margin-bottom:8px}
+.modal-box p{color:var(--sand);font-size:13px;margin-bottom:20px;line-height:1.6}
+.modal-box .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.modal-box label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
+.modal-box input,.modal-box select{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:11px 14px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;width:100%}
+.modal-box input:focus,.modal-box select:focus{outline:none;border-color:var(--gold)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn-small{flex:1}
+.modal-err{font-size:13px;color:#e08a6e;margin-top:10px;display:none}
+
+/* Правки сайта */
+.editor-box{background:var(--coal);padding:28px 24px;margin-bottom:60px}
+.editor-box .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.editor-box label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
+.editor-box input,.editor-box textarea{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:12px 14px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;width:100%;resize:vertical}
+.editor-box input:focus,.editor-box textarea:focus{outline:none;border-color:var(--gold)}
+.editor-note{font-size:12px;color:rgba(201,184,163,.6);margin-top:-8px;margin-bottom:16px;line-height:1.6}
+.editor-preview{background:rgba(232,230,225,.04);border-left:2px solid var(--gold);padding:16px;font-size:13px;color:var(--sand);margin:16px 0;display:none;white-space:pre-wrap;word-break:break-word}
+.editor-preview mark{background:rgba(214,181,122,.25);color:var(--gold)}
+.editor-result{font-size:13px;margin-top:14px;display:none}
+.editor-result.ok{color:var(--gold)}
+.editor-result.err{color:#e08a6e}
 
 .empty-state,#loadingState{padding:60px 20px;text-align:center;color:var(--sand);background:var(--coal)}
 #errorState{padding:40px 20px;text-align:center;color:#e08a6e;background:var(--coal);display:none}
@@ -155,17 +187,91 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
     </div>
     <div class="cust" id="custList"></div>
+
+    <p class="sec-title" style="margin-top:56px">Правки сайта</p>
+    <div class="editor-box">
+      <div class="field">
+        <label for="edit-page">Страница (слаг)</label>
+        <input type="text" id="edit-page" placeholder="например, community или en/community">
+      </div>
+      <p class="editor-note">Юридические и служебные страницы (oferta, privacy, cookies, bot, documents, account, admin) через админку не редактируются — правьте их вручную, как раньше.</p>
+      <div class="field">
+        <label for="edit-old">Точный существующий текст</label>
+        <textarea id="edit-old" rows="3" placeholder="Скопируйте текст с сайта дословно — должен встречаться на странице ровно один раз"></textarea>
+      </div>
+      <div class="field">
+        <label for="edit-new">Новый текст</label>
+        <textarea id="edit-new" rows="3"></textarea>
+      </div>
+      <button class="btn-small" id="editPreviewBtn">Проверить</button>
+      <div class="editor-preview" id="editorPreview"></div>
+      <div class="modal-actions" id="editorConfirmRow" style="display:none">
+        <button class="btn-small" id="editConfirmBtn">Закоммитить на сайт →</button>
+        <button class="btn-small btn-ghost" id="editCancelBtn">Отмена</button>
+      </div>
+      <p class="editor-result" id="editorResult"></p>
+    </div>
   </div>
 </div>
 
 </div>
 </main>
 
+<!-- Модалка: подтверждение удаления клиента -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>Удалить клиента?</h3>
+    <p>Email <strong id="deleteModalEmail"></strong> будет удалён из личного кабинета целиком — вся история покупок пропадёт из «Мои покупки». Полная бухгалтерская история платежей останется в ЮKassa, это касается только витрины на сайте. Действие необратимо.</p>
+    <div class="modal-actions">
+      <button class="btn-small mini-btn-danger" id="deleteConfirmBtn" style="flex:1;padding:11px">Да, удалить</button>
+      <button class="btn-small btn-ghost" id="deleteCancelBtn" style="flex:1">Отмена</button>
+    </div>
+    <p class="modal-err" id="deleteModalErr"></p>
+  </div>
+</div>
+
+<!-- Модалка: ручное добавление покупки -->
+<div class="modal-overlay" id="addPurchaseModal">
+  <div class="modal-box">
+    <h3>Добавить покупку вручную</h3>
+    <p>Для клиента <strong id="addPurchaseEmail"></strong>. Используйте, если оплата прошла не через сайт (перевод, наличные) или вебхук ЮKassa не дописал покупку автоматически.</p>
+    <div class="field">
+      <label for="ap-product">Товар</label>
+      <select id="ap-product">
+        <option value="community">AELITA COMMUNITY</option>
+        <option value="concierge">Книжный консьерж</option>
+        <option value="gift">Подарочная карта</option>
+        <option value="other">Другое</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="ap-label">Название (необязательно)</label>
+      <input type="text" id="ap-label" placeholder="Показать своим текстом вместо стандартного">
+    </div>
+    <div class="field">
+      <label for="ap-amount">Сумма, ₽</label>
+      <input type="number" id="ap-amount" min="1" step="1">
+    </div>
+    <div class="field">
+      <label for="ap-id">ID платежа (необязательно)</label>
+      <input type="text" id="ap-id" placeholder="Оставьте пустым — сгенерируется само">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-small" id="addPurchaseConfirmBtn" style="flex:1;padding:11px">Добавить</button>
+      <button class="btn-small btn-ghost" id="addPurchaseCancelBtn" style="flex:1">Отмена</button>
+    </div>
+    <p class="modal-err" id="addPurchaseErr"></p>
+  </div>
+</div>
+
 <script>
 // ЗАПОЛНИТЬ после деплоя _tools/Admin/login.js и data.js — до
 // заполнения страница показывает понятное сообщение, не ломается.
 var ADMIN_LOGIN_URL = '';
 var ADMIN_DATA_URL = '';
+var ADMIN_DELETE_URL = '';
+var ADMIN_ADD_PURCHASE_URL = '';
+var ADMIN_SITE_EDIT_URL = '';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -244,14 +350,139 @@ function renderCustomers(list) {
       return '<div class="purchase-row"><span class="name">' + name + '</span><span>' + fmtDate(p.paidAt) + ' · ' + fmtMoney(p.amount) + '</span></div>';
     }).join('');
     var purchaseWord = pluralRu(c.purchaseCount, 'покупка', 'покупки', 'покупок');
+    var emailAttr = c.email.replace(/"/g, '&quot;');
     return '<div class="cust-item">' +
       '<div class="cust-head">' +
         '<div><div class="cust-email">' + c.email + '</div><div class="cust-meta">с ' + fmtDate(c.createdAt) + ' · ' + c.purchaseCount + ' ' + purchaseWord + '</div></div>' +
         '<div class="cust-total">' + fmtMoney(c.totalSpent) + '</div>' +
       '</div>' +
       purchasesHtml +
+      '<div class="cust-actions" style="margin-top:14px">' +
+        '<button class="mini-btn" data-action="add-purchase" data-email="' + emailAttr + '">+ Покупка</button>' +
+        '<button class="mini-btn" data-action="export" data-email="' + emailAttr + '">Экспорт</button>' +
+        '<button class="mini-btn mini-btn-danger" data-action="delete" data-email="' + emailAttr + '">Удалить</button>' +
+      '</div>' +
     '</div>';
   }).join('');
+}
+
+document.getElementById('custList').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  var email = btn.dataset.email;
+  var action = btn.dataset.action;
+  if (action === 'delete') openDeleteModal(email);
+  else if (action === 'add-purchase') openAddPurchaseModal(email);
+  else if (action === 'export') exportCustomer(email);
+});
+
+function exportCustomer(email) {
+  var customer = allCustomers.find(function (c) { return c.email === email; });
+  if (!customer) return;
+  var blob = new Blob([JSON.stringify(customer, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'aelita-' + email.replace(/[^a-z0-9]+/gi, '-') + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ── Удаление клиента ─────────────────────────────────────────────
+var deleteTargetEmail = null;
+function openDeleteModal(email) {
+  deleteTargetEmail = email;
+  document.getElementById('deleteModalEmail').textContent = email;
+  document.getElementById('deleteModalErr').style.display = 'none';
+  document.getElementById('deleteModal').classList.add('open');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  deleteTargetEmail = null;
+}
+document.getElementById('deleteCancelBtn').addEventListener('click', closeDeleteModal);
+document.getElementById('deleteConfirmBtn').addEventListener('click', async function () {
+  if (!deleteTargetEmail) return;
+  if (!ADMIN_DELETE_URL) { showModalErr('deleteModalErr', 'Функция удаления ещё не подключена — заполните ADMIN_DELETE_URL.'); return; }
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Удаляем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_DELETE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ email: deleteTargetEmail }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) { showModalErr('deleteModalErr', data && data.error === 'not_found' ? 'Клиент не найден — возможно, уже удалён.' : 'Не получилось удалить. Попробуйте ещё раз.'); return; }
+    closeDeleteModal();
+    loadData({ refresh: true });
+  } catch (e) {
+    showModalErr('deleteModalErr', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+// ── Ручное добавление покупки ────────────────────────────────────
+var addPurchaseTargetEmail = null;
+function openAddPurchaseModal(email) {
+  addPurchaseTargetEmail = email;
+  document.getElementById('addPurchaseEmail').textContent = email;
+  document.getElementById('addPurchaseErr').style.display = 'none';
+  document.getElementById('ap-product').value = 'community';
+  document.getElementById('ap-label').value = '';
+  document.getElementById('ap-amount').value = '';
+  document.getElementById('ap-id').value = '';
+  document.getElementById('addPurchaseModal').classList.add('open');
+}
+function closeAddPurchaseModal() {
+  document.getElementById('addPurchaseModal').classList.remove('open');
+  addPurchaseTargetEmail = null;
+}
+document.getElementById('addPurchaseCancelBtn').addEventListener('click', closeAddPurchaseModal);
+document.getElementById('addPurchaseConfirmBtn').addEventListener('click', async function () {
+  if (!addPurchaseTargetEmail) return;
+  if (!ADMIN_ADD_PURCHASE_URL) { showModalErr('addPurchaseErr', 'Функция ещё не подключена — заполните ADMIN_ADD_PURCHASE_URL.'); return; }
+  var amount = Number(document.getElementById('ap-amount').value);
+  if (!amount || amount <= 0) { showModalErr('addPurchaseErr', 'Укажите сумму больше нуля.'); return; }
+  var paymentId = document.getElementById('ap-id').value.trim() || ('manual-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8));
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Добавляем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_ADD_PURCHASE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({
+        email: addPurchaseTargetEmail,
+        product: document.getElementById('ap-product').value,
+        productLabel: document.getElementById('ap-label').value.trim(),
+        amount: amount,
+        paymentId: paymentId,
+      }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) { showModalErr('addPurchaseErr', 'Не получилось добавить покупку. Попробуйте ещё раз.'); return; }
+    closeAddPurchaseModal();
+    loadData({ refresh: true });
+  } catch (e) {
+    showModalErr('addPurchaseErr', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+function showModalErr(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
 var currentSort = 'date'; // 'date' | 'spent' — порядок и так приходит с сервера
@@ -369,6 +600,110 @@ document.getElementById('pwToggle').addEventListener('click', function () {
 
 document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('admin-password').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+
+// ── Правки сайта (find-and-replace через GitHub, с превью) ──────────
+function escapeHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+var lastPreviewedBody = null; // тело запроса, для которого превью успешно нашло текст — confirm отправляет ЕГО ЖЕ, не собирает заново (страховка от рассинхрона полей между превью и подтверждением)
+
+function resetEditorConfirm() {
+  document.getElementById('editorConfirmRow').style.display = 'none';
+  lastPreviewedBody = null;
+}
+
+document.getElementById('editPreviewBtn').addEventListener('click', async function () {
+  var resultEl = document.getElementById('editorResult');
+  var previewEl = document.getElementById('editorPreview');
+  resultEl.style.display = 'none';
+  previewEl.style.display = 'none';
+  resetEditorConfirm();
+
+  if (!ADMIN_SITE_EDIT_URL) { showEditorResult('err', 'Правки сайта ещё не подключены — заполните ADMIN_SITE_EDIT_URL.'); return; }
+
+  var page = document.getElementById('edit-page').value.trim().replace(/^\/+|\/+$/g, '');
+  var oldText = document.getElementById('edit-old').value;
+  var newText = document.getElementById('edit-new').value;
+  if (!page) { showEditorResult('err', 'Укажите страницу.'); return; }
+  if (!oldText) { showEditorResult('err', 'Укажите текущий текст, который нужно найти.'); return; }
+  if (oldText === newText) { showEditorResult('err', 'Новый текст совпадает со старым — менять нечего.'); return; }
+
+  var reqBody = { page: page, oldText: oldText, newText: newText };
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Проверяем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_SITE_EDIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify(reqBody),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (res.status === 403) { showEditorResult('err', 'Эта страница закрыта от правок из админки — юридические и служебные страницы правятся только вручную.'); return; }
+    if (res.status === 404) { showEditorResult('err', 'Такой страницы не нашлось. Проверьте слаг (например, «community», не «/community/»).'); return; }
+    if (!res.ok) { showEditorResult('err', 'Не получилось проверить. Попробуйте ещё раз.'); return; }
+    if (data.error === 'text_not_found') { showEditorResult('err', 'Такой текст на странице не найден — проверьте, что скопировали его дословно, без опечаток.'); return; }
+    if (data.error === 'text_not_unique') { showEditorResult('err', 'Этот текст встречается на странице ' + data.occurrences + ' раз — добавьте немного окружающего текста, чтобы он стал уникальным.'); return; }
+    if (data.found) {
+      var snippet = escapeHtml(data.snippet);
+      var oldEsc = escapeHtml(oldText);
+      snippet = snippet.split(oldEsc).join('<mark>' + oldEsc + '</mark>');
+      previewEl.innerHTML = '…' + snippet + '…';
+      previewEl.style.display = 'block';
+      document.getElementById('editorConfirmRow').style.display = 'flex';
+      lastPreviewedBody = reqBody;
+    }
+  } catch (e) {
+    showEditorResult('err', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+document.getElementById('editCancelBtn').addEventListener('click', function () {
+  document.getElementById('editorPreview').style.display = 'none';
+  resetEditorConfirm();
+});
+
+document.getElementById('editConfirmBtn').addEventListener('click', async function () {
+  if (!lastPreviewedBody) return;
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Коммитим…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_SITE_EDIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify(Object.assign({}, lastPreviewedBody, { confirm: true })),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (res.status === 409) { showEditorResult('err', 'Кто-то другой изменил эту страницу, пока вы проверяли правку. Нажмите «Проверить» ещё раз — превью подтянет актуальный текст.'); return; }
+    if (!res.ok || !data.committed) { showEditorResult('err', 'Не получилось закоммитить правку. Попробуйте ещё раз.'); return; }
+    showEditorResult('ok', 'Готово — правка на сайте' + (data.commitUrl ? ' (' : '') + (data.commitUrl ? '<a href="' + data.commitUrl + '" target="_blank" rel="noopener" style="color:inherit">коммит на GitHub →</a>)' : '') + '. На самом сайте появится обычно в течение минуты.');
+    document.getElementById('editorPreview').style.display = 'none';
+    resetEditorConfirm();
+    document.getElementById('edit-old').value = '';
+    document.getElementById('edit-new').value = '';
+  } catch (e) {
+    showEditorResult('err', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+function showEditorResult(kind, html) {
+  var el = document.getElementById('editorResult');
+  el.className = 'editor-result ' + kind;
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
 
 // Уже есть токен с прошлого раза в этой вкладке — не заставляем
 // вводить пароль заново, просто пробуем загрузить данные (если токен

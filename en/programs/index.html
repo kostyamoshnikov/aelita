@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AELITA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Show program — AELITA PRODUCTION</title>
+<meta name="description" content="Buy a printed show program right at the venue — pick the show and pay by card, no registration. 200 ₽.">
+<link rel="canonical" href="https://aelita-production.ru/en/programs/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/programs/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/programs/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/programs/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/programs/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/programs/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/programs/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/en/programs/">
+<meta property="og:title" content="Show program — AELITA PRODUCTION">
+<meta property="og:description" content="Buy a printed show program right at the venue — pick the show and pay by card, no registration. 200 ₽.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Show program — AELITA PRODUCTION">
+<meta name="twitter:description" content="Buy a printed show program right at the venue — pick the show and pay by card, no registration. 200 ₽.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=19">
+<style>body{max-width:100vw}
+section{padding:70px 0}
+.hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;width:100%}
+.btn-gold:disabled{opacity:.4;cursor:default}
+.sec-head{margin-bottom:50px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
+p a:hover{opacity:.75}
+/* HERO — компактный, без полноэкранного beam-эффекта: страница для быстрого сценария, не для долгого просмотра */
+.hero{padding:120px 0 60px;position:relative;overflow:hidden}
+.hero-beam::before{content:"";position:absolute;top:-5%;left:55%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);transform:rotate(10deg);transform-origin:top center;box-shadow:0 0 18px 4px rgba(214,181,122,.45),0 0 70px 18px rgba(214,181,122,.15);animation:beam-in 2s ease both}
+@keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:70%}}
+.hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.hero-title{font-size:clamp(32px,7vw,64px);letter-spacing:.06em;line-height:1.1;margin-bottom:24px}
+.hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:24px}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:56ch;margin-bottom:28px;line-height:1.8}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap}
+.hero-meta-item{display:flex;flex-direction:column;gap:4px}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:15px;color:var(--bone)}
+/* ВЫБОР СПЕКТАКЛЯ — карточки-переключатели */
+.show-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(max-width:640px){.show-grid{grid-template-columns:1fr}}
+.show-card{background:var(--coal);border:1px solid transparent;border-left:2px solid transparent;padding:28px 26px;text-align:left;cursor:pointer;font-family:inherit;color:inherit;-webkit-appearance:none;appearance:none;transition:border-color .2s,background .2s;width:100%}
+.show-card:hover{background:#202026}
+.show-card.selected{border-left-color:var(--gold);background:#202026}
+.show-card .mark{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.5);margin-bottom:10px;display:block}
+.show-card.selected .mark{color:var(--gold)}
+.show-card h3{font-size:19px;letter-spacing:.06em;font-weight:300;line-height:1.35}
+/* ОПЛАТА */
+.pay-sec{background:var(--coal)}
+.pay-box{max-width:440px;margin:0 auto;text-align:center}
+.pay-box .price{font-family:'Montserrat',sans-serif;font-size:44px;color:var(--gold);letter-spacing:.04em;margin-bottom:6px}
+.pay-box .chosen{font-size:14px;color:var(--sand);margin-bottom:28px;min-height:20px}
+.pay-note{font-size:12px;color:rgba(201,184,163,.5);margin-top:16px;line-height:1.7}
+.pay-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left;margin-top:20px}
+/* КАК ПОЛУЧИТЬ — три коротких шага */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+@media(max-width:760px){.steps-grid{grid-template-columns:1fr}}
+.step-item{background:var(--coal);padding:32px 28px}
+.step-item .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.step-item h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:8px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.step-item p{color:var(--sand);font-size:13px;line-height:1.7}
+@media(max-width:430px){section{padding:50px 0}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+    <div class="nav-links">
+      <a href="/en/tickets">Schedule</a>
+      <a href="/en/projects">Productions</a>
+      <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/account">Account</a>
+      <a href="/en/contacts">Contact</a>
+    </div>
+    <a class="lang-switch" href="https://aelita-production.ru/programs/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <button class="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<div class="hero">
+  <div class="hero-beam" aria-hidden="true"></div>
+  <div class="wrap hero-content">
+    <p class="hero-community">AELITA PRODUCTION</p>
+    <h1 class="hero-title">Show program</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">A printed keepsake program — 4 pages, about the show and the team. Pick the show below, pay by card, and show the screen at the entrance.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="lbl">Price</span>
+        <span class="val">200 ₽</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="lbl">Registration</span>
+        <span class="val">not required</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHOOSE THE SHOW -->
+<section id="pick">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Step 1</span><h2>Which show is the program for?</h2></div>
+    <div class="show-grid reveal" id="showGrid">
+      <button type="button" class="show-card" data-show="porfiriy"><span class="mark">Choose</span><h3>“Porfiry”</h3></button>
+      <button type="button" class="show-card" data-show="iov"><span class="mark">Choose</span><h3>“IOV: Material”</h3></button>
+      <button type="button" class="show-card" data-show="human"><span class="mark">Choose</span><h3>“Archaeology of the Human”</h3></button>
+      <button type="button" class="show-card" data-show="listen"><span class="mark">Choose</span><h3>“Listen!”</h3></button>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section class="pay-sec" id="pay">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Step 2</span><h2>Payment</h2></div>
+    <div class="pay-box reveal">
+      <div class="price">200 ₽</div>
+      <div class="chosen" id="chosenShow">Choose a show above first</div>
+      <button class="btn-gold" id="payBtn_program" disabled onclick="AELITA_pay('program', {show: window.AELITA_selectedShow, buttonEl: this})">Pay — 200 ₽ →</button>
+      <p class="pay-note">Payment by card through YooKassa, no registration or account needed. After paying, show your phone screen at the stand — you'll get your program.</p>
+      <p class="pay-note">Having trouble? Email us: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
+      <div class="pay-ok" id="paymentReturnMsg">If the payment went through — show this screen at the stand and you'll get your program. If something went wrong — email us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO GET IT -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">How it works</span><h2>Three steps</h2></div>
+    <div class="steps-grid reveal">
+      <div class="step-item">
+        <div class="num">1</div>
+        <h3>Choose the show</h3>
+        <p>The one you came to see today — the program is made for it specifically.</p>
+      </div>
+      <div class="step-item">
+        <div class="num">2</div>
+        <h3>Pay by card</h3>
+        <p>200 ₽, right on this page, no registration — faster than standing in line.</p>
+      </div>
+      <div class="step-item">
+        <div class="num">3</div>
+        <h3>Show the screen</h3>
+        <p>To the staff at the stand — they'll hand you the printed program.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+      </div>
+      <div>
+        <h4>Social media</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/community">AELITA COMMUNITY</a>
+        <a href="/en/book-concierge">Book Concierge</a>
+        <a href="/en/gift-card">Book Concierge</a>
+        <a href="/en/programs">Show program</a>
+        <a href="/en/collaboration">Collaborate</a>
+        <a href="/en/faq">FAQ</a>
+      </div>
+    </div>
+    <div class="requisites">
+      LLC “AELITA PRODUCTION”<br>
+      Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
+      OGRN 1254000006644 · TIN 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
+  },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting) e.target.classList.add('line-on')})
+  },{threshold:.4});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){ el.classList.add('on'); });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){ el.classList.add('line-on'); });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+<!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Telegram widget -->
+<div class="tg-widget" id="tg-widget">
+  <div class="tg-bubble" id="tg-bubble">Write to us — our bot responds instantly</div>
+  <a class="tg-btn" href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" aria-label="Message us on Telegram">
+    <svg viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"></path></svg>
+    Write to us
+  </a>
+</div>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/payments.js"></script>
+<script src="/assets/main.js?v=19"></script>
+
+<script>
+  // Выбор спектакля — переключает карточки, включает кнопку оплаты.
+  // window.AELITA_selectedShow читает payments.js в onclick выше в
+  // момент клика по «Оплатить», не раньше — так что порядок объявления
+  // не важен.
+  window.AELITA_selectedShow = null;
+  var SHOW_LABELS = { porfiriy: '«Порфирий»', iov: '«ИОВ:материал»', human: '«Археология человеческого»', listen: '«Послушайте!»' };
+  document.getElementById('showGrid').addEventListener('click', function (e) {
+    var card = e.target.closest('.show-card');
+    if (!card) return;
+    document.querySelectorAll('.show-card').forEach(function (c) { c.classList.remove('selected'); });
+    card.classList.add('selected');
+    window.AELITA_selectedShow = card.dataset.show;
+    document.getElementById('chosenShow').textContent = 'Программка ' + SHOW_LABELS[card.dataset.show];
+    document.getElementById('payBtn_program').disabled = false;
+  });
+</script>
+
+<script>
+  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
+  // aelita_paid в return_url). Не подтверждение самой оплаты (это
+  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
+  // ждали», без чего человек после реальной оплаты видел бы ту же
+  // форму и не понимал, получилось ли.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('aelita_paid') !== '1') return;
+    var el = document.getElementById('paymentReturnMsg');
+    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    params.delete('aelita_paid');
+    var qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+  })();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW зарегистрирован:', reg.scope))
+        .catch(err => console.error('SW ошибка:', err));
+    });
+  }
+</script>
+</body>
+</html>

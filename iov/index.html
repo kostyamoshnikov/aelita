@@ -35,12 +35,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=18">
+<link rel="stylesheet" href="/assets/style.css?v=19">
 <style>body{max-width:100vw}
 section{padding:100px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;transition:all .3s}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;transition:opacity .3s}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:56px}
 /* ── nav ── */
   
@@ -72,8 +72,8 @@ section{padding:100px 0}
 .hero-sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(13px,1.6vw,17px);letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:8px}
 .hero-dir{font-size:14px;color:rgba(201,184,163,.7);letter-spacing:.1em;margin-bottom:40px}
 .hero-btns{display:flex;gap:16px;flex-wrap:wrap}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;transition:opacity .3s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;transition:all .3s}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 /* ── sections ── */
   section{padding:100px 0}
 .sec-head h2{font-size:clamp(18px,2.6vw,26px);letter-spacing:.32em}
@@ -155,8 +155,8 @@ section{padding:100px 0}
 @media(max-width:430px){section{padding:60px 0}}
 @media(max-width:375px){section{padding:50px 0}}
 @media(max-width:900px){.desc-grid{grid-template-columns:1fr}}
-.btn-outline{display:inline-block}
-.btn-gold{display:inline-block}
+.btn-outline{display:inline-block;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{display:inline-block;-webkit-appearance:none;appearance:none;cursor:pointer}
 @media(max-width:430px){section{padding:60px 0}}
 @media(max-width:375px){section{padding:50px 0}}
 </style>

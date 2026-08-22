@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A}
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow-x:hidden}
 body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
@@ -25,9 +25,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(18px,3vw,
 p{color:var(--sand);font-size:15px;margin-bottom:40px;max-width:40ch;margin-left:auto;margin-right:auto}
 .links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 .btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;padding:14px 28px;transition:all .3s}
-.btn-gold{background:var(--gold);color:var(--ink)}
+.btn-gold{background:var(--gold);color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold:hover{opacity:.85}
-.btn-outline{border:1px solid rgba(201,184,163,.35);color:var(--sand)}
+.btn-outline{border:1px solid rgba(201,184,163,.35);color:var(--sand);background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
 footer{padding:24px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
 footer p{color:rgba(201,184,163,.4);font-size:12px}

@@ -24,6 +24,7 @@
       notConfigured: 'Оплата на сайте ещё не подключена — напишите нам напрямую, поможем оформить: aelita.production@yandex.ru',
       missingFields: 'Заполните имя и контакт — без них не отправим',
       badAmount: 'Укажите сумму от 500 до 100 000 ₽',
+      missingShow: 'Выберите спектакль',
       processing: 'Переходим к оплате…',
       failed: 'Оплата не началась. Попробуйте ещё раз — или напишите нам напрямую, поможем оформить.',
     },
@@ -31,6 +32,7 @@
       notConfigured: "Payment isn't connected on the site yet — email us directly and we'll help set it up: aelita.production@yandex.ru",
       missingFields: "Fill in your name and contact — we can't send this without them",
       badAmount: 'Enter an amount between 500 and 100,000 ₽',
+      missingShow: 'Choose a show',
       processing: 'Redirecting to payment…',
       failed: "Payment didn't start. Try again — or email us directly and we'll help sort it out.",
     },
@@ -81,20 +83,28 @@
     location.href = '/account?next=' + encodeURIComponent(location.pathname + location.hash);
   }
 
-  // product — 'community' | 'concierge' | 'gift'. Цену для community/
-  // concierge сервер знает сам (см. create-payment.js) — amount имеет
-  // смысл только для gift, для остальных передавать не нужно.
+  // product — 'community' | 'concierge' | 'gift' | 'program'. Цену для
+  // community/concierge/program сервер знает сам (см. create-payment.js)
+  // — amount имеет смысл только для gift. show — только для program
+  // (слаг спектакля, для которого покупается программка).
+  //
+  // 'program' — ЕДИНСТВЕННОЕ исключение из «оплата только после входа»
+  // (pack-v126, см. create-payment.js докстринг зачем): гостевая
+  // покупка у стойки в фойе, без токена и без имени/контакта — не
+  // задерживаем человека формальностями там, где вся суть в скорости.
   window.AELITA_pay = async function (product, opts) {
     opts = opts || {};
     var name = (opts.name || '').trim();
     var contact = (opts.contact || '').trim();
     var amount = opts.amount;
+    var show = opts.show || '';
     var comment = opts.comment || '';
     var buttonEl = opts.buttonEl || null;
+    var isGuestCheckout = product === 'program';
 
     var token = null;
     try { token = localStorage.getItem('aelita_account_token'); } catch (e) { /* приватный режим и т.п. */ }
-    if (!token) {
+    if (!token && !isGuestCheckout) {
       // Без входа в кабинет оплата на сайте недоступна — не пытаемся
       // вызывать API впустую (он всё равно откажет), сразу ведём
       // войти/зарегистрироваться и вернуться на эту же страницу.
@@ -106,7 +116,7 @@
       alert(t.notConfigured);
       return;
     }
-    if (!name || !contact) {
+    if (!isGuestCheckout && (!name || !contact)) {
       alert(t.missingFields);
       return;
     }
@@ -116,6 +126,10 @@
         alert(t.badAmount);
         return;
       }
+    }
+    if (product === 'program' && !show) {
+      alert(t.missingShow);
+      return;
     }
 
     var originalText = buttonEl ? buttonEl.textContent : '';
@@ -131,18 +145,29 @@
     returnUrl.searchParams.set('aelita_paid', '1');
 
     try {
+      var headers = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = 'Bearer ' + token; // program и без токена пройдёт — сервер его не требует для этого продукта
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, comment: comment, return_url: returnUrl.toString() }),
+        headers: headers,
+        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString() }),
       });
       if (res.status === 401) {
-        // Токен был, но сервер его не принял (истёк/подделан/аккаунт
-        // удалён) — с точки зрения человека это то же самое «нужно
-        // войти», а не общая ошибка оплаты. Форму тоже сохраняем —
-        // это могло случиться посреди заполнения длинной анкеты.
-        try { localStorage.removeItem('aelita_account_token'); } catch (e) {}
-        goToLogin();
+        if (isGuestCheckout) {
+          // program не требует токена вообще — 401 здесь означает
+          // что-то другое (например, случайно протухший токен из
+          // localStorage помешал), не «нужно войти». Ведём себя как
+          // при обычной ошибке оплаты, не отправляем на /account —
+          // это гостевой сценарий, у него нет /account-предыстории.
+          alert(t.failed);
+        } else {
+          // Токен был, но сервер его не принял (истёк/подделан/аккаунт
+          // удалён) — с точки зрения человека это то же самое «нужно
+          // войти», а не общая ошибка оплаты. Форму тоже сохраняем —
+          // это могло случиться посреди заполнения длинной анкеты.
+          try { localStorage.removeItem('aelita_account_token'); } catch (e) {}
+          goToLogin();
+        }
         return;
       }
       var data = await res.json();
