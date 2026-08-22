@@ -144,6 +144,114 @@
 
 </main>
 
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+      </div>
+      <div>
+        <h4>Social media</h4>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/community">AELITA COMMUNITY</a>
+        <a href="/en/book-concierge">Book Concierge</a>
+        <a href="/en/gift-card">Gift Card</a>
+        <a href="/en/programs">Show program</a>
+        <a href="/en/collaboration">Collaborate</a>
+        <a href="/en/faq">FAQ</a>
+      </div>
+    </div>
+    <div class="requisites">
+      LLC “AELITA PRODUCTION”<br>
+      Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
+      OGRN 1254000006644 · TIN 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Линия sec-head
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  // Театральный занавес
+  const curtain = document.querySelector('.curtain');
+  if(curtain){
+    setTimeout(()=>{
+      curtain.classList.add('open');
+      // После завершения анимации принудительно показываем все reveal-элементы
+      setTimeout(()=>{
+        curtain.style.display = 'none';
+        document.querySelectorAll('.reveal:not(.on)').forEach(el => el.classList.add('on'));
+      }, 1200);
+    }, 80);
+  }
+
+  // Параллакс
+  const heroBg = document.querySelector('.hero-bg');
+  if(heroBg){
+    let ticking = false;
+    window.addEventListener('scroll',()=>{
+      if(!ticking){
+        requestAnimationFrame(()=>{
+          heroBg.style.transform = 'translateY('+window.scrollY*.28+'px)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  
+  
+  // Закрыть по Escape
+  
+
+  // Fallback: показываем всё через 700ms если IO не сработал
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+
 <!-- Cookie Banner -->
 <div id="cookie-banner">
   <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
