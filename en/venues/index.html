@@ -185,7 +185,7 @@
   async function handleForm(id){
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
-    if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
+    if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Please fill in your name and email');return;}
     if(id==='v'){
       const fields = {
         'Имя': n.value,

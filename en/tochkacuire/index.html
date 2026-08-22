@@ -708,7 +708,7 @@ section{padding:90px 0}
   async function subscribe(){
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
-    if(!email || !email.includes('@')){alert('Укажите email');return;}
+    if(!email || !email.includes('@')){alert('Please enter your email');return;}
     await sendTelegram('Точка Кюри — уведомить о продажах', {
       'Имя': name,
       'Email': email,

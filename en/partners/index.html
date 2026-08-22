@@ -258,7 +258,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   async function handleForm(){
     const email = document.getElementById('femail').value.trim();
     const name = document.getElementById('fname').value.trim();
-    if(!email || !email.includes('@') || !name){alert('Заполните имя и почту');return;}
+    if(!email || !email.includes('@') || !name){alert('Please fill in your name and email');return;}
     const typeEl = document.querySelector('#form_partner select');
     await sendTelegram('Партнёры — заявка', {
       'Имя': name,

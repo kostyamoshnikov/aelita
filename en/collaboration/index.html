@@ -277,7 +277,7 @@
     const email = (document.getElementById('cf-email')?.value || '').trim();
     const tel   = (document.getElementById('cf-tel')?.value || '').trim();
     const msg   = (document.getElementById('cf-msg')?.value || '').trim();
-    if(!name || !email || !msg){ alert('Заполните имя, почту и сообщение.'); return; }
+    if(!name || !email || !msg){ alert('Please fill in your name, email and message.'); return; }
     const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Сообщение': msg};
     await Promise.all([
       sendTelegram('Сотрудничество — заявка', fields),
