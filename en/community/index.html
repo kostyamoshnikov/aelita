@@ -118,6 +118,14 @@ p a:hover{opacity:.75}
 .book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
 .book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
+.season-timeline{display:flex;flex-direction:column;gap:1px;background:rgba(232,230,225,.07);margin-top:40px}
+.season-month{background:var(--ink);padding:24px 26px;display:grid;grid-template-columns:76px 1fr;gap:20px;align-items:start}
+.season-month .m-name{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:2px}
+.season-month .m-body h4{font-size:15px;font-weight:400;color:var(--bone);margin-bottom:3px;line-height:1.4}
+.season-month .m-body .m-author{font-size:12px;color:rgba(201,184,163,.7);margin-bottom:8px}
+.season-month .m-body p{font-size:13px;color:var(--sand);line-height:1.65}
+.season-month .m-body .m-fiction{font-size:12px;color:rgba(201,184,163,.6);margin-top:6px;font-style:italic}
+@media(max-width:600px){.season-month{grid-template-columns:1fr;gap:5px}.season-month .m-name{padding-top:0}}
 .book-list-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .book-list ul{list-style:none}
 .book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
@@ -264,19 +272,19 @@ p a:hover{opacity:.75}
       <div class="mars-diagram">
         <div class="mars-step">
           <span class="num">01</span>
-          <div><h3>Speaks</h3><p>One participant transmits — like a radio station on its own frequency.</p></div>
+          <div><h3>Formulates</h3><p>A participant asks a question, using their own experience as the main argument. They don't hide their view — they put it on the table.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">02</span>
-          <div><h3>Hears</h3><p>The second receives the signal through their own prism — and understands it their own way.</p></div>
+          <div><h3>Responds</h3><p>The second participant doesn't argue — they run what they heard through their own frame of reference, and hand back a different version of the same question. That's how depth is born.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">03</span>
-          <div><h3>Compares</h3><p>The third sees both sources and names their own — without bias.</p></div>
+          <div><h3>Questions it</h3><p>The third participant sees both positions and points out their limits. They don't judge who's right — they show the boundaries of each claim.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">✦</span>
-          <div><h3>Katya</h3><p>She holds all three languages simultaneously. Translates. Doesn't explain — creates a space.</p></div>
+          <div><h3>Katya</h3><p>She holds all three positions in mind at once and keeps attention on the substance, not on defending anyone's ego or worldview. She doesn't let the conversation slide into an argument. Her job isn't to explain the meaning for everyone — it's to make sure each participant can find the truth themselves. She builds a stable frame where uncomfortable questions can be asked without fear or ceremony.</p></div>
         </div>
       </div>
     </div>
@@ -288,9 +296,11 @@ p a:hover{opacity:.75}
   <div class="wrap reveal">
     <div class="insight-box">
       <h2>Chaos first.<br>Then — an aftertaste of insights</h2>
-      <p>At meetings <strong>it's not always clear what is happening</strong>. Sometimes it seems you're just talking — and then you realise you've introduced your chaos into someone else's picture of the world.</p>
-      <p>It leaves a lasting aftertaste. You revisit situations. You process what you heard. You come to conclusions.</p>
-      <p>Katya doesn't heal and doesn't teach. She — <strong>a little flame from which you can take as much as you can carry</strong>.</p>
+      <p>At meetings it's not always clear how the mechanism actually works: sometimes it seems you're just talking, when in fact <strong>someone else's pressure of meaning is flowing into the shared pot</strong>.</p>
+      <p>The difference between our “maps” creates tension, and it's exactly that tension that sets the system in motion, pushing each participant's frame of perception to widen.</p>
+      <p>The steam doesn't just vanish. After the meeting it keeps working inside the system — reflecting on what you heard resets the feedback loops, and making sense of someone else's experience turns the compressed air into an actual movement of thought.</p>
+      <p>It's not just a matter of revisiting situations — it's a gradual shift in the algorithm itself: understanding how to act under new conditions.</p>
+      <p>Katya doesn't run the boiler and doesn't set the temperature. She's <strong>the mechanism that keeps the system at the pressure it needs</strong>, letting each participant start their own process of turning that energy into something, and take from this pot exactly as much force as their own structure is ready to hold.</p>
     </div>
   </div>
 </div>
@@ -330,33 +340,103 @@ p a:hover{opacity:.75}
       <a class="btn-gold" href="#join">Join the new group</a>
     </div>
 
-    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">This season's program</span><h2>What we'll be reading</h2></div>
-    <div class="book-list reveal">
-      <div class="book-list-group">
-        <p class="book-list-label">Non-fiction</p>
-        <ul>
-          <li><span class="book-title">“The Russian Family, 11th–19th Centuries”</span><span class="book-author">Vasily Leshchenko</span></li>
-          <li><span class="book-title">“On Aggression”</span><span class="book-author">Konrad Lorenz</span></li>
-          <li><span class="book-title">“Sex in Human Loving”</span><span class="book-author">Eric Berne</span></li>
-          <li><span class="book-title">“Selected Works”</span><span class="book-author">Donald Woods Winnicott</span></li>
-          <li><span class="book-title">“The Father”</span><span class="book-author">Luigi Zoja</span></li>
-          <li><span class="book-title">“Drugs, Addiction and Initiation”</span><span class="book-author">Luigi Zoja</span></li>
-          <li><span class="book-title">“Love and Fear”</span><span class="book-author">Zygmunt Bauman</span></li>
-          <li><span class="book-title">“Love Relations: Normality and Pathology”</span><span class="book-author">Otto Kernberg</span></li>
-          <li><span class="book-title">“Existential Psychotherapy”</span><span class="book-author">Irvin Yalom</span></li>
-          <li><span class="book-title">“The Symposium”</span><span class="book-author">Plato</span></li>
-        </ul>
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">This season's program</span><h2>What and when we're reading</h2></div>
+    <div class="season-timeline reveal">
+      <div class="season-month">
+        <span class="m-name">September</span>
+        <div class="m-body">
+          <h4>“Games People Play” + “What Do You Say After You Say Hello?”</h4>
+          <p class="m-author">Eric Berne — counted as one entry, it's essentially one body of work</p>
+          <p>We open the season with a shared vocabulary: what games we play on each other without noticing, and what the hidden payoff is — this lens will be needed for every month after this one.</p>
+        </div>
       </div>
-      <div class="book-list-group">
-        <p class="book-list-label">Fiction</p>
-        <ul>
-          <li><span class="book-title">“Madame Bovary”</span><span class="book-author">Gustave Flaubert</span></li>
-          <li><span class="book-title">“Anna Karenina”</span><span class="book-author">Leo Tolstoy</span></li>
-          <li><span class="book-title">“The Storm”</span><span class="book-author">Alexander Ostrovsky</span></li>
-          <li><span class="book-title">“Lady Macbeth of the Mtsensk District”</span><span class="book-author">Nikolai Leskov</span></li>
-          <li><span class="book-title">“Till Boredom Do Us Part”</span><span class="book-author">Jacobo Bergareche</span></li>
-        </ul>
+      <div class="season-month">
+        <span class="m-name">October</span>
+        <div class="m-body">
+          <h4>“The Symposium”</h4>
+          <p class="m-author">Plato</p>
+          <p>Where did the idea of a “soulmate” come from? We compare it with the biblical view of marriage as a union before God.</p>
+        </div>
       </div>
+      <div class="season-month">
+        <span class="m-name">November</span>
+        <div class="m-body">
+          <h4>“The Russian Family, 11th–19th Centuries” <span style="color:rgba(201,184,163,.5);font-weight:300">· The first pillar falls</span></h4>
+          <p class="m-author">Vasily Leshchenko</p>
+          <p>We look at family as an economic institution. And at how biblical norms once underpinned that way of life.</p>
+          <p class="m-fiction">In parallel: “The Storm” and “Lady Macbeth of the Mtsensk District” — how religious and cultural norms crushed the individual.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">December</span>
+        <div class="m-body">
+          <h4>“On Aggression” <span style="color:rgba(201,184,163,.5);font-weight:300">· The second pillar falls</span></h4>
+          <p class="m-author">Konrad Lorenz</p>
+          <p>We look at nature. If people are made free, what is instinct saying inside us? Why are aggression and possessiveness built into us biologically?</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">January</span>
+        <div class="m-body">
+          <h4>“Selected Works” <span style="color:rgba(201,184,163,.5);font-weight:300">· The inner foundation</span></h4>
+          <p class="m-author">Donald Woods Winnicott</p>
+          <p>How does infant experience with the mother shape the capacity for faithfulness and trust? Here the Bible works as an archetype of “unconditional maternal love.”</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">February</span>
+        <div class="m-body">
+          <h4>“The Father” <span style="color:rgba(201,184,163,.5);font-weight:300">· The Father archetype, human and divine</span></h4>
+          <p class="m-author">Luigi Zoja</p>
+          <p>We continue the theme of childhood. Who is the Father in psychology, and in the Old and New Testaments? How does his absence or presence affect one's readiness to be an adult and take responsibility for a partnership?</p>
+          <p class="m-fiction">In parallel: “Hamlet” — a world without a father.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">March</span>
+        <div class="m-body">
+          <h4>“Drugs, Addiction and Initiation” <span style="color:rgba(201,184,163,.5);font-weight:300">· Escaping reality</span></h4>
+          <p class="m-author">Luigi Zoja</p>
+          <p>Why do we chase intense sensations? Why is infidelity also a kind of drug? What are we trying to “kill” in ourselves by escaping routine, and why does the Bible call this sin?</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">April</span>
+        <div class="m-body">
+          <h4>“Sex in Human Loving” <span style="color:rgba(201,184,163,.5);font-weight:300">· Scripts and games</span></h4>
+          <p class="m-author">Eric Berne</p>
+          <p>We look at how we play “games” — how attraction and sex get used as tools of manipulation. We compare this with the moral principles of the New Testament.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">May</span>
+        <div class="m-body">
+          <h4>“Love and Fear” <span style="color:rgba(201,184,163,.5);font-weight:300">· A diagnosis for 2026</span></h4>
+          <p class="m-author">Zygmunt Bauman</p>
+          <p>The final look at the collapse of all the external “pillars” — society, the church, economics. Why religion no longer holds things together, and what happens to people left alone with their freedom.</p>
+          <p class="m-fiction">In parallel: “Till Boredom Do Us Part” and “Madame Bovary.”</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">June</span>
+        <div class="m-body">
+          <h4>“Love Relations: Normality and Pathology” <span style="color:rgba(201,184,163,.5);font-weight:300">· Mature love</span></h4>
+          <p class="m-author">Otto Kernberg</p>
+          <p>We reach the peak of psychoanalysis. How to hold aggression, anger, and boredom in a long relationship without destroying it — an answer to the question, “how do you stay faithful by choice?”</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">July</span>
+        <div class="m-body">
+          <h4>“Existential Psychotherapy” <span style="color:rgba(201,184,163,.5);font-weight:300">· An existential conclusion, and the year pulled together</span></h4>
+          <p class="m-author">Irvin Yalom — chapters on isolation, responsibility, and the meaning of life</p>
+          <p>Why do we choose one person, knowing we'll die alone? What does real meaning look like against mere “rules”? We put the whole puzzle back together — looking at the entire year through Plato, Berne, and Yalom: what's left of the “commandments” once fear and self-interest are gone.</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="max-width:74ch;margin-top:32px">
+      <p style="color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:14px">We don't read the Bible separately, chapter by chapter — we keep it on the table as a basic vocabulary of morality. At every meeting we ask: “How does the New Testament see this? What did it mean to people 2,000 years ago, and how can we understand it now without doing violence to ourselves?”</p>
+      <p style="color:var(--sand);font-size:14px;line-height:1.8">Fiction runs alongside as an extra emotional layer — you read it at your own pace, and at meetings we look at the characters through the psychology and philosophy we've just covered.</p>
     </div>
     <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">If you're tired of slogans like “family is sacred” and want to understand how closeness actually works — we're headed the same way. And beyond the books, the group travels together, goes to the theater and exhibitions, paints, celebrates birthdays, and builds projects together — some of it is visible in the photos below.</p>
   </div>
@@ -429,7 +509,7 @@ p a:hover{opacity:.75}
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Remote</h3>
-        <p><strong>100% option to join online.</strong><br>Every meeting is recorded — watch at your own pace if you couldn't make it in person.</p>
+        <p><strong>100% possibility to join online — live, on a video call, right during the meeting.</strong><br>Every meeting is recorded — you can watch it at your own pace if you couldn't make it in person or online.</p>
       </div>
     </div>
   </div>
@@ -441,7 +521,7 @@ p a:hover{opacity:.75}
     <span class="eyebrow">Join</span>
     <h2 style="margin-top:14px">I want to join</h2>
     <p>Write to us — we'll tell you about the next meeting and how to join the group.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">A new group starts in September — beginning again with Eric Berne. Participation — 10,000 ₽ per month.</p>
+    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">A new group starts in September — this season's theme: exploring the foundations of monogamous family. Participation — 10,000 ₽ a month.</p>
 
     <div class="notify-tabs" id="notifyTabs_j">
       <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Via website</button>

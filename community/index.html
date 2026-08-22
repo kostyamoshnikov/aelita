@@ -115,6 +115,14 @@ p a:hover{opacity:.75}
 .book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
 .book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
+.season-timeline{display:flex;flex-direction:column;gap:1px;background:rgba(232,230,225,.07);margin-top:40px}
+.season-month{background:var(--ink);padding:24px 26px;display:grid;grid-template-columns:76px 1fr;gap:20px;align-items:start}
+.season-month .m-name{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:2px}
+.season-month .m-body h4{font-size:15px;font-weight:400;color:var(--bone);margin-bottom:3px;line-height:1.4}
+.season-month .m-body .m-author{font-size:12px;color:rgba(201,184,163,.7);margin-bottom:8px}
+.season-month .m-body p{font-size:13px;color:var(--sand);line-height:1.65}
+.season-month .m-body .m-fiction{font-size:12px;color:rgba(201,184,163,.6);margin-top:6px;font-style:italic}
+@media(max-width:600px){.season-month{grid-template-columns:1fr;gap:5px}.season-month .m-name{padding-top:0}}
 .book-list-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .book-list ul{list-style:none}
 .book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
@@ -261,19 +269,19 @@ p a:hover{opacity:.75}
       <div class="mars-diagram">
         <div class="mars-step">
           <span class="num">01</span>
-          <div><h3>Говорит</h3><p>Один участник транслирует — будто радиостанция на своей волне.</p></div>
+          <div><h3>Формулирует</h3><p>Участник задаёт вопрос, используя свой личный опыт как главный аргумент. Свой взгляд он не прячет, а выкладывает на стол.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">02</span>
-          <div><h3>Слышит</h3><p>Второй принимает сигнал через свою призму — и понимает по-своему.</p></div>
+          <div><h3>Отвечает</h3><p>Второй участник не спорит, а пропускает услышанное через свою систему координат — и возвращает уже другую версию этого вопроса. Так рождается объём.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">03</span>
-          <div><h3>Сравнивает</h3><p>Третий видит оба источника и называет своё — без предвзятости.</p></div>
+          <div><h3>Ставит под сомнение</h3><p>Третий участник видит оба тезиса и указывает на их ограничения. Он не оценивает, кто прав, а показывает границы каждого утверждения.</p></div>
         </div>
         <div class="mars-step">
           <span class="num">✦</span>
-          <div><h3>Катя</h3><p>Удерживает все три языка одновременно. Переводит. Не объясняет — создаёт пространство для понимания.</p></div>
+          <div><h3>Катя</h3><p>Держит в уме все три позиции и фокусирует внимание на сути, а не на защите эго и картины мира. Не даёт перевести разговор в спор. Её задача — не объяснять смысл за всех, а следить, чтобы каждый участник смог сам открыть истину. Она создаёт устойчивую рамку, в которой неудобные вопросы можно задавать без страха и регламента.</p></div>
         </div>
       </div>
     </div>
@@ -285,9 +293,11 @@ p a:hover{opacity:.75}
   <div class="wrap reveal">
     <div class="insight-box">
       <h2>Сначала хаос.<br>Потом — послевкусие из инсайтов</h2>
-      <p>На встречах <strong>не всегда понятно, что происходит</strong>. Иногда кажется, что просто разговариваешь — а оказывается, вносишь свой хаос в чужую картину мира. Или получаешь из чужого хаоса ключ к своему.</p>
-      <p>После остаётся долгое послевкусие. Пересматриваешь ситуации. Осмысливаешь услышанное. Приходит понимание чего-то нового — на что можно взглянуть по-другому. Примеряешь. И приходит понимание, как жить дальше.</p>
-      <p>Катя не лечит и не учит. Она — <strong>огонёк вокруг которого можно взять столько, сколько сможешь взять</strong>.</p>
+      <p>На встречах не всегда понятно, как именно работает механизм: иногда кажется, что просто говоришь, а на деле <strong>в общий котёл попадает давление чужих смыслов</strong>.</p>
+      <p>Разность наших «карт» создаёт напряжение, и именно оно приводит систему в движение, заставляя рамки восприятия каждого участника расширяться.</p>
+      <p>Пар не исчезает бесследно. После встречи он продолжает работу внутри системы — размышляя над услышанным, вы перезапускаете петли обратной связи, а осмысляя чужой опыт, преобразуете сжатый воздух в конкретное движение мысли.</p>
+      <p>Происходит не просто пересмотр ситуаций, а постепенная смена алгоритма — понимание того, как действовать в новых условиях.</p>
+      <p>Катя не управляет котлом и не задаёт температуру. Она — <strong>механизм, который поддерживает необходимое давление в системе</strong>, позволяя каждому участнику самостоятельно запустить собственный процесс преобразования энергии и взять из этого котла ровно столько силы, сколько готова вместить его собственная структура.</p>
     </div>
   </div>
 </div>
@@ -327,33 +337,103 @@ p a:hover{opacity:.75}
       <a class="btn-gold" href="#join">Записаться в новую группу</a>
     </div>
 
-    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2>Что будем читать</h2></div>
-    <div class="book-list reveal">
-      <div class="book-list-group">
-        <p class="book-list-label">Нон-фикшн</p>
-        <ul>
-          <li><span class="book-title">«Русская семья XI–XIX веков»</span><span class="book-author">Василий Лещенко</span></li>
-          <li><span class="book-title">«Агрессия, или Так называемое зло»</span><span class="book-author">Конрад Лоренц</span></li>
-          <li><span class="book-title">«Секс в человеческой любви»</span><span class="book-author">Эрик Берн</span></li>
-          <li><span class="book-title">«Избранное»</span><span class="book-author">Дональд Вудс Винникотт</span></li>
-          <li><span class="book-title">«Отец»</span><span class="book-author">Луиджи Зойя</span></li>
-          <li><span class="book-title">«Наркомания: патология или поиск инициации»</span><span class="book-author">Луиджи Зойя</span></li>
-          <li><span class="book-title">«Любовь и страх»</span><span class="book-author">Зигмунт Бауман</span></li>
-          <li><span class="book-title">«Отношения любви: нормальность и патология»</span><span class="book-author">Отто Кернберг</span></li>
-          <li><span class="book-title">«Экзистенциальная психотерапия»</span><span class="book-author">Ирвин Ялом</span></li>
-          <li><span class="book-title">«Пир»</span><span class="book-author">Платон</span></li>
-        </ul>
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2>Что и когда читаем</h2></div>
+    <div class="season-timeline reveal">
+      <div class="season-month">
+        <span class="m-name">Сентябрь</span>
+        <div class="m-body">
+          <h4>«Игры, в которые играют люди» + «Люди, которые играют в игры»</h4>
+          <p class="m-author">Эрик Берн — считаем за один пункт, это по сути одна работа</p>
+          <p>Открываем сезон общим словарём: какие игры мы играем друг с другом не глядя, и какой в них скрытый выигрыш — эта оптика понадобится на все остальные месяцы.</p>
+        </div>
       </div>
-      <div class="book-list-group">
-        <p class="book-list-label">Художественная литература</p>
-        <ul>
-          <li><span class="book-title">«Госпожа Бовари»</span><span class="book-author">Гюстав Флобер</span></li>
-          <li><span class="book-title">«Анна Каренина»</span><span class="book-author">Лев Толстой</span></li>
-          <li><span class="book-title">«Гроза»</span><span class="book-author">Александр Островский</span></li>
-          <li><span class="book-title">«Леди Макбет Мценского уезда»</span><span class="book-author">Николай Лесков</span></li>
-          <li><span class="book-title">«Пока скука не разлучит нас»</span><span class="book-author">Хакобо Бергарече</span></li>
-        </ul>
+      <div class="season-month">
+        <span class="m-name">Октябрь</span>
+        <div class="m-body">
+          <h4>«Пир»</h4>
+          <p class="m-author">Платон</p>
+          <p>Откуда взялась идея «второй половинки»? Сравниваем с библейским взглядом на брак как на союз перед Богом.</p>
+        </div>
       </div>
+      <div class="season-month">
+        <span class="m-name">Ноябрь</span>
+        <div class="m-body">
+          <h4>«Русская семья XI–XIX веков» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение первого кита</span></h4>
+          <p class="m-author">Василий Лещенко</p>
+          <p>Разбираем семью как экономический институт. Здесь же — как библейские нормы лежали в основе этого уклада.</p>
+          <p class="m-fiction">Параллельно: «Гроза» и «Леди Макбет Мценского уезда» — как религиозные и культурные нормы разрушали личность.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Декабрь</span>
+        <div class="m-body">
+          <h4>«Агрессия, или Так называемое зло» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение второго кита</span></h4>
+          <p class="m-author">Конрад Лоренц</p>
+          <p>Смотрим на природу. Если человек создан свободным, то что в нас говорит инстинкт? Почему агрессия и собственничество заложены в нас биологически?</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Январь</span>
+        <div class="m-body">
+          <h4>«Избранное» <span style="color:rgba(201,184,163,.5);font-weight:300">· Внутренний фундамент</span></h4>
+          <p class="m-author">Дональд Вудс Винникотт</p>
+          <p>Как младенческий опыт с матерью формирует способность к верности и доверию? Библия здесь — как архетип «безусловной материнской любви».</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Февраль</span>
+        <div class="m-body">
+          <h4>«Отец» <span style="color:rgba(201,184,163,.5);font-weight:300">· Архетип и Божественный отец</span></h4>
+          <p class="m-author">Луиджи Зойя</p>
+          <p>Продолжаем тему детства. Кто такой Отец в психологии и в Ветхом и Новом Завете? Как его отсутствие или присутствие влияет на готовность быть взрослым и брать ответственность за пару?</p>
+          <p class="m-fiction">Параллельно: «Гамлет» — мир без отца.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Март</span>
+        <div class="m-body">
+          <h4>«Наркомания: патология или поиск инициации» <span style="color:rgba(201,184,163,.5);font-weight:300">· Побег из реальности</span></h4>
+          <p class="m-author">Луиджи Зойя</p>
+          <p>Зачем мы ищем острых ощущений? Почему измена — это тоже своего рода наркотик? Что мы пытаемся «убить» в себе, уходя от рутины, и почему Библия называет это грехом?</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Апрель</span>
+        <div class="m-body">
+          <h4>«Секс в человеческой любви» <span style="color:rgba(201,184,163,.5);font-weight:300">· Сценарии и игры</span></h4>
+          <p class="m-author">Эрик Берн</p>
+          <p>Разбираем, как мы играем в «игры» — как влечение и секс используются как инструмент манипуляции. Сравниваем с нравственными принципами Нового Завета.</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Май</span>
+        <div class="m-body">
+          <h4>«Любовь и страх» <span style="color:rgba(201,184,163,.5);font-weight:300">· Диагноз 2026 года</span></h4>
+          <p class="m-author">Зигмунт Бауман</p>
+          <p>Финальный разбор крушения всех внешних «китов» — социума, церкви, экономики. Почему религия больше не держит, и что происходит с людьми, которые остались одни со своей свободой.</p>
+          <p class="m-fiction">Параллельно: «Пока скука не разлучит нас» и «Госпожа Бовари».</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Июнь</span>
+        <div class="m-body">
+          <h4>«Отношения любви: нормальность и патология» <span style="color:rgba(201,184,163,.5);font-weight:300">· Зрелая любовь</span></h4>
+          <p class="m-author">Отто Кернберг</p>
+          <p>Выходим на пик психоанализа. Как выдерживать агрессию, злость и скуку в долгосрочных отношениях и не разрушить их — ответ на вопрос «как сохранять верность добровольно?».</p>
+        </div>
+      </div>
+      <div class="season-month">
+        <span class="m-name">Июль</span>
+        <div class="m-body">
+          <h4>«Экзистенциальная психотерапия» <span style="color:rgba(201,184,163,.5);font-weight:300">· Экзистенциальный итог и синтез года</span></h4>
+          <p class="m-author">Ирвин Ялом — главы про изоляцию, ответственность и смысл жизни</p>
+          <p>Почему мы выбираем одного человека, зная, что умрём в одиночестве? Что такое настоящий смысл против «правил»? Собираем весь пазл заново — смотрим на весь год через призму Платона, Берна и Ялома: что осталось от «заповедей», когда исчезли страх и выгода.</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="max-width:74ch;margin-top:32px">
+      <p style="color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:14px">Библию не читаем отдельно по главам — держим на столе как базовый словарь морали. На каждой встрече спрашиваем: «А как на это смотрит Новый Завет? Что это значило для людей 2000 лет назад, и как мы теперь можем понять это без насилия над собой?»</p>
+      <p style="color:var(--sand);font-size:14px;line-height:1.8">Художественная литература идёт дополнительным эмоциональным слоем — читаете в своём темпе, а на встречах разбираем героев через призму пройденной психологии и философии.</p>
     </div>
     <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">Если вы устали от лозунгов «семья — это святое» и хотите понять, как устроена близость на самом деле — нам по пути. А ещё с группой мы путешествуем, ходим в театр и на выставки, рисуем, отмечаем дни рождения и создаём проекты вместе — часть этого видно в фотографиях ниже.</p>
   </div>
@@ -426,7 +506,7 @@ p a:hover{opacity:.75}
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Дистанционно</h3>
-        <p><strong>100% возможность участия онлайн.</strong><br>Все встречи записываются — можно смотреть в своём темпе, если не получилось быть вживую.</p>
+        <p><strong>100% возможность участия онлайн — прямо на встрече, по видеосвязи.</strong><br>Все встречи записываются — можно посмотреть в своём темпе, если не получилось быть вживую или на связи.</p>
       </div>
     </div>
   </div>
@@ -438,7 +518,7 @@ p a:hover{opacity:.75}
     <span class="eyebrow">Присоединиться</span>
     <h2 style="margin-top:14px">Хочу в клуб</h2>
     <p>Напишите — расскажем о ближайшей встрече и как попасть в группу.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Новая группа стартует в сентябре — начинаем снова с Эрика Берна. Участие — 10 000 ₽ в месяц.</p>
+    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Новая группа стартует в сентябре — тема сезона: исследование оснований для моногамной семьи. Участие — 10 000 ₽ в месяц.</p>
 
     <div class="notify-tabs" id="notifyTabs_j">
       <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Через сайт</button>
