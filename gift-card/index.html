@@ -139,6 +139,7 @@ p a:hover{opacity:.75}
 .join-field textarea{min-height:90px;resize:vertical}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -271,6 +272,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Ваш телефон или Telegram</label><input type="text" id="j-contact" placeholder="+7 ... или @username"></div>
       <div class="join-field"><label>Для кого подарок — необязательно</label><input type="text" id="j-recipient" placeholder="Имя получателя, если хотите подарить лично"></div>
       <div class="join-field"><label>Личное сообщение — необязательно</label><textarea id="j-message" placeholder="Что написать в сертификате"></textarea></div>
+      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы оформить подарок прямо сейчас — напишите нам напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, поможем оформить.</p>
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">Оплатить →</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
       <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
@@ -392,6 +394,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
+<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 <script>
   // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка

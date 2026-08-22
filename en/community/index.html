@@ -42,6 +42,19 @@ section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:50px}
+/* Галерея — горизontальный scroll-snap, помещается в один экран
+   телефона по высоте, вместо вертикального masonry (.photo-gallery
+   из assets/style.css, используется на других страницах — здесь
+   намеренно НЕ он: страница и так длинная, вертикальный список из 8
+   фото добавлял бы лишний экран прокрутки, заказчик попросил
+   компактнее). */
+.gallery-scroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(214,181,122,.4) transparent}
+.gallery-scroll::-webkit-scrollbar{height:5px}
+.gallery-scroll::-webkit-scrollbar-thumb{background:rgba(214,181,122,.35);border-radius:3px}
+.gallery-scroll img{scroll-snap-align:center;flex:0 0 78%;max-width:380px;height:52vh;max-height:440px;min-height:260px;object-fit:cover;border-radius:2px;filter:brightness(.92);transition:filter .3s ease}
+.gallery-scroll img:hover{filter:brightness(1)}
+.gallery-hint{font-size:12px;color:rgba(201,184,163,.5);margin-top:2px}
+@media(min-width:640px){.gallery-scroll img{flex:0 0 320px;height:400px}}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 /* Текстовые ссылки */
@@ -104,6 +117,14 @@ p a:hover{opacity:.75}
 .book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
 .book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
+.book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
+.book-list-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.book-list ul{list-style:none}
+.book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
+.book-list li:first-child{border-top:none}
+.book-title{display:block;color:var(--bone);font-size:15px;margin-bottom:3px;line-height:1.4}
+.book-author{display:block;color:var(--sand);font-size:13px}
+@media(max-width:760px){.book-list{grid-template-columns:1fr;gap:8px}}
 /* ОТЗЫВЫ */
   .reviews-sec{background:var(--coal)}
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
@@ -142,6 +163,7 @@ p a:hover{opacity:.75}
 .join-field textarea{min-height:90px;resize:vertical}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -295,12 +317,48 @@ p a:hover{opacity:.75}
         <div class="deco">B</div>
       </div>
     </div>
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">This season's theme</span><h2>Why we choose to be together</h2></div>
+    <div class="reveal" style="max-width:74ch">
+      <p style="color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:20px">Marriage used to rest on religion, economics, and public opinion. Today all three pillars have shaken: women earn their own money, the church is no longer an authority for many, and the word “divorce” surprises no one. There's almost no external reason left for monogamous family — and no one has quite put the internal ones into words.</p>
+      <p style="color:var(--sand);font-size:16px;line-height:1.9">There's no ready-made answer. For a year we'll read — from psychology to philosophy to fiction — and try to piece together our own puzzle: why people choose to wake up next to the same person for a lifetime, and whether there's meaning in that when they could choose otherwise.</p>
+    </div>
+
     <div class="reveal" style="margin-top:2px;background:var(--coal);border-left:2px solid var(--gold);padding:32px 36px">
       <p style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">New intake · September</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">A new AELITA COMMUNITY group — starting again from the beginning with Eric Berne. For those who wanted to join before but missed it.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Participation — 10,000 ₽ per month.</p>
+      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">A new AELITA COMMUNITY group starts in September — for those who wanted to join earlier but didn't make it.</p>
+      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Format — 1 book a month, 1 meeting a week. Participation — 10,000 ₽ a month.</p>
       <a class="btn-gold" href="#join">Join the new group</a>
     </div>
+
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">This season's program</span><h2>What we'll be reading</h2></div>
+    <div class="book-list reveal">
+      <div class="book-list-group">
+        <p class="book-list-label">Non-fiction</p>
+        <ul>
+          <li><span class="book-title">“The Russian Family, 11th–19th Centuries”</span><span class="book-author">Vasily Leshchenko</span></li>
+          <li><span class="book-title">“On Aggression”</span><span class="book-author">Konrad Lorenz</span></li>
+          <li><span class="book-title">“Sex in Human Loving”</span><span class="book-author">Eric Berne</span></li>
+          <li><span class="book-title">“Selected Works”</span><span class="book-author">Donald Woods Winnicott</span></li>
+          <li><span class="book-title">“The Father”</span><span class="book-author">Luigi Zoja</span></li>
+          <li><span class="book-title">“Drugs, Addiction and Initiation”</span><span class="book-author">Luigi Zoja</span></li>
+          <li><span class="book-title">“Love and Fear”</span><span class="book-author">Zygmunt Bauman</span></li>
+          <li><span class="book-title">“Love Relations: Normality and Pathology”</span><span class="book-author">Otto Kernberg</span></li>
+          <li><span class="book-title">“Existential Psychotherapy”</span><span class="book-author">Irvin Yalom</span></li>
+          <li><span class="book-title">“The Symposium”</span><span class="book-author">Plato</span></li>
+        </ul>
+      </div>
+      <div class="book-list-group">
+        <p class="book-list-label">Fiction</p>
+        <ul>
+          <li><span class="book-title">“Madame Bovary”</span><span class="book-author">Gustave Flaubert</span></li>
+          <li><span class="book-title">“Anna Karenina”</span><span class="book-author">Leo Tolstoy</span></li>
+          <li><span class="book-title">“The Storm”</span><span class="book-author">Alexander Ostrovsky</span></li>
+          <li><span class="book-title">“Lady Macbeth of the Mtsensk District”</span><span class="book-author">Nikolai Leskov</span></li>
+          <li><span class="book-title">“Till Boredom Do Us Part”</span><span class="book-author">Jacobo Bergareche</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">If you're tired of slogans like “family is sacred” and want to understand how closeness actually works — we're headed the same way. And beyond the books, the group travels together, goes to the theater and exhibitions, paints, celebrates birthdays, and builds projects together — some of it is visible in the photos below.</p>
   </div>
 </section>
 
@@ -329,7 +387,7 @@ p a:hover{opacity:.75}
 <section id="gallery">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Atmosphere</span><h2>From past meetings</h2></div>
-    <div class="photo-gallery reveal">
+    <div class="gallery-scroll reveal">
       <img src="/images/community/community-1.jpg" alt="AELITA COMMUNITY members — group photo" loading="lazy">
       <img src="/images/community/community-2.jpg" alt="An AELITA COMMUNITY meeting — discussing the topic at the table" loading="lazy">
       <img src="/images/community/community-3.jpg" alt="AELITA COMMUNITY members at sunset" loading="lazy">
@@ -339,6 +397,7 @@ p a:hover{opacity:.75}
       <img src="/images/community/community-7.jpg" alt="AELITA COMMUNITY members having dinner together" loading="lazy">
       <img src="/images/community/community-8.jpg" alt="A celebration cake at a club meeting" loading="lazy">
     </div>
+    <p class="gallery-hint reveal">Swipe sideways to see all the photos →</p>
   </div>
 </section>
 
@@ -394,6 +453,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Name</label><input type="text" id="j-name" placeholder="Your name"></div>
       <div class="join-field"><label>Phone or Telegram</label><input type="text" id="j-contact" placeholder="+7 ... or @username"></div>
       <div class="join-field"><label>A few words about yourself — optional</label><textarea placeholder="What brings you here, what are you looking for..."></textarea></div>
+      <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To sign up right now — click “Ask Katya first” below, we'll set everything up personally.</p>
       <button class="btn-gold" id="payBtn_community" onclick="AELITA_pay('community', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, buttonEl: this})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Ask Katya first</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
@@ -593,6 +653,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
+<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 
 <script>

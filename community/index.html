@@ -39,6 +39,19 @@ section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:50px}
+/* Галерея — горизontальный scroll-snap, помещается в один экран
+   телефона по высоте, вместо вертикального masonry (.photo-gallery
+   из assets/style.css, используется на других страницах — здесь
+   намеренно НЕ он: страница и так длинная, вертикальный список из 8
+   фото добавлял бы лишний экран прокрутки, заказчик попросил
+   компактнее). */
+.gallery-scroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(214,181,122,.4) transparent}
+.gallery-scroll::-webkit-scrollbar{height:5px}
+.gallery-scroll::-webkit-scrollbar-thumb{background:rgba(214,181,122,.35);border-radius:3px}
+.gallery-scroll img{scroll-snap-align:center;flex:0 0 78%;max-width:380px;height:52vh;max-height:440px;min-height:260px;object-fit:cover;border-radius:2px;filter:brightness(.92);transition:filter .3s ease}
+.gallery-scroll img:hover{filter:brightness(1)}
+.gallery-hint{font-size:12px;color:rgba(201,184,163,.5);margin-top:2px}
+@media(min-width:640px){.gallery-scroll img{flex:0 0 320px;height:400px}}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 /* Текстовые ссылки */
@@ -101,6 +114,14 @@ p a:hover{opacity:.75}
 .book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
 .book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
+.book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
+.book-list-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.book-list ul{list-style:none}
+.book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
+.book-list li:first-child{border-top:none}
+.book-title{display:block;color:var(--bone);font-size:15px;margin-bottom:3px;line-height:1.4}
+.book-author{display:block;color:var(--sand);font-size:13px}
+@media(max-width:760px){.book-list{grid-template-columns:1fr;gap:8px}}
 /* ОТЗЫВЫ */
   .reviews-sec{background:var(--coal)}
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
@@ -139,6 +160,7 @@ p a:hover{opacity:.75}
 .join-field textarea{min-height:90px;resize:vertical}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -292,12 +314,48 @@ p a:hover{opacity:.75}
         <div class="deco">Б</div>
       </div>
     </div>
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Тема сезона</span><h2>Зачем мы выбираем быть вместе</h2></div>
+    <div class="reveal" style="max-width:74ch">
+      <p style="color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:20px">Раньше брак держался на религии, экономике и общественном мнении. Сегодня все три опоры пошатнулись: женщина зарабатывает сама, церковь для многих перестала быть авторитетом, слово «развод» никого не удивляет. Внешних причин для моногамной семьи почти не осталось — а внутренние никто толком не формулировал.</p>
+      <p style="color:var(--sand);font-size:16px;line-height:1.9">Готового ответа тут не существует. Год будем читать — от психологии до философии и прозы — и пробовать собрать свой собственный пазл: зачем люди выбирают просыпаться рядом с одним человеком всю жизнь, и есть ли в этом смысл, если можно иначе.</p>
+    </div>
+
     <div class="reveal" style="margin-top:2px;background:var(--coal);border-left:2px solid var(--gold);padding:32px 36px">
       <p style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Новый набор · Сентябрь</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">Новая группа AELITA COMMUNITY — начинаем снова с Эрика Берна, с самого начала. Для тех, кто хотел присоединиться раньше, но не успел.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Участие — 10 000 ₽ в месяц.</p>
+      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">Новая группа AELITA COMMUNITY стартует в сентябре — для тех, кто хотел присоединиться раньше, но не успел.</p>
+      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Формат — 1 книга в месяц, 1 встреча в неделю. Участие — 10 000 ₽ в месяц.</p>
       <a class="btn-gold" href="#join">Записаться в новую группу</a>
     </div>
+
+    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2>Что будем читать</h2></div>
+    <div class="book-list reveal">
+      <div class="book-list-group">
+        <p class="book-list-label">Нон-фикшн</p>
+        <ul>
+          <li><span class="book-title">«Русская семья XI–XIX веков»</span><span class="book-author">Василий Лещенко</span></li>
+          <li><span class="book-title">«Агрессия, или Так называемое зло»</span><span class="book-author">Конрад Лоренц</span></li>
+          <li><span class="book-title">«Секс в человеческой любви»</span><span class="book-author">Эрик Берн</span></li>
+          <li><span class="book-title">«Избранное»</span><span class="book-author">Дональд Вудс Винникотт</span></li>
+          <li><span class="book-title">«Отец»</span><span class="book-author">Луиджи Зойя</span></li>
+          <li><span class="book-title">«Наркомания: патология или поиск инициации»</span><span class="book-author">Луиджи Зойя</span></li>
+          <li><span class="book-title">«Любовь и страх»</span><span class="book-author">Зигмунт Бауман</span></li>
+          <li><span class="book-title">«Отношения любви: нормальность и патология»</span><span class="book-author">Отто Кернберг</span></li>
+          <li><span class="book-title">«Экзистенциальная психотерапия»</span><span class="book-author">Ирвин Ялом</span></li>
+          <li><span class="book-title">«Пир»</span><span class="book-author">Платон</span></li>
+        </ul>
+      </div>
+      <div class="book-list-group">
+        <p class="book-list-label">Художественная литература</p>
+        <ul>
+          <li><span class="book-title">«Госпожа Бовари»</span><span class="book-author">Гюстав Флобер</span></li>
+          <li><span class="book-title">«Анна Каренина»</span><span class="book-author">Лев Толстой</span></li>
+          <li><span class="book-title">«Гроза»</span><span class="book-author">Александр Островский</span></li>
+          <li><span class="book-title">«Леди Макбет Мценского уезда»</span><span class="book-author">Николай Лесков</span></li>
+          <li><span class="book-title">«Пока скука не разлучит нас»</span><span class="book-author">Хакобо Бергарече</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">Если вы устали от лозунгов «семья — это святое» и хотите понять, как устроена близость на самом деле — нам по пути. А ещё с группой мы путешествуем, ходим в театр и на выставки, рисуем, отмечаем дни рождения и создаём проекты вместе — часть этого видно в фотографиях ниже.</p>
   </div>
 </section>
 
@@ -326,7 +384,7 @@ p a:hover{opacity:.75}
 <section id="gallery">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Атмосфера</span><h2>С прошлых встреч</h2></div>
-    <div class="photo-gallery reveal">
+    <div class="gallery-scroll reveal">
       <img src="/images/community/community-1.jpg" alt="Участники AELITA COMMUNITY — совместное фото" loading="lazy">
       <img src="/images/community/community-2.jpg" alt="Встреча клуба AELITA COMMUNITY — разбор темы за столом" loading="lazy">
       <img src="/images/community/community-3.jpg" alt="Участники AELITA COMMUNITY на закате" loading="lazy">
@@ -336,6 +394,7 @@ p a:hover{opacity:.75}
       <img src="/images/community/community-7.jpg" alt="Ужин участников AELITA COMMUNITY" loading="lazy">
       <img src="/images/community/community-8.jpg" alt="Праздничный торт на встрече клуба" loading="lazy">
     </div>
+    <p class="gallery-hint reveal">Листайте вбок, чтобы посмотреть все фото →</p>
   </div>
 </section>
 
@@ -391,6 +450,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Имя</label><input type="text" id="j-name" placeholder="Как вас зовут"></div>
       <div class="join-field"><label>Телефон или Telegram</label><input type="text" id="j-contact" placeholder="+7 ... или @username"></div>
       <div class="join-field"><label>Пару слов о себе — необязательно</label><textarea placeholder="Что привело, чего ищете..."></textarea></div>
+      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы записаться прямо сейчас — нажмите «Сначала спросить Катю» ниже, мы всё оформим лично.</p>
       <button class="btn-gold" id="payBtn_community" onclick="AELITA_pay('community', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Сначала спросить Катю</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
@@ -590,6 +650,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
+<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 
 <script>

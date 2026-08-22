@@ -139,6 +139,7 @@ p a:hover{opacity:.75}
 .join-field textarea{min-height:90px;resize:vertical}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -311,6 +312,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Какие жанры и темы откликаются</label><input type="text" id="j-genres" placeholder="Нон-фикшн, проза, психология, фантастика..."></div>
       <div class="join-field"><label>Книга, от которой не могли оторваться — необязательно</label><input type="text" id="j-favorite" placeholder="Автор, название"></div>
       <div class="join-field"><label>Что-то ещё, что стоит знать — необязательно</label><textarea id="j-note" placeholder="Предпочтения по жанрам, темы, которых лучше избегать..."></textarea></div>
+      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы отправить заявку прямо сейчас — нажмите «Только отправить анкету» ниже, мы свяжемся и оформим оплату лично.</p>
       <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Только отправить анкету</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
@@ -518,6 +520,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/payments.js"></script>
+<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 
 <script>

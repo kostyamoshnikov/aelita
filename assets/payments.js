@@ -45,6 +45,28 @@
   // поломки, сайт при этом не ломается.
   var CREATE_PAYMENT_URL = '';
 
+  // Кнопки «Оплатить» на всех страницах остаются на месте нетронутыми
+  // (видны, кликабельны, ведут на реальный флоу) даже пока
+  // CREATE_PAYMENT_URL пуст — так попросил заказчик: ЮKassa при
+  // модерации магазина смотрит на живой сайт и должна увидеть
+  // настоящую кнопку оплаты, а не её отсутствие. Вместо того чтобы
+  // прятать кнопку, показываем рядом честное уведомление — см.
+  // AELITA_showNotConnectedNotice() ниже, вызывается со страниц с
+  // оплатой (community/book-concierge/gift-card/programs). Уведомление
+  // само пропадёт, как только сюда впишут реальный URL — ничего не
+  // нужно будет чистить вручную на каждой странице по отдельности.
+  window.AELITA_paymentsConfigured = !!CREATE_PAYMENT_URL;
+
+  // id — элемент уведомления на конкретной странице (текст уже готов
+  // в разметке, тут только показываем/прячем). Вызывать после того как
+  // DOM готов — используется как <script>AELITA_showNotConnectedNotice('id')</script>
+  // сразу после подключения payments.js на каждой странице с оплатой.
+  window.AELITA_showNotConnectedNotice = function (elId) {
+    if (window.AELITA_paymentsConfigured) return; // реальный URL уже есть — ничего не показываем
+    var el = document.getElementById(elId);
+    if (el) el.style.display = 'block';
+  };
+
   var DRAFT_KEY = 'aelita_form_draft:' + location.pathname;
 
   // Раз оплата теперь ВСЕГДА требует входа, человек без аккаунта
