@@ -85,7 +85,7 @@ body{max-width:100vw}
   <div class="acc-wrap">
     <div id="loadingState">Loading…</div>
     <div id="content" style="display:none">
-      <p class="acc-meta">Signed in as <strong id="acc-email"></strong> · member since <span id="acc-since"></span></p>
+      <p class="acc-meta">Signed in as <strong id="acc-email"></strong> · with us since <span id="acc-since"></span></p>
       <div id="purchases"></div>
       <div class="acc-actions">
         <a class="btn-outline" href="/en/tickets">To the schedule</a>
@@ -159,7 +159,7 @@ body{max-width:100vw}
   function renderPurchases(purchases) {
     var el = document.getElementById('purchases');
     if (!purchases || !purchases.length) {
-      el.innerHTML = '<div class="empty-state">Пока нет покупок — заходите в <a href="/tickets">афишу</a>, когда решите на что-нибудь сходить.</div>';
+      el.innerHTML = '<div class="empty-state">Пока пусто — загляните в <a href="/tickets">афишу</a>, если решите на что-нибудь сходить.</div>';
       return;
     }
     var sorted = purchases.slice().sort(function (a, b) { return new Date(b.paidAt) - new Date(a.paidAt); });
@@ -185,13 +185,20 @@ body{max-width:100vw}
       return;
     }
     var data = await window.AELITA_account.me({
-      onError: function () {
-        document.getElementById('loadingState').textContent = 'Не получилось загрузить кабинет. Обновите страницу или напишите нам: aelita.production@yandex.ru';
+      onError: function (msg) {
+        document.getElementById('loadingState').textContent = msg || 'Не получилось загрузить кабинет. Обновите страницу или напишите нам: aelita.production@yandex.ru';
       },
     });
     if (!data) {
-      // me() уже сам разлогинил при 401 — просто уводим на вход
-      location.href = '/account';
+      // me() возвращает null по РАЗНЫМ причинам — важно не путать их,
+      // иначе получается бесконечный редирект-цикл между этой
+      // страницей и /account (нашли вручную при проверке кабинета,
+      // см. CHANGELOG): если токен всё ещё в localStorage, значит
+      // причина НЕ в истёкшей сессии (это была сеть/сервер — см.
+      // сообщение из onError выше), и уводить со страницы не нужно —
+      // просто остаёмся здесь с сообщением об ошибке. Реально уводим
+      // на /account только если me() сама уже стёрла токен (401).
+      if (!window.AELITA_account.isLoggedIn()) location.href = '/account';
       return;
     }
     document.getElementById('acc-email').textContent = data.email;

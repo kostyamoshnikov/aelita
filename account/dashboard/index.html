@@ -82,7 +82,7 @@ body{max-width:100vw}
   <div class="acc-wrap">
     <div id="loadingState">Загружаем…</div>
     <div id="content" style="display:none">
-      <p class="acc-meta">Вы вошли как <strong id="acc-email"></strong> · в кабинете с <span id="acc-since"></span></p>
+      <p class="acc-meta">Вы в кабинете как <strong id="acc-email"></strong> · с нами с <span id="acc-since"></span></p>
       <div id="purchases"></div>
       <div class="acc-actions">
         <a class="btn-outline" href="/tickets">К афише</a>
@@ -156,7 +156,7 @@ body{max-width:100vw}
   function renderPurchases(purchases) {
     var el = document.getElementById('purchases');
     if (!purchases || !purchases.length) {
-      el.innerHTML = '<div class="empty-state">Пока нет покупок — заходите в <a href="/tickets">афишу</a>, когда решите на что-нибудь сходить.</div>';
+      el.innerHTML = '<div class="empty-state">Пока пусто — загляните в <a href="/tickets">афишу</a>, если решите на что-нибудь сходить.</div>';
       return;
     }
     var sorted = purchases.slice().sort(function (a, b) { return new Date(b.paidAt) - new Date(a.paidAt); });

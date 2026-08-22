@@ -8,4 +8,7 @@ Disallow: /cookies
 Disallow: /bot
 Disallow: /documents-pdf/
 
+# Внутренняя админка — не для индексации, не для публики
+Disallow: /admin
+
 Sitemap: https://aelita-production.ru/sitemap.xml

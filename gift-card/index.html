@@ -272,7 +272,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Для кого подарок — необязательно</label><input type="text" id="j-recipient" placeholder="Имя получателя, если хотите подарить лично"></div>
       <div class="join-field"><label>Личное сообщение — необязательно</label><textarea id="j-message" placeholder="Что написать в сертификате"></textarea></div>
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">Оплатить →</button>
-      <p class="join-note">Для оплаты нужен вход в <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не входили, попросим войти или зарегистрироваться перед оплатой.</p>
+      <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
       <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
       <div class="join-ok" id="paymentReturnMsg">Если оплата прошла успешно — мы получили уведомление и свяжемся с вами, чтобы оформить сертификат. Если что-то пошло не так или остались вопросы — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>

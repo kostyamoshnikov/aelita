@@ -10,7 +10,33 @@
 // валидного токена — см. там), а не только здесь — проверка тут нужна
 // исключительно для того, чтобы не пытаться платить впустую, а сразу
 // отправить человека войти, не дожидаясь ошибки уже после клика.
+//
+// Один файл на RU и EN версию сайта (общий <script src="/assets/payments.js">
+// на обеих) — переводческий пайплайн (_tools/DesignSystem/i18n/) сюда не
+// заходит, script/style не переводятся (см. i18n/README.md). Язык — по
+// document.documentElement.lang, тот же паттерн, что у reviews.js и
+// account.js (см. `var LANG` там).
 (function () {
+  var LANG = document.documentElement.lang === 'en' ? 'en' : 'ru';
+
+  var TEXT = {
+    ru: {
+      notConfigured: 'Оплата на сайте ещё не подключена — напишите нам напрямую, поможем оформить: aelita.production@yandex.ru',
+      missingFields: 'Заполните имя и контакт — без них не отправим',
+      badAmount: 'Укажите сумму от 500 до 100 000 ₽',
+      processing: 'Переходим к оплате…',
+      failed: 'Оплата не началась. Попробуйте ещё раз — или напишите нам напрямую, поможем оформить.',
+    },
+    en: {
+      notConfigured: "Payment isn't connected on the site yet — email us directly and we'll help set it up: aelita.production@yandex.ru",
+      missingFields: "Fill in your name and contact — we can't send this without them",
+      badAmount: 'Enter an amount between 500 and 100,000 ₽',
+      processing: 'Redirecting to payment…',
+      failed: "Payment didn't start. Try again — or email us directly and we'll help sort it out.",
+    },
+  };
+  var t = TEXT[LANG];
+
   // ЗАПОЛНИТЬ после деплоя _tools/Payments/create-payment.js — публичный
   // URL вида https://functions.yandexcloud.net/<id функции>. Пока пусто —
   // кнопки «Оплатить» показывают понятное сообщение вместо тихой
@@ -77,23 +103,23 @@
     }
 
     if (!CREATE_PAYMENT_URL) {
-      alert('Оплата на сайте ещё не подключена — напишите нам напрямую, поможем оформить: aelita.production@yandex.ru');
+      alert(t.notConfigured);
       return;
     }
     if (!name || !contact) {
-      alert('Укажите имя и контакт');
+      alert(t.missingFields);
       return;
     }
     if (product === 'gift') {
       var n = Number(amount);
       if (!n || n < 500 || n > 100000) {
-        alert('Укажите сумму от 500 до 100 000 ₽');
+        alert(t.badAmount);
         return;
       }
     }
 
     var originalText = buttonEl ? buttonEl.textContent : '';
-    if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = 'Переходим к оплате…'; }
+    if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.processing; }
 
     // Метка в return_url — чтобы страница, на которую ЮKassa вернёт
     // человека, могла показать понятное «мы вас ждали» вместо тишины
@@ -124,9 +150,9 @@
         location.href = data.confirmation_url;
         return; // уходим со страницы — не нужно возвращать кнопку в исходное состояние
       }
-      alert('Не получилось начать оплату. Попробуйте ещё раз или напишите нам напрямую.');
+      alert(t.failed);
     } catch (e) {
-      alert('Не получилось начать оплату. Попробуйте ещё раз или напишите нам напрямую.');
+      alert(t.failed);
     }
     if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }
   };
