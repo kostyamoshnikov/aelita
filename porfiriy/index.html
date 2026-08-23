@@ -71,18 +71,35 @@ section{padding:90px 0}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "VideoObject",
-  "name": "Тизер спектакля «Порфирий»",
-  "description": "Тизер медитативно-детективного мэшапа по мотивам «Преступления и наказания» Достоевского и новелл Акутагавы. AELITA PRODUCTION.",
-  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg",
-  "uploadDate": "2026-07-18",
-  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4",
-  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239086&hd=2",
-  "publisher": {
-    "@type": "Organization",
-    "name": "AELITA PRODUCTION",
-    "url": "https://aelita-production.ru"
-  }
+  "@graph": [
+    {
+      "@type": "VideoObject",
+      "name": "Тизер спектакля «Порфирий»",
+      "description": "Тизер медитативно-детективного мэшапа по мотивам «Преступления и наказания» Достоевского и новелл Акутагавы. AELITA PRODUCTION.",
+      "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg",
+      "uploadDate": "2026-07-18",
+      "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4",
+      "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239086&hd=2",
+      "publisher": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    },
+    {
+      "@type": "TheaterEvent",
+      "@id": "https://aelita-production.ru/porfiriy/#event",
+      "name": "Порфирий",
+      "description": "Медитативно-детективный мэшап по мотивам «Преступления и наказания» Достоевского и новелл Акутагавы. 16+.",
+      "url": "https://aelita-production.ru/porfiriy/",
+      "image": "https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02253_panuag.jpg",
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -294,6 +311,7 @@ section{padding:90px 0}
         <a href="/">Главная</a>
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
+        <a href="/shop">Магазин</a>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>

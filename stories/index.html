@@ -42,18 +42,35 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "VideoObject",
-  "name": "Тизер спектакля «Сюжеты. О земном и небесном»",
-  "description": "Тизер пластического спектакля Юлии Бычковой и танцевальной компании «Короче». AELITA PRODUCTION.",
-  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784388714/%D0%A1%D0%AE%D0%96%D0%95%D0%A2%D0%AB._%D0%9E_%D0%97%D0%95%D0%9C%D0%9D%D0%9E%D0%9C_%D0%98_%D0%9D%D0%95%D0%91%D0%95%D0%A1%D0%9D%D0%9E%D0%9C_-_%D0%A2%D0%B8%D0%B7%D0%B5%D1%80_2_AELITA_PRODU%D0%A1TION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_popj7k.jpg",
-  "uploadDate": "2026-07-18",
-  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784388714/%D0%A1%D0%AE%D0%96%D0%95%D0%A2%D0%AB._%D0%9E_%D0%97%D0%95%D0%9C%D0%9D%D0%9E%D0%9C_%D0%98_%D0%9D%D0%95%D0%91%D0%95%D0%A1%D0%9D%D0%9E%D0%9C_-_%D0%A2%D0%B8%D0%B7%D0%B5%D1%80_2_AELITA_PRODU%D0%A1TION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_popj7k.mp4",
-  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239075&hd=2",
-  "publisher": {
-    "@type": "Organization",
-    "name": "AELITA PRODUCTION",
-    "url": "https://aelita-production.ru"
-  }
+  "@graph": [
+    {
+      "@type": "VideoObject",
+      "name": "Тизер спектакля «Сюжеты. О земном и небесном»",
+      "description": "Тизер пластического спектакля Юлии Бычковой и танцевальной компании «Короче». AELITA PRODUCTION.",
+      "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784388714/%D0%A1%D0%AE%D0%96%D0%95%D0%A2%D0%AB._%D0%9E_%D0%97%D0%95%D0%9C%D0%9D%D0%9E%D0%9C_%D0%98_%D0%9D%D0%95%D0%91%D0%95%D0%A1%D0%9D%D0%9E%D0%9C_-_%D0%A2%D0%B8%D0%B7%D0%B5%D1%80_2_AELITA_PRODU%D0%A1TION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_popj7k.jpg",
+      "uploadDate": "2026-07-18",
+      "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784388714/%D0%A1%D0%AE%D0%96%D0%95%D0%A2%D0%AB._%D0%9E_%D0%97%D0%95%D0%9C%D0%9D%D0%9E%D0%9C_%D0%98_%D0%9D%D0%95%D0%91%D0%95%D0%A1%D0%9D%D0%9E%D0%9C_-_%D0%A2%D0%B8%D0%B7%D0%B5%D1%80_2_AELITA_PRODU%D0%A1TION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_popj7k.mp4",
+      "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239075&hd=2",
+      "publisher": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    },
+    {
+      "@type": "TheaterEvent",
+      "@id": "https://aelita-production.ru/stories/#event",
+      "name": "Сюжеты. О земном и небесном",
+      "description": "Пластический спектакль Юлии Бычковой и танцевальной компании «Короче».",
+      "url": "https://aelita-production.ru/stories/",
+      "image": "https://aelita-production.ru/images/stories/stories-1.jpg",
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -206,6 +223,7 @@
         <a href="/">Главная</a>
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
+        <a href="/shop">Магазин</a>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>

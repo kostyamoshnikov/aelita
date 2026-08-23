@@ -42,18 +42,35 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "VideoObject",
-  "name": "Тизер спектакля «Послушайте»",
-  "description": "Тизер интерактивного танцевального спектакля Юлии Бычковой «Послушайте!» — путешествие по личным чувствам и эмоциям. AELITA PRODUCTION.",
-  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784386916/9789031385815_pxpilq.jpg",
-  "uploadDate": "2026-07-18",
-  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784386916/9789031385815_pxpilq.mp4",
-  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239071&hd=2",
-  "publisher": {
-    "@type": "Organization",
-    "name": "AELITA PRODUCTION",
-    "url": "https://aelita-production.ru"
-  }
+  "@graph": [
+    {
+      "@type": "VideoObject",
+      "name": "Тизер спектакля «Послушайте»",
+      "description": "Тизер интерактивного танцевального спектакля Юлии Бычковой «Послушайте!» — путешествие по личным чувствам и эмоциям. AELITA PRODUCTION.",
+      "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784386916/9789031385815_pxpilq.jpg",
+      "uploadDate": "2026-07-18",
+      "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784386916/9789031385815_pxpilq.mp4",
+      "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239071&hd=2",
+      "publisher": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    },
+    {
+      "@type": "TheaterEvent",
+      "@id": "https://aelita-production.ru/listen/#event",
+      "name": "Послушайте!",
+      "description": "Интерактивное путешествие по просторам личных чувств, эмоций и наблюдений. Танцевальный спектакль Юлии Бычковой.",
+      "url": "https://aelita-production.ru/listen/",
+      "image": "https://aelita-production.ru/images/listen/listen-1.jpg",
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -192,6 +209,7 @@
         <a href="/">Главная</a>
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
+        <a href="/shop">Магазин</a>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>

@@ -122,6 +122,45 @@
     return out;
   }
 
+  // Дописывает aggregateRating в JSON-LD страницы (TheaterEvent/Event
+  // с @id вида ".../<slug>/#event", см. Site/<slug>/index.html) — но
+  // ТОЛЬКО когда реально пришли опубликованные отзывы с сервера.
+  // Намеренно не пишет нулевые/выдуманные значения — Google и Яндекс
+  // штрафуют структурированные данные с рейтингом, который нельзя
+  // подтвердить на самой странице (см. правила Google Search Central
+  // про rating snippets). Пока REVIEWS_API_URL не задеплоен (заглушка,
+  // см. начало файла) — reviews всегда пустой массив, эта функция не
+  // вызывается вообще, схема остаётся как есть, без aggregateRating.
+  function updateAggregateRatingSchema(reviews) {
+    if (!reviews || !reviews.length) return;
+    try {
+      var scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      for (var i = 0; i < scripts.length; i++) {
+        var data;
+        try { data = JSON.parse(scripts[i].textContent); } catch (e) { continue; }
+        var nodes = data['@graph'] || [data];
+        var found = false;
+        for (var j = 0; j < nodes.length; j++) {
+          var node = nodes[j];
+          if (node && typeof node['@id'] === 'string' && node['@id'].indexOf('#event') !== -1) {
+            var sum = 0;
+            for (var k = 0; k < reviews.length; k++) sum += Number(reviews[k].rating) || 0;
+            var avg = Math.round((sum / reviews.length) * 10) / 10;
+            node.aggregateRating = {
+              '@type': 'AggregateRating',
+              'ratingValue': avg,
+              'reviewCount': reviews.length,
+              'bestRating': 5,
+              'worstRating': 1
+            };
+            found = true;
+          }
+        }
+        if (found) scripts[i].textContent = JSON.stringify(data);
+      }
+    } catch (e) { /* структурированные данные — не критично для страницы, тихо пропускаем */ }
+  }
+
   function renderReviews(container, reviews) {
     if (!reviews.length) {
       container.innerHTML = '<p class="aud-reviews-empty">' + t.empty + '</p>';
@@ -137,6 +176,7 @@
     });
     html += '</div>';
     container.innerHTML = html;
+    updateAggregateRatingSchema(reviews);
   }
 
   function loadReviews(slug, container) {

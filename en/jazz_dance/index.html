@@ -45,18 +45,35 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "VideoObject",
-  "name": "Тизер спектакля «JAZZ'n'DANCE»",
-  "description": "Тизер шоу «Jazz 'n' Dance» Ксении Шамариной — цирк, джаз и танцы в одном концерте. AELITA PRODUCTION.",
-  "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.jpg",
-  "uploadDate": "2026-07-18",
-  "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.mp4",
-  "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239074&hd=2",
-  "publisher": {
-    "@type": "Organization",
-    "name": "AELITA PRODUCTION",
-    "url": "https://aelita-production.ru"
-  }
+  "@graph": [
+    {
+      "@type": "VideoObject",
+      "name": "Тизер спектакля «JAZZ'n'DANCE»",
+      "description": "Тизер шоу «Jazz 'n' Dance» Ксении Шамариной — цирк, джаз и танцы в одном концерте. AELITA PRODUCTION.",
+      "thumbnailUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.jpg",
+      "uploadDate": "2026-07-18",
+      "contentUrl": "https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.mp4",
+      "embedUrl": "https://vkvideo.ru/video_ext.php?oid=-229246987&id=456239074&hd=2",
+      "publisher": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    },
+    {
+      "@type": "TheaterEvent",
+      "@id": "https://aelita-production.ru/jazz_dance/#event",
+      "name": "JAZZ'n'DANCE",
+      "description": "Цирк, джаз и танцы в одном концерте. Шоу Ксении Шамариной.",
+      "url": "https://aelita-production.ru/jazz_dance/",
+      "image": "https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.jpg",
+      "organizer": {
+        "@type": "Organization",
+        "name": "AELITA PRODUCTION",
+        "url": "https://aelita-production.ru"
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -189,6 +206,7 @@
         <a href="/en/">Home</a>
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
+        <a href="/en/shop">Shop</a>
         <a href="/en/community">AELITA COMMUNITY</a>
         <a href="/en/gift-card">Gift Card</a>
         <a href="/en/collaboration">Collaborate</a>
