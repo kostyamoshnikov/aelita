@@ -4,9 +4,13 @@
 // отправляет новые через форму. Каждая страница спектакля просто
 // вызывает AelitaReviews.init('slug-спектакля') один раз.
 //
-// Опубликованный отзыв появляется не мгновенно — сначала модерация
-// (см. _tools/Reviews/README.md). Отправленный отзыв сразу показывает
-// зрителю «спасибо, на модерации», не притворяется, что он уже виден.
+// С автопубликацией (см. _tools/Reviews/README.md, портировано из
+// ReviewsBot Николая Балашова, pack-v70): чистый по спам-фильтру
+// отзыв публикуется сразу на бэкенде, подозрительный — ждёт ручной
+// модерации. Ответ Apps Script непрозрачен для fetch() без preflight
+// (см. комментарий ниже про бэклог) — клиент не может достоверно
+// узнать, какой из двух случаев произошёл, поэтому текст «спасибо»
+// намеренно не утверждает ни того, ни другого.
 
 (function () {
   'use strict';
@@ -79,7 +83,7 @@
       submit: 'Отправить отзыв',
       sending: 'Отправляем…',
       thanksTitle: 'Спасибо!',
-      thanksBody: 'Отзыв отправлен и появится на сайте после модерации.',
+      thanksBody: 'Отзыв отправлен. Если в нём не нашлось признаков спама — он уже опубликован, иначе появится после проверки.',
       errName: 'Укажите имя',
       errText: 'Текст отзыва — от 10 до 2000 символов',
       errRating: 'Поставьте оценку',
@@ -96,7 +100,7 @@
       submit: 'Submit review',
       sending: 'Sending…',
       thanksTitle: 'Thank you!',
-      thanksBody: 'Your review has been sent and will appear on the site after moderation.',
+      thanksBody: "Your review has been sent. If it didn't trip the spam filter, it's already live — otherwise it'll appear after a quick check.",
       errName: 'Please enter your name',
       errText: 'Review text — 10 to 2000 characters',
       errRating: 'Please give a rating',
@@ -157,6 +161,10 @@
         '<label class="aud-consent"><input type="checkbox" id="aud-consent"> ' + t.consent + '</label>' +
         '<p class="aud-error" id="aud-error" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +
+        // Honeypot: скрыто от людей (position off-screen), боты часто
+        // заполняют все поля формы вслепую — портировано из ReviewsBot
+        // Николая Балашова (pack-v70).
+        '<input type="text" id="aud-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">' +
       '</div>' +
       '<p class="aud-thanks" id="aud-thanks" style="display:none"><strong>' + t.thanksTitle + '</strong><br>' + t.thanksBody + '</p>';
 
@@ -190,7 +198,8 @@
       submitBtn.disabled = true;
       submitBtn.textContent = t.sending;
 
-      var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent };
+      var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent,
+        website: wrap.querySelector('#aud-website').value }; // honeypot
 
       // Fire-and-forget к Apps Script: ответ CORS-непрозрачный при
       // простом fetch без preflight, но данные долетают и пишутся в
