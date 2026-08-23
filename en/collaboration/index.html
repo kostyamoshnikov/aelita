@@ -197,12 +197,16 @@
         </select>
       </div>
       <div class="field">
-        <label>Email</label>
-        <input id="cf-email" type="email" placeholder="email@example.com">
+        <label>Email <span class="req-mark">*</span></label>
+        <input class="input-clear" id="cf-email" type="email" inputmode="email" autocomplete="email" placeholder="email@example.com" required>
       </div>
       <div class="field">
-        <label>Phone (optional)</label>
-        <input id="cf-tel" type="tel" placeholder="+7 ...">
+        <label>Phone <span class="req-mark">*</span></label>
+        <input class="input-clear" id="cf-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
+      </div>
+      <div class="field">
+        <label>Telegram <span class="opt-mark">— optional</span></label>
+        <input class="input-clear" id="cf-tg" type="text" autocomplete="off" placeholder="@username">
       </div>
       <div class="field full">
         <label>Message</label>
@@ -257,9 +261,7 @@
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
-        <a href="/en/book-concierge">Book Concierge</a>
         <a href="/en/gift-card">Gift Card</a>
-        <a href="/en/programs">Show program</a>
         <a href="/en/collaboration">Collaborate</a>
         <a href="/en/faq">FAQ</a>
       </div>
@@ -279,9 +281,11 @@
     const who   = (document.getElementById('cf-who')?.value || '').trim();
     const email = (document.getElementById('cf-email')?.value || '').trim();
     const tel   = (document.getElementById('cf-tel')?.value || '').trim();
+    const tg    = (document.getElementById('cf-tg')?.value || '').trim();
     const msg   = (document.getElementById('cf-msg')?.value || '').trim();
     if(!name || !email || !msg){ alert('Заполните имя, почту и сообщение.'); return; }
-    const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Сообщение': msg};
+    if(!tel){ alert('Заполните телефон.'); return; }
+    const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Сообщение': msg};
     await Promise.all([
       sendTelegram('Сотрудничество — заявка', fields),
       sendFormspree('Сотрудничество — заявка', fields)

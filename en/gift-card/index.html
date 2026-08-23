@@ -140,6 +140,9 @@ p a:hover{opacity:.75}
 .join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
 .join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
 .join-field textarea{min-height:90px;resize:vertical}
+.req-mark{color:var(--gold);font-weight:700}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:10px}
+.input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
 .pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
@@ -272,11 +275,13 @@ p a:hover{opacity:.75}
     <div class="join-form" id="joinForm">
       <div class="join-field"><label>Any amount from 500 to 100,000 ₽. Pay right here, via YooKassa.</label><input type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
       <div class="join-field"><label>Your name</label><input type="text" id="j-name" placeholder="Your name"></div>
-      <div class="join-field"><label>Your name</label><input type="text" id="j-contact" placeholder="+7 ... or @username"></div>
+      <div class="join-field"><label>Your phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Your email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field"><label>Your Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Your phone or Telegram</label><input type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
       <div class="join-field"><label>Who is it for — optional</label><textarea id="j-message" placeholder="What to write on the certificate"></textarea></div>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To arrange a gift right now — email us directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, we'll help set it up.</p>
-      <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">A personal message — optional</button>
+      <button class="btn-gold" id="payBtn_gift" onclick="var c=collectContact(); if(c) AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: c, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">A personal message — optional</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
       <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
       <div class="join-ok" id="paymentReturnMsg">If your payment went through, we've received the notification and will get in touch to issue the certificate. If something went wrong or you have questions — write to us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
@@ -310,9 +315,7 @@ p a:hover{opacity:.75}
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
-        <a href="/en/book-concierge">Book Concierge</a>
         <a href="/en/gift-card">Gift Card</a>
-        <a href="/en/programs">Show program</a>
         <a href="/en/collaboration">Collaborate</a>
         <a href="/en/faq">FAQ</a>
       </div>
@@ -327,6 +330,17 @@ p a:hover{opacity:.75}
 </footer>
 
 <script>
+  function collectContact(){
+    var phone = document.getElementById('j-phone').value.trim();
+    var email = document.getElementById('j-email').value.trim();
+    var tg = document.getElementById('j-telegram').value.trim();
+    if(!phone){ alert('Укажите телефон'); return null; }
+    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
+    var parts = ['Тел: ' + phone, 'Email: ' + email];
+    if(tg) parts.push('TG: ' + tg);
+    return parts.join(' · ');
+  }
+
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
   },{threshold:.08});

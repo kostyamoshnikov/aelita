@@ -176,12 +176,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
           </select>
         </div>
         <div class="field">
-          <label>Электронная почта</label>
-          <input type="email" id="femail" placeholder="email@example.com">
+          <label>Электронная почта <span class="req-mark">*</span></label>
+          <input class="input-clear" type="email" id="femail" inputmode="email" autocomplete="email" placeholder="email@example.com" required>
         </div>
         <div class="field">
-          <label>Телефон</label>
-          <input type="tel" id="fphone" placeholder="+7 ...">
+          <label>Телефон <span class="req-mark">*</span></label>
+          <input class="input-clear" type="tel" id="fphone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
+        </div>
+        <div class="field">
+          <label>Telegram <span class="opt-mark">— необязательно</span></label>
+          <input class="input-clear" type="text" id="ftg" autocomplete="off" placeholder="@username">
         </div>
         <div class="field full">
           <label>Краткое описание вашего проекта или предложения</label>
@@ -238,9 +242,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/community">AELITA COMMUNITY</a>
-        <a href="/book-concierge">Книжный консьерж</a>
         <a href="/gift-card">Подарочная карта</a>
-        <a href="/programs">Программка спектакля</a>
         <a href="/collaboration">Сотрудничество</a>
         <a href="/faq">Частые вопросы</a>
       </div>
@@ -258,22 +260,33 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   async function handleForm(){
     const email = document.getElementById('femail').value.trim();
     const name = document.getElementById('fname').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
     if(!email || !email.includes('@') || !name){alert('Заполните имя и почту');return;}
+    if(!phone){alert('Заполните телефон');return;}
+    const tg = document.getElementById('ftg').value.trim();
+    const msg = document.getElementById('fmsg').value.trim();
     const typeEl = document.querySelector('#form_partner select');
     await sendTelegram('Партнёры — заявка', {
       'Имя': name,
       'Email': email,
+      'Телефон': phone,
+      'Telegram': tg,
       'Кто вы': typeEl ? typeEl.value : '',
+      'Описание': msg,
     });
     await sendFormspree('Партнёры — заявка', {
       'Имя': name,
       'Email': email,
+      'Телефон': phone,
+      'Telegram': tg,
       'Кто вы': typeEl ? typeEl.value : '',
+      'Описание': msg,
     });
     document.getElementById('formOk').style.display='block';
     document.getElementById('fname').value='';
     document.getElementById('femail').value='';
     document.getElementById('fphone').value='';
+    document.getElementById('ftg').value='';
     document.getElementById('fmsg').value='';
     document.getElementById('ftype').value='';
   }

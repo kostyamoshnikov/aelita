@@ -661,9 +661,7 @@ section{padding:90px 0}
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
-        <a href="/en/book-concierge">Book Concierge</a>
         <a href="/en/gift-card">Gift Card</a>
-        <a href="/en/programs">Show program</a>
         <a href="/en/collaboration">Collaborate</a>
         <a href="/en/faq">FAQ</a>
       </div>
@@ -711,7 +709,7 @@ section{padding:90px 0}
   async function subscribe(){
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
-    if(!email || !email.includes('@')){alert('Укажите email');return;}
+    if(!email || !email.includes('@')){alert('Please enter your email');return;}
     await sendTelegram('Точка Кюри — уведомить о продажах', {
       'Имя': name,
       'Email': email,

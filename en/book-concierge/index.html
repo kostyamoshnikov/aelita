@@ -140,6 +140,9 @@ p a:hover{opacity:.75}
 .join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
 .join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
 .join-field textarea{min-height:90px;resize:vertical}
+.req-mark{color:var(--gold);font-weight:700}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:10px}
+.input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
 .join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
 .join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
 .pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
@@ -309,14 +312,16 @@ p a:hover{opacity:.75}
     <div id="formSite_j">
     <div class="join-form" id="joinForm">
       <div class="join-field"><label>Name</label><input type="text" id="j-name" placeholder="Your name"></div>
-      <div class="join-field"><label>Phone or Telegram</label><input type="text" id="j-contact" placeholder="+7 ... or @username"></div>
+      <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Shipping address</label><input type="text" id="j-address" placeholder="City, street, house, apartment, postal code"></div>
       <div class="join-field"><label>What's happening in your life right now</label><textarea id="j-situation" placeholder="A couple of words — what matters right now, what you're looking for"></textarea></div>
       <div class="join-field"><label>Genres and themes that resonate</label><input type="text" id="j-genres" placeholder="Non-fiction, fiction, psychology, sci-fi..."></div>
       <div class="join-field"><label>A book you couldn't put down — optional</label><input type="text" id="j-favorite" placeholder="Author, title"></div>
       <div class="join-field"><label>Anything else we should know — optional</label><textarea id="j-note" placeholder="Genre preferences, topics to avoid..."></textarea></div>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To send your form right now — click “Just send the form” below, we'll get in touch and arrange payment personally.</p>
-      <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: document.getElementById('j-contact').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Pay — 10,000 ₽/month →</button>
+      <button class="btn-gold" id="payBtn_concierge" onclick="var c=collectContact(); if(c) AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: c, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Just send the questionnaire</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
       <p class="join-note">Fill in the questionnaire above before paying — that way Katya sees your preferences right away. Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
@@ -367,9 +372,7 @@ p a:hover{opacity:.75}
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
-        <a href="/en/book-concierge">Book Concierge</a>
         <a href="/en/gift-card">Gift Card</a>
-        <a href="/en/programs">Show program</a>
         <a href="/en/collaboration">Collaborate</a>
         <a href="/en/faq">FAQ</a>
       </div>
@@ -384,15 +387,28 @@ p a:hover{opacity:.75}
 </footer>
 
 <script>
+  function collectContact(){
+    var phone = document.getElementById('j-phone').value.trim();
+    var email = document.getElementById('j-email').value.trim();
+    var tg = document.getElementById('j-telegram').value.trim();
+    if(!phone){ alert('Укажите телефон'); return null; }
+    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
+    var parts = ['Тел: ' + phone, 'Email: ' + email];
+    if(tg) parts.push('TG: ' + tg);
+    return parts.join(' · ');
+  }
+
   async function joinClub(){
     const name = document.getElementById('j-name').value.trim();
-    const contact = document.getElementById('j-contact').value.trim();
     const address = document.getElementById('j-address').value.trim();
     const situation = document.getElementById('j-situation').value.trim();
     const genres = document.getElementById('j-genres').value.trim();
     const favorite = document.getElementById('j-favorite').value.trim();
     const note = document.getElementById('j-note').value.trim();
-    if(!name || !contact || !address){alert('Укажите имя, контакт и адрес для отправки книг');return;}
+    if(!name){ alert('Укажите имя'); return; }
+    if(!address){ alert('Укажите адрес для отправки книг'); return; }
+    const contact = collectContact();
+    if(!contact){return;}
     const fields = {
       'Имя': name,
       'Контакт': contact,

@@ -106,8 +106,9 @@
     <div id="formSite_v">
     <div class="form-grid" id="form_v">
       <div class="field"><label>Имя и фамилия</label><input type="text" id="name_v" placeholder="Иван Иванов"></div>
-      <div class="field"><label>Электронная почта</label><input type="email" id="email_v" placeholder="email@example.com"></div>
-      <div class="field"><label>Телефон</label><input type="tel" id="phone_v" placeholder="+7 ..."></div>
+      <div class="field"><label>Электронная почта <span class="req-mark">*</span></label><input class="input-clear" type="email" id="email_v" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="phone_v" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="tg_v" autocomplete="off" placeholder="@username"></div>
       <div class="field"><label>Город и площадка</label><input type="text" id="place_v" placeholder="Город, название площадки"></div>
       <div class="field"><label>Вместимость зала</label><input type="text" id="capacity_v" placeholder="Количество мест"></div>
       <div class="field"><label>Предполагаемые даты</label><input type="text" id="dates_v" placeholder="Когда готовы принять"></div>
@@ -164,9 +165,7 @@
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/community">AELITA COMMUNITY</a>
-        <a href="/book-concierge">Книжный консьерж</a>
         <a href="/gift-card">Подарочная карта</a>
-        <a href="/programs">Программка спектакля</a>
         <a href="/collaboration">Сотрудничество</a>
         <a href="/faq">Частые вопросы</a>
       </div>
@@ -185,12 +184,15 @@
   async function handleForm(id){
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
+    const p=document.getElementById('phone_'+id);
     if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
+    if(!p||!p.value.trim()){alert('Заполните телефон');return;}
     if(id==='v'){
       const fields = {
         'Имя': n.value,
         'Email': e.value,
         'Телефон': (document.getElementById('phone_v')||{}).value || '',
+        'Telegram': (document.getElementById('tg_v')||{}).value || '',
         'Город и площадка': (document.getElementById('place_v')||{}).value || '',
         'Вместимость зала': (document.getElementById('capacity_v')||{}).value || '',
         'Предполагаемые даты': (document.getElementById('dates_v')||{}).value || '',

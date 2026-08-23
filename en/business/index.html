@@ -138,8 +138,9 @@
     <div id="formSite_b">
     <div class="form-grid" id="form_b">
       <div class="field"><label>Full name</label><input type="text" id="name_b" placeholder="John Smith"></div>
-      <div class="field"><label>Email address</label><input type="email" id="email_b" placeholder="email@example.com"></div>
-      <div class="field"><label>Phone</label><input type="tel" placeholder="+7 ..."></div>
+      <div class="field"><label>Email address <span class="req-mark">*</span></label><input class="input-clear" type="email" id="email_b" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="phone_b" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="tg_b" autocomplete="off" placeholder="@username"></div>
       <div class="field"><label>Company name</label><input type="text" placeholder="Company Ltd ..."></div>
       <div class="field"><label>Event format</label><select><option value="">Select...</option><option>Corporate screening</option><option>Team building</option><option>Partnership event</option><option>Gift for clients</option><option>Other</option></select></div>
       <div class="field"><label>Number of guests</label><input type="text" placeholder="Approximately"></div>
@@ -216,9 +217,7 @@
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/community">AELITA COMMUNITY</a>
-        <a href="/en/book-concierge">Book Concierge</a>
         <a href="/en/gift-card">Gift Card</a>
-        <a href="/en/programs">Show program</a>
         <a href="/en/collaboration">Collaborate</a>
         <a href="/en/faq">FAQ</a>
       </div>
@@ -237,18 +236,25 @@
   async function handleForm(id){
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
+    const p=document.getElementById('phone_'+id);
     if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
+    if(!p||!p.value.trim()){alert('Заполните телефон');return;}
+    const tg=document.getElementById('tg_'+id);
     const sel=document.querySelector('#form_'+id+' select');
     const msg=document.querySelector('#form_'+id+' textarea');
     await sendTelegram('Для бизнеса — заявка', {
       'Имя': n.value,
       'Email': e.value,
+      'Телефон': p.value,
+      'Telegram': tg ? tg.value : '',
       'Кто вы': sel ? sel.value : '',
       'Сообщение': msg ? msg.value : '',
     });
     await sendFormspree('Для бизнеса — заявка', {
       'Имя': n.value,
       'Email': e.value,
+      'Телефон': p.value,
+      'Telegram': tg ? tg.value : '',
       'Кто вы': sel ? sel.value : '',
       'Сообщение': msg ? msg.value : '',
     });

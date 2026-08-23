@@ -538,6 +538,13 @@ section{padding:80px 0}
 .field input,.field textarea,.field select{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s;width:100%}
 .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold)}
 .field textarea{resize:vertical;min-height:110px}
+/* Обязательные/необязательные поля — «чёткая зона ввода» (см. Site/
+   README.md, раздел «Обязательные поля форм»). Общий файл, единая
+   правка на все страницы, использующие этот style.css (business/
+   event/creativity/collaboration/partners/venues). */
+.req-mark{color:var(--gold);font-weight:700}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:10px}
+.input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
 .cb-group{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .cb-item{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14px;color:var(--sand)}
 .cb-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
