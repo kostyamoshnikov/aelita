@@ -347,6 +347,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Genres and themes that resonate</label><input type="text" id="j-genres" placeholder="Non-fiction, fiction, psychology, sci-fi..."></div>
       <div class="join-field"><label>A book you couldn't put down — optional</label><input type="text" id="j-favorite" placeholder="Author, title"></div>
       <div class="join-field"><label>Anything else we should know — optional</label><textarea id="j-note" placeholder="Genre preferences, topics to avoid..."></textarea></div>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To send your form right now — click “Just send the form” below, we'll get in touch and arrange payment personally.</p>
       <button class="btn-gold" id="payBtn_concierge" onclick="var c=collectContact(); if(c) AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: c, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Just send the questionnaire</button>
@@ -433,8 +434,9 @@ p a:hover{opacity:.75}
     const genres = document.getElementById('j-genres').value.trim();
     const favorite = document.getElementById('j-favorite').value.trim();
     const note = document.getElementById('j-note').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
-    if(!address){ alert('Укажите адрес для отправки книг'); return; }
+    if(!name){ alert('Please enter your name'); return; }
+    if(!address){ alert('Please enter a delivery address for books'); return; }
+    if(!document.getElementById('pdConsent').checked){ alert('Please check the personal data consent box — we cannot process your request without it'); return; }
     const contact = collectContact();
     if(!contact){return;}
     const fields = {

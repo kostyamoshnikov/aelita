@@ -25,6 +25,7 @@
       missingFields: 'Заполните имя и контакт — без них не отправим',
       badAmount: 'Укажите сумму от 500 до 100 000 ₽',
       missingShow: 'Выберите спектакль',
+      missingConsent: 'Отметьте согласие на обработку персональных данных — без него мы не можем принять оплату',
       processing: 'Переходим к оплате…',
       failed: 'Оплата не началась. Попробуйте ещё раз — или напишите нам напрямую, поможем оформить.',
     },
@@ -33,6 +34,7 @@
       missingFields: "Fill in your name and contact — we can't send this without them",
       badAmount: 'Enter an amount between 500 and 100,000 ₽',
       missingShow: 'Choose a show',
+      missingConsent: "Please check the personal data consent box — we can't process payment without it",
       processing: 'Redirecting to payment…',
       failed: "Payment didn't start. Try again — or email us directly and we'll help sort it out.",
     },
@@ -161,6 +163,23 @@
       alert(t.missingFields);
       return;
     }
+    // Согласие на обработку персональных данных — отдельный чекбокс
+    // (id="pdConsent"), НЕ пассивная надпись у кнопки (той раньше
+    // ограничивались все формы на сайте, но пассивное «нажимая кнопку,
+    // вы соглашаетесь» — это не «конкретное, информированное и
+    // однозначное действие», как того требует ст. 9 152-ФЗ; чекбокс,
+    // который нужно осознанно поставить, соответствует требованию
+    // напрямую). Есть не на каждой странице с оплатой — 'program'
+    // (покупка без личных данных вообще, см. isGuestCheckout выше) его
+    // не требует и обычно не имеет; если чекбокса на странице нет,
+    // проверку пропускаем, а не блокируем оплату несуществующим полем.
+    if (!isGuestCheckout) {
+      var consentEl = document.getElementById('pdConsent');
+      if (consentEl && !consentEl.checked) {
+        alert(t.missingConsent);
+        return;
+      }
+    }
     if (product === 'gift') {
       var n = Number(amount);
       if (!n || n < 500 || n > 100000) {
@@ -189,10 +208,18 @@
       var headers = { 'Content-Type': 'application/json' };
       if (token) headers.Authorization = 'Bearer ' + token; // program и без токена пройдёт — сервер его не требует для этого продукта
       var yandexClientId = await getYmClientId();
+      // Тестовый режим — только для внутреннего тестирования, НЕ видно
+      // обычным покупателям ни в интерфейсе, ни в URL по умолчанию.
+      // Включается вручную дописыванием ?aelita_test=1 к адресу
+      // страницы (см. _tools/Payments/README.md, «Тестовые заказы») —
+      // сервер (create-payment.js) сам откажет, если тестовые
+      // реквизиты ЮKassa не настроены, так что случайно оставленный
+      // параметр в ссылке никого не подставит под боевой платёж.
+      var isTest = new URLSearchParams(location.search).get('aelita_test') === '1';
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId }),
+        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {

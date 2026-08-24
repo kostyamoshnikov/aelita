@@ -104,8 +104,8 @@ body{max-width:100vw}
         <div class="form-col">
           <div class="field"><label for="reg-email">Email</label><input type="email" id="reg-email" placeholder="email@example.com" autocomplete="email"></div>
           <div class="field"><label for="reg-password">Password</label><input type="password" id="reg-password" placeholder="At least 8 characters" autocomplete="new-password"></div>
+          <label class="cb-item" style="margin:4px 0"><input type="checkbox" id="reg-consent"> I agree to the <a href="/en/oferta" style="color:var(--gold)">public offer</a> and <a href="/en/privacy" style="color:var(--gold)">personal data processing</a></label>
           <button class="btn-gold" id="registerBtn" onclick="doRegister()">Create account →</button>
-          <p class="form-note">By clicking the button, you agree to the <a href="/en/oferta" style="color:var(--gold)">public offer</a> and <a href="/en/privacy" style="color:var(--gold)">personal data processing policy</a>.</p>
           <p class="form-err" id="regErr"></p>
         </div>
       </div>
@@ -209,6 +209,7 @@ body{max-width:100vw}
     var password = document.getElementById('reg-password').value;
     if (!email || !password) { showErr('regErr', 'Укажите email и пароль.'); return; }
     if (password.length < 8) { showErr('regErr', 'Пароль должен быть не короче 8 символов.'); return; }
+    if (!document.getElementById('reg-consent').checked) { showErr('regErr', 'Please check the box agreeing to the offer and personal data processing.'); return; }
     window.AELITA_account.register(email, password, {
       buttonEl: document.getElementById('registerBtn'),
       onSuccess: function () { location.href = NEXT_PATH || '/account/dashboard'; },

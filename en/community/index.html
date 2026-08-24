@@ -574,7 +574,8 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>A few words about yourself — optional</label><textarea placeholder="What brings you here, what are you looking for..."></textarea></div>
-      <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To sign up right now — click “Ask Katya first” below, we'll set everything up personally.</p>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
+      <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To sign up right now — click "Ask Katya first" below, we'll set everything up personally.</p>
       <button class="btn-gold" id="payBtn_community" onclick="var c=collectContact(); if(c) AELITA_pay('community', {name: document.getElementById('j-name').value, contact: c, buttonEl: this})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Ask Katya first</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
@@ -659,7 +660,8 @@ p a:hover{opacity:.75}
 
   async function joinClub(){
     const name = document.getElementById('j-name').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
+    if(!name){ alert('Please enter your name'); return; }
+    if(!document.getElementById('pdConsent').checked){ alert('Please check the personal data consent box — we cannot process your request without it'); return; }
     const contact = collectContact();
     if(!contact){return;}
     await sendTelegram('AELITA COMMUNITY — вступление', {

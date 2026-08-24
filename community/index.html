@@ -571,6 +571,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Пару слов о себе — необязательно</label><textarea placeholder="Что привело, чего ищете..."></textarea></div>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
       <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы записаться прямо сейчас — нажмите «Сначала спросить Катю» ниже, мы всё оформим лично.</p>
       <button class="btn-gold" id="payBtn_community" onclick="var c=collectContact(); if(c) AELITA_pay('community', {name: document.getElementById('j-name').value, contact: c, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Сначала спросить Катю</button>
@@ -657,6 +658,7 @@ p a:hover{opacity:.75}
   async function joinClub(){
     const name = document.getElementById('j-name').value.trim();
     if(!name){ alert('Укажите имя'); return; }
+    if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
     const contact = collectContact();
     if(!contact){return;}
     await sendTelegram('AELITA COMMUNITY — вступление', {

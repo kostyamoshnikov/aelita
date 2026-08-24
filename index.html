@@ -538,6 +538,7 @@ footer p{color:var(--sand);font-size:14px}
       <input type="email" id="subEmail" placeholder="Ваша почта" aria-label="Электронная почта">
       <button onclick="subscribe()">Подписаться</button>
     </div>
+    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
     <p class="sub-ok" id="subOk">Готово — напишем, как только откроются продажи.</p>
   </div>
 </section>
@@ -588,6 +589,29 @@ footer p{color:var(--sand);font-size:14px}
 
   const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
+  // URL веб-приложения _tools/CrewBot/Code.gs — заполнить после деплоя
+  // (см. её README.md). Настоящее хранилище подписчиков (лист
+  // «Контакты», тег 'сайт-подписка') — sendTelegram/sendFormspree выше
+  // остаются как мгновенное уведомление админу, но САМИ ПО СЕБЕ не
+  // сохраняют подписчика никуда для будущей рассылки, это делает
+  // только addContact ниже.
+  const CREWBOT_WEBAPP_URL = 'XXX';
+
+  async function addNewsletterContact(name, email) {
+    if (CREWBOT_WEBAPP_URL === 'XXX') return; // не задеплоено — не падаем, просто не сохраняем
+    try {
+      await fetch(CREWBOT_WEBAPP_URL, {
+        method: 'POST',
+        // text/plain, не application/json — намеренно: Apps Script
+        // веб-приложения плохо переваривают CORS preflight (OPTIONS) от
+        // браузеров на application/json (см. тот же приём в
+        // _tools/Tickets/lib/guest-system-bridge.js).
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action: 'addContact', name: name || '', email: email, tags: ['сайт-подписка'] }),
+      });
+    } catch(e) { console.log('CrewBot addContact error:', e); }
+  }
+
   async function sendFormspree(formName, fields) {
     try {
       var data = new FormData();
@@ -627,6 +651,8 @@ footer p{color:var(--sand);font-size:14px}
   async function subscribe(){
     const v = document.getElementById('subEmail').value.trim();
     if(!v || !v.includes('@')) return;
+    if(!document.getElementById('subConsent').checked){ alert('Отметьте согласие на обработку персональных данных'); return; }
+    await addNewsletterContact('', v);
     await sendTelegram('Главная — подписка на показы', {'Email': v});
     await sendFormspree('Главная — подписка на показы', {'Email': v});
     document.getElementById('subOk').style.display = 'block';

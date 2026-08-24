@@ -465,6 +465,18 @@ section{padding:90px 0}
         <p class="bio">How to remove the metal and tension from your speech. Where to find the calm, low notes that put a listener at ease. How simple pauses bring you closer to an audience than the loudest words ever could. And why perfect diction can sometimes sound less honest than a little roughness.</p>
         <div class="speaker-quote">Your voice is an invitation to dialogue.</div>
       </div>
+
+      <div class="speaker-card">
+        <img src="/images/abdulova.jpg" alt="Katya Abdulova" loading="lazy">
+        <div class="speaker-meta">Date to be confirmed</div>
+        <div class="speaker-kicker">Talk</div>
+        <h3>Art as a Startup: Engineering Attention and Reality</h3>
+        <div class="speaker-name"><a href="/en/abdulova" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--gold)">Katya Abdulova</a></div>
+        <div class="speaker-role">Curator and producer of the “Tochka Cuire” contemporary art festival</div>
+        <p class="bio">Business is used to defending itself against uncertainty with strategy sessions and plans — the artist doesn't fight uncertainty, but plays with it, and always wins: it's artists who create the image of the future and the reality each of us carries in our heads. Launching the festival in Stary Oskol was the same kind of startup: zero budget, no cultural habit among the audience, and total unknown.</p>
+        <p class="bio">The lecture covers how directing tools, systems thinking and creative practice turn a point that doesn't exist on any map into a place of attraction for thousands of people; why contemporary art is really about the hard work of building communities; and how founders can stop searching for a magic “growth” button by learning to create meaning where others see only industrial pipes.</p>
+        <div class="speaker-quote">Nobody wanted an iPhone until Steve Jobs invented it.</div>
+      </div>
     </div>
     <p class="reveal" style="color:var(--steel);font-size:12.5px;margin-top:20px">The business programme's speaker line-up is still growing.</p>
   </div>
@@ -644,7 +656,7 @@ section{padding:90px 0}
           <li class="star">Exhibitions, lectures, workshops and a children's happening — free entry</li>
           <li>Purchase and refund terms — in the <a href="https://cuire-fest.ru/oferta/" target="_blank" rel="noopener" style="color:var(--gold)">public offer</a></li>
         </ul>
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita-site&utm_medium=referral&utm_campaign=site&utm_content=tochkacuire" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Choose your seats →</a>
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita-site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Choose your seats →</a>
       </div>
       <div class="form-box">
         <h3>Stay up to date with the festival programme</h3>
@@ -653,8 +665,8 @@ section{padding:90px 0}
           <div class="field"><label>Name</label><input type="text" id="sub-name" placeholder="Your name"></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
           <div class="field"><label>Phone — optional</label><input type="tel" placeholder="+7 ..."></div>
+          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
           <button class="btn-gold" onclick="subscribe()">Subscribe to updates →</button>
-          <p class="form-note">By clicking the button, you agree to the processing of your contact details to be notified about the festival.</p>
         </div>
         <div class="form-ok" id="subOk">✓ Done! Thank you — we'll send the programme and write about new shows at the “Tochka Cuire” festival.</div>
       </div>
@@ -746,6 +758,8 @@ section{padding:90px 0}
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
     if(!email || !email.includes('@')){alert('Укажите email');return;}
+    if(!document.getElementById('sub-consent').checked){alert('Отметьте согласие на обработку персональных данных');return;}
+    await addNewsletterContact(name, email);
     await sendTelegram('Точка Кюри — уведомить о продажах', {
       'Имя': name,
       'Email': email,
@@ -793,6 +807,20 @@ section{padding:90px 0}
   const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
   const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  // См. Site/index.html — тот же принцип, тот же будущий URL после деплоя.
+  const CREWBOT_WEBAPP_URL = 'XXX';
+
+  async function addNewsletterContact(name, email) {
+    if (CREWBOT_WEBAPP_URL === 'XXX') return;
+    try {
+      await fetch(CREWBOT_WEBAPP_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action: 'addContact', name: name || '', email: email, tags: ['сайт-подписка'] }),
+      });
+    } catch(e) { console.log('CrewBot addContact error:', e); }
+  }
 
   async function sendFormspree(formName, fields) {
     try {

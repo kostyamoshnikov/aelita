@@ -214,8 +214,8 @@
         <textarea id="cf-msg" placeholder="Tell us about your enquiry..."></textarea>
       </div>
       <div class="field full">
+        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_cl"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
         <button class="submit-btn" onclick="handleSubmit()">Send</button>
-        <p class="form-note">By clicking the button, you agree to the <a href="/en/privacy" style="color:var(--gold)">personal data processing policy</a></p>
       </div>
     </div>
     </div>
@@ -287,6 +287,7 @@
     const msg   = (document.getElementById('cf-msg')?.value || '').trim();
     if(!name || !email || !msg){ alert('Заполните имя, почту и сообщение.'); return; }
     if(!tel){ alert('Заполните телефон.'); return; }
+    if(!document.getElementById('consent_cl')?.checked){ alert('Please check the personal data consent box — we cannot process your request without it'); return; }
     const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Сообщение': msg};
     await Promise.all([
       sendTelegram('Сотрудничество — заявка', fields),

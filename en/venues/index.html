@@ -120,8 +120,8 @@
       <div class="field full"><label>Which production interests you?</label><textarea id="show_v" placeholder="Title or format — if you have decided"></textarea></div>
       <div class="field full"><label>Wishes and comments</label><textarea id="msg_v" placeholder="Anything else we should know..."></textarea></div>
       <div class="field full">
+        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_v"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
         <button class="btn-gold" onclick="handleForm('v')" style="width:fit-content">Submit application</button>
-        <p class="form-note">By clicking the button, you agree to the personal data processing policy</p>
         <p class="form-ok" id="ok_v">Thank you! We will review your application and get in touch within 2 working days.</p>
       </div>
     </div>
@@ -192,6 +192,8 @@
     const p=document.getElementById('phone_'+id);
     if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
     if(!p||!p.value.trim()){alert('Заполните телефон');return;}
+    const consent=document.getElementById('consent_'+id);
+    if(!consent||!consent.checked){alert('Please check the personal data consent box — we cannot process your application without it');return;}
     if(id==='v'){
       const fields = {
         'Имя': n.value,

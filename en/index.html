@@ -541,6 +541,7 @@ footer p{color:var(--sand);font-size:14px}
       <input type="email" id="subEmail" placeholder="Your email" aria-label="Email address">
       <button onclick="subscribe()">Subscribe</button>
     </div>
+    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
     <p class="sub-ok" id="subOk">Done — we'll write as soon as sales open.</p>
   </div>
 </section>
@@ -591,6 +592,20 @@ footer p{color:var(--sand);font-size:14px}
 
   const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
+  // См. Site/index.html (RU) — тот же будущий URL после деплоя CrewBot.
+  const CREWBOT_WEBAPP_URL = 'XXX';
+
+  async function addNewsletterContact(name, email) {
+    if (CREWBOT_WEBAPP_URL === 'XXX') return;
+    try {
+      await fetch(CREWBOT_WEBAPP_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action: 'addContact', name: name || '', email: email, tags: ['сайт-подписка'] }),
+      });
+    } catch(e) { console.log('CrewBot addContact error:', e); }
+  }
+
   async function sendFormspree(formName, fields) {
     try {
       var data = new FormData();
@@ -630,6 +645,8 @@ footer p{color:var(--sand);font-size:14px}
   async function subscribe(){
     const v = document.getElementById('subEmail').value.trim();
     if(!v || !v.includes('@')) return;
+    if(!document.getElementById('subConsent').checked){ alert('Please check the personal data consent box'); return; }
+    await addNewsletterContact('', v);
     await sendTelegram('Главная — подписка на показы', {'Email': v});
     await sendFormspree('Главная — подписка на показы', {'Email': v});
     document.getElementById('subOk').style.display = 'block';

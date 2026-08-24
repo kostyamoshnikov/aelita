@@ -46,6 +46,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .buy-btn:disabled{opacity:.4;cursor:not-allowed}
 .msg{color:#C98B6B;font-size:13px;margin-top:8px;min-height:16px}
 .warn{background:#2A2410;border:1px solid #5A4A00;color:#D6B57A;font-size:12px;padding:8px 12px;border-radius:4px;margin-bottom:14px}
+.cb-item{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px;color:var(--sand)}
+.cb-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
 .test-banner{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:13px;font-weight:500;padding:10px 14px;border-radius:4px;margin-bottom:14px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
 </style>
 </head>
@@ -74,6 +76,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <input id="f-name" placeholder="Имя">
     <input id="f-email" type="email" placeholder="Email — на него придут билеты">
     <input id="f-contact" placeholder="Телефон (необязательно)">
+    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
     <div class="msg" id="msg"></div>
   </div>
 </div>
@@ -216,6 +219,10 @@ async function submitOrder(){
   const msgEl = document.getElementById('msg');
   if(!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     msgEl.textContent = 'Укажите имя и корректный email — на него придут билеты.';
+    return;
+  }
+  if(!document.getElementById('pdConsent').checked){
+    msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него не оформим заказ.';
     return;
   }
   document.getElementById('buy-btn').disabled = true;

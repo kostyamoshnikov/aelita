@@ -462,6 +462,18 @@ section{padding:90px 0}
         <p class="bio">Как убрать из речи металл и напряжение. Где брать низкие, спокойные ноты, которые успокаивают собеседника. Как простые паузы делают вас ближе к аудитории, чем самые громкие слова. И почему идеальная дикция иногда звучит менее честно, чем лёгкая небрежность.</p>
         <div class="speaker-quote">Ваш голос — это приглашение к диалогу.</div>
       </div>
+
+      <div class="speaker-card">
+        <img src="/images/abdulova.jpg" alt="Катя Абдулова" loading="lazy">
+        <div class="speaker-meta">Дата уточняется</div>
+        <div class="speaker-kicker">Лекция</div>
+        <h3>Искусство как стартап: конструирование внимания и реальности</h3>
+        <div class="speaker-name"><a href="/abdulova" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--gold)">Катя Абдулова</a></div>
+        <div class="speaker-role">Куратор и продюсер фестиваля современного искусства «Точка Кюри»</div>
+        <p class="bio">Бизнес привык защищаться от неопределённости стратегическими сессиями и планами — художник с ней не борется, а играет, и всегда выигрывает: именно художники создают тот образ будущего и ту реальность, которую каждый из нас носит в голове. Запуск фестиваля в Старом Осколе — тот же стартап: нулевой бюджет, отсутствие культурной привычки у аудитории и полная неизвестность.</p>
+        <p class="bio">На лекции — как инструменты режиссуры, системное мышление и практика творчества превращают точку, которой нет на карте, в место притяжения для тысяч людей; почему современное искусство — это про жёсткую сборку сообществ; и как предпринимателю перестать искать волшебную кнопку «роста», научившись создавать смыслы там, где другие видят только промышленные трубы.</p>
+        <div class="speaker-quote">Никто не хотел iPhone, пока Стив Джобс его не придумал.</div>
+      </div>
     </div>
     <p class="reveal" style="color:var(--steel);font-size:12.5px;margin-top:20px">Состав спикеров деловой программы пополняется.</p>
   </div>
@@ -650,8 +662,8 @@ section{padding:90px 0}
           <div class="field"><label>Имя</label><input type="text" id="sub-name" placeholder="Ваше имя"></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
           <div class="field"><label>Телефон — по желанию</label><input type="tel" placeholder="+7 ..."></div>
+          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
           <button class="btn-gold" onclick="subscribe()">Подписаться на новости →</button>
-          <p class="form-note">Нажимая кнопку, вы соглашаетесь на обработку контактов для уведомления о фестивале.</p>
         </div>
         <div class="form-ok" id="subOk">✓ Готово! Спасибо — пришлём программу и напишем о новых показах фестиваля «ТОЧКА КЮРИ».</div>
       </div>
@@ -743,6 +755,8 @@ section{padding:90px 0}
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
     if(!email || !email.includes('@')){alert('Укажите email');return;}
+    if(!document.getElementById('sub-consent').checked){alert('Отметьте согласие на обработку персональных данных');return;}
+    await addNewsletterContact(name, email);
     await sendTelegram('Точка Кюри — уведомить о продажах', {
       'Имя': name,
       'Email': email,
@@ -790,6 +804,20 @@ section{padding:90px 0}
   const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
   const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  // См. Site/index.html — тот же принцип, тот же будущий URL после деплоя.
+  const CREWBOT_WEBAPP_URL = 'XXX';
+
+  async function addNewsletterContact(name, email) {
+    if (CREWBOT_WEBAPP_URL === 'XXX') return;
+    try {
+      await fetch(CREWBOT_WEBAPP_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action: 'addContact', name: name || '', email: email, tags: ['сайт-подписка'] }),
+      });
+    } catch(e) { console.log('CrewBot addContact error:', e); }
+  }
 
   async function sendFormspree(formName, fields) {
     try {

@@ -166,8 +166,8 @@
       </div>
       <div class="field full"><label>Пожелания и комментарии</label><textarea placeholder="Всё, что важно нам знать..."></textarea></div>
       <div class="field full">
+        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_b"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
         <button class="btn-gold" onclick="handleForm('b')" style="width:fit-content">Отправить заявку</button>
-        <p class="form-note">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</p>
         <p class="form-ok" id="ok_b">Спасибо! Мы изучим вашу заявку и свяжемся в течение 2 рабочих дней.</p>
       </div>
     </div>
@@ -238,6 +238,8 @@
     const p=document.getElementById('phone_'+id);
     if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
     if(!p||!p.value.trim()){alert('Заполните телефон');return;}
+    const consent=document.getElementById('consent_'+id);
+    if(!consent||!consent.checked){alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку');return;}
     const tg=document.getElementById('tg_'+id);
     const sel=document.querySelector('#form_'+id+' select');
     const msg=document.querySelector('#form_'+id+' textarea');

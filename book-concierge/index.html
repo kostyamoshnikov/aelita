@@ -344,6 +344,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Какие жанры и темы откликаются</label><input type="text" id="j-genres" placeholder="Нон-фикшн, проза, психология, фантастика..."></div>
       <div class="join-field"><label>Книга, от которой не могли оторваться — необязательно</label><input type="text" id="j-favorite" placeholder="Автор, название"></div>
       <div class="join-field"><label>Что-то ещё, что стоит знать — необязательно</label><textarea id="j-note" placeholder="Предпочтения по жанрам, темы, которых лучше избегать..."></textarea></div>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
       <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы отправить заявку прямо сейчас — нажмите «Только отправить анкету» ниже, мы свяжемся и оформим оплату лично.</p>
       <button class="btn-gold" id="payBtn_concierge" onclick="var c=collectContact(); if(c) AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: c, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Только отправить анкету</button>
@@ -432,6 +433,7 @@ p a:hover{opacity:.75}
     const note = document.getElementById('j-note').value.trim();
     if(!name){ alert('Укажите имя'); return; }
     if(!address){ alert('Укажите адрес для отправки книг'); return; }
+    if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
     const contact = collectContact();
     if(!contact){return;}
     const fields = {

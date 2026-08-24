@@ -196,8 +196,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
           <textarea id="fmsg" placeholder="Tell us about yourself and how you see us working together..."></textarea>
         </div>
         <div class="field full">
+          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_partner"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
           <button class="btn-gold" onclick="handleForm()" style="width:fit-content">Send</button>
-          <p class="form-note">By clicking the button, you agree to the <a href="/en/privacy" style="color:var(--gold)">personal data processing policy</a></p>
           <p class="form-ok" id="formOk">Thank you! We will get in touch within one working day.</p>
         </div>
       </div>
@@ -268,6 +268,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     const phone = document.getElementById('fphone').value.trim();
     if(!email || !email.includes('@') || !name){alert('Заполните имя и почту');return;}
     if(!phone){alert('Заполните телефон');return;}
+    if(!document.getElementById('consent_partner').checked){alert('Please check the personal data consent box — we cannot process your application without it');return;}
     const tg = document.getElementById('ftg').value.trim();
     const msg = document.getElementById('fmsg').value.trim();
     const typeEl = document.querySelector('#form_partner select');
