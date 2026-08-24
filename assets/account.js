@@ -15,6 +15,8 @@
       notConfigured: 'Личный кабинет ещё не подключён — напишите нам напрямую: aelita.production@yandex.ru',
       creating: 'Создаём аккаунт…',
       signingIn: 'Входим…',
+      downloadingContract: 'Готовим договор…',
+      changingPassword: 'Сохраняем новый пароль…',
       errors: {
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
@@ -23,13 +25,18 @@
         invalid_credentials: 'Email или пароль не совпадают — проверьте и попробуйте ещё раз.',
         storage_unreachable: 'Не достучались до сервера. Попробуйте ещё раз через минуту.',
         server_misconfigured: 'Личный кабинет временно недоступен — напишите нам напрямую.',
+        purchase_not_found: 'Не нашли эту покупку в кабинете — обновите страницу и попробуйте ещё раз.',
+        pdf_failed: 'Не получилось собрать договор. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
+      passwordChanged: 'Пароль изменён.',
     },
     en: {
       notConfigured: "The account isn't connected yet — email us directly: aelita.production@yandex.ru",
       creating: 'Creating account…',
       signingIn: 'Signing in…',
+      downloadingContract: 'Preparing the contract…',
+      changingPassword: 'Saving new password…',
       errors: {
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
@@ -38,8 +45,11 @@
         invalid_credentials: "Email or password doesn't match — check and try again.",
         storage_unreachable: "Couldn't reach the server. Try again in a moment.",
         server_misconfigured: 'The account is temporarily unavailable — email us directly.',
+        purchase_not_found: "Couldn't find that purchase in your account — refresh the page and try again.",
+        pdf_failed: "Couldn't generate the contract. Try again or email us: aelita.production@yandex.ru",
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
+      passwordChanged: 'Password changed.',
     },
   };
   var t = TEXT[LANG];
@@ -50,6 +60,8 @@
   var REGISTER_URL = '';
   var LOGIN_URL = '';
   var ME_URL = '';
+  var CONTRACT_URL = '';
+  var CHANGE_PASSWORD_URL = '';
 
   var STORAGE_KEY = 'aelita_account_token';
 
@@ -154,6 +166,110 @@
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }
+    },
+    // Скачивает индивидуальный договор по конкретной покупке
+    // (paymentId) и запускает сохранение файла в браузере. В отличие
+    // от register/login/me, это не JSON — сервер отдаёт сам PDF
+    // (Content-Type: application/pdf), поэтому здесь fetch → blob →
+    // временная ссылка с click(), а не res.json().
+    downloadContract: async function (paymentId, opts) {
+      opts = opts || {};
+      if (!CONTRACT_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.downloadingContract; }
+      try {
+        var res = await fetch(CONTRACT_URL + '?paymentId=' + encodeURIComponent(paymentId), {
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        if (res.status === 401) { clearToken(); location.href = '/account'; return; }
+        if (!res.ok) {
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
+          if (opts.onError) opts.onError(errorMessage(data));
+          else alert(errorMessage(data));
+          return;
+        }
+        var blob = await res.blob();
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'AELITA-dogovor-' + paymentId + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        if (opts.onSuccess) opts.onSuccess();
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // opts.currentPassword/newPassword — {ok:true} при успехе. Не
+    // трогает токен: пароль подтверждён и так самим запросом, повторно
+    // логиниться не нужно (см. комментарий в change-password.js).
+    changePassword: async function (currentPassword, newPassword, opts) {
+      opts = opts || {};
+      if (!CHANGE_PASSWORD_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.changingPassword; }
+      try {
+        var res = await fetch(CHANGE_PASSWORD_URL, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword }),
+        });
+        if (res.status === 401) {
+          var data401 = null;
+          try { data401 = await res.json(); } catch (e) {}
+          // 401 здесь чаще всего значит «текущий пароль не совпал», не
+          // «токен истёк» (токен уже проверен раньше в этом же ответе
+          // сервера, см. change-password.js) — поэтому, в отличие от
+          // me()/downloadContract(), НЕ трогаем localStorage и не
+          // редиректим: остаёмся на странице с понятной ошибкой.
+          if (opts.onError) opts.onError(errorMessage(data401));
+          else alert(errorMessage(data401));
+          return;
+        }
+        var data = await res.json();
+        if (res.ok && data.ok) {
+          if (opts.onSuccess) opts.onSuccess();
+          else alert(t.passwordChanged);
+          return;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // Экспорт данных заказчика (152-ФЗ) — из уже загруженных me()
+    // данных, БЕЗ отдельного запроса к серверу: всё, что сервер вообще
+    // отдаёт про аккаунт (email, дата регистрации, покупки), уже есть
+    // на странице к моменту, когда кабинет отрисован. Отдельная Cloud
+    // Function для этого не нужна.
+    exportData: function (accountData) {
+      var blob = new Blob([JSON.stringify(accountData, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'aelita-account-data.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     },
   };
 })();

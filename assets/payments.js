@@ -246,7 +246,17 @@
       }
       alert(t.failed);
     } catch (e) {
-      alert(t.failed);
+      // Сеть недоступна (fetch не смог достучаться вообще, TypeError) и
+      // «сервер ответил, но что-то не так» (JSON не распарсился и т.п.)
+      // раньше показывали одно и то же сообщение — разницы для человека
+      // почти нет («попробуйте ещё раз» подходит в обоих случаях), но
+      // если сеть точно недоступна — стоит сказать прямо, а не звать
+      // «попробовать ещё раз», который тут же упадёт по той же причине.
+      if (e instanceof TypeError) {
+        alert(LANG === 'en' ? 'No connection — check your internet and try again.' : 'Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
+      } else {
+        alert(t.failed);
+      }
     }
     if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }
   };

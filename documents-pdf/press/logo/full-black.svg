@@ -1,0 +1,78 @@
+<svg width="3840" height="6826" viewBox="0 0 1920 3413" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- blade brightness along its length: dim at tip, brightest ~65-75%, amber fade at foot -->
+    <linearGradient id="bladeFill" x1="1213" y1="1058" x2="882" y2="2170" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#8F877C"/>
+      <stop offset="11%"  stop-color="#C9C2B8"/>
+      <stop offset="26%"  stop-color="#F4F0E9"/>
+      <stop offset="39%"  stop-color="#FFFFFF"/>
+      <stop offset="66%"  stop-color="#FFFFFF"/>
+      <stop offset="80%"  stop-color="#FBF3E4"/>
+      <stop offset="88%"  stop-color="#EFD9B4"/>
+      <stop offset="90%"  stop-color="#E2C08C" stop-opacity="0.5"/>
+      <stop offset="93%"  stop-color="#D2AC76" stop-opacity="0.34"/>
+      <stop offset="96%"  stop-color="#C49E6A" stop-opacity="0.22"/>
+      <stop offset="98%"  stop-color="#B8905A" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#B8905A" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="glowFill" x1="1213" y1="1058" x2="890" y2="2145" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#D6B57A" stop-opacity="0"/>
+      <stop offset="25%"  stop-color="#E3C9A0" stop-opacity="0.18"/>
+      <stop offset="45%"  stop-color="#F2DDB2" stop-opacity="0.5"/>
+      <stop offset="62%"  stop-color="#F7E7C4" stop-opacity="0.75"/>
+      <stop offset="78%"  stop-color="#EFD3A0" stop-opacity="0.6"/>
+      <stop offset="90%"  stop-color="#D6B57A" stop-opacity="0.45"/>
+      <stop offset="97%"  stop-color="#C49B5E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#B8905A" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="blurEdge" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="blurTail" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="blurCore" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="blurMid" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="blurWide" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="42"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="3413" fill="#050505"/>
+
+  <!-- ============ left blade ============ -->
+  <!-- widest warm halo, concentrated around lower-middle -->
+  <line x1="1125" y1="1360" x2="950" y2="1980" stroke="url(#glowFill)" stroke-width="90" stroke-linecap="round" filter="url(#blurWide)"/>
+  <line x1="1110" y1="1420" x2="940" y2="2010" stroke="url(#glowFill)" stroke-width="56" stroke-linecap="round" filter="url(#blurMid)"/>
+
+  <!-- tapered solid blade: widening from hairline tip to broad lower-middle then tapering foot -->
+  <path d="M 1213,1058
+           L 898,2168
+           L 866,2168
+           Z"
+        fill="url(#bladeFill)" filter="url(#blurEdge)"/>
+
+  <!-- crisp core highlight -->
+  <line x1="1212" y1="1062" x2="895" y2="2125" stroke="url(#bladeFill)" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- ============ right leg of the А ============ -->
+  <linearGradient id="legFill" x1="1100" y1="1630" x2="1255" y2="2020" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#FFFFFF"/>
+    <stop offset="70%" stop-color="#EFEFEF"/>
+    <stop offset="100%" stop-color="#AFAFAF"/>
+  </linearGradient>
+  <line x1="1100" y1="1632" x2="1255" y2="2022" stroke="url(#legFill)" stroke-width="17" stroke-linecap="butt"/>
+
+  <!-- ============ crossbar of the А ============ -->
+  <rect x="1025" y="1850" width="127" height="10" fill="#F2F0EC" opacity="0.95"/>
+
+  <!-- ============ wordmark ============ -->
+  <g fill="#F5F0E8"><path d="M695 1392 375 552H1010ZM631 1493H762L1333 0H1219L1041 469H344L167 0H61Z" transform="translate(427.93017578125,2296.0) scale(0.0693359375,-0.0693359375)"/><path d="M170 115V236Q376 50 647.0 50.0Q918 50 1064.5 229.5Q1211 409 1211 706H365V784H1211Q1205 1092 1060.0 1265.0Q915 1438 633 1438Q372 1438 170 1254V1369Q376 1520 645 1520Q959 1520 1139.0 1312.0Q1319 1104 1319.0 745.0Q1319 386 1139.0 178.5Q959 -29 645 -29Q382 -29 170 115Z" transform="translate(635.06982421875,2296.0) scale(0.0693359375,-0.0693359375)"/><path d="M104 -28V60Q285 107 383 353Q500 646 500 1211V1493H1287V0H1185V1410H600V1111Q600 626 480 322Q362 29 104 -28Z" transform="translate(844.22021484375,2296.0) scale(0.0693359375,-0.0693359375)"/><path d="M252 0V1493H352V128L1146 1493H1294V0H1192V1374L394 0Z" transform="translate(1060.99755859375,2296.0) scale(0.0693359375,-0.0693359375)"/><path d="M45 1493H1206V1411H676V0H575V1411H45Z" transform="translate(1278.19091796875,2296.0) scale(0.0693359375,-0.0693359375)"/><path d="M695 1392 375 552H1010ZM631 1493H762L1333 0H1219L1041 469H344L167 0H61Z" transform="translate(1474.93017578125,2296.0) scale(0.0693359375,-0.0693359375)"/></g>
+  <g fill="#DDD8CE"><path d="M252 0V1493H1288V0H1188V1412H352V0Z" transform="translate(548.51904296875,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M350 1410V724H657Q824 724 915 813Q1007 902 1007 1068Q1007 1231 915 1321Q824 1410 657 1410ZM250 1493H657Q880 1493 995 1385Q1109 1277 1109 1068Q1109 858 995 750Q880 642 657 642H350V0H250Z" transform="translate(655.15576171875,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M417 1255Q273 1068 273 745Q273 424 417 237Q562 50 807.0 50.0Q1052 50 1196 237Q1339 424 1339 745Q1339 1068 1196 1255Q1052 1442 807.0 1442.0Q562 1442 417 1255ZM807 1520Q1097 1520 1271 1310Q1445 1099 1445 745Q1445 392 1271 182Q1097 -29 807 -29Q516 -29 341 181Q167 391 167.0 745.0Q167 1099 341 1310Q516 1520 807 1520Z" transform="translate(751.36767578125,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M406 80H1185V1411H600V1089Q600 560 468 198Q445 135 406 80ZM164 -321V80H245Q358 142 401 280Q501 598 501 1211V1493H1286V81H1426V-321H1344V0H246V-321Z" transform="translate(860.46533203125,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M695 1392 375 552H1010ZM631 1493H762L1333 0H1219L1041 469H344L167 0H61Z" transform="translate(968.81103515625,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M252 0V1493H351V726L1102 1493H1235L655 900L1262 0H1131L578 821L351 590V0Z" transform="translate(1070.69677734375,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M250 0V1493H352V81H1043V1493H1144V81H1836V1493H1937V0Z" transform="translate(1171.86474609375,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M249 1493H1093V1410H351V837H1062V756H351V81H1111V0H249Z" transform="translate(1300.61572265625,2428.0) scale(0.0341796875,-0.0341796875)"/><path d="M249 1493H350V837H1185V1493H1286V0H1185V756H350V0H249Z" transform="translate(1398.84423828125,2428.0) scale(0.0341796875,-0.0341796875)"/></g>
+</svg>

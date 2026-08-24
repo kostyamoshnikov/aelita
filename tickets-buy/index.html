@@ -49,6 +49,12 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .cb-item{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px;color:var(--sand)}
 .cb-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
 .test-banner{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:13px;font-weight:500;padding:10px 14px;border-radius:4px;margin-bottom:14px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.error-box{background:var(--coal);border:1px solid #C98B6B;border-radius:6px;padding:24px;text-align:center;margin-top:20px}
+.error-box p{color:var(--sand);margin:0 0 16px}
+.retry-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 22px;border-radius:3px;font-size:13px;cursor:pointer;margin:0 6px}
+.success-box{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center;margin-top:20px}
+.success-box h2{color:#B7C9A8;font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;font-size:18px;margin:0 0 12px}
+.help-link{position:fixed;left:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5}
 </style>
 </head>
 <body>
@@ -57,6 +63,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <h1 id="title">Загрузка…</h1>
   <div class="meta" id="meta"></div>
   <div id="degraded" style="display:none" class="warn">Не удалось сверить занятость с гостевым списком — редкое, но возможное место может оказаться занятым при оформлении заказа, проверим ещё раз перед оплатой.</div>
+
+  <div id="success-block" style="display:none" class="success-box">
+    <h2>Оплата прошла</h2>
+    <p id="success-text">Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.</p>
+  </div>
+
+  <div id="error-block" style="display:none" class="error-box">
+    <p id="error-text">Не получилось загрузить показ.</p>
+    <button class="retry-btn" onclick="init()">Попробовать снова</button>
+    <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Написать нам</a>
+  </div>
 
   <div id="assigned-block" style="display:none">
     <div class="stage">Сцена</div>
@@ -72,7 +89,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     </div>
   </div>
 
-  <div class="form">
+  <div class="form" id="form-block">
     <input id="f-name" placeholder="Имя">
     <input id="f-email" type="email" placeholder="Email — на него придут билеты">
     <input id="f-contact" placeholder="Телефон (необязательно)">
@@ -81,11 +98,18 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   </div>
 </div>
 
+<!-- Всегда на виду, включая экран ошибки — если что-то пошло не так на
+     любом шаге (показ не загрузился, места кончились, оплата не
+     началась), у человека должен быть выход, не только «попробуйте
+     ещё раз». Телефон — быстрее email в моменте живой покупки. -->
+<a class="help-link" href="tel:+79605151690">🆘 Нужна помощь? +7 960 515-16-90</a>
+
 <div class="bar">
   <div class="total">Итого: <span id="total">0 ₽</span></div>
   <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Оплатить</button>
 </div>
 
+<script src="/assets/analytics-events.js"></script>
 <script>
 // ⚠️ Заполнить после деплоя Cloud Functions (см. _tools/Tickets/README.md)
 const API_BASE = 'XXX'; // например https://functions.yandexcloud.net/<folder>
@@ -100,11 +124,62 @@ const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от
 
 function seatKey(r,s){ return r + '-' + s; }
 
+function showError(text){
+  document.getElementById('title').textContent = 'Не получилось';
+  document.getElementById('error-text').textContent = text;
+  document.getElementById('error-block').style.display = 'block';
+  document.getElementById('form-block').style.display = 'none';
+  document.querySelector('.bar').style.display = 'none';
+}
+
+function showSuccess(text){
+  document.getElementById('title').textContent = data && data.title ? data.title : 'AELITA PRODUCTION';
+  if(text) document.getElementById('success-text').textContent = text;
+  document.getElementById('success-block').style.display = 'block';
+  document.getElementById('assigned-block').style.display = 'none';
+  document.getElementById('general-block').style.display = 'none';
+  document.getElementById('form-block').style.display = 'none';
+  document.getElementById('error-block').style.display = 'none';
+  document.querySelector('.bar').style.display = 'none';
+}
+
 async function init(){
-  if(!performanceId){ document.getElementById('title').textContent = 'Показ не указан'; return; }
-  const res = await fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
-  data = await res.json();
-  if(data.error){ document.getElementById('title').textContent = 'Показ не найден'; return; }
+  document.getElementById('error-block').style.display = 'none';
+  document.getElementById('title').textContent = 'Загрузка…';
+  document.querySelector('.bar').style.display = 'flex';
+  document.getElementById('form-block').style.display = 'block';
+
+  if(!performanceId){ showError('В ссылке не указан показ — вернитесь на афишу и выберите спектакль ещё раз.'); return; }
+
+  // Возврат с оплаты (return_url из create-order.js) — раньше страница
+  // просто рисовала схему зала заново, будто ничего не произошло:
+  // человек, который только что заплатил, видел те же кнопки «Оплатить»
+  // и мог решить, что покупка не прошла. Webhook уже выслал билет к
+  // этому моменту (или вот-вот вышлет) — здесь просто подтверждаем.
+  if(params.get('aelita_paid') === '1'){
+    showSuccess('Оплата прошла. Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.');
+    return;
+  }
+
+  let res, freshData;
+  try{
+    res = await fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
+  }catch(e){
+    showError('Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
+    return;
+  }
+  if(!res.ok){
+    showError('Сервер ответил с ошибкой (' + res.status + ') — попробуйте ещё раз, если не поможет, напишите нам.');
+    return;
+  }
+  try{
+    freshData = await res.json();
+  }catch(e){
+    showError('Сервер прислал что-то непонятное — попробуйте ещё раз, если не поможет, напишите нам.');
+    return;
+  }
+  data = freshData;
+  if(data.error){ showError('Показ не найден — возможно, продажи ещё не открыты или ссылка устарела.'); return; }
 
   if(data.seating === 'redirect'){
     // Показ переведён на партнёрскую систему (см. config/events.js,
@@ -239,6 +314,13 @@ async function submitOrder(){
     const res = await fetch(`${API_BASE}/create-order`, {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
     });
+    if(!res.ok && res.status !== 400 && res.status !== 409){
+      // 400/409 — осмысленный отказ с телом (разберём ниже), остальное —
+      // сервер сломался, а не "ваш заказ не прошёл".
+      msgEl.innerHTML = 'Сервер ответил с ошибкой — попробуйте ещё раз. Если повторится, воспользуйтесь кнопкой помощи внизу слева.';
+      document.getElementById('buy-btn').disabled = false;
+      return;
+    }
     const out = await res.json();
     if(out.confirmation_url){ location.href = out.confirmation_url; return; }
     if(out.error === 'sold_via_partner'){
@@ -247,7 +329,7 @@ async function submitOrder(){
       return;
     }
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
-      msgEl.textContent = 'Кто-то только что забрал часть выбранных мест — обновите страницу и выберите другие.';
+      msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
     } else {
       msgEl.textContent = 'Не удалось оформить заказ, попробуйте ещё раз.';
     }

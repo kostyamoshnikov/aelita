@@ -17,7 +17,7 @@
   из-за сети действия сохраняются и уходят сами при восстановлении.
 -->
 <style>
-:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B}
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh}
 h1{font-size:16px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px}
@@ -33,6 +33,8 @@ input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);co
 button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:14px;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
 #queue-badge{display:none;background:var(--warn);color:var(--ink);font-size:11px;text-transform:uppercase;padding:6px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
+.test-flag{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
@@ -41,6 +43,13 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 <input id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <div id="result"></div>
 
+<!-- Всегда на виду — это буквально самый частый момент, когда контролёру
+     на входе может понадобиться живой человек (спорный QR, очередь
+     копится, связь легла) — звонок, не сообщение: на входе не до чтения
+     ответа. Номер — тот же контакт, что и на сайте (facts.json). -->
+<a class="help-fab" href="tel:+79605151690">🆘 Позвать помощь</a>
+
+<script src="/assets/analytics-events.js"></script>
 <script>
 // ⚠️ Заполнить после деплоя (см. _tools/Tickets/README.md)
 const API_BASE = 'XXX';
@@ -54,16 +63,35 @@ let wakeLock = null;
 async function requestWakeLock(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') requestWakeLock(); });
 document.addEventListener('click', function once(){ requestWakeLock(); document.removeEventListener('click', once); }, {once:true});
+requestWakeLock(); // сразу при загрузке — контролёр может пользоваться только физическим сканером
+                    // (тот шлёт нажатия клавиш, не клики мышью/тапы), тогда click-обработчик выше
+                    // мог вообще ни разу не сработать за смену, и экран гас бы посреди работы.
 
 function getQueue(){ try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); }catch(e){ return []; } }
 function saveQueue(arr){ localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr.length); }
 function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0){ el.textContent='Не отправлено: '+n; el.style.display='block'; } else el.style.display='none'; }
 
+// Различаем «нет связи» (fetch вообще не смог достучаться — TypeError,
+// см. спецификацию fetch()) от «сервер ответил, но с ошибкой» (HTTP-код
+// не ok, или JSON осмысленный, но говорит "не найдено" и т.п.) — раньше
+// оба случая ловились одним catch и превращались в «нет связи», что при
+// настоящей ошибке сервера маскировало бы её под офлайн-очередь.
+class NetworkError extends Error {}
 async function api(action, extra){
-  const res = await fetch(`${API_BASE}/ticket-check`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action, ...extra })
-  });
+  let res;
+  try{
+    res = await fetch(`${API_BASE}/ticket-check`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action, ...extra })
+    });
+  }catch(e){
+    throw new NetworkError('Нет связи с сервером');
+  }
+  if(!res.ok){
+    // Сервер ответил, но плохо (500 и т.п.) — это НЕ офлайн, показываем
+    // как обычную ошибку, не кладём в очередь на автоповтор бесконечно.
+    throw new Error('Сервер вернул ошибку: ' + res.status);
+  }
   return res.json();
 }
 
@@ -76,7 +104,7 @@ async function flushQueue(){
   const remaining = [];
   for(const item of arr){
     try{ await api('redeem', {token: item.token}); }
-    catch(e){ remaining.push(item); }
+    catch(e){ if(e instanceof NetworkError) remaining.push(item); } // серверная ошибка на отложенном повторе — не копим бесконечно, просто теряем попытку, а не зацикливаем
   }
   saveQueue(remaining);
 }
@@ -99,7 +127,10 @@ async function handleScan(token){
   try{
     data = await api('check', {token});
   }catch(e){
-    resultEl.innerHTML = '<div class="card warn">Нет связи — попробуйте ещё раз или используйте ручной ввод позже.</div>';
+    const msg = e instanceof NetworkError
+      ? 'Нет связи — попробуйте ещё раз или используйте ручной ввод позже.'
+      : 'Сервер ответил с ошибкой — попробуйте ещё раз, если не поможет — звоните в «Позвать помощь».';
+    resultEl.innerHTML = `<div class="card warn">${msg}</div>`;
     return;
   }
   render(data);
@@ -114,8 +145,10 @@ function render(data){
   lastOrderId = data.orderId;
   lastIdentifier = data.seatKey || data.ticketNumber;
   const already = data.alreadyRedeemed;
+  const testFlag = data.isTest ? '<div class="test-flag">⚠️ Тестовый заказ</div>' : '';
   resultEl.innerHTML = `
     <div class="card ${already?'warn':'ok'}">
+      ${testFlag}
       <div class="name">${data.name}</div>
       <div class="detail">${data.production}${data.hall ? ' · ' + data.hall : ''}${data.seatKey ? ' · место ' + data.seatKey.replace('-', ' ряд, место ') : ''}</div>
       <div class="status ${already?'warn':'ok'}">${already ? 'Уже погашен' : 'Билет действителен'}</div>
@@ -128,20 +161,35 @@ async function confirmRedeem(){
     const data = await api('redeem', {token: currentToken});
     render(data);
   }catch(e){
-    // офлайн — ставим в очередь, показываем оптимистичный результат
-    const arr = getQueue();
-    arr.push({token: currentToken, ts: Date.now()});
-    saveQueue(arr);
-    document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
+    if(e instanceof NetworkError){
+      // офлайн — ставим в очередь, показываем оптимистичный результат
+      const arr = getQueue();
+      arr.push({token: currentToken, ts: Date.now()});
+      saveQueue(arr);
+      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
+    } else {
+      // Настоящая серверная ошибка — НЕ в очередь (переотправка того же
+      // самого запроса вряд ли что-то исправит сама), явно показываем,
+      // чтобы контролёр не пропустил человека дважды по недоразумению.
+      document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — попробуйте ещё раз или позовите помощь.</div></div>';
+    }
   }
 }
 
 async function undoRedeem(){
-  const data = await api('undo', { orderId: lastOrderId, identifier: lastIdentifier });
-  if(data.ok){
-    document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Возвращён в действительные</div></div>';
-  } else {
-    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div></div>';
+  try{
+    const data = await api('undo', { orderId: lastOrderId, identifier: lastIdentifier });
+    if(data.ok){
+      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Возвращён в действительные</div></div>';
+    } else {
+      document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div></div>';
+    }
+  }catch(e){
+    // Раньше здесь не было try/catch вообще — сетевой сбой на «Вернуть в
+    // действительные» падал необработанным отказом промиса, кнопка
+    // просто ничего не делала без единого сообщения контролёру.
+    const msg = e instanceof NetworkError ? 'Нет связи — попробуйте ещё раз.' : 'Сервер ответил с ошибкой — попробуйте ещё раз.';
+    document.getElementById('result').innerHTML = `<div class="card warn"><div class="status warn">${msg}</div></div>`;
   }
 }
 

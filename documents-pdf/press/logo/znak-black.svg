@@ -1,0 +1,75 @@
+<svg width="3840" height="6826" viewBox="0 0 1920 3413" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- blade brightness along its length: dim at tip, brightest ~65-75%, amber fade at foot -->
+    <linearGradient id="bladeFill" x1="1213" y1="1058" x2="882" y2="2170" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#8F877C"/>
+      <stop offset="11%"  stop-color="#C9C2B8"/>
+      <stop offset="26%"  stop-color="#F4F0E9"/>
+      <stop offset="39%"  stop-color="#FFFFFF"/>
+      <stop offset="66%"  stop-color="#FFFFFF"/>
+      <stop offset="80%"  stop-color="#FBF3E4"/>
+      <stop offset="88%"  stop-color="#EFD9B4"/>
+      <stop offset="90%"  stop-color="#E2C08C" stop-opacity="0.5"/>
+      <stop offset="93%"  stop-color="#D2AC76" stop-opacity="0.34"/>
+      <stop offset="96%"  stop-color="#C49E6A" stop-opacity="0.22"/>
+      <stop offset="98%"  stop-color="#B8905A" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#B8905A" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="glowFill" x1="1213" y1="1058" x2="890" y2="2145" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#D6B57A" stop-opacity="0"/>
+      <stop offset="25%"  stop-color="#E3C9A0" stop-opacity="0.18"/>
+      <stop offset="45%"  stop-color="#F2DDB2" stop-opacity="0.5"/>
+      <stop offset="62%"  stop-color="#F7E7C4" stop-opacity="0.75"/>
+      <stop offset="78%"  stop-color="#EFD3A0" stop-opacity="0.6"/>
+      <stop offset="90%"  stop-color="#D6B57A" stop-opacity="0.45"/>
+      <stop offset="97%"  stop-color="#C49B5E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#B8905A" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="blurEdge" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="blurTail" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="blurCore" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="blurMid" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="blurWide" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="42"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="3413" fill="#050505"/>
+
+  <!-- ============ left blade ============ -->
+  <!-- widest warm halo, concentrated around lower-middle -->
+  <line x1="1125" y1="1360" x2="950" y2="1980" stroke="url(#glowFill)" stroke-width="90" stroke-linecap="round" filter="url(#blurWide)"/>
+  <line x1="1110" y1="1420" x2="940" y2="2010" stroke="url(#glowFill)" stroke-width="56" stroke-linecap="round" filter="url(#blurMid)"/>
+
+  <!-- tapered solid blade: widening from hairline tip to broad lower-middle then tapering foot -->
+  <path d="M 1213,1058
+           L 898,2168
+           L 866,2168
+           Z"
+        fill="url(#bladeFill)" filter="url(#blurEdge)"/>
+
+  <!-- crisp core highlight -->
+  <line x1="1212" y1="1062" x2="895" y2="2125" stroke="url(#bladeFill)" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- ============ right leg of the А ============ -->
+  <linearGradient id="legFill" x1="1100" y1="1630" x2="1255" y2="2020" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#FFFFFF"/>
+    <stop offset="70%" stop-color="#EFEFEF"/>
+    <stop offset="100%" stop-color="#AFAFAF"/>
+  </linearGradient>
+  <line x1="1100" y1="1632" x2="1255" y2="2022" stroke="url(#legFill)" stroke-width="17" stroke-linecap="butt"/>
+
+  <!-- ============ crossbar of the А ============ -->
+  <rect x="1025" y="1850" width="127" height="10" fill="#F2F0EC" opacity="0.95"/>
+
+</svg>
