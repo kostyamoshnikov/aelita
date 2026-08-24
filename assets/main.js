@@ -9,6 +9,20 @@
 var YM_ID = 104681911;
 var ymLoaded = false;
 
+// Пиксель VK Рекламы — та же техническая основа, что и счётчик
+// top.mail.ru (после перехода на новый рекламный кабинет VK Рекламы,
+// 28 января 2026, старый VK.Retargeting.Init/JS API ретаргетинга
+// больше не работает — пиксель нового кабинета выдаётся именно в
+// виде кода top.mail.ru, id пикселя = id счётчика top.mail.ru).
+// ЗАПОЛНИТЬ после создания пикселя в кабинете ads.vk.com (раздел
+// «Сайты» → «Добавить пиксель») — см. Site/README.md, раздел
+// «Аналитика». Пока 0 — пиксель намеренно не грузится вообще (см.
+// loadVkPixel ниже): пустой ID даёт нерабочую заглушку, которая
+// выглядит как готовность, но ничего не отслеживает — честнее совсем
+// не грузить счётчик, чем грузить нерабочий.
+var VK_PIXEL_ID = 0;
+var vkPixelLoaded = false;
+
 function loadMetrika(){
   if(ymLoaded) return;
   ymLoaded = true;
@@ -33,11 +47,29 @@ function loadMetrika(){
   // пиксель без согласия.
 }
 
+function loadVkPixel(){
+  if (vkPixelLoaded) return;
+  if (!VK_PIXEL_ID) return; // id ещё не заполнен — см. комментарий выше
+  vkPixelLoaded = true;
+  var _tmr = window._tmr = window._tmr || [];
+  _tmr.push({ id: VK_PIXEL_ID, type: "pageView", start: (new Date()).getTime() });
+  (function (d, w, id) {
+    if (d.getElementById(id)) return;
+    var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+    ts.src = "https://top-fwz1.mail.ru/js/code.js";
+    var f = function () { var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s); };
+    if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+  })(document, window, "topmailru-code");
+  // Как и у Метрики выше — без cookie-согласия эта функция не вызывается
+  // вообще, поэтому отдельного <noscript>-пикселя тоже намеренно нет.
+}
+
 (function(){
   if(localStorage.getItem('cookies_accepted')){
     var b=document.getElementById('cookie-banner');
     if(b) b.style.display='none';
     loadMetrika();
+    loadVkPixel();
     if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
   }
 })();
@@ -55,6 +87,7 @@ function acceptCookies(){
   var b=document.getElementById('cookie-banner');
   if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
   loadMetrika();
+  loadVkPixel();
   if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
   updateFixedWidgets();
   updateCtaBar();

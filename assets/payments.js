@@ -45,6 +45,25 @@
   // поломки, сайт при этом не ломается.
   var CREATE_PAYMENT_URL = '';
 
+  // ClientID Метрики — нужен, чтобы после реальной оплаты webhook.js мог
+  // отправить честную серверную конверсию «purchase» через Measurement
+  // Protocol (см. _tools/Payments/webhook.js и README.md, раздел
+  // «Аналитика»). getClientID — асинхронный колбэк-метод самой
+  // Метрики; если счётчик ещё не загружен (нет cookie-согласия) или
+  // не успел ответить за разумное время — просто не передаём id,
+  // платёж всё равно проходит как обычно, только без этой конверсии.
+  function getYmClientId() {
+    return new Promise(function (resolve) {
+      if (!window.ym || typeof window.YM_ID === 'undefined') { resolve(null); return; }
+      var settled = false;
+      var finish = function (id) { if (!settled) { settled = true; resolve(id || null); } };
+      try {
+        window.ym(window.YM_ID, 'getClientID', finish);
+      } catch (e) { finish(null); }
+      setTimeout(function () { finish(null); }, 1000);
+    });
+  }
+
   // Кнопки «Оплатить» на всех страницах остаются на месте нетронутыми
   // (видны, кликабельны, ведут на реальный флоу) даже пока
   // CREATE_PAYMENT_URL пуст — так попросил заказчик: ЮKassa при
@@ -169,10 +188,11 @@
     try {
       var headers = { 'Content-Type': 'application/json' };
       if (token) headers.Authorization = 'Bearer ' + token; // program и без токена пройдёт — сервер его не требует для этого продукта
+      var yandexClientId = await getYmClientId();
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString() }),
+        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {
