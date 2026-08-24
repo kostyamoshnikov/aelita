@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контроль билетов — AELITA PRODUCTION</title>
+<!--
+  AELITA PRODUCTION · Tickets — контроль на входе.
+  По образцу уже проверенного на cuiri сценария: USB/Bluetooth сканер
+  штрихкодов работает как клавиатура (навёл на QR — текст сам
+  появляется в поле, Enter отправляет), плюс поле для ручного ввода,
+  если QR не читается. Камеру-сканер в браузере НЕ делали (см.
+  README.md Tickets, «Открытые вопросы») — сканер-пистолет надёжнее и
+  не требует разрешений камеры на каждом устройстве контролёра.
+  Офлайн-очередь — тот же паттерн, что в _tools/GuestSystem/index.html
+  (см. флешбэк в чате про «учти опыт гостевой системы»): непринятые
+  из-за сети действия сохраняются и уходят сами при восстановлении.
+-->
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh}
+h1{font-size:16px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px}
+input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);color:var(--bone);padding:16px;font-size:16px;border-radius:4px;margin-bottom:10px}
+.card{background:var(--coal);border-radius:8px;padding:20px;margin-top:16px;text-align:center}
+.card.ok{border:1px solid var(--ok)}
+.card.warn{border:1px solid var(--warn)}
+.name{font-size:20px;margin-bottom:4px}
+.detail{color:var(--sand);font-size:14px;margin-bottom:14px}
+.status{font-size:15px;font-weight:500;padding:6px 0}
+.status.ok{color:var(--ok)}
+.status.warn{color:var(--warn)}
+button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:14px;margin:4px;cursor:pointer}
+button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
+#queue-badge{display:none;background:var(--warn);color:var(--ink);font-size:11px;text-transform:uppercase;padding:6px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
+</style>
+</head>
+<body>
+<h1>Контроль билетов</h1>
+<div id="queue-badge"></div>
+<input id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
+<div id="result"></div>
+
+<script>
+// ⚠️ Заполнить после деплоя (см. _tools/Tickets/README.md)
+const API_BASE = 'XXX';
+
+const QUEUE_KEY = 'aelita-tickets-redeem-queue';
+let currentToken = null;
+let lastOrderId = null;
+let lastIdentifier = null;
+let wakeLock = null;
+
+async function requestWakeLock(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') requestWakeLock(); });
+document.addEventListener('click', function once(){ requestWakeLock(); document.removeEventListener('click', once); }, {once:true});
+
+function getQueue(){ try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); }catch(e){ return []; } }
+function saveQueue(arr){ localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr.length); }
+function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0){ el.textContent='Не отправлено: '+n; el.style.display='block'; } else el.style.display='none'; }
+
+async function api(action, extra){
+  const res = await fetch(`${API_BASE}/ticket-check`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ action, ...extra })
+  });
+  return res.json();
+}
+
+// Сеть vs логическая ошибка — тот же принцип, что в GuestSystem: сеть
+// не сработала → в очередь и повторить; сервер ответил осмысленно
+// (уже погашен и т.п.) → показать сразу, повторять нет смысла.
+async function flushQueue(){
+  const arr = getQueue();
+  if(arr.length === 0) return;
+  const remaining = [];
+  for(const item of arr){
+    try{ await api('redeem', {token: item.token}); }
+    catch(e){ remaining.push(item); }
+  }
+  saveQueue(remaining);
+}
+window.addEventListener('online', flushQueue);
+setInterval(flushQueue, 15000);
+
+const input = document.getElementById('scan-input');
+input.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && input.value.trim()){
+    handleScan(input.value.trim());
+    input.value = '';
+  }
+});
+
+async function handleScan(token){
+  currentToken = token;
+  const resultEl = document.getElementById('result');
+  resultEl.innerHTML = '<div class="card">Проверяем…</div>';
+  let data;
+  try{
+    data = await api('check', {token});
+  }catch(e){
+    resultEl.innerHTML = '<div class="card warn">Нет связи — попробуйте ещё раз или используйте ручной ввод позже.</div>';
+    return;
+  }
+  render(data);
+}
+
+function render(data){
+  const resultEl = document.getElementById('result');
+  if(!data.ok){
+    resultEl.innerHTML = `<div class="card warn"><div class="status warn">Билет не найден или недействителен</div></div>`;
+    return;
+  }
+  lastOrderId = data.orderId;
+  lastIdentifier = data.seatKey || data.ticketNumber;
+  const already = data.alreadyRedeemed;
+  resultEl.innerHTML = `
+    <div class="card ${already?'warn':'ok'}">
+      <div class="name">${data.name}</div>
+      <div class="detail">${data.production}${data.hall ? ' · ' + data.hall : ''}${data.seatKey ? ' · место ' + data.seatKey.replace('-', ' ряд, место ') : ''}</div>
+      <div class="status ${already?'warn':'ok'}">${already ? 'Уже погашен' : 'Билет действителен'}</div>
+      ${!already ? '<button class="action" onclick="confirmRedeem()">Пропустить</button>' : '<button class="action secondary" onclick="undoRedeem()">Вернуть в действительные</button>'}
+    </div>`;
+}
+
+async function confirmRedeem(){
+  try{
+    const data = await api('redeem', {token: currentToken});
+    render(data);
+  }catch(e){
+    // офлайн — ставим в очередь, показываем оптимистичный результат
+    const arr = getQueue();
+    arr.push({token: currentToken, ts: Date.now()});
+    saveQueue(arr);
+    document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
+  }
+}
+
+async function undoRedeem(){
+  const data = await api('undo', { orderId: lastOrderId, identifier: lastIdentifier });
+  if(data.ok){
+    document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Возвращён в действительные</div></div>';
+  } else {
+    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div></div>';
+  }
+}
+
+flushQueue();
+</script>
+</body>
+</html>

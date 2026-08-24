@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Купить билет — AELITA PRODUCTION</title>
+<!--
+  AELITA PRODUCTION · Tickets — страница покупки.
+  Открывается с ?performance=<id> (см. _tools/Tickets/config/events.js).
+  Два режима, определяются ответом availability.js:
+    seating:'assigned' — схема зала, места цветом по ценовому поясу
+      (тот же принцип, что у Яндекс Афиши — маркировка по цене, см.
+      исследование в чате), выбранные места подсвечены золотым.
+    seating:'general'  — просто счётчик количества билетов.
+  API_BASE ниже — заполнить после деплоя Cloud Functions (см. README.md
+  Tickets, раздел «Деплой»), сейчас плейсхолдер.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;padding-bottom:100px}
+h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:22px;margin:0 0 4px}
+.wrap{max-width:720px;margin:0 auto;padding:20px}
+.meta{color:var(--sand);font-size:14px;margin-bottom:20px}
+.stage{text-align:center;color:var(--sand);font-size:11px;letter-spacing:.2em;margin:16px 0 10px;text-transform:uppercase}
+.hall{overflow-x:auto;padding:8px 0}
+.row{display:flex;justify-content:center;gap:2px;margin-bottom:2px;white-space:nowrap}
+.row-num{width:22px;font-size:9px;color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.seat{width:16px;height:16px;border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
+.seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
+.seat.selected{background:var(--gold)!important;box-shadow:0 0 0 1px var(--bone)}
+.aisle-gap{width:10px;flex:0 0 auto}
+.zones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;font-size:11px;color:var(--sand)}
+.zone-chip{display:flex;align-items:center;gap:5px}
+.zone-swatch{width:10px;height:10px;border-radius:2px}
+.form{background:var(--coal);border-radius:6px;padding:16px;margin-top:20px}
+.form input{width:100%;background:var(--ink);border:1px solid rgba(217,217,217,.18);color:var(--bone);padding:11px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;border-radius:3px}
+.qty{display:flex;align-items:center;gap:14px;justify-content:center;margin:20px 0}
+.qty button{width:36px;height:36px;border-radius:50%;border:1px solid var(--sand);background:transparent;color:var(--bone);font-size:18px;cursor:pointer}
+.qty span{font-size:20px;min-width:24px;text-align:center}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,13,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(214,181,122,.2);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.total{font-size:18px}
+.buy-btn{background:var(--gold);color:var(--ink);border:none;padding:12px 28px;border-radius:3px;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.buy-btn:disabled{opacity:.4;cursor:not-allowed}
+.msg{color:#C98B6B;font-size:13px;margin-top:8px;min-height:16px}
+.warn{background:#2A2410;border:1px solid #5A4A00;color:#D6B57A;font-size:12px;padding:8px 12px;border-radius:4px;margin-bottom:14px}
+.test-banner{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:13px;font-weight:500;padding:10px 14px;border-radius:4px;margin-bottom:14px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="test-banner" style="display:none" class="test-banner">Тестовый режим — реальные деньги не списываются</div>
+  <h1 id="title">Загрузка…</h1>
+  <div class="meta" id="meta"></div>
+  <div id="degraded" style="display:none" class="warn">Не удалось сверить занятость с гостевым списком — редкое, но возможное место может оказаться занятым при оформлении заказа, проверим ещё раз перед оплатой.</div>
+
+  <div id="assigned-block" style="display:none">
+    <div class="stage">Сцена</div>
+    <div class="hall" id="hall"></div>
+    <div class="zones" id="zones"></div>
+  </div>
+
+  <div id="general-block" style="display:none">
+    <div class="qty">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="qty-val">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+  </div>
+
+  <div class="form">
+    <input id="f-name" placeholder="Имя">
+    <input id="f-email" type="email" placeholder="Email — на него придут билеты">
+    <input id="f-contact" placeholder="Телефон (необязательно)">
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div class="bar">
+  <div class="total">Итого: <span id="total">0 ₽</span></div>
+  <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Оплатить</button>
+</div>
+
+<script>
+// ⚠️ Заполнить после деплоя Cloud Functions (см. _tools/Tickets/README.md)
+const API_BASE = 'XXX'; // например https://functions.yandexcloud.net/<folder>
+
+const params = new URLSearchParams(location.search);
+const performanceId = params.get('performance');
+let selectedSeats = []; // [{row, seat, price}]
+let quantity = 1;
+let data = null;
+
+const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от дорогого к дешёвому — золотой затухает к серому, тот же принцип, что цветовая маркировка по цене у Яндекс Афиши
+
+function seatKey(r,s){ return r + '-' + s; }
+
+async function init(){
+  if(!performanceId){ document.getElementById('title').textContent = 'Показ не указан'; return; }
+  const res = await fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
+  data = await res.json();
+  if(data.error){ document.getElementById('title').textContent = 'Показ не найден'; return; }
+
+  if(data.seating === 'redirect'){
+    // Показ переведён на партнёрскую систему (см. config/events.js,
+    // «Откат к Ticketscloud») — просто уводим туда, ничего своего не
+    // рисуем.
+    document.getElementById('title').textContent = 'Переходим к продаже билетов…';
+    location.href = data.buyUrl;
+    return;
+  }
+
+  document.getElementById('title').textContent = data.title;
+  if(data.isTest){ document.getElementById('test-banner').style.display = 'block'; }
+  const dt = data.datetime ? new Date(data.datetime).toLocaleString('ru-RU',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Дата уточняется';
+  document.getElementById('meta').textContent = `${dt} · ${data.venue.name}, ${data.venue.address} · ${data.ageRating}`;
+
+  if(data.seating === 'assigned'){
+    if(data.guestCheckDegraded){ document.getElementById('degraded').style.display='block'; }
+    document.getElementById('assigned-block').style.display = 'block';
+    renderHall();
+    renderZoneLegend();
+  } else {
+    document.getElementById('general-block').style.display = 'block';
+    updateTotal();
+  }
+}
+
+function priceForRow(row){
+  const z = data.zones.find(z => row >= z.rows[0] && row <= z.rows[1]);
+  return z ? z.price : 0;
+}
+function colorForRow(row){
+  const idx = data.zones.findIndex(z => row >= z.rows[0] && row <= z.rows[1]);
+  return ZONE_COLORS[idx] || ZONE_COLORS[ZONE_COLORS.length-1];
+}
+
+function renderHall(){
+  const geo = data.geometry;
+  const container = document.getElementById('hall');
+  container.innerHTML = '';
+  for(let r=1; r<=geo.rows; r++){
+    const count = geo.seatsPerRow[r-1];
+    const rowEl = document.createElement('div');
+    rowEl.className = 'row';
+    const numLeft = document.createElement('div'); numLeft.className='row-num'; numLeft.textContent = r;
+    rowEl.appendChild(numLeft);
+    for(let s=1; s<=count; s++){
+      if(geo.aisle && geo.aisle.row === r && s === geo.aisle.afterSeatNumber + 1){
+        const gap = document.createElement('div'); gap.className='aisle-gap'; rowEl.appendChild(gap);
+      }
+      const key = seatKey(r,s);
+      const btn = document.createElement('div');
+      btn.className = 'seat';
+      btn.dataset.row = r; btn.dataset.seat = s;
+      const status = data.occupied[key];
+      if(status === 'sold' || status === 'guest' || status === 'held'){
+        btn.classList.add(status === 'guest' ? 'guest' : 'sold');
+      } else {
+        btn.style.background = colorForRow(r);
+        btn.onclick = () => toggleSeat(r, s, btn);
+      }
+      rowEl.appendChild(btn);
+    }
+    container.appendChild(rowEl);
+  }
+}
+
+function renderZoneLegend(){
+  const el = document.getElementById('zones');
+  el.innerHTML = '';
+  data.zones.forEach((z, i) => {
+    const chip = document.createElement('div'); chip.className = 'zone-chip';
+    chip.innerHTML = `<span class="zone-swatch" style="background:${ZONE_COLORS[i]||ZONE_COLORS[ZONE_COLORS.length-1]}"></span>Ряды ${z.rows[0]}–${z.rows[1]} · ${z.price} ₽`;
+    el.appendChild(chip);
+  });
+}
+
+function toggleSeat(row, seat, el){
+  const idx = selectedSeats.findIndex(s => s.row===row && s.seat===seat);
+  if(idx >= 0){
+    selectedSeats.splice(idx,1);
+    el.classList.remove('selected');
+    el.style.background = colorForRow(row);
+  } else {
+    if(selectedSeats.length >= 10){ document.getElementById('msg').textContent = 'Максимум 10 мест в одном заказе.'; return; }
+    selectedSeats.push({row, seat, price: priceForRow(row)});
+    el.classList.add('selected');
+  }
+  updateTotal();
+}
+
+function changeQty(delta){
+  quantity = Math.max(1, Math.min(10, quantity + delta));
+  document.getElementById('qty-val').textContent = quantity;
+  updateTotal();
+}
+
+function updateTotal(){
+  let total = 0;
+  if(data.seating === 'assigned'){
+    total = selectedSeats.reduce((sum,s)=>sum+s.price,0);
+  } else {
+    total = (data.price || 0) * quantity;
+  }
+  document.getElementById('total').textContent = total + ' ₽';
+  document.getElementById('buy-btn').disabled = (data.seating==='assigned' && selectedSeats.length===0);
+}
+
+async function submitOrder(){
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  const msgEl = document.getElementById('msg');
+  if(!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    msgEl.textContent = 'Укажите имя и корректный email — на него придут билеты.';
+    return;
+  }
+  document.getElementById('buy-btn').disabled = true;
+  msgEl.textContent = 'Оформляем заказ…';
+
+  const payload = {
+    performance_id: performanceId, name, email, contact,
+    return_url: location.origin + location.pathname + '?performance=' + performanceId + '&aelita_paid=1',
+  };
+  if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
+  else payload.quantity = quantity;
+
+  try{
+    const res = await fetch(`${API_BASE}/create-order`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const out = await res.json();
+    if(out.confirmation_url){ location.href = out.confirmation_url; return; }
+    if(out.error === 'sold_via_partner'){
+      msgEl.textContent = 'Этот показ теперь продаётся у партнёра — переходим…';
+      location.href = out.buy_url;
+      return;
+    }
+    if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
+      msgEl.textContent = 'Кто-то только что забрал часть выбранных мест — обновите страницу и выберите другие.';
+    } else {
+      msgEl.textContent = 'Не удалось оформить заказ, попробуйте ещё раз.';
+    }
+    document.getElementById('buy-btn').disabled = false;
+  }catch(e){
+    msgEl.textContent = 'Ошибка сети — проверьте связь и попробуйте снова.';
+    document.getElementById('buy-btn').disabled = false;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
