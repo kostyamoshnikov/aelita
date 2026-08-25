@@ -71,6 +71,11 @@ section{padding:90px 0}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 /* COUNTDOWN */
   .countdown{display:flex;gap:2px;margin:40px 0 0}
+  .quicknav{position:sticky;top:0;z-index:40;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(232,230,225,.1);overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .quicknav-in{display:inline-flex;gap:4px;padding:12px 20px}
+  .quicknav a{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);text-decoration:none;padding:8px 14px;border-radius:20px;transition:color .2s,background .2s;flex-shrink:0}
+  .quicknav a:hover{color:var(--bone);background:rgba(232,230,225,.06)}
+  .quicknav a.gold{color:var(--gold);border:1px solid rgba(214,181,122,.4)}
 .cd-item{background:var(--coal);padding:20px 24px;text-align:center;min-width:80px;flex:1;max-width:120px}
 .cd-num{font-family:'Montserrat',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:200;color:var(--gold);line-height:1}
 .cd-lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand);margin-top:6px}
@@ -286,6 +291,17 @@ section{padding:90px 0}
 </div>
 
 <!-- ABOUT THE FESTIVAL -->
+<nav class="quicknav" aria-label="Quick page links">
+  <div class="quicknav-in">
+    <a href="#program">Programme</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#tickets" class="gold">Tickets</a>
+    <a href="#business">Business programme</a>
+    <a href="#exhibitions">Exhibitions</a>
+    <a href="#venue">Venue</a>
+  </div>
+</nav>
+
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">About the festival</span><h2>An annual festival in the heart of an industrial city</h2></div>
@@ -372,7 +388,7 @@ section{padding:90px 0}
         <div class="prog-right"><span class="age">16+</span><span class="dur">~1:00</span></div>
       </a>
     </div>
-    <div class="prog-note reveal">✳ Tickets — on the seating chart: physical theatre shows 1,000–2,500 ₽, drama shows 1,000–3,500 ₽, the gallery performance — 1,500 ₽ standing. The “IOV: Material” show on October 22 is closed — no public tickets. Sales for the October 23–25 shows are open. All off-stage events — exhibitions, lectures, workshops and the kids' happening — free entry.</div>
+    <div class="prog-note reveal">✳ Ticket sales for the October 23–25 shows are open — price and seating are shown when you pick a specific show. All off-stage events — exhibitions, lectures, workshops and the kids' happening — free entry.</div>
   </div>
 </section>
 
@@ -652,12 +668,22 @@ section{padding:90px 0}
         <div class="ticket-per">October 23–25 shows · price depends on the row</div>
         <ul class="ticket-list">
           <li>Seating chart, seat selection and payment by card or SBP. An e-ticket with a QR code arrives by email right after payment.</li>
-          <li>Physical theatre shows — 1,000–2,500 ₽, drama shows — 1,000–3,500 ₽, the gallery performance — 1,500 ₽ standing</li>
-          <li class="star">The “IOV: Material” show on October 22 is closed — no public tickets</li>
           <li class="star">Exhibitions, lectures, workshops and a children's happening — free entry</li>
-          <li>Purchase and refund terms — in the <a href="https://cuire-fest.ru/oferta/" target="_blank" rel="noopener" style="color:var(--gold)">public offer</a></li>
+          <li>Purchase and refund terms — in the <a href="/en/oferta" style="color:var(--gold)">public offer</a></li>
         </ul>
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita-site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Choose your seats →</a>
+        <a class="btn-gold" href="/tickets-buy/?performance=iov-2026-10-23" style="margin-top:24px;display:inline-block">Buy a ticket to the festival opening →</a>
+        <p style="color:var(--sand);font-size:13px;margin-top:20px">Or pick another show:</p>
+        <div class="show-list">
+          <a class="show-row" href="/tickets-buy/?performance=prorochestva-2026-10-23"><span class="show-when">Oct 23, 19:00</span><span class="show-title">"Prophecies of Migratory Birds" (OMYT, Saint Petersburg)</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=pushkin-2026-10-24"><span class="show-when">Oct 24, 11:00</span><span class="show-title">"Pushkin. The Shot. The Blizzard." (Extracurricular Classics, Kaluga)</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=mozgi-2026-10-24"><span class="show-when">Oct 24, 14:00</span><span class="show-title">"Do You Have a Brain?"</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=pet-prosto-2026-10-24"><span class="show-when">Oct 24, 16:00</span><span class="show-title">Choir performance "Just Sing"</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=rasyomon-2026-10-24"><span class="show-when">Oct 24, 18:00</span><span class="show-title">"The Rashomon Effect" (OMYT, Saint Petersburg)</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=porfiriy-2026-10-24"><span class="show-when">Oct 24, 19:00</span><span class="show-title">"Porfiry" 16+, dir. Alexander Panov</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=kaliostro-2026-10-25"><span class="show-when">Oct 25, 11:00</span><span class="show-title">"Cagliostro" (Extracurricular Classics, Kaluga)</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=meyday3-2026-10-25"><span class="show-when">Oct 25, 13:00</span><span class="show-title">"Mayday-3" (OMYT, Saint Petersburg) — Gallery</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=rozovoe-maslo-2026-10-25"><span class="show-when">Oct 25, 19:00</span><span class="show-title">"The Scent of Rose Oil" (OMYT, Saint Petersburg)</span><span class="show-go">Pick seats →</span></a>
+        </div>
       </div>
       <div class="form-box">
         <h3>Stay up to date with the festival programme</h3>

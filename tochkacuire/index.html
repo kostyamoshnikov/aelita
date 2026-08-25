@@ -68,6 +68,11 @@ section{padding:90px 0}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 /* COUNTDOWN */
   .countdown{display:flex;gap:2px;margin:40px 0 0}
+  .quicknav{position:sticky;top:0;z-index:40;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(232,230,225,.1);overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .quicknav-in{display:inline-flex;gap:4px;padding:12px 20px}
+  .quicknav a{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);text-decoration:none;padding:8px 14px;border-radius:20px;transition:color .2s,background .2s;flex-shrink:0}
+  .quicknav a:hover{color:var(--bone);background:rgba(232,230,225,.06)}
+  .quicknav a.gold{color:var(--gold);border:1px solid rgba(214,181,122,.4)}
 .cd-item{background:var(--coal);padding:20px 24px;text-align:center;min-width:80px;flex:1;max-width:120px}
 .cd-num{font-family:'Montserrat',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:200;color:var(--gold);line-height:1}
 .cd-lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--sand);margin-top:6px}
@@ -180,6 +185,13 @@ section{padding:90px 0}
 .ticket-list li{font-size:14px;color:var(--sand);display:flex;gap:12px;align-items:baseline;line-height:1.5}
 .ticket-list li::before{content:"✓";color:var(--gold);flex-shrink:0;font-size:13px}
 .ticket-list li.star::before{content:"✦";color:rgba(214,181,122,.5)}
+.show-list{display:flex;flex-direction:column;margin-top:24px;border-top:1px solid rgba(232,230,225,.1)}
+.show-row{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid rgba(232,230,225,.1);text-decoration:none;transition:background .2s}
+.show-row:hover{background:rgba(214,181,122,.06)}
+.show-when{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.05em;color:var(--sand);white-space:nowrap;flex-shrink:0;width:110px}
+.show-title{color:var(--bone);font-size:14px;flex:1}
+.show-go{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--gold);white-space:nowrap;flex-shrink:0}
+@media(max-width:480px){.show-row{flex-wrap:wrap}.show-when{width:auto}.show-go{width:100%;margin-top:4px}}
 .form-box{background:var(--ink);padding:52px 44px}
 .form-box h3{font-size:18px;letter-spacing:.18em;font-weight:300;margin-bottom:8px;text-transform:uppercase}
 .form-box p{color:var(--sand);font-size:14px;margin-bottom:28px}
@@ -282,6 +294,22 @@ section{padding:90px 0}
   </div>
 </div>
 
+<!-- БЫСТРАЯ НАВИГАЦИЯ — страница длинная (12 разделов), без неё
+     сложно найти нужное, не листая всё подряд (см. запрос заказчика).
+     Приклеена к верху (sticky), прокручивается по горизонтали на
+     мобильном. Билеты — золотым и первым пунктом после программы,
+     самое частое, что ищут. -->
+<nav class="quicknav" aria-label="Быстрые ссылки по странице">
+  <div class="quicknav-in">
+    <a href="#program">Программа</a>
+    <a href="#schedule">Расписание</a>
+    <a href="#tickets" class="gold">Билеты</a>
+    <a href="#business">Деловая программа</a>
+    <a href="#exhibitions">Выставки</a>
+    <a href="#venue">Площадка</a>
+  </div>
+</nav>
+
 <!-- О ФЕСТИВАЛЕ -->
 <section id="about">
   <div class="wrap">
@@ -369,7 +397,7 @@ section{padding:90px 0}
         <div class="prog-right"><span class="age">16+</span><span class="dur">~1:00</span></div>
       </a>
     </div>
-    <div class="prog-note reveal">✸ Билеты — на схеме зала: пластические спектакли 1 000–2 500 ₽, драматические 1 000–3 500 ₽, перформанс в галерее — 1 500 ₽ без мест. Показ «ИОВ:материал» 22 октября — закрытый, билеты не продаются. Продажи на показы 23–25 октября открыты. Все события вне залов — выставки, лекторий, мастер-классы и детский хэппенинг — бесплатные.</div>
+    <div class="prog-note reveal">✸ Продажи билетов на показы 23–25 октября открыты — цена и места видны при выборе конкретного показа. Все события вне залов — выставки, лекторий, мастер-классы и детский хэппенинг — бесплатные.</div>
   </div>
 </section>
 
@@ -649,12 +677,22 @@ section{padding:90px 0}
         <div class="ticket-per">Показы 23–25 октября · цена зависит от ряда</div>
         <ul class="ticket-list">
           <li>Схема зала, выбор мест и оплата картой или через СБП. Электронный билет с QR-кодом приходит на почту сразу после оплаты.</li>
-          <li>Пластические спектакли — 1 000–2 500 ₽, драматические — 1 000–3 500 ₽, перформанс в галерее — 1 500 ₽ без мест</li>
-          <li class="star">Показ «ИОВ:материал» 22 октября — закрытый, билеты не продаются</li>
           <li class="star">Выставки, лекторий, мастер-классы и детский хэппенинг — бесплатно</li>
-          <li>Условия покупки и возврата — в <a href="https://cuire-fest.ru/oferta/" target="_blank" rel="noopener" style="color:var(--gold)">публичной оферте</a></li>
+          <li>Условия покупки и возврата — в <a href="/oferta" style="color:var(--gold)">публичной оферте</a></li>
         </ul>
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita-site&utm_medium=referral&utm_campaign=site&utm_content=tochkacuire" target="_blank" rel="noopener" style="margin-top:24px;display:inline-block">Выбрать места →</a>
+        <a class="btn-gold" href="/tickets-buy/?performance=iov-2026-10-23" style="margin-top:24px;display:inline-block">Купить билет на открытие фестиваля →</a>
+        <p style="color:var(--sand);font-size:13px;margin-top:20px">Или выбрать другой показ:</p>
+        <div class="show-list">
+          <a class="show-row" href="/tickets-buy/?performance=prorochestva-2026-10-23"><span class="show-when">23 октября, 19:00</span><span class="show-title">«Пророчества перелётных птиц» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=pushkin-2026-10-24"><span class="show-when">24 октября, 11:00</span><span class="show-title">«Пушкин. Выстрел. Метель» (Внеклассная классика, Калуга)</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=mozgi-2026-10-24"><span class="show-when">24 октября, 14:00</span><span class="show-title">«Есть ли у вас мозги?»</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=pet-prosto-2026-10-24"><span class="show-when">24 октября, 16:00</span><span class="show-title">Спектакль хора «Петь просто»</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=rasyomon-2026-10-24"><span class="show-when">24 октября, 18:00</span><span class="show-title">«Эффект Расёмон» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=porfiriy-2026-10-24"><span class="show-when">24 октября, 19:00</span><span class="show-title">«Порфирий» 16+, реж. Александр Панов</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=kaliostro-2026-10-25"><span class="show-when">25 октября, 11:00</span><span class="show-title">«Калиостро» (Внеклассная классика, Калуга)</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=meyday3-2026-10-25"><span class="show-when">25 октября, 13:00</span><span class="show-title">«Мэйдэй-3» (ОМУТ, Санкт-Петербург) — Галерея</span><span class="show-go">Выбрать места →</span></a>
+          <a class="show-row" href="/tickets-buy/?performance=rozovoe-maslo-2026-10-25"><span class="show-when">25 октября, 19:00</span><span class="show-title">«Запах розового масла» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
+        </div>
       </div>
       <div class="form-box">
         <h3>Быть в курсе программы фестиваля</h3>
