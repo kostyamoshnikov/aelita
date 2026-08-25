@@ -43,6 +43,12 @@
 .page-hero .sub{color:var(--sand);font-size:16px;max-width:52ch;margin-bottom:10px}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .pull-quote{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.6vw,26px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:28px;margin:28px 0}
+.logic-row{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
+.logic-chip{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:9px 16px}
+.fact-strip{display:flex;flex-wrap:wrap;gap:32px;margin:8px 0 32px;padding:20px 0;border-top:1px solid rgba(214,181,122,.2);border-bottom:1px solid rgba(214,181,122,.2)}
+.fact-strip .f-item{display:flex;flex-direction:column;gap:6px}
+.fact-strip .f-item .lbl{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.fact-strip .f-item .val{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--bone)}
 </style>
 <script type="application/ld+json">
 {
@@ -119,7 +125,18 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>About the project</h2></div>
-    <p class="desc reveal">"A suit as a symbol of normativity. A suit as an arthropod's shell. A suit as geometry, as something that gives rise to lines that don't exist in nature. As something maximally artificial. As black and white. As familiar human postures twist and a non-human logic shows through. The logic of form, the logic of nerves, the logic of breathing, the logic of the subconscious."</p>
+    <div class="fact-strip reveal">
+      <div class="f-item"><span class="lbl">Format</span><span class="val">Solo dance performance</span></div>
+      <div class="f-item"><span class="lbl">Runtime</span><span class="val">30 minutes</span></div>
+      <div class="f-item"><span class="lbl">Premiere</span><span class="val">MOÑ, Kazan</span></div>
+    </div>
+    <p class="desc reveal">"A suit as a symbol of normativity. A suit as an arthropod's shell. A suit as geometry, as something that gives rise to lines that don't exist in nature. As something maximally artificial. As black and white. As familiar human postures twist and a non-human logic shows through."</p>
+    <div class="logic-row reveal">
+      <span class="logic-chip">Logic of form</span>
+      <span class="logic-chip">Logic of nerves</span>
+      <span class="logic-chip">Logic of breathing</span>
+      <span class="logic-chip">Logic of the subconscious</span>
+    </div>
     <p class="desc reveal">A step toward the everyday, two steps aside and back. In the same time as the audience, and at once in another temporality — as if waking up inside Kafka's "Metamorphosis."</p>
     <blockquote class="pull-quote reveal">"I'm interested in movement that never fully forms. Scraps, fragments, freezes. What slips past my aesthetic control and even past self-preservation. The leg gains a consciousness of its own, separate from the head."</blockquote>
     <p class="desc reveal">A piece that investigates the body as a place where contradictions meet: cultural constraints and physiology, geometry and politics, suffering and puzzle. It premiered at the MOÑ theatre venue (Kazan) as part of an evening of contemporary choreography.</p>
@@ -129,9 +146,9 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Next performance</h2></div>
-    <p style="color:var(--sand)">October 10, 2026, 6:00 PM · Dom Arkhitektora, Kaluga, Lenina St. 116, 2nd floor · open seating, 45 seats · 1,000 ₽</p>
+    <p style="color:var(--sand)">October 10, 2026, 6:00 PM · <a href="/en/dom-arhitektora" style="color:var(--sand);text-decoration:underline">Dom Arkhitektora</a>, Kaluga · 1,000 ₽</p>
     <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" style="display:inline-block;margin-top:20px">Buy ticket →</a>
-    <p style="color:var(--sand);font-size:14px;margin-top:24px;max-width:60ch">Dom Arkhitektora is an emerging cultural space in Kaluga: lectures, community-club meetups, art residencies, performances and exhibitions.</p>
+    <p style="color:var(--sand);font-size:14px;margin-top:24px"><a href="/en/dom-arhitektora" style="color:var(--gold)">How to get to the venue →</a></p>
   </div>
 </section>
 

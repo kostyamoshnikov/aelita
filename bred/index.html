@@ -40,6 +40,12 @@
 .page-hero .sub{color:var(--sand);font-size:16px;max-width:52ch;margin-bottom:10px}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .pull-quote{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.6vw,26px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:28px;margin:28px 0}
+.logic-row{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
+.logic-chip{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:9px 16px}
+.fact-strip{display:flex;flex-wrap:wrap;gap:32px;margin:8px 0 32px;padding:20px 0;border-top:1px solid rgba(214,181,122,.2);border-bottom:1px solid rgba(214,181,122,.2)}
+.fact-strip .f-item{display:flex;flex-direction:column;gap:6px}
+.fact-strip .f-item .lbl{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.fact-strip .f-item .val{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--bone)}
 </style>
 <script type="application/ld+json">
 {
@@ -116,7 +122,18 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>О проекте</h2></div>
-    <p class="desc reveal">«Костюм как символ нормативности. Костюм как панцирь членистоногого. Костюм как геометрия, как то, что рождает линии, которых не существует в природе. Как что-то максимально искусственное. Как чёрное и белое. Как привычные позы человека искривляются и просвечивает не-человеческая логика. Логика формы, логика нервов, логика дыхания, логика подсознания».</p>
+    <div class="fact-strip reveal">
+      <div class="f-item"><span class="lbl">Формат</span><span class="val">Соло, танц-перформанс</span></div>
+      <div class="f-item"><span class="lbl">Хронометраж</span><span class="val">30 минут</span></div>
+      <div class="f-item"><span class="lbl">Премьера</span><span class="val">MOÑ, Казань</span></div>
+    </div>
+    <p class="desc reveal">«Костюм как символ нормативности. Костюм как панцирь членистоногого. Костюм как геометрия, как то, что рождает линии, которых не существует в природе. Как что-то максимально искусственное. Как чёрное и белое. Как привычные позы человека искривляются и просвечивает не-человеческая логика».</p>
+    <div class="logic-row reveal">
+      <span class="logic-chip">Логика формы</span>
+      <span class="logic-chip">Логика нервов</span>
+      <span class="logic-chip">Логика дыхания</span>
+      <span class="logic-chip">Логика подсознания</span>
+    </div>
     <p class="desc reveal">Шаг к бытовому, два шага в сторону и обратно. В одном времени со зрителем и тут же в другой темпоральности — как если бы проснулся в «Превращении» Кафки.</p>
     <blockquote class="pull-quote reveal">«Меня интересует не-доформленное движение. Такие огрызки, обрывки, зависания. То, что ускользает от моего эстетического контроля и даже от самосохранения. Нога приобретает своё сознание, отдельное от головы».</blockquote>
     <p class="desc reveal">Спектакль-исследование тела как места, где сходится противоречивое: культурные ограничения и физиология, геометрия и политика, страдание и головоломка. Премьера прошла в театральной площадке MOÑ (Казань) в программе вечера современной хореографии.</p>
@@ -126,9 +143,9 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайший показ</h2></div>
-    <p style="color:var(--sand)">10 октября 2026, 18:00 · Дом архитектора, Калуга, ул. Ленина, 116, 2 этаж · свободная рассадка, 45 мест · 1000 ₽</p>
+    <p style="color:var(--sand)">10 октября 2026, 18:00 · <a href="/dom-arhitektora" style="color:var(--sand);text-decoration:underline">Дом архитектора</a>, Калуга · 1000 ₽</p>
     <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" style="display:inline-block;margin-top:20px">Купить билет →</a>
-    <p style="color:var(--sand);font-size:14px;margin-top:24px;max-width:60ch">«Дом архитектора» — формирующееся культурное пространство Калуги: лекции, встречи тематических клубов, арт-резиденции, спектакли и выставки.</p>
+    <p style="color:var(--sand);font-size:14px;margin-top:24px"><a href="/dom-arhitektora" style="color:var(--gold)">Как добраться до площадки →</a></p>
   </div>
 </section>
 
