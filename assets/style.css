@@ -295,7 +295,6 @@ nav a, footer a{color:var(--sand)}
     .career-grid{grid-template-columns:1fr}
     .team-grid{grid-template-columns:1fr}
     .foot-grid{grid-template-columns:1fr}
-    .foot-grid>div:first-child{grid-column:1}
     footer h4{font-size:10px}
     footer a{font-size:13px}
   }
@@ -401,7 +400,6 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(-
 footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
 @media(max-width:760px){
     .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .foot-grid>div:first-child{grid-column:1/3}
     footer h4{margin-bottom:12px}
     footer a{margin-bottom:8px;font-size:13px}
   }
@@ -433,7 +431,7 @@ body{max-width:100vw}
 .about-text p strong{color:var(--bone);font-weight:400}
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:36px;margin-bottom:50px}
 footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
@@ -546,8 +544,8 @@ section{padding:80px 0}
 .opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:10px}
 .input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
 .cb-group{display:flex;flex-direction:column;gap:10px;margin-top:4px}
-.cb-item{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14px;color:var(--sand)}
-.cb-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+.cb-item{display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:14px;color:var(--sand)}
+.cb-item input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
 .form-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:10px}
 .form-ok{color:var(--gold);font-size:14px;margin-top:16px;display:none}
 @media(max-width:760px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:1}}
@@ -615,7 +613,7 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 .aud-review-form{max-width:520px}
 .aud-review-form h3{font-size:17px;font-weight:400;letter-spacing:.02em;color:var(--bone);margin-bottom:18px}
 .aud-stars-input{margin-bottom:16px}
-.aud-star-btn{font-size:26px;color:rgba(232,230,225,.2);cursor:pointer;transition:color .15s;margin-right:4px;display:inline-block}
+.aud-star-btn{font-size:34px;color:rgba(232,230,225,.2);cursor:pointer;transition:color .15s;margin-right:8px;display:inline-block}
 .aud-star-btn.on{color:var(--gold)}
 .aud-input,.aud-textarea{width:100%;background:var(--coal);border:1px solid rgba(232,230,225,.12);color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;padding:13px 16px;margin-bottom:14px;resize:vertical}
 .aud-input:focus,.aud-textarea:focus{outline:1px solid var(--gold);border-color:var(--gold)}

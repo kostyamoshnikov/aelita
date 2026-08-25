@@ -186,11 +186,10 @@ p a:hover{opacity:.75}
     <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
-      <a href="/en/projects">Productions</a>
-      <a href="/en/shop">Shop</a>
-      <a href="/en/collaboration">Collaborate</a>
-      <a href="/en/account">Account</a>
-      <a href="/en/contacts">Contact</a>
+    <a href="/en/projects">Productions</a>
+    <a href="/en/about">About the company</a>
+    <a href="/en/collaboration">Collaborate</a>
+    <a href="/en/contacts">Contact</a>
     </div>
     <a class="lang-switch" href="https://aelita-production.ru/gift-card/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
@@ -301,13 +300,13 @@ p a:hover{opacity:.75}
 
     <div class="join-form" id="joinForm">
       <div class="join-field"><label>Any amount from 500 to 100,000 ₽. Pay right here, via YooKassa.</label><input type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
-      <div class="join-field"><label>Your name</label><input type="text" id="j-name" placeholder="Your name"></div>
+      <div class="join-field"><label>Your name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
       <div class="join-field"><label>Your phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="join-field"><label>Your email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Your Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Your phone or Telegram</label><input type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
       <div class="join-field"><label>Who is it for — optional</label><textarea id="j-message" placeholder="What to write on the certificate"></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To arrange a gift right now — email us directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, we'll help set it up.</p>
       <button class="btn-gold" id="payBtn_gift" onclick="var c=collectContact(); if(c) AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: c, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">A personal message — optional</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
@@ -326,16 +325,16 @@ p a:hover{opacity:.75}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
-        <a href="/en/team">Team</a>
-        <a href="/en/partners">Partners</a>
-      </div>
-      <div>
-        <h4>Social media</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">VKontakte</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>About</h4>
+        <a href="/en/rezidents">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
       </div>
       <div>
         <h4>Sections</h4>
@@ -343,6 +342,9 @@ p a:hover{opacity:.75}
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/shop">Shop</a>
+      </div>
+      <div>
+        <h4>Products</h4>
         <a href="/en/community">AELITA COMMUNITY</a>
         <a href="/en/gift-card">Gift Card</a>
         <a href="/en/collaboration">Collaborate</a>

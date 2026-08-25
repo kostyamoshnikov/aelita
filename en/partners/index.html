@@ -82,9 +82,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
-      <a href="/en/projects">Productions</a>
-      <a href="/en/collaboration">Collaborate</a>
-      <a href="/en/contacts">Contact</a>
+    <a href="/en/projects">Productions</a>
+    <a href="/en/about">About the company</a>
+    <a href="/en/collaboration">Collaborate</a>
+    <a href="/en/contacts">Contact</a>
     </div>
     <a class="lang-switch" href="https://aelita-production.ru/partners/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
@@ -164,8 +165,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <div id="formSite_p">
       <div class="form-grid">
         <div class="field">
-          <label>Full name</label>
-          <input type="text" id="fname" placeholder="John Smith">
+          <label>Full name <span class="req-mark">*</span></label>
+          <input type="text" id="fname" placeholder="John Smith" required>
         </div>
         <div class="field">
           <label>Who are you</label>
@@ -196,7 +197,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
           <textarea id="fmsg" placeholder="Tell us about yourself and how you see us working together..."></textarea>
         </div>
         <div class="field full">
-          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_partner"> I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></label>
+          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_partner"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></span></label>
           <button class="btn-gold" onclick="handleForm()" style="width:fit-content">Send</button>
           <p class="form-ok" id="formOk">Thank you! We will get in touch within one working day.</p>
         </div>
@@ -229,16 +230,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
-        <a href="/en/team">Team</a>
-        <a href="/en/partners">Partners</a>
-      </div>
-      <div>
-        <h4>Social media</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">VKontakte</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>About</h4>
+        <a href="/en/rezidents">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
       </div>
       <div>
         <h4>Sections</h4>
@@ -246,6 +247,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/shop">Shop</a>
+      </div>
+      <div>
+        <h4>Products</h4>
         <a href="/en/community">AELITA COMMUNITY</a>
         <a href="/en/gift-card">Gift Card</a>
         <a href="/en/collaboration">Collaborate</a>
@@ -390,6 +394,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   <nav class="m-menu-links">
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/shop" onclick="toggleMenu()">Shop</a>
     <a href="/en/about" onclick="toggleMenu()">About the company</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>

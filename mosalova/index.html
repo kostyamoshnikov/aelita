@@ -92,7 +92,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
   @media(max-width:760px){footer{padding-bottom:210px}}
 @media(max-width:430px){footer{padding-bottom:230px}}
-  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:50px}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:44px;margin-bottom:50px}
   footer h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
   footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
   footer a:hover{color:var(--bone)}
@@ -100,12 +100,11 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
   @media(max-width:760px){
     .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .foot-grid>div:first-child{grid-column:1/3}
     footer h4{margin-bottom:12px}
     footer a{margin-bottom:8px;font-size:13px}
   }
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}.foot-grid>div:first-child{grid-column:1/3}}
-  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}.foot-grid>div:first-child{grid-column:1}}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+  @media(max-width:420px){.foot-grid{grid-template-columns:1fr}}
   .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
   .reveal.on{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
@@ -274,7 +273,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .career-grid{grid-template-columns:1fr}
     .team-grid{grid-template-columns:1fr}
     .foot-grid{grid-template-columns:1fr}
-    .foot-grid>div:first-child{grid-column:1}
     footer h4{font-size:10px}
     footer a{font-size:13px}
   }
@@ -336,9 +334,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects">Проекты</a>
-      <a href="/collaboration">Сотрудничество</a>
-      <a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/mosalova/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -401,16 +400,16 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
-        <a href="/team">Команда</a>
-        <a href="/partners">Партнёры</a>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
       </div>
       <div>
         <h4>Разделы</h4>
@@ -418,6 +417,9 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>
@@ -468,6 +470,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>

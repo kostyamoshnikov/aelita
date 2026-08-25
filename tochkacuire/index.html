@@ -241,9 +241,10 @@ section{padding:90px 0}
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects" class="active">Проекты</a>
-      <a href="/collaboration">Сотрудничество</a>
-      <a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/tochkacuire/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -659,10 +660,10 @@ section{padding:90px 0}
         <h3>Быть в курсе программы фестиваля</h3>
         <p>Продажи на показы 23–25 октября уже открыты — билеты на схеме зала на официальном сайте фестиваля. Оставьте контакты, если хотите получить полную программу и узнавать о новых показах и событиях.</p>
         <div class="form-col" id="subscribeForm">
-          <div class="field"><label>Имя</label><input type="text" id="sub-name" placeholder="Ваше имя"></div>
+          <div class="field"><label>Имя *</label><input type="text" id="sub-name" placeholder="Ваше имя" required></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
           <div class="field"><label>Телефон — по желанию</label><input type="tel" placeholder="+7 ..."></div>
-          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
+          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
           <button class="btn-gold" onclick="subscribe()">Подписаться на новости →</button>
         </div>
         <div class="form-ok" id="subOk">✓ Готово! Спасибо — пришлём программу и напишем о новых показах фестиваля «ТОЧКА КЮРИ».</div>
@@ -688,16 +689,16 @@ section{padding:90px 0}
         <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Продюсеры: <a href="/abdulova" style="color:var(--gold)">Екатерина Абдулова,</a> <a href="/moshnikov" style="color:var(--gold)">Константин Мошников</a></p>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
-        <a href="/team">Команда</a>
-        <a href="/partners">Партнёры</a>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
       </div>
       <div>
         <h4>Разделы</h4>
@@ -705,6 +706,9 @@ section{padding:90px 0}
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>
@@ -754,6 +758,7 @@ section{padding:90px 0}
   async function subscribe(){
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
+    if(!name){alert('Укажите имя');return;}
     if(!email || !email.includes('@')){alert('Укажите email');return;}
     if(!document.getElementById('sub-consent').checked){alert('Отметьте согласие на обработку персональных данных');return;}
     await addNewsletterContact(name, email);
@@ -870,6 +875,7 @@ section{padding:90px 0}
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>

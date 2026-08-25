@@ -228,7 +228,7 @@ header .sub{
   footer{padding:80px 0 46px;border-top:1px solid rgba(232,230,225,.08)}
   @media(max-width:760px){footer{padding-bottom:210px}}
 @media(max-width:430px){footer{padding-bottom:230px}}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:60px}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:44px;margin-bottom:60px}
 footer h4{
     font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;
     letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;
@@ -340,12 +340,10 @@ footer p{color:var(--sand);font-size:14px}
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects">Проекты</a>
-      <a href="#sreda">Среда</a>
-      <a href="/shop">Магазин</a>
-      <a href="/collaboration">Сотрудничество</a>
-      <a href="/account">Личный кабинет</a>
-      <a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -534,11 +532,12 @@ footer p{color:var(--sand);font-size:14px}
     <span class="eyebrow">Не пропустить</span>
     <h2 style="margin-top:14px">Первыми узнавайте о показах</h2>
     <p>Старт продаж, новые города, закулисье и специальные события — коротко и по делу, без спама.</p>
+    <input type="text" id="subName" placeholder="Ваше имя" aria-label="Имя" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:15px">
     <div class="sub-form">
       <input type="email" id="subEmail" placeholder="Ваша почта" aria-label="Электронная почта">
       <button onclick="subscribe()">Подписаться</button>
     </div>
-    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
+    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
     <p class="sub-ok" id="subOk">Готово — напишем, как только откроются продажи.</p>
   </div>
 </section>
@@ -552,21 +551,25 @@ footer p{color:var(--sand);font-size:14px}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
-        <a href="/partners">Партнёры</a>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
       </div>
       <div>
         <h4>Разделы</h4>
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>
@@ -649,13 +652,16 @@ footer p{color:var(--sand);font-size:14px}
   }
 
   async function subscribe(){
+    const name = document.getElementById('subName').value.trim();
     const v = document.getElementById('subEmail').value.trim();
+    if(!name){ alert('Укажите имя'); return; }
     if(!v || !v.includes('@')) return;
     if(!document.getElementById('subConsent').checked){ alert('Отметьте согласие на обработку персональных данных'); return; }
-    await addNewsletterContact('', v);
-    await sendTelegram('Главная — подписка на показы', {'Email': v});
-    await sendFormspree('Главная — подписка на показы', {'Email': v});
+    await addNewsletterContact(name, v);
+    await sendTelegram('Главная — подписка на показы', {'Имя': name, 'Email': v});
+    await sendFormspree('Главная — подписка на показы', {'Имя': name, 'Email': v});
     document.getElementById('subOk').style.display = 'block';
+    document.getElementById('subName').value = '';
     document.getElementById('subEmail').value = '';
   }
   // появление секций при скролле

@@ -69,9 +69,10 @@ body{max-width:100vw}
 <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
 <div class="nav-links">
 <a href="/tickets">Афиша</a>
-<a href="/projects">Проекты</a>
-<a href="/collaboration">Сотрудничество</a>
-<a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
 </div>
 <a class="lang-switch" href="/en/account/dashboard/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
 <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -80,6 +81,21 @@ body{max-width:100vw}
 </div>
 </nav>
 
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
+    <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
+    <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
+    <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
 <main id="main">
 
 <div class="page-header">
@@ -259,7 +275,9 @@ body{max-width:100vw}
       return;
     }
     lastAccountData = data;
-    document.getElementById('acc-email').textContent = data.email;
+    // data.name пуст у аккаунтов, зарегистрированных до pack-v170 (тогда
+    // поле не спрашивали) — показываем email как раньше, не пустую строку.
+    document.getElementById('acc-email').textContent = data.name ? (data.name + ' · ' + data.email) : data.email;
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
     document.getElementById('loadingState').style.display = 'none';

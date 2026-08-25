@@ -45,13 +45,15 @@
 .doc-item{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;padding:26px 0;border-bottom:1px solid rgba(232,230,225,.08)}
 .doc-item:first-of-type{border-top:1px solid rgba(232,230,225,.08)}
 .doc-item h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;letter-spacing:.02em;margin-bottom:6px;color:var(--bone)}
+.doc-item h3 a.show-link{color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px}
+.doc-item h3 a.show-link:hover{text-decoration-color:var(--gold)}
 .doc-item p{color:var(--sand);font-size:13.5px;max-width:60ch}
 .doc-link-pdf{font-family:'Montserrat',sans-serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);border:1px solid rgba(201,184,163,.3);padding:11px 18px;white-space:nowrap;transition:all .3s}
 .doc-link-pdf:hover{border-color:var(--gold);color:var(--gold)}
 .logo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:20px}
 .logo-card{background:var(--ink);padding:28px;display:flex;flex-direction:column;gap:14px}
-.logo-card .swatch{height:90px;display:flex;align-items:center;justify-content:center;background:var(--coal);border-radius:2px}
-.logo-card .swatch img{max-height:56px;max-width:70%}
+.logo-card .swatch{height:260px;display:flex;align-items:center;justify-content:center;background:var(--coal);border-radius:2px}
+.logo-card .swatch img{max-height:230px;max-width:85%}
 .logo-card .swatch.on-bone{background:var(--bone)}
 .logo-card h4{font-family:'Montserrat',sans-serif;font-weight:300;font-size:13px;letter-spacing:.1em;color:var(--bone)}
 .logo-card .fmt-links{display:flex;gap:14px;flex-wrap:wrap}
@@ -75,9 +77,10 @@
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects">Проекты</a>
-      <a href="/collaboration">Сотрудничество</a>
-      <a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/press/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -172,15 +175,15 @@
     <p class="press-group-title reveal">Спектакли программы фестиваля</p>
     <div class="doc-list reveal">
       <div class="doc-item" id="iov">
-        <div><h3>AELITA PRODUCTION откроет фестиваль «Точка Кюри» премьерой «ИОВ:материал» — режиссёрским дебютом Екатерины Абдуловой</h3><p>Спектакль-открытие фестиваля.</p></div>
+        <div><h3>AELITA PRODUCTION откроет фестиваль «Точка Кюри» премьерой <a class="show-link" href="/iov">«ИОВ:материал»</a> — режиссёрским дебютом Екатерины Абдуловой</h3><p>Спектакль-открытие фестиваля.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/iov.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="porfiriy">
-        <div><h3>AELITA PRODUCTION покажет на фестивале «Точка Кюри» медитативный детектив «Порфирий» Александра Панова</h3><p>Спектакль в постоянном репертуаре компании.</p></div>
+        <div><h3>AELITA PRODUCTION покажет на фестивале «Точка Кюри» медитативный детектив <a class="show-link" href="/porfiriy">«Порфирий»</a> Александра Панова</h3><p>Спектакль в постоянном репертуаре компании.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/porfiriy.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="mozgi">
-        <div><h3>На фестивале «Точка Кюри» покажут интерактивный моноспектакль «Есть ли у вас мозги?» Дмитрия Туркова</h3><p>О возможностях человеческого мозга и цене научных открытий.</p></div>
+        <div><h3>На фестивале «Точка Кюри» покажут интерактивный моноспектакль <a class="show-link" href="/mozgi">«Есть ли у вас мозги?»</a> Дмитрия Туркова</h3><p>О возможностях человеческого мозга и цене научных открытий.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/mozgi.pdf" download>Скачать PDF</a>
       </div>
     </div>
@@ -188,11 +191,11 @@
     <p class="press-group-title reveal">В репертуаре AELITA PRODUCTION</p>
     <div class="doc-list reveal">
       <div class="doc-item" id="listen">
-        <div><h3>«Послушайте!» — танцевальный спектакль Юлии Бычковой в репертуаре AELITA PRODUCTION</h3><p>В постоянном репертуаре компании, вне программы фестиваля.</p></div>
+        <div><h3><a class="show-link" href="/listen">«Послушайте!»</a> — танцевальный спектакль Юлии Бычковой в репертуаре AELITA PRODUCTION</h3><p>В постоянном репертуаре компании, вне программы фестиваля.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/listen.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="human">
-        <div><h3>«Археология человеческого» — вечер малых форм современного танца в репертуаре AELITA PRODUCTION</h3><p>В постоянном репертуаре компании, вне программы фестиваля.</p></div>
+        <div><h3><a class="show-link" href="/human">«Археология человеческого»</a> — вечер малых форм современного танца в репертуаре AELITA PRODUCTION</h3><p>В постоянном репертуаре компании, вне программы фестиваля.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/human.pdf" download>Скачать PDF</a>
       </div>
     </div>
@@ -200,19 +203,19 @@
     <p class="press-group-title reveal">Гости фестиваля — Пространство танца OMYT</p>
     <div class="doc-list reveal">
       <div class="doc-item" id="meydey">
-        <div><h3>Пространство танца OMYT покажет на фестивале «Точка Кюри» перформанс «Мэйдэй» Надежды Кохановой</h3><p>О сигнале бедствия, который подан, а бедствие не случается.</p></div>
+        <div><h3>Пространство танца OMYT покажет на фестивале «Точка Кюри» перформанс <a class="show-link" href="/meydey">«Мэйдэй»</a> Надежды Кохановой</h3><p>О сигнале бедствия, который подан, а бедствие не случается.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/meydey.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="rasyomon">
-        <div><h3>Резиденты OMYT покажут на фестивале «Точка Кюри» спектакль «Эффект Расёмон» Надежды Кохановой</h3><p>О природе человеческого порока — через образы Акутагавы и Куросавы.</p></div>
+        <div><h3>Резиденты OMYT покажут на фестивале «Точка Кюри» спектакль <a class="show-link" href="/rasyomon">«Эффект Расёмон»</a> Надежды Кохановой</h3><p>О природе человеческого порока — через образы Акутагавы и Куросавы.</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/rasyomon.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="rozovoe-maslo">
-        <div><h3>Резиденты OMYT покажут на фестивале «Точка Кюри» пластическую зарисовку «Запах розового масла»</h3><p>На тему библейской линии романа Булгакова «Мастер и Маргарита».</p></div>
+        <div><h3>Резиденты OMYT покажут на фестивале «Точка Кюри» пластическую зарисовку <a class="show-link" href="/rozovoe-maslo">«Запах розового масла»</a></h3><p>На тему библейской линии романа Булгакова «Мастер и Маргарита».</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/rozovoe-maslo.pdf" download>Скачать PDF</a>
       </div>
       <div class="doc-item" id="prorochestva">
-        <div><h3>Пространство танца OMYT покажет на фестивале «Точка Кюри» сайт-специфик перформанс «Пророчества перелётных птиц»</h3><p>Восемь перформерок в костюмах птиц, премьера — в парке Александрия (Петергоф).</p></div>
+        <div><h3>Пространство танца OMYT покажет на фестивале «Точка Кюри» сайт-специфик перформанс <a class="show-link" href="/prorochestva">«Пророчества перелётных птиц»</a></h3><p>Восемь перформерок в костюмах птиц, премьера — в парке Александрия (Петергоф).</p></div>
         <a class="doc-link-pdf" href="/documents-pdf/press/prorochestva.pdf" download>Скачать PDF</a>
       </div>
     </div>
@@ -271,16 +274,16 @@
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
-        <a href="/team">Команда</a>
-        <a href="/partners">Партнёры</a>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
       </div>
       <div>
         <h4>Разделы</h4>
@@ -288,6 +291,9 @@
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>
@@ -336,6 +342,7 @@
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>

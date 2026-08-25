@@ -18,6 +18,7 @@
       downloadingContract: 'Готовим договор…',
       changingPassword: 'Сохраняем новый пароль…',
       errors: {
+        bad_name: 'Укажите имя.',
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
         email_taken: 'Этот email нам уже знаком — попробуйте войти.',
@@ -38,6 +39,7 @@
       downloadingContract: 'Preparing the contract…',
       changingPassword: 'Saving new password…',
       errors: {
+        bad_name: 'Please enter your name.',
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
         email_taken: 'That email is already registered — try signing in instead.',
@@ -87,7 +89,7 @@
     isLoggedIn: function () { return !!getToken(); },
     logout: function () { clearToken(); },
 
-    register: async function (email, password, opts) {
+    register: async function (name, email, password, opts) {
       opts = opts || {};
       if (!REGISTER_URL) { notConfigured(); return; }
       var buttonEl = opts.buttonEl || null;
@@ -96,7 +98,7 @@
       try {
         var res = await fetch(REGISTER_URL, {
           method: 'POST',
-          body: JSON.stringify({ email: email, password: password }),
+          body: JSON.stringify({ name: name, email: email, password: password }),
         });
         var data = await res.json();
         if (res.ok && data.token) {

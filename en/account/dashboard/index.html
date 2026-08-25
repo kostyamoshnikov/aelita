@@ -72,9 +72,10 @@ body{max-width:100vw}
 <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
 <div class="nav-links">
 <a href="/en/tickets">Schedule</a>
-<a href="/en/projects">Productions</a>
-<a href="/en/collaboration">Collaborate</a>
-<a href="/en/contacts">Contact</a>
+    <a href="/en/projects">Productions</a>
+    <a href="/en/about">About the company</a>
+    <a href="/en/collaboration">Collaborate</a>
+    <a href="/en/contacts">Contact</a>
 </div>
 <a class="lang-switch" href="https://aelita-production.ru/account/dashboard/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
 <button class="burger" aria-label="Menu" onclick="toggleMenu()">
@@ -83,6 +84,21 @@ body{max-width:100vw}
 </div>
 </nav>
 
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/shop" onclick="toggleMenu()">Shop</a>
+    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
 <main id="main">
 
 <div class="page-header">
@@ -263,7 +279,7 @@ body{max-width:100vw}
       return;
     }
     lastAccountData = data;
-    document.getElementById('acc-email').textContent = data.email;
+    document.getElementById('acc-email').textContent = data.name ? (data.name + ' · ' + data.email) : data.email;
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
     document.getElementById('loadingState').style.display = 'none';

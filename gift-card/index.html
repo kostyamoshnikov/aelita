@@ -183,11 +183,10 @@ p a:hover{opacity:.75}
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects">Проекты</a>
-      <a href="/shop">Магазин</a>
-      <a href="/collaboration">Сотрудничество</a>
-      <a href="/account">Личный кабинет</a>
-      <a href="/contacts">Контакты</a>
+    <a href="/projects">Проекты</a>
+    <a href="/about">О компании</a>
+    <a href="/collaboration">Сотрудничество</a>
+    <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/gift-card/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -298,13 +297,13 @@ p a:hover{opacity:.75}
 
     <div class="join-form" id="joinForm">
       <div class="join-field"><label>Сумма подарка, ₽</label><input type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
-      <div class="join-field"><label>Ваше имя</label><input type="text" id="j-name" placeholder="Как вас зовут"></div>
+      <div class="join-field"><label>Ваше имя <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Как вас зовут" required></div>
       <div class="join-field"><label>Ваш телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="join-field"><label>Ваш email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Ваш Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Для кого подарок — необязательно</label><input type="text" id="j-recipient" placeholder="Имя получателя, если хотите подарить лично"></div>
       <div class="join-field"><label>Личное сообщение — необязательно</label><textarea id="j-message" placeholder="Что написать в сертификате"></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"> Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></label>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы оформить подарок прямо сейчас — напишите нам напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, поможем оформить.</p>
       <button class="btn-gold" id="payBtn_gift" onclick="var c=collectContact(); if(c) AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: c, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">Оплатить →</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
@@ -323,16 +322,16 @@ p a:hover{opacity:.75}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="/rezidents" style="margin-top:14px">Резиденты компании</a>
-        <a href="/team">Команда</a>
-        <a href="/partners">Партнёры</a>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
         <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
       </div>
       <div>
         <h4>Разделы</h4>
@@ -340,6 +339,9 @@ p a:hover{opacity:.75}
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
         <a href="/community">AELITA COMMUNITY</a>
         <a href="/gift-card">Подарочная карта</a>
         <a href="/collaboration">Сотрудничество</a>
