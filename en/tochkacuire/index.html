@@ -180,7 +180,6 @@ section{padding:90px 0}
 @media(max-width:760px){.venue-grid{grid-template-columns:1fr}}
 /* TICKETS */
   .tickets-sec{background:var(--coal)}
-.tickets-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .ticket-box{background:var(--ink);padding:52px 44px}
 .ticket-price{font-family:'Montserrat',sans-serif;font-size:clamp(48px,7vw,72px);font-weight:200;color:var(--gold);line-height:1;margin-bottom:8px}
 .ticket-per{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
@@ -205,7 +204,7 @@ section{padding:90px 0}
 .field input:focus{outline:none;border-color:var(--gold)}
 .form-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:8px}
 .form-ok{color:var(--gold);font-size:14px;display:none;padding:20px;background:rgba(214,181,122,.08);border-left:2px solid var(--gold)}
-@media(max-width:760px){.tickets-grid{grid-template-columns:1fr}.ticket-box,.form-box{padding:36px 28px}}
+@media(max-width:760px){.ticket-box,.form-box{padding:36px 28px}}
 /* EXTERNAL LINK BANNER */
   .ext-banner{background:linear-gradient(135deg, rgba(214,181,122,.15), rgba(214,181,122,.05));border:1px solid rgba(214,181,122,.3);padding:40px 44px;display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:50px;flex-wrap:wrap}
 .ext-banner p{color:var(--sand);font-size:15px}
@@ -670,19 +669,13 @@ section{padding:90px 0}
 <section id="tickets" class="tickets-sec">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Tickets</span><h2>One ticket — one performance</h2></div>
-    <div class="tickets-grid reveal">
-      <div class="ticket-box">
+    <div class="reveal">
+      <div class="ticket-box" style="max-width:720px">
         <div class="ticket-price">from 1,000 ₽</div>
         <div class="ticket-per">October 23–25 shows · price depends on the row</div>
-        <ul class="ticket-list">
-          <li><span>Payment by card or SBP. An e-ticket with a QR code arrives by email right after payment.</span></li>
-          <li class="star"><span>Exhibitions, lectures, workshops and a children's happening — free entry</span></li>
-          <li><span>Purchase and refund terms — in the <a href="/en/oferta" style="color:var(--gold)">public offer</a></span></li>
-        </ul>
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" style="margin-top:24px;display:inline-block" target="_blank" rel="noopener">Buy a ticket to "IOV: Material" — the festival opening →</a>
-        <p style="color:var(--sand);font-size:13px;margin-top:20px">Or pick another show:</p>
-        <div class="show-list">
+        <div class="show-list" style="margin-top:12px">
           <a class="show-row" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener"><span class="show-when">Oct 23, 19:00</span><span class="show-title">"Prophecies of Migratory Birds" (OMYT, Saint Petersburg)</span><span class="show-go">Pick seats →</span></a>
+          <a class="show-row" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener"><span class="show-when">Oct 23, 20:00</span><span class="show-title">"IOV: Material" — the festival opening</span><span class="show-go">Pick seats →</span></a>
           <a class="show-row" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc" target="_blank" rel="noopener"><span class="show-when">Oct 24, 11:00</span><span class="show-title">"Pushkin. The Shot. The Blizzard." (Extracurricular Classics, Kaluga)</span><span class="show-go">Pick seats →</span></a>
           <a class="show-row" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3" target="_blank" rel="noopener"><span class="show-when">Oct 24, 14:00</span><span class="show-title">"Do You Have a Brain?"</span><span class="show-go">Pick seats →</span></a>
           <a class="show-row" href="/tickets-buy/?performance=pet-prosto-2026-10-24"><span class="show-when">Oct 24, 16:00</span><span class="show-title">Choir performance "Just Sing"</span><span class="show-go">Pick seats →</span></a>
@@ -692,8 +685,16 @@ section{padding:90px 0}
           <a class="show-row" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211" target="_blank" rel="noopener"><span class="show-when">Oct 25, 13:00</span><span class="show-title">"Mayday-3" (OMYT, Saint Petersburg) — Gallery</span><span class="show-go">Pick seats →</span></a>
           <a class="show-row" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45" target="_blank" rel="noopener"><span class="show-when">Oct 25, 19:00</span><span class="show-title">"The Scent of Rose Oil" (OMYT, Saint Petersburg)</span><span class="show-go">Pick seats →</span></a>
         </div>
+        <ul class="ticket-list" style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(232,230,225,.1)">
+          <li><span>Payment by card or SBP. An e-ticket with a QR code arrives by email right after payment.</span></li>
+          <li class="star"><span>Exhibitions, lectures, workshops and a children's happening — free entry</span></li>
+          <li><span>Purchase and refund terms — in the <a href="/en/oferta" style="color:var(--gold)">public offer</a></span></li>
+        </ul>
       </div>
-      <div class="form-box">
+    </div>
+
+    <div class="reveal" style="margin-top:2px">
+      <div class="form-box" style="max-width:720px">
         <h3>Stay up to date with the festival programme</h3>
         <p>Tickets for the October 23–25 shows are already on sale — pick your seats on the official festival website. Leave your contact if you'd like the full programme and updates on new shows and events.</p>
         <div class="form-col" id="subscribeForm">
