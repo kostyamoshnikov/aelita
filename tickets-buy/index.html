@@ -79,6 +79,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <div class="stage">Сцена</div>
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
+    <div class="meta" style="text-align:center;margin-top:4px">Выбранные места удерживаются 10 минут — успейте завершить оплату за это время.</div>
   </div>
 
   <div id="general-block" style="display:none">
@@ -151,13 +152,19 @@ async function init(){
 
   if(!performanceId){ showError('В ссылке не указан показ — вернитесь на афишу и выберите спектакль ещё раз.'); return; }
 
-  // Возврат с оплаты (return_url из create-order.js) — раньше страница
-  // просто рисовала схему зала заново, будто ничего не произошло:
-  // человек, который только что заплатил, видел те же кнопки «Оплатить»
-  // и мог решить, что покупка не прошла. Webhook уже выслал билет к
-  // этому моменту (или вот-вот вышлет) — здесь просто подтверждаем.
+  // Возврат с оплаты (return_url из create-order.js).
+  //
+  // ⚠️ pack-v196: раньше здесь просто доверяли параметру aelita_paid=1
+  // и сразу показывали «Оплата прошла». Но return_url — это куда
+  // ЮKassa отправляет браузер при ЛЮБОМ исходе: успех, отмена,
+  // отклонённая карта — параметр в URL один и тот же. Человек, который
+  // передумал или которому отказали в оплате, видел тот же зелёный
+  // экран успеха, уходил ждать письмо, которое не придёт, а место
+  // тихо освобождалось через 10 минут. Теперь — честный опрос
+  // order-status.js по сохранённым order_id/payment_id (см. submitOrder,
+  // sessionStorage перед редиректом на ЮKassa).
   if(params.get('aelita_paid') === '1'){
-    showSuccess('Оплата прошла. Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.');
+    pollOrderStatus();
     return;
   }
 
@@ -179,6 +186,7 @@ async function init(){
     return;
   }
   data = freshData;
+  if(data.error === 'not_on_sale'){ showError('Продажи на этот показ ещё не открыты — попробуйте позже.'); return; }
   if(data.error){ showError('Показ не найден — возможно, продажи ещё не открыты или ссылка устарела.'); return; }
 
   if(data.seating === 'redirect'){
@@ -304,7 +312,7 @@ async function submitOrder(){
   msgEl.textContent = 'Оформляем заказ…';
 
   const payload = {
-    performance_id: performanceId, name, email, contact,
+    performance_id: performanceId, name, email, contact, pd_consent: true,
     return_url: location.origin + location.pathname + '?performance=' + performanceId + '&aelita_paid=1',
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
@@ -322,7 +330,25 @@ async function submitOrder(){
       return;
     }
     const out = await res.json();
-    if(out.confirmation_url){ location.href = out.confirmation_url; return; }
+    if(out.confirmation_url){
+      // pack-v196: сохраняем order_id/payment_id, чтобы при возврате с
+      // ЮKassa опросить РЕАЛЬНЫЙ статус (order-status.js), а не верить
+      // одному query-параметру (см. init(), pollOrderStatus()).
+      // sessionStorage переживает переход на внешний домен ЮKassa и
+      // обратно — это тот же таб браузера, не новая сессия.
+      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id})); }catch(e){}
+      if(out.hold_expires_at){
+        // pack-v196: раньше человек нигде не видел, что на оплату есть
+        // ограниченное время — только README упоминал 10 минут, нигде
+        // на странице. Секунда на прочитать перед редиректом лучше, чем
+        // ничего — а если он вернётся кнопкой "назад" браузера, минуты
+        // всё равно тикают на сервере независимо от того, смотрит он или нет.
+        const mins = Math.max(1, Math.round((new Date(out.hold_expires_at).getTime() - Date.now()) / 60000));
+        msgEl.textContent = `Место(а) удержаны на ${mins} мин. Переходим к оплате…`;
+      }
+      location.href = out.confirmation_url;
+      return;
+    }
     if(out.error === 'sold_via_partner'){
       msgEl.textContent = 'Этот показ теперь продаётся у партнёра — переходим…';
       location.href = out.buy_url;
@@ -338,6 +364,59 @@ async function submitOrder(){
     msgEl.textContent = 'Ошибка сети — проверьте связь и попробуйте снова.';
     document.getElementById('buy-btn').disabled = false;
   }
+}
+
+// pack-v196: честный опрос order-status.js вместо доверия одному
+// query-параметру (см. init()). Опрашивает раз в 2 секунды, максимум
+// 15 попыток (~30 секунд — вебхуку в норме хватает пары секунд,
+// дольше — уже не задержка, а достойный внимания сбой).
+async function pollOrderStatus(){
+  document.getElementById('title').textContent = 'Проверяем оплату…';
+  document.querySelector('.bar').style.display = 'none';
+  document.getElementById('form-block').style.display = 'none';
+
+  let stored = null;
+  try{ stored = JSON.parse(sessionStorage.getItem('aelita-order-' + performanceId) || 'null'); }catch(e){}
+  if(!stored || !stored.orderId || !stored.paymentId){
+    // Пришли на страницу возврата без сохранённых id — например, другая
+    // вкладка/устройство, или sessionStorage не пережил переход. Честно
+    // говорим, что не можем проверить сами, вместо того чтобы соврать
+    // про успех или молчать.
+    showError('Не удалось автоматически проверить статус оплаты. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам.');
+    return;
+  }
+
+  const MAX_ATTEMPTS = 15;
+  for(let attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
+    let res, out;
+    try{
+      res = await fetch(`${API_BASE}/order-status?order_id=${encodeURIComponent(stored.orderId)}&payment_id=${encodeURIComponent(stored.paymentId)}`);
+      out = res.ok ? await res.json() : null;
+    }catch(e){ out = null; }
+
+    if(out && out.status === 'paid'){
+      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      showSuccess('Оплата прошла. Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.');
+      return;
+    }
+    if(out && out.status === 'seat_conflict'){
+      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      showSuccess('Оплата прошла. При оформлении произошла редкая техническая накладка с местом — мы уже знаем и свяжемся с вами в ближайшее время, деньги не потеряны.');
+      return;
+    }
+    if(out && out.status === 'canceled'){
+      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      showError('Оплата не прошла или была отменена — место(а) снова доступны. Вернитесь на шаг назад и попробуйте ещё раз.');
+      return;
+    }
+    // 'processing' / 'pending' / сетевая ошибка / неожиданный ответ —
+    // продолжаем опрос, ещё рано делать выводы.
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  // Не дождались определённого статуса за отведённое время — не врём
+  // ни про успех, ни про провал, честно объясняем и даём контакт.
+  showError('Оплата обрабатывается дольше обычного. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам, ничего не потеряется.');
 }
 
 init();

@@ -15,6 +15,12 @@
   Офлайн-очередь — тот же паттерн, что в _tools/GuestSystem/index.html
   (см. флешбэк в чате про «учти опыт гостевой системы»): непринятые
   из-за сети действия сохраняются и уходят сами при восстановлении.
+
+  pack-v196: опциональный параметр ?performance=<id> — привязывает
+  страницу к конкретному показу. Если он есть, билет с ДРУГОГО показа
+  теперь отклоняется сервером явно (wrong_performance), а не полагается
+  на то, что контролёр сам заметит несовпадающее название спектакля.
+  Без параметра — старое поведение (общий URL на все показы).
 -->
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
@@ -39,6 +45,7 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 </head>
 <body>
 <h1>Контроль билетов</h1>
+<div id="performance-badge" style="display:none;color:var(--sand);font-size:13px;margin:-10px 0 14px"></div>
 <div id="queue-badge"></div>
 <input id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <div id="result"></div>
@@ -53,6 +60,21 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 <script>
 // ⚠️ Заполнить после деплоя (см. _tools/Tickets/README.md)
 const API_BASE = 'XXX';
+
+// pack-v196: если страница открыта с ?performance=<id>, привязываем
+// контроль к этому показу — билет с другого показа сервер отклонит
+// явно (см. ticket-check.js, wrong_performance), а не полагается на то,
+// что контролёр сам заметит несовпадающее название в карточке.
+const expectedPerformanceId = new URLSearchParams(location.search).get('performance') || null;
+if (expectedPerformanceId) {
+  fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(expectedPerformanceId)}`)
+    .then((r) => r.ok ? r.json() : null)
+    .then((d) => {
+      const el = document.getElementById('performance-badge');
+      if (d && d.title) { el.textContent = '📍 ' + d.title; el.style.display = 'block'; }
+    })
+    .catch(() => {}); // не критично — бейдж чисто информационный, проверка на сервере сработает в любом случае
+}
 
 const QUEUE_KEY = 'aelita-tickets-redeem-queue';
 let currentToken = null;
@@ -103,7 +125,7 @@ async function flushQueue(){
   if(arr.length === 0) return;
   const remaining = [];
   for(const item of arr){
-    try{ await api('redeem', {token: item.token}); }
+    try{ await api('redeem', {token: item.token, expected_performance_id: item.expectedPerformanceId || undefined}); }
     catch(e){ if(e instanceof NetworkError) remaining.push(item); } // серверная ошибка на отложенном повторе — не копим бесконечно, просто теряем попытку, а не зацикливаем
   }
   saveQueue(remaining);
@@ -125,7 +147,7 @@ async function handleScan(token){
   resultEl.innerHTML = '<div class="card">Проверяем…</div>';
   let data;
   try{
-    data = await api('check', {token});
+    data = await api('check', {token, expected_performance_id: expectedPerformanceId || undefined});
   }catch(e){
     const msg = e instanceof NetworkError
       ? 'Нет связи — попробуйте ещё раз или используйте ручной ввод позже.'
@@ -139,7 +161,10 @@ async function handleScan(token){
 function render(data){
   const resultEl = document.getElementById('result');
   if(!data.ok){
-    resultEl.innerHTML = `<div class="card warn"><div class="status warn">Билет не найден или недействителен</div></div>`;
+    const msg = data.error === 'wrong_performance'
+      ? `Билет с ДРУГОГО показа${data.actualProduction ? ' («' + data.actualProduction + '»)' : ''} — не пропускать`
+      : 'Билет не найден или недействителен';
+    resultEl.innerHTML = `<div class="card warn"><div class="status warn">${msg}</div></div>`;
     return;
   }
   lastOrderId = data.orderId;
@@ -158,13 +183,13 @@ function render(data){
 
 async function confirmRedeem(){
   try{
-    const data = await api('redeem', {token: currentToken});
+    const data = await api('redeem', {token: currentToken, expected_performance_id: expectedPerformanceId || undefined});
     render(data);
   }catch(e){
     if(e instanceof NetworkError){
       // офлайн — ставим в очередь, показываем оптимистичный результат
       const arr = getQueue();
-      arr.push({token: currentToken, ts: Date.now()});
+      arr.push({token: currentToken, expectedPerformanceId, ts: Date.now()});
       saveQueue(arr);
       document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
     } else {
