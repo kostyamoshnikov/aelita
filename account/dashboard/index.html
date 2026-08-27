@@ -190,6 +190,18 @@ body{max-width:100vw}
     var symbol = currency === 'RUB' ? '₽' : (currency || '');
     return Number(amount).toLocaleString('ru-RU') + ' ' + symbol;
   }
+  // Экранирование перед вставкой в innerHTML — productLabel приходит не
+  // только из webhook.js (там значения из фиксированного списка), но и
+  // из Admin/add-purchase.js (свободный текст до 200 символов, вводит
+  // админ вручную) — без экранирования админка теоретически могла бы
+  // стать вектором для чужого скрипта, который выполнился бы в браузере
+  // КЛИЕНТА при просмотре кабинета. Порог входа высокий (нужен доступ к
+  // /admin), но раз уже проверяли путь клиента — заодно закрыли и это.
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
 
   function renderPurchases(purchases) {
     var el = document.getElementById('purchases');
@@ -199,8 +211,8 @@ body{max-width:100vw}
     }
     var sorted = purchases.slice().sort(function (a, b) { return new Date(b.paidAt) - new Date(a.paidAt); });
     var html = '<div class="purchase-list">' + sorted.map(function (p) {
-      var name = p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка';
-      var pid = p.paymentId || '';
+      var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка');
+      var pid = escapeHtml(p.paymentId || '');
       return '<div class="purchase-item">' +
         '<span class="name">' + name + '</span>' +
         '<span class="date">' + fmtDate(p.paidAt) + '</span>' +

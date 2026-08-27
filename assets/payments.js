@@ -41,10 +41,10 @@
   };
   var t = TEXT[LANG];
 
-  // ЗАПОЛНИТЬ после деплоя _tools/Payments/create-payment.js — публичный
-  // URL вида https://functions.yandexcloud.net/<id функции>. Пока пусто —
-  // кнопки «Оплатить» показывают понятное сообщение вместо тихой
-  // поломки, сайт при этом не ломается.
+  // ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
+  // финальное значение https://api.aelita-production.ru/payments/create-payment.
+  // Пока пусто — кнопки «Оплатить» показывают понятное сообщение
+  // вместо тихой поломки, сайт при этом не ломается.
   var CREATE_PAYMENT_URL = '';
 
   // ClientID Метрики — нужен, чтобы после реальной оплаты webhook.js мог

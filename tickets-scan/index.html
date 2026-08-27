@@ -21,11 +21,28 @@
   теперь отклоняется сервером явно (wrong_performance), а не полагается
   на то, что контролёр сам заметит несовпадающее название спектакля.
   Без параметра — старое поведение (общий URL на все показы).
+
+  pack-v201: экран кода доступа персонала. Раньше страница защищалась
+  только тем, что URL никому лишнему не давали, — теперь перед
+  сканером общий PIN смены (STAFF_ACCESS_CODE на сервере, см.
+  README.md Tickets). Код хранится в localStorage после первого ввода
+  (не спрашивать на каждом входе на страницу — контролёр открывает её
+  много раз за смену), сбрасывается сам, если сервер ответит 401
+  (код сменили/неверный). Пока сервер не выдаёт код — например,
+  секрет не настроен на бэкенде, staffCodeValid() пропускает всех —
+  экран всё равно показывается: лучше спросить лишний раз, чем
+  выяснить постфактум, что защиты не было вовсе.
 -->
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh}
+#gate{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;z-index:50}
+#gate h2{font-size:15px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px;color:var(--sand)}
+#gate input{max-width:280px;text-align:center;font-size:20px;letter-spacing:.1em}
+#gate button{background:var(--gold);color:var(--ink);border:none;padding:14px 28px;border-radius:4px;font-size:14px;cursor:pointer;max-width:280px;width:100%}
+#gate .err{color:var(--warn);font-size:13px;margin:-4px 0 10px;min-height:16px}
+#app{display:none}
 h1{font-size:16px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px}
 input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);color:var(--bone);padding:16px;font-size:16px;border-radius:4px;margin-bottom:10px}
 .card{background:var(--coal);border-radius:8px;padding:20px;margin-top:16px;text-align:center}
@@ -44,11 +61,23 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 </style>
 </head>
 <body>
+<div id="gate">
+  <h2>Код доступа персонала</h2>
+  <div class="err" id="gate-err"></div>
+  <input id="gate-input" placeholder="PIN" inputmode="numeric" autocomplete="off">
+  <button id="gate-submit" style="margin-top:6px">Войти</button>
+</div>
+
+<div id="app">
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:13px;margin:-10px 0 14px"></div>
 <div id="queue-badge"></div>
 <input id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
+<button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
+<video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
+<canvas id="camera-canvas" style="display:none"></canvas>
 <div id="result"></div>
+</div>
 
 <!-- Всегда на виду — это буквально самый частый момент, когда контролёру
      на входе может понадобиться живой человек (спорный QR, очередь
@@ -56,10 +85,57 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
      ответа. Номер — тот же контакт, что и на сайте (facts.json). -->
 <a class="help-fab" href="tel:+79605151690">🆘 Позвать помощь</a>
 
+<!-- pack-v201: jsQR — единственная внешняя JS-зависимость на сайте
+     (везде до этого только собственный код, см. README.md, «Внешние
+     зависимости»). Самостоятельно собрать декодер QR из кадров видео —
+     несоразмерная работа против готовой проверенной библиотеки; в
+     контейнере сборки пака нет сети, чтобы скачать и заложить файл
+     локально (см. qr_gen.py — та же причина, по которой генератор QR
+     в паке не использует pip-пакет), поэтому подключено с cdnjs. Если
+     захотите самостоятельно захостить — файл один, ~30 КБ, положить
+     в /assets/jsQR.js и поменять src ниже на локальный путь. Работает
+     только как ДОПОЛНЕНИЕ к сканеру-пистолету/ручному вводу, не
+     замена — сканер остаётся основным способом (надёжнее, не спрашивает
+     разрешение камеры на каждом устройстве контролёра). -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js"></script>
 <script src="/assets/analytics-events.js"></script>
 <script>
-// ⚠️ Заполнить после деплоя (см. _tools/Tickets/README.md)
+// ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
+// финальное значение https://api.aelita-production.ru/tickets
 const API_BASE = 'XXX';
+
+// ─── Код доступа персонала (pack-v201) ──────────────────────────────
+const STAFF_CODE_KEY = 'aelita-tickets-staff-code';
+function getStaffCode(){ return localStorage.getItem(STAFF_CODE_KEY) || ''; }
+function setStaffCode(v){ localStorage.setItem(STAFF_CODE_KEY, v); }
+function clearStaffCode(){ localStorage.removeItem(STAFF_CODE_KEY); }
+function showGate(errMsg){
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gate-err').textContent = errMsg || '';
+  document.getElementById('gate-input').focus();
+}
+function showApp(){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('scan-input').focus();
+}
+document.getElementById('gate-submit').addEventListener('click', submitGate);
+document.getElementById('gate-input').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitGate(); });
+function submitGate(){
+  const v = document.getElementById('gate-input').value.trim();
+  if(!v){ document.getElementById('gate-err').textContent = 'Введите код'; return; }
+  setStaffCode(v);
+  showApp();
+  // Сразу проверяем код лёгким запросом ('undo' без orderId — сервер
+  // ответит 401 при неверном коде до проверки самого билета, или
+  // { ok:false } при верном коде и отсутствующем заказе — оба случая
+  // отличимы по HTTP-статусу, см. api()).
+  api('undo', { orderId: '__gate_check__', identifier: '' }).catch((e)=>{
+    if(e instanceof UnauthorizedError){ /* уже обработано в api() — вернёт на gate */ }
+  });
+}
+if(!getStaffCode()){ showGate(); } else { showApp(); }
 
 // pack-v196: если страница открыта с ?performance=<id>, привязываем
 // контроль к этому показу — билет с другого показа сервер отклонит
@@ -99,15 +175,24 @@ function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0
 // оба случая ловились одним catch и превращались в «нет связи», что при
 // настоящей ошибке сервера маскировало бы её под офлайн-очередь.
 class NetworkError extends Error {}
+class UnauthorizedError extends Error {}
 async function api(action, extra){
   let res;
   try{
     res = await fetch(`${API_BASE}/ticket-check`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action, ...extra })
+      body: JSON.stringify({ action, staffCode: getStaffCode(), ...extra })
     });
   }catch(e){
     throw new NetworkError('Нет связи с сервером');
+  }
+  if(res.status === 401){
+    // Код неверный или его сменили — не копим в очередь, не показываем
+    // как обычную серверную ошибку: возвращаем на экран ввода кода,
+    // чтобы контролёр не долбил сканер вслепую.
+    clearStaffCode();
+    showGate('Код неверен или устарел — введите снова');
+    throw new UnauthorizedError('unauthorized');
   }
   if(!res.ok){
     // Сервер ответил, но плохо (500 и т.п.) — это НЕ офлайн, показываем
@@ -126,7 +211,7 @@ async function flushQueue(){
   const remaining = [];
   for(const item of arr){
     try{ await api('redeem', {token: item.token, expected_performance_id: item.expectedPerformanceId || undefined}); }
-    catch(e){ if(e instanceof NetworkError) remaining.push(item); } // серверная ошибка на отложенном повторе — не копим бесконечно, просто теряем попытку, а не зацикливаем
+    catch(e){ if(e instanceof NetworkError || e instanceof UnauthorizedError) remaining.push(item); } // сеть или код сменился — не теряем попытку, остальные серверные ошибки на повторе не копим бесконечно
   }
   saveQueue(remaining);
 }
@@ -141,6 +226,74 @@ input.addEventListener('keydown', (e) => {
   }
 });
 
+// ─── Камера-сканер (pack-v201, дополнение к USB-сканеру/ручному вводу) ──
+let cameraStream = null;
+let cameraLoopId = null;
+let cameraLastCode = null;
+let cameraLastAt = 0;
+const CAMERA_COOLDOWN_MS = 2500; // не долбить handleScan на каждый кадр, пока контролёр убирает билет из кадра
+
+const cameraToggleBtn = document.getElementById('camera-toggle');
+const cameraVideo = document.getElementById('camera-video');
+const cameraCanvas = document.getElementById('camera-canvas');
+cameraToggleBtn.addEventListener('click', () => { cameraStream ? stopCamera() : startCamera(); });
+
+async function startCamera(){
+  if(typeof jsQR !== 'function'){
+    // cdnjs не отдал файл (нет сети на площадке в момент загрузки страницы
+    // и т.п.) — сканер-пистолет и ручной ввод продолжают работать как
+    // раньше, камера просто недоступна в этот раз.
+    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
+    return;
+  }
+  try{
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+  }catch(e){
+    // Отказ в разрешении / нет камеры на устройстве — не ошибка контроля,
+    // сканер-пистолет остаётся основным способом.
+    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
+    cameraStream = null;
+    return;
+  }
+  cameraVideo.srcObject = cameraStream;
+  cameraVideo.style.display = 'block';
+  await cameraVideo.play();
+  cameraToggleBtn.textContent = '📷 Выключить камеру';
+  cameraLoopId = requestAnimationFrame(cameraTick);
+}
+
+function stopCamera(){
+  if(cameraLoopId) cancelAnimationFrame(cameraLoopId);
+  cameraLoopId = null;
+  if(cameraStream){ cameraStream.getTracks().forEach((t) => t.stop()); }
+  cameraStream = null;
+  cameraVideo.style.display = 'none';
+  cameraToggleBtn.textContent = '📷 Включить камеру';
+}
+
+function cameraTick(){
+  if(!cameraStream) return; // остановлена между кадрами
+  if(cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA){
+    cameraCanvas.width = cameraVideo.videoWidth;
+    cameraCanvas.height = cameraVideo.videoHeight;
+    const ctx = cameraCanvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+    const frame = ctx.getImageData(0, 0, cameraCanvas.width, cameraCanvas.height);
+    const code = jsQR(frame.data, frame.width, frame.height);
+    if(code && code.data){
+      const now = Date.now();
+      // тот же билет второй раз подряд в течение окна — контролёр ещё не
+      // убрал его из кадра, не шлём повторный handleScan на каждый кадр
+      if(!(code.data === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS)){
+        cameraLastCode = code.data;
+        cameraLastAt = now;
+        handleScan(code.data);
+      }
+    }
+  }
+  cameraLoopId = requestAnimationFrame(cameraTick);
+}
+
 async function handleScan(token){
   currentToken = token;
   const resultEl = document.getElementById('result');
@@ -149,6 +302,7 @@ async function handleScan(token){
   try{
     data = await api('check', {token, expected_performance_id: expectedPerformanceId || undefined});
   }catch(e){
+    if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     const msg = e instanceof NetworkError
       ? 'Нет связи — попробуйте ещё раз или используйте ручной ввод позже.'
       : 'Сервер ответил с ошибкой — попробуйте ещё раз, если не поможет — звоните в «Позвать помощь».';
@@ -186,6 +340,7 @@ async function confirmRedeem(){
     const data = await api('redeem', {token: currentToken, expected_performance_id: expectedPerformanceId || undefined});
     render(data);
   }catch(e){
+    if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     if(e instanceof NetworkError){
       // офлайн — ставим в очередь, показываем оптимистичный результат
       const arr = getQueue();
@@ -210,6 +365,7 @@ async function undoRedeem(){
       document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div></div>';
     }
   }catch(e){
+    if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     // Раньше здесь не было try/catch вообще — сетевой сбой на «Вернуть в
     // действительные» падал необработанным отказом промиса, кнопка
     // просто ничего не делала без единого сообщения контролёру.
@@ -218,7 +374,7 @@ async function undoRedeem(){
   }
 }
 
-flushQueue();
+if(getStaffCode()) flushQueue(); // до ввода кода очередь не трогаем — нечем себя авторизовать
 </script>
 </body>
 </html>

@@ -265,13 +265,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 </div>
 
 <script>
-// ЗАПОЛНИТЬ после деплоя _tools/Admin/login.js и data.js — до
-// заполнения страница показывает понятное сообщение, не ломается.
-var ADMIN_LOGIN_URL = '';
-var ADMIN_DATA_URL = '';
-var ADMIN_DELETE_URL = '';
-var ADMIN_ADD_PURCHASE_URL = '';
-var ADMIN_SITE_EDIT_URL = '';
+// ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
+// одно значение на всю систему: https://api.aelita-production.ru/admin
+// До заполнения страница показывает понятное сообщение, не ломается.
+var API_BASE = '';
+var ADMIN_LOGIN_URL = API_BASE && API_BASE + '/login';
+var ADMIN_DATA_URL = API_BASE && API_BASE + '/data';
+var ADMIN_DELETE_URL = API_BASE && API_BASE + '/delete-customer';
+var ADMIN_ADD_PURCHASE_URL = API_BASE && API_BASE + '/add-purchase';
+var ADMIN_SITE_EDIT_URL = API_BASE && API_BASE + '/site-edit';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -288,6 +290,30 @@ function clearToken() { try { sessionStorage.removeItem(STORAGE_KEY); } catch (e
 function fmtMoney(n) {
   if (n == null || !isFinite(n)) return '—';
   return Math.round(n).toLocaleString('ru-RU') + ' ₽';
+}
+// Экранирование перед вставкой в innerHTML. Два реальных источника
+// непроверенного текста, оба рендерятся здесь без него до этой правки:
+//   1. c.email — email вводит САМ клиент при регистрации
+//      (Account/register.js), а проверка там — простой regex вида
+//      /^[^\s@]+@[^\s@]+\.[^\s@]+$/, который НЕ исключает <>"' — только
+//      пробелы и @. Проверено: 'test<script>@evil.co' проходит эту
+//      валидацию. Значит любой человек мог самостоятельно
+//      зарегистрироваться с email-полезной нагрузкой, которая
+//      выполнилась бы в браузере АДМИНА при простом открытии списка
+//      клиентов — потенциально кража токена админки из sessionStorage.
+//      Самый серьёзный вектор из найденного при проверке пути клиента.
+//   2. productLabel — свободный текст до 200 символов, вводит админ
+//      вручную в Admin/add-purchase.js («Название» в форме «Добавить
+//      покупку») — ниже порог (нужен уже сам доступ к /admin), но тоже
+//      рендерился без экранирования в трёх местах (список клиентов,
+//      разбивка по товарам, и отдельно в Site/account/dashboard/ —
+//      та тоже почина́лась в этом же заходе).
+// Дата/суммы/счётчики (fmtMoney/fmtDate/pluralRu) — числа и ISO-даты,
+// экранирования не требуют, не трогаем.
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
 }
 function fmtDate(iso) {
   if (!iso) return '—';
@@ -321,7 +347,7 @@ function renderStats(stats) {
   } else {
     byProductEl.innerHTML = entries.map(function (key) {
       var p = stats.byProduct[key];
-      var label = p.label || PRODUCT_NAMES[key] || key;
+      var label = escapeHtml(p.label || PRODUCT_NAMES[key] || key);
       return '<div class="chip"><strong>' + label + '</strong> — ' + p.count + ' · ' + fmtMoney(p.revenue) + '</div>';
     }).join('');
   }
@@ -346,14 +372,15 @@ function renderCustomers(list) {
   }
   el.innerHTML = list.map(function (c) {
     var purchasesHtml = (c.purchases || []).map(function (p) {
-      var name = p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка';
+      var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка');
       return '<div class="purchase-row"><span class="name">' + name + '</span><span>' + fmtDate(p.paidAt) + ' · ' + fmtMoney(p.amount) + '</span></div>';
     }).join('');
     var purchaseWord = pluralRu(c.purchaseCount, 'покупка', 'покупки', 'покупок');
-    var emailAttr = c.email.replace(/"/g, '&quot;');
+    var email = escapeHtml(c.email);
+    var emailAttr = email;
     return '<div class="cust-item">' +
       '<div class="cust-head">' +
-        '<div><div class="cust-email">' + c.email + '</div><div class="cust-meta">с ' + fmtDate(c.createdAt) + ' · ' + c.purchaseCount + ' ' + purchaseWord + '</div></div>' +
+        '<div><div class="cust-email">' + email + '</div><div class="cust-meta">с ' + fmtDate(c.createdAt) + ' · ' + c.purchaseCount + ' ' + purchaseWord + '</div></div>' +
         '<div class="cust-total">' + fmtMoney(c.totalSpent) + '</div>' +
       '</div>' +
       purchasesHtml +

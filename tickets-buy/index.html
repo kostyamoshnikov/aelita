@@ -12,8 +12,8 @@
       (тот же принцип, что у Яндекс Афиши — маркировка по цене, см.
       исследование в чате), выбранные места подсвечены золотым.
     seating:'general'  — просто счётчик количества билетов.
-  API_BASE ниже — заполнить после деплоя Cloud Functions (см. README.md
-  Tickets, раздел «Деплой»), сейчас плейсхолдер.
+  API_BASE ниже — заполнить после деплоя Gateway (см.
+  _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -112,8 +112,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
 <script src="/assets/analytics-events.js"></script>
 <script>
-// ⚠️ Заполнить после деплоя Cloud Functions (см. _tools/Tickets/README.md)
-const API_BASE = 'XXX'; // например https://functions.yandexcloud.net/<folder>
+// ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
+// финальное значение https://api.aelita-production.ru/tickets
+const API_BASE = 'XXX';
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');

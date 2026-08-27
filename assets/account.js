@@ -56,14 +56,17 @@
   };
   var t = TEXT[LANG];
 
-  // ЗАПОЛНИТЬ после деплоя функций _tools/Account/ — тот же принцип,
-  // что у CREATE_PAYMENT_URL в payments.js: пока пусто, формы
-  // показывают понятное сообщение вместо тихой поломки.
-  var REGISTER_URL = '';
-  var LOGIN_URL = '';
-  var ME_URL = '';
-  var CONTRACT_URL = '';
-  var CHANGE_PASSWORD_URL = '';
+  // ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
+  // одно значение на всю систему: https://api.aelita-production.ru/account
+  // (тот же Gateway обслуживает все четыре системы, каждая под своим
+  // префиксом пути — см. _tools/SYSTEMS-CONSOLIDATION.md). До
+  // заполнения формы показывают понятное сообщение, не ломаются молча.
+  var API_BASE = '';
+  var REGISTER_URL = API_BASE && API_BASE + '/register';
+  var LOGIN_URL = API_BASE && API_BASE + '/login';
+  var ME_URL = API_BASE && API_BASE + '/me';
+  var CONTRACT_URL = API_BASE && API_BASE + '/contract';
+  var CHANGE_PASSWORD_URL = API_BASE && API_BASE + '/change-password';
 
   var STORAGE_KEY = 'aelita_account_token';
 
