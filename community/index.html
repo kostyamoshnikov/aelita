@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="АЭЛИТА">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AELITA COMMUNITY — книжный клуб Екатерины Абдуловой</title>
-<meta name="description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
+<title>AELITA COMMUNITY</title>
+<meta name="description" content="AELITA COMMUNITY — комьюнити AELITA PRODUCTION. Сейчас — книжный поток и поток для предпринимателей.">
 <link rel="canonical" href="https://aelita-production.ru/community/">
 <link rel="alternate" hreflang="ru" href="https://aelita-production.ru/community/">
 <link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/community/">
@@ -22,208 +22,36 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aelita-production.ru/community/">
 <meta property="og:site_name" content="AELITA PRODUCTION">
-<meta property="og:title" content="AELITA COMMUNITY — книжный клуб Екатерины Абдуловой">
-<meta property="og:description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
+<meta property="og:title" content="AELITA COMMUNITY">
+<meta property="og:description" content="AELITA COMMUNITY — комьюнити AELITA PRODUCTION. Сейчас — книжный поток и поток для предпринимателей.">
 <meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AELITA COMMUNITY — книжный клуб Екатерины Абдуловой">
-<meta name="twitter:description" content="AELITA COMMUNITY — пространство, наполненное смыслом. Книжные встречи Екатерины Абдуловой. Сейчас читаем Мамардашвили «Беседы о мышлении».">
+<meta name="twitter:title" content="AELITA COMMUNITY">
+<meta name="twitter:description" content="AELITA COMMUNITY — комьюнити AELITA PRODUCTION. Сейчас — книжный поток и поток для предпринимателей.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css?v=19">
 <style>body{max-width:100vw}
-section{padding:90px 0}
-.hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
-.sec-head{margin-bottom:50px}
-/* Галерея — горизontальный scroll-snap, помещается в один экран
-   телефона по высоте, вместо вертикального masonry (.photo-gallery
-   из assets/style.css, используется на других страницах — здесь
-   намеренно НЕ он: страница и так длинная, вертикальный список из 8
-   фото добавлял бы лишний экран прокрутки, заказчик попросил
-   компактнее). */
-.gallery-scroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(214,181,122,.4) transparent}
-.gallery-scroll::-webkit-scrollbar{height:5px}
-.gallery-scroll::-webkit-scrollbar-thumb{background:rgba(214,181,122,.35);border-radius:3px}
-.gallery-scroll img{scroll-snap-align:center;flex:0 0 78%;max-width:380px;height:52vh;max-height:440px;min-height:260px;object-fit:cover;border-radius:2px;filter:brightness(.92);transition:filter .3s ease}
-.gallery-scroll img:hover{filter:brightness(1)}
-.gallery-hint{font-size:12px;color:rgba(201,184,163,.5);margin-top:2px}
-@media(min-width:640px){.gallery-scroll img{flex:0 0 320px;height:400px}}
-a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
-a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
-/* Текстовые ссылки */
-  p a,.bio-info a,.desc-text a{color:var(--gold);text-decoration:none;transition:opacity .3s}
-p a:hover{opacity:.75}
-/* NAV */
-  
-  
-  
-  
-  
-  
-  
-  
-
-  /* HERO */
-  .hero{min-height:90svh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:90px;padding-top:120px;position:relative;overflow:hidden}
-.hero-beam::before{content:"";position:absolute;top:-5%;left:55%;width:1.5px;height:80%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);transform:rotate(10deg);transform-origin:top center;box-shadow:0 0 18px 4px rgba(214,181,122,.45),0 0 70px 18px rgba(214,181,122,.15);animation:beam-in 2s ease both}
-@keyframes beam-in{from{opacity:0;height:0}to{opacity:1;height:80%}}
-.hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
-@media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
-.hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
-.hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
-.hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
-.hero-meta-item .val{font-size:15px;color:var(--bone)}
-/* О КЛУБЕ */
-  .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
-.about-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:18px}
-.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:18px;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
-.katya-card{background:var(--coal);padding:44px 36px}
-.katya-card .role{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
-.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
-.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
-.katya-credentials{margin-top:24px;border-top:1px solid rgba(232,230,225,.07);padding-top:20px;display:flex;flex-direction:column;gap:8px}
-.katya-cred{font-size:12px;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
-/* МАРСИАНСКИЙ */
-  .mars{background:var(--coal);padding:80px 0}
-.mars-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-.mars-text h2{font-size:clamp(22px,3.5vw,38px);letter-spacing:.1em;margin-bottom:24px;line-height:1.3}
-.mars-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:16px}
-.mars-text p strong{color:var(--bone);font-weight:400}
-.mars-diagram{display:flex;flex-direction:column;gap:2px}
-.mars-step{background:var(--ink);padding:28px 24px;display:flex;gap:18px;align-items:start}
-.mars-step .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
-.mars-step h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
-.mars-step p{color:var(--sand);font-size:13px;line-height:1.7}
-@media(max-width:760px){.mars-grid{grid-template-columns:1fr}}
-/* ЧТЕНИЕ */
-  .reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.book-card{background:var(--coal);padding:44px 36px;position:relative;overflow:hidden}
-.book-card.current{border-left:2px solid var(--gold)}
-.book-card .status{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.book-card .author{font-size:13px;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
-.book-card h3{font-size:clamp(18px,2.4vw,24px);letter-spacing:.1em;font-weight:300;margin-bottom:16px;line-height:1.3}
-.book-card p{color:var(--sand);font-size:14px;line-height:1.75}
-.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
-.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
-@media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
-.book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
-.season-timeline{display:flex;flex-direction:column;gap:1px;background:rgba(232,230,225,.07);margin-top:40px}
-.season-month{background:var(--ink);padding:24px 26px;display:grid;grid-template-columns:76px 1fr;gap:20px;align-items:start}
-.season-month .m-name{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:2px}
-.season-month .m-body h4{font-size:15px;font-weight:400;color:var(--bone);margin-bottom:3px;line-height:1.4}
-.season-month .m-body .m-author{font-size:12px;color:rgba(201,184,163,.7);margin-bottom:8px}
-.season-month .m-body p{font-size:13px;color:var(--sand);line-height:1.65}
-.season-month .m-body .m-fiction{font-size:12px;color:rgba(201,184,163,.6);margin-top:6px;font-style:italic}
-@media(max-width:600px){.season-month{grid-template-columns:1fr;gap:5px}.season-month .m-name{padding-top:0}}
-.book-list-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.book-list ul{list-style:none}
-.book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
-.book-list li:first-child{border-top:none}
-.book-title{display:block;color:var(--bone);font-size:15px;margin-bottom:3px;line-height:1.4}
-.book-author{display:block;color:var(--sand);font-size:13px}
-@media(max-width:760px){.book-list{grid-template-columns:1fr;gap:8px}}
-/* ОТЗЫВЫ */
-  .reviews-sec{background:var(--coal)}
-.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.review{background:var(--ink);padding:40px 36px}
-.review-text{font-size:15px;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
-.review-text::before{content:"«";color:var(--gold);font-size:24px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
-.review-author{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
-.review-context{font-size:12px;color:var(--sand);margin-top:5px}
-.review.wide{grid-column:1/-1}
-@media(max-width:760px){.reviews-grid{grid-template-columns:1fr}.review.wide{grid-column:1}}
-/* ИНСАЙТ */
-  .insight{padding:70px 0}
-.insight-box{background:var(--coal);padding:60px;position:relative;overflow:hidden}
-.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
-.insight-box h2{font-size:clamp(18px,2.8vw,28px);letter-spacing:.16em;margin-bottom:28px;line-height:1.4}
-.insight-box p{color:var(--sand);font-size:16px;line-height:1.9;max-width:72ch;margin-bottom:16px}
-.insight-box p strong{color:var(--bone);font-weight:400}
-@media(max-width:760px){.insight-box{padding:40px 28px}}
-/* ФОРМАТ */
-  .format-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
-.format-item{background:var(--coal);padding:36px 28px}
-.format-item .icon{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
-.format-item h3{font-size:14px;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
-.format-item p{color:var(--sand);font-size:14px;line-height:1.7}
-.format-item strong{color:var(--bone);font-weight:400}
-@media(max-width:900px){.format-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.format-grid{grid-template-columns:1fr}}
-/* ВСТУПИТЬ */
-  .join-sec{background:var(--coal);padding:80px 0;text-align:center}
-.join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
-.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
-.join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.join-field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
-.join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
-.join-field textarea{min-height:90px;resize:vertical}
-/* Обязательные/необязательные поля — «чёткая зона ввода», чтобы не
-   путать какое поле нужно заполнить, а какое нет (см. Site/README.md,
-   раздел «Обязательные поля форм»). .req-mark — звёздочка у
-   обязательных, .opt-mark — подпись у необязательных, .input-clear —
-   более заметная граница в состоянии :invalid (не в фокусе — то есть
-   после того как поле тронули и ушли, не сразу при загрузке пустой
-   формы, иначе все обязательные поля были бы «красными» с первой же
-   секунды). */
-.req-mark{color:var(--gold);font-weight:700}
-.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:10px}
-.input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
-.join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
-.join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
-.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
-/* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
-@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
-@media(max-width:430px){section{padding:60px 0}}
-@media(max-width:375px){section{padding:50px 0}}
+.hub-hero{padding:150px 0 70px}
+.hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
+.hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;color:var(--sand);max-width:640px;line-height:1.6}
 </style>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "AELITA COMMUNITY",
-  "description": "Книжный клуб Екатерины Абдуловой — встречи и разговоры о книгах и смыслах вне театрального контекста.",
-  "brand": {
-    "@type": "Organization",
-    "name": "AELITA PRODUCTION"
-  },
-  "image": "https://aelita-production.ru/images/og-default.jpg",
-  "url": "https://aelita-production.ru/community/",
-  "offers": {
-    "@type": "Offer",
-    "url": "https://aelita-production.ru/community/",
-    "priceSpecification": {
-      "@type": "UnitPriceSpecification",
-      "price": "10000",
-      "priceCurrency": "RUB",
-      "unitText": "MONTH"
-    },
-    "availability": "https://schema.org/InStock"
-  }
-}
-</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
-
+<div class="curtain" aria-hidden="true"><div class="curtain-l"></div><div class="curtain-r"></div></div>
 <nav>
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-    <a href="/projects">Проекты</a>
-    <a href="/about">О компании</a>
-    <a href="/collaboration">Сотрудничество</a>
-    <a href="/contacts">Контакты</a>
+      <a href="/projects">Проекты</a>
+      <a href="/about">О компании</a>
+      <a href="/collaboration">Сотрудничество</a>
+      <a href="/contacts">Контакты</a>
     </div>
     <a class="lang-switch" href="/en/community/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
@@ -234,368 +62,24 @@ p a:hover{opacity:.75}
 
 <main id="main">
 
-<div class="hero">
-  <div class="hero-beam" aria-hidden="true"></div>
-  <div class="wrap hero-content">
-    <p class="hero-community">AELITA COMMUNITY</p>
-    <h1 class="hero-title">Пространство,<br>наполненное<br>смыслом</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-sub">Еженедельные встречи, на которых мы учимся отделять свои желания от чужих и находим в себе смелость жить.</p>
-    <div class="hero-meta">
-      <div class="hero-meta-item">
-        <span class="lbl">Сейчас читаем</span>
-        <span class="val">Мамардашвили</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="lbl">Новая группа</span>
-        <span class="val">Сентябрь · снова Берн</span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <a class="btn-gold" href="#join">Хочу в клуб</a>
-      <a class="btn-outline" href="#season-program" style="margin-left:0">Что читаем</a>
-    </div>
+<div class="hub-hero">
+  <div class="wrap">
+    <p class="eyebrow">AELITA COMMUNITY</p>
+    <h1>Комьюнити AELITA PRODUCTION</h1>
+    <p class="sub">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, как устроено мышление — своё и чужое. Сейчас в AELITA COMMUNITY — два книжных потока; со временем появятся другие форматы, не обязательно про книги.</p>
   </div>
 </div>
 
-<!-- О КЛУБЕ -->
-<section id="about">
+<section>
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">О клубе</span><h2>Архитектура понимания</h2></div>
-    <div class="about-grid reveal">
-      <div class="about-text">
-        <p>Мы часто думаем, что нас не понимают, потому что мы «плохо объяснили», или что человек напротив «плохо понимает». И то, и другое — ложь. Здесь мы создаём форму, в которой понимание может возникнуть.</p>
-        <p>AELITA COMMUNITY — <strong>языковая среда</strong>, такое место, где люди дорастают сначала до больших, а затем и до своих собственных идей, место, где учатся отделять свои желания от чужих, судьбу от родительских сценариев, а близость от экономики.</p>
-        <blockquote class="about-quote">Ты есть только там, где думаешь, чувствуешь, переживаешь, хочешь, поступаешь не как все. Никаких «всех» не существует. Существуют родительские предписания, кодекс инстаграм*-соответствия, культурные скрипты... Но всё это не человек.</blockquote>
-        <p style="font-size:12px;color:rgba(201,184,163,.5);margin-top:-12px">* Instagram — социальная сеть, принадлежащая компании Meta Platforms Inc., деятельность которой по реализации продуктов Instagram и Facebook на территории Российской Федерации признана экстремистской и запрещена.</p>
-        <p>Чтобы думать не как все — нужно пересобрать себя. Не раз и даже не два. <strong>Постоянно. Безостановочно. Каждую минуту.</strong></p>
-        <p>Уже больше 13 лет Катя читает книги и ведёт встречи. Книга, фильм, картина или спектакль для неё — инструмент: можно использовать, а можно и нет.</p>
-      </div>
-      <div>
-        <div class="katya-card">
-          <p class="role">Основательница · Архитектор пространств</p>
-          <h3>Екатерина Абдулова</h3>
-          <p>Психолог, сертифицированный транзактный аналитик (ITAA), коуч (ACSTH), режиссёр. Основательница <a href="/abdulova">AELITA PRODUCTION</a>.</p>
-          <p>Говорит на «марсианском» — и умеет перевести обратно на человеческий. С терпением, чувствуя ритм каждого.</p>
-          <a class="katya-link" href="/abdulova">Подробнее о Кате →</a>
-          <div class="katya-credentials">
-            <span class="katya-cred">ВШП — психолог, 2010</span>
-            <span class="katya-cred">MBA — управление проектами</span>
-            <span class="katya-cred">ITAA — транзактный анализ, 2018</span>
-            <span class="katya-cred">Методология П.Г. Щедровицкого, 2022</span>
-            <span class="katya-cred">РГИСИ — режиссура, 2025</span>
-          </div>
-        </div>
-      </div>
+    <div class="sec-head reveal"><span class="eyebrow">Потоки</span><h2>Куда пойти</h2></div>
+    <div class="other-grid reveal" style="gap:24px">
+      <a class="other-card" href="/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, тема сезона меняется — сейчас про то, зачем мы выбираем быть вместе.</p></a>
+      <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка. Сейчас 3 уровень.</p></a>
     </div>
+    <p class="desc reveal" style="margin-top:32px"><a href="/workshop-2026-09-12" style="color:var(--gold)">Открытая встреча потока для предпринимателей</a> — 12 сентября, «Дом архитектора», Калуга, вход свободный.</p>
   </div>
 </section>
-
-<!-- МАРСИАНСКИЙ ЯЗЫК -->
-<div class="mars">
-  <div class="wrap">
-    <div class="mars-grid reveal">
-      <div class="mars-text">
-        <span class="eyebrow" style="display:block;margin-bottom:18px">Про марсианский</span>
-        <h2>Как мы говорим на одном языке и не понимаем друг друга</h2>
-        <p>На одной из встреч возник интересный вопрос: достаточно ли просто знать русский язык, чтобы понимать друг друга? Или это <strong>сломанный телефон</strong>, где один говорит одно, второй смотрит через мутное стекло когнитивных искажений и понимает что-то другое, отвечая уже на сгенерированное опытом описание, а не на то, что ему действительно сказали?</p>
-        <p>Катя говорит на «марсианском» — языке смыслов, которые не лежат на поверхности.</p>
-        <p>Её роль в группе: <strong>исследовать искажения, предлагать другой язык описания</strong> и возвращать сказанное к действительному содержанию. Это требует терпения и видения — и именно это она несёт в группу.</p>
-        <p>Как быстро люди могут настроить языки на одну волну передачи данных? Ведь это не математика. Мы не договорились, что 2+2=4.</p>
-      </div>
-      <div class="mars-diagram">
-        <div class="mars-step">
-          <span class="num">01</span>
-          <div><h3>Формулирует</h3><p>Участник задаёт вопрос, используя свой личный опыт как главный аргумент. Свой взгляд он не прячет, а выкладывает на стол.</p></div>
-        </div>
-        <div class="mars-step">
-          <span class="num">02</span>
-          <div><h3>Отвечает</h3><p>Второй участник не спорит, а пропускает услышанное через свою систему координат — и возвращает уже другую версию этого вопроса. Так рождается объём.</p></div>
-        </div>
-        <div class="mars-step">
-          <span class="num">03</span>
-          <div><h3>Ставит под сомнение</h3><p>Третий участник видит оба тезиса и указывает на их ограничения. Он не оценивает, кто прав, а показывает границы каждого утверждения.</p></div>
-        </div>
-        <div class="mars-step">
-          <span class="num">✦</span>
-          <div><h3>Катя</h3><p>Держит в уме все три позиции и фокусирует внимание на сути, а не на защите эго и картины мира. Не даёт перевести разговор в спор. Её задача — не объяснять смысл за всех, а следить, чтобы каждый участник смог сам открыть истину. Она создаёт устойчивую рамку, в которой неудобные вопросы можно задавать без страха и регламента.</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ИНСАЙТ -->
-<div class="insight">
-  <div class="wrap reveal">
-    <div class="insight-box">
-      <h2>Сначала хаос.<br>Потом — послевкусие из инсайтов</h2>
-      <p>На встречах не всегда понятно, как именно работает механизм: иногда кажется, что просто говоришь, а на деле <strong>в общий котёл попадает давление чужих смыслов</strong>.</p>
-      <p>Разность наших «карт» создаёт напряжение, и именно оно приводит систему в движение, заставляя рамки восприятия каждого участника расширяться.</p>
-      <p>Пар не исчезает бесследно. После встречи он продолжает работу внутри системы — размышляя над услышанным, вы перезапускаете петли обратной связи, а осмысляя чужой опыт, преобразуете сжатый воздух в конкретное движение мысли.</p>
-      <p>Происходит не просто пересмотр ситуаций, а постепенная смена алгоритма — понимание того, как действовать в новых условиях.</p>
-      <p>Катя не управляет котлом и не задаёт температуру. Она — <strong>механизм, который поддерживает необходимое давление в системе</strong>, позволяя каждому участнику самостоятельно запустить собственный процесс преобразования энергии и взять из этого котла ровно столько силы, сколько готова вместить его собственная структура.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ЧТЕНИЕ -->
-<section id="reading" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Библиотека</span><h2>Что читаем</h2></div>
-    <div class="reading-grid reveal">
-      <div class="book-card current">
-        <p class="status">Читаем сейчас</p>
-        <p class="author">Мераб Мамардашвили</p>
-        <h3>Беседы о мышлении</h3>
-        <p>Философ, который думал вслух — и учил мыслить тех, кто слушал. Мамардашвили говорил о сознании, времени, усилии понимания. О том, что мышление — это не то, что само собой происходит. Это работа.</p>
-        <p class="chapters">Беседы о мышлении · В процессе чтения</p>
-        <div class="deco">М</div>
-      </div>
-      <div class="book-card">
-        <p class="status">Читали раньше</p>
-        <p class="author">Эрик Берн</p>
-        <h3>Люди, которые играют в игры. Игры, в которые играют люди</h3>
-        <p>Универсальный инструмент, который решает базовые проблемы в голове. Транзактный анализ в применении к отношениям, бизнесу, маркетингу. Через два месяца работы с Берном — честный ответ на вопрос: «Чего пришёл?».</p>
-        <p class="chapters">Завершили · Перешли к Мамардашвили</p>
-        <div class="deco">Б</div>
-      </div>
-    </div>
-    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Тема сезона</span><h2>Зачем мы выбираем быть вместе</h2></div>
-    <div class="reveal" style="max-width:74ch">
-      <p style="color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:20px">Раньше брак держался на религии, экономике и общественном мнении. Сегодня все три опоры пошатнулись: женщина зарабатывает сама, церковь для многих перестала быть авторитетом, слово «развод» никого не удивляет. Внешних причин для моногамной семьи почти не осталось — а внутренние никто толком не формулировал.</p>
-      <p style="color:var(--sand);font-size:16px;line-height:1.9">Готового ответа тут не существует. Год будем читать — от психологии до философии и прозы — и пробовать собрать свой собственный пазл: зачем люди выбирают просыпаться рядом с одним человеком всю жизнь, и есть ли в этом смысл, если можно иначе.</p>
-    </div>
-
-    <div class="reveal" style="margin-top:2px;background:var(--coal);border-left:2px solid var(--gold);padding:32px 36px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Новый набор · Сентябрь</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">Новая группа AELITA COMMUNITY стартует в сентябре — для тех, кто хотел присоединиться раньше, но не успел.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Формат — 1 книга в месяц, 1 встреча в неделю. Участие — 10 000 ₽ в месяц.</p>
-      <a class="btn-gold" href="#join">Записаться в новую группу</a>
-    </div>
-
-    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2 id="season-program">Что и когда читаем</h2></div>
-    <div class="season-timeline reveal">
-      <div class="season-month">
-        <span class="m-name">Сентябрь</span>
-        <div class="m-body">
-          <h4>«Игры, в которые играют люди» + «Люди, которые играют в игры»</h4>
-          <p class="m-author">Эрик Берн — считаем за один пункт, это по сути одна работа</p>
-          <p>Открываем сезон общим словарём: какие игры мы играем друг с другом не глядя, и какой в них скрытый выигрыш — эта оптика понадобится на все остальные месяцы.</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Октябрь</span>
-        <div class="m-body">
-          <h4>«Пир»</h4>
-          <p class="m-author">Платон</p>
-          <p>Откуда взялась идея «второй половинки»? Сравниваем с библейским взглядом на брак как на союз перед Богом.</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Ноябрь</span>
-        <div class="m-body">
-          <h4>«Русская семья XI–XIX веков» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение первого кита</span></h4>
-          <p class="m-author">Василий Лещенко</p>
-          <p>Разбираем семью как экономический институт. Здесь же — как библейские нормы лежали в основе этого уклада.</p>
-          <p class="m-fiction">Параллельно: «Гроза» и «Леди Макбет Мценского уезда» — как религиозные и культурные нормы разрушали личность.</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Декабрь</span>
-        <div class="m-body">
-          <h4>«Агрессия, или Так называемое зло» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение второго кита</span></h4>
-          <p class="m-author">Конрад Лоренц</p>
-          <p>Смотрим на природу. Если человек создан свободным, то что в нас говорит инстинкт? Почему агрессия и собственничество заложены в нас биологически?</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Январь</span>
-        <div class="m-body">
-          <h4>«Избранное» <span style="color:rgba(201,184,163,.5);font-weight:300">· Внутренний фундамент</span></h4>
-          <p class="m-author">Дональд Вудс Винникотт</p>
-          <p>Как младенческий опыт с матерью формирует способность к верности и доверию? Библия здесь — как архетип «безусловной материнской любви».</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Февраль</span>
-        <div class="m-body">
-          <h4>«Отец» <span style="color:rgba(201,184,163,.5);font-weight:300">· Архетип и Божественный отец</span></h4>
-          <p class="m-author">Луиджи Зойя</p>
-          <p>Продолжаем тему детства. Кто такой Отец в психологии и в Ветхом и Новом Завете? Как его отсутствие или присутствие влияет на готовность быть взрослым и брать ответственность за пару?</p>
-          <p class="m-fiction">Параллельно: «Гамлет» — мир без отца.</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Март</span>
-        <div class="m-body">
-          <h4>«Наркомания: патология или поиск инициации» <span style="color:rgba(201,184,163,.5);font-weight:300">· Побег из реальности</span></h4>
-          <p class="m-author">Луиджи Зойя</p>
-          <p>Зачем мы ищем острых ощущений? Почему измена — это тоже своего рода наркотик? Что мы пытаемся «убить» в себе, уходя от рутины, и почему Библия называет это грехом?</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Апрель</span>
-        <div class="m-body">
-          <h4>«Секс в человеческой любви» <span style="color:rgba(201,184,163,.5);font-weight:300">· Сценарии и игры</span></h4>
-          <p class="m-author">Эрик Берн</p>
-          <p>Разбираем, как мы играем в «игры» — как влечение и секс используются как инструмент манипуляции. Сравниваем с нравственными принципами Нового Завета.</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Май</span>
-        <div class="m-body">
-          <h4>«Любовь и страх» <span style="color:rgba(201,184,163,.5);font-weight:300">· Диагноз 2026 года</span></h4>
-          <p class="m-author">Зигмунт Бауман</p>
-          <p>Финальный разбор крушения всех внешних «китов» — социума, церкви, экономики. Почему религия больше не держит, и что происходит с людьми, которые остались одни со своей свободой.</p>
-          <p class="m-fiction">Параллельно: «Пока скука не разлучит нас» и «Госпожа Бовари».</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Июнь</span>
-        <div class="m-body">
-          <h4>«Отношения любви: нормальность и патология» <span style="color:rgba(201,184,163,.5);font-weight:300">· Зрелая любовь</span></h4>
-          <p class="m-author">Отто Кернберг</p>
-          <p>Выходим на пик психоанализа. Как выдерживать агрессию, злость и скуку в долгосрочных отношениях и не разрушить их — ответ на вопрос «как сохранять верность добровольно?».</p>
-        </div>
-      </div>
-      <div class="season-month">
-        <span class="m-name">Июль</span>
-        <div class="m-body">
-          <h4>«Экзистенциальная психотерапия» <span style="color:rgba(201,184,163,.5);font-weight:300">· Экзистенциальный итог и синтез года</span></h4>
-          <p class="m-author">Ирвин Ялом — главы про изоляцию, ответственность и смысл жизни</p>
-          <p>Почему мы выбираем одного человека, зная, что умрём в одиночестве? Что такое настоящий смысл против «правил»? Собираем весь пазл заново — смотрим на весь год через призму Платона, Берна и Ялома: что осталось от «заповедей», когда исчезли страх и выгода.</p>
-        </div>
-      </div>
-    </div>
-    <div class="reveal" style="max-width:74ch;margin-top:32px">
-      <p style="color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:14px">Библию не читаем отдельно по главам — держим на столе как базовый словарь морали. На каждой встрече спрашиваем: «А как на это смотрит Новый Завет? Что это значило для людей 2000 лет назад, и как мы теперь можем понять это без насилия над собой?»</p>
-      <p style="color:var(--sand);font-size:14px;line-height:1.8">Художественная литература идёт дополнительным эмоциональным слоем — читаете в своём темпе, а на встречах разбираем героев через призму пройденной психологии и философии.</p>
-    </div>
-    <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">Если вы устали от лозунгов «семья — это святое» и хотите понять, как устроена близость на самом деле — нам по пути. А ещё с группой мы путешествуем, ходим в театр и на выставки, рисуем, отмечаем дни рождения и создаём проекты вместе — часть этого видно в фотографиях ниже.</p>
-  </div>
-</section>
-
-<!-- ОТЗЫВЫ -->
-<section class="reviews-sec" id="reviews">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Голоса</span><h2>Что говорят участники</h2></div>
-    <div class="reviews-grid reveal">
-      <div class="review wide">
-        <p class="review-text">Катя, это походу ты... Помню фразу твою о том, что от Берна каждый возьмёт столько, сколько сможет взять. По факту — каждый вокруг вчерашнего костра и тебя, как нашего огонька, берёт столько, сколько может взять. Как будто мы можем много читать и говорить, но ценность в тебе, Кать. И в наших встречах. Спасибо.</p>
-        <p class="review-author">Участница клуба</p>
-      </div>
-      <div class="review">
-        <p class="review-text">Благодарю за встречу! После остаётся долгое послевкусие из инсайтов, пересматриваю ситуации, осмысливаю услышанное. Приходит понимание чего нового, на что можно взглянуть по-другому.</p>
-        <p class="review-author">Участница клуба</p>
-      </div>
-      <div class="review">
-        <p class="review-text">Рада знакомству с каждым! От всех беру себе по чуть-чуть, примеряю — и приходит понимание, как жить дальше. По крайней мере, пробовать.</p>
-        <p class="review-author">Участница клуба</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ФОТО С ВСТРЕЧ -->
-<section id="gallery">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Атмосфера</span><h2>С прошлых встреч</h2></div>
-    <div class="gallery-scroll reveal">
-      <img src="/images/community/community-1.jpg" alt="Участники AELITA COMMUNITY — совместное фото" loading="lazy">
-      <img src="/images/community/community-2.jpg" alt="Встреча клуба AELITA COMMUNITY — разбор темы за столом" loading="lazy">
-      <img src="/images/community/community-3.jpg" alt="Участники AELITA COMMUNITY на закате" loading="lazy">
-      <img src="/images/community/community-4.jpg" alt="Участники AELITA COMMUNITY в гостях друг у друга" loading="lazy">
-      <img src="/images/community/community-5.jpg" alt="Вечер у костра — встреча клуба вне зала" loading="lazy">
-      <img src="/images/community/community-6.jpg" alt="Участники AELITA COMMUNITY делятся фото со встречи" loading="lazy">
-      <img src="/images/community/community-7.jpg" alt="Ужин участников AELITA COMMUNITY" loading="lazy">
-      <img src="/images/community/community-9.jpg" alt="Участники AELITA COMMUNITY в зрительном зале" loading="lazy">
-      <img src="/images/community/community-8.jpg" alt="Праздничный торт на встрече клуба" loading="lazy">
-    </div>
-    <p class="gallery-hint reveal">Листайте вбок, чтобы посмотреть все фото →</p>
-  </div>
-</section>
-
-<!-- ФОРМАТ -->
-<section id="format">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Формат</span><h2>Как это устроено</h2></div>
-    <div class="format-grid reveal">
-      <div class="format-item">
-        <div class="icon">◈</div>
-        <h3>Встречи</h3>
-        <p><strong>4 встречи в месяц</strong><br>В камерном формате — до 10 человек. За редким исключением о дате сообщают заранее.</p>
-      </div>
-      <div class="format-item">
-        <div class="icon">◈</div>
-        <h3>Группа</h3>
-        <p>Интимный формат — все знают друг друга.</p>
-      </div>
-      <div class="format-item">
-        <div class="icon">◈</div>
-        <h3>Правила</h3>
-        <p>Каждый <strong>читает и пишет конспекты</strong>, приносит вопросы — так рождается разговор.</p>
-      </div>
-      <div class="format-item">
-        <div class="icon">◈</div>
-        <h3>Результат</h3>
-        <p><strong>Другое сознание на выходе.</strong><br>Честный ответ себе на вопрос: «Чего пришёл?» И щепотка смелости жить дальше по-своему.</p>
-      </div>
-      <div class="format-item">
-        <div class="icon">◈</div>
-        <h3>Дистанционно</h3>
-        <p><strong>Возможность участия онлайн — прямо на встрече, по видеосвязи.</strong><br>Все встречи записываются — можно посмотреть в своём темпе, если не получилось быть вживую или на связи.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ВСТУПИТЬ -->
-<div class="join-sec" id="join">
-  <div class="wrap">
-    <span class="eyebrow">Присоединиться</span>
-    <h2 style="margin-top:14px">Хочу в клуб</h2>
-    <p>Напишите — расскажем о ближайшей встрече и как попасть в группу.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Новая группа стартует в сентябре — тема сезона: исследование оснований для моногамной семьи. Участие — 10 000 ₽ в месяц.</p>
-
-    <div class="notify-tabs" id="notifyTabs_j">
-      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Через сайт</button>
-      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_j('bot', this)">Через Telegram-бота</button>
-    </div>
-
-    <div id="formSite_j">
-    <div class="join-form" id="joinForm">
-      <div class="join-field"><label>Имя <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Как вас зовут" required></div>
-      <div class="join-field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="join-field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
-      <div class="join-field"><label>Пару слов о себе — необязательно</label><textarea placeholder="Что привело, чего ищете..."></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
-      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы записаться прямо сейчас — нажмите «Сначала спросить Катю» ниже, мы всё оформим лично.</p>
-      <button class="btn-gold" id="payBtn_community" onclick="var c=collectContact(); if(c) AELITA_pay('community', {name: document.getElementById('j-name').value, contact: c, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
-      <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Сначала спросить Катю</button>
-      <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
-      <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
-      <div class="join-ok" id="paymentReturnMsg">Если оплата прошла успешно — мы получили уведомление и Катя свяжется с вами, чтобы рассказать о ближайшей встрече. Если что-то пошло не так или остались вопросы — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
-    </div>
-    <div class="join-ok" id="joinOk">Спасибо! Катя свяжется с вами и расскажет о ближайшей встрече.</div>
-    </div>
-
-    <div id="formBot_j" style="display:none">
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community" target="_blank" rel="noopener">Хочу в клуб</a>
-      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
-    </div>
-  </div>
-</div>
-
-<script>
-  function switchFormTab_j(tab, btn){
-    document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('formSite_j').style.display = (tab === 'site') ? 'block' : 'none';
-    document.getElementById('formBot_j').style.display = (tab === 'bot') ? 'block' : 'none';
-  }
-</script>
 
 </main>
 
@@ -640,97 +124,26 @@ p a:hover{opacity:.75}
     </div>
   </div>
 </footer>
-
 <script>
-  // Телефон и email — обязательны на каждой форме сайта, Telegram —
-  // отдельным пунктом, желательным, но не обязательным (см. Site/
-  // README.md, раздел «Обязательные поля форм» — заказчик попросил
-  // именно так после разбора заявок без телефона/почты).
-  function collectContact(){
-    var phone = document.getElementById('j-phone').value.trim();
-    var email = document.getElementById('j-email').value.trim();
-    var tg = document.getElementById('j-telegram').value.trim();
-    if(!phone){ alert('Укажите телефон'); return null; }
-    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
-    var parts = ['Тел: ' + phone, 'Email: ' + email];
-    if(tg) parts.push('TG: ' + tg);
-    return parts.join(' · ');
-  }
-
-  async function joinClub(){
-    const name = document.getElementById('j-name').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
-    if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
-    const contact = collectContact();
-    if(!contact){return;}
-    await sendTelegram('AELITA COMMUNITY — вступление', {
-      'Имя': name,
-      'Контакт': contact,
-    });
-    await sendFormspree('AELITA COMMUNITY — вступление', {
-      'Имя': name,
-      'Контакт': contact,
-    });
-    document.getElementById('joinForm').style.display='none';
-    document.getElementById('joinOk').style.display='block';
-  }
-
-  const io = new IntersectionObserver(es=>{
-    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
-  },{threshold:.08});
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
   const lineIO = new IntersectionObserver(es=>{
-    es.forEach(e=>{if(e.isIntersecting) e.target.classList.add('line-on')})
-  },{threshold:.4});
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
   document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
 
-  
-  
-  // Закрыть по Escape
-  
-
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
-
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
-
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
+  const curtain = document.querySelector('.curtain');
+  if(curtain){
+    setTimeout(()=>{
+      curtain.classList.add('open');
+      setTimeout(()=>{
+        curtain.style.display = 'none';
+        document.querySelectorAll('.reveal:not(.on)').forEach(el => el.classList.add('on'));
+      }, 1200);
+    }, 80);
   }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
-
-  // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
     document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
       el.classList.add('on');
@@ -764,22 +177,11 @@ p a:hover{opacity:.75}
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
   </div>
 </div>
-
 <!-- /Cookie Banner -->
 
 <button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<!-- Модальное окно Спасибо -->
-<div class="thanks-modal" id="thanks-modal">
-  <div class="thanks-box">
-    <div class="thanks-icon">✦</div>
-    <h3>Спасибо</h3>
-    <p>Ваше сообщение получено. Мы свяжемся с вами в течение рабочего дня.</p>
-    <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Закрыть</button>
-  </div>
-</div>
-
-<!-- Telegram виджет -->
+<!-- Telegram widget -->
 <div class="tg-widget" id="tg-widget">
   <div class="tg-bubble" id="tg-bubble">Напишите нам — бот ответит мгновенно</div>
   <a class="tg-btn" href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" aria-label="Написать в Telegram">
@@ -790,33 +192,14 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js"></script>
-<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
-
-<script>
-  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
-  // aelita_paid в return_url). Не подтверждение самой оплаты (это
-  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
-  // ждали», без чего человек после реальной оплаты видел бы ту же
-  // форму и не понимал, получилось ли.
-  (function () {
-    var params = new URLSearchParams(location.search);
-    if (params.get('aelita_paid') !== '1') return;
-    var el = document.getElementById('paymentReturnMsg');
-    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-    params.delete('aelita_paid');
-    var qs = params.toString();
-    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-  })();
-</script>
 
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('SW зарегистрирован:', reg.scope))
-        .catch(err => console.error('SW ошибка:', err));
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW error:', err));
     });
   }
 </script>
