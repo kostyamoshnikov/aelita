@@ -312,7 +312,7 @@ nav a, footer a{color:var(--sand)}
     .bio-photo{height:260px}
   }
 h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
-.notify-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.notify-tabs{display:flex;justify-content:center;gap:8px;margin-top:28px;margin-bottom:28px;flex-wrap:wrap}
 .notify-tab.active{border-color:var(--gold);color:var(--gold)}
 .notify-tab:hover{border-color:var(--gold);color:var(--gold)}
 .notify-bot-note{color:var(--sand);font-size:13px;margin-top:16px}
@@ -452,6 +452,9 @@ section{padding:80px 0}
   .hero-bg{will-change:transform}
 .page-header h1{font-size:clamp(28px,5vw,52px);letter-spacing:.18em;margin-top:16px}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;-webkit-appearance:none;appearance:none;cursor:pointer;font-weight:inherit}
+.submit-btn{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:block;width:100%;text-align:center;transition:opacity .3s;border:none;-webkit-appearance:none;appearance:none;cursor:pointer;font-weight:inherit;margin-top:20px}
+.submit-btn:hover{opacity:.85}
+.submit-btn:disabled{cursor:default}
   /* ── Hero видео ── */
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,13,.3) 0%,rgba(11,11,13,.0) 35%,rgba(11,11,13,.85) 72%,var(--ink) 100%)}
 .teaser-sound-btn{
