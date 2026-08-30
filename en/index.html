@@ -344,7 +344,7 @@ footer p{color:var(--sand);font-size:14px}
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
     <a href="/en/projects">Productions</a>
-    <a href="/en/about">About the company</a>
+    <a href="/en/about">About</a>
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
@@ -391,6 +391,28 @@ footer p{color:var(--sand);font-size:14px}
     <div class="sec-head reveal"><span class="eyebrow">01</span><h2>Schedule</h2></div>
 
     <div class="event reveal">
+      <div class="ev-date">12.09<small>Kaluga</small></div>
+      <div class="ev-info">
+        <h3><a href="/en/workshop-2026-09-12" style="color:var(--gold);text-decoration:none">Open Meeting for Entrepreneurs</a></h3>
+        <p>Dom Arkhitektora</p>
+        <p class="fest">Level 3 · Book club for entrepreneurs · <a href="/en/community">AELITA COMMUNITY</a></p>
+        <span class="badge">18+ · Free entry</span>
+      </div>
+      <a class="ev-cta" href="/en/workshop-2026-09-12">Learn more</a>
+    </div>
+
+    <div class="event reveal">
+      <div class="ev-date">13.09<small>Kaluga</small></div>
+      <div class="ev-info">
+        <h3><a href="/en/workshop-2026-09-13" style="color:var(--gold);text-decoration:none">Open Meeting — Main Stream</a></h3>
+        <p>Dom Arkhitektora</p>
+        <p class="fest">Main stream · Book club · <a href="/en/community">AELITA COMMUNITY</a></p>
+        <span class="badge">18+ · Free entry</span>
+      </div>
+      <a class="ev-cta" href="/en/workshop-2026-09-13">Learn more</a>
+    </div>
+
+    <div class="event reveal">
       <div class="ev-date">22–25.10<small>Stary Oskol</small></div>
       <div class="ev-info">
         <h3><a href="/en/tochkacuire" style="color:var(--gold);text-decoration:none">“Tochka Cuire”</a></h3>
@@ -406,7 +428,7 @@ footer p{color:var(--sand);font-size:14px}
         <h3><a href="/en/bred" style="color:var(--gold);text-decoration:none">{AND ALL THIS NONSENSE TOO}</a></h3>
         <p>Dom Arkhitektora</p>
         <p class="fest">Dance performance <a href="/en/vdovichenko">Anton Vdovichenko</a></p>
-        <span class="badge">18+ · 1,000 ₽</span>
+        <span class="badge">18+ · 1000 ₽</span>
       </div>
       <a class="ev-cta" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Buy ticket</a>
     </div>
@@ -616,14 +638,23 @@ footer p{color:var(--sand);font-size:14px}
 
   const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  // См. Site/index.html (RU) — тот же будущий URL после деплоя CrewBot.
+  // URL веб-приложения _tools/CrewBot/Code.gs — заполнить после деплоя
+  // (см. её README.md). Настоящее хранилище подписчиков (лист
+  // «Контакты», тег 'сайт-подписка') — sendTelegram/sendFormspree выше
+  // остаются как мгновенное уведомление админу, но САМИ ПО СЕБЕ не
+  // сохраняют подписчика никуда для будущей рассылки, это делает
+  // только addContact ниже.
   const CREWBOT_WEBAPP_URL = 'XXX';
 
   async function addNewsletterContact(name, email) {
-    if (CREWBOT_WEBAPP_URL === 'XXX') return;
+    if (CREWBOT_WEBAPP_URL === 'XXX') return; // не задеплоено — не падаем, просто не сохраняем
     try {
       await fetch(CREWBOT_WEBAPP_URL, {
         method: 'POST',
+        // text/plain, не application/json — намеренно: Apps Script
+        // веб-приложения плохо переваривают CORS preflight (OPTIONS) от
+        // браузеров на application/json (см. тот же приём в
+        // _tools/Tickets/lib/guest-system-bridge.js).
         headers: {'Content-Type': 'text/plain;charset=utf-8'},
         body: JSON.stringify({ action: 'addContact', name: name || '', email: email, tags: ['сайт-подписка'] }),
       });
@@ -669,9 +700,9 @@ footer p{color:var(--sand);font-size:14px}
   async function subscribe(){
     const name = document.getElementById('subName').value.trim();
     const v = document.getElementById('subEmail').value.trim();
-    if(!name){ alert('Please enter your name'); return; }
+    if(!name){ alert('Укажите имя'); return; }
     if(!v || !v.includes('@')) return;
-    if(!document.getElementById('subConsent').checked){ alert('Please check the personal data consent box'); return; }
+    if(!document.getElementById('subConsent').checked){ alert('Отметьте согласие на обработку персональных данных'); return; }
     await addNewsletterContact(name, v);
     await sendTelegram('Главная — подписка на показы', {'Имя': name, 'Email': v});
     await sendFormspree('Главная — подписка на показы', {'Имя': name, 'Email': v});
@@ -712,7 +743,7 @@ footer p{color:var(--sand);font-size:14px}
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
-    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
