@@ -41,6 +41,17 @@
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
 .hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;color:var(--sand);max-width:640px;line-height:1.6}
+/* Перенесено из book-space/index.html (pack-v229) — та же карточка
+   Кати переиспользована здесь без credentials-списка, укороченный
+   .about-grid тоже отсюда, набор правил идентичен, только без
+   .katya-credentials/.katya-cred (в этой версии карточки не нужны). */
+.about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+.katya-card{background:var(--coal);padding:44px 36px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 </style>
 </head>
 <body>
@@ -75,12 +86,33 @@
 
 <section>
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Streams</span><h2>Where to go</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Community</span><h2>More than one format</h2></div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>AELITA COMMUNITY is a shared home for formats that don't reduce to ready-made answers. For now it holds one active project — the book club; over time other directions may join it, not necessarily about reading.</p>
+        <p>What they'll share is this: not a lecture with ready conclusions, but an environment where the friction between different ways of thinking is itself the mechanism that moves understanding forward.</p>
+      </div>
+      <div>
+        <div class="katya-card">
+          <p class="role">Founder · Space Architect</p>
+          <h3>Ekaterina Abdulova</h3>
+          <p>Psychologist, certified transactional analyst (ITAA), coach (ACSTH), director. <a href="/en/abdulova">AELITA PRODUCTION</a>.</p>
+          <a class="katya-link" href="/en/abdulova">More about Katya →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Book club</span><h2>Two tracks</h2></div>
     <div class="other-grid reveal" style="gap:24px">
       <a class="other-card" href="/en/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Currently reading</span><h3>Main stream</h3><p>Weekly meetings, the season's theme changes — right now it's about why we choose to be together.</p></a>
       <a class="other-card" href="/en/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">For entrepreneurs</span><h3>Stream for entrepreneurs</h3><p>A separate programme — from the psychology of family and power to the philosophy of thought and language. Currently Level 3.</p></a>
     </div>
-    <p class="desc reveal" style="margin-top:32px"><a href="/en/workshop-2026-09-13" style="color:var(--gold)">Open meeting of the main stream</a> — September 13, “Dom Arkhitektora,” Kaluga, free entry. Also — <a href="/en/workshop-2026-09-12" style="color:var(--gold)">an open meeting of the entrepreneurs stream</a> September 12, at the same venue.</p>
+    <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:14px">Both streams are a small-group format, up to 10 people, no ready-made answers or lectures. Meetings are recorded — you can watch at your own pace if you couldn't join live.</p>
+    <p class="desc reveal" style="margin-top:24px"><a href="/en/workshop-2026-09-13" style="color:var(--gold)">Open meeting of the main stream</a> — September 13, “Dom Arkhitektora,” Kaluga, free entry. Also — <a href="/en/workshop-2026-09-12" style="color:var(--gold)">an open meeting of the entrepreneurs stream</a> September 12, at the same venue.</p>
   </div>
 </section>
 

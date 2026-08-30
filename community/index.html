@@ -38,6 +38,17 @@
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
 .hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;color:var(--sand);max-width:640px;line-height:1.6}
+/* Перенесено из book-space/index.html (pack-v229) — та же карточка
+   Кати переиспользована здесь без credentials-списка, укороченный
+   .about-grid тоже отсюда, набор правил идентичен, только без
+   .katya-credentials/.katya-cred (в этой версии карточки не нужны). */
+.about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+.katya-card{background:var(--coal);padding:44px 36px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 </style>
 </head>
 <body>
@@ -72,12 +83,33 @@
 
 <section>
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Потоки</span><h2>Куда пойти</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Комьюнити</span><h2>Больше, чем один формат</h2></div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>AELITA COMMUNITY — общий дом для форматов, которые не сводятся к готовым ответам. Пока в нём один действующий проект — книжный клуб; со временем к нему могут добавиться и другие направления, не обязательно про чтение.</p>
+        <p>Общее в них будет одно: не лекция с готовыми выводами, а среда, где трение между разными способами думать — само по себе и есть механизм, который двигает понимание вперёд.</p>
+      </div>
+      <div>
+        <div class="katya-card">
+          <p class="role">Основательница · Архитектор пространств</p>
+          <h3>Екатерина Абдулова</h3>
+          <p>Психолог, сертифицированный транзактный аналитик (ITAA), коуч (ACSTH), режиссёр. Основательница <a href="/abdulova">AELITA PRODUCTION</a>.</p>
+          <a class="katya-link" href="/abdulova">Подробнее о Кате →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Два направления</h2></div>
     <div class="other-grid reveal" style="gap:24px">
       <a class="other-card" href="/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, тема сезона меняется — сейчас про то, зачем мы выбираем быть вместе.</p></a>
       <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка. Сейчас 3 уровень.</p></a>
     </div>
-    <p class="desc reveal" style="margin-top:32px"><a href="/workshop-2026-09-13" style="color:var(--gold)">Открытая встреча основного потока</a> — 13 сентября, «Дом архитектора», Калуга, вход свободный. Также — <a href="/workshop-2026-09-12" style="color:var(--gold)">открытая встреча потока для предпринимателей</a> 12 сентября, там же.</p>
+    <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:14px">Оба потока — камерный формат, до 10 человек, без готовых ответов и лекций. Встречи записываются — можно посмотреть в своём темпе, если не получилось быть на связи вживую.</p>
+    <p class="desc reveal" style="margin-top:24px"><a href="/workshop-2026-09-13" style="color:var(--gold)">Открытая встреча основного потока</a> — 13 сентября, «Дом архитектора», Калуга, вход свободный. Также — <a href="/workshop-2026-09-12" style="color:var(--gold)">открытая встреча потока для предпринимателей</a> 12 сентября, там же.</p>
   </div>
 </section>
 
