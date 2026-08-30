@@ -179,9 +179,15 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 
   /* Текстовые ссылки в контенте */
-  p a, li a, .desc a, .bio-info a, .about-text a, .bio-text a,
-  .desc-text a, .physics-text a, .tl-desc a, .career-item p a,
-  .review-show a, .vendor-address a{
+  /* кнопки исключены — у них собственный цвет (--ink/--bone/--sand),
+     иначе .bio-info a перебивал .btn-gold по специфичности:
+     золотой текст на золотом фоне = невидимая кнопка */
+  p a:not(.btn-gold):not(.btn-outline):not(.submit-btn), li a:not(.btn-gold):not(.btn-outline):not(.submit-btn),
+  .desc a:not(.btn-gold):not(.btn-outline):not(.submit-btn), .bio-info a:not(.btn-gold):not(.btn-outline):not(.submit-btn),
+  .about-text a:not(.btn-gold):not(.btn-outline):not(.submit-btn), .bio-text a:not(.btn-gold):not(.btn-outline):not(.submit-btn),
+  .desc-text a:not(.btn-gold):not(.btn-outline):not(.submit-btn), .physics-text a:not(.btn-gold):not(.btn-outline):not(.submit-btn),
+  .tl-desc a:not(.btn-gold):not(.btn-outline):not(.submit-btn), .career-item p a:not(.btn-gold):not(.btn-outline):not(.submit-btn),
+  .review-show a:not(.btn-gold):not(.btn-outline):not(.submit-btn), .vendor-address a:not(.btn-gold):not(.btn-outline):not(.submit-btn){
     color:var(--gold);
     text-decoration:none;
     transition:opacity .3s;
@@ -369,7 +375,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
     <a href="/en/projects">Productions</a>
-    <a href="/en/about">About the company</a>
+    <a href="/en/about">About</a>
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
@@ -529,7 +535,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
-    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
