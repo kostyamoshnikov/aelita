@@ -45,7 +45,7 @@
   // финальное значение https://api.aelita-production.ru/payments/create-payment.
   // Пока пусто — кнопки «Оплатить» показывают понятное сообщение
   // вместо тихой поломки, сайт при этом не ломается.
-  var CREATE_PAYMENT_URL = '';
+  var CREATE_PAYMENT_URL = 'https://api.aelita-production.ru/payments/create-payment';
 
   // ClientID Метрики — нужен, чтобы после реальной оплаты webhook.js мог
   // отправить честную серверную конверсию «purchase» через Measurement

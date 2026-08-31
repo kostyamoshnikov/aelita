@@ -61,7 +61,7 @@
   // (тот же Gateway обслуживает все четыре системы, каждая под своим
   // префиксом пути — см. _tools/SYSTEMS-CONSOLIDATION.md). До
   // заполнения формы показывают понятное сообщение, не ломаются молча.
-  var API_BASE = '';
+  var API_BASE = 'https://api.aelita-production.ru/account';
   var REGISTER_URL = API_BASE && API_BASE + '/register';
   var LOGIN_URL = API_BASE && API_BASE + '/login';
   var ME_URL = API_BASE && API_BASE + '/me';
