@@ -416,17 +416,12 @@ p a:hover{opacity:.75}
   </div>
 </footer>
 
-<!-- payments.js подключён здесь (а не только в футере ниже, где было
-     раньше) — этому блоку нужны её общие хелперы валидации
-     (AELITA_isValidEmail/AELITA_normalizePhone/AELITA_wireContactValidation)
-     уже на этом месте страницы, до второго <script src> ниже.
-     Повторное подключение того же файла безвредно — это чистый IIFE
-     без побочных эффектов при подключении, объявляет функции один раз. -->
+<!-- payments.js -->
 <script src="/assets/payments.js"></script>
 <script>
   // collectContact() используется ТОЛЬКО для joinClub() (анкета без
   // оплаты, отправка в Telegram/Formspree) — платёж (AELITA_pay) с
-  // pack-v234 сам проверяет email/телефон через общие хелперы из
+  // pack-v235 сам проверяет email/телефон через общие хелперы из
   // payments.js (AELITA_isValidEmail/AELITA_normalizePhone), эта
   // функция ему больше не нужна.
   function collectContact(){

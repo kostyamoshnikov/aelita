@@ -114,7 +114,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 <script src="/assets/analytics-events.js"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
-     ниже) — а ради общих helper'ов валидации (pack-v234):
+     ниже) — а ради общих helper'ов валидации (pack-v235):
      AELITA_isValidEmail/AELITA_normalizePhone/AELITA_showFieldError/
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
@@ -159,7 +159,7 @@ async function init(){
   document.getElementById('title').textContent = 'Загрузка…';
   document.querySelector('.bar').style.display = 'flex';
   document.getElementById('form-block').style.display = 'block';
-  // pack-v234: подсказка «неверный формат» прямо под полем, ещё до
+  // pack-v235: подсказка «неверный формат» прямо под полем, ещё до
   // клика «Оплатить» — как только человек увёл фокус с поля. init()
   // может вызываться повторно (кнопка «Попробовать снова») — навешиваем
   // слушатели один раз за загрузку страницы, не при каждом вызове.
@@ -322,7 +322,7 @@ async function submitOrder(){
   const emailEl = document.getElementById('f-email');
   const phoneEl = document.getElementById('f-contact');
   const msgEl = document.getElementById('msg');
-  // pack-v234: раздельная проверка — подсвечиваем конкретное поле, а
+  // pack-v235: раздельная проверка — подсвечиваем конкретное поле, а
   // не одно общее сообщение «заполните всё правильно». Телефон теперь
   // ОБЯЗАТЕЛЕН (раньше был опционален) — нужен для чека (54-ФЗ, см.
   // _tools/Tickets/create-order.js).

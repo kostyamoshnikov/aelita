@@ -79,7 +79,7 @@
   var ME_URL = API_BASE && API_BASE + '/me';
   var CONTRACT_URL = API_BASE && API_BASE + '/contract';
   var CHANGE_PASSWORD_URL = API_BASE && API_BASE + '/change-password';
-  // pack-v234 — регистрация на бесплатные мероприятия (_tools/Events/),
+  // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/),
   // отдельный префикс под тем же Gateway, см. _tools/Events/README.md.
   var EVENTS_API_BASE = 'https://api.aelita-production.ru/events';
   var EVENTS_REGISTER_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/register';
@@ -278,7 +278,7 @@
       }
     },
 
-    // pack-v234 — регистрация на бесплатные мероприятия (_tools/Events/).
+    // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/).
     // Тот же принцип, что у остальных методов: токен из localStorage,
     // 401 трактуем как «нужно войти заново» (см. me() комментарий про
     // разные причины null — здесь ситуация проще: единственная причина

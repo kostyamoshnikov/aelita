@@ -559,6 +559,7 @@ p a:hover{opacity:.75}
 
     <div id="formSite_j">
     <div class="join-form" id="joinForm">
+      <div style="font-size:11px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required</div>
       <div class="join-field"><label>Name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
       <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
@@ -566,7 +567,8 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>A few words about yourself — optional</label><textarea placeholder="What brings you here, what are you looking for..."></textarea></div>
       <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To sign up right now — click “Ask Katya first” below, we'll set everything up personally.</p>
-      <button class="btn-gold" id="payBtn_community" onclick="var c=collectContact(); if(c) AELITA_pay('community', {name: document.getElementById('j-name').value, contact: c, buttonEl: this})">Pay — 10,000 ₽/month →</button>
+      <div class="msg" id="payMsg_community" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
+      <button class="btn-gold" id="payBtn_community" onclick="AELITA_pay('community', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_community'})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Ask Katya first</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
       <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
@@ -582,6 +584,8 @@ p a:hover{opacity:.75}
   </div>
 </div>
 
+<!-- payments.js -->
+<script src="/assets/payments.js"></script>
 <script>
   function switchFormTab_j(tab, btn){
     document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
@@ -667,12 +671,19 @@ p a:hover{opacity:.75}
   }
 
   async function handleSubmit_ent(){
-    const name  = (document.getElementById('ent-name')?.value || '').trim();
-    const email = (document.getElementById('ent-email')?.value || '').trim();
-    const tel   = (document.getElementById('ent-tel')?.value || '').trim();
+    const nameEl = document.getElementById('ent-name');
+    const emailEl = document.getElementById('ent-email');
+    const telEl = document.getElementById('ent-tel');
+    const name  = (nameEl?.value || '').trim();
+    const email = (emailEl?.value || '').trim();
+    const tel   = (telEl?.value || '').trim();
     const tg    = (document.getElementById('ent-tg')?.value || '').trim();
-    if(!name || !email){ alert('Заполните имя и почту.'); return; }
-    if(!tel){ alert('Заполните телефон.'); return; }
+    if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
+    AELITA_clearFieldError(nameEl);
+    if(!AELITA_isValidEmail(email)){ AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка'); emailEl.focus(); return; }
+    AELITA_clearFieldError(emailEl);
+    if(!AELITA_normalizePhone(tel)){ AELITA_showFieldError(telEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой'); telEl.focus(); return; }
+    AELITA_clearFieldError(telEl);
     if(!document.getElementById('consent_ent')?.checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
     const fields = {'Имя': name, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Поток': 'AELITA COMMUNITY — поток для предпринимателей'};
     await Promise.all([
@@ -682,6 +693,8 @@ p a:hover{opacity:.75}
     document.getElementById('formSite_ent').style.display = 'none';
     document.getElementById('entOk').style.display = 'block';
   }
+  AELITA_wireContactValidation('ent-email', 'email');
+  AELITA_wireContactValidation('ent-tel', 'phone');
 </script>
 
 </main>
@@ -732,21 +745,39 @@ p a:hover{opacity:.75}
   // Телефон и email — обязательны на каждой форме сайта, Telegram —
   // отдельным пунктом, желательным, но не обязательным (см. Site/
   // README.md, раздел «Обязательные поля форм» — заказчик попросил
-  // именно так после разбора заявок без телефона/почты).
+  // именно так после разбора заявок без телефона/почты). pack-v235:
+  // проверка формата (не только «не пусто») через общие хелперы
+  // payments.js, с подсветкой конкретного поля вместо alert().
   function collectContact(){
-    var phone = document.getElementById('j-phone').value.trim();
-    var email = document.getElementById('j-email').value.trim();
+    var phoneEl = document.getElementById('j-phone');
+    var emailEl = document.getElementById('j-email');
+    var phone = phoneEl.value.trim();
+    var email = emailEl.value.trim();
     var tg = document.getElementById('j-telegram').value.trim();
-    if(!phone){ alert('Укажите телефон'); return null; }
-    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
+    if(!AELITA_normalizePhone(phone)){
+      AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
+      phoneEl.focus();
+      return null;
+    }
+    AELITA_clearFieldError(phoneEl);
+    if(!AELITA_isValidEmail(email)){
+      AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
+      emailEl.focus();
+      return null;
+    }
+    AELITA_clearFieldError(emailEl);
     var parts = ['Тел: ' + phone, 'Email: ' + email];
     if(tg) parts.push('TG: ' + tg);
     return parts.join(' · ');
   }
+  AELITA_wireContactValidation('j-email', 'email');
+  AELITA_wireContactValidation('j-phone', 'phone');
 
   async function joinClub(){
-    const name = document.getElementById('j-name').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
+    const nameEl = document.getElementById('j-name');
+    const name = nameEl.value.trim();
+    if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
+    AELITA_clearFieldError(nameEl);
     if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
     const contact = collectContact();
     if(!contact){return;}
@@ -877,7 +908,6 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 

@@ -74,6 +74,11 @@ p a:hover{opacity:.75}
 .pay-box .price{font-family:'Montserrat',sans-serif;font-size:44px;color:var(--gold);letter-spacing:.04em;margin-bottom:6px}
 .pay-box .chosen{font-size:14px;color:var(--sand);margin-bottom:28px;min-height:20px}
 .pay-note{font-size:12px;color:rgba(201,184,163,.5);margin-top:16px;line-height:1.7}
+.join-field{margin-bottom:12px;text-align:left}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field input:focus{outline:none;border-color:var(--gold)}
+.req-mark{color:var(--gold);font-weight:700}
 .pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 .pay-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left;margin-top:20px}
 /* КАК ПОЛУЧИТЬ — три коротких шага */
@@ -116,7 +121,7 @@ p a:hover{opacity:.75}
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
     <a href="/en/projects">Productions</a>
-    <a href="/en/about">About the company</a>
+    <a href="/en/about">About</a>
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
@@ -170,8 +175,13 @@ p a:hover{opacity:.75}
       <div class="price">200 ₽</div>
       <div class="chosen" id="chosenShow">Choose a show above first</div>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on this page is still being connected. To get a program right now — ask the staff at the stand, card payment is available on the spot.</p>
-      <button class="btn-gold" id="payBtn_program" disabled onclick="AELITA_pay('program', {show: window.AELITA_selectedShow, buttonEl: this})">Pay — 200 ₽ →</button>
-      <p class="pay-note">Payment by card through YooKassa, no registration or account needed. After paying, show your phone screen at the stand — you'll get your program.</p>
+      <div style="font-size:11px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required — needed to send the receipt</div>
+      <div class="join-field"><label>Name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
+      <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="msg" id="payMsg_program" style="display:none;color:#C98B6B;font-size:13px;margin:8px 0"></div>
+      <button class="btn-gold" id="payBtn_program" disabled onclick="AELITA_pay('program', {show: window.AELITA_selectedShow, name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_program'})">Pay — 200 ₽ →</button>
+      <p class="pay-note">Card payment via YooKassa, no registration or account needed — name/email/phone are only for the receipt, not for an account. After payment, show your phone screen at the counter to get your programme booklet.</p>
       <p class="pay-note">Having trouble? Email us: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
       <div class="pay-ok" id="paymentReturnMsg">If the payment went through — show this screen at the stand and you'll get your program. If something went wrong — email us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
@@ -268,7 +278,7 @@ p a:hover{opacity:.75}
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
-    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
@@ -311,6 +321,8 @@ p a:hover{opacity:.75}
   // момент клика по «Оплатить», не раньше — так что порядок объявления
   // не важен.
   window.AELITA_selectedShow = null;
+  AELITA_wireContactValidation('j-email', 'email');
+  AELITA_wireContactValidation('j-phone', 'phone');
   var SHOW_LABELS = { porfiriy: '«Порфирий»', iov: '«ИОВ:материал»', human: '«Археология человеческого»', listen: '«Послушайте!»' };
   document.getElementById('showGrid').addEventListener('click', function (e) {
     var card = e.target.closest('.show-card');

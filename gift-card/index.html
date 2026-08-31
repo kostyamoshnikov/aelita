@@ -359,12 +359,10 @@ p a:hover{opacity:.75}
   </div>
 </footer>
 
-<!-- payments.js подключён здесь, до скрипта ниже — нужны её общие
-     хелперы валидации (pack-v234). Безопасно подключать в любом
-     месте — чистый IIFE без побочных эффектов при загрузке. -->
+<!-- payments.js -->
 <script src="/assets/payments.js"></script>
 <script>
-  // collectContact() убрана (pack-v234) — AELITA_pay сам проверяет
+  // collectContact() убрана (pack-v235) — AELITA_pay сам проверяет
   // email/телефон через общие хелперы payments.js, на этой странице
   // не было отдельной анкеты без оплаты (в отличие от book-concierge/
   // book-space), так что функция была не нужна уже и раньше.

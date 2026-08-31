@@ -187,7 +187,7 @@ p a:hover{opacity:.75}
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
     <a href="/en/projects">Productions</a>
-    <a href="/en/about">About the company</a>
+    <a href="/en/about">About</a>
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
@@ -299,6 +299,7 @@ p a:hover{opacity:.75}
     <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Enter the amount and your details — after payment we'll get in touch to arrange the certificate.</p>
 
     <div class="join-form" id="joinForm">
+      <div style="font-size:11px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required</div>
       <div class="join-field"><label>Any amount from 500 to 100,000 ₽. Pay right here, via YooKassa.</label><input type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
       <div class="join-field"><label>Your name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
       <div class="join-field"><label>Your phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
@@ -308,7 +309,8 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Who is it for — optional</label><textarea id="j-message" placeholder="What to write on the certificate"></textarea></div>
       <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To arrange a gift right now — email us directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, we'll help set it up.</p>
-      <button class="btn-gold" id="payBtn_gift" onclick="var c=collectContact(); if(c) AELITA_pay('gift', {name: document.getElementById('j-name').value, contact: c, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value, buttonEl: this})">A personal message — optional</button>
+      <div class="msg" id="payMsg_gift" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
+      <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_gift'})">A personal message — optional</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
       <p class="join-note">Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
       <div class="join-ok" id="paymentReturnMsg">If your payment went through, we've received the notification and will get in touch to issue the certificate. If something went wrong or you have questions — write to us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
@@ -360,17 +362,15 @@ p a:hover{opacity:.75}
   </div>
 </footer>
 
+<!-- payments.js -->
+<script src="/assets/payments.js"></script>
 <script>
-  function collectContact(){
-    var phone = document.getElementById('j-phone').value.trim();
-    var email = document.getElementById('j-email').value.trim();
-    var tg = document.getElementById('j-telegram').value.trim();
-    if(!phone){ alert('Укажите телефон'); return null; }
-    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
-    var parts = ['Тел: ' + phone, 'Email: ' + email];
-    if(tg) parts.push('TG: ' + tg);
-    return parts.join(' · ');
-  }
+  // collectContact() убрана (pack-v235) — AELITA_pay сам проверяет
+  // email/телефон через общие хелперы payments.js, на этой странице
+  // не было отдельной анкеты без оплаты (в отличие от book-concierge/
+  // book-space), так что функция была не нужна уже и раньше.
+  AELITA_wireContactValidation('j-email', 'email');
+  AELITA_wireContactValidation('j-phone', 'phone');
 
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
@@ -398,7 +398,7 @@ p a:hover{opacity:.75}
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
-    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
@@ -442,7 +442,6 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 <script>

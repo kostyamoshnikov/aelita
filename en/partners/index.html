@@ -83,7 +83,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
     <a href="/en/projects">Productions</a>
-    <a href="/en/about">About the company</a>
+    <a href="/en/about">About</a>
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
@@ -272,7 +272,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     const phone = document.getElementById('fphone').value.trim();
     if(!email || !email.includes('@') || !name){alert('Заполните имя и почту');return;}
     if(!phone){alert('Заполните телефон');return;}
-    if(!document.getElementById('consent_partner').checked){alert('Please check the personal data consent box — we cannot process your application without it');return;}
+    if(!document.getElementById('consent_partner').checked){alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку');return;}
     const tg = document.getElementById('ftg').value.trim();
     const msg = document.getElementById('fmsg').value.trim();
     const typeEl = document.querySelector('#form_partner select');
@@ -395,7 +395,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
-    <a href="/en/about" onclick="toggleMenu()">About the company</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
