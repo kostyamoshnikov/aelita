@@ -173,41 +173,29 @@
   <div class="wrap reveal">
     <span class="eyebrow">Записаться</span>
     <h2 style="margin-top:14px">Регистрация на открытую встречу</h2>
-    <p class="sub">Вход свободный, количество мест ограничено. Оставьте заявку так, как удобнее — на сайте или в Telegram-боте.</p>
+    <!-- pack-v234: регистрация теперь ОБЯЗАТЕЛЬНО через личный кабинет
+         (заказчик попросил PDF-билет с QR на почту и возможность
+         отменить регистрацию из кабинета, см. историю чата) — прежняя
+         анкета без аккаунта (Telegram-бот/Formspree) убрана целиком,
+         альтернативного пути без входа теперь нет. -->
+    <p class="sub">Вход свободный, количество мест ограничено. Регистрация — через личный кабинет: один клик, если уже заходили на сайт, письмо с билетом (QR на входе) придёт на почту.</p>
 
-    <div class="notify-tabs" id="notifyTabs_om">
-      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_om('site', this)">Через сайт</button>
-      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_om('bot', this)">Через Telegram-бота</button>
+    <div id="regLoggedOut" style="display:none">
+      <p style="color:var(--sand);margin-bottom:16px">Нужен личный кабинет — это быстро, подойдёт любой email.</p>
+      <a class="submit-btn" href="/account?next=%2Fworkshop-2026-09-12" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
     </div>
 
-    <div id="formSite_om">
-    <div class="form-grid">
-      <div class="field">
-        <label>Имя <span class="req-mark">*</span></label>
-        <input id="om-name" type="text" placeholder="Как вас зовут" required>
-      </div>
-      <div class="field">
-        <label>Телефон <span class="req-mark">*</span></label>
-        <input class="input-clear" id="om-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
-      </div>
-      <div class="field">
-        <label>Почта <span class="req-mark">*</span></label>
-        <input class="input-clear" id="om-email" type="email" inputmode="email" autocomplete="email" placeholder="email@example.com" required>
-      </div>
-      <div class="field">
-        <label>Telegram <span class="opt-mark">— необязательно</span></label>
-        <input class="input-clear" id="om-tg" type="text" autocomplete="off" placeholder="@username">
-      </div>
-      <div class="field full">
-        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_om"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
-        <button class="submit-btn" onclick="handleSubmit_om()">Записаться</button>
-      </div>
-    </div>
+    <div id="regAlready" style="display:none">
+      <p style="color:var(--gold)">Вы уже зарегистрированы на эту встречу — билет с QR-кодом отправлен на почту. Управлять регистрацией можно в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>.</p>
     </div>
 
-    <div id="formBot_om" style="display:none">
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=open_meeting" target="_blank" rel="noopener">Записаться через бота</a>
-      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
+    <div id="regForm" style="display:none">
+      <button class="submit-btn" id="regBtn" onclick="doRegisterEvent()">Записаться →</button>
+      <p id="regMsg" style="color:#C98B6B;font-size:13px;margin-top:10px;min-height:16px"></p>
+    </div>
+
+    <div id="regOk" style="display:none">
+      <p style="color:var(--gold)">Готово — вы зарегистрированы! Билет с QR-кодом отправлен на почту (проверьте папку «Спам», если не видно). Отменить регистрацию можно в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>.</p>
     </div>
   </div>
 </div>
@@ -265,6 +253,10 @@
     </div>
   </div>
 </footer>
+<!-- account.js подключён здесь, до скрипта ниже — тому нужен
+     window.AELITA_account (registerForEvent/listEventRegistrations,
+     pack-v234). Безопасно подключать в любом месте — чистый IIFE. -->
+<script src="/assets/account.js"></script>
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
@@ -285,73 +277,52 @@
     }, 80);
   }
 
-  function switchFormTab_om(tab, btn){
-    document.querySelectorAll('#notifyTabs_om .notify-tab').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('formSite_om').style.display = (tab === 'site') ? 'block' : 'none';
-    document.getElementById('formBot_om').style.display = (tab === 'bot') ? 'block' : 'none';
-  }
+  const EVENT_ID = 'workshop-2026-09-12';
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
-
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
-
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
+  // pack-v234: регистрация теперь через личный кабинет
+  // (_tools/Events/, см. Site/assets/account.js — registerForEvent/
+  // listEventRegistrations) — sendTelegram/sendFormspree/тумблер
+  // «через бота» отсюда убраны целиком, альтернативы без входа
+  // больше нет (см. комментарий в разметке выше).
+  async function initRegistration(){
+    if(!window.AELITA_account || !window.AELITA_account.isLoggedIn()){
+      document.getElementById('regLoggedOut').style.display = 'block';
+      return;
     }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
+    var data = await window.AELITA_account.listEventRegistrations({
+      onError: function(){
+        // Не смогли проверить статус — не блокируем попытку
+        // зарегистрироваться, сервер сам вернёт already_registered,
+        // если регистрация на самом деле уже есть.
+        document.getElementById('regForm').style.display = 'block';
+      },
+    });
+    var already = data && data.registrations && data.registrations.some(function(r){ return r.eventId === EVENT_ID; });
+    if(already){
+      document.getElementById('regAlready').style.display = 'block';
+    } else if(data) {
+      document.getElementById('regForm').style.display = 'block';
+    }
   }
 
-  function showThanks(){
-    var m = document.getElementById('thanks-modal');
-    if(m) m.classList.add('open');
+  function doRegisterEvent(){
+    var msgEl = document.getElementById('regMsg');
+    msgEl.textContent = '';
+    window.AELITA_account.registerForEvent(EVENT_ID, {
+      buttonEl: document.getElementById('regBtn'),
+      onSuccess: function(data){
+        document.getElementById('regForm').style.display = 'none';
+        var okEl = document.getElementById('regOk');
+        okEl.style.display = 'block';
+        if(data && data.mailSent === false){
+          okEl.innerHTML = '<p style="color:var(--gold)">Готово — вы зарегистрированы! Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>. Если билет нужен на почту — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>.</p>';
+        }
+      },
+      onError: function(msg){ msgEl.textContent = msg; },
+    });
   }
 
-  async function handleSubmit_om(){
-    const name  = (document.getElementById('om-name')?.value || '').trim();
-    const email = (document.getElementById('om-email')?.value || '').trim();
-    const tel   = (document.getElementById('om-tel')?.value || '').trim();
-    const tg    = (document.getElementById('om-tg')?.value || '').trim();
-    if(!name || !email){ alert('Заполните имя и почту.'); return; }
-    if(!tel){ alert('Заполните телефон.'); return; }
-    if(!document.getElementById('consent_om')?.checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
-    const fields = {'Имя': name, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Событие': 'Открытая встреча книжного клуба, 12 сентября 2026'};
-    await Promise.all([
-      sendTelegram('Открытая встреча клуба — регистрация', fields),
-      sendFormspree('Открытая встреча клуба — регистрация', fields)
-    ]);
-    const btn = document.querySelector('.submit-btn');
-    showThanks(); if(btn){ btn.textContent = 'Записаны'; btn.disabled = true; btn.style.opacity = '.6'; }
-  }
+  initRegistration();
 
   setTimeout(function(){
     document.querySelectorAll('.reveal:not(.on)').forEach(function(el){

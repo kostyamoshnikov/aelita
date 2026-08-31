@@ -22,7 +22,9 @@
   var TEXT = {
     ru: {
       notConfigured: 'Оплата на сайте ещё не подключена — напишите нам напрямую, поможем оформить: aelita.production@yandex.ru',
-      missingFields: 'Заполните имя и контакт — без них не отправим',
+      badName: 'Укажите имя',
+      badEmail: 'Проверьте email — похоже, в адресе опечатка',
+      badPhone: 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой',
       badAmount: 'Укажите сумму от 500 до 100 000 ₽',
       missingShow: 'Выберите спектакль',
       missingConsent: 'Отметьте согласие на обработку персональных данных — без него мы не можем принять оплату',
@@ -31,7 +33,9 @@
     },
     en: {
       notConfigured: "Payment isn't connected on the site yet — email us directly and we'll help set it up: aelita.production@yandex.ru",
-      missingFields: "Fill in your name and contact — we can't send this without them",
+      badName: 'Please enter your name',
+      badEmail: "Check your email — the address doesn't look right",
+      badPhone: "Check your phone number — it looks incomplete or incorrect",
       badAmount: 'Enter an amount between 500 and 100,000 ₽',
       missingShow: 'Choose a show',
       missingConsent: "Please check the personal data consent box — we can't process payment without it",
@@ -40,6 +44,93 @@
     },
   };
   var t = TEXT[LANG];
+
+  // ── Валидация email/телефона — тот же паттерн и та же нормализация
+  // телефона, что на сервере (_tools/Shared/lib/validate.js, pack-v234)
+  // — держать оба места в синхроне вручную, единого общего файла между
+  // клиентским JS и Node-функциями в этом паке нет технически (разные
+  // среды выполнения). Клиентская проверка — только для мгновенной
+  // обратной связи человеку; окончательное решение всегда за сервером.
+  var EMAIL_RE = /^[^\s@<>"'&]+@[^\s@<>"'&]+\.[^\s@<>"'&]+$/;
+  function isValidEmail(raw) {
+    return typeof raw === 'string' && EMAIL_RE.test(raw.trim());
+  }
+  function normalizePhone(raw) {
+    if (typeof raw !== 'string') return null;
+    var digits = raw.replace(/\D/g, '');
+    if (digits.length === 11 && (digits[0] === '7' || digits[0] === '8')) digits = '7' + digits.slice(1);
+    else if (digits.length === 10) digits = '7' + digits;
+    else return null;
+    return '+' + digits;
+  }
+  window.AELITA_isValidEmail = isValidEmail;
+  window.AELITA_normalizePhone = normalizePhone;
+
+  // ── Подсветка ошибок ПРЯМО ПОД ПОЛЕМ — вместо alert() на весь экран.
+  // Вызывается и при потере фокуса (пока человек ещё заполняет форму —
+  // подсказать сразу, не дожидаясь клика «Оплатить»), и при отправке
+  // формы (последняя проверка перед запросом к серверу).
+  function fieldErrorEl(inputEl) {
+    var id = inputEl.id + '-err';
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = id;
+      el.className = 'field-err';
+      el.style.cssText = 'color:#C98B6B;font-size:12px;margin:-6px 0 10px;min-height:14px';
+      inputEl.insertAdjacentElement('afterend', el);
+    }
+    return el;
+  }
+  function showFieldError(inputEl, message) {
+    if (!inputEl) return;
+    fieldErrorEl(inputEl).textContent = message;
+    inputEl.style.borderColor = '#C98B6B';
+  }
+  function clearFieldError(inputEl) {
+    if (!inputEl) return;
+    var el = document.getElementById(inputEl.id + '-err');
+    if (el) el.textContent = '';
+    inputEl.style.borderColor = '';
+  }
+  window.AELITA_showFieldError = showFieldError;
+  window.AELITA_clearFieldError = clearFieldError;
+
+  // Подключает live-проверку к полю: показывает/убирает ошибку под
+  // полем при потере фокуса и при вводе (если поле уже было отмечено
+  // ошибочным — снимаем пометку сразу, как только оно снова стало
+  // валидным, не дожидаясь следующего blur). kind — 'email' | 'phone'.
+  // Вызывать один раз на странице для каждого поля:
+  // AELITA_wireContactValidation('j-email', 'email'); и т.п.
+  window.AELITA_wireContactValidation = function (fieldId, kind) {
+    var el = document.getElementById(fieldId);
+    if (!el) return;
+    var check = function () {
+      var v = el.value.trim();
+      if (!v) { clearFieldError(el); return; } // пустое поле — не подсказываем формат, только «обязательно» при отправке
+      var ok = kind === 'email' ? isValidEmail(v) : normalizePhone(v) !== null;
+      if (ok) clearFieldError(el);
+      else showFieldError(el, kind === 'email' ? t.badEmail : t.badPhone);
+    };
+    el.addEventListener('blur', check);
+    el.addEventListener('input', function () {
+      // Пока поле пустое или уже помечено ошибкой — перепроверяем на
+      // каждый ввод, чтобы ошибка исчезла сразу, как только человек её
+      // исправит, а не только после следующего ухода из поля.
+      if (document.getElementById(fieldId + '-err') && document.getElementById(fieldId + '-err').textContent) check();
+    });
+  };
+
+  // Показывает сообщение о результате отправки формы в заданном месте
+  // страницы (id элемента с текстом), а не в alert() — так текст видно
+  // рядом с кнопкой, не перекрывая форму модальным окном. Если элемент
+  // с таким id на странице не найден — откатываемся на alert(), чтобы
+  // сообщение точно не потерялось молча.
+  function showPayMsg(msgElId, text) {
+    var el = msgElId ? document.getElementById(msgElId) : null;
+    if (el) { el.textContent = text; el.style.display = 'block'; }
+    else alert(text);
+  }
 
   // ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
   // финальное значение https://api.aelita-production.ru/payments/create-payment.
@@ -131,19 +222,33 @@
   // — amount имеет смысл только для gift. show — только для program
   // (слаг спектакля, для которого покупается программка).
   //
-  // 'program' — ЕДИНСТВЕННОЕ исключение из «оплата только после входа»
-  // (pack-v126, см. create-payment.js докстринг зачем): гостевая
-  // покупка у стойки в фойе, без токена и без имени/контакта — не
-  // задерживаем человека формальностями там, где вся суть в скорости.
+  // 'program' — ЕДИНСТВЕННОЕ исключение из «оплата только после
+  // ЛОГИНА» (pack-v126, см. create-payment.js докстринг зачем):
+  // гостевая покупка у стойки в фойе без создания аккаунта. ⚠️
+  // pack-v234: имя/email/телефон теперь обязательны и здесь тоже (см.
+  // opts.msgElId ниже — каждая страница передаёт id своего блока для
+  // сообщений) — искючение касается только требования входа, не
+  // требования контакта.
+  //
+  // opts.email/opts.phone — сырые значения из полей формы страницы;
+  // opts.msgElId — id элемента, куда вывести сообщение об ошибке или
+  // прогрессе (см. showPayMsg выше) — если не передан, используется
+  // alert() как отказоустойчивый запасной вариант.
   window.AELITA_pay = async function (product, opts) {
     opts = opts || {};
     var name = (opts.name || '').trim();
-    var contact = (opts.contact || '').trim();
+    var email = (opts.email || '').trim();
+    var phoneRaw = (opts.phone || '').trim();
     var amount = opts.amount;
     var show = opts.show || '';
     var comment = opts.comment || '';
     var buttonEl = opts.buttonEl || null;
-    var isGuestCheckout = product === 'program';
+    var msgElId = opts.msgElId || null;
+    var isGuestCheckout = product === 'program'; // касается ТОЛЬКО входа/логина, не контакта — см. докстринг выше
+
+    var nameEl = document.getElementById(opts.nameFieldId || 'j-name');
+    var emailEl = document.getElementById(opts.emailFieldId || 'j-email');
+    var phoneEl = document.getElementById(opts.phoneFieldId || 'j-phone');
 
     var token = null;
     try { token = localStorage.getItem('aelita_account_token'); } catch (e) { /* приватный режим и т.п. */ }
@@ -156,11 +261,32 @@
     }
 
     if (!CREATE_PAYMENT_URL) {
-      alert(t.notConfigured);
+      showPayMsg(msgElId, t.notConfigured);
       return;
     }
-    if (!isGuestCheckout && (!name || !contact)) {
-      alert(t.missingFields);
+
+    // Имя, email, телефон — теперь ОБЯЗАТЕЛЬНЫ для любого продукта, в
+    // т.ч. program (pack-v234, было раньше опущено для гостевой
+    // покупки у стойки, см. докстринг выше про 54-ФЗ). Проверяем по
+    // очереди и подсвечиваем ИМЕННО то поле, где ошибка — а не одно
+    // общее сообщение — так человек сразу видит, что поправить.
+    if (!name) {
+      showFieldError(nameEl, t.badName);
+      showPayMsg(msgElId, t.badName);
+      if (nameEl) nameEl.focus();
+      return;
+    }
+    if (!isValidEmail(email)) {
+      showFieldError(emailEl, t.badEmail);
+      showPayMsg(msgElId, t.badEmail);
+      if (emailEl) emailEl.focus();
+      return;
+    }
+    var normalizedPhone = normalizePhone(phoneRaw);
+    if (!normalizedPhone) {
+      showFieldError(phoneEl, t.badPhone);
+      showPayMsg(msgElId, t.badPhone);
+      if (phoneEl) phoneEl.focus();
       return;
     }
     // Согласие на обработку персональных данных — отдельный чекбокс
@@ -169,31 +295,29 @@
     // вы соглашаетесь» — это не «конкретное, информированное и
     // однозначное действие», как того требует ст. 9 152-ФЗ; чекбокс,
     // который нужно осознанно поставить, соответствует требованию
-    // напрямую). Есть не на каждой странице с оплатой — 'program'
-    // (покупка без личных данных вообще, см. isGuestCheckout выше) его
-    // не требует и обычно не имеет; если чекбокса на странице нет,
-    // проверку пропускаем, а не блокируем оплату несуществующим полем.
-    if (!isGuestCheckout) {
-      var consentEl = document.getElementById('pdConsent');
-      if (consentEl && !consentEl.checked) {
-        alert(t.missingConsent);
-        return;
-      }
+    // напрямую). Есть не на каждой странице — если чекбокса на
+    // странице нет, проверку пропускаем, а не блокируем оплату
+    // несуществующим полем.
+    var consentEl = document.getElementById('pdConsent');
+    if (consentEl && !consentEl.checked) {
+      showPayMsg(msgElId, t.missingConsent);
+      return;
     }
     if (product === 'gift') {
       var n = Number(amount);
       if (!n || n < 500 || n > 100000) {
-        alert(t.badAmount);
+        showPayMsg(msgElId, t.badAmount);
         return;
       }
     }
     if (product === 'program' && !show) {
-      alert(t.missingShow);
+      showPayMsg(msgElId, t.missingShow);
       return;
     }
 
     var originalText = buttonEl ? buttonEl.textContent : '';
     if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.processing; }
+    showPayMsg(msgElId, t.processing);
 
     // Метка в return_url — чтобы страница, на которую ЮKassa вернёт
     // человека, могла показать понятное «мы вас ждали» вместо тишины
@@ -219,7 +343,7 @@
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, contact: contact, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest }),
+        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {
@@ -227,8 +351,9 @@
           // что-то другое (например, случайно протухший токен из
           // localStorage помешал), не «нужно войти». Ведём себя как
           // при обычной ошибке оплаты, не отправляем на /account —
+
           // это гостевой сценарий, у него нет /account-предыстории.
-          alert(t.failed);
+          showPayMsg(msgElId, t.failed);
         } else {
           // Токен был, но сервер его не принял (истёк/подделан/аккаунт
           // удалён) — с точки зрения человека это то же самое «нужно
@@ -244,7 +369,16 @@
         location.href = data.confirmation_url;
         return; // уходим со страницы — не нужно возвращать кнопку в исходное состояние
       }
-      alert(t.failed);
+      // Сервер — окончательный источник истины по валидации (см.
+      // Shared/lib/validate.js) — клиентская проверка выше в норме уже
+      // отсекла bad_name/bad_email/bad_phone, но если сервер всё же
+      // вернул один из этих кодов (например, другая, более старая
+      // версия страницы без обновлённой проверки), подсвечиваем то же
+      // поле, а не молчим общей фразой.
+      if (data && data.error === 'bad_email') { showFieldError(emailEl, t.badEmail); showPayMsg(msgElId, t.badEmail); }
+      else if (data && data.error === 'bad_phone') { showFieldError(phoneEl, t.badPhone); showPayMsg(msgElId, t.badPhone); }
+      else if (data && data.error === 'bad_name') { showFieldError(nameEl, t.badName); showPayMsg(msgElId, t.badName); }
+      else showPayMsg(msgElId, t.failed);
     } catch (e) {
       // Сеть недоступна (fetch не смог достучаться вообще, TypeError) и
       // «сервер ответил, но что-то не так» (JSON не распарсился и т.п.)
@@ -253,9 +387,9 @@
       // если сеть точно недоступна — стоит сказать прямо, а не звать
       // «попробовать ещё раз», который тут же упадёт по той же причине.
       if (e instanceof TypeError) {
-        alert(LANG === 'en' ? 'No connection — check your internet and try again.' : 'Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
+        showPayMsg(msgElId, LANG === 'en' ? 'No connection — check your internet and try again.' : 'Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
       } else {
-        alert(t.failed);
+        showPayMsg(msgElId, t.failed);
       }
     }
     if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }

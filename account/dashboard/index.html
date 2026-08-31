@@ -59,6 +59,14 @@ body{max-width:100vw}
 .pw-form input:focus{outline:none;border-color:var(--gold)}
 #pw-message{font-size:13px;color:var(--sand);min-height:18px}
 #pw-message.ok{color:var(--gold)}
+.reg-list{display:flex;flex-direction:column;gap:1px;background:rgba(201,184,163,.15)}
+.reg-item{background:var(--ink);padding:22px 26px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+.reg-item .name{font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.04em}
+.reg-item .date{color:var(--sand);font-size:13px;margin-top:4px}
+.reg-item .cancel-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sand);background:none;border:1px solid rgba(201,184,163,.3);padding:8px 14px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.reg-item .cancel-btn:hover{border-color:#C98B6B;color:#C98B6B}
+.reg-item .cancel-btn:disabled{opacity:.5;cursor:default}
+@media(max-width:600px){.reg-item{grid-template-columns:1fr}.reg-item .cancel-btn{justify-self:start}}
 @media(max-width:600px){.purchase-item{grid-template-columns:1fr;gap:10px}.purchase-item .amount{justify-self:start}.purchase-item .contract-btn{justify-self:start}}
 </style>
 </head>
@@ -115,6 +123,13 @@ body{max-width:100vw}
         <a class="btn-outline" href="/tickets">К афише</a>
         <button class="btn-outline" onclick="onExportData()" style="border-color:rgba(201,184,163,.3)">Скачать мои данные</button>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(201,184,163,.3)">Выйти</button>
+      </div>
+
+      <!-- pack-v234 — регистрации на бесплатные мероприятия
+           (_tools/Events/), отдельно от платных покупок выше. -->
+      <div class="acc-section">
+        <h2>Мои регистрации на мероприятия</h2>
+        <div id="eventRegistrations"><p style="color:var(--sand)">Загружаем…</p></div>
       </div>
 
       <div class="acc-section">
@@ -231,6 +246,46 @@ body{max-width:100vw}
     });
   }
 
+  // pack-v234 — регистрации на бесплатные мероприятия.
+  function renderEventRegistrations(registrations) {
+    var el = document.getElementById('eventRegistrations');
+    if (!registrations || !registrations.length) {
+      el.innerHTML = '<div class="empty-state">Пока нет активных регистраций — загляните на <a href="/tickets">афишу</a>, там же анонсы бесплатных встреч.</div>';
+      return;
+    }
+    var sorted = registrations.slice().sort(function (a, b) { return new Date(a.datetime) - new Date(b.datetime); });
+    var html = '<div class="reg-list">' + sorted.map(function (r) {
+      var title = escapeHtml(r.title || r.eventId || 'Мероприятие');
+      var venue = escapeHtml((r.venueName || '') + (r.venueAddress ? ', ' + r.venueAddress : ''));
+      var eid = escapeHtml(r.eventId || '');
+      return '<div class="reg-item">' +
+        '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDate(r.datetime) + (venue ? ' · ' + venue : '') + '</span></span>' +
+        '<button class="cancel-btn" data-event-id="' + eid + '" onclick="onCancelRegistration(this)">Отменить регистрацию</button>' +
+      '</div>';
+    }).join('') + '</div>';
+    el.innerHTML = html;
+  }
+
+  function loadEventRegistrations() {
+    window.AELITA_account.listEventRegistrations({
+      onError: function (msg) {
+        document.getElementById('eventRegistrations').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
+      },
+    }).then(function (data) {
+      if (data) renderEventRegistrations(data.registrations);
+    });
+  }
+
+  function onCancelRegistration(buttonEl) {
+    var eventId = buttonEl.getAttribute('data-event-id');
+    if (!confirm('Отменить регистрацию? Место освободится для других участников, вам придёт письмо с подтверждением отмены.')) return;
+    window.AELITA_account.cancelEventRegistration(eventId, {
+      buttonEl: buttonEl,
+      onSuccess: function () { loadEventRegistrations(); },
+      onError: function (msg) { alert(msg); },
+    });
+  }
+
   var lastAccountData = null;
 
   function onExportData() {
@@ -292,6 +347,7 @@ body{max-width:100vw}
     document.getElementById('acc-email').textContent = data.name ? (data.name + ' · ' + data.email) : data.email;
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
+    loadEventRegistrations();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
   })();

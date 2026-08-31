@@ -62,7 +62,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <div id="test-banner" style="display:none" class="test-banner">Тестовый режим — реальные деньги не списываются</div>
   <h1 id="title">Загрузка…</h1>
   <div class="meta" id="meta"></div>
-  <div id="degraded" style="display:none" class="warn">Не удалось сверить занятость с гостевым списком — редкое, но возможное место может оказаться занятым при оформлении заказа, проверим ещё раз перед оплатой.</div>
+  <div id="degraded" style="display:none" class="warn">Идёт дополнительная проверка занятости мест — в редком случае выбранное место может оказаться занято, мы проверим ещё раз и предупредим до оплаты.</div>
 
   <div id="success-block" style="display:none" class="success-box">
     <h2>Оплата прошла</h2>
@@ -91,9 +91,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   </div>
 
   <div class="form" id="form-block">
+    <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Поля со звёздочкой (*) обязательны для заполнения</div>
     <input id="f-name" placeholder="Имя *" required>
-    <input id="f-email" type="email" placeholder="Email * — на него придут билеты" required>
-    <input id="f-contact" placeholder="Телефон (необязательно)">
+    <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email * — на него придут билеты" required>
+    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон * — для чека и связи, если что-то пойдёт не так" required>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
     <div class="msg" id="msg"></div>
   </div>
@@ -111,6 +112,14 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 </div>
 
 <script src="/assets/analytics-events.js"></script>
+<!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
+     в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
+     ниже) — а ради общих helper'ов валидации (pack-v234):
+     AELITA_isValidEmail/AELITA_normalizePhone/AELITA_showFieldError/
+     AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
+     код проверки email/телефона на всех страницах с оплатой, не
+     дублировать регулярки по каждому файлу отдельно. -->
+<script src="/assets/payments.js"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -150,6 +159,15 @@ async function init(){
   document.getElementById('title').textContent = 'Загрузка…';
   document.querySelector('.bar').style.display = 'flex';
   document.getElementById('form-block').style.display = 'block';
+  // pack-v234: подсказка «неверный формат» прямо под полем, ещё до
+  // клика «Оплатить» — как только человек увёл фокус с поля. init()
+  // может вызываться повторно (кнопка «Попробовать снова») — навешиваем
+  // слушатели один раз за загрузку страницы, не при каждом вызове.
+  if(!window.__aelitaContactWired){
+    AELITA_wireContactValidation('f-email', 'email');
+    AELITA_wireContactValidation('f-contact', 'phone');
+    window.__aelitaContactWired = true;
+  }
 
   if(!performanceId){ showError('В ссылке не указан показ — вернитесь на афишу и выберите спектакль ещё раз.'); return; }
 
@@ -300,11 +318,35 @@ async function submitOrder(){
   const name = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const contact = document.getElementById('f-contact').value.trim();
+  const nameEl = document.getElementById('f-name');
+  const emailEl = document.getElementById('f-email');
+  const phoneEl = document.getElementById('f-contact');
   const msgEl = document.getElementById('msg');
-  if(!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    msgEl.textContent = 'Укажите имя и корректный email — на него придут билеты.';
+  // pack-v234: раздельная проверка — подсвечиваем конкретное поле, а
+  // не одно общее сообщение «заполните всё правильно». Телефон теперь
+  // ОБЯЗАТЕЛЕН (раньше был опционален) — нужен для чека (54-ФЗ, см.
+  // _tools/Tickets/create-order.js).
+  if(!name){
+    AELITA_showFieldError(nameEl, 'Укажите имя');
+    msgEl.textContent = 'Укажите имя.';
+    nameEl.focus();
     return;
   }
+  AELITA_clearFieldError(nameEl);
+  if(!AELITA_isValidEmail(email)){
+    AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
+    msgEl.textContent = 'Проверьте email — на него придут билеты.';
+    emailEl.focus();
+    return;
+  }
+  AELITA_clearFieldError(emailEl);
+  if(!AELITA_normalizePhone(contact)){
+    AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
+    msgEl.textContent = 'Укажите корректный телефон — он нужен для чека и на случай, если понадобится связаться.';
+    phoneEl.focus();
+    return;
+  }
+  AELITA_clearFieldError(phoneEl);
   if(!document.getElementById('pdConsent').checked){
     msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него не оформим заказ.';
     return;
@@ -357,6 +399,15 @@ async function submitOrder(){
     }
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
       msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
+    } else if(out.error === 'bad_email'){
+      AELITA_showFieldError(document.getElementById('f-email'), 'Проверьте email — похоже, в адресе опечатка');
+      msgEl.textContent = 'Проверьте email.';
+    } else if(out.error === 'bad_phone'){
+      AELITA_showFieldError(document.getElementById('f-contact'), 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
+      msgEl.textContent = 'Проверьте телефон.';
+    } else if(out.error === 'bad_name'){
+      AELITA_showFieldError(document.getElementById('f-name'), 'Укажите имя');
+      msgEl.textContent = 'Укажите имя.';
     } else {
       msgEl.textContent = 'Не удалось оформить заказ, попробуйте ещё раз.';
     }

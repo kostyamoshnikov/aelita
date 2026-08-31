@@ -28,9 +28,15 @@
         server_misconfigured: 'Личный кабинет временно недоступен — напишите нам напрямую.',
         purchase_not_found: 'Не нашли эту покупку в кабинете — обновите страницу и попробуйте ещё раз.',
         pdf_failed: 'Не получилось собрать договор. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',
+        unknown_or_closed_event: 'Регистрация на это мероприятие сейчас недоступна.',
+        already_registered: 'Вы уже зарегистрированы на это мероприятие.',
+        event_full: 'Мест больше нет — все места заняты.',
+        not_registered: 'Регистрация не найдена — возможно, уже отменена.',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
+      registering: 'Регистрируем…',
+      cancelling: 'Отменяем регистрацию…',
     },
     en: {
       notConfigured: "The account isn't connected yet — email us directly: aelita.production@yandex.ru",
@@ -49,9 +55,15 @@
         server_misconfigured: 'The account is temporarily unavailable — email us directly.',
         purchase_not_found: "Couldn't find that purchase in your account — refresh the page and try again.",
         pdf_failed: "Couldn't generate the contract. Try again or email us: aelita.production@yandex.ru",
+        unknown_or_closed_event: "Registration for this event isn't available right now.",
+        already_registered: "You're already registered for this event.",
+        event_full: 'No spots left — the event is full.',
+        not_registered: "Registration not found — it may already be cancelled.",
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
+      registering: 'Registering…',
+      cancelling: 'Cancelling registration…',
     },
   };
   var t = TEXT[LANG];
@@ -67,6 +79,12 @@
   var ME_URL = API_BASE && API_BASE + '/me';
   var CONTRACT_URL = API_BASE && API_BASE + '/contract';
   var CHANGE_PASSWORD_URL = API_BASE && API_BASE + '/change-password';
+  // pack-v234 — регистрация на бесплатные мероприятия (_tools/Events/),
+  // отдельный префикс под тем же Gateway, см. _tools/Events/README.md.
+  var EVENTS_API_BASE = 'https://api.aelita-production.ru/events';
+  var EVENTS_REGISTER_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/register';
+  var EVENTS_CANCEL_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/cancel';
+  var EVENTS_MY_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/my';
 
   var STORAGE_KEY = 'aelita_account_token';
 
@@ -257,6 +275,95 @@
         else alert(errorMessage(null));
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v234 — регистрация на бесплатные мероприятия (_tools/Events/).
+    // Тот же принцип, что у остальных методов: токен из localStorage,
+    // 401 трактуем как «нужно войти заново» (см. me() комментарий про
+    // разные причины null — здесь ситуация проще: единственная причина
+    // 401 у этих трёх ручек — невалидный/просроченный токен, сервер не
+    // возвращает 401 ни по какой другой причине, см. register.js/
+    // cancel.js/my-registrations.js в _tools/Events/).
+    registerForEvent: async function (eventId, opts) {
+      opts = opts || {};
+      if (!EVENTS_REGISTER_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = '/account?next=' + encodeURIComponent(location.pathname); return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.registering; }
+      try {
+        var res = await fetch(EVENTS_REGISTER_URL, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ event_id: eventId }),
+        });
+        if (res.status === 401) { clearToken(); location.href = '/account?next=' + encodeURIComponent(location.pathname); return; }
+        var data = await res.json();
+        if (res.ok) {
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    cancelEventRegistration: async function (eventId, opts) {
+      opts = opts || {};
+      if (!EVENTS_CANCEL_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.cancelling; }
+      try {
+        var res = await fetch(EVENTS_CANCEL_URL, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ event_id: eventId }),
+        });
+        if (res.status === 401) { clearToken(); location.href = '/account'; return; }
+        var data = await res.json();
+        if (res.ok) {
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // Список активных регистраций для /account/dashboard — та же
+    // осторожность с null, что у me(): 401 значит «уводить на
+    // /account», любая другая причина — «сеть/сервер, оставаться на
+    // странице с ошибкой».
+    listEventRegistrations: async function (opts) {
+      opts = opts || {};
+      var token = getToken();
+      if (!token) return null;
+      if (!EVENTS_MY_URL) { if (opts.onError) opts.onError(errorMessage({ error: 'server_misconfigured' })); return null; }
+      try {
+        var res = await fetch(EVENTS_MY_URL, { headers: { Authorization: 'Bearer ' + token } });
+        if (res.status === 401) { clearToken(); return null; }
+        var data = await res.json();
+        if (res.ok) return data;
+        if (opts.onError) opts.onError(errorMessage(data));
+        return null;
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        return null;
       }
     },
 

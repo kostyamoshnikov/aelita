@@ -334,6 +334,7 @@ p a:hover{opacity:.75}
 
     <div id="formSite_j">
     <div class="join-form" id="joinForm">
+      <div style="font-size:11px;color:var(--sand);margin-bottom:4px">Поля со звёздочкой (*) обязательны для заполнения</div>
       <div class="join-field"><label>Имя <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Как вас зовут" required></div>
       <div class="join-field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
@@ -345,7 +346,8 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Что-то ещё, что стоит знать — необязательно</label><textarea id="j-note" placeholder="Предпочтения по жанрам, темы, которых лучше избегать..."></textarea></div>
       <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы отправить заявку прямо сейчас — нажмите «Только отправить анкету» ниже, мы свяжемся и оформим оплату лично.</p>
-      <button class="btn-gold" id="payBtn_concierge" onclick="var c=collectContact(); if(c) AELITA_pay('concierge', {name: document.getElementById('j-name').value, contact: c, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value, buttonEl: this})">Оплатить — 10 000 ₽/мес →</button>
+      <div class="msg" id="payMsg_concierge" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
+      <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_concierge'})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Только отправить анкету</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
       <p class="join-note">Заполните анкету выше перед оплатой — так Катя сразу увидит ваши предпочтения. Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
@@ -414,26 +416,57 @@ p a:hover{opacity:.75}
   </div>
 </footer>
 
+<!-- payments.js подключён здесь (а не только в футере ниже, где было
+     раньше) — этому блоку нужны её общие хелперы валидации
+     (AELITA_isValidEmail/AELITA_normalizePhone/AELITA_wireContactValidation)
+     уже на этом месте страницы, до второго <script src> ниже.
+     Повторное подключение того же файла безвредно — это чистый IIFE
+     без побочных эффектов при подключении, объявляет функции один раз. -->
+<script src="/assets/payments.js"></script>
 <script>
+  // collectContact() используется ТОЛЬКО для joinClub() (анкета без
+  // оплаты, отправка в Telegram/Formspree) — платёж (AELITA_pay) с
+  // pack-v234 сам проверяет email/телефон через общие хелперы из
+  // payments.js (AELITA_isValidEmail/AELITA_normalizePhone), эта
+  // функция ему больше не нужна.
   function collectContact(){
-    var phone = document.getElementById('j-phone').value.trim();
-    var email = document.getElementById('j-email').value.trim();
+    var phoneEl = document.getElementById('j-phone');
+    var emailEl = document.getElementById('j-email');
+    var phone = phoneEl.value.trim();
+    var email = emailEl.value.trim();
     var tg = document.getElementById('j-telegram').value.trim();
-    if(!phone){ alert('Укажите телефон'); return null; }
-    if(!email || !email.includes('@')){ alert('Укажите email'); return null; }
+    if(!AELITA_normalizePhone(phone)){
+      AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
+      phoneEl.focus();
+      return null;
+    }
+    AELITA_clearFieldError(phoneEl);
+    if(!AELITA_isValidEmail(email)){
+      AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
+      emailEl.focus();
+      return null;
+    }
+    AELITA_clearFieldError(emailEl);
     var parts = ['Тел: ' + phone, 'Email: ' + email];
     if(tg) parts.push('TG: ' + tg);
     return parts.join(' · ');
   }
 
+  // Живая подсказка под полями email/телефон, ещё до отправки формы —
+  // один раз за загрузку страницы.
+  AELITA_wireContactValidation('j-email', 'email');
+  AELITA_wireContactValidation('j-phone', 'phone');
+
   async function joinClub(){
-    const name = document.getElementById('j-name').value.trim();
+    const nameEl = document.getElementById('j-name');
+    const name = nameEl.value.trim();
     const address = document.getElementById('j-address').value.trim();
     const situation = document.getElementById('j-situation').value.trim();
     const genres = document.getElementById('j-genres').value.trim();
     const favorite = document.getElementById('j-favorite').value.trim();
     const note = document.getElementById('j-note').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
+    if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
+    AELITA_clearFieldError(nameEl);
     if(!address){ alert('Укажите адрес для отправки книг'); return; }
     if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
     const contact = collectContact();
@@ -568,7 +601,6 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
 <script src="/assets/main.js?v=19"></script>
 
