@@ -119,6 +119,7 @@
       try {
         var res = await fetch(REGISTER_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
           body: JSON.stringify({ name: name, email: email, password: password }),
         });
         var data = await res.json();
@@ -146,6 +147,7 @@
       try {
         var res = await fetch(LOGIN_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
           body: JSON.stringify({ email: email, password: password }),
         });
         var data = await res.json();
@@ -247,7 +249,7 @@
       try {
         var res = await fetch(CHANGE_PASSWORD_URL, {
           method: 'POST',
-          headers: { Authorization: 'Bearer ' + token },
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword }),
         });
         if (res.status === 401) {
@@ -296,7 +298,7 @@
       try {
         var res = await fetch(EVENTS_REGISTER_URL, {
           method: 'POST',
-          headers: { Authorization: 'Bearer ' + token },
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
         if (res.status === 401) { clearToken(); location.href = '/account?next=' + encodeURIComponent(location.pathname); return; }
@@ -326,7 +328,7 @@
       try {
         var res = await fetch(EVENTS_CANCEL_URL, {
           method: 'POST',
-          headers: { Authorization: 'Bearer ' + token },
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
         if (res.status === 401) { clearToken(); location.href = '/account'; return; }
