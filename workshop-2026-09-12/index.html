@@ -177,7 +177,7 @@
 
     <div id="regLoggedOut" style="display:none">
       <p style="color:var(--sand);margin-bottom:16px">Ещё не заходили на сайт? Создайте кабинет прямо здесь — это займёт минуту.</p>
-      <a class="submit-btn" href="/account?next=%2Fworkshop-2026-09-12" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
+      <a class="submit-btn" href="/account?next=%2Fworkshop-2026-09-12%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
     </div>
 
     <div id="regAlready" style="display:none">
@@ -295,6 +295,17 @@
       document.getElementById('regAlready').style.display = 'block';
     } else if(data) {
       document.getElementById('regForm').style.display = 'block';
+      // pack-v242: если вернулись сюда сразу после создания кабинета
+      // специально ради этой встречи (см. href regLoggedOut выше,
+      // ?auto_register=1 в next=) — не заставлять нажимать
+      // «Записаться» второй раз, человек уже выразил намерение.
+      // Параметр убираем ДО вызова — обновление страницы (F5) не
+      // должно повторно отправлять регистрацию.
+      var params = new URLSearchParams(location.search);
+      if (params.get('auto_register') === '1') {
+        history.replaceState(null, '', location.pathname);
+        doRegisterEvent();
+      }
     }
   }
 

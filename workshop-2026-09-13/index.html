@@ -168,7 +168,7 @@
 
     <div id="regLoggedOut" style="display:none">
       <p style="color:var(--sand);margin-bottom:16px">Ещё не заходили на сайт? Создайте кабинет прямо здесь — это займёт минуту.</p>
-      <a class="submit-btn" href="/account?next=%2Fworkshop-2026-09-13" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
+      <a class="submit-btn" href="/account?next=%2Fworkshop-2026-09-13%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
     </div>
 
     <div id="regAlready" style="display:none">
@@ -283,6 +283,13 @@
       document.getElementById('regAlready').style.display = 'block';
     } else if(data) {
       document.getElementById('regForm').style.display = 'block';
+      // pack-v242: см. workshop-2026-09-12 для полного объяснения —
+      // автопродолжение регистрации после возврата с создания кабинета.
+      var params = new URLSearchParams(location.search);
+      if (params.get('auto_register') === '1') {
+        history.replaceState(null, '', location.pathname);
+        doRegisterEvent();
+      }
     }
   }
 

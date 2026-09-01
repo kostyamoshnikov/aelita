@@ -201,7 +201,7 @@
       opts = opts || {};
       if (!CONTRACT_URL) { notConfigured(); return; }
       var token = getToken();
-      if (!token) { location.href = '/account'; return; }
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.downloadingContract; }
@@ -209,7 +209,7 @@
         var res = await fetch(CONTRACT_URL + '?paymentId=' + encodeURIComponent(paymentId), {
           headers: { Authorization: 'Bearer ' + token },
         });
-        if (res.status === 401) { clearToken(); location.href = '/account'; return; }
+        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
         if (!res.ok) {
           var data = null;
           try { data = await res.json(); } catch (e) {}
@@ -242,7 +242,7 @@
       opts = opts || {};
       if (!CHANGE_PASSWORD_URL) { notConfigured(); return; }
       var token = getToken();
-      if (!token) { location.href = '/account'; return; }
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.changingPassword; }
@@ -291,7 +291,15 @@
       opts = opts || {};
       if (!EVENTS_REGISTER_URL) { notConfigured(); return; }
       var token = getToken();
-      if (!token) { location.href = '/account?next=' + encodeURIComponent(location.pathname); return; }
+      // pack-v242: добавлен ?auto_register=1 к next= — если токен
+      // истёк ровно между загрузкой страницы (где кнопка уже была
+      // показана как «войдите») и кликом, человека всё равно вернут
+      // сюда и продолжат регистрацию автоматически, не просто на
+      // пустую страницу мероприятия. Основной путь (не залогинен с
+      // самого начала) — та же логика зашита статично в href на
+      // самих страницах мероприятий (regLoggedOut), здесь — подстраховка
+      // на редкий гоночный случай.
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1'); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.registering; }
@@ -301,7 +309,7 @@
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
-        if (res.status === 401) { clearToken(); location.href = '/account?next=' + encodeURIComponent(location.pathname); return; }
+        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1'); return; }
         var data = await res.json();
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);
@@ -321,7 +329,7 @@
       opts = opts || {};
       if (!EVENTS_CANCEL_URL) { notConfigured(); return; }
       var token = getToken();
-      if (!token) { location.href = '/account'; return; }
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.cancelling; }
@@ -331,7 +339,7 @@
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
-        if (res.status === 401) { clearToken(); location.href = '/account'; return; }
+        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
         var data = await res.json();
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);

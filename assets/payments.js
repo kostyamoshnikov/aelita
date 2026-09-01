@@ -214,7 +214,14 @@
 
   function goToLogin() {
     saveFormDraft();
-    location.href = '/account?next=' + encodeURIComponent(location.pathname + location.hash);
+    // pack-v242: раньше всегда вело на /account (RU), даже с EN-страниц
+    // — человек создавал аккаунт и терял языковой контекст, возвращаясь
+    // на русскую версию (тот же класс бага, что и на workshop-страницах,
+    // см. account.js). LANG уже вычисляется выше в этом же файле.
+    // location.pathname САМ по себе уже содержит /en/, если страница
+    // английская (это реальный путь браузера) — добавлять префикс
+    // повторно сюда нельзя, задвоится в /en/en/....
+    location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + location.hash);
   }
 
   // product — 'community' | 'concierge' | 'gift' | 'program'. Цену для

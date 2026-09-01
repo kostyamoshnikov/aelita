@@ -171,7 +171,7 @@
 
     <div id="regLoggedOut" style="display:none">
       <p style="color:var(--sand);margin-bottom:16px">Haven't signed in before? Create an account right here — it takes a minute.</p>
-      <a class="submit-btn" href="/en/account?next=%2Fworkshop-2026-09-13" style="text-decoration:none;display:inline-block">Sign in or register →</a>
+      <a class="submit-btn" href="/en/account?next=%2Fen%2Fworkshop-2026-09-13%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Sign in or register →</a>
     </div>
 
     <div id="regAlready" style="display:none">
@@ -286,6 +286,12 @@
       document.getElementById('regAlready').style.display = 'block';
     } else if(data) {
       document.getElementById('regForm').style.display = 'block';
+      // pack-v242: see workshop-2026-09-12 (RU) for full explanation.
+      var params = new URLSearchParams(location.search);
+      if (params.get('auto_register') === '1') {
+        history.replaceState(null, '', location.pathname);
+        doRegisterEvent();
+      }
     }
   }
 
