@@ -126,6 +126,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
 .nav-links a{color:var(--sand);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;transition:color .3s}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
 @media(max-width:760px){.nav-links{display:none}}
+/* pack-v254: в меню стало 8 пунктов вместо 5 (добавлены «Точка Кюри»,
+   «Магазин», «Community» — раньше два последних были только в
+   мобильном меню, и с компьютера их было не найти вообще). При
+   исходной разрядке .28em и промежутке 34px восемь пунктов на узком
+   десктопе/планшете наезжают на «КАБИНЕТ» и переключатель языка —
+   поэтому ниже 1200px сжимаем разрядку и промежутки, а не прячем
+   пункты. Ниже 760px меню и так уходит в бургер. */
+@media(min-width:761px) and (max-width:1200px){
+  .nav-links{gap:18px}
+  .nav-links a{letter-spacing:.16em}
+}
+@media(min-width:761px) and (max-width:940px){
+  .nav-links{gap:11px}
+  .nav-links a{font-size:10px;letter-spacing:.08em}
+}
 /* Ссылка «Кабинет» в шапке — только на широких экранах: на мобильном
    она бы теснила логотип, EN и бургер, а в самом бургер-меню
    «Личный кабинет» и так есть отдельным пунктом. */
