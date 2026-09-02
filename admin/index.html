@@ -42,7 +42,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 /* Шапка данных: заголовок + действия */
 .data-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:40px}
 .data-head h1{margin-bottom:0}
-.data-actions{display:flex;gap:10px;flex-shrink:0}
+.data-actions{display:flex;gap:10px;flex-shrink:0;align-items:center}
+.loaded-at{font-size:11px;color:rgba(201,184,163,.6);white-space:nowrap}
 .btn-small{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;border:1px solid rgba(214,181,122,.35);color:var(--gold);background:none;cursor:pointer}
 .btn-small:hover{background:rgba(214,181,122,.08)}
 .btn-small:disabled{opacity:.5;cursor:default}
@@ -76,7 +77,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .cust{display:flex;flex-direction:column;gap:1px;background:rgba(201,184,163,.15)}
 .cust-item{background:var(--ink);padding:20px 22px}
 .cust-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.cust-name{font-family:'Montserrat',sans-serif;font-size:15px;letter-spacing:.02em;margin-bottom:2px}
 .cust-email{font-family:'Montserrat',sans-serif;font-size:14px;word-break:break-all}
+.cust-name + .cust-email{font-size:12px;color:var(--sand);font-family:'Inter',sans-serif;letter-spacing:0}
 .cust-meta{color:var(--sand);font-size:12px}
 .cust-total{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);white-space:nowrap}
 .purchase-row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--sand);margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,184,163,.1)}
@@ -113,6 +116,23 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .editor-result{font-size:13px;margin-top:14px;display:none}
 .editor-result.ok{color:var(--gold)}
 .editor-result.err{color:#e08a6e}
+
+/* Регистрации на бесплатные встречи (pack-v251) */
+.ev-card{background:var(--coal);padding:22px 24px;margin-bottom:1px}
+.ev-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:4px}
+.ev-title{font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.03em}
+.ev-when{color:var(--sand);font-size:12px;margin-top:2px}
+.ev-count{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);white-space:nowrap}
+.ev-count .cap{color:var(--sand);font-size:12px}
+.ev-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ev-people{margin-top:14px;border-top:1px solid rgba(201,184,163,.12);padding-top:12px;display:none}
+.ev-people.open{display:block}
+.ev-person{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(201,184,163,.06)}
+.ev-person:last-child{border-bottom:none}
+.ev-person .who{color:var(--bone)}
+.ev-person .who small{display:block;color:var(--sand);font-size:11px;word-break:break-all}
+.ev-person .when{color:var(--sand);font-size:11px;white-space:nowrap}
+.ev-empty{color:var(--sand);font-size:13px;padding:6px 0}
 
 .empty-state,#loadingState{padding:60px 20px;text-align:center;color:var(--sand);background:var(--coal)}
 #errorState{padding:40px 20px;text-align:center;color:#e08a6e;background:var(--coal);display:none}
@@ -155,6 +175,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <h1>Клиенты, покупки, статистика</h1>
     </div>
     <div class="data-actions">
+      <span class="loaded-at" id="loadedAt"></span>
       <button class="btn-small" id="refreshBtn">Обновить</button>
       <button class="btn-small btn-ghost" id="logoutBtn">Выйти</button>
     </div>
@@ -180,13 +201,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 
     <p class="sec-title">Клиенты (<span id="cust-count">0</span>)</p>
     <div class="filter-row">
-      <input type="text" class="search" id="custSearch" placeholder="Поиск по email…">
+      <input type="text" class="search" id="custSearch" placeholder="Поиск по имени или email…">
       <div class="sort-tabs">
         <button type="button" class="sort-tab active" data-sort="date">Сначала новые</button>
         <button type="button" class="sort-tab" data-sort="spent">Сначала больше потратили</button>
       </div>
     </div>
     <div class="cust" id="custList"></div>
+
+    <!-- ADMIN_TODO.md, п.1.2 — до pack-v251 админ не видел регистраций
+         на бесплатные встречи вообще: единственным источником были
+         письма и Telegram по одному на каждую (pack-v247), список
+         приходилось собирать вручную. -->
+    <p class="sec-title" style="margin-top:56px">Регистрации на встречи</p>
+    <div id="eventsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <p class="sec-title" style="margin-top:56px">Правки сайта</p>
     <div class="editor-box">
@@ -274,6 +302,9 @@ var ADMIN_DATA_URL = API_BASE && API_BASE + '/data';
 var ADMIN_DELETE_URL = API_BASE && API_BASE + '/delete-customer';
 var ADMIN_ADD_PURCHASE_URL = API_BASE && API_BASE + '/add-purchase';
 var ADMIN_SITE_EDIT_URL = API_BASE && API_BASE + '/site-edit';
+// pack-v251, ADMIN_TODO.md п.1.2 — список регистраций на бесплатные
+// встречи (см. _tools/Admin/events-registrations.js).
+var ADMIN_EVENTS_URL = API_BASE && API_BASE + '/events-registrations';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -290,6 +321,50 @@ function clearToken() { try { sessionStorage.removeItem(STORAGE_KEY); } catch (e
 function fmtMoney(n) {
   if (n == null || !isFinite(n)) return '—';
   return Math.round(n).toLocaleString('ru-RU') + ' ₽';
+}
+
+// ── Словарь ошибок ───────────────────────────────────────────────
+// ADMIN_TODO.md, пп.2.1 и 2.2 — две противоположные крайности,
+// сведённые к одному поведению:
+//   2.1 — loadData() показывала СЫРОЙ data.error как есть, и админ
+//         видел «storage_unreachable» вместо человеческого текста;
+//   2.2 — модалки, наоборот, глушили любую ошибку сервера общим
+//         «Не получилось, попробуйте ещё раз», теряя полезную
+//         причину (например, что клиент уже удалён).
+// Теперь оба места идут через errorMessage(): известный код →
+// понятный текст, неизвестный → общий fallback, но смысл не теряется.
+// Тот же приём и та же структура, что на клиентской части сайта
+// (Site/assets/account.js, там errors/fallback появились раньше) —
+// не изобретаем второй стиль для того же самого.
+var ERRORS = {
+  // общие для всех функций Admin
+  not_authenticated: 'Сессия истекла — войдите заново.',
+  storage_unreachable: 'Не достучались до хранилища. Попробуйте ещё раз через минуту.',
+  server_misconfigured: 'Админка настроена не полностью — проверьте переменные окружения функции.',
+  bad_json: 'Сервер не разобрал запрос. Обновите страницу и попробуйте ещё раз.',
+  method_not_allowed: 'Неподдерживаемый запрос — обновите страницу.',
+  // delete-customer / add-purchase
+  not_found: 'Клиент не найден — возможно, уже удалён.',
+  missing_email: 'Не передан email клиента — обновите страницу.',
+  unknown_product: 'Неизвестный товар — выберите из списка.',
+  missing_payment_id: 'Не удалось сформировать ID платежа — попробуйте ещё раз.',
+  bad_amount: 'Укажите сумму больше нуля.',
+  // login
+  invalid_password: 'Неверный пароль.',
+  // site-edit
+  missing_page: 'Укажите страницу.',
+  missing_old_text: 'Укажите текущий текст, который нужно найти.',
+  no_change: 'Новый текст совпадает со старым — менять нечего.',
+  page_excluded: 'Эта страница закрыта от правок из админки — юридические и служебные страницы правятся только вручную.',
+  page_not_found: 'Такой страницы не нашлось. Проверьте слаг (например, «community», не «/community/»).',
+  github_unreachable: 'Не достучались до GitHub. Попробуйте ещё раз через минуту.',
+  github_rejected: 'GitHub отклонил запрос — проверьте права токена и ветку.',
+  conflict_retry: 'Кто-то другой изменил эту страницу, пока вы проверяли правку. Нажмите «Проверить» ещё раз — превью подтянет актуальный текст.',
+};
+var ERROR_FALLBACK = 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или посмотрите логи функции в консоли Yandex Cloud.';
+
+function errorMessage(data) {
+  return (data && ERRORS[data.error]) || ERROR_FALLBACK;
 }
 // Экранирование перед вставкой в innerHTML. Два реальных источника
 // непроверенного текста, оба рендерятся здесь без него до этой правки:
@@ -378,9 +453,17 @@ function renderCustomers(list) {
     var purchaseWord = pluralRu(c.purchaseCount, 'покупка', 'покупки', 'покупок');
     var email = escapeHtml(c.email);
     var emailAttr = email;
+    // Имя — отдельной строкой над email (pack-v251, ADMIN_TODO.md
+    // п.2.3): по нему теперь ищут, значит его надо и видеть. У старых
+    // записей его может не быть (обязательным стало с pack-v170) —
+    // тогда просто не рисуем строку, а не выводим «null».
+    // escapeHtml обязателен: имя вводит сам клиент при регистрации,
+    // это ровно тот же непроверенный источник, что и email — см.
+    // комментарий у функции escapeHtml выше.
+    var nameHtml = c.name ? '<div class="cust-name">' + escapeHtml(c.name) + '</div>' : '';
     return '<div class="cust-item">' +
       '<div class="cust-head">' +
-        '<div><div class="cust-email">' + email + '</div><div class="cust-meta">с ' + fmtDate(c.createdAt) + ' · ' + c.purchaseCount + ' ' + purchaseWord + '</div></div>' +
+        '<div>' + nameHtml + '<div class="cust-email">' + email + '</div><div class="cust-meta">с ' + fmtDate(c.createdAt) + ' · ' + c.purchaseCount + ' ' + purchaseWord + '</div></div>' +
         '<div class="cust-total">' + fmtMoney(c.totalSpent) + '</div>' +
       '</div>' +
       purchasesHtml +
@@ -445,7 +528,7 @@ document.getElementById('deleteConfirmBtn').addEventListener('click', async func
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
-    if (!res.ok) { showModalErr('deleteModalErr', data && data.error === 'not_found' ? 'Клиент не найден — возможно, уже удалён.' : 'Не получилось удалить. Попробуйте ещё раз.'); return; }
+    if (!res.ok) { showModalErr('deleteModalErr', errorMessage(data)); return; }
     closeDeleteModal();
     loadData({ refresh: true });
   } catch (e) {
@@ -496,7 +579,7 @@ document.getElementById('addPurchaseConfirmBtn').addEventListener('click', async
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
-    if (!res.ok) { showModalErr('addPurchaseErr', 'Не получилось добавить покупку. Попробуйте ещё раз.'); return; }
+    if (!res.ok) { showModalErr('addPurchaseErr', errorMessage(data)); return; }
     closeAddPurchaseModal();
     loadData({ refresh: true });
   } catch (e) {
@@ -517,7 +600,17 @@ var currentSort = 'date'; // 'date' | 'spent' — порядок и так пр�
                             // первые), 'spent' пересортировывает на клиенте
 function applyFiltersAndSort() {
   var q = document.getElementById('custSearch').value.trim().toLowerCase();
-  var list = q ? allCustomers.filter(function (c) { return c.email.toLowerCase().indexOf(q) !== -1; }) : allCustomers.slice();
+  // ADMIN_TODO.md, п.2.3: ищем и по email, И ПО ИМЕНИ. Раньше — только
+  // по email, хотя имя есть в данных и показывается на карточке; на
+  // практике скорее помнишь фамилию, чем адрес почты. name может быть
+  // null у старых записей (поле стало обязательным только с pack-v170,
+  // до этого клиенты регистрировались без него) — поэтому || ''.
+  var list = q
+    ? allCustomers.filter(function (c) {
+        return c.email.toLowerCase().indexOf(q) !== -1
+          || String(c.name || '').toLowerCase().indexOf(q) !== -1;
+      })
+    : allCustomers.slice();
   if (currentSort === 'spent') {
     list = list.slice().sort(function (a, b) { return b.totalSpent - a.totalSpent; });
   }
@@ -534,6 +627,155 @@ document.querySelectorAll('.sort-tab').forEach(function (btn) {
     applyFiltersAndSort();
   });
 });
+
+// ADMIN_TODO.md, п.2.6 — отметка времени загрузки данных.
+// Показываем и абсолютное время («данные на 14:32»), и относительный
+// возраст («8 мин назад»), потому что важен именно возраст: цифра
+// «14:32» сама по себе не подсказывает, что вкладка висит с утра.
+// Пересчитываем раз в минуту — не автообновление данных (его
+// сознательно не добавляем: список может обновиться под курсором в
+// момент клика по «Удалить», это опаснее устаревших цифр), а только
+// честная подпись, насколько показанное устарело.
+var lastLoadedAt = null;
+
+function renderLoadedAt() {
+  var el = document.getElementById('loadedAt');
+  if (!el || !lastLoadedAt) return;
+  var mins = Math.floor((Date.now() - lastLoadedAt.getTime()) / 60000);
+  var hhmm = lastLoadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  var age;
+  if (mins < 1) age = 'только что';
+  else if (mins < 60) age = mins + ' ' + pluralRu(mins, 'минуту', 'минуты', 'минут') + ' назад';
+  else {
+    var hours = Math.floor(mins / 60);
+    age = hours + ' ' + pluralRu(hours, 'час', 'часа', 'часов') + ' назад';
+  }
+  el.textContent = 'данные на ' + hhmm + ' · ' + age;
+}
+
+function markLoadedNow() {
+  lastLoadedAt = new Date();
+  renderLoadedAt();
+}
+
+setInterval(renderLoadedAt, 60000);
+
+// ── Регистрации на бесплатные встречи (pack-v251) ────────────────
+// ADMIN_TODO.md, п.1.2. Грузится отдельным запросом от основного
+// loadData(): это разные бэкенд-функции (Admin/data.js и
+// Admin/events-registrations.js), и падение одной не должно уносить
+// вторую — если хранилище регистраций недоступно, список клиентов
+// всё равно должен открыться, и наоборот.
+var allEvents = [];
+
+function fmtEventWhen(iso) {
+  if (!iso) return 'дата уточняется';
+  try {
+    return new Date(iso).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+  } catch (e) { return iso; }
+}
+
+function renderEvents(events) {
+  var el = document.getElementById('eventsBlock');
+  if (!events.length) {
+    el.innerHTML = '<div class="empty-state">В каталоге нет мероприятий — см. _tools/Events/config/events.js</div>';
+    return;
+  }
+  el.innerHTML = events.map(function (ev, idx) {
+    var peopleWord = pluralRu(ev.registeredCount, 'человек', 'человека', 'человек');
+    // capacity: null — лимит не задан (ADMIN_TODO.md, п.1.3: код
+    // проверки готов, ждёт числа от заказчика). Показываем это честно,
+    // а не рисуем «∞» — так видно, что решение ещё не принято.
+    var cap = ev.capacity != null
+      ? '<span class="cap"> из ' + ev.capacity + '</span>'
+      : '<span class="cap"> · лимит не задан</span>';
+    var people = ev.registrations.length
+      ? ev.registrations.map(function (r) {
+          return '<div class="ev-person">' +
+            '<span class="who">' + escapeHtml(r.name || '—') + '<small>' + escapeHtml(r.email) + '</small></span>' +
+            '<span class="when">' + fmtDate(r.createdAt) + '</span>' +
+          '</div>';
+        }).join('')
+      : '<div class="ev-empty">Пока никто не записался.</div>';
+    return '<div class="ev-card">' +
+      '<div class="ev-head">' +
+        '<div><div class="ev-title">' + escapeHtml(ev.title) + '</div>' +
+        '<div class="ev-when">' + fmtEventWhen(ev.datetime) + ' · ' + escapeHtml(ev.venueName || '') + '</div></div>' +
+        '<div class="ev-count">' + ev.registeredCount + ' ' + peopleWord + cap + '</div>' +
+      '</div>' +
+      '<div class="ev-actions">' +
+        '<button class="mini-btn" data-ev-action="toggle" data-ev-idx="' + idx + '">Показать список</button>' +
+        (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать CSV</button>' : '') +
+      '</div>' +
+      '<div class="ev-people" id="ev-people-' + idx + '">' + people + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('eventsBlock').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-ev-action]');
+  if (!btn) return;
+  var idx = Number(btn.dataset.evIdx);
+  if (btn.dataset.evAction === 'toggle') {
+    var box = document.getElementById('ev-people-' + idx);
+    var opening = !box.classList.contains('open');
+    box.classList.toggle('open', opening);
+    btn.textContent = opening ? 'Скрыть список' : 'Показать список';
+  } else if (btn.dataset.evAction === 'csv') {
+    exportEventCsv(allEvents[idx]);
+  }
+});
+
+/**
+ * Выгрузка списка участников — прямо из ADMIN_TODO.md, п.1.2:
+ * «Плюс выгрузка списка, чтобы отмечать пришедших на входе».
+ * CSV, а не JSON (в отличие от выгрузки клиента выше): этот файл
+ * открывают в таблице и печатают, чтобы ставить галочки на входе —
+ * JSON для такой задачи бесполезен.
+ * BOM в начале — иначе Excel открывает UTF-8 кириллицу кракозябрами.
+ */
+function exportEventCsv(ev) {
+  if (!ev) return;
+  var rows = [['Имя', 'Email', 'Записался', 'Отметка о приходе']];
+  ev.registrations.forEach(function (r) {
+    rows.push([r.name || '', r.email || '', fmtDate(r.createdAt), '']);
+  });
+  var csv = rows.map(function (row) {
+    return row.map(function (cell) {
+      var s = String(cell).replace(/"/g, '""');
+      return '"' + s + '"';
+    }).join(';');
+  }).join('\r\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'aelita-' + ev.id + '-registrations.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function loadEvents() {
+  var el = document.getElementById('eventsBlock');
+  if (!ADMIN_EVENTS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_EVENTS_URL, { headers: { Authorization: 'Bearer ' + token } });
+    // 401 здесь НЕ выкидывает на экран входа: основной loadData()
+    // работает с тем же токеном и сам обработает истёкшую сессию —
+    // два параллельных редиректа на /admin спорили бы друг с другом.
+    if (res.status === 401) { el.innerHTML = ''; return; }
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    allEvents = data.events || [];
+    renderEvents(allEvents);
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить регистрации. Попробуйте «Обновить».</div>';
+  }
+}
 
 function showError(msg) {
   document.getElementById('loadingState').style.display = 'none';
@@ -560,13 +802,21 @@ async function loadData(opts) {
     var res = await fetch(ADMIN_DATA_URL, { headers: { Authorization: 'Bearer ' + token } });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
-    if (!res.ok) { showError((data && data.error) || 'Не получилось загрузить данные.'); return; }
+    if (!res.ok) { showError(errorMessage(data)); return; }
     allCustomers = data.customers || [];
     renderStats(data.stats || {});
     renderLinks(data.adminLinks || {});
     applyFiltersAndSort();
+    // ADMIN_TODO.md, п.2.6: данные грузятся один раз при входе, и если
+    // вкладка открыта с утра — смотришь на утренние цифры, не понимая
+    // этого. Теперь рядом с «Обновить» видно, когда именно загружено.
+    markLoadedNow();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
+    // Регистрации грузим отдельно и не ждём их — список клиентов уже
+    // можно показывать, а раздел встреч дорисуется, когда придёт ответ
+    // (см. loadEvents: свои ошибки показывает у себя, не роняя эту).
+    loadEvents();
   } catch (e) {
     showError('Не получилось связаться с сервером. Попробуйте ещё раз.');
   } finally {
@@ -610,7 +860,7 @@ async function doLogin() {
       showData();
       return;
     }
-    showErr(data && data.error === 'invalid_password' ? 'Неверный пароль.' : 'Что-то пошло не так. Попробуйте ещё раз.');
+    showErr(errorMessage(data));
   } catch (e) {
     showErr('Не получилось связаться с сервером. Попробуйте ещё раз.');
   } finally {
@@ -671,9 +921,9 @@ document.getElementById('editPreviewBtn').addEventListener('click', async functi
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
-    if (res.status === 403) { showEditorResult('err', 'Эта страница закрыта от правок из админки — юридические и служебные страницы правятся только вручную.'); return; }
-    if (res.status === 404) { showEditorResult('err', 'Такой страницы не нашлось. Проверьте слаг (например, «community», не «/community/»).'); return; }
-    if (!res.ok) { showEditorResult('err', 'Не получилось проверить. Попробуйте ещё раз.'); return; }
+    if (res.status === 403) { showEditorResult('err', ERRORS.page_excluded); return; }
+    if (res.status === 404) { showEditorResult('err', ERRORS.page_not_found); return; }
+    if (!res.ok) { showEditorResult('err', errorMessage(data)); return; }
     if (data.error === 'text_not_found') { showEditorResult('err', 'Такой текст на странице не найден — проверьте, что скопировали его дословно, без опечаток.'); return; }
     if (data.error === 'text_not_unique') { showEditorResult('err', 'Этот текст встречается на странице ' + data.occurrences + ' раз — добавьте немного окружающего текста, чтобы он стал уникальным.'); return; }
     if (data.found) {
@@ -711,8 +961,8 @@ document.getElementById('editConfirmBtn').addEventListener('click', async functi
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
-    if (res.status === 409) { showEditorResult('err', 'Кто-то другой изменил эту страницу, пока вы проверяли правку. Нажмите «Проверить» ещё раз — превью подтянет актуальный текст.'); return; }
-    if (!res.ok || !data.committed) { showEditorResult('err', 'Не получилось закоммитить правку. Попробуйте ещё раз.'); return; }
+    if (res.status === 409) { showEditorResult('err', ERRORS.conflict_retry); return; }
+    if (!res.ok || !data.committed) { showEditorResult('err', errorMessage(data)); return; }
     showEditorResult('ok', 'Готово — правка на сайте' + (data.commitUrl ? ' (' : '') + (data.commitUrl ? '<a href="' + data.commitUrl + '" target="_blank" rel="noopener" style="color:inherit">коммит на GitHub →</a>)' : '') + '. На самом сайте появится обычно в течение минуты.');
     document.getElementById('editorPreview').style.display = 'none';
     resetEditorConfirm();

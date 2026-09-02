@@ -32,11 +32,14 @@
         already_registered: 'Вы уже зарегистрированы на это мероприятие.',
         event_full: 'Мест больше нет — все места заняты.',
         not_registered: 'Регистрация не найдена — возможно, уже отменена.',
+        mail_failed: 'Не удалось отправить письмо — попробуйте ещё раз через минуту. QR-код для входа виден прямо здесь, в кабинете.',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
+      resending: 'Отправляем письмо…',
+      resent: 'Письмо с билетом отправлено — проверьте почту, в том числе папку «Спам».',
     },
     en: {
       notConfigured: "The account isn't connected yet — email us directly: aelita.production@yandex.ru",
@@ -59,11 +62,14 @@
         already_registered: "You're already registered for this event.",
         event_full: 'No spots left — the event is full.',
         not_registered: "Registration not found — it may already be cancelled.",
+        mail_failed: "Couldn't send the email — try again in a minute. Your entry QR code is visible right here in your account.",
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
+      resending: 'Sending email…',
+      resent: 'Ticket email sent — check your inbox, including the spam folder.',
     },
   };
   var t = TEXT[LANG];
@@ -85,6 +91,7 @@
   var EVENTS_REGISTER_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/register';
   var EVENTS_CANCEL_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/cancel';
   var EVENTS_MY_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/my';
+  var EVENTS_RESEND_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/resend-ticket';
 
   var STORAGE_KEY = 'aelita_account_token';
 
@@ -335,6 +342,42 @@
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.cancelling; }
       try {
         var res = await fetch(EVENTS_CANCEL_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ event_id: eventId }),
+        });
+        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+        var data = await res.json();
+        if (res.ok) {
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v246: повторная отправка PDF-билета на почту — если письмо
+    // потерялось или ушло в спам. Отправляется всегда СЕБЕ: адрес
+    // сервер берёт из проверенного токена, не из тела запроса (см.
+    // _tools/Events/resend-ticket.js), поэтому здесь передаётся только
+    // event_id. QR в письме тот же самый, что и в первом — старое
+    // письмо не протухает, оба билета валидны на входе.
+    resendEventTicket: async function (eventId, opts) {
+      opts = opts || {};
+      if (!EVENTS_RESEND_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.resending; }
+      try {
+        var res = await fetch(EVENTS_RESEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),

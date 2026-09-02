@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=22">
 <style>body{max-width:100vw}
 section{padding:70px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -125,6 +125,7 @@ p a:hover{opacity:.75}
     <a href="/en/collaboration">Collaborate</a>
     <a href="/en/contacts">Contact</a>
     </div>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
     <a class="lang-switch" href="https://aelita-production.ru/programs/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -181,6 +182,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="msg" id="payMsg_program" style="display:none;color:#C98B6B;font-size:13px;margin:8px 0"></div>
       <button class="btn-gold" id="payBtn_program" disabled onclick="AELITA_pay('program', {show: window.AELITA_selectedShow, name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_program'})">Pay — 200 ₽ →</button>
+      <p style="color:var(--gold);font-size:12px;margin-top:6px">Unfortunately, payment and registration sometimes don't go through with a VPN enabled — please turn it off and try again.</p>
       <p class="pay-note">Card payment via YooKassa, no registration or account needed — name/email/phone are only for the receipt, not for an account. After payment, show your phone screen at the counter to get your programme booklet.</p>
       <p class="pay-note">Having trouble? Email us: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
       <div class="pay-ok" id="paymentReturnMsg">If the payment went through — show this screen at the stand and you'll get your program. If something went wrong — email us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
@@ -238,6 +240,7 @@ p a:hover{opacity:.75}
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/shop">Shop</a>
+        <a href="/en/account">Account</a>
       </div>
       <div>
         <h4>Products</h4>
@@ -283,6 +286,7 @@ p a:hover{opacity:.75}
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
     <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+    <a href="/en/account" onclick="toggleMenu()">Account</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>

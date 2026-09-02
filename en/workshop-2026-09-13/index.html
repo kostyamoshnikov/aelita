@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=22">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -79,6 +79,7 @@
       <a href="/en/collaboration">Collaborate</a>
       <a href="/en/contacts">Contact</a>
     </div>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
     <a class="lang-switch" href="https://aelita-production.ru/workshop-2026-09-13/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -168,10 +169,11 @@
     <span class="eyebrow">Register</span>
     <h2 style="margin-top:14px">Registration for the open meeting</h2>
     <p class="sub">Free admission, limited seats. To register, you'll need an account on the site — it's also where all your event registrations and ticket purchases are kept; setting one up takes a minute and any email works. After you register, a ticket with a QR code will be emailed to you.</p>
+    <p style="color:var(--gold);font-size:12px;margin-top:6px;margin-bottom:20px">Unfortunately, payment and registration sometimes don't go through with a VPN enabled — please turn it off and try again.</p>
 
     <div id="regLoggedOut" style="display:none">
       <p style="color:var(--sand);margin-bottom:16px">Haven't signed in before? Create an account right here — it takes a minute.</p>
-      <a class="submit-btn" href="/en/account?next=%2Fen%2Fworkshop-2026-09-13%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Sign in or register →</a>
+      <a class="submit-btn" href="/en/account?next=%2Fworkshop-2026-09-13%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Sign in or register →</a>
     </div>
 
     <div id="regAlready" style="display:none">
@@ -225,6 +227,7 @@
         <a href="/en/tickets">Schedule</a>
         <a href="/en/projects">Productions</a>
         <a href="/en/shop">Shop</a>
+        <a href="/en/account">Account</a>
       </div>
       <div>
         <h4>Products</h4>
@@ -284,9 +287,21 @@
     var already = data && data.registrations && data.registrations.some(function(r){ return r.eventId === EVENT_ID; });
     if(already){
       document.getElementById('regAlready').style.display = 'block';
-    } else if(data) {
+    } else if(!data) {
+      // pack-v246: listEventRegistrations вернул null — единственная
+      // причина при уже пройденной проверке isLoggedIn() выше: токен
+      // истёк, сервер отдал 401, account.js его очистил. Раньше эта
+      // ветка не обрабатывалась вообще: `else if(data)` не срабатывал,
+      // и человек видел ПУСТУЮ секцию «Записаться» — ни кнопки, ни
+      // объяснения, тупик (подтверждено симуляцией всех трёх
+      // состояний). Показываем тот же блок «войдите», что и
+      // незалогиненному — он ведёт на /account с auto_register=1,
+      // то есть после входа регистрация продолжится сама.
+      document.getElementById('regLoggedOut').style.display = 'block';
+    } else {
       document.getElementById('regForm').style.display = 'block';
-      // pack-v242: see workshop-2026-09-12 (RU) for full explanation.
+      // pack-v242: см. workshop-2026-09-12 для полного объяснения —
+      // автопродолжение регистрации после возврата с создания кабинета.
       var params = new URLSearchParams(location.search);
       if (params.get('auto_register') === '1') {
         history.replaceState(null, '', location.pathname);
@@ -334,6 +349,7 @@
     <a href="/en/community" onclick="toggleMenu()">Community</a>
     <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
     <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+    <a href="/en/account" onclick="toggleMenu()">Account</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>

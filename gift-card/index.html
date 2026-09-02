@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=22">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -188,6 +188,7 @@ p a:hover{opacity:.75}
     <a href="/collaboration">Сотрудничество</a>
     <a href="/contacts">Контакты</a>
     </div>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
     <a class="lang-switch" href="/en/gift-card/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -309,6 +310,7 @@ p a:hover{opacity:.75}
       <div class="msg" id="payMsg_gift" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_gift'})">Оплатить →</button>
       <p class="join-note">Для оплаты нужен <a href="/account" style="color:var(--gold)">личный кабинет</a> — если ещё не заходили, попросим войти или зарегистрироваться прямо перед оплатой, это быстро.</p>
+      <p style="color:var(--gold);font-size:12px;margin-top:6px">К сожалению, оплата и регистрация иногда не проходят при включённом VPN — пожалуйста, отключите его и попробуйте ещё раз.</p>
       <p class="join-note">Или напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
       <div class="join-ok" id="paymentReturnMsg">Если оплата прошла успешно — мы получили уведомление и свяжемся с вами, чтобы оформить сертификат. Если что-то пошло не так или остались вопросы — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
@@ -341,6 +343,7 @@ p a:hover{opacity:.75}
         <a href="/tickets">Афиша</a>
         <a href="/projects">Проекты</a>
         <a href="/shop">Магазин</a>
+        <a href="/account">Личный кабинет</a>
       </div>
       <div>
         <h4>Продукты</h4>
@@ -400,6 +403,7 @@ p a:hover{opacity:.75}
     <a href="/community" onclick="toggleMenu()">Community</a>
     <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
     <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+    <a href="/account" onclick="toggleMenu()">Личный кабинет</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>

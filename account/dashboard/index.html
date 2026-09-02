@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=22">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
@@ -66,7 +66,18 @@ body{max-width:100vw}
 .reg-item .cancel-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sand);background:none;border:1px solid rgba(201,184,163,.3);padding:8px 14px;cursor:pointer;white-space:nowrap;transition:all .2s}
 .reg-item .cancel-btn:hover{border-color:#C98B6B;color:#C98B6B}
 .reg-item .cancel-btn:disabled{opacity:.5;cursor:default}
-@media(max-width:600px){.reg-item{grid-template-columns:1fr}.reg-item .cancel-btn{justify-self:start}}
+/* pack-v246 — QR прямо в кабинете и повторная отправка письма. */
+.reg-item{grid-template-columns:auto 1fr auto}
+.reg-qr{background:#fff;padding:8px;line-height:0;border-radius:2px}
+.reg-qr svg{display:block;width:104px;height:104px}
+.reg-qr-missing{width:104px;height:104px;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--coal);color:var(--sand);font-size:10px;padding:8px;line-height:1.4}
+.reg-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.reg-item .resend-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);background:none;border:1px solid rgba(214,181,122,.4);padding:8px 14px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.reg-item .resend-btn:hover{border-color:var(--gold);background:rgba(214,181,122,.08)}
+.reg-item .resend-btn:disabled{opacity:.5;cursor:default}
+.reg-msg{font-size:12px;color:var(--gold);margin-top:6px;text-align:right;max-width:260px}
+.reg-hint{color:var(--sand);font-size:11px;margin-top:6px}
+@media(max-width:600px){.reg-item{grid-template-columns:1fr}.reg-item .cancel-btn{justify-self:start}.reg-actions{align-items:flex-start}.reg-msg{text-align:left}}
 @media(max-width:600px){.purchase-item{grid-template-columns:1fr;gap:10px}.purchase-item .amount{justify-self:start}.purchase-item .contract-btn{justify-self:start}}
 </style>
 </head>
@@ -82,6 +93,7 @@ body{max-width:100vw}
     <a href="/collaboration">Сотрудничество</a>
     <a href="/contacts">Контакты</a>
 </div>
+<a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
 <a class="lang-switch" href="/en/account/dashboard/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
 <button class="burger" aria-label="Меню" onclick="toggleMenu()">
 <span></span><span></span><span></span>
@@ -100,6 +112,7 @@ body{max-width:100vw}
     <a href="/community" onclick="toggleMenu()">Community</a>
     <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
     <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+    <a href="/account" onclick="toggleMenu()">Личный кабинет</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
@@ -187,15 +200,67 @@ body{max-width:100vw}
 </div>
 
 <script src="/assets/analytics-events.js"></script>
+<script src="/assets/qrcode.js"></script>
 <script src="/assets/account.js"></script>
 <script src="/assets/main.js?v=19"></script>
 <script>
-  var PRODUCT_NAMES = { community: 'AELITA COMMUNITY', concierge: 'Книжный консьерж', gift: 'Подарочная карта' };
+  // pack-v246: словарь по языку страницы. Переводческий пайплайн
+  // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
+  // только HTML-разметку (см. i18n/README.md). Из-за этого в EN-версии
+  // кабинета до сих пор был русский текст: «Пока пусто», «Скачать
+  // договор», «Отменить регистрацию», «Пароль изменён» и другие, плюс
+  // ссылки вели на русскую /tickets вместо /en/tickets. Найдено при
+  // добавлении QR в кабинет — те же грабли, что уже решены в
+  // assets/account.js и assets/reviews.js тем же паттерном
+  // (document.documentElement.lang), поэтому берём его, а не
+  // изобретаем новый механизм.
+  var LANG = document.documentElement.lang === 'en' ? 'en' : 'ru';
+  var TICKETS_URL = LANG === 'en' ? '/en/tickets' : '/tickets';
+
+  var T = {
+    ru: {
+      productPurchase: 'Покупка',
+      productEvent: 'Мероприятие',
+      emptyPurchases: 'Пока пусто — загляните в <a href="' + TICKETS_URL + '">афишу</a>, если решите на что-нибудь сходить.',
+      emptyRegistrations: 'Пока нет активных регистраций — загляните на <a href="' + TICKETS_URL + '">афишу</a>, там же анонсы бесплатных встреч.',
+      downloadContract: 'Скачать договор',
+      qrInEmail: 'QR — в письме с билетом',
+      showQrAtEntrance: 'Покажите QR при входе',
+      resendTicket: 'Прислать на почту',
+      cancelRegistration: 'Отменить регистрацию',
+      ticketResent: 'Письмо с билетом отправлено — проверьте почту, в том числе папку «Спам».',
+      confirmCancel: 'Отменить регистрацию? Место освободится для других участников, вам придёт письмо с подтверждением отмены.',
+      passwordChanged: 'Пароль изменён.',
+      loadFailed: 'Не получилось загрузить кабинет. Обновите страницу или напишите нам: aelita.production@yandex.ru',
+      products: { community: 'AELITA COMMUNITY', concierge: 'Книжный консьерж', gift: 'Подарочная карта' },
+      locale: 'ru-RU',
+    },
+    en: {
+      productPurchase: 'Purchase',
+      productEvent: 'Event',
+      emptyPurchases: 'Nothing here yet — take a look at the <a href="' + TICKETS_URL + '">schedule</a> if you feel like going to something.',
+      emptyRegistrations: 'No active registrations yet — take a look at the <a href="' + TICKETS_URL + '">schedule</a>, free meetings are announced there too.',
+      downloadContract: 'Download contract',
+      qrInEmail: 'QR is in the ticket email',
+      showQrAtEntrance: 'Show the QR at the entrance',
+      resendTicket: 'Email me the ticket',
+      cancelRegistration: 'Cancel registration',
+      ticketResent: 'Ticket email sent — check your inbox, including the spam folder.',
+      confirmCancel: 'Cancel this registration? Your spot will be freed up for others, and you\'ll get a confirmation email.',
+      passwordChanged: 'Password changed.',
+      loadFailed: "Couldn't load your account. Refresh the page or email us: aelita.production@yandex.ru",
+      products: { community: 'AELITA COMMUNITY', concierge: 'Book concierge', gift: 'Gift card' },
+      locale: 'en-GB',
+    },
+  };
+  var t = T[LANG];
+
+  var PRODUCT_NAMES = t.products;
 
   function fmtDate(iso) {
     try {
       var d = new Date(iso);
-      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      return d.toLocaleDateString(t.locale, { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (e) { return iso || '—'; }
   }
   function fmtAmount(amount, currency) {
@@ -219,18 +284,18 @@ body{max-width:100vw}
   function renderPurchases(purchases) {
     var el = document.getElementById('purchases');
     if (!purchases || !purchases.length) {
-      el.innerHTML = '<div class="empty-state">Пока пусто — загляните в <a href="/tickets">афишу</a>, если решите на что-нибудь сходить.</div>';
+      el.innerHTML = '<div class="empty-state">' + t.emptyPurchases + '</div>';
       return;
     }
     var sorted = purchases.slice().sort(function (a, b) { return new Date(b.paidAt) - new Date(a.paidAt); });
     var html = '<div class="purchase-list">' + sorted.map(function (p) {
-      var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка');
+      var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || t.productPurchase);
       var pid = escapeHtml(p.paymentId || '');
       return '<div class="purchase-item">' +
         '<span class="name">' + name + '</span>' +
         '<span class="date">' + fmtDate(p.paidAt) + '</span>' +
         '<span class="amount">' + fmtAmount(p.amount, p.currency) + '</span>' +
-        (pid ? '<button class="contract-btn" data-payment-id="' + pid + '" onclick="onDownloadContract(this)">Скачать договор</button>' : '') +
+        (pid ? '<button class="contract-btn" data-payment-id="' + pid + '" onclick="onDownloadContract(this)">' + t.downloadContract + '</button>' : '') +
       '</div>';
     }).join('') + '</div>';
     el.innerHTML = html;
@@ -248,20 +313,81 @@ body{max-width:100vw}
   function renderEventRegistrations(registrations) {
     var el = document.getElementById('eventRegistrations');
     if (!registrations || !registrations.length) {
-      el.innerHTML = '<div class="empty-state">Пока нет активных регистраций — загляните на <a href="/tickets">афишу</a>, там же анонсы бесплатных встреч.</div>';
+      el.innerHTML = '<div class="empty-state">' + t.emptyRegistrations + '</div>';
       return;
     }
     var sorted = registrations.slice().sort(function (a, b) { return new Date(a.datetime) - new Date(b.datetime); });
     var html = '<div class="reg-list">' + sorted.map(function (r) {
-      var title = escapeHtml(r.title || r.eventId || 'Мероприятие');
+      var title = escapeHtml(r.title || r.eventId || t.productEvent);
       var venue = escapeHtml((r.venueName || '') + (r.venueAddress ? ', ' + r.venueAddress : ''));
       var eid = escapeHtml(r.eventId || '');
+      // pack-v246: QR прямо в кабинете — чтобы попасть на встречу, даже
+      // если письмо потерялось или ушло в спам. Это ТОТ ЖЕ токен, что
+      // в PDF из письма (сервер пересчитывает его детерминированно, см.
+      // _tools/Events/my-registrations.js) — не второй параллельный
+      // документ. Рисуем локально, ничего не запрашивая: токен уже
+      // пришёл вместе со списком.
+      //
+      // Библиотека (assets/qrcode.js, MIT, без зависимостей и без
+      // обращений в сеть) подключена ТОЛЬКО на этой странице, не в
+      // общий main.js — это единственное место на сайте, где QR
+      // рисуется в браузере, тянуть 57 КБ на все страницы ради одной
+      // незачем.
+      var qrHtml = '';
+      if (r.qrToken && typeof qrcode === 'function') {
+        try {
+          var qr = qrcode(0, 'M');
+          qr.addData(r.qrToken);
+          qr.make();
+          qrHtml = '<div class="reg-qr">' + qr.createSvgTag({ cellSize: 3, margin: 0, scalable: true }) + '</div>';
+        } catch (e) {
+          // Не роняем весь список из-за одного QR — покажем заглушку.
+          qrHtml = '';
+        }
+      }
+      if (!qrHtml) {
+        // Токена нет (сервер не смог его пересчитать) или библиотека не
+        // загрузилась — регистрация всё равно действительна, просто
+        // говорим, где взять билет.
+        qrHtml = '<div class="reg-qr-missing">' + t.qrInEmail + '</div>';
+      }
       return '<div class="reg-item">' +
-        '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDate(r.datetime) + (venue ? ' · ' + venue : '') + '</span></span>' +
-        '<button class="cancel-btn" data-event-id="' + eid + '" onclick="onCancelRegistration(this)">Отменить регистрацию</button>' +
+        qrHtml +
+        '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDate(r.datetime) + (venue ? ' · ' + venue : '') + '</span>' +
+          '<span class="reg-hint">' + t.showQrAtEntrance + '</span></span>' +
+        '<span class="reg-actions">' +
+          '<button class="resend-btn" data-event-id="' + eid + '" onclick="onResendTicket(this)">' + t.resendTicket + '</button>' +
+          '<button class="cancel-btn" data-event-id="' + eid + '" onclick="onCancelRegistration(this)">' + t.cancelRegistration + '</button>' +
+        '</span>' +
       '</div>';
     }).join('') + '</div>';
     el.innerHTML = html;
+  }
+
+  // pack-v246: повторная отправка билета на почту. Сообщение
+  // показываем рядом с самой кнопкой, а не alert'ом — человек уже
+  // смотрит в это место экрана, лишнее модальное окно закрывать не надо.
+  function onResendTicket(buttonEl) {
+    var eventId = buttonEl.getAttribute('data-event-id');
+    var wrap = buttonEl.parentNode;
+    var msgEl = wrap.querySelector('.reg-msg');
+    if (!msgEl) {
+      msgEl = document.createElement('span');
+      msgEl.className = 'reg-msg';
+      wrap.appendChild(msgEl);
+    }
+    msgEl.textContent = '';
+    window.AELITA_account.resendEventTicket(eventId, {
+      buttonEl: buttonEl,
+      onSuccess: function () {
+        msgEl.style.color = 'var(--gold)';
+        msgEl.textContent = t.ticketResent;
+      },
+      onError: function (msg) {
+        msgEl.style.color = '#C98B6B';
+        msgEl.textContent = msg;
+      },
+    });
   }
 
   function loadEventRegistrations() {
@@ -276,7 +402,7 @@ body{max-width:100vw}
 
   function onCancelRegistration(buttonEl) {
     var eventId = buttonEl.getAttribute('data-event-id');
-    if (!confirm('Отменить регистрацию? Место освободится для других участников, вам придёт письмо с подтверждением отмены.')) return;
+    if (!confirm(t.confirmCancel)) return;
     window.AELITA_account.cancelEventRegistration(eventId, {
       buttonEl: buttonEl,
       onSuccess: function () { loadEventRegistrations(); },
@@ -302,7 +428,7 @@ body{max-width:100vw}
     window.AELITA_account.changePassword(current, next, {
       buttonEl: submitEl,
       onSuccess: function () {
-        msgEl.textContent = 'Пароль изменён.';
+        msgEl.textContent = t.passwordChanged;
         msgEl.classList.add('ok');
         document.getElementById('pw-form').reset();
       },
@@ -324,7 +450,7 @@ body{max-width:100vw}
     }
     var data = await window.AELITA_account.me({
       onError: function (msg) {
-        document.getElementById('loadingState').textContent = msg || 'Не получилось загрузить кабинет. Обновите страницу или напишите нам: aelita.production@yandex.ru';
+        document.getElementById('loadingState').textContent = msg || t.loadFailed;
       },
     });
     if (!data) {
