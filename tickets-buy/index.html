@@ -26,7 +26,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .meta{color:var(--sand);font-size:14px;margin-bottom:20px}
 .stage{text-align:center;color:var(--sand);font-size:11px;letter-spacing:.2em;margin:16px 0 10px;text-transform:uppercase}
 .hall{overflow-x:auto;padding:8px 0}
-.row{display:flex;justify-content:center;gap:2px;margin-bottom:2px;white-space:nowrap}
+.row{display:flex;gap:2px;margin:0 auto 2px;width:max-content;white-space:nowrap}
 .row-num{width:22px;font-size:9px;color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .seat{width:16px;height:16px;border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
 .seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
@@ -205,6 +205,7 @@ async function init(){
     return;
   }
   data = freshData;
+  if(data.error === 'sales_closed'){ showError('Продажи на этот показ закрыты.'); return; }
   if(data.error === 'not_on_sale'){ showError('Продажи на этот показ ещё не открыты — попробуйте позже.'); return; }
   if(data.error){ showError('Показ не найден — возможно, продажи ещё не открыты или ссылка устарела.'); return; }
 
