@@ -755,9 +755,9 @@ section{padding:90px 0}
   async function subscribe(){
     const email = document.getElementById('sub-email').value.trim();
     const name = document.getElementById('sub-name').value.trim();
-    if(!name){alert('Укажите имя');return;}
-    if(!email || !email.includes('@')){alert('Укажите email');return;}
-    if(!document.getElementById('sub-consent').checked){alert('Отметьте согласие на обработку персональных данных');return;}
+    if(!name){alert('Please enter your name');return;}
+    if(!email || !email.includes('@')){alert('Please enter your email');return;}
+    if(!document.getElementById('sub-consent').checked){alert('Please agree to the processing of personal data');return;}
     await addNewsletterContact(name, email);
     await sendTelegram('Точка Кюри — уведомить о продажах', {
       'Имя': name,

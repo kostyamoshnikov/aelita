@@ -19,9 +19,7 @@
 // HTML (тот же принцип «пусто — не ломает», что у остальных
 // API_BASE/*_URL констант в паке).
 (function () {
-  // ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
-  // финальное значение https://api.aelita-production.ru/tickets
-  var API_BASE = '';
+  var API_BASE = 'https://api.aelita-production.ru/tickets';
   if (!API_BASE) return;
 
   fetch(API_BASE + '/performances-list')

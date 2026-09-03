@@ -115,6 +115,9 @@ header .sub{
   }
 .hero-next > a:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .hero-next .date-line{color:var(--gold);font-size:13px;letter-spacing:.14em;font-family:'Montserrat',sans-serif}
+.filters{display:flex;gap:12px;margin-bottom:50px;flex-wrap:wrap}
+.filter-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;padding:11px 22px;border:1px solid rgba(201,184,163,.25);color:var(--sand);background:none;cursor:pointer;transition:all .3s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold)}
 /* ── sections ─────────────────────── */
   section{padding:110px 0;position:relative}
 .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:60px}
@@ -223,6 +226,7 @@ header .sub{
     color:var(--ink);padding:16px 26px;
   }
 .sub-ok{color:var(--gold);margin-top:20px;display:none;font-size:14px;letter-spacing:.06em}
+.sub-err{color:#e08a6e;margin-top:14px;display:none;font-size:13px;letter-spacing:.04em}
 @media(max-width:560px){
     .sub-form{flex-direction:column;gap:12px}
     .sub-form input{border-right:1px solid rgba(201,184,163,.4)}
@@ -384,8 +388,8 @@ footer p{color:var(--sand);font-size:14px}
   <p class="sub">Art that changes states of mind</p>
   <div class="hero-rule" aria-hidden="true"></div>
   <div class="hero-next">
-    <span class="eyebrow">Next performance</span>
-    <span class="date-line">October 23 · Stary Oskol · IOV: Material</span>
+    <span class="eyebrow">Upcoming events</span>
+    <span class="date-line">September 12 &amp; 13 · Kaluga · Open meetings</span>
     <a href="/en/tickets">Schedule &amp; Tickets</a>
   </div>
 </header>
@@ -394,78 +398,96 @@ footer p{color:var(--sand);font-size:14px}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">01</span><h2>Schedule</h2></div>
 
-    <div class="event reveal">
+<!-- AFISHA:BEGIN -->
+    <div class="filters reveal">
+      <button class="filter-btn active" onclick="filterCity('all',this)">All cities</button>
+      <button class="filter-btn" onclick="filterCity('spb',this)">Saint Petersburg</button>
+      <button class="filter-btn" onclick="filterCity('osk',this)">Stary Oskol</button>
+      <button class="filter-btn" onclick="filterCity('kaluga',this)">Kaluga</button>
+    </div>
+    <div class="event reveal" data-city="kaluga">
       <div class="ev-date">12.09<small>Kaluga</small></div>
       <div class="ev-info">
-        <h3><a href="/en/workshop-2026-09-12" style="color:var(--gold);text-decoration:none">Open Meeting for Entrepreneurs</a></h3>
+        <h3><a href="/en/workshop-2026-09-12">Open Meeting for Entrepreneurs</a></h3>
         <p>Belinsky Library</p>
         <p class="fest">Level 3 · Book club for entrepreneurs · <a href="/en/community">AELITA COMMUNITY</a></p>
         <span class="badge">18+ · Free entry</span>
       </div>
-      <a class="ev-cta" href="/en/workshop-2026-09-12">Learn more</a>
+      <div class="ev-actions">
+        <a class="btn-gold" href="/en/workshop-2026-09-12#join">Register</a> <a class="btn-outline" href="/en/workshop-2026-09-12">Learn more</a>
+      </div>
     </div>
-
-    <div class="event reveal">
+    <div class="event reveal" data-city="kaluga">
       <div class="ev-date">13.09<small>Kaluga</small></div>
       <div class="ev-info">
-        <h3><a href="/en/workshop-2026-09-13" style="color:var(--gold);text-decoration:none">Open Meeting — Main Stream</a></h3>
+        <h3><a href="/en/workshop-2026-09-13">Open Meeting — Main Stream</a></h3>
         <p>Belinsky Library</p>
         <p class="fest">Main stream · Book club · <a href="/en/community">AELITA COMMUNITY</a></p>
         <span class="badge">18+ · Free entry</span>
       </div>
-      <a class="ev-cta" href="/en/workshop-2026-09-13">Learn more</a>
-    </div>
-
-    <div class="event reveal">
-      <div class="ev-date">22–25.10<small>Stary Oskol</small></div>
-      <div class="ev-info">
-        <h3><a href="/en/tochkacuire" style="color:var(--gold);text-decoration:none">“Tochka Cuire”</a></h3>
-        <p>Annual Contemporary Arts Festival · CSI “Byl”</p>
-        <span class="badge">First edition</span>
+      <div class="ev-actions">
+        <a class="btn-gold" href="/en/workshop-2026-09-13#join">Register</a> <a class="btn-outline" href="/en/workshop-2026-09-13">Learn more</a>
       </div>
-      <a class="ev-cta" href="/en/tochkacuire">About the festival</a>
     </div>
-
-    <div class="event reveal">
+    <div class="event reveal" data-city="kaluga">
       <div class="ev-date">10.10<small>Kaluga</small></div>
       <div class="ev-info">
-        <h3><a href="/en/bred" style="color:var(--gold);text-decoration:none">{AND ALL THIS NONSENSE TOO}</a></h3>
+        <h3><a href="/en/bred">{AND ALL THIS NONSENSE TOO}</a></h3>
         <p>Dom Arkhitektora</p>
         <p class="fest">Dance performance <a href="/en/vdovichenko">Anton Vdovichenko</a></p>
         <span class="badge">18+ · 1000 ₽</span>
       </div>
-      <a class="ev-cta" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Buy ticket</a>
+      <div class="ev-actions">
+        <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Buy ticket</a> <a class="btn-outline" href="/en/bred">About the production</a>
+      </div>
     </div>
-
-    <div class="event reveal">
+    <div class="event reveal" data-city="osk">
+      <div class="ev-date">22–25.10<small>Stary Oskol</small></div>
+      <div class="ev-info">
+        <h3><a href="/en/tochkacuire">“Tochka Cuire”</a></h3>
+        <p>Annual Contemporary Arts Festival · CSI “Byl”</p>
+        <span class="badge">First edition</span>
+      </div>
+      <div class="ev-actions">
+        <a class="btn-outline" href="/en/tochkacuire">About the festival</a>
+      </div>
+    </div>
+    <div class="event reveal" data-city="osk">
       <div class="ev-date">23.10<small>Stary Oskol</small></div>
       <div class="ev-info">
-        <h3><a href="/en/iov" style="color:var(--gold);text-decoration:none">“IOV: Material”</a></h3>
+        <h3><a href="/en/iov">“IOV: Material”</a></h3>
         <p><a href="/en/tochkacuire">CSI “Byl”</a></p>
         <p class="fest">Opening show of the festival <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
+        <span class="badge">Pushkin Card</span>
       </div>
-      <a class="ev-cta" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" data-performance-id="iov-2026-10-23">Buy ticket</a>
+      <div class="ev-actions">
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" data-performance-id="iov-2026-10-23">Buy ticket</a> <a class="btn-outline" href="/en/iov">About the production</a>
+      </div>
     </div>
-
-    <div class="event reveal">
+    <div class="event reveal" data-city="osk">
       <div class="ev-date">24.10<small>Stary Oskol</small></div>
       <div class="ev-info">
-        <h3><a href="/en/porfiriy" style="color:var(--gold);text-decoration:none">“Porfiry”</a></h3>
+        <h3><a href="/en/porfiriy">“Porfiry”</a></h3>
         <p><a href="/en/tochkacuire">CSI “Byl”</a></p>
         <p class="fest">Part of the festival programme <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
+        <span class="badge">16+</span>
       </div>
-      <a class="ev-cta" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" data-performance-id="porfiriy-2026-10-24">Buy ticket</a>
+      <div class="ev-actions">
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" data-performance-id="porfiriy-2026-10-24">Buy ticket</a> <a class="btn-outline" href="/en/porfiriy">About the production</a>
+      </div>
     </div>
-
-    <div class="event reveal">
+    <div class="event reveal" data-city="spb">
       <div class="ev-date">October<small>Saint Petersburg</small></div>
       <div class="ev-info">
-        <h3>“IOV: Material”</h3>
+        <h3><a href="/en/iov">“IOV: Material”</a></h3>
         <p>New Stage of the Alexandrinsky Theatre</p>
-        <p class="fest">Date to be announced</p>
+        <span class="badge">Date to be announced</span>
       </div>
-      <a class="ev-cta" href="#subscribe">Be the first to know</a>
+      <div class="ev-actions">
+        <a class="btn-outline" href="/#subscribe">Be the first to know</a> <a class="btn-outline" href="/en/iov">About the production</a>
+      </div>
     </div>
+    <!-- AFISHA:END -->
   </div>
 </section>
 
@@ -582,12 +604,14 @@ footer p{color:var(--sand);font-size:14px}
     <span class="eyebrow">Don't miss it</span>
     <h2 style="margin-top:14px">Be the first to know about performances</h2>
     <p>Ticket sales launches, new cities, behind the scenes and special events — brief and to the point, without spam.</p>
-    <input type="text" id="subName" placeholder="Your name" aria-label="Name" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:15px">
+    <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
+    <input type="text" id="subName" placeholder="Your name *" aria-label="Name (required)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:15px">
     <div class="sub-form">
-      <input type="email" id="subEmail" placeholder="Your email" aria-label="Email address">
+      <input type="email" id="subEmail" placeholder="Your email *" aria-label="Email address (required)" required>
       <button onclick="subscribe()">Subscribe</button>
     </div>
-    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a></span></label>
+    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>I agree to the <a href="/en/privacy" style="color:var(--gold)">processing of my personal data</a> <span style="color:var(--gold);font-weight:700">*</span></span></label>
+    <p class="sub-err" id="subErr"></p>
     <p class="sub-ok" id="subOk">Done — we'll write as soon as sales open.</p>
   </div>
 </section>
@@ -707,9 +731,17 @@ footer p{color:var(--sand);font-size:14px}
   async function subscribe(){
     const name = document.getElementById('subName').value.trim();
     const v = document.getElementById('subEmail').value.trim();
-    if(!name){ alert('Укажите имя'); return; }
-    if(!v || !v.includes('@')) return;
-    if(!document.getElementById('subConsent').checked){ alert('Отметьте согласие на обработку персональных данных'); return; }
+    const err = document.getElementById('subErr');
+    const showErr = (msg) => { err.textContent = msg; err.style.display = 'block'; };
+    err.style.display = 'none';
+    // pack-v258: раньше здесь был молчаливый `return` при пустой почте
+    // (кнопка ничего не делала без объяснения) И РУССКИЕ тексты в
+    // alert() на английской версии страницы — англоязычный посетитель
+    // видел «Укажите имя». Оба недочёта исправлены: сообщения на
+    // английском и показываются в самой форме.
+    if(!name){ showErr('Please enter your name.'); return; }
+    if(!v || !v.includes('@')){ showErr('Please enter your email — that is where announcements go.'); return; }
+    if(!document.getElementById('subConsent').checked){ showErr('Please agree to the processing of personal data.'); return; }
     await addNewsletterContact(name, v);
     await sendTelegram('Главная — подписка на показы', {'Имя': name, 'Email': v});
     await sendFormspree('Главная — подписка на показы', {'Имя': name, 'Email': v});
@@ -718,6 +750,21 @@ footer p{color:var(--sand);font-size:14px}
     document.getElementById('subEmail').value = '';
   }
   // появление секций при скролле
+  // Фильтр афиши по городу. Имя filterCity (не filter) — `filter` это
+  // ещё и стандартный метод массивов, а на главной этот скрипт живёт
+  // рядом с остальной логикой страницы; специфичное имя надёжнее.
+  // Разметку кнопок и карточек генерирует
+  // _tools/DesignSystem/afisha/build_afisha.py — сама функция общая
+  // для /tickets и главной, но лежит в каждой странице отдельно
+  // (страницы самодостаточны, общего JS-файла у них нет).
+  function filterCity(city,btn){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.event').forEach(e=>{
+      e.style.display=(city==='all'||e.dataset.city===city)?'grid':'none';
+    });
+  }
+
   const io = new IntersectionObserver(es => {
     es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
   }, {threshold:.12});

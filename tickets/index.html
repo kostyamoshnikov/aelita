@@ -109,13 +109,13 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 
 <section style="padding:60px 0 100px">
   <div class="wrap">
+<!-- AFISHA:BEGIN -->
     <div class="filters reveal">
-      <button class="filter-btn active" onclick="filter('all',this)">Все города</button>
-      <button class="filter-btn" onclick="filter('spb',this)">Санкт-Петербург</button>
-      <button class="filter-btn" onclick="filter('osk',this)">Старый Оскол</button>
-      <button class="filter-btn" onclick="filter('kaluga',this)">Калуга</button>
+      <button class="filter-btn active" onclick="filterCity('all',this)">Все города</button>
+      <button class="filter-btn" onclick="filterCity('spb',this)">Санкт-Петербург</button>
+      <button class="filter-btn" onclick="filterCity('osk',this)">Старый Оскол</button>
+      <button class="filter-btn" onclick="filterCity('kaluga',this)">Калуга</button>
     </div>
-
     <div class="event reveal" data-city="kaluga">
       <div class="ev-date">12.09<small>Калуга</small></div>
       <div class="ev-info">
@@ -125,8 +125,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">18+ · Вход свободный</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-gold" href="/workshop-2026-09-12#join">Записаться</a>
-        <a class="btn-outline" href="/workshop-2026-09-12">Подробнее</a>
+        <a class="btn-gold" href="/workshop-2026-09-12#join">Записаться</a> <a class="btn-outline" href="/workshop-2026-09-12">Подробнее</a>
       </div>
     </div>
     <div class="event reveal" data-city="kaluga">
@@ -138,11 +137,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">18+ · Вход свободный</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-gold" href="/workshop-2026-09-13#join">Записаться</a>
-        <a class="btn-outline" href="/workshop-2026-09-13">Подробнее</a>
+        <a class="btn-gold" href="/workshop-2026-09-13#join">Записаться</a> <a class="btn-outline" href="/workshop-2026-09-13">Подробнее</a>
       </div>
     </div>
-
     <div class="event reveal" data-city="kaluga">
       <div class="ev-date">10.10<small>Калуга</small></div>
       <div class="ev-info">
@@ -152,11 +149,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">18+ · 1000 ₽</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Купить билет</a>
-        <a class="btn-outline" href="/bred">О спектакле</a>
+        <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Купить билет</a> <a class="btn-outline" href="/bred">О спектакле</a>
       </div>
     </div>
-
     <div class="event reveal" data-city="osk">
       <div class="ev-date">22–25.10<small>Старый Оскол</small></div>
       <div class="ev-info">
@@ -168,7 +163,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <a class="btn-outline" href="/tochkacuire">О фестивале</a>
       </div>
     </div>
-<div class="event reveal" data-city="osk">
+    <div class="event reveal" data-city="osk">
       <div class="ev-date">23.10<small>Старый Оскол</small></div>
       <div class="ev-info">
         <h3><a href="/iov">«ИОВ:материал»</a></h3>
@@ -177,11 +172,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">Пушкинская карта</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" data-performance-id="iov-2026-10-23">Купить билет</a>
-        <a class="btn-outline" href="/iov">О спектакле</a>
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" data-performance-id="iov-2026-10-23">Купить билет</a> <a class="btn-outline" href="/iov">О спектакле</a>
       </div>
     </div>
-
     <div class="event reveal" data-city="osk">
       <div class="ev-date">24.10<small>Старый Оскол</small></div>
       <div class="ev-info">
@@ -191,11 +184,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">16+</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" data-performance-id="porfiriy-2026-10-24">Купить билет</a>
-        <a class="btn-outline" href="/porfiriy">О спектакле</a>
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" data-performance-id="porfiriy-2026-10-24">Купить билет</a> <a class="btn-outline" href="/porfiriy">О спектакле</a>
       </div>
     </div>
-
     <div class="event reveal" data-city="spb">
       <div class="ev-date">Октябрь<small>Санкт-Петербург</small></div>
       <div class="ev-info">
@@ -204,10 +195,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
         <span class="badge">Дата будет объявлена</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-outline" href="/#subscribe">Узнать первым</a>
-        <a class="btn-outline" href="/iov">О спектакле</a>
+        <a class="btn-outline" href="/#subscribe">Узнать первым</a> <a class="btn-outline" href="/iov">О спектакле</a>
       </div>
     </div>
+    <!-- AFISHA:END -->
   </div>
 </section>
 
@@ -306,7 +297,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
     document.getElementById('subOk').style.display='block';
     document.getElementById('subEmail').value='';
   }
-  function filter(city,btn){
+  // Фильтр афиши по городу. Имя filterCity (не filter) — `filter` это
+  // ещё и стандартный метод массивов, а на главной этот скрипт живёт
+  // рядом с остальной логикой страницы; специфичное имя надёжнее.
+  // Разметку кнопок и карточек генерирует
+  // _tools/DesignSystem/afisha/build_afisha.py — сама функция общая
+  // для /tickets и главной, но лежит в каждой странице отдельно
+  // (страницы самодостаточны, общего JS-файла у них нет).
+  function filterCity(city,btn){
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.event').forEach(e=>{

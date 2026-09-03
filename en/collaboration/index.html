@@ -296,9 +296,9 @@
     const tel   = (document.getElementById('cf-tel')?.value || '').trim();
     const tg    = (document.getElementById('cf-tg')?.value || '').trim();
     const msg   = (document.getElementById('cf-msg')?.value || '').trim();
-    if(!name || !email || !msg){ alert('Заполните имя, почту и сообщение.'); return; }
-    if(!tel){ alert('Заполните телефон.'); return; }
-    if(!document.getElementById('consent_cl')?.checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
+    if(!name || !email || !msg){ alert('Please fill in your name, email and message.'); return; }
+    if(!tel){ alert('Please fill in your phone number.'); return; }
+    if(!document.getElementById('consent_cl')?.checked){ alert('Please agree to the processing of personal data — we cannot accept the request without it'); return; }
     const fields = {'Имя': name, 'Кто вы': who, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Сообщение': msg};
     await Promise.all([
       sendTelegram('Сотрудничество — заявка', fields),
