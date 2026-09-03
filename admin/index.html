@@ -127,7 +127,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .ev-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .ev-people{margin-top:14px;border-top:1px solid rgba(201,184,163,.12);padding-top:12px;display:none}
 .ev-people.open{display:block}
-.ev-person{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(201,184,163,.06)}
+.ev-person{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(201,184,163,.06);flex-wrap:wrap}
 .ev-person:last-child{border-bottom:none}
 .ev-person .who{color:var(--bone)}
 .ev-person .who small{display:block;color:var(--sand);font-size:11px;word-break:break-all}
@@ -199,7 +199,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 
     <div class="links-row" id="adminLinks"></div>
 
-    <p class="sec-title">Клиенты (<span id="cust-count">0</span>)</p>
+    <p class="sec-title">Клиенты (<span id="cust-count">0</span>) <button class="mini-btn" id="openAddCustomerBtn" style="margin-left:12px;vertical-align:middle">+ Клиент</button></p>
     <div class="filter-row">
       <input type="text" class="search" id="custSearch" placeholder="Поиск по имени или email…">
       <div class="sort-tabs">
@@ -292,6 +292,50 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
   </div>
 </div>
 
+<!-- pack-v257 — модалка: добавить нового клиента вручную -->
+<div class="modal-overlay" id="addCustomerModal">
+  <div class="modal-box">
+    <h3>Добавить клиента</h3>
+    <p>Заведёт личный кабинет и вышлет временный пароль на почту. Используйте, если человек оплатил не через сайт и его ещё нет в базе, или попросил завести кабинет напрямую.</p>
+    <div class="field">
+      <label for="ac-name">Имя</label>
+      <input type="text" id="ac-name" placeholder="Как зовут человека">
+    </div>
+    <div class="field">
+      <label for="ac-email">Email</label>
+      <input type="email" id="ac-email" placeholder="email@example.com">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-small" id="addCustomerConfirmBtn" style="flex:1;padding:11px">Добавить</button>
+      <button class="btn-small btn-ghost" id="addCustomerCancelBtn" style="flex:1">Отмена</button>
+    </div>
+    <p class="modal-err" id="addCustomerErr"></p>
+  </div>
+</div>
+
+<!-- pack-v257 — модалка: добавить регистрацию на встречу вручную.
+     Общая на все события — какое именно, помнит currentAddRegEventId
+     (см. скрипт ниже), а не отдельная копия модалки на каждую встречу. -->
+<div class="modal-overlay" id="addRegistrationModal">
+  <div class="modal-box">
+    <h3>Добавить регистрацию</h3>
+    <p>Для <strong id="addRegEventTitle"></strong>. Используйте, если человек записался не через сайт (по телефону, лично). Ему придёт то же письмо с PDF-билетом, что при обычной регистрации.</p>
+    <div class="field">
+      <label for="ar-name">Имя</label>
+      <input type="text" id="ar-name" placeholder="Как зовут человека">
+    </div>
+    <div class="field">
+      <label for="ar-email">Email</label>
+      <input type="email" id="ar-email" placeholder="email@example.com">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-small" id="addRegistrationConfirmBtn" style="flex:1;padding:11px">Добавить</button>
+      <button class="btn-small btn-ghost" id="addRegistrationCancelBtn" style="flex:1">Отмена</button>
+    </div>
+    <p class="modal-err" id="addRegistrationErr"></p>
+  </div>
+</div>
+
 <script>
 // ЗАПОЛНИТЬ после деплоя Gateway (см. _tools/Gateway/README.md) —
 // одно значение на всю систему: https://api.aelita-production.ru/admin
@@ -305,6 +349,10 @@ var ADMIN_SITE_EDIT_URL = API_BASE && API_BASE + '/site-edit';
 // pack-v251, ADMIN_TODO.md п.1.2 — список регистраций на бесплатные
 // встречи (см. _tools/Admin/events-registrations.js).
 var ADMIN_EVENTS_URL = API_BASE && API_BASE + '/events-registrations';
+// pack-v257 — ручное добавление/отмена регистрации и клиента из /admin.
+var ADMIN_EVENTS_ADD_URL = API_BASE && API_BASE + '/events-add-registration';
+var ADMIN_EVENTS_CANCEL_URL = API_BASE && API_BASE + '/events-cancel-registration';
+var ADMIN_ADD_CUSTOMER_URL = API_BASE && API_BASE + '/add-customer';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -360,6 +408,15 @@ var ERRORS = {
   github_unreachable: 'Не достучались до GitHub. Попробуйте ещё раз через минуту.',
   github_rejected: 'GitHub отклонил запрос — проверьте права токена и ветку.',
   conflict_retry: 'Кто-то другой изменил эту страницу, пока вы проверяли правку. Нажмите «Проверить» ещё раз — превью подтянет актуальный текст.',
+  // pack-v257 — events-add/cancel-registration, add-customer
+  bad_name: 'Укажите имя.',
+  bad_email: 'Проверьте email — похоже, в адресе опечатка.',
+  unknown_event: 'Неизвестное мероприятие — обновите страницу.',
+  already_registered: 'Этот человек уже зарегистрирован на встречу.',
+  event_full: 'Мест на встрече больше нет.',
+  not_registered: 'Регистрация не найдена — возможно, уже отменена.',
+  missing_fields: 'Заполните все поля.',
+  email_taken: 'Клиент с таким email уже есть в базе.',
 };
 var ERROR_FALLBACK = 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или посмотрите логи функции в консоли Yandex Cloud.';
 
@@ -540,6 +597,147 @@ document.getElementById('deleteConfirmBtn').addEventListener('click', async func
 
 // ── Ручное добавление покупки ────────────────────────────────────
 var addPurchaseTargetEmail = null;
+
+// pack-v257 — модалка «Добавить клиента»
+function openAddCustomerModal() {
+  document.getElementById('addCustomerErr').style.display = 'none';
+  document.getElementById('ac-name').value = '';
+  document.getElementById('ac-email').value = '';
+  document.getElementById('addCustomerModal').classList.add('open');
+}
+function closeAddCustomerModal() {
+  document.getElementById('addCustomerModal').classList.remove('open');
+}
+document.getElementById('openAddCustomerBtn').addEventListener('click', openAddCustomerModal);
+document.getElementById('addCustomerCancelBtn').addEventListener('click', closeAddCustomerModal);
+document.getElementById('addCustomerConfirmBtn').addEventListener('click', async function () {
+  if (!ADMIN_ADD_CUSTOMER_URL) { showModalErr('addCustomerErr', 'Функция ещё не подключена — заполните ADMIN_ADD_CUSTOMER_URL.'); return; }
+  var name = document.getElementById('ac-name').value.trim();
+  var email = document.getElementById('ac-email').value.trim();
+  if (!name) { showModalErr('addCustomerErr', ERRORS.bad_name); return; }
+  if (!email) { showModalErr('addCustomerErr', ERRORS.bad_email); return; }
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Добавляем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_ADD_CUSTOMER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ name: name, email: email }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) { showModalErr('addCustomerErr', errorMessage(data)); return; }
+    closeAddCustomerModal();
+    // mailSent:false — клиент технически создан, но письмо с паролем
+    // не ушло (см. Admin/add-customer.js докстринг: это единственный
+    // способ узнать пароль). Список обновится и без этого — но стоит
+    // сказать об этом сразу, а не молчать про то, что человек пока
+    // не может войти.
+    if (data && data.mailSent === false) {
+      alert('Клиент добавлен, но письмо с паролем не отправилось. Свяжитесь с человеком другим способом или попробуйте позже через «Сменить пароль» после того, как разберётесь с почтой.');
+    }
+    loadData({ refresh: true });
+  } catch (e) {
+    showModalErr('addCustomerErr', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+// pack-v257 — модалка «Добавить регистрацию». Общая на все события —
+// currentAddRegEventId/currentAddRegEventTitle запоминают, для какого
+// именно события открыта, когда её вызвали с конкретной карточки.
+var currentAddRegEventId = null;
+var currentAddRegEventTitle = null;
+function openAddRegistrationModal(eventId, eventTitle) {
+  currentAddRegEventId = eventId;
+  currentAddRegEventTitle = eventTitle;
+  document.getElementById('addRegEventTitle').textContent = eventTitle;
+  document.getElementById('addRegistrationErr').style.display = 'none';
+  document.getElementById('ar-name').value = '';
+  document.getElementById('ar-email').value = '';
+  document.getElementById('addRegistrationModal').classList.add('open');
+}
+function closeAddRegistrationModal() {
+  document.getElementById('addRegistrationModal').classList.remove('open');
+  currentAddRegEventId = null;
+  currentAddRegEventTitle = null;
+}
+document.getElementById('addRegistrationCancelBtn').addEventListener('click', closeAddRegistrationModal);
+document.getElementById('addRegistrationConfirmBtn').addEventListener('click', async function () {
+  if (!currentAddRegEventId) return;
+  if (!ADMIN_EVENTS_ADD_URL) { showModalErr('addRegistrationErr', 'Функция ещё не подключена — заполните ADMIN_EVENTS_ADD_URL.'); return; }
+  var name = document.getElementById('ar-name').value.trim();
+  var email = document.getElementById('ar-email').value.trim();
+  if (!name) { showModalErr('addRegistrationErr', ERRORS.bad_name); return; }
+  if (!email) { showModalErr('addRegistrationErr', ERRORS.bad_email); return; }
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Добавляем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_EVENTS_ADD_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ event_id: currentAddRegEventId, name: name, email: email }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    // event_full — не отказ, а вопрос: лимит задан и уже выбран, но
+    // админ вправе посадить человека сверх него (см. докстринг
+    // Admin/events-add-registration.js). Переспрашиваем и повторяем
+    // запрос с override:true — молча превышать лимит нельзя.
+    if (!res.ok && data && data.error === 'event_full') {
+      var msg = 'Мест уже занято ' + data.registeredCount + ' из ' + data.capacity + '. Всё равно добавить сверх лимита?';
+      if (!confirm(msg)) return;
+      res = await fetch(ADMIN_EVENTS_ADD_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ event_id: currentAddRegEventId, name: name, email: email, override: true }),
+      });
+      if (res.status === 401) { clearToken(); showGate(); return; }
+      data = await res.json();
+    }
+    if (!res.ok) { showModalErr('addRegistrationErr', errorMessage(data)); return; }
+    closeAddRegistrationModal();
+    if (data && data.mailSent === false) {
+      alert('Регистрация добавлена, но письмо с билетом не отправилось. Сообщите человеку детали другим способом.');
+    }
+    loadEvents();
+  } catch (e) {
+    showModalErr('addRegistrationErr', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+// pack-v257 — отмена регистрации из /admin (в отличие от отмены самим
+// клиентом из его кабинета, использует свой, admin-эндпоинт — см.
+// Admin/events-cancel-registration.js докстринг).
+async function adminCancelRegistration(eventId, email, btn) {
+  if (!confirm('Отменить регистрацию для ' + email + '? Человеку придёт письмо об отмене.')) return;
+  if (!ADMIN_EVENTS_CANCEL_URL) { alert('Функция ещё не подключена — заполните ADMIN_EVENTS_CANCEL_URL.'); return; }
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Отменяем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_EVENTS_CANCEL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ event_id: eventId, email: email }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) { alert(errorMessage(data)); return; }
+    loadEvents();
+  } catch (e) {
+    alert('Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+}
 function openAddPurchaseModal(email) {
   addPurchaseTargetEmail = email;
   document.getElementById('addPurchaseEmail').textContent = email;
@@ -694,6 +892,7 @@ function renderEvents(events) {
           return '<div class="ev-person">' +
             '<span class="who">' + escapeHtml(r.name || '—') + '<small>' + escapeHtml(r.email) + '</small></span>' +
             '<span class="when">' + fmtDate(r.createdAt) + '</span>' +
+            '<button class="mini-btn mini-btn-danger" data-ev-action="cancelReg" data-ev-idx="' + idx + '" data-ev-email="' + escapeHtml(r.email) + '">Отменить</button>' +
           '</div>';
         }).join('')
       : '<div class="ev-empty">Пока никто не записался.</div>';
@@ -706,6 +905,7 @@ function renderEvents(events) {
       '<div class="ev-actions">' +
         '<button class="mini-btn" data-ev-action="toggle" data-ev-idx="' + idx + '">Показать список</button>' +
         (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать CSV</button>' : '') +
+        '<button class="mini-btn" data-ev-action="addReg" data-ev-idx="' + idx + '">+ Регистрация</button>' +
       '</div>' +
       '<div class="ev-people" id="ev-people-' + idx + '">' + people + '</div>' +
     '</div>';
@@ -723,6 +923,10 @@ document.getElementById('eventsBlock').addEventListener('click', function (e) {
     btn.textContent = opening ? 'Скрыть список' : 'Показать список';
   } else if (btn.dataset.evAction === 'csv') {
     exportEventCsv(allEvents[idx]);
+  } else if (btn.dataset.evAction === 'addReg') {
+    openAddRegistrationModal(allEvents[idx].id, allEvents[idx].title);
+  } else if (btn.dataset.evAction === 'cancelReg') {
+    adminCancelRegistration(allEvents[idx].id, btn.dataset.evEmail, btn);
   }
 });
 
@@ -879,11 +1083,20 @@ document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('admin-password').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
 
 // ── Правки сайта (find-and-replace через GitHub, с превью) ──────────
-function escapeHtml(s) {
-  var d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
+// pack-v257: здесь раньше было ВТОРОЕ объявление escapeHtml() (через
+// div.textContent → innerHTML) — оно молча ПЕРЕКРЫВАЛО правильную
+// версию выше (строка 444), т.к. в JS повторное объявление функции с
+// тем же именем в одной области видимости побеждает по порядку в
+// исходнике, независимо от места вызова. Тот вариант безопасен ТОЛЬКО
+// для текста между тегами (не экранирует " и ') — но часть мест в
+// этом файле вставляет escapeHtml(...) внутрь HTML-атрибута
+// (data-ev-email="..." и т.п.), где кавычка обрывает атрибут раньше
+// времени, и остаток строки утекает как новые, настоящие атрибуты
+// тега. Найдено тестом на pack-v257 (email с "><img...onerror=...
+// не ломал текст, но реально инжектировал onerror в саму кнопку) —
+// исправлено удалением дубликата, теперь везде используется только
+// правильная версия из строки 444, которая экранирует все пять
+// опасных символов (&<>"') и потому безопасна в обоих контекстах.
 
 var lastPreviewedBody = null; // тело запроса, для которого превью успешно нашло текст — confirm отправляет ЕГО ЖЕ, не собирает заново (страховка от рассинхрона полей между превью и подтверждением)
 
