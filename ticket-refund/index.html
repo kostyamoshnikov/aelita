@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="АЭЛИТА">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Возврат билета — AELITA PRODUCTION</title>
+<meta name="description" content="Оформление возврата билета AELITA PRODUCTION: проверка заказа, выбор билетов, предварительный расчёт суммы.">
+<link rel="canonical" href="https://aelita-production.ru/ticket-refund/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/ticket-refund/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/ticket-refund/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/ticket-refund/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/ticket-refund/">
+<meta property="og:site_name" content="AELITA PRODUCTION">
+<meta property="og:title" content="Возврат билета — AELITA PRODUCTION">
+<meta property="og:description" content="Оформление возврата билета AELITA PRODUCTION: проверка заказа, выбор билетов, предварительный расчёт суммы.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Возврат билета — AELITA PRODUCTION">
+<meta name="twitter:description" content="Оформление возврата билета AELITA PRODUCTION: проверка заказа, выбор билетов, предварительный расчёт суммы.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=22">
+<style>
+body{max-width:100vw;line-height:1.75}
+a{color:var(--gold);text-decoration:none}
+:root{--maxw:760px}
+footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
+.rf{padding:60px 0 80px}
+.rf h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:30px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.rf .lead{color:var(--sand);font-size:15px;max-width:60ch;margin-bottom:34px}
+.rf label{display:block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.rf input[type=text]{width:100%;padding:12px 14px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:14px;margin-bottom:6px}
+.rf .hint{color:var(--grey);font-size:12px;margin-bottom:20px}
+.rf button{padding:13px 26px;background:var(--gold);color:var(--ink);border:none;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.rf button.ghost{background:none;border:1px solid var(--gold);color:var(--gold)}
+.rf button:disabled{opacity:.5;cursor:default}
+.rf .msg{margin-top:14px;font-size:14px}
+.rf .msg.err{color:#E08A7B}
+.rf .msg.ok{color:#7BC47F}
+.tk{display:flex;gap:12px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.08)}
+.tk input[type=checkbox]{margin-top:4px;width:18px;height:18px;accent-color:var(--gold)}
+.tk .who{flex:1}
+.tk .who b{font-weight:500}
+.tk .note{color:var(--grey);font-size:13px;display:block;margin-top:3px}
+.tk.off{opacity:.55}
+.calc{margin-top:22px;padding:18px;border:1px solid var(--line);background:var(--coal)}
+.calc .sum{font-size:22px;margin:6px 0}
+.calc .basis{color:var(--sand);font-size:13px}
+.calc .warn{color:#E0B87B;font-size:13px;margin-top:10px}
+.rf select{width:100%;padding:12px 14px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:14px;margin-bottom:20px}
+.rf .links{margin-top:40px;padding-top:24px;border-top:1px solid rgba(232,230,225,.08);font-size:14px;color:var(--sand)}
+.done{padding:28px;border:1px solid var(--gold);background:var(--coal)}
+.done .num{font-family:'Montserrat',sans-serif;font-size:24px;letter-spacing:.1em;color:var(--gold);margin:10px 0}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+<nav>
+<div class="nav-in">
+<a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+</div>
+<a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+<a class="lang-switch" href="/en/documents/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+</nav>
+<main id="main">
+<div class="wrap rf">
+
+  <!-- Шаг 1: доступ к заказу. ⚠️ Оба поля обязательны — это
+       единственная защита от перебора чужих заказов (DOCS_TZ 39.2). -->
+  <section id="step-lookup">
+    <h1>Возврат билета</h1>
+    <p class="lead">Заполните форму — она зафиксирует дату обращения, от которой по <a href="/oferta">оферте</a> считается размер возврата. Раньше для этого нужно было писать письмо и ждать ответа, дошло ли оно.</p>
+
+    <label for="order">Номер заказа</label>
+    <input type="text" id="order" autocomplete="off" spellcheck="false" placeholder="например, 11111111-2222-3333-4444-555555555555">
+    <p class="hint">Номер заказа указан в письме с билетами — в теме письма и рядом с QR-кодом.</p>
+
+    <label for="contact">Электронная почта или телефон</label>
+    <input type="text" id="contact" autocomplete="off" placeholder="те, что вы указали при покупке">
+    <p class="hint">Нужны оба поля: так мы убеждаемся, что заказ действительно ваш.</p>
+
+    <button id="btn-lookup" onclick="lookup()">Найти заказ</button>
+    <div class="msg" id="lookup-msg"></div>
+  </section>
+
+  <!-- Шаг 2: билеты, причина, расчёт -->
+  <section id="step-order" hidden>
+    <h1>Ваш заказ</h1>
+    <p class="lead" id="order-head"></p>
+
+    <div id="tickets"></div>
+
+    <label for="reason" style="margin-top:26px">Причина возврата</label>
+    <select id="reason" onchange="recalc()"></select>
+
+    <div class="calc" id="calc" hidden>
+      <div class="basis" id="calc-basis"></div>
+      <div class="sum" id="calc-sum"></div>
+      <div class="warn">Это предварительный расчёт, а не окончательное решение: заявление рассматривается вручную, а по основаниям «болезнь» и «смерть близкого родственника» ещё и с учётом документов.</div>
+      <div class="warn" id="calc-docs" hidden></div>
+    </div>
+
+    <div style="margin-top:26px">
+      <button id="btn-send" onclick="sendRequest()">Отправить заявление</button>
+      <button class="ghost" onclick="location.reload()">Отмена</button>
+    </div>
+    <div class="msg" id="send-msg"></div>
+  </section>
+
+  <!-- Шаг 3: подтверждение -->
+  <section id="step-done" hidden>
+    <h1>Заявление принято</h1>
+    <div class="done">
+      <div>Номер обращения</div>
+      <div class="num" id="done-num"></div>
+      <div id="done-body"></div>
+    </div>
+  </section>
+
+  <div class="links">
+    Правила и сроки возврата — раздел 6 <a href="/oferta">Договора оферты</a>.
+    Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>,
+    <a href="tel:+79605151690">+7 960 515-16-90</a>.
+  </div>
+</div>
+
+</main>
+
+<script src="/assets/analytics-events.js"></script>
+<script>
+const API = 'https://api.aelita-production.ru/tickets/refund';
+let ORDER = null, REASONS = [];
+
+const $ = (id) => document.getElementById(id);
+function msg(el, text, cls){ const e=$(el); e.textContent=text||''; e.className='msg'+(cls?' '+cls:''); }
+
+async function api(payload){
+  const res = await fetch(API, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+  });
+  let out = null;
+  try { out = await res.json(); } catch(e) {}
+  return { status: res.status, body: out };
+}
+
+async function lookup(){
+  const order = $('order').value.trim();
+  const contact = $('contact').value.trim();
+  if(!order || !contact){ msg('lookup-msg','Заполните оба поля.','err'); return; }
+  $('btn-lookup').disabled = true; msg('lookup-msg','Ищем заказ…');
+  const { status, body } = await api({ action:'lookup', order_number:order, contact });
+  $('btn-lookup').disabled = false;
+  if(status === 404){
+    // ⚠️ Одинаковый текст на «нет заказа» и «контакт не совпал» —
+    // разные сообщения превратили бы форму в способ проверять,
+    // существует ли чужой заказ (DOCS_TZ 39.2).
+    msg('lookup-msg','Заказ с такими данными не найден. Проверьте номер заказа и контакт — они должны совпадать с указанными при покупке.','err');
+    return;
+  }
+  if(status === 400 && body && body.error === 'order_not_paid'){
+    msg('lookup-msg','По этому заказу оплата не прошла — возвращать нечего. Если деньги списались, напишите нам.','err'); return;
+  }
+  if(status !== 200 || !body){ msg('lookup-msg','Не удалось получить данные заказа. Попробуйте позже или напишите нам.','err'); return; }
+
+  ORDER = body.order; REASONS = body.reasons;
+  msg('lookup-msg','');
+  renderOrder();
+}
+
+function fmtDate(iso){
+  if(!iso) return '';
+  try { return new Date(iso).toLocaleString('ru-RU',{dateStyle:'long',timeStyle:'short'}); }
+  catch(e){ return iso; }
+}
+
+function renderOrder(){
+  $('step-lookup').hidden = true;
+  $('step-order').hidden = false;
+  $('order-head').textContent = ORDER.production_title + (ORDER.performance_datetime ? ' · ' + fmtDate(ORDER.performance_datetime) : '');
+
+  $('tickets').innerHTML = ORDER.tickets.map((t, i) => {
+    const place = t.seat_key ? ('ряд ' + t.seat_key.split('-')[0] + ', место ' + t.seat_key.split('-')[1]) : 'свободная рассадка';
+    return '<div class="tk' + (t.selectable ? '' : ' off') + '">' +
+      '<input type="checkbox" ' + (t.selectable ? '' : 'disabled ') + 'data-i="' + i + '" onchange="recalc()">' +
+      '<div class="who"><b>Билет № ' + t.ticket_number + '</b> — ' + place + ', ' + t.price + ' ₽' +
+      (t.note ? '<span class="note">' + t.note + '</span>' : '') + '</div></div>';
+  }).join('');
+
+  $('reason').innerHTML = REASONS.map(r => '<option value="' + r.id + '">' + r.title + '</option>').join('');
+  recalc();
+}
+
+function selectedTickets(){
+  return Array.from(document.querySelectorAll('#tickets input[type=checkbox]:checked'))
+    .map(cb => ORDER.tickets[Number(cb.dataset.i)]);
+}
+
+// ⚠️ Расчёт на клиенте — ТОЛЬКО предварительный показ. Итоговую сумму
+// считает сервер при приёме заявления и он же фиксирует день
+// обращения; клиентская цифра ничего не решает.
+function recalc(){
+  const picked = selectedTickets();
+  const reasonId = $('reason').value;
+  const reason = REASONS.find(r => r.id === reasonId);
+  $('btn-send').disabled = picked.length === 0;
+  $('calc-docs').hidden = !(reason && reason.requires_documents);
+  if(reason && reason.requires_documents){
+    $('calc-docs').innerHTML = 'Понадобятся подтверждающие документы и заявление по форме Минкультуры' +
+      (reason.form_url ? ' — <a href="' + reason.form_url + '">скачать форму</a>' : '') +
+      '. Отправьте их в ответ на письмо, которое придёт после отправки заявления.';
+  }
+  if(picked.length === 0){ $('calc').hidden = true; return; }
+  $('calc').hidden = false;
+  const total = picked.reduce((s,t) => s + Number(t.price), 0);
+  $('calc-basis').textContent = 'Выбрано билетов: ' + picked.length + ' на сумму ' + total + ' ₽.';
+  $('calc-sum').textContent = 'Точную сумму к возврату покажем сразу после отправки заявления.';
+}
+
+async function sendRequest(){
+  const picked = selectedTickets();
+  if(picked.length === 0) return;
+  $('btn-send').disabled = true; msg('send-msg','Отправляем…');
+  const { status, body } = await api({
+    action:'request',
+    order_number: $('order').value.trim(),
+    contact: $('contact').value.trim(),
+    ticket_numbers: picked.map(t => t.ticket_number),
+    reason: $('reason').value,
+  });
+  if(status === 409){
+    msg('send-msg','По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.','err');
+    $('btn-send').disabled = false; return;
+  }
+  if(status !== 200 || !body){
+    msg('send-msg','Не удалось отправить заявление. Попробуйте ещё раз или напишите нам на aelita.production@yandex.ru.','err');
+    $('btn-send').disabled = false; return;
+  }
+  $('step-order').hidden = true;
+  $('step-done').hidden = false;
+  $('done-num').textContent = body.refund_number;
+  const est = body.estimate || {};
+  let html = '<p>Дата обращения: <b>' + fmtDate(body.requested_at) + '</b> — именно от неё считается размер возврата, даже если рассмотрение займёт время.</p>';
+  html += '<p>Предварительно к возврату: <b>' + (est.amountRub != null ? est.amountRub + ' ₽' : '—') + '</b>';
+  if(est.basis) html += '<br><span style="color:var(--sand);font-size:13px">' + est.basis + '</span>';
+  html += '</p>';
+  if(body.needs_documents){
+    html += '<p style="color:#E0B87B">Отправьте подтверждающие документы' +
+      (body.form_url ? ' и <a href="' + body.form_url + '">заполненную форму</a>' : '') +
+      ' в ответ на письмо — без них возврат по этому основанию оформить нельзя.</p>';
+  }
+  html += body.mail_sent
+    ? '<p>Подтверждение отправлено на вашу почту.</p>'
+    : '<p style="color:#E0B87B">Заявление принято, но письмо-подтверждение отправить не удалось. Сохраните номер обращения.</p>';
+  html += '<p style="color:var(--sand);font-size:13px">Возврат производится в течение 10 рабочих дней с момента получения заявления (п. 6.1 оферты).</p>';
+  $('done-body').innerHTML = html;
+}
+</script>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="https://vk.com/aelita_production" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a href="https://t.me/aelita_production" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
+        <a href="/press">Пресса</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="/">Главная</a>
+        <a href="/tickets">Афиша</a>
+        <a href="/projects">Проекты</a>
+        <a href="/shop">Магазин</a>
+        <a href="/account">Личный кабинет</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
+        <a href="/community">AELITA COMMUNITY</a>
+        <a href="/gift-card">Подарочная карта</a>
+        <a href="/business">Искусство для бизнеса</a>
+        <a href="/collaboration">Сотрудничество</a>
+        <a href="/faq">Частые вопросы</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН»<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+<script>
+  function switchFormTab_c(tab, btn){
+    document.querySelectorAll('#notifyTabs_c .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_c').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_c').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+
+  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
+
+  async function sendFormspree(formName, fields) {
+    try {
+      var data = new FormData();
+      data.append('_subject', '[AELITA] ' + formName);
+      var keys = Object.keys(fields);
+      for (var i = 0; i < keys.length; i++) {
+        data.append(keys[i], String(fields[keys[i]] || '').trim());
+      }
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: data,
+        headers: {'Accept': 'application/json'}
+      });
+    } catch(e) { console.log('Formspree error:', e); }
+  }
+
+  async function sendTelegram(formName, fields) {
+    var lines = ['[AELITA] ' + formName, ''];
+    var keys = Object.keys(fields);
+    for (var i = 0; i < keys.length; i++) {
+      var label = keys[i];
+      var value = String(fields[label] || '').trim();
+      if (value) lines.push('<b>' + label + ':</b> ' + value);
+    }
+    lines.push('');
+    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
+    var msgText = lines.join('\n');
+    try {
+      await fetch(TG_WORKER, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: msgText})
+      });
+    } catch(e) { console.log('TG error:', e); }
+  }
+
+  async function submitCommunityForm(){
+    const name = document.getElementById('name_c').value.trim();
+    const email = document.getElementById('email_c').value.trim();
+    const tg = document.getElementById('tg_c').value.trim();
+    const stream = document.getElementById('stream_c').value;
+    const err = document.getElementById('err_c');
+    const showErr = (msg) => { err.textContent = msg; err.style.display = 'block'; };
+    err.style.display = 'none';
+    if(!name){ showErr('Укажите имя.'); return; }
+    if(!email || !email.includes('@')){ showErr('Укажите почту — на неё придёт ответ.'); return; }
+    if(!document.getElementById('consent_c').checked){ showErr('Отметьте согласие на обработку персональных данных.'); return; }
+    await sendTelegram('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
+    await sendFormspree('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
+    document.getElementById('ok_c').style.display = 'block';
+    document.getElementById('name_c').value = '';
+    document.getElementById('email_c').value = '';
+    document.getElementById('tg_c').value = '';
+    document.getElementById('stream_c').value = '';
+  }
+</script>
+
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+  const curtain = document.querySelector('.curtain');
+  if(curtain){
+    setTimeout(()=>{
+      curtain.classList.add('open');
+      setTimeout(()=>{
+        curtain.style.display = 'none';
+        document.querySelectorAll('.reveal:not(.on)').forEach(el => el.classList.add('on'));
+      }, 1200);
+    }, 80);
+  }
+
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/tochkacuire" onclick="toggleMenu()">Точка Кюри</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
+    <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
+    <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
+    <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+    <a href="/account" onclick="toggleMenu()">Личный кабинет</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+<!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Telegram widget -->
+<div class="tg-widget" id="tg-widget">
+  <div class="tg-bubble" id="tg-bubble">Напишите нам — бот ответит мгновенно</div>
+  <a class="tg-btn" href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" aria-label="Написать в Telegram">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"/></svg>
+    Написать нам
+  </a>
+</div>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=19"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW error:', err));
+    });
+  }
+</script>
+</body>
+</html>

@@ -49,6 +49,27 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
 .seat.selected{background:var(--gold)!important;box-shadow:0 0 0 1px var(--bone)}
 .aisle-gap{width:10px;flex:0 0 auto}
+/* pack-v272: полоса «Держим места» — живой отсчёт холда, который
+   реально стоит на сервере с момента выбора места (hold-seat.js).
+   Появляется только когда есть что удерживать. */
+.hold-bar{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--coal);border:1px solid rgba(214,181,122,.35);border-radius:4px;padding:9px 14px;margin:14px 0 0;font-size:13px}
+.hold-bar.on{display:flex}
+.hold-bar .hold-label{color:var(--sand)}
+.hold-bar .hold-time{color:var(--gold);font-variant-numeric:tabular-nums;font-size:15px}
+/* Последняя минута — предупреждающий цвет, тот же, что у .msg. */
+.hold-bar.urgent{border-color:#C98B6B}
+.hold-bar.urgent .hold-time{color:#C98B6B}
+/* pack-v272: выбранные места списком. До этого внизу была только
+   сумма — при нескольких местах в широком зале человек не видел, что
+   именно выбрал, особенно прокрутив схему в сторону. */
+.picked{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.picked-chip{display:flex;align-items:center;gap:8px;background:var(--coal);border:1px solid rgba(214,181,122,.3);border-radius:20px;padding:6px 8px 6px 14px;font-size:13px;color:var(--bone)}
+.picked-chip .chip-price{color:var(--sand);font-size:12px}
+/* 28px — проходит минимум WCAG 2.2 SC 2.5.8 (24px), как и клетка
+   места после pack-v270: снять место по ошибке здесь так же обидно,
+   как выбрать не то. */
+.picked-chip button{width:28px;height:28px;flex:0 0 auto;border-radius:50%;border:none;background:transparent;color:var(--sand);font-size:17px;line-height:1;cursor:pointer}
+.picked-chip button:hover{color:var(--bone)}
 .zones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;font-size:11px;color:var(--sand)}
 .zone-chip{display:flex;align-items:center;gap:5px}
 .zone-swatch{width:10px;height:10px;border-radius:2px}
@@ -65,6 +86,16 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .qty span{font-size:20px;min-width:24px;text-align:center}
 .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,13,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(214,181,122,.2);padding:14px 20px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:6}
 .total{font-size:18px}
+.total-was{font-size:14px;color:var(--grey);text-decoration:line-through;margin-left:8px}
+.promo-wrap{max-width:900px;margin:0 auto;padding:0 20px 12px}
+.promo-toggle{background:none;border:none;color:var(--gold);font-family:'Montserrat',sans-serif;font-size:13px;cursor:pointer;padding:0;text-decoration:underline}
+.promo-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.promo-row input{flex:1;min-width:160px;padding:10px 12px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:14px;text-transform:uppercase}
+.promo-apply{padding:10px 18px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:.1em;cursor:pointer}
+.promo-apply:disabled{opacity:.5;cursor:default}
+.promo-msg{margin-top:8px;font-size:13px}
+.promo-msg.ok{color:#7BC47F}
+.promo-msg.err{color:#E08A7B}
 .buy-btn{background:var(--gold);color:var(--ink);border:none;padding:12px 28px;border-radius:3px;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .buy-btn:disabled{opacity:.4;cursor:not-allowed}
 .msg{color:#C98B6B;font-size:13px;margin-top:8px;min-height:16px}
@@ -109,7 +140,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <div class="stage">Сцена</div>
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
-    <div class="meta" style="text-align:center;margin-top:4px">Выбранные места удерживаются 10 минут — успейте завершить оплату за это время.</div>
+    <!-- pack-v272: было статичное «удерживаются 10 минут» — обещание,
+         которое до этой версии не выполнялось: холд ставился только
+         при нажатии «Оплатить». Теперь место действительно удержано с
+         момента выбора, и отсчёт показывает реальный остаток. -->
+    <div class="hold-bar" id="hold-bar">
+      <span class="hold-label">Держим ваши места</span>
+      <span class="hold-time" id="hold-time">—</span>
+    </div>
+    <div class="picked" id="picked"></div>
   </div>
 
   <div id="general-block" style="display:none">
@@ -138,8 +177,23 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
      ещё раз». Телефон — быстрее email в моменте живой покупки. -->
 <a class="help-link" href="tel:+79605151690">🆘 Нужна помощь? +7 960 515-16-90</a>
 
+<!-- Промокод. Раскрывающееся поле, а не всегда видимое: у большинства
+     покупателей кода нет, и пустая рамка «введите промокод» над кнопкой
+     оплаты только добавляет сомнение «а я что, переплачиваю?». -->
+<div class="promo-wrap" id="promo-wrap">
+  <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()">У меня есть промокод</button>
+  <div class="promo-row" id="promo-row" hidden>
+    <input type="text" id="promo-input" placeholder="Промокод" autocomplete="off" spellcheck="false" maxlength="32">
+    <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Применить</button>
+  </div>
+  <div class="promo-msg" id="promo-msg"></div>
+</div>
+
 <div class="bar">
-  <div class="total">Итого: <span id="total">0 ₽</span></div>
+  <div class="total">
+    Итого: <span id="total">0 ₽</span>
+    <span class="total-was" id="total-was" hidden></span>
+  </div>
   <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Оплатить</button>
 </div>
 
@@ -162,6 +216,28 @@ const performanceId = params.get('performance');
 let selectedSeats = []; // [{row, seat, price}]
 let quantity = 1;
 let data = null;
+
+// pack-v272: идентификатор ЭТОГО браузера для холда мест на момент
+// выбора (см. _tools/Tickets/hold-seat.js). sessionStorage, а не
+// localStorage: холд живёт минуты и относится к текущей покупке —
+// переживать закрытие вкладки ему незачем, а вот при возврате с
+// оплаты кнопкой «назад» в той же вкладке он должен сохраниться,
+// поэтому и не просто переменная в памяти.
+let holdId = null;
+try {
+  holdId = sessionStorage.getItem('aelita_hold_id');
+  if(!holdId){
+    holdId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2));
+    sessionStorage.setItem('aelita_hold_id', holdId);
+  }
+}catch(e){
+  // Приватный режим/запрет хранилища — работаем без него: холд просто
+  // не переживёт перезагрузку страницы, покупка при этом возможна.
+  holdId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2));
+}
+let holdExpiresAt = null;  // ISO-строка от сервера
+let holdTicker = null;     // id интервала отсчёта
+let holdRenewTimer = null; // id интервала продления
 
 const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от дорогого к дешёвому — золотой затухает к серому, тот же принцип, что цветовая маркировка по цене у Яндекс Афиши
 
@@ -332,23 +408,280 @@ function renderZoneLegend(){
   });
 }
 
-function toggleSeat(row, seat, el){
+// ─── pack-v272: холд мест на момент выбора ────────────────────────
+//
+// До этой версии место резервировалось только при нажатии «Оплатить»,
+// то есть всё время заполнения формы выбранные места ничем не были
+// защищены — их мог забрать другой покупатель, и человек узнавал об
+// этом уже после клика. Теперь клик по месту сразу удерживает его на
+// сервере (hold-seat.js), а create-order этот холд перенимает.
+
+/** Возвращает {ok} либо {ok:false, taken:[...]} — молча не глотаем. */
+async function holdRequest(action, seats){
+  if(!seats.length) return {ok:true};
+  const res = await fetch(`${API_BASE}/hold-seat`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      performance_id: performanceId,
+      hold_id: holdId,
+      action,
+      seats: seats.map(s=>({row:s.row, seat:s.seat})),
+    }),
+  });
+  let out = {};
+  try{ out = await res.json(); }catch(e){}
+  if(res.ok && out.ok){
+    if(out.hold_expires_at) startHoldCountdown(out.hold_expires_at);
+    return {ok:true};
+  }
+  if(res.status === 409 && out.error === 'seats_taken') return {ok:false, taken: out.seats || []};
+  return {ok:false};
+}
+
+function markSeatTaken(row, seat){
+  const el = document.querySelector(`.seat[data-row="${row}"][data-seat="${seat}"]`);
+  if(!el) return;
+  el.classList.remove('selected');
+  el.classList.add('sold');
+  el.style.background = '';
+  el.onclick = null;
+}
+
+async function toggleSeat(row, seat, el){
+  const msgEl = document.getElementById('msg');
   const idx = selectedSeats.findIndex(s => s.row===row && s.seat===seat);
+
   if(idx >= 0){
+    // Снятие выделения — сначала в интерфейсе (отклик мгновенный),
+    // освобождение на сервере следом. Если запрос не дойдёт, место
+    // всё равно освободится по TTL, поэтому ошибку тут не показываем.
     selectedSeats.splice(idx,1);
     el.classList.remove('selected');
     el.style.background = colorForRow(row);
-  } else {
-    if(selectedSeats.length >= 10){ document.getElementById('msg').textContent = 'Максимум 10 мест в одном заказе.'; return; }
+    invalidatePromo();
+    updateTotal();
+    holdRequest('release', [{row, seat}]).catch(()=>{});
+    if(!selectedSeats.length) stopHoldCountdown();
+    return;
+  }
+
+  if(selectedSeats.length >= 10){ msgEl.textContent = 'Максимум 10 мест в одном заказе.'; return; }
+
+  // Место занимаем на сервере ДО того, как показать выбранным — иначе
+  // получилось бы прежнее враньё: подсвечено как ваше, а на самом деле
+  // ничьё. Пока запрос летит, место недоступно для повторного клика.
+  el.onclick = null;
+  el.style.opacity = '.5';
+  let r;
+  try{
+    r = await holdRequest('hold', [...selectedSeats, {row, seat}]);
+  }catch(e){
+    r = {ok:false};
+  }
+  el.style.opacity = '';
+
+  if(r.ok){
     selectedSeats.push({row, seat, price: priceForRow(row)});
     el.classList.add('selected');
+    el.onclick = () => toggleSeat(row, seat, el);
+    msgEl.textContent = '';
+    invalidatePromo();
+    updateTotal();
+    return;
   }
-  updateTotal();
+
+  if(r.taken && r.taken.length){
+    // Кто-то успел первым. Показываем это сразу на схеме — человек
+    // выбирает другое место, а не узнаёт об этом после заполнения
+    // формы.
+    r.taken.forEach(k => {
+      const [tr, ts] = String(k).split('-').map(Number);
+      markSeatTaken(tr, ts);
+      const si = selectedSeats.findIndex(s => s.row===tr && s.seat===ts);
+      if(si >= 0) selectedSeats.splice(si,1);
+    });
+    msgEl.textContent = 'Это место только что заняли — выберите другое.';
+    invalidatePromo();
+    updateTotal();
+    return;
+  }
+
+  el.onclick = () => toggleSeat(row, seat, el);
+  msgEl.textContent = 'Не удалось занять место — проверьте связь и попробуйте ещё раз.';
 }
+
+function renderPicked(){
+  const el = document.getElementById('picked');
+  el.innerHTML = '';
+  if(!data || data.seating !== 'assigned') return;
+  // Порядок — как на схеме (ряд, потом место), а не в порядке кликов:
+  // так список читается вместе с залом, а не как история действий.
+  const sorted = [...selectedSeats].sort((a,b)=> a.row-b.row || a.seat-b.seat);
+  sorted.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'picked-chip';
+    const label = document.createElement('span');
+    label.textContent = `${s.row} ряд, ${s.seat} место`;
+    const price = document.createElement('span');
+    price.className = 'chip-price';
+    price.textContent = s.price + ' ₽';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', `Убрать место: ряд ${s.row}, место ${s.seat}`);
+    btn.textContent = '×';
+    btn.onclick = () => {
+      const seatEl = document.querySelector(`.seat[data-row="${s.row}"][data-seat="${s.seat}"]`);
+      if(seatEl) toggleSeat(s.row, s.seat, seatEl);
+    };
+    chip.appendChild(label); chip.appendChild(price); chip.appendChild(btn);
+    el.appendChild(chip);
+  });
+}
+
+function startHoldCountdown(expiresAtIso){
+  holdExpiresAt = expiresAtIso;
+  document.getElementById('hold-bar').classList.add('on');
+  if(holdTicker) clearInterval(holdTicker);
+  tickHold();
+  holdTicker = setInterval(tickHold, 1000);
+  // Продлеваем, пока страница открыта и места выбраны: живой человек,
+  // который вдумчиво заполняет форму, не должен терять места на
+  // середине. TTL на сервере 5 минут, продлеваем заметно чаще.
+  if(holdRenewTimer) clearInterval(holdRenewTimer);
+  holdRenewTimer = setInterval(() => {
+    if(selectedSeats.length) holdRequest('hold', selectedSeats).catch(()=>{});
+  }, 90000);
+}
+
+function stopHoldCountdown(){
+  if(holdTicker){ clearInterval(holdTicker); holdTicker = null; }
+  if(holdRenewTimer){ clearInterval(holdRenewTimer); holdRenewTimer = null; }
+  holdExpiresAt = null;
+  const bar = document.getElementById('hold-bar');
+  bar.classList.remove('on','urgent');
+}
+
+function tickHold(){
+  if(!holdExpiresAt) return;
+  const left = new Date(holdExpiresAt).getTime() - Date.now();
+  const bar = document.getElementById('hold-bar');
+  if(left <= 0){
+    // Холд истёк на сервере — честно снимаем выбор, а не оставляем
+    // подсветку мест, которые уже никому не принадлежат.
+    stopHoldCountdown();
+    selectedSeats = [];
+    document.querySelectorAll('.seat.selected').forEach(el => {
+      el.classList.remove('selected');
+      el.style.background = colorForRow(Number(el.dataset.row));
+    });
+    invalidatePromo();
+    updateTotal();
+    document.getElementById('msg').textContent = 'Время удержания истекло — выберите места заново.';
+    return;
+  }
+  const total = Math.ceil(left/1000);
+  const mm = String(Math.floor(total/60)).padStart(2,'0');
+  const ss = String(total%60).padStart(2,'0');
+  document.getElementById('hold-time').textContent = `${mm}:${ss}`;
+  bar.classList.toggle('urgent', left < 60000);
+}
+
+// Уходя со страницы, освобождаем места сразу, не дожидаясь TTL — тогда
+// они возвращаются в продажу мгновенно. sendBeacon переживает выгрузку
+// вкладки, обычный fetch на этом этапе браузер уже может оборвать.
+window.addEventListener('pagehide', () => {
+  if(!selectedSeats.length || !navigator.sendBeacon) return;
+  // Не освобождаем, если человек ушёл ОПЛАЧИВАТЬ: места должны
+  // остаться за ним на странице ЮKassa (там уже действует холд заказа).
+  if(window.__aelitaGoingToPayment) return;
+  try{
+    navigator.sendBeacon(`${API_BASE}/hold-seat`, new Blob([JSON.stringify({
+      performance_id: performanceId,
+      hold_id: holdId,
+      action: 'release',
+      seats: selectedSeats.map(s=>({row:s.row, seat:s.seat})),
+    })], {type:'application/json'}));
+  }catch(e){}
+});
 
 function changeQty(delta){
   quantity = Math.max(1, Math.min(10, quantity + delta));
   document.getElementById('qty-val').textContent = quantity;
+  invalidatePromo();
+  updateTotal();
+}
+
+// ── Промокод ──────────────────────────────────────────────────────
+// Принятый сервером код и посчитанная им сумма. Считает ВСЕГДА сервер
+// (check-promo.js той же функцией, что и create-order.js) — на клиенте
+// формулы скидки нет намеренно, иначе превью и счёт могли бы разойтись.
+let appliedPromo = null;      // строка кода или null
+let promoFinalAmount = null;  // сумма со скидкой, присланная сервером
+
+function togglePromo(){
+  const row = document.getElementById('promo-row');
+  row.hidden = !row.hidden;
+  if(!row.hidden) document.getElementById('promo-input').focus();
+}
+
+function promoMsg(text, cls){
+  const el = document.getElementById('promo-msg');
+  el.textContent = text || '';
+  el.className = 'promo-msg' + (cls ? ' ' + cls : '');
+}
+
+// Человеческие формулировки причин отказа — коды приходят с сервера
+// (см. config/promocodes.js: resolvePromoCode).
+const PROMO_REASONS = {
+  unknown: 'Такого промокода нет — проверьте написание.',
+  expired: 'Срок действия промокода истёк.',
+  not_for_this_performance: 'Этот промокод не действует на выбранный спектакль.',
+  misconfigured: 'С этим промокодом что-то не так — напишите нам, разберёмся.',
+  empty: 'Введите промокод.',
+};
+
+async function applyPromo(){
+  const input = document.getElementById('promo-input');
+  const btn = document.getElementById('promo-apply');
+  const code = input.value.trim();
+  if(!code){ promoMsg(PROMO_REASONS.empty, 'err'); return; }
+  // Нечего проверять, пока не выбраны места — сумма ещё неизвестна.
+  if(data.seating === 'assigned' && selectedSeats.length === 0){
+    promoMsg('Сначала выберите места — потом посчитаем скидку.', 'err');
+    return;
+  }
+  btn.disabled = true; promoMsg('Проверяем…');
+  const payload = { performance_id: performanceId, promo_code: code };
+  if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>`${s.row}-${s.seat}`);
+  else payload.quantity = quantity;
+  try{
+    const res = await fetch(`${API_BASE}/check-promo`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const out = await res.json();
+    if(!res.ok){
+      promoMsg('Не удалось проверить промокод — попробуйте ещё раз.', 'err');
+    } else if(out.valid){
+      appliedPromo = out.promo_code;
+      promoFinalAmount = out.final_amount;
+      const saved = (out.original_amount - out.final_amount).toFixed(2).replace(/\.00$/,'');
+      promoMsg(`Промокод ${out.promo_code} применён — скидка ${saved} ₽.`, 'ok');
+      // ⚠️ Нулевой заказ пока не поддержан на бэкенде (см.
+      // TICKETS_TODO, «Нулевой заказ») — честно предупреждаем здесь,
+      // а не даём человеку упереться в отказ после «Оплатить».
+      if(out.zero_amount){
+        promoMsg('Скидка покрывает всю сумму — такие заказы пока нельзя оформить онлайн. Напишите нам, оформим вручную.', 'err');
+        appliedPromo = null; promoFinalAmount = null;
+      }
+    } else {
+      appliedPromo = null; promoFinalAmount = null;
+      promoMsg(PROMO_REASONS[out.reason] || 'Промокод не применён.', 'err');
+    }
+  }catch(e){
+    promoMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+  }
+  btn.disabled = false;
   updateTotal();
 }
 
@@ -359,8 +692,30 @@ function updateTotal(){
   } else {
     total = (data.price || 0) * quantity;
   }
-  document.getElementById('total').textContent = total + ' ₽';
+  const totalEl = document.getElementById('total');
+  const wasEl = document.getElementById('total-was');
+  // Скидка считалась для КОНКРЕТНОГО набора мест. Изменили выбор —
+  // прежняя сумма больше не действительна, код надо переприменить.
+  // Молча оставить старую цифру было бы обманом покупателя.
+  if(appliedPromo !== null && promoFinalAmount === null){ appliedPromo = null; }
+  if(appliedPromo !== null && promoFinalAmount !== null){
+    totalEl.textContent = promoFinalAmount + ' ₽';
+    wasEl.textContent = total + ' ₽';
+    wasEl.hidden = false;
+  } else {
+    totalEl.textContent = total + ' ₽';
+    wasEl.hidden = true;
+  }
   document.getElementById('buy-btn').disabled = (data.seating==='assigned' && selectedSeats.length===0);
+  renderPicked();
+}
+
+// Сброс применённого кода при смене выбора мест/количества — вызывается
+// оттуда же, откуда updateTotal, но ДО него.
+function invalidatePromo(){
+  if(appliedPromo === null) return;
+  appliedPromo = null; promoFinalAmount = null;
+  promoMsg('Выбор изменился — примените промокод заново.', 'err');
 }
 
 async function submitOrder(){
@@ -406,9 +761,16 @@ async function submitOrder(){
   const payload = {
     performance_id: performanceId, name, email, contact, pd_consent: true,
     return_url: location.origin + location.pathname + '?performance=' + performanceId + '&aelita_paid=1',
+    // pack-v272: этим заказ перенимает холд, поставленный при выборе
+    // мест на схеме (hold-seat.js) — иначе покупатель конфликтовал бы
+    // сам с собой и не смог оплатить собственные выбранные места.
+    hold_id: holdId,
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
   else payload.quantity = quantity;
+  // Промокод отправляем ТОЛЬКО если сервер его уже подтвердил при
+  // проверке — сумму всё равно пересчитает create-order.js сам.
+  if(appliedPromo) payload.promo_code = appliedPromo;
 
   try{
     const res = await fetch(`${API_BASE}/create-order`, {
@@ -423,6 +785,14 @@ async function submitOrder(){
     }
     const out = await res.json();
     if(out.confirmation_url){
+      // pack-v272: уходим на ЮKassa — обработчик pagehide НЕ должен
+      // освобождать места: заказ уже перенял холд на себя (владелец
+      // теперь orderId, а не sel:<hold_id>), и отпускать их сейчас
+      // означало бы отдать чужому покупателю места, за которые человек
+      // прямо сейчас платит. Отсчёт на странице тоже останавливаем —
+      // с этого момента действует холд ЗАКАЗА (10 минут), а не выбора.
+      window.__aelitaGoingToPayment = true;
+      stopHoldCountdown();
       // pack-v196: сохраняем order_id/payment_id, чтобы при возврате с
       // ЮKassa опросить РЕАЛЬНЫЙ статус (order-status.js), а не верить
       // одному query-параметру (см. init(), pollOrderStatus()).
