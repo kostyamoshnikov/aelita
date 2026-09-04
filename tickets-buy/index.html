@@ -189,6 +189,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <div class="promo-msg" id="promo-msg"></div>
 </div>
 
+<!-- pack-v277: подарочная карта — тот же паттерн раскрывающегося поля
+     и те же классы, что у промокода (.promo-*), новый CSS не заводим. -->
+<div class="promo-wrap" id="gift-wrap">
+  <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">У меня есть подарочная карта</button>
+  <div class="promo-row" id="gift-row" hidden>
+    <input type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="19">
+    <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Применить</button>
+  </div>
+  <div class="promo-msg" id="gift-msg"></div>
+</div>
+
 <div class="bar">
   <div class="total">
     Итого: <span id="total">0 ₽</span>
@@ -459,7 +470,7 @@ async function toggleSeat(row, seat, el){
     selectedSeats.splice(idx,1);
     el.classList.remove('selected');
     el.style.background = colorForRow(row);
-    invalidatePromo();
+    invalidateDiscounts();
     updateTotal();
     holdRequest('release', [{row, seat}]).catch(()=>{});
     if(!selectedSeats.length) stopHoldCountdown();
@@ -486,7 +497,7 @@ async function toggleSeat(row, seat, el){
     el.classList.add('selected');
     el.onclick = () => toggleSeat(row, seat, el);
     msgEl.textContent = '';
-    invalidatePromo();
+    invalidateDiscounts();
     updateTotal();
     return;
   }
@@ -502,7 +513,7 @@ async function toggleSeat(row, seat, el){
       if(si >= 0) selectedSeats.splice(si,1);
     });
     msgEl.textContent = 'Это место только что заняли — выберите другое.';
-    invalidatePromo();
+    invalidateDiscounts();
     updateTotal();
     return;
   }
@@ -575,7 +586,7 @@ function tickHold(){
       el.classList.remove('selected');
       el.style.background = colorForRow(Number(el.dataset.row));
     });
-    invalidatePromo();
+    invalidateDiscounts();
     updateTotal();
     document.getElementById('msg').textContent = 'Время удержания истекло — выберите места заново.';
     return;
@@ -608,16 +619,27 @@ window.addEventListener('pagehide', () => {
 function changeQty(delta){
   quantity = Math.max(1, Math.min(10, quantity + delta));
   document.getElementById('qty-val').textContent = quantity;
-  invalidatePromo();
+  invalidateDiscounts();
   updateTotal();
 }
 
-// ── Промокод ──────────────────────────────────────────────────────
-// Принятый сервером код и посчитанная им сумма. Считает ВСЕГДА сервер
-// (check-promo.js той же функцией, что и create-order.js) — на клиенте
-// формулы скидки нет намеренно, иначе превью и счёт могли бы разойтись.
+// ── Промокод и подарочная карта ─────────────────────────────────────
+// Принятый сервером код(ы) и посчитанная СЕРВЕРОМ сумма. Считает ВСЕГДА
+// сервер (check-promo.js/check-gift-code.js той же функцией, что и
+// create-order.js) — на клиенте формулы скидки нет намеренно, иначе
+// превью и счёт могли бы разойтись.
+//
+// pack-v277: оба кода можно применить вместе (сначала промокод, потом
+// карта, или наоборот) — каждый из двух проверочных запросов принимает
+// код ВТОРОГО, если он уже применён (см. докстринги check-promo.js/
+// check-gift-code.js), и возвращает ОБЩИЙ final_amount с учётом обоих.
+// Поэтому на фронтенде — ОДНА общая переменная итоговой суммы, а не по
+// одной на каждый вид скидки: тот запрос, что выполнился последним,
+// уже знает про оба кода разом.
 let appliedPromo = null;      // строка кода или null
-let promoFinalAmount = null;  // сумма со скидкой, присланная сервером
+let appliedGift = null;       // строка кода или null
+let combinedFinalAmount = null; // сумма с учётом ВСЕХ применённых скидок сразу
+let giftUsedAmount = 0;       // сколько из скидки — по карте (для текста сообщений)
 
 function togglePromo(){
   const row = document.getElementById('promo-row');
@@ -627,6 +649,18 @@ function togglePromo(){
 
 function promoMsg(text, cls){
   const el = document.getElementById('promo-msg');
+  el.textContent = text || '';
+  el.className = 'promo-msg' + (cls ? ' ' + cls : '');
+}
+
+function toggleGift(){
+  const row = document.getElementById('gift-row');
+  row.hidden = !row.hidden;
+  if(!row.hidden) document.getElementById('gift-input').focus();
+}
+
+function giftMsg(text, cls){
+  const el = document.getElementById('gift-msg');
   el.textContent = text || '';
   el.className = 'promo-msg' + (cls ? ' ' + cls : '');
 }
@@ -641,6 +675,22 @@ const PROMO_REASONS = {
   empty: 'Введите промокод.',
 };
 
+// Симметрично PROMO_REASONS — коды из check-gift-code.js/create-order.js.
+const GIFT_REASONS = {
+  not_found: 'Такой карты нет — проверьте код.',
+  inactive: 'Эта карта больше не активна.',
+  depleted: 'На карте не осталось средств.',
+  covered_by_promo: 'Промокод уже покрывает всю сумму — карта не понадобилась.',
+  empty: 'Введите код карты.',
+};
+
+function seatsOrQtyPayload(){
+  const p = {};
+  if(data.seating === 'assigned') p.seats = selectedSeats.map(s=>`${s.row}-${s.seat}`);
+  else p.quantity = quantity;
+  return p;
+}
+
 async function applyPromo(){
   const input = document.getElementById('promo-input');
   const btn = document.getElementById('promo-apply');
@@ -652,9 +702,8 @@ async function applyPromo(){
     return;
   }
   btn.disabled = true; promoMsg('Проверяем…');
-  const payload = { performance_id: performanceId, promo_code: code };
-  if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>`${s.row}-${s.seat}`);
-  else payload.quantity = quantity;
+  const payload = { performance_id: performanceId, promo_code: code, ...seatsOrQtyPayload() };
+  if(appliedGift) payload.gift_code = appliedGift;
   try{
     const res = await fetch(`${API_BASE}/check-promo`, {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
@@ -664,7 +713,8 @@ async function applyPromo(){
       promoMsg('Не удалось проверить промокод — попробуйте ещё раз.', 'err');
     } else if(out.valid){
       appliedPromo = out.promo_code;
-      promoFinalAmount = out.final_amount;
+      combinedFinalAmount = out.final_amount;
+      giftUsedAmount = out.gift_used_amount || 0;
       const saved = (out.original_amount - out.final_amount).toFixed(2).replace(/\.00$/,'');
       promoMsg(`Промокод ${out.promo_code} применён — скидка ${saved} ₽.`, 'ok');
       // ⚠️ Нулевой заказ пока не поддержан на бэкенде (см.
@@ -672,14 +722,58 @@ async function applyPromo(){
       // а не даём человеку упереться в отказ после «Оплатить».
       if(out.zero_amount){
         promoMsg('Скидка покрывает всю сумму — такие заказы пока нельзя оформить онлайн. Напишите нам, оформим вручную.', 'err');
-        appliedPromo = null; promoFinalAmount = null;
+        appliedPromo = null; combinedFinalAmount = null;
       }
     } else {
-      appliedPromo = null; promoFinalAmount = null;
+      appliedPromo = null;
       promoMsg(PROMO_REASONS[out.reason] || 'Промокод не применён.', 'err');
     }
   }catch(e){
     promoMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+  }
+  btn.disabled = false;
+  updateTotal();
+}
+
+async function applyGift(){
+  const input = document.getElementById('gift-input');
+  const btn = document.getElementById('gift-apply');
+  const code = input.value.trim().toUpperCase();
+  if(!code){ giftMsg(GIFT_REASONS.empty, 'err'); return; }
+  if(data.seating === 'assigned' && selectedSeats.length === 0){
+    giftMsg('Сначала выберите места — потом посчитаем сумму.', 'err');
+    return;
+  }
+  btn.disabled = true; giftMsg('Проверяем…');
+  const payload = { performance_id: performanceId, gift_code: code, ...seatsOrQtyPayload() };
+  if(appliedPromo) payload.promo_code = appliedPromo;
+  try{
+    const res = await fetch(`${API_BASE}/check-gift-code`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const out = await res.json();
+    if(!res.ok){
+      giftMsg('Не удалось проверить карту — попробуйте ещё раз.', 'err');
+    } else if(out.valid){
+      appliedGift = code;
+      combinedFinalAmount = out.final_amount;
+      giftUsedAmount = out.gift_used_amount || 0;
+      const rest = out.available_amount - out.gift_used_amount;
+      giftMsg(
+        `Карта применена — списано ${out.gift_used_amount} ₽` +
+        (rest > 0 ? `, на карте останется ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : ', остаток исчерпан.'),
+        'ok'
+      );
+      if(out.zero_amount){
+        giftMsg('Скидка покрывает всю сумму — такие заказы пока нельзя оформить онлайн. Напишите нам, оформим вручную.', 'err');
+        appliedGift = null; combinedFinalAmount = null;
+      }
+    } else {
+      appliedGift = null;
+      giftMsg(GIFT_REASONS[out.reason] || 'Карта не применена.', 'err');
+    }
+  }catch(e){
+    giftMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
   }
   btn.disabled = false;
   updateTotal();
@@ -697,9 +791,9 @@ function updateTotal(){
   // Скидка считалась для КОНКРЕТНОГО набора мест. Изменили выбор —
   // прежняя сумма больше не действительна, код надо переприменить.
   // Молча оставить старую цифру было бы обманом покупателя.
-  if(appliedPromo !== null && promoFinalAmount === null){ appliedPromo = null; }
-  if(appliedPromo !== null && promoFinalAmount !== null){
-    totalEl.textContent = promoFinalAmount + ' ₽';
+  if(appliedPromo === null && appliedGift === null){ combinedFinalAmount = null; }
+  if((appliedPromo !== null || appliedGift !== null) && combinedFinalAmount !== null){
+    totalEl.textContent = combinedFinalAmount + ' ₽';
     wasEl.textContent = total + ' ₽';
     wasEl.hidden = false;
   } else {
@@ -710,12 +804,23 @@ function updateTotal(){
   renderPicked();
 }
 
-// Сброс применённого кода при смене выбора мест/количества — вызывается
+// Сброс применённых кодов при смене выбора мест/количества — вызывается
 // оттуда же, откуда updateTotal, но ДО него.
 function invalidatePromo(){
   if(appliedPromo === null) return;
-  appliedPromo = null; promoFinalAmount = null;
+  appliedPromo = null; combinedFinalAmount = null;
   promoMsg('Выбор изменился — примените промокод заново.', 'err');
+}
+
+function invalidateGift(){
+  if(appliedGift === null) return;
+  appliedGift = null; combinedFinalAmount = null;
+  giftMsg('Выбор изменился — примените карту заново.', 'err');
+}
+
+function invalidateDiscounts(){
+  invalidatePromo();
+  invalidateGift();
 }
 
 async function submitOrder(){
@@ -768,9 +873,10 @@ async function submitOrder(){
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
   else payload.quantity = quantity;
-  // Промокод отправляем ТОЛЬКО если сервер его уже подтвердил при
+  // Промокод/карту отправляем ТОЛЬКО если сервер их уже подтвердил при
   // проверке — сумму всё равно пересчитает create-order.js сам.
   if(appliedPromo) payload.promo_code = appliedPromo;
+  if(appliedGift) payload.gift_code = appliedGift;
 
   try{
     const res = await fetch(`${API_BASE}/create-order`, {
@@ -818,6 +924,23 @@ async function submitOrder(){
     }
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
       msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
+    } else if(out.error === 'gift_card_changed'){
+      // pack-v277: гонка за остаток карты между проверкой и оплатой —
+      // тот же класс события, что seats_taken, только для денег, не
+      // мест. Сбрасываем применённую карту и показываем АКТУАЛЬНЫЙ
+      // остаток, который прислал сервер, — не заставляем гадать заново.
+      appliedGift = null; combinedFinalAmount = null;
+      giftMsg(`Остаток карты изменился — доступно ${out.available_amount} ₽. Примените карту заново.`, 'err');
+      updateTotal();
+      msgEl.textContent = 'Остаток подарочной карты изменился — примените её заново и повторите оплату.';
+    } else if(out.error === 'zero_amount_not_supported'){
+      // Скидка (промокод + карта вместе) перекрыла всю сумму — такие
+      // заказы пока не проводятся онлайн (см. TICKETS_TODO, «Нулевой
+      // заказ»). Предупреждали об этом уже на превью (out.zero_amount в
+      // applyPromo/applyGift), сюда попадаем только если человек всё же
+      // умудрился отправить такую комбинацию (например, применил один
+      // код, потом другой без промежуточного предупреждения).
+      msgEl.innerHTML = 'Скидка покрывает всю сумму — такие заказы пока нельзя оформить online. Позвоните нам, оформим вручную: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
     } else if(out.error === 'duplicate_seats'){
       msgEl.innerHTML = 'Одно и то же место попало в заказ дважды — возможно, страница была открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать места заново.';
     } else if(out.error === 'bad_email'){

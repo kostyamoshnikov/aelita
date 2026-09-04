@@ -133,6 +133,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .ev-person .who small{display:block;color:var(--sand);font-size:11px;word-break:break-all}
 .ev-person .when{color:var(--sand);font-size:11px;white-space:nowrap}
 .ev-empty{color:var(--sand);font-size:13px;padding:6px 0}
+.rf-status{font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.rf-status-new{color:var(--gold)}
+.rf-status-approved{color:#7ec48c}
+.rf-status-paid{color:#7ec48c}
+.rf-status-rejected{color:#c97b7b}
 
 .empty-state,#loadingState{padding:60px 20px;text-align:center;color:var(--sand);background:var(--coal)}
 #errorState{padding:40px 20px;text-align:center;color:#e08a6e;background:var(--coal);display:none}
@@ -209,12 +214,36 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
     </div>
     <div class="cust" id="custList"></div>
 
+    <!-- ADMIN_TODO.md, п.1.1 — «самое трудоёмкое из всех правок»:
+         до этой функции список проданных билетов на показ, сверка
+         кассы и поиск заказа по фамилии были невозможны через
+         админку — только вручную через личный кабинет ЮKassa.
+         OPEN_QUESTIONS.md, вопрос 2 (🔴): без этого списка нечем
+         исполнить п. 6.3.3 оферты — автоматический возврат ВСЕМ
+         покупателям при отмене показа. -->
+    <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button></p>
+    <div class="filter-row">
+      <input type="text" class="search" id="ordSearch" placeholder="Поиск по имени, email или номеру заказа…">
+      <select class="search" id="ordPerfFilter" style="max-width:280px">
+        <option value="">Все показы</option>
+      </select>
+    </div>
+    <div id="ordersBlock"><div class="empty-state">Загружаем…</div></div>
+
     <!-- ADMIN_TODO.md, п.1.2 — до pack-v251 админ не видел регистраций
          на бесплатные встречи вообще: единственным источником были
          письма и Telegram по одному на каждую (pack-v247), список
          приходилось собирать вручную. -->
     <p class="sec-title" style="margin-top:56px">Регистрации на встречи</p>
     <div id="eventsBlock"><div class="empty-state">Загружаем…</div></div>
+
+    <!-- DOCS_TZ.md раздел 39.7, OPEN_QUESTIONS.md вопрос 10, шаг 5 —
+         до этого раздела заявления на возврат билетов копились в
+         хранилище (см. Tickets/lib/refund-store.js), которое никто не
+         открывает: страница /ticket-refund принимала заявления, но
+         одобрить их или отклонить было негде. -->
+    <p class="sec-title" style="margin-top:56px">Заявления на возврат</p>
+    <div id="refundsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <p class="sec-title" style="margin-top:56px">Правки сайта</p>
     <div class="editor-box">
@@ -353,6 +382,12 @@ var ADMIN_EVENTS_URL = API_BASE && API_BASE + '/events-registrations';
 var ADMIN_EVENTS_ADD_URL = API_BASE && API_BASE + '/events-add-registration';
 var ADMIN_EVENTS_CANCEL_URL = API_BASE && API_BASE + '/events-cancel-registration';
 var ADMIN_ADD_CUSTOMER_URL = API_BASE && API_BASE + '/add-customer';
+// DOCS_TZ.md раздел 39.7 — заявления на возврат билетов (см.
+// _tools/Admin/events-ticket-refunds.js).
+var ADMIN_REFUNDS_URL = API_BASE && API_BASE + '/events-ticket-refunds';
+// ADMIN_TODO.md, п.1.1 — список заказов билетов (см.
+// _tools/Admin/tickets-orders.js).
+var ADMIN_ORDERS_URL = API_BASE && API_BASE + '/tickets-orders';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -417,6 +452,15 @@ var ERRORS = {
   not_registered: 'Регистрация не найдена — возможно, уже отменена.',
   missing_fields: 'Заполните все поля.',
   email_taken: 'Клиент с таким email уже есть в базе.',
+  // заявления на возврат (Admin/events-ticket-refunds.js)
+  refund_not_found: 'Заявление не найдено — возможно, страница устарела. Обновите список.',
+  missing_refund_id: 'Не передан номер заявления — обновите страницу.',
+  bad_action: 'Неизвестное действие — обновите страницу.',
+  rejection_reason_required: 'Укажите причину отказа.',
+  not_approved_yet: 'Сначала одобрите заявление — отметить «выплачено» можно только после одобрения.',
+  seat_conflict: 'Место(-а) по этому заказу уже в другом статусе — расхождение данных, нужен ручной разбор (напишите в поддержку с номером заявления).',
+  order_not_found: 'Заказ по этому заявлению не найден — расхождение данных, нужен ручной разбор.',
+  no_tickets: 'В заявлении нет билетов — расхождение данных.',
 };
 var ERROR_FALLBACK = 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или посмотрите логи функции в консоли Yandex Cloud.';
 
@@ -981,6 +1025,250 @@ async function loadEvents() {
   }
 }
 
+// ── Заявления на возврат билетов (DOCS_TZ.md 39.7) ────────────────
+// Тот же принцип, что у loadEvents() чуть выше: отдельный запрос,
+// отдельные ошибки, падение этого раздела не должно ронять список
+// клиентов.
+var allRefunds = [];
+var REFUND_REASON_LABELS = {
+  refusal: 'Отказ от посещения',
+  illness: 'Болезнь',
+  death: 'Смерть члена семьи или близкого родственника',
+  organizer: 'Отмена/перенос по инициативе театра',
+};
+var REFUND_STATUS_LABELS = {
+  new: 'новое', approved: 'одобрено', rejected: 'отклонено', paid: 'выплачено',
+};
+
+function fmtRefundDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }); }
+  catch (e) { return iso; }
+}
+
+function renderRefunds(refunds) {
+  var el = document.getElementById('refundsBlock');
+  if (!refunds.length) {
+    el.innerHTML = '<div class="empty-state">Заявлений на возврат пока нет.</div>';
+    return;
+  }
+  el.innerHTML = refunds.map(function (r, idx) {
+    var ticketsLines = (r.estimate && r.estimate.perTicket ? r.estimate.perTicket : []).map(function (t) {
+      return '<div class="ev-person"><span class="who">Билет № ' + escapeHtml(String(t.ticket_number)) +
+        '<small>' + fmtMoney(t.price) + ' → ' + fmtMoney(t.amount) + ' (' + t.percent + '%)</small></span></div>';
+    }).join('');
+    var actions = '';
+    if (r.status === 'new') {
+      actions =
+        '<button class="mini-btn" data-rf-action="approve" data-rf-idx="' + idx + '">Одобрить</button>' +
+        '<button class="mini-btn mini-btn-danger" data-rf-action="reject" data-rf-idx="' + idx + '">Отклонить</button>';
+    } else if (r.status === 'approved') {
+      actions = '<button class="mini-btn" data-rf-action="mark_paid" data-rf-idx="' + idx + '">Отметить выплаченным</button>';
+    }
+    var decided = r.status === 'rejected'
+      ? '<div class="ev-empty">Причина отказа: ' + escapeHtml(r.rejectionReason || '—') + '</div>'
+      : (r.status === 'approved' || r.status === 'paid')
+        ? '<div class="ev-empty">Решение принято ' + fmtRefundDate(r.decidedAt) + '</div>'
+        : '';
+    return '<div class="ev-card">' +
+      '<div class="ev-head">' +
+        '<div><div class="ev-title">' + escapeHtml(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
+        '<div class="ev-when">' + escapeHtml(r.buyerName || '—') + ' · ' + escapeHtml(r.contactEmail || '') + '</div>' +
+        '<div class="ev-when">Обращение ' + fmtRefundDate(r.requestedAt) + ' · ' + escapeHtml(REFUND_REASON_LABELS[r.reason] || r.reason) + '</div></div>' +
+        '<div class="ev-count"><span class="rf-status rf-status-' + escapeHtml(r.status) + '">' + escapeHtml(REFUND_STATUS_LABELS[r.status] || r.status) + '</span><br>' +
+        fmtMoney(r.estimate ? r.estimate.amountRub : null) + '</div>' +
+      '</div>' +
+      '<div class="ev-people open">' + (ticketsLines || '<div class="ev-empty">Билеты не указаны — расхождение данных.</div>') + decided + '</div>' +
+      (actions ? '<div class="ev-actions">' + actions + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('refundsBlock').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-rf-action]');
+  if (!btn) return;
+  var idx = Number(btn.dataset.rfIdx);
+  var refund = allRefunds[idx];
+  if (!refund) return;
+  var action = btn.dataset.rfAction;
+  if (action === 'approve') {
+    if (!confirm('Одобрить возврат по заявлению ' + refund.refundNumber + '? Билеты будут аннулированы, места — освобождены для продажи.')) return;
+    submitRefundAction(refund.refundId, 'approve', null, btn);
+  } else if (action === 'mark_paid') {
+    if (!confirm('Отметить заявление ' + refund.refundNumber + ' как выплаченное?')) return;
+    submitRefundAction(refund.refundId, 'mark_paid', null, btn);
+  } else if (action === 'reject') {
+    // Причина обязательна (см. Admin/events-ticket-refunds.js: «отказ
+    // без причины оспаривается почти автоматически», DOCS_TZ 39.7).
+    // Отдельной модалки под одно текстовое поле не заводим — prompt()
+    // здесь пропорционален задаче, тот же принцип экономии, что уже
+    // применяется к остальным простым подтверждениям в этом файле.
+    var reason = prompt('Причина отказа (обязательно, попадёт в письмо покупателю):');
+    if (reason === null) return;
+    reason = reason.trim();
+    if (!reason) { alert(ERRORS.rejection_reason_required); return; }
+    submitRefundAction(refund.refundId, 'reject', reason, btn);
+  }
+});
+
+async function submitRefundAction(refundId, action, rejectionReason, btn) {
+  if (!ADMIN_REFUNDS_URL) { alert('Функция ещё не подключена — заполните ADMIN_REFUNDS_URL.'); return; }
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Сохраняем…';
+  try {
+    var token = getToken();
+    var res = await fetch(ADMIN_REFUNDS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ refund_id: refundId, action: action, rejection_reason: rejectionReason }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) { alert(errorMessage(data)); return; }
+    loadRefunds();
+  } catch (e) {
+    alert('Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+}
+
+async function loadRefunds() {
+  var el = document.getElementById('refundsBlock');
+  if (!ADMIN_REFUNDS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_REFUNDS_URL, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) { el.innerHTML = ''; return; }
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    allRefunds = data.refunds || [];
+    renderRefunds(allRefunds);
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить заявления. Попробуйте «Обновить».</div>';
+  }
+}
+
+// ── Заказы билетов (ADMIN_TODO.md, п.1.1) ─────────────────────────
+var allOrders = [];
+var ORDER_STATUS_LABELS = {
+  paid: 'оплачен', pending_payment: 'ожидает оплаты', cancelled: 'отменён', expired: 'истёк',
+};
+
+function renderOrders(orders) {
+  var el = document.getElementById('ordersBlock');
+  document.getElementById('ord-count').textContent = orders.length;
+  if (!orders.length) {
+    el.innerHTML = '<div class="empty-state">Заказов не найдено.</div>';
+    return;
+  }
+  el.innerHTML = orders.map(function (o, idx) {
+    var ticketsLines = (o.tickets || []).map(function (t) {
+      var where = t.seatKey ? 'место ' + t.seatKey : '№ ' + t.ticketNumber;
+      var mark = t.refundedAt ? ' · возвращён' : (t.redeemedAt ? ' · прошёл' : '');
+      return '<div class="ev-person"><span class="who">' + escapeHtml(where) + '<small>' + fmtMoney(t.price) + mark + '</small></span></div>';
+    }).join('');
+    return '<div class="ev-card">' +
+      '<div class="ev-head">' +
+        '<div><div class="ev-title">№ ' + escapeHtml(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
+        '<div class="ev-when">' + escapeHtml(o.buyerName || '—') + ' · ' + escapeHtml(o.buyerEmail || '') + ' · ' + escapeHtml(o.buyerContact || '') + '</div>' +
+        '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · ' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</div></div>' +
+        '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:11px;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
+      '</div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button></div>' +
+      '<div class="ev-people" id="ord-tickets-' + idx + '">' + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('ordersBlock').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-ord-action="toggle"]');
+  if (!btn) return;
+  var box = document.getElementById('ord-tickets-' + btn.dataset.ordIdx);
+  var opening = !box.classList.contains('open');
+  box.classList.toggle('open', opening);
+  btn.textContent = opening ? 'Скрыть билеты' : 'Показать билеты';
+});
+
+/** Заполняет выпадающий список показов уникальными спектаклями из уже загруженных заказов. */
+function populatePerfFilter(orders) {
+  var sel = document.getElementById('ordPerfFilter');
+  var seen = {}; var opts = [];
+  orders.forEach(function (o) {
+    if (!o.performanceId || seen[o.performanceId]) return;
+    seen[o.performanceId] = true;
+    opts.push({ id: o.performanceId, label: (o.productionTitle || o.performanceId) + (o.eventDatetime ? ' — ' + fmtEventWhen(o.eventDatetime) : '') });
+  });
+  var current = sel.value;
+  sel.innerHTML = '<option value="">Все показы</option>' + opts.map(function (o) {
+    return '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.label) + '</option>';
+  }).join('');
+  sel.value = current;
+}
+
+function applyOrderFilters() {
+  var q = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
+  var perf = document.getElementById('ordPerfFilter').value;
+  var filtered = allOrders.filter(function (o) {
+    if (perf && o.performanceId !== perf) return false;
+    if (!q) return true;
+    return (o.buyerName || '').toLowerCase().includes(q) ||
+      (o.buyerEmail || '').toLowerCase().includes(q) ||
+      (o.orderNumber || '').toLowerCase().includes(q) ||
+      (o.orderId || '').toLowerCase().includes(q);
+  });
+  renderOrders(filtered);
+}
+document.getElementById('ordSearch').addEventListener('input', applyOrderFilters);
+document.getElementById('ordPerfFilter').addEventListener('change', applyOrderFilters);
+
+/**
+ * Выгрузка для сверки кассы — прямо из ADMIN_TODO.md, п.1.1:
+ * «свести кассу». BOM — та же причина, что у exportEventCsv:
+ * иначе Excel открывает UTF-8 кириллицу кракозябрами.
+ */
+document.getElementById('ordersCsvBtn').addEventListener('click', function () {
+  var q = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
+  var perf = document.getElementById('ordPerfFilter').value;
+  var rows = [['Номер заказа', 'Спектакль', 'Покупатель', 'Email', 'Телефон', 'Статус', 'Создан', 'Оплачен', 'Билетов', 'Погашено', 'Сумма']];
+  allOrders.filter(function (o) {
+    if (perf && o.performanceId !== perf) return false;
+    if (!q) return true;
+    return (o.buyerName || '').toLowerCase().includes(q) || (o.buyerEmail || '').toLowerCase().includes(q) || (o.orderNumber || '').toLowerCase().includes(q);
+  }).forEach(function (o) {
+    rows.push([o.orderNumber || '', o.productionTitle || '', o.buyerName || '', o.buyerEmail || '', o.buyerContact || '',
+      ORDER_STATUS_LABELS[o.status] || o.status, fmtDate(o.createdAt), o.paidAt ? fmtDate(o.paidAt) : '', o.ticketsCount, o.redeemedCount, o.totalAmount]);
+  });
+  var csv = rows.map(function (row) {
+    return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
+  }).join('\r\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'aelita-orders.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+async function loadOrders() {
+  var el = document.getElementById('ordersBlock');
+  if (!ADMIN_ORDERS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) { el.innerHTML = ''; return; }
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    allOrders = data.orders || [];
+    populatePerfFilter(allOrders);
+    applyOrderFilters();
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить заказы. Попробуйте «Обновить».</div>';
+  }
+}
+
 function showError(msg) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorMsg').textContent = msg;
@@ -1021,6 +1309,8 @@ async function loadData(opts) {
     // можно показывать, а раздел встреч дорисуется, когда придёт ответ
     // (см. loadEvents: свои ошибки показывает у себя, не роняя эту).
     loadEvents();
+    loadRefunds();
+    loadOrders();
   } catch (e) {
     showError('Не получилось связаться с сервером. Попробуйте ещё раз.');
   } finally {

@@ -172,6 +172,11 @@ async function lookup(){
     msg('lookup-msg','Заказ с такими данными не найден. Проверьте номер заказа и контакт — они должны совпадать с указанными при покупке.','err');
     return;
   }
+  if(status === 429){
+    const wait = body && body.retry_after_seconds ? Math.ceil(body.retry_after_seconds/60) : 10;
+    msg('lookup-msg','Слишком много попыток по этому номеру заказа. Попробуйте снова через '+wait+' мин или напишите нам на aelita.production@yandex.ru.','err');
+    return;
+  }
   if(status === 400 && body && body.error === 'order_not_paid'){
     msg('lookup-msg','По этому заказу оплата не прошла — возвращать нечего. Если деньги списались, напишите нам.','err'); return;
   }
@@ -244,6 +249,11 @@ async function sendRequest(){
   });
   if(status === 409){
     msg('send-msg','По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.','err');
+    $('btn-send').disabled = false; return;
+  }
+  if(status === 429){
+    const wait = body && body.retry_after_seconds ? Math.ceil(body.retry_after_seconds/60) : 10;
+    msg('send-msg','Слишком много попыток по этому номеру заказа. Попробуйте снова через '+wait+' мин или напишите нам на aelita.production@yandex.ru.','err');
     $('btn-send').disabled = false; return;
   }
   if(status !== 200 || !body){
