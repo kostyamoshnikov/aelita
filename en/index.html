@@ -734,14 +734,15 @@ footer p{color:var(--sand);font-size:14px}
     const err = document.getElementById('subErr');
     const showErr = (msg) => { err.textContent = msg; err.style.display = 'block'; };
     err.style.display = 'none';
-    // pack-v258: раньше здесь был молчаливый `return` при пустой почте
-    // (кнопка ничего не делала без объяснения) И РУССКИЕ тексты в
-    // alert() на английской версии страницы — англоязычный посетитель
-    // видел «Укажите имя». Оба недочёта исправлены: сообщения на
-    // английском и показываются в самой форме.
-    if(!name){ showErr('Please enter your name.'); return; }
-    if(!v || !v.includes('@')){ showErr('Please enter your email — that is where announcements go.'); return; }
-    if(!document.getElementById('subConsent').checked){ showErr('Please agree to the processing of personal data.'); return; }
+    if(!name){ showErr('Укажите имя.'); return; }
+    // pack-v258: раньше здесь был молчаливый `return` — при пустой или
+    // неверной почте кнопка просто ничего не делала, без единого слова
+    // объяснения, и человек не понимал, почему форма «не работает».
+    // Заодно alert() заменены на сообщение в самой форме — тот же
+    // подход, что уже принят на остальных формах сайта (см.
+    // assets/payments.js, AELITA_showFieldError).
+    if(!v || !v.includes('@')){ showErr('Укажите почту — на неё придут анонсы.'); return; }
+    if(!document.getElementById('subConsent').checked){ showErr('Отметьте согласие на обработку персональных данных.'); return; }
     await addNewsletterContact(name, v);
     await sendTelegram('Главная — подписка на показы', {'Имя': name, 'Email': v});
     await sendFormspree('Главная — подписка на показы', {'Имя': name, 'Email': v});

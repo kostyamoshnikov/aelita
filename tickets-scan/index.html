@@ -312,12 +312,38 @@ async function handleScan(token){
   render(data);
 }
 
+// pack-v267: экранирование. Имя покупателя приходит из заказа и
+// задаётся самим покупателем — create-order.js проверяет только, что
+// оно непустое. Отсюда оно попадало прямо в innerHTML на устройстве
+// контролёра, где в localStorage лежит код смены персонала: покупатель
+// мог назваться '<img src=x onerror=...>' и получить выполнение скрипта
+// на входе. Тот же класс бага, что чинили в админке в pack-v257, но в
+// более чувствительном месте. Экранируем ВСЁ, что пришло с сервера.
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// pack-v267: раньше четыре разных ответа сервера схлопывались в одно
+// «Билет не найден или недействителен». Для контролёра это разные
+// ситуации с разными действиями — в первую очередь order_not_paid:
+// заказ настоящий, но не оплачен (человек дошёл до ЮKassa, получил
+// ссылку и бросил). У него на руках правдоподобный PDF, и отправлять
+// его как «недействительный» неверно — его нужно отправить доплатить.
+const CHECK_FAIL_MESSAGES = {
+  order_not_paid: 'Заказ НЕ ОПЛАЧЕН — не пропускать. Отправьте к администратору: оплату можно завершить на месте.',
+  bad_signature: 'Подпись QR не сходится — билет поддельный или испорчен. Не пропускать, позовите администратора.',
+  ticket_not_found: 'Такого места нет в заказе — возможно, билет от другого заказа. Не пропускать, позовите администратора.',
+  order_not_found: 'Заказ не найден — билет недействителен. Не пропускать.',
+};
+
 function render(data){
   const resultEl = document.getElementById('result');
   if(!data.ok){
     const msg = data.error === 'wrong_performance'
-      ? `Билет с ДРУГОГО показа${data.actualProduction ? ' («' + data.actualProduction + '»)' : ''} — не пропускать`
-      : 'Билет не найден или недействителен';
+      ? `Билет с ДРУГОГО показа${data.actualProduction ? ' («' + escapeHtml(data.actualProduction) + '»)' : ''} — не пропускать`
+      : (CHECK_FAIL_MESSAGES[data.error] || 'Билет не найден или недействителен');
     resultEl.innerHTML = `<div class="card warn"><div class="status warn">${msg}</div></div>`;
     return;
   }
@@ -328,8 +354,8 @@ function render(data){
   resultEl.innerHTML = `
     <div class="card ${already?'warn':'ok'}">
       ${testFlag}
-      <div class="name">${data.name}</div>
-      <div class="detail">${data.production}${data.hall ? ' · ' + data.hall : ''}${data.seatKey ? ' · место ' + data.seatKey.replace('-', ' ряд, место ') : ''}</div>
+      <div class="name">${escapeHtml(data.name)}</div>
+      <div class="detail">${escapeHtml(data.production)}${data.hall ? ' · ' + escapeHtml(data.hall) : ''}${data.seatKey ? ' · место ' + escapeHtml(String(data.seatKey).replace('-', ' ряд, место ')) : ''}</div>
       <div class="status ${already?'warn':'ok'}">${already ? 'Уже погашен' : 'Билет действителен'}</div>
       ${!already ? '<button class="action" onclick="confirmRedeem()">Пропустить</button>' : '<button class="action secondary" onclick="undoRedeem()">Вернуть в действительные</button>'}
     </div>`;

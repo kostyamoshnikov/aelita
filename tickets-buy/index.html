@@ -20,7 +20,7 @@
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;padding-bottom:100px}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;padding-bottom:calc(160px + env(safe-area-inset-bottom,0px))}
 h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:22px;margin:0 0 4px}
 .wrap{max-width:720px;margin:0 auto;padding:20px}
 .meta{color:var(--sand);font-size:14px;margin-bottom:20px}
@@ -29,6 +29,23 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .row{display:flex;gap:2px;margin:0 auto 2px;width:max-content;white-space:nowrap}
 .row-num{width:22px;font-size:9px;color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .seat{width:16px;height:16px;border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
+/* pack-v270: на сенсорных экранах клетка места 16×16 не проходит
+   минимум WCAG 2.2 (SC 2.5.8 Target Size — 24×24 CSS-пикселя), а с
+   зазором в 2px эффективная цель ещё меньше. В Синем зале 34 места в
+   ряду — промахнуться и выбрать соседнее место было слишком легко, а
+   цена ошибки тут не косметическая: человек платит за не то место.
+   Увеличиваем до 24×24 именно по типу указателя, а не по ширине
+   экрана: мышью 16px попадаются нормально, пальцем — нет. Ряд от
+   этого становится шире и требует больше прокрутки, но горизонтальная
+   прокрутка зала и так штатная (её починили в pack-v266), а
+   непопадание по месту — нет. */
+@media (pointer:coarse){
+  .seat{width:24px;height:24px}
+  .row{gap:3px}
+  /* Номер ряда набран 9px — рядом с 16px-клетками это смотрелось
+     соразмерно, рядом с 24px стало нечитаемо мелко. */
+  .row-num{width:26px;font-size:12px}
+}
 .seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
 .seat.selected{background:var(--gold)!important;box-shadow:0 0 0 1px var(--bone)}
 .aisle-gap{width:10px;flex:0 0 auto}
@@ -37,10 +54,16 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .zone-swatch{width:10px;height:10px;border-radius:2px}
 .form{background:var(--coal);border-radius:6px;padding:16px;margin-top:20px}
 .form input{width:100%;background:var(--ink);border:1px solid rgba(217,217,217,.18);color:var(--bone);padding:11px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;border-radius:3px}
+/* pack-v266: пояснения к полям вынесены из placeholder отдельной
+   строкой. В placeholder они обрезались на телефоне на середине слова
+   («Телефон * — для чека и связи, если что-т»), а обрезанный текст
+   ещё и исчезает целиком, как только человек начинает печатать. */
+.form input + .field-hint{margin-top:-6px}
+.field-hint{font-size:11px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
 .qty{display:flex;align-items:center;gap:14px;justify-content:center;margin:20px 0}
 .qty button{width:36px;height:36px;border-radius:50%;border:1px solid var(--sand);background:transparent;color:var(--bone);font-size:18px;cursor:pointer}
 .qty span{font-size:20px;min-width:24px;text-align:center}
-.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,13,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(214,181,122,.2);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,13,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(214,181,122,.2);padding:14px 20px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:6}
 .total{font-size:18px}
 .buy-btn{background:var(--gold);color:var(--ink);border:none;padding:12px 28px;border-radius:3px;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .buy-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -54,7 +77,14 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .retry-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 22px;border-radius:3px;font-size:13px;cursor:pointer;margin:0 6px}
 .success-box{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center;margin-top:20px}
 .success-box h2{color:#B7C9A8;font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;font-size:18px;margin:0 0 12px}
-.help-link{position:fixed;left:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5}
+/* pack-v266: помощь больше не перекрывает «Оплатить». Раньше обе
+   были position:fixed у нижнего края, у .help-link стоял z-index:5, у
+   .bar — ничего: на узком экране пилюля с телефоном ложилась поверх
+   кнопки оплаты и та становилась недоступна для нажатия. Теперь у
+   панели свой слой выше, а помощь поднята НАД панелью (её высота
+   ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
+   у телефонов с жестовой навигацией. */
+.help-link{position:fixed;left:16px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5;max-width:calc(100vw - 32px);box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -93,8 +123,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <div class="form" id="form-block">
     <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Поля со звёздочкой (*) обязательны для заполнения</div>
     <input id="f-name" placeholder="Имя *" required>
-    <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email * — на него придут билеты" required>
-    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон * — для чека и связи, если что-то пойдёт не так" required>
+    <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email *" required>
+    <div class="field-hint">На него придут билеты</div>
+    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон *" required>
+    <div class="field-hint">Для чека и для связи, если что-то пойдёт не так</div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
     <div class="msg" id="msg"></div>
   </div>
@@ -195,6 +227,13 @@ async function init(){
     return;
   }
   if(!res.ok){
+    // pack-v267: 404 — это не «сервер сломался», а «такого показа нет»
+    // (устаревшая ссылка, опечатка в id). Раньше человек с чужой старой
+    // ссылки видел пугающее «Сервер ответил с ошибкой (404)».
+    if(res.status === 404){
+      showError('Такого показа нет — возможно, ссылка устарела. Актуальные даты — в афише: aelita-production.ru/tickets');
+      return;
+    }
     showError('Сервер ответил с ошибкой (' + res.status + ') — попробуйте ещё раз, если не поможет, напишите нам.');
     return;
   }
@@ -270,6 +309,15 @@ function renderHall(){
       }
       rowEl.appendChild(btn);
     }
+    // pack-v270: номер ряда дублируется справа. Ряд Синего зала шире
+    // экрана телефона (34 места), и прокрутив его вправо человек терял
+    // единственный номер, оставшийся слева за краем, — то есть выбирал
+    // место, не видя, какой это ряд. На бумажных схемах зала номер
+    // печатают с обеих сторон ровно по этой причине.
+    const numRight = document.createElement('div');
+    numRight.className = 'row-num';
+    numRight.textContent = r;
+    rowEl.appendChild(numRight);
     container.appendChild(rowEl);
   }
 }
@@ -400,6 +448,8 @@ async function submitOrder(){
     }
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
       msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
+    } else if(out.error === 'duplicate_seats'){
+      msgEl.innerHTML = 'Одно и то же место попало в заказ дважды — возможно, страница была открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать места заново.';
     } else if(out.error === 'bad_email'){
       AELITA_showFieldError(document.getElementById('f-email'), 'Проверьте email — похоже, в адресе опечатка');
       msgEl.textContent = 'Проверьте email.';
@@ -409,6 +459,21 @@ async function submitOrder(){
     } else if(out.error === 'bad_name'){
       AELITA_showFieldError(document.getElementById('f-name'), 'Укажите имя');
       msgEl.textContent = 'Укажите имя.';
+    } else if(out.error === 'pd_consent_required'){
+      msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него оформить заказ нельзя.';
+    } else if(out.error === 'yookassa_unreachable'){
+      // Платёжный сервис не ответил. Заказ у нас есть, места удержаны —
+      // повтор имеет смысл, и человеку важно знать, что дело не в нём.
+      msgEl.textContent = 'Платёжный сервис не отвечает — это на его стороне, не у вас. Места за вами, попробуйте нажать «Оплатить» ещё раз через минуту.';
+    } else if(out.error === 'yookassa_rejected'){
+      // Повтор тем же способом не поможет — нужен другой канал.
+      msgEl.innerHTML = 'Платёжный сервис отклонил заказ. Повторять смысла нет — позвоните нам, оформим вручную: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+    } else if(out.error === 'server_misconfigured'){
+      msgEl.innerHTML = 'Онлайн-оплата сейчас не настроена — это наша ошибка, не ваша. Позвоните, продадим билет напрямую: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+    } else if(out.error === 'unknown_or_closed_performance'){
+      msgEl.innerHTML = 'Продажи на этот показ закрылись, пока страница была открыта. <a href="/tickets" style="color:var(--gold)">Посмотреть афишу</a>';
+    } else if(out.error === 'seat_out_of_range' || out.error === 'bad_seat_count' || out.error === 'bad_quantity'){
+      msgEl.innerHTML = 'Выбор мест не сходится с залом — похоже, страница открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать заново.';
     } else {
       msgEl.textContent = 'Не удалось оформить заказ, попробуйте ещё раз.';
     }

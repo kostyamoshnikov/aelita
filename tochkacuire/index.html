@@ -116,6 +116,14 @@ section{padding:90px 0}
 .day-content{display:none;background:var(--ink);padding:40px}
 .day-content.active{display:block}
 .time-item{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.06)}
+/* pack-v270: на узких экранах 80px под «19:00» плюс зазор 20px съедали
+   до трети строки, и описания показов («Пластический спектакль
+   „Пророчества перелётных птиц“ — танцевальная группа „ОМУТ“,
+   Санкт-Петербург») рвались на много строк в колонке шириной ~180px.
+   Время занимает пять знаков, столько места ему не нужно. */
+@media(max-width:430px){
+  .time-item{grid-template-columns:52px 1fr;gap:12px}
+}
 .time-item:last-child{border-bottom:none}
 .time-item .time{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);font-weight:300}
 .time-item .event{font-size:15px;color:var(--bone)}

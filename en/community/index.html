@@ -261,9 +261,9 @@
     const err = document.getElementById('err_c');
     const showErr = (msg) => { err.textContent = msg; err.style.display = 'block'; };
     err.style.display = 'none';
-    if(!name){ showErr('Please enter your name.'); return; }
-    if(!email || !email.includes('@')){ showErr('Please enter your email — we\u2019ll reply there.'); return; }
-    if(!document.getElementById('consent_c').checked){ showErr('Please agree to the processing of personal data.'); return; }
+    if(!name){ showErr('Укажите имя.'); return; }
+    if(!email || !email.includes('@')){ showErr('Укажите почту — на неё придёт ответ.'); return; }
+    if(!document.getElementById('consent_c').checked){ showErr('Отметьте согласие на обработку персональных данных.'); return; }
     await sendTelegram('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
     await sendFormspree('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
     document.getElementById('ok_c').style.display = 'block';

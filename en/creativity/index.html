@@ -201,10 +201,10 @@
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
     const p=document.getElementById('phone_'+id);
-    if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Please fill in your name and email');return;}
-    if(!p||!p.value.trim()){alert('Please fill in your phone number');return;}
+    if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
+    if(!p||!p.value.trim()){alert('Заполните телефон');return;}
     const consent=document.getElementById('consent_'+id);
-    if(!consent||!consent.checked){alert('Please agree to the processing of personal data — we cannot accept the request without it');return;}
+    if(!consent||!consent.checked){alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку');return;}
     const tg=document.getElementById('tg_'+id);
     const sel=document.querySelector('#form_'+id+' select');
     const msg=document.querySelector('#form_'+id+' textarea');
