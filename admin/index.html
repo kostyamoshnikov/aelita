@@ -103,6 +103,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions .btn-small{flex:1}
 .modal-err{font-size:13px;color:#e08a6e;margin-top:10px;display:none}
+.modal-ok{font-size:13px;color:var(--gold);margin-top:10px}
 
 /* Правки сайта */
 .editor-box{background:var(--coal);padding:28px 24px;margin-bottom:60px}
@@ -230,6 +231,21 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
     </div>
     <div id="ordersBlock"><div class="empty-state">Загружаем…</div></div>
 
+    <!-- TICKETS_TODO.md, п.6 — до этого раздела остаток карты можно
+         было узнать только тем же способом, что и покупатель (ввести
+         код на tickets-buy), то есть уже ЗНАЯ код заранее. Сценарий
+         «покупатель потерял карту, не помнит остаток» был закрыть
+         нечем. Кнопка «+ Засыпать карту» — пункт 5 того же документа
+         (обратная засыпка карт, проданных до автоматической системы):
+         тот же паттерн, что у «Заказы билетов» с кнопкой CSV чуть выше
+         и у «Клиенты» с кнопкой «+ Клиент» — действие в конце
+         заголовочной строки раздела, а не отдельный второй раздел. -->
+    <p class="sec-title" style="margin-top:56px">Подарочные карты (<span id="gc-count">0</span>) <button class="mini-btn" id="openAddGiftcardBtn" style="margin-left:12px;vertical-align:middle">+ Засыпать карту</button></p>
+    <div class="filter-row">
+      <input type="text" class="search" id="gcSearch" placeholder="Поиск по коду, имени или email…">
+    </div>
+    <div id="giftCardsBlock"><div class="empty-state">Загружаем…</div></div>
+
     <!-- ADMIN_TODO.md, п.1.2 — до pack-v251 админ не видел регистраций
          на бесплатные встречи вообще: единственным источником были
          письма и Telegram по одному на каждую (pack-v247), список
@@ -342,6 +358,46 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
   </div>
 </div>
 
+<!-- pack-v280 — модалка: обратная засыпка подарочной карты, проданной
+     до варианта Б (TICKETS_TODO.md, пункт 5). Сумма — ОСТАТОК, не
+     обязательно исходный номинал: карта могла уже частично гаситься
+     вручную по переписке, это знает только сам администратор. -->
+<div class="modal-overlay" id="addGiftcardModal">
+  <div class="modal-box">
+    <h3>Засыпать подарочную карту</h3>
+    <p>Для карт, проданных ДО автоматической системы. Код вычислится сам по номеру платежа — сверьте его с тем, что напечатано на PDF у покупателя, ПЕРЕД тем как считать сумму подтверждённой.</p>
+    <div class="field">
+      <label for="ag-payment">Номер платежа (ЮKassa)</label>
+      <input type="text" id="ag-payment" placeholder="Из личного кабинета ЮKassa">
+    </div>
+    <div class="field">
+      <label for="ag-amount">Остаток на сегодня, ₽</label>
+      <input type="number" id="ag-amount" placeholder="Не обязательно исходная сумма покупки" min="1" max="100000" step="1">
+    </div>
+    <div class="field">
+      <label for="ag-name">Имя покупателя (необязательно)</label>
+      <input type="text" id="ag-name" placeholder="Если помните">
+    </div>
+    <div class="field">
+      <label for="ag-email">Email покупателя (необязательно)</label>
+      <input type="email" id="ag-email" placeholder="Если помните">
+    </div>
+    <details style="margin:4px 0 14px">
+      <summary style="cursor:pointer;color:var(--sand);font-size:13px">Код карты известен другим способом (редко)</summary>
+      <div class="field" style="margin-top:12px">
+        <label for="ag-code">Код с PDF (если номер платежа неизвестен)</label>
+        <input type="text" id="ag-code" placeholder="AELITA-XXXX-XXXX или AELITA-XXXX-XXXX-XXXX" maxlength="21">
+      </div>
+    </details>
+    <div class="modal-actions">
+      <button class="btn-small" id="addGiftcardConfirmBtn" style="flex:1;padding:11px">Засыпать</button>
+      <button class="btn-small btn-ghost" id="addGiftcardCancelBtn" style="flex:1">Отмена</button>
+    </div>
+    <p class="modal-err" id="addGiftcardErr"></p>
+    <p class="modal-ok" id="addGiftcardOk" style="display:none"></p>
+  </div>
+</div>
+
 <!-- pack-v257 — модалка: добавить регистрацию на встречу вручную.
      Общая на все события — какое именно, помнит currentAddRegEventId
      (см. скрипт ниже), а не отдельная копия модалки на каждую встречу. -->
@@ -382,12 +438,17 @@ var ADMIN_EVENTS_URL = API_BASE && API_BASE + '/events-registrations';
 var ADMIN_EVENTS_ADD_URL = API_BASE && API_BASE + '/events-add-registration';
 var ADMIN_EVENTS_CANCEL_URL = API_BASE && API_BASE + '/events-cancel-registration';
 var ADMIN_ADD_CUSTOMER_URL = API_BASE && API_BASE + '/add-customer';
+// pack-v280 — обратная засыпка подарочных карт (TICKETS_TODO.md, пункт 5).
+var ADMIN_ADD_GIFTCARD_URL = API_BASE && API_BASE + '/add-giftcard';
 // DOCS_TZ.md раздел 39.7 — заявления на возврат билетов (см.
 // _tools/Admin/events-ticket-refunds.js).
 var ADMIN_REFUNDS_URL = API_BASE && API_BASE + '/events-ticket-refunds';
 // ADMIN_TODO.md, п.1.1 — список заказов билетов (см.
 // _tools/Admin/tickets-orders.js).
 var ADMIN_ORDERS_URL = API_BASE && API_BASE + '/tickets-orders';
+// TICKETS_TODO.md, п.6 — список подарочных карт (см.
+// _tools/Admin/gift-cards.js).
+var ADMIN_GIFT_CARDS_URL = API_BASE && API_BASE + '/gift-cards';
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -461,6 +522,9 @@ var ERRORS = {
   seat_conflict: 'Место(-а) по этому заказу уже в другом статусе — расхождение данных, нужен ручной разбор (напишите в поддержку с номером заявления).',
   order_not_found: 'Заказ по этому заявлению не найден — расхождение данных, нужен ручной разбор.',
   no_tickets: 'В заявлении нет билетов — расхождение данных.',
+  // pack-v280 — обратная засыпка карт (Admin/add-giftcard.js)
+  bad_payment_id: 'Укажите номер платежа.',
+  bad_code_format: 'Код не похож на код карты — проверьте формат (AELITA-XXXX-XXXX или AELITA-XXXX-XXXX-XXXX).',
 };
 var ERROR_FALLBACK = 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или посмотрите логи функции в консоли Yandex Cloud.';
 
@@ -685,6 +749,84 @@ document.getElementById('addCustomerConfirmBtn').addEventListener('click', async
     loadData({ refresh: true });
   } catch (e) {
     showModalErr('addCustomerErr', 'Не получилось связаться с сервером.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+});
+
+// pack-v280 — модалка «Засыпать подарочную карту» (TICKETS_TODO.md,
+// пункт 5). В отличие от addCustomer, успех НЕ закрывает модалку
+// автоматически: код нужно показать администратору для сверки с PDF,
+// а списка карт (пункт 6, ещё не сделан) нет — обновлять после
+// закрытия нечего.
+function openAddGiftcardModal() {
+  document.getElementById('addGiftcardErr').style.display = 'none';
+  document.getElementById('addGiftcardOk').style.display = 'none';
+  document.getElementById('ag-payment').value = '';
+  document.getElementById('ag-amount').value = '';
+  document.getElementById('ag-name').value = '';
+  document.getElementById('ag-email').value = '';
+  document.getElementById('ag-code').value = '';
+  document.getElementById('addGiftcardModal').classList.add('open');
+}
+function closeAddGiftcardModal() {
+  document.getElementById('addGiftcardModal').classList.remove('open');
+}
+document.getElementById('openAddGiftcardBtn').addEventListener('click', openAddGiftcardModal);
+document.getElementById('addGiftcardCancelBtn').addEventListener('click', closeAddGiftcardModal);
+document.getElementById('addGiftcardConfirmBtn').addEventListener('click', async function () {
+  if (!ADMIN_ADD_GIFTCARD_URL) { showModalErr('addGiftcardErr', 'Функция ещё не подключена — заполните ADMIN_ADD_GIFTCARD_URL.'); return; }
+  document.getElementById('addGiftcardOk').style.display = 'none';
+  var paymentId = document.getElementById('ag-payment').value.trim();
+  var amount = parseFloat(document.getElementById('ag-amount').value);
+  var name = document.getElementById('ag-name').value.trim();
+  var email = document.getElementById('ag-email').value.trim();
+  var code = document.getElementById('ag-code').value.trim();
+  if (!paymentId) { showModalErr('addGiftcardErr', ERRORS.bad_payment_id); return; }
+  if (!(amount > 0)) { showModalErr('addGiftcardErr', ERRORS.bad_amount); return; }
+  var btn = this;
+  var original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Засыпаем…';
+  try {
+    var token = getToken();
+    var payload = { payment_id: paymentId, amount_rub: amount };
+    if (name) payload.buyer_name = name;
+    if (email) payload.buyer_email = email;
+    if (code) payload.code = code;
+    var res = await fetch(ADMIN_ADD_GIFTCARD_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify(payload),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json();
+    if (!res.ok) {
+      // payment_already_has_card/code_already_exists — в теле есть
+      // существующий code, полезно показать его сразу, а не просто
+      // «уже существует»: администратор сможет сверить, тот ли это
+      // платёж, которым он и собирался заняться.
+      if ((data.error === 'payment_already_has_card' || data.error === 'code_already_exists') && data.code) {
+        showModalErr('addGiftcardErr', (data.error === 'payment_already_has_card'
+          ? 'У этого платежа уже есть карта: '
+          : 'Такой код уже существует: ') + data.code);
+      } else {
+        showModalErr('addGiftcardErr', errorMessage(data));
+      }
+      return;
+    }
+    document.getElementById('ag-payment').value = '';
+    document.getElementById('ag-amount').value = '';
+    document.getElementById('ag-name').value = '';
+    document.getElementById('ag-email').value = '';
+    document.getElementById('ag-code').value = '';
+    var okEl = document.getElementById('addGiftcardOk');
+    okEl.textContent = 'Готово — код карты: ' + data.code + ' · остаток ' + data.amount + ' ₽. Сверьте код с тем, что на PDF у покупателя.';
+    okEl.style.display = 'block';
+    // Список карт (раздел «Подарочные карты», TICKETS_TODO.md п.6)
+    // появился позже этой модалки — раньше обновлять было нечего.
+    loadGiftCards();
+  } catch (e) {
+    showModalErr('addGiftcardErr', 'Не получилось связаться с сервером.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -1269,6 +1411,83 @@ async function loadOrders() {
   }
 }
 
+// ── Подарочные карты (TICKETS_TODO.md, п.6) ───────────────────────
+var allGiftCards = [];
+var GC_STATUS_LABELS = { active: 'активна', closed: 'закрыта' };
+
+function fmtGcDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }); }
+  catch (e) { return iso; }
+}
+
+function renderGiftCards(cards) {
+  var el = document.getElementById('giftCardsBlock');
+  document.getElementById('gc-count').textContent = cards.length;
+  if (!cards.length) {
+    el.innerHTML = '<div class="empty-state">Карт не найдено.</div>';
+    return;
+  }
+  el.innerHTML = cards.map(function (c, idx) {
+    var historyLines = (c.redemptions || []).map(function (r) {
+      return '<div class="ev-person"><span class="who">Погашение по заказу ' + escapeHtml(r.orderId) +
+        '<small>' + fmtMoney(r.amountKop / 100) + ' · ' + fmtGcDate(r.redeemedAt) + '</small></span></div>';
+    }).join('') + (c.refundCredits || []).map(function (r) {
+      return '<div class="ev-person"><span class="who">Возврат на карту, билет № ' + escapeHtml(r.ticketNumber) +
+        '<small>+' + fmtMoney(r.amountKop / 100) + ' · ' + fmtGcDate(r.creditedAt) + '</small></span></div>';
+    }).join('');
+    return '<div class="ev-card">' +
+      '<div class="ev-head">' +
+        '<div><div class="ev-title" style="font-family:monospace,monospace">' + escapeHtml(c.code) + '</div>' +
+        '<div class="ev-when">' + escapeHtml(c.buyerName || '—') + ' · ' + escapeHtml(c.buyerEmail || '') + '</div>' +
+        '<div class="ev-when">Выпущена ' + fmtGcDate(c.issuedAt) + ' · ' + escapeHtml(GC_STATUS_LABELS[c.status] || c.status) +
+          (c.activeReservationsCount ? ' · ' + c.activeReservationsCount + ' в резерве прямо сейчас' : '') + '</div></div>' +
+        '<div class="ev-count">' + fmtMoney(c.availableAmountKop / 100) + '<br><span style="font-size:11px;color:var(--sand)">из ' + fmtMoney(c.initialAmountKop / 100) + '</span></div>' +
+      '</div>' +
+      (historyLines
+        ? '<div class="ev-actions"><button class="mini-btn" data-gc-action="toggle" data-gc-idx="' + idx + '">Показать историю</button></div>' +
+          '<div class="ev-people" id="gc-history-' + idx + '">' + historyLines + '</div>'
+        : '<div class="ev-empty">Ещё не использовалась.</div>') +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('giftCardsBlock').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-gc-action="toggle"]');
+  if (!btn) return;
+  var box = document.getElementById('gc-history-' + btn.dataset.gcIdx);
+  var opening = !box.classList.contains('open');
+  box.classList.toggle('open', opening);
+  btn.textContent = opening ? 'Скрыть историю' : 'Показать историю';
+});
+
+document.getElementById('gcSearch').addEventListener('input', function () {
+  var q = (this.value || '').trim().toLowerCase();
+  if (!q) { renderGiftCards(allGiftCards); return; }
+  renderGiftCards(allGiftCards.filter(function (c) {
+    return (c.code || '').toLowerCase().includes(q) ||
+      (c.buyerName || '').toLowerCase().includes(q) ||
+      (c.buyerEmail || '').toLowerCase().includes(q);
+  }));
+});
+
+async function loadGiftCards() {
+  var el = document.getElementById('giftCardsBlock');
+  if (!ADMIN_GIFT_CARDS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_GIFT_CARDS_URL, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) { el.innerHTML = ''; return; }
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    allGiftCards = data.cards || [];
+    renderGiftCards(allGiftCards);
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить карты. Попробуйте «Обновить».</div>';
+  }
+}
+
 function showError(msg) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorMsg').textContent = msg;
@@ -1311,6 +1530,7 @@ async function loadData(opts) {
     loadEvents();
     loadRefunds();
     loadOrders();
+    loadGiftCards();
   } catch (e) {
     showError('Не получилось связаться с сервером. Попробуйте ещё раз.');
   } finally {

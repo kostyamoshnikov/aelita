@@ -194,7 +194,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 <div class="promo-wrap" id="gift-wrap">
   <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">У меня есть подарочная карта</button>
   <div class="promo-row" id="gift-row" hidden>
-    <input type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="19">
+    <input type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="21">
     <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Применить</button>
   </div>
   <div class="promo-msg" id="gift-msg"></div>
@@ -673,6 +673,9 @@ const PROMO_REASONS = {
   not_for_this_performance: 'Этот промокод не действует на выбранный спектакль.',
   misconfigured: 'С этим промокодом что-то не так — напишите нам, разберёмся.',
   empty: 'Введите промокод.',
+  // pack-v279: у промокода бывает лимит числа применений — см.
+  // config/promocodes.js maxUses.
+  limit_reached: 'Лимит по этому промокоду исчерпан.',
 };
 
 // Симметрично PROMO_REASONS — коды из check-gift-code.js/create-order.js.
@@ -717,12 +720,10 @@ async function applyPromo(){
       giftUsedAmount = out.gift_used_amount || 0;
       const saved = (out.original_amount - out.final_amount).toFixed(2).replace(/\.00$/,'');
       promoMsg(`Промокод ${out.promo_code} применён — скидка ${saved} ₽.`, 'ok');
-      // ⚠️ Нулевой заказ пока не поддержан на бэкенде (см.
-      // TICKETS_TODO, «Нулевой заказ») — честно предупреждаем здесь,
-      // а не даём человеку упереться в отказ после «Оплатить».
+      // pack-v278: нулевой заказ поддержан — при клике «Оплатить» на
+      // такой сумме ЮKassa не понадобится вообще (см. create-order.js).
       if(out.zero_amount){
-        promoMsg('Скидка покрывает всю сумму — такие заказы пока нельзя оформить онлайн. Напишите нам, оформим вручную.', 'err');
-        appliedPromo = null; combinedFinalAmount = null;
+        promoMsg('Промокод покрывает всю сумму — доплаты не потребуется.', 'ok');
       }
     } else {
       appliedPromo = null;
@@ -764,9 +765,10 @@ async function applyGift(){
         (rest > 0 ? `, на карте останется ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : ', остаток исчерпан.'),
         'ok'
       );
+      // pack-v278: нулевой заказ поддержан — при клике «Оплатить» на
+      // такой сумме ЮKassa не понадобится вообще (см. create-order.js).
       if(out.zero_amount){
-        giftMsg('Скидка покрывает всю сумму — такие заказы пока нельзя оформить онлайн. Напишите нам, оформим вручную.', 'err');
-        appliedGift = null; combinedFinalAmount = null;
+        giftMsg('Карта покрывает всю сумму — доплаты не потребуется.', 'ok');
       }
     } else {
       appliedGift = null;
@@ -890,6 +892,24 @@ async function submitOrder(){
       return;
     }
     const out = await res.json();
+    if(out.zero_amount){
+      // pack-v278: скидка (промокод + подарочная карта) покрыла всю
+      // сумму — ЮKassa вообще не вызывалась, create-order.js уже
+      // материализовал заказ и выслал билеты (см. lib/finalize-order.js).
+      // Никакого редиректа и опроса order-status.js не нужно — ответ
+      // уже окончательный, синхронный.
+      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      if(out.seat_conflict){
+        // Редкая гонка — см. finalize-order.js: билет не выдан
+        // автоматически, но покупателю уже отдельно ушло письмо с
+        // объяснением. Тот же текст, что показывает pollOrderStatus()
+        // для платного пути в том же случае.
+        showSuccess('Оплата не потребовалась — скидка покрыла всю сумму. При оформлении произошла редкая техническая накладка с местом, мы уже знаем и свяжемся с вами в ближайшее время.');
+      } else {
+        showSuccess('Оплата не потребовалась — скидка покрыла всю сумму. Билеты уже летят на почту, проверьте папку «Спам», если через пару минут не появятся.');
+      }
+      return;
+    }
     if(out.confirmation_url){
       // pack-v272: уходим на ЮKassa — обработчик pagehide НЕ должен
       // освобождать места: заказ уже перенял холд на себя (владелец
@@ -933,14 +953,22 @@ async function submitOrder(){
       giftMsg(`Остаток карты изменился — доступно ${out.available_amount} ₽. Примените карту заново.`, 'err');
       updateTotal();
       msgEl.textContent = 'Остаток подарочной карты изменился — примените её заново и повторите оплату.';
-    } else if(out.error === 'zero_amount_not_supported'){
-      // Скидка (промокод + карта вместе) перекрыла всю сумму — такие
-      // заказы пока не проводятся онлайн (см. TICKETS_TODO, «Нулевой
-      // заказ»). Предупреждали об этом уже на превью (out.zero_amount в
-      // applyPromo/applyGift), сюда попадаем только если человек всё же
-      // умудрился отправить такую комбинацию (например, применил один
-      // код, потом другой без промежуточного предупреждения).
-      msgEl.innerHTML = 'Скидка покрывает всю сумму — такие заказы пока нельзя оформить online. Позвоните нам, оформим вручную: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+    } else if(out.error === 'promo_limit_reached'){
+      // pack-v279: та же гонка, что gift_card_changed, только за слот
+      // промокода с лимитом (config/promocodes.js maxUses) — кто-то
+      // забрал последнее место акции между превью и отправкой заказа.
+      appliedPromo = null; combinedFinalAmount = null;
+      promoMsg('Лимит по этому промокоду только что исчерпан — снят с заказа.', 'err');
+      updateTotal();
+      msgEl.textContent = 'Промокод исчерпан — пересчитали без него, проверьте сумму и оплатите ещё раз.';
+    } else if(out.error === 'finalize_failed'){
+      // pack-v278: скидка увела сумму в 0, но что-то пошло не так уже
+      // при самой материализации заказа (см. create-order.js — крайне
+      // редкий путь, finalize-order.js сама ловит и алертит почти все
+      // свои шаги, сюда попадает только совсем непредвиденное).
+      // Место(а) к этому моменту, скорее всего, уже отмечены проданными
+      // — не предлагаем «попробовать ещё раз», это может задвоить заказ.
+      msgEl.innerHTML = 'Что-то пошло не так при оформлении бесплатного заказа — не пробуйте ещё раз, а позвоните нам, разберёмся: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
     } else if(out.error === 'duplicate_seats'){
       msgEl.innerHTML = 'Одно и то же место попало в заказ дважды — возможно, страница была открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать места заново.';
     } else if(out.error === 'bad_email'){
