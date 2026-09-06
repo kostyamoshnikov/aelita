@@ -25,10 +25,44 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .wrap{max-width:720px;margin:0 auto;padding:20px}
 .meta{color:var(--sand);font-size:14px;margin-bottom:20px}
 .stage{text-align:center;color:var(--sand);font-size:11px;letter-spacing:.2em;margin:16px 0 10px;text-transform:uppercase}
+/* pack-v281: панель масштаба над схемой зала. Оформлена теми же
+   средствами, что .mini-btn/.btn-outline в паке (тонкая рамка цвета
+   --sand, прозрачный фон, --gold на наведении) — не заимствуем чужой
+   стиль круглых белых кнопок с тенью, он не из этой системы. */
+.zoom-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 6px}
+.zoom-bar .zoom-label{margin-right:auto;color:var(--sand);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.zoom-btn{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  background:none;border:1px solid rgba(201,184,163,.35);color:var(--sand);border-radius:3px;
+  font-size:18px;line-height:1;font-family:inherit;cursor:pointer;transition:border-color .2s,color .2s}
+.zoom-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+/* Предел масштаба — кнопка гасится, а не исчезает: исчезающая кнопка
+   сдвигала бы соседнюю под курсором/пальцем. */
+.zoom-btn:disabled{opacity:.3;cursor:not-allowed}
+.zoom-level{min-width:46px;text-align:center;color:var(--sand);font-size:12px;font-variant-numeric:tabular-nums}
 .hall{overflow-x:auto;padding:8px 0}
-.row{display:flex;gap:2px;margin:0 auto 2px;width:max-content;white-space:nowrap}
-.row-num{width:22px;font-size:9px;color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-.seat{width:16px;height:16px;border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
+.row{display:flex;gap:var(--seat-gap);margin:0 auto 2px;width:max-content;white-space:nowrap}
+.row-num{width:var(--rownum-w);font-size:var(--rownum-fs);color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.seat{width:var(--seat-size);height:var(--seat-size);border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
+/* pack-v281: масштабирование схемы зала (кнопки +/− над схемой).
+   ⚠️ ПОЧЕМУ ЧЕРЕЗ CSS-ПЕРЕМЕННЫЕ РАЗМЕРА, А НЕ transform:scale().
+   Соблазн — навесить `transform: scale(k)` на .hall и не трогать
+   ничего больше. Так делать нельзя по трём причинам, каждая из
+   которых ломает уже работающее:
+     1. `transform` НЕ меняет размер элемента для раскладки — контейнер
+        остаётся прежней ширины, и горизонтальная прокрутка (её
+        чинили в pack-v266) при увеличении просто перестала бы
+        доставать до правого края зала.
+     2. Клетка места визуально росла бы, но её РЕАЛЬНАЯ область
+        нажатия — нет: попадание пальцем осталось бы таким же, как при
+        16px, то есть ровно та проблема, которую чинили в pack-v270
+        (WCAG 2.2 SC 2.5.8), вернулась бы при любом зуме.
+     3. При дробном масштабе `transform` даёт размытые границы клеток
+        на не-Retina экранах — схема зала становится грязной.
+   Переменные размера меняют настоящую геометрию: и раскладку, и
+   область нажатия, и чёткость. Прокрутка, номера рядов по краям
+   (pack-v270) и проход между местами продолжают работать без правок —
+   они все выражены в тех же переменных. */
+:root{--seat-size:16px;--seat-gap:2px;--rownum-w:22px;--rownum-fs:9px;--aisle-w:10px}
 /* pack-v270: на сенсорных экранах клетка места 16×16 не проходит
    минимум WCAG 2.2 (SC 2.5.8 Target Size — 24×24 CSS-пикселя), а с
    зазором в 2px эффективная цель ещё меньше. В Синем зале 34 места в
@@ -40,15 +74,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    прокрутка зала и так штатная (её починили в pack-v266), а
    непопадание по месту — нет. */
 @media (pointer:coarse){
-  .seat{width:24px;height:24px}
-  .row{gap:3px}
-  /* Номер ряда набран 9px — рядом с 16px-клетками это смотрелось
-     соразмерно, рядом с 24px стало нечитаемо мелко. */
-  .row-num{width:26px;font-size:12px}
+  :root{--seat-size:24px;--seat-gap:3px;--rownum-w:26px;--rownum-fs:12px}
 }
 .seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
 .seat.selected{background:var(--gold)!important;box-shadow:0 0 0 1px var(--bone)}
-.aisle-gap{width:10px;flex:0 0 auto}
+.aisle-gap{width:var(--aisle-w);flex:0 0 auto}
 /* pack-v272: полоса «Держим места» — живой отсчёт холда, который
    реально стоит на сервере с момента выбора места (hold-seat.js).
    Появляется только когда есть что удерживать. */
@@ -137,6 +167,16 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   </div>
 
   <div id="assigned-block" style="display:none">
+    <!-- pack-v281: масштаб схемы зала. В Синем зале 34 места в ряду —
+         на телефоне ряд шире экрана втрое, и рассмотреть, где именно
+         свободное место, было тяжело; на большом экране, наоборот,
+         схема мелкая. Кнопки решают оба случая. -->
+    <div class="zoom-bar">
+      <span class="zoom-label">Масштаб</span>
+      <button type="button" class="zoom-btn" id="zoom-out" aria-label="Уменьшить схему зала">−</button>
+      <span class="zoom-level" id="zoom-level" aria-live="polite">100%</span>
+      <button type="button" class="zoom-btn" id="zoom-in" aria-label="Увеличить схему зала">+</button>
+    </div>
     <div class="stage">Сцена</div>
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
@@ -407,7 +447,78 @@ function renderHall(){
     rowEl.appendChild(numRight);
     container.appendChild(rowEl);
   }
+  // Кнопки масштаба существуют независимо от зала, но их состояние
+  // (проценты, гашение на пределах) должно быть верным с первого
+  // показа схемы, а не только после первого нажатия.
+  applyZoom();
 }
+
+// ── Масштаб схемы зала (pack-v281) ────────────────────────────────
+// Базовые размеры берём из CSS, а не хардкодим здесь: на сенсорных
+// экранах действует @media (pointer:coarse) с более крупной клеткой
+// (pack-v270, WCAG 2.2), и «100%» на телефоне обязано означать именно
+// её, а не десктопные 16px. Читаем фактически применённые значения
+// один раз при инициализации.
+var ZOOM_STEPS = [0.75, 1, 1.25, 1.5, 2];
+var zoomIndex = 1; // 100%
+var zoomBase = null;
+
+function readZoomBase(){
+  var cs = getComputedStyle(document.documentElement);
+  var num = function(name, fallback){
+    var v = parseFloat(cs.getPropertyValue(name));
+    return isFinite(v) && v > 0 ? v : fallback;
+  };
+  return {
+    seat: num('--seat-size', 16),
+    gap: num('--seat-gap', 2),
+    rownumW: num('--rownum-w', 22),
+    rownumFs: num('--rownum-fs', 9),
+    aisle: num('--aisle-w', 10),
+  };
+}
+
+function applyZoom(){
+  if(!zoomBase) zoomBase = readZoomBase();
+  var k = ZOOM_STEPS[zoomIndex];
+  var hall = document.getElementById('hall');
+
+  // ⚠️ Сохраняем ТОЧКУ ОБЗОРА, а не позицию прокрутки. При изменении
+  // масштаба ширина содержимого меняется, и прежний scrollLeft в
+  // пикселях указывал бы на другое место зала — схема «убегала» бы
+  // из-под пальца. Запоминаем, какая ДОЛЯ зала была по центру экрана,
+  // и восстанавливаем именно её.
+  var prevCenterRatio = 0.5;
+  if(hall && hall.scrollWidth > hall.clientWidth){
+    prevCenterRatio = (hall.scrollLeft + hall.clientWidth / 2) / hall.scrollWidth;
+  }
+
+  var s = document.documentElement.style;
+  s.setProperty('--seat-size', (zoomBase.seat * k) + 'px');
+  s.setProperty('--seat-gap', Math.max(1, zoomBase.gap * k) + 'px');
+  s.setProperty('--rownum-w', (zoomBase.rownumW * k) + 'px');
+  s.setProperty('--rownum-fs', (zoomBase.rownumFs * k) + 'px');
+  s.setProperty('--aisle-w', (zoomBase.aisle * k) + 'px');
+
+  document.getElementById('zoom-level').textContent = Math.round(k * 100) + '%';
+  document.getElementById('zoom-out').disabled = (zoomIndex === 0);
+  document.getElementById('zoom-in').disabled = (zoomIndex === ZOOM_STEPS.length - 1);
+
+  if(hall){
+    // Ширина пересчитывается синхронно после смены переменных, но
+    // читаем scrollWidth уже ПОСЛЕ записи — иначе получим старое
+    // значение и вернём обзор не туда.
+    var target = prevCenterRatio * hall.scrollWidth - hall.clientWidth / 2;
+    hall.scrollLeft = Math.max(0, target);
+  }
+}
+
+document.getElementById('zoom-in').addEventListener('click', function(){
+  if(zoomIndex < ZOOM_STEPS.length - 1){ zoomIndex++; applyZoom(); }
+});
+document.getElementById('zoom-out').addEventListener('click', function(){
+  if(zoomIndex > 0){ zoomIndex--; applyZoom(); }
+});
 
 function renderZoneLegend(){
   const el = document.getElementById('zones');

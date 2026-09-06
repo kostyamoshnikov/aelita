@@ -73,6 +73,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .sort-tabs{display:flex;gap:2px}
 .sort-tab{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:12px 16px;background:var(--coal);color:var(--sand);border:none;cursor:pointer}
 .sort-tab.active{background:rgba(214,181,122,.12);color:var(--gold)}
+/* ADMIN_TODO.md, п.2.5 — независимый переключатель (не входит в
+   sort-tabs: это фильтр «да/нет», а не взаимоисключающий выбор
+   порядка), визуально та же кнопка. */
+.filter-toggle{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:12px 16px;background:var(--coal);color:var(--sand);border:none;cursor:pointer}
+.filter-toggle.active{background:rgba(214,181,122,.12);color:var(--gold)}
 
 .cust{display:flex;flex-direction:column;gap:1px;background:rgba(201,184,163,.15)}
 .cust-item{background:var(--ink);padding:20px 22px}
@@ -211,7 +216,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <div class="sort-tabs">
         <button type="button" class="sort-tab active" data-sort="date">Сначала новые</button>
         <button type="button" class="sort-tab" data-sort="spent">Сначала больше потратили</button>
+        <!-- ADMIN_TODO.md, п.2.5 — была только сортировка «по сумме», не
+             по числу покупок: клиент с одной дорогой покупкой и клиент,
+             купивший десять раз понемногу, в первой неотличимы. -->
+        <button type="button" class="sort-tab" data-sort="purchases">Сначала больше покупок</button>
       </div>
+      <!-- ADMIN_TODO.md, п.2.5 — отделяет реальных клиентов от тех, кто
+           просто завёл кабинет (например, через add-customer.js) и ни
+           разу не купил. -->
+      <button type="button" class="filter-toggle" id="onlyWithPurchasesBtn">Только с покупками</button>
     </div>
     <div class="cust" id="custList"></div>
 
@@ -979,9 +992,13 @@ function showModalErr(id, msg) {
   el.style.display = 'block';
 }
 
-var currentSort = 'date'; // 'date' | 'spent' — порядок и так приходит с сервера
-                            // отсортированным по дате регистрации (новые
-                            // первые), 'spent' пересортировывает на клиенте
+var currentSort = 'date'; // 'date' | 'spent' | 'purchases' — 'date' и так
+                            // приходит с сервера отсортированным (новые
+                            // первые), остальные пересортировывают на клиенте
+// ADMIN_TODO.md, п.2.5 — независимый булев фильтр, не часть currentSort:
+// можно смотреть «только с покупками» при ЛЮБОМ выбранном порядке.
+var onlyWithPurchases = false;
+
 function applyFiltersAndSort() {
   var q = document.getElementById('custSearch').value.trim().toLowerCase();
   // ADMIN_TODO.md, п.2.3: ищем и по email, И ПО ИМЕНИ. Раньше — только
@@ -995,8 +1012,13 @@ function applyFiltersAndSort() {
           || String(c.name || '').toLowerCase().indexOf(q) !== -1;
       })
     : allCustomers.slice();
+  if (onlyWithPurchases) {
+    list = list.filter(function (c) { return (c.purchases || []).length > 0; });
+  }
   if (currentSort === 'spent') {
     list = list.slice().sort(function (a, b) { return b.totalSpent - a.totalSpent; });
+  } else if (currentSort === 'purchases') {
+    list = list.slice().sort(function (a, b) { return (b.purchases || []).length - (a.purchases || []).length; });
   }
   renderCustomers(list);
 }
@@ -1010,6 +1032,12 @@ document.querySelectorAll('.sort-tab').forEach(function (btn) {
     currentSort = btn.dataset.sort;
     applyFiltersAndSort();
   });
+});
+
+document.getElementById('onlyWithPurchasesBtn').addEventListener('click', function () {
+  onlyWithPurchases = !onlyWithPurchases;
+  this.classList.toggle('active', onlyWithPurchases);
+  applyFiltersAndSort();
 });
 
 // ADMIN_TODO.md, п.2.6 — отметка времени загрузки данных.
