@@ -115,6 +115,17 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
       <div class="warn" id="calc-docs" hidden></div>
     </div>
 
+    <!-- pack-v292: загрузка подтверждающего документа — только для
+         причин, где он предусмотрен (болезнь, смерть родственника).
+         Необязательно: не приложили сейчас — заявление всё равно
+         примется, документ можно прислать позже почтой, как раньше. -->
+    <div id="doc-upload" hidden style="margin-top:20px">
+      <label for="doc-file">Подтверждающий документ (необязательно сейчас — можно прислать позже почтой)</label>
+      <input type="file" id="doc-file" accept="application/pdf,image/jpeg,image/png" onchange="onDocFileChosen()">
+      <div class="hint" id="doc-hint">Фото или скан, PDF/JPG/PNG, до 1.5 МБ — большие фото сжимаем автоматически.</div>
+      <div class="msg" id="doc-msg"></div>
+    </div>
+
     <div style="margin-top:26px">
       <button id="btn-send" onclick="sendRequest()">Отправить заявление</button>
       <button class="ghost" onclick="location.reload()">Отмена</button>
@@ -145,6 +156,7 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
 <script>
 const API = 'https://api.aelita-production.ru/tickets/refund';
 let ORDER = null, REASONS = [];
+let DOC_FILE = null; // {filename, mime_type, base64} — установит onDocFileChosen()
 
 const $ = (id) => document.getElementById(id);
 function msg(el, text, cls){ const e=$(el); e.textContent=text||''; e.className='msg'+(cls?' '+cls:''); }
@@ -224,16 +236,105 @@ function recalc(){
   const reason = REASONS.find(r => r.id === reasonId);
   $('btn-send').disabled = picked.length === 0;
   $('calc-docs').hidden = !(reason && reason.requires_documents);
+  $('doc-upload').hidden = !(reason && reason.requires_documents);
   if(reason && reason.requires_documents){
     $('calc-docs').innerHTML = 'Понадобятся подтверждающие документы и заявление по форме Минкультуры' +
       (reason.form_url ? ' — <a href="' + reason.form_url + '">скачать форму</a>' : '') +
-      '. Отправьте их в ответ на письмо, которое придёт после отправки заявления.';
+      '. Приложите документ ниже сейчас или отправьте в ответ на письмо, которое придёт после отправки заявления.';
+  } else {
+    DOC_FILE = null; $('doc-file').value = ''; msg('doc-msg','');
   }
   if(picked.length === 0){ $('calc').hidden = true; return; }
   $('calc').hidden = false;
   const total = picked.reduce((s,t) => s + Number(t.price), 0);
   $('calc-basis').textContent = 'Выбрано билетов: ' + picked.length + ' на сумму ' + total + ' ₽.';
   $('calc-sum').textContent = 'Точную сумму к возврату покажем сразу после отправки заявления.';
+}
+
+// pack-v292: приём файла для подтверждающего документа. Изображения
+// сжимаем в браузере через canvas — лимит на бэкенде 1.5 МБ (см.
+// Tickets/lib/refund-store.js: MAX_DOCUMENT_BYTES, там же объяснение
+// про жёсткий потолок Yandex API Gateway на весь запрос), а фото
+// прямо с телефона обычно 3–8 МБ — без сжатия документ почти всегда
+// отклонялся бы, хотя ограничение было задумано «не пропустить явно
+// гигантский файл», а не «отказывать в обычном фото со смартфона».
+// PDF не сжимаем (нечем на клиенте без тяжёлых библиотек) — просто
+// проверяем размер и объясняем, что делать, если не проходит.
+const DOC_MAX_BYTES = 1.5 * 1024 * 1024;
+
+function fileToBase64(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function compressImage(file, quality){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const maxSide = 1800;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('canvas_failed')), 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image_load_failed')); };
+    img.src = url;
+  });
+}
+
+async function onDocFileChosen(){
+  const input = $('doc-file');
+  const file = input.files && input.files[0];
+  DOC_FILE = null;
+  if(!file){ msg('doc-msg',''); return; }
+
+  msg('doc-msg','Готовим файл…');
+  try {
+    if(file.type === 'application/pdf'){
+      if(file.size > DOC_MAX_BYTES){
+        msg('doc-msg','Файл слишком большой (максимум 1.5 МБ для PDF — сжать его мы не можем). Отправьте документ позже почтой в ответ на письмо.','error');
+        input.value = '';
+        return;
+      }
+      DOC_FILE = { filename: file.name, mime_type: 'application/pdf', base64: await fileToBase64(file) };
+      msg('doc-msg','Готово: ' + file.name);
+      return;
+    }
+
+    if(file.type !== 'image/jpeg' && file.type !== 'image/png'){
+      msg('doc-msg','Формат не подходит — нужен PDF, JPG или PNG.','error');
+      input.value = '';
+      return;
+    }
+
+    // Сжимаем, пока не впишемся в лимит или пока не упрёмся в качество,
+    // ниже которого смысла продолжать нет — тогда честно просим почту.
+    let blob = file;
+    if(file.size > DOC_MAX_BYTES){
+      for(const q of [0.82, 0.65, 0.5, 0.35]){
+        blob = await compressImage(file, q);
+        if(blob.size <= DOC_MAX_BYTES) break;
+      }
+    }
+    if(blob.size > DOC_MAX_BYTES){
+      msg('doc-msg','Даже после сжатия файл больше 1.5 МБ. Отправьте документ позже почтой в ответ на письмо.','error');
+      input.value = '';
+      return;
+    }
+    DOC_FILE = { filename: file.name.replace(/\.[^.]*$/, '.jpg'), mime_type: 'image/jpeg', base64: await fileToBase64(blob) };
+    msg('doc-msg', blob === file ? 'Готово: ' + file.name : 'Готово, сжато до ' + Math.round(blob.size/1024) + ' КБ.');
+  } catch(e){
+    msg('doc-msg','Не получилось обработать файл. Можно отправить документ позже почтой.','error');
+    input.value = '';
+  }
 }
 
 async function sendRequest(){
@@ -246,6 +347,7 @@ async function sendRequest(){
     contact: $('contact').value.trim(),
     ticket_numbers: picked.map(t => t.ticket_number),
     reason: $('reason').value,
+    document: DOC_FILE || undefined,
   });
   if(status === 409){
     msg('send-msg','По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.','err');
@@ -268,7 +370,9 @@ async function sendRequest(){
   html += '<p>Предварительно к возврату: <b>' + (est.amountRub != null ? est.amountRub + ' ₽' : '—') + '</b>';
   if(est.basis) html += '<br><span style="color:var(--sand);font-size:13px">' + est.basis + '</span>';
   html += '</p>';
-  if(body.needs_documents){
+  if(body.needs_documents && body.document_uploaded){
+    html += '<p style="color:#8FBF8F">✅ Документ получен и приложен к заявлению.</p>';
+  } else if(body.needs_documents){
     html += '<p style="color:#E0B87B">Отправьте подтверждающие документы' +
       (body.form_url ? ' и <a href="' + body.form_url + '">заполненную форму</a>' : '') +
       ' в ответ на письмо — без них возврат по этому основанию оформить нельзя.</p>';

@@ -456,6 +456,8 @@ var ADMIN_ADD_GIFTCARD_URL = API_BASE && API_BASE + '/add-giftcard';
 // DOCS_TZ.md раздел 39.7 — заявления на возврат билетов (см.
 // _tools/Admin/events-ticket-refunds.js).
 var ADMIN_REFUNDS_URL = API_BASE && API_BASE + '/events-ticket-refunds';
+// pack-v292 — выдача документов, приложенных к заявлению на возврат.
+var ADMIN_REFUND_DOCUMENT_URL = API_BASE && API_BASE + '/refund-document';
 // ADMIN_TODO.md, п.1.1 — список заказов билетов (см.
 // _tools/Admin/tickets-orders.js).
 var ADMIN_ORDERS_URL = API_BASE && API_BASE + '/tickets-orders';
@@ -1240,6 +1242,20 @@ function renderRefunds(refunds) {
       : (r.status === 'approved' || r.status === 'paid')
         ? '<div class="ev-empty">Решение принято ' + fmtRefundDate(r.decidedAt) + '</div>'
         : '';
+    // pack-v292 — документы, приложенные к заявлению (болезнь, смерть
+    // родственника). Кнопка вызывает Admin/refund-document.js —
+    // единственный способ получить содержимое, ссылки на сам объект
+    // Object Storage нигде на странице нет (см. докстринг той функции).
+    var docsHtml = '';
+    if (r.documentsDeletedAt) {
+      docsHtml = '<div class="ev-empty">Документы были приложены, срок хранения истёк ' + fmtRefundDate(r.documentsDeletedAt) + ' — удалены автоматически.</div>';
+    } else if (r.documents && r.documents.length) {
+      docsHtml = '<div class="ev-actions">' + r.documents.map(function (d) {
+        return '<button class="mini-btn" data-rf-doc-refund="' + escapeHtml(r.refundId) + '" data-rf-doc-file="' + escapeHtml(d.filename) + '">Скачать: ' + escapeHtml(d.filename) + '</button>';
+      }).join('') + '</div>';
+    } else if (r.reason === 'illness' || r.reason === 'death') {
+      docsHtml = '<div class="ev-empty">Документ не приложен — ожидается почтой.</div>';
+    }
     return '<div class="ev-card">' +
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + escapeHtml(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
@@ -1248,15 +1264,43 @@ function renderRefunds(refunds) {
         '<div class="ev-count"><span class="rf-status rf-status-' + escapeHtml(r.status) + '">' + escapeHtml(REFUND_STATUS_LABELS[r.status] || r.status) + '</span><br>' +
         fmtMoney(r.estimate ? r.estimate.amountRub : null) + '</div>' +
       '</div>' +
-      '<div class="ev-people open">' + (ticketsLines || '<div class="ev-empty">Билеты не указаны — расхождение данных.</div>') + decided + '</div>' +
+      '<div class="ev-people open">' + (ticketsLines || '<div class="ev-empty">Билеты не указаны — расхождение данных.</div>') + decided + docsHtml + '</div>' +
       (actions ? '<div class="ev-actions">' + actions + '</div>' : '') +
     '</div>';
   }).join('');
 }
 
-document.getElementById('refundsBlock').addEventListener('click', function (e) {
-  var btn = e.target.closest('button[data-rf-action]');
-  if (!btn) return;
+document.getElementById('refundsBlock').addEventListener('click', async function (e) {
+  var docBtn = e.target.closest('button[data-rf-doc-refund]');
+  if (docBtn) {
+    var token = getToken();
+    if (!token) return;
+    var refundId = docBtn.dataset.rfDocRefund, filename = docBtn.dataset.rfDocFile;
+    var original = docBtn.textContent;
+    docBtn.disabled = true; docBtn.textContent = 'Загружаем…';
+    try {
+      var res = await fetch(ADMIN_REFUND_DOCUMENT_URL + '?refund_id=' + encodeURIComponent(refundId) + '&filename=' + encodeURIComponent(filename), {
+        headers: { Authorization: 'Bearer ' + token },
+      });
+      if (!res.ok) {
+        var data = null;
+        try { data = await res.json(); } catch (e2) {}
+        alert(errorMessage(data));
+        return;
+      }
+      var blob = await res.blob();
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e2) {
+      alert('Не удалось скачать документ.');
+    } finally {
+      docBtn.disabled = false; docBtn.textContent = original;
+    }
+    return;
+  }
   var idx = Number(btn.dataset.rfIdx);
   var refund = allRefunds[idx];
   if (!refund) return;
