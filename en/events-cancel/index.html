@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cancel registration — AELITA PRODUCTION</title>
+<!-- EN twin of Site/events-cancel/index.html — see its comments for the full reasoning (why cancellation requires a button click, not just opening the link). -->
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:var(--coal);border-radius:8px;padding:32px 28px;max-width:420px;width:100%;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+h1{font-size:19px;font-weight:500;margin:0 0 10px}
+p{font-size:14px;color:var(--sand);line-height:1.5;margin:0 0 20px}
+button{background:var(--gold);color:var(--ink);border:none;padding:14px 24px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;width:100%}
+button:disabled{opacity:.6;cursor:default}
+button.secondary{background:transparent;border:1px solid rgba(217,217,217,.3);color:var(--bone);margin-top:10px}
+.status{font-size:15px;font-weight:500;margin:14px 0 4px}
+.status.ok{color:var(--ok)}
+.status.warn{color:var(--warn)}
+a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="eyebrow">AELITA PRODUCTION</div>
+  <h1 id="title">Cancel registration</h1>
+  <p id="text">Checking your link…</p>
+  <div id="actions"></div>
+</div>
+<script src="/assets/analytics-events.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get('token');
+const API_BASE = 'https://api.aelita-production.ru/events';
+
+function render(titleText, bodyText, statusClass, statusText, actionsHtml){
+  document.getElementById('title').textContent = titleText;
+  document.getElementById('text').innerHTML = bodyText;
+  const actionsEl = document.getElementById('actions');
+  actionsEl.innerHTML = (statusText ? `<div class="status ${statusClass}">${statusText}</div>` : '') + (actionsHtml || '');
+}
+
+if(!token){
+  render('Link is not valid', 'The link is missing its cancellation code — it may have been copied incompletely. Please open the email again and click the full link, or cancel from your account dashboard instead.', 'warn', null,
+    '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+} else {
+  render('Cancel registration', 'Confirm cancellation — your spot will be freed up for other participants.', null, null,
+    '<button id="confirmBtn">Yes, cancel</button><button class="secondary" onclick="history.back()">Don\'t cancel</button>');
+  document.getElementById('confirmBtn').addEventListener('click', doCancel);
+}
+
+async function doCancel(){
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true;
+  btn.textContent = 'Cancelling…';
+  try {
+    const res = await fetch(API_BASE + '/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ cancel_token: token }),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data && data.ok) {
+      const quantityNote = data.quantity > 1 ? ` (all ${data.quantity} tickets in this registration)` : '';
+      render('Registration cancelled', `"${escapeHtml(data.eventTitle || '')}"${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}. Your spot has been freed up for other participants.`, 'ok', 'Done',
+        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+    } else if (res.status === 404 || (data && data.error === 'not_registered')) {
+      render('Already cancelled', 'This registration was already cancelled earlier (for example, if you already clicked this link) — nothing left to cancel.', 'warn', null,
+        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+    } else if (data && data.error === 'bad_cancel_token') {
+      render('Link is not valid', 'We could not verify the cancellation code — try opening the link from the email again, or cancel from your account dashboard.', 'warn', null,
+        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+    } else {
+      render('Could not cancel', 'The server could not process the request — try again in a minute, or cancel from your account dashboard.', 'warn', null,
+        '<button onclick="doCancel()">Try again</button>');
+    }
+  } catch (e) {
+    render('Could not cancel', 'Could not reach the server — check your connection and try again.', 'warn', null,
+      '<button onclick="doCancel()">Try again</button>');
+  }
+}
+
+function escapeHtml(s){
+  const div = document.createElement('div');
+  div.textContent = String(s);
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>

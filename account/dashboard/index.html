@@ -71,6 +71,16 @@ body{max-width:100vw}
 .reg-qr{background:#fff;padding:8px;line-height:0;border-radius:2px}
 .reg-qr svg{display:block;width:104px;height:104px}
 .reg-qr-missing{width:104px;height:104px;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--coal);color:var(--sand);font-size:10px;padding:8px;line-height:1.4}
+/* pack-v296 — несколько билетов на одну регистрацию: группа QR вместо
+   одного, каждый со своей подписью «Билет N» и отметкой входа. При
+   quantity:1 (подавляющее большинство регистраций) выглядит как один
+   .reg-qr и раньше — .reg-ticket-label не рендерится вовсе при одном
+   билете (см. renderEventRegistrations), лишней подписи не появляется. */
+.reg-qr-group{display:flex;flex-wrap:wrap;gap:14px}
+.reg-ticket{text-align:center}
+.reg-ticket-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
+.reg-ticket-checked{font-size:10px;color:var(--gold);margin-top:6px}
+.cal-link{font-size:11px;color:var(--gold);text-decoration:underline}
 .reg-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
 .reg-item .resend-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);background:none;border:1px solid rgba(214,181,122,.4);padding:8px 14px;cursor:pointer;white-space:nowrap;transition:all .2s}
 .reg-item .resend-btn:hover{border-color:var(--gold);background:rgba(214,181,122,.08)}
@@ -233,6 +243,9 @@ body{max-width:100vw}
       qrInEmail: 'QR — в письме с билетом',
       showQrAtEntrance: 'Покажите QR при входе',
       resendTicket: 'Прислать на почту',
+      ticketLabel: 'Билет',
+      ticketCheckedIn: 'Прошёл вход',
+      addToCalendar: 'Добавить в календарь',
       cancelRegistration: 'Отменить регистрацию',
       ticketResent: 'Письмо с билетом отправлено — проверьте почту, в том числе папку «Спам».',
       confirmCancel: 'Отменить регистрацию? Место освободится для других участников, вам придёт письмо с подтверждением отмены.',
@@ -250,6 +263,9 @@ body{max-width:100vw}
       qrInEmail: 'QR is in the ticket email',
       showQrAtEntrance: 'Show the QR at the entrance',
       resendTicket: 'Email me the ticket',
+      ticketLabel: 'Ticket',
+      ticketCheckedIn: 'Checked in',
+      addToCalendar: 'Add to calendar',
       cancelRegistration: 'Cancel registration',
       ticketResent: 'Ticket email sent — check your inbox, including the spam folder.',
       confirmCancel: 'Cancel this registration? Your spot will be freed up for others, and you\'ll get a confirmation email.',
@@ -316,6 +332,8 @@ body{max-width:100vw}
   }
 
   // pack-v235 — регистрации на бесплатные мероприятия.
+  // pack-v296 — regs.tickets теперь массив (1 и больше), не один
+  // qrToken на регистрацию; плюс ссылка «Добавить в календарь».
   function renderEventRegistrations(registrations) {
     var el = document.getElementById('eventRegistrations');
     if (!registrations || !registrations.length) {
@@ -327,40 +345,42 @@ body{max-width:100vw}
       var title = escapeHtml(r.title || r.eventId || t.productEvent);
       var venue = escapeHtml((r.venueName || '') + (r.venueAddress ? ', ' + r.venueAddress : ''));
       var eid = escapeHtml(r.eventId || '');
-      // pack-v246: QR прямо в кабинете — чтобы попасть на встречу, даже
-      // если письмо потерялось или ушло в спам. Это ТОТ ЖЕ токен, что
-      // в PDF из письма (сервер пересчитывает его детерминированно, см.
-      // _tools/Events/my-registrations.js) — не второй параллельный
-      // документ. Рисуем локально, ничего не запрашивая: токен уже
-      // пришёл вместе со списком.
-      //
-      // Библиотека (assets/qrcode.js, MIT, без зависимостей и без
-      // обращений в сеть) подключена ТОЛЬКО на этой странице, не в
-      // общий main.js — это единственное место на сайте, где QR
-      // рисуется в браузере, тянуть 57 КБ на все страницы ради одной
-      // незачем.
-      var qrHtml = '';
-      if (r.qrToken && typeof qrcode === 'function') {
-        try {
-          var qr = qrcode(0, 'M');
-          qr.addData(r.qrToken);
-          qr.make();
-          qrHtml = '<div class="reg-qr">' + qr.createSvgTag({ cellSize: 3, margin: 0, scalable: true }) + '</div>';
-        } catch (e) {
-          // Не роняем весь список из-за одного QR — покажем заглушку.
-          qrHtml = '';
+      var tickets = r.tickets && r.tickets.length ? r.tickets : [{ qrToken: r.qrToken, checkedInAt: null }]; // подстраховка на случай старого ответа сервера без tickets[]
+      // pack-v246/pack-v296: QR прямо в кабинете — чтобы попасть на
+      // встречу, даже если письмо потерялось или ушло в спам. Это ТЕ
+      // ЖЕ токены, что в PDF из письма (сервер пересчитывает их
+      // детерминированно, см. _tools/Events/my-registrations.js) — не
+      // второй параллельный документ. Рисуем локально, ничего не
+      // запрашивая: токены уже пришли вместе со списком.
+      var qrBlocks = tickets.map(function (tk, i) {
+        var qrHtml = '';
+        if (tk.qrToken && typeof qrcode === 'function') {
+          try {
+            var qr = qrcode(0, 'M');
+            qr.addData(tk.qrToken);
+            qr.make();
+            qrHtml = '<div class="reg-qr">' + qr.createSvgTag({ cellSize: 3, margin: 0, scalable: true }) + '</div>';
+          } catch (e) {
+            qrHtml = '';
+          }
         }
-      }
-      if (!qrHtml) {
-        // Токена нет (сервер не смог его пересчитать) или библиотека не
-        // загрузилась — регистрация всё равно действительна, просто
-        // говорим, где взять билет.
-        qrHtml = '<div class="reg-qr-missing">' + t.qrInEmail + '</div>';
-      }
+        if (!qrHtml) {
+          // Токена нет (сервер не смог его пересчитать) или библиотека не
+          // загрузилась — регистрация всё равно действительна, просто
+          // говорим, где взять билет.
+          qrHtml = '<div class="reg-qr-missing">' + t.qrInEmail + '</div>';
+        }
+        var ticketLabel = tickets.length > 1 ? '<div class="reg-ticket-label">' + t.ticketLabel + ' ' + (i + 1) + '</div>' : '';
+        var checkedBadge = tk.checkedInAt ? '<div class="reg-ticket-checked">' + t.ticketCheckedIn + '</div>' : '';
+        return '<div class="reg-ticket">' + ticketLabel + qrHtml + checkedBadge + '</div>';
+      }).join('');
+      var calLink = r.googleCalendarUrl
+        ? '<a class="cal-link" href="' + escapeHtml(r.googleCalendarUrl) + '" target="_blank" rel="noopener">' + t.addToCalendar + '</a>'
+        : '';
       return '<div class="reg-item">' +
-        qrHtml +
+        '<div class="reg-qr-group">' + qrBlocks + '</div>' +
         '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDate(r.datetime) + (venue ? ' · ' + venue : '') + '</span>' +
-          '<span class="reg-hint">' + t.showQrAtEntrance + '</span></span>' +
+          '<span class="reg-hint">' + t.showQrAtEntrance + '</span>' + (calLink ? '<br>' + calLink : '') + '</span>' +
         '<span class="reg-actions">' +
           '<button class="resend-btn" data-event-id="' + eid + '" onclick="onResendTicket(this)">' + t.resendTicket + '</button>' +
           '<button class="cancel-btn" data-event-id="' + eid + '" onclick="onCancelRegistration(this)">' + t.cancelRegistration + '</button>' +

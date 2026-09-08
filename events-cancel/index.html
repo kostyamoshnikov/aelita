@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отмена регистрации — AELITA PRODUCTION</title>
+<!--
+  AELITA PRODUCTION · Events — страница-приёмник ссылки «Отменить
+  регистрацию» из письма (pack-v296, см. Events/register.js и
+  Events/lib/event-cancel-token.js).
+
+  ⚠️ ПОЧЕМУ ОТМЕНА НЕ ПРОИСХОДИТ САМА ПРИ ОТКРЫТИИ ССЫЛКИ. Ссылка —
+  обычный GET-переход по клику в письме, а сама отмена — POST на
+  /events/cancel. Если бы страница отправляла этот POST сама, не
+  дожидаясь действия человека, её выполнил бы и антивирус/почтовый
+  сканер, который открывает ссылки из письма ДО того, как их увидит
+  адресат (обычная практика корпоративной почты) — отмена случилась бы
+  раньше, чем человек вообще прочитал письмо. Кнопка «Да, отменить»
+  здесь не формальность, а единственная защита от этого сценария:
+  сканеры не нажимают кнопки, только загружают страницы.
+
+  Один и тот же токен использован дважды подряд (двойной клик,
+  открытие в двух вкладках) — не ошибка, cancel.js отвечает тем же
+  успехом на уже отменённую регистрацию своим кодом not_registered,
+  который эта страница показывает как «уже было отменено», не как
+  сбой (см. render() ниже).
+-->
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:var(--coal);border-radius:8px;padding:32px 28px;max-width:420px;width:100%;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+h1{font-size:19px;font-weight:500;margin:0 0 10px}
+p{font-size:14px;color:var(--sand);line-height:1.5;margin:0 0 20px}
+button{background:var(--gold);color:var(--ink);border:none;padding:14px 24px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;width:100%}
+button:disabled{opacity:.6;cursor:default}
+button.secondary{background:transparent;border:1px solid rgba(217,217,217,.3);color:var(--bone);margin-top:10px}
+.status{font-size:15px;font-weight:500;margin:14px 0 4px}
+.status.ok{color:var(--ok)}
+.status.warn{color:var(--warn)}
+a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="eyebrow">AELITA PRODUCTION</div>
+  <h1 id="title">Отмена регистрации</h1>
+  <p id="text">Проверяем ссылку…</p>
+  <div id="actions"></div>
+</div>
+<script src="/assets/analytics-events.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get('token');
+const API_BASE = 'https://api.aelita-production.ru/events';
+
+function render(titleText, bodyText, statusClass, statusText, actionsHtml){
+  document.getElementById('title').textContent = titleText;
+  document.getElementById('text').innerHTML = bodyText;
+  const actionsEl = document.getElementById('actions');
+  actionsEl.innerHTML = (statusText ? `<div class="status ${statusClass}">${statusText}</div>` : '') + (actionsHtml || '');
+}
+
+if(!token){
+  render('Ссылка недействительна', 'В ссылке нет кода отмены — она могла быть скопирована не полностью. Откройте письмо ещё раз и нажмите на ссылку целиком, либо отмените регистрацию из личного кабинета.', 'warn', null,
+    '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+} else {
+  render('Отмена регистрации', 'Подтвердите отмену — место освободится для других участников.', null, null,
+    '<button id="confirmBtn">Да, отменить</button><button class="secondary" onclick="history.back()">Не отменять</button>');
+  document.getElementById('confirmBtn').addEventListener('click', doCancel);
+}
+
+async function doCancel(){
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true;
+  btn.textContent = 'Отменяем…';
+  try {
+    const res = await fetch(API_BASE + '/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ cancel_token: token }),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data && data.ok) {
+      const quantityNote = data.quantity > 1 ? ` (все ${data.quantity} билета из этой регистрации)` : '';
+      render('Регистрация отменена', `«${escapeHtml(data.eventTitle || '')}»${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}. Место освобождено для других участников.`, 'ok', 'Готово',
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+    } else if (res.status === 404 || (data && data.error === 'not_registered')) {
+      render('Уже отменено', 'Эта регистрация уже была отменена раньше (например, если вы уже нажимали эту ссылку) — повторно отменять нечего.', 'warn', null,
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+    } else if (data && data.error === 'bad_cancel_token') {
+      render('Ссылка недействительна', 'Не удалось проверить код отмены — попробуйте открыть ссылку из письма ещё раз или отмените регистрацию из личного кабинета.', 'warn', null,
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+    } else {
+      render('Не получилось отменить', 'Сервер не смог обработать запрос — попробуйте ещё раз через минуту или отмените из личного кабинета.', 'warn', null,
+        '<button onclick="doCancel()">Повторить</button>');
+    }
+  } catch (e) {
+    render('Не получилось отменить', 'Не удалось связаться с сервером — проверьте соединение и попробуйте ещё раз.', 'warn', null,
+      '<button onclick="doCancel()">Повторить</button>');
+  }
+}
+
+function escapeHtml(s){
+  const div = document.createElement('div');
+  div.textContent = String(s);
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>

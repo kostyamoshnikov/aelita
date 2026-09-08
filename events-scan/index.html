@@ -138,6 +138,7 @@ const QUEUE_KEY = 'aelita-events-checkin-queue';
 let currentToken = null;
 let lastEventId = null;
 let lastEmail = null;
+let lastTicketId = null; // pack-v296 — undo теперь снимает отметку конкретного билета, не всей регистрации
 let wakeLock = null;
 
 async function requestWakeLock(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
@@ -297,11 +298,21 @@ function render(data){
   }
   lastEventId = data.eventId;
   lastEmail = data.email;
+  lastTicketId = data.ticketId;
   const already = data.alreadyCheckedIn;
+  // pack-v296: контекст группового заказа — «билет 2 из 3» видно даже
+  // когда сам заказ на несколько билетов оформлен одной регистрацией
+  // (см. Events/register.js, quantity). При quantity:1 (ticketsTotal
+  // отсутствует или равен 1) строка не показывается вовсе — не несёт
+  // информации сверх того, что и так видно в карточке.
+  const groupNote = data.ticketsTotal > 1
+    ? `<div class="detail">Билетов в этой регистрации: ${data.ticketsCheckedIn} из ${data.ticketsTotal} уже прошли</div>`
+    : '';
   resultEl.innerHTML = `
     <div class="card ${already?'warn':'ok'}">
       <div class="name">${escapeHtml(data.name)}</div>
       <div class="detail">${escapeHtml(data.eventTitle)}${data.venueName ? ' · ' + escapeHtml(data.venueName) : ''}</div>
+      ${groupNote}
       <div class="status ${already?'warn':'ok'}">${already ? 'Уже отмечен на входе' : 'Регистрация действительна'}</div>
       ${!already ? '<button class="action" onclick="confirmCheckin()">Пропустить</button>' : '<button class="action secondary" onclick="undoCheckin()">Отменить отметку</button>'}
     </div>`;
@@ -326,7 +337,7 @@ async function confirmCheckin(){
 
 async function undoCheckin(){
   try{
-    const data = await api('undo', { eventId: lastEventId, email: lastEmail });
+    const data = await api('undo', { eventId: lastEventId, email: lastEmail, ticketId: lastTicketId });
     if(data.ok){
       document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Отметка снята</div></div>';
     } else {

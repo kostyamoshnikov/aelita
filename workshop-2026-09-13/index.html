@@ -181,6 +181,17 @@
     </div>
 
     <div id="regForm" style="display:none">
+      <div style="margin-bottom:16px">
+        <label for="regQuantity" style="display:block;color:var(--sand);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Количество билетов</label>
+        <select id="regQuantity" style="background:var(--surface,#1a1a1a);color:var(--bone,#fff);border:1px solid rgba(255,255,255,.2);padding:10px 14px;font-size:15px;border-radius:4px">
+          <option value="1">1 — только я</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <p style="color:var(--sand);font-size:12px;margin-top:6px">Если приводите с собой друзей — у каждого будет свой QR-код на входе, письмо придёт одно, с билетами во вложении.</p>
+      </div>
       <button class="submit-btn" id="regBtn" onclick="doRegisterEvent()">Записаться →</button>
       <p id="regMsg" style="color:#C98B6B;font-size:13px;margin-top:10px;min-height:16px"></p>
     </div>
@@ -315,12 +326,18 @@
   function doRegisterEvent(){
     var msgEl = document.getElementById('regMsg');
     msgEl.textContent = '';
+    var qtyEl = document.getElementById('regQuantity');
+    var quantity = qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1;
     window.AELITA_account.registerForEvent(EVENT_ID, {
       buttonEl: document.getElementById('regBtn'),
+      quantity: quantity,
       onSuccess: function(data){
         document.getElementById('regForm').style.display = 'none';
         var okEl = document.getElementById('regOk');
         okEl.style.display = 'block';
+        if(data && data.quantity > 1){
+          okEl.querySelector('p').innerHTML = 'Готово — вы зарегистрированы, билетов: ' + data.quantity + '! Все билеты с QR-кодами отправлены на почту одним письмом (проверьте папку «Спам», если не видно). Отменить регистрацию можно в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>.';
+        }
         if(data && data.mailSent === false){
           okEl.innerHTML = '<p style="color:var(--gold)">Готово — вы зарегистрированы! Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>. Если билет нужен на почту — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>.</p>';
         }

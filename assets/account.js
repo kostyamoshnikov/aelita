@@ -31,6 +31,7 @@
         unknown_or_closed_event: 'Регистрация на это мероприятие сейчас недоступна.',
         already_registered: 'Вы уже зарегистрированы на это мероприятие.',
         event_full: 'Мест больше нет — все места заняты.',
+        bad_quantity: 'Проверьте количество билетов.',
         not_registered: 'Регистрация не найдена — возможно, уже отменена.',
         mail_failed: 'Не удалось отправить письмо — попробуйте ещё раз через минуту. QR-код для входа виден прямо здесь, в кабинете.',
         auth_required: 'Сессия истекла — войдите заново, и регистрация продолжится.',
@@ -64,6 +65,7 @@
         unknown_or_closed_event: "Registration for this event isn't available right now.",
         already_registered: "You're already registered for this event.",
         event_full: 'No spots left — the event is full.',
+        bad_quantity: 'Check the number of tickets.',
         not_registered: "Registration not found — it may already be cancelled.",
         mail_failed: "Couldn't send the email — try again in a minute. Your entry QR code is visible right here in your account.",
         auth_required: 'Your session has expired — sign in again and the registration will continue.',
@@ -317,10 +319,13 @@
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.registering; }
       try {
+        // pack-v296: quantity — сколько билетов за одну регистрацию
+        // (по умолчанию 1, прежнее поведение без изменений для
+        // страниц, ещё не обновлённых под селектор количества).
         var res = await fetch(EVENTS_REGISTER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ event_id: eventId }),
+          body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1 }),
         });
         if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1'); return; }
         var data = await res.json();
