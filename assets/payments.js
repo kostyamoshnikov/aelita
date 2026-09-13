@@ -413,7 +413,17 @@
       // если сеть точно недоступна — стоит сказать прямо, а не звать
       // «попробовать ещё раз», который тут же упадёт по той же причине.
       if (e instanceof TypeError) {
-        showPayMsg(msgElId, LANG === 'en' ? 'No connection — check your internet and try again.' : 'Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
+        // pack-v334: TypeError здесь = ответа не пришло вовсе, значит
+        // до сервера не дошло. Самая частая причина — включённый VPN:
+        // страница лежит на GitHub Pages и через VPN открывается, а
+        // оплата идёт в Yandex Cloud, куда с зарубежного узла запрос
+        // не доходит. Прежний текст «проверьте интернет» уводил в
+        // сторону — интернет у человека работает, он это видит, и
+        // делал вывод, что сломан сайт. Ветка else не тронута: там
+        // сервер ОТВЕТИЛ, и про VPN писать нельзя.
+        showPayMsg(msgElId, LANG === 'en'
+          ? 'Could not reach the payment server. The usual cause is a VPN: the page itself loads through it, but the payment service is hosted in Russia and the request does not get through. Try turning the VPN off and repeating. If you have no VPN on — write to us and we will sort it out.'
+          : 'Не удалось связаться с сервером оплаты. Чаще всего причина — включённый VPN: сама страница через него открывается, а платёжный сервис находится в России и запрос до него не доходит. Попробуйте отключить VPN и повторить. Если VPN не включён — напишите нам, разберёмся.');
       } else {
         showPayMsg(msgElId, t.failed);
       }

@@ -145,6 +145,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    панели свой слой выше, а помощь поднята НАД панелью (её высота
    ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
    у телефонов с жестовой навигацией. */
+.vpn-note{color:var(--gold);font-size:12px;line-height:1.5;margin-top:10px}
 .help-link{position:fixed;left:16px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5;max-width:calc(100vw - 32px);box-sizing:border-box}
 </style>
 </head>
@@ -208,6 +209,12 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <div class="field-hint">Для чека и для связи, если что-то пойдёт не так</div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
     <div class="msg" id="msg"></div>
+
+    <!-- pack-v334: предупреждение про VPN. На шести других страницах с
+     оплатой оно стоит с pack-v238 («на всех страницах с оплатой»), но
+     билетная система появилась позже (pack-v272+) и предупреждение не
+     получила — то есть его не было ровно там, где платят чаще всего. -->
+    <p class="vpn-note">К сожалению, оплата не проходит при включённом VPN — платёжный сервис находится в России, и запрос до него не доходит. Если страница не загружается или оплата не начинается — отключите VPN и попробуйте ещё раз.</p>
   </div>
 </div>
 
@@ -216,6 +223,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
      началась), у человека должен быть выход, не только «попробуйте
      ещё раз». Телефон — быстрее email в моменте живой покупки. -->
 <a class="help-link" href="tel:+79605151690">🆘 Нужна помощь? +7 960 515-16-90</a>
+
 
 <!-- Промокод. Раскрывающееся поле, а не всегда видимое: у большинства
      покупателей кода нет, и пустая рамка «введите промокод» над кнопкой
@@ -261,6 +269,22 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
 const API_BASE = 'https://api.aelita-production.ru/tickets';
+
+// pack-v334. Единый текст для случая «ответа не пришло вовсе».
+// ⚠️ Показывать его можно ТОЛЬКО там, где fetch бросил исключение:
+// это значит, что до сервера не дошло. Если сервер ответил — пусть
+// даже ошибкой — причина другая, и про VPN писать нельзя, иначе
+// человек будет выключать VPN там, где дело не в нём.
+// Почему VPN назван прямо: страница лежит на GitHub Pages (глобальный
+// CDN) и открывается через любой VPN, а оплата идёт в Yandex Cloud,
+// куда с зарубежного узла запрос часто не доходит. Снаружи это
+// выглядит как «сайт открылся, а кнопка не работает». Прежний текст
+// «проверьте интернет» уводил в сторону: интернет у человека
+// работает, он это видит — и делал вывод, что сломан сайт.
+const NET_FAIL_MSG = 'Не удалось связаться с сервером оплаты. '
+  + 'Чаще всего причина — включённый VPN: сама страница через него открывается, '
+  + 'а платёжный сервис находится в России и запрос до него не доходит. '
+  + 'Попробуйте отключить VPN и повторить. Если VPN не включён — напишите нам, разберёмся.';
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');
@@ -350,7 +374,14 @@ async function init(){
   try{
     res = await fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
   }catch(e){
-    showError('Нет связи с сервером — проверьте интернет и попробуйте ещё раз.');
+    // pack-v334: сюда попадаем ТОЛЬКО когда ответа не было вовсе —
+    // fetch бросает исключение на сетевом сбое, а не на ошибке от
+    // сервера (та уходит в !res.ok ниже). Именно так и выглядит
+    // включённый VPN: страница уже загрузилась (GitHub Pages,
+    // глобальный CDN), а до API в Yandex Cloud запрос не доходит.
+    // Прежний текст «проверьте интернет» уводил в сторону: интернет у
+    // человека работает, он это видит, и делал вывод, что сломан сайт.
+    showError(NET_FAIL_MSG);
     return;
   }
   if(!res.ok){
@@ -1111,7 +1142,10 @@ async function submitOrder(){
     }
     document.getElementById('buy-btn').disabled = false;
   }catch(e){
-    msgEl.textContent = 'Ошибка сети — проверьте связь и попробуйте снова.';
+    // Сетевой сбой в момент оформления заказа — тот же признак VPN,
+    // что и при загрузке (см. NET_FAIL_MSG). Здесь он больнее всего:
+    // человек уже выбрал места и заполнил форму.
+    msgEl.textContent = NET_FAIL_MSG;
     document.getElementById('buy-btn').disabled = false;
   }
 }

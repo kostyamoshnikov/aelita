@@ -77,7 +77,7 @@ async function doCancel(){
         '<button onclick="doCancel()">Try again</button>');
     }
   } catch (e) {
-    render('Could not cancel', 'Could not reach the server — check your connection and try again.', 'warn', null,
+    render('Could not cancel', 'Could not reach the server. The usual cause is a VPN: the page itself loads through it, but the service is hosted in Russia and the request does not get through. Try turning the VPN off and repeating.', 'warn', null,
       '<button onclick="doCancel()">Try again</button>');
   }
 }

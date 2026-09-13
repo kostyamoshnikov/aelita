@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=22">
+<link rel="stylesheet" href="/assets/style.css?v=24">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -161,10 +161,28 @@ let DOC_FILE = null; // {filename, mime_type, base64} — установит onD
 const $ = (id) => document.getElementById(id);
 function msg(el, text, cls){ const e=$(el); e.textContent=text||''; e.className='msg'+(cls?' '+cls:''); }
 
+// pack-v334. ⚠️ Раньше здесь не было обработки сетевого сбоя вовсе:
+// fetch бросал исключение, оно не ловилось ни здесь, ни у вызывающих,
+// и страница НАВСЕГДА зависала на «Ищем заказ…» — кнопка оставалась
+// заблокированной, сообщение об ошибке не появлялось. Ровно это и
+// происходило при включённом VPN (страница с GitHub Pages грузится, а
+// до API в Yandex Cloud запрос не доходит), то есть человек, которому
+// нужно вернуть билет, упирался в молчащую форму.
+// status 0 = ответа не было; сервер, ответивший ошибкой, сюда не
+// попадает и разбирается по своему коду, как и раньше.
+const NET_FAIL_MSG = 'Не удалось связаться с сервером. Чаще всего причина — включённый VPN: '
+  + 'сама страница через него открывается, а сервис находится в России и запрос до него не доходит. '
+  + 'Попробуйте отключить VPN и повторить. Если VPN не включён — напишите нам на aelita.production@yandex.ru.';
+
 async function api(payload){
-  const res = await fetch(API, {
-    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-  });
+  let res;
+  try {
+    res = await fetch(API, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    return { status: 0, body: null };
+  }
   let out = null;
   try { out = await res.json(); } catch(e) {}
   return { status: res.status, body: out };
@@ -177,6 +195,7 @@ async function lookup(){
   $('btn-lookup').disabled = true; msg('lookup-msg','Ищем заказ…');
   const { status, body } = await api({ action:'lookup', order_number:order, contact });
   $('btn-lookup').disabled = false;
+  if(status === 0){ msg('lookup-msg', NET_FAIL_MSG, 'err'); return; }
   if(status === 404){
     // ⚠️ Одинаковый текст на «нет заказа» и «контакт не совпал» —
     // разные сообщения превратили бы форму в способ проверять,
@@ -349,6 +368,10 @@ async function sendRequest(){
     reason: $('reason').value,
     document: DOC_FILE || undefined,
   });
+  if(status === 0){
+    msg('send-msg', NET_FAIL_MSG, 'err');
+    $('btn-send').disabled = false; return;
+  }
   if(status === 409){
     msg('send-msg','По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.','err');
     $('btn-send').disabled = false; return;
@@ -567,7 +590,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=22"></script>
+<script src="/assets/main.js?v=24"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
