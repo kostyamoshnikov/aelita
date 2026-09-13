@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Open Book Club Meeting — main stream — AELITA COMMUNITY</title>
-<meta name="description" content='<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. An open meeting of the AELITA COMMUNITY book club — main stream. Free entry, registration required.'>
+<meta name="description" content="<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. Open Book Club Meeting AELITA COMMUNITY — основной поток. Вход свободный, registration required.">
 <link rel="canonical" href="https://aelita-production.ru/en/workshop-main/">
 <link rel="alternate" hreflang="ru" href="https://aelita-production.ru/workshop-main/">
 <link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/workshop-main/">
@@ -26,12 +26,12 @@
 <meta property="og:url" content="https://aelita-production.ru/en/workshop-main/">
 <meta property="og:site_name" content="AELITA PRODUCTION">
 <meta property="og:title" content="Open Book Club Meeting — main stream — AELITA COMMUNITY">
-<meta property="og:description" content='<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. An open meeting of the AELITA COMMUNITY book club — main stream. Free entry, registration required.'>
+<meta property="og:description" content="<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. Open Book Club Meeting AELITA COMMUNITY — основной поток. Вход свободный, registration required.">
 <meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Open Book Club Meeting — main stream — AELITA COMMUNITY">
-<meta name="twitter:description" content='<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. An open meeting of the AELITA COMMUNITY book club — main stream.'>
+<meta name="twitter:description" content="<!-- DATE:workshop-2026-09-13:dayMonthTime:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonthTime:en:END -->, <!-- VENUE:workshop-2026-09-13:cityVenue:en:BEGIN -->Kaluga — venue to be announced<!-- VENUE:workshop-2026-09-13:cityVenue:en:END -->. Open Book Club Meeting AELITA COMMUNITY — основной поток.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -339,10 +339,10 @@
         var okEl = document.getElementById('regOk');
         okEl.style.display = 'block';
         if(data && data.quantity > 1){
-          okEl.querySelector('p').innerHTML = 'Done — you\'re registered, tickets: ' + data.quantity + '! All tickets with QR codes have been emailed to you in one message (check your Spam folder if you don\'t see it). You can cancel your registration in <a href="/en/account/dashboard" style="color:var(--gold)">your account</a>.';
+          okEl.querySelector('p').innerHTML = 'Готово — вы зарегистрированы, билетов: ' + data.quantity + '! Все билеты с QR-кодами отправлены на почту одним письмом (проверьте папку «Спам», если не видно). Отменить регистрацию можно в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>.';
         }
         if(data && data.mailSent === false){
-          okEl.innerHTML = '<p style="color:var(--gold)">Done — you\'re registered! We couldn\'t send the ticket email, but your registration is saved — you\'ll find it in <a href="/en/account/dashboard" style="color:var(--gold)">your account</a>. If you need the ticket by email, write to us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>.</p>';
+          okEl.innerHTML = '<p style="color:var(--gold)">Готово — вы зарегистрированы! Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>. Если билет нужен на почту — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>.</p>';
         }
       },
       onError: function(msg){ msgEl.textContent = msg; },
