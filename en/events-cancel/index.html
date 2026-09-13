@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cancel registration — AELITA PRODUCTION</title>
-<!-- EN twin of Site/events-cancel/index.html — see its comments for the full reasoning (why cancellation requires a button click, not just opening the link). -->
+<!--
+  EN twin of Site/events-cancel/index.html — see its comments for the full reasoning (why cancellation requires a button click, not just opening the link).
+-->
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
 *{box-sizing:border-box}
@@ -43,18 +45,18 @@ function render(titleText, bodyText, statusClass, statusText, actionsHtml){
 }
 
 if(!token){
-  render('Link is not valid', 'The link is missing its cancellation code — it may have been copied incompletely. Please open the email again and click the full link, or cancel from your account dashboard instead.', 'warn', null,
-    '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+  render('Ссылка недействительна', 'В ссылке нет кода отмены — она могла быть скопирована не полностью. Откройте письмо ещё раз и нажмите на ссылку целиком, либо отмените регистрацию из личного кабинета.', 'warn', null,
+    '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
 } else {
-  render('Cancel registration', 'Confirm cancellation — your spot will be freed up for other participants.', null, null,
-    '<button id="confirmBtn">Yes, cancel</button><button class="secondary" onclick="history.back()">Don\'t cancel</button>');
+  render('Отмена регистрации', 'Подтвердите отмену — место освободится для других участников.', null, null,
+    '<button id="confirmBtn">Да, отменить</button><button class="secondary" onclick="history.back()">Не отменять</button>');
   document.getElementById('confirmBtn').addEventListener('click', doCancel);
 }
 
 async function doCancel(){
   const btn = document.getElementById('confirmBtn');
   btn.disabled = true;
-  btn.textContent = 'Cancelling…';
+  btn.textContent = 'Отменяем…';
   try {
     const res = await fetch(API_BASE + '/cancel', {
       method: 'POST',
@@ -63,22 +65,27 @@ async function doCancel(){
     });
     const data = await res.json().catch(() => null);
     if (res.ok && data && data.ok) {
-      const quantityNote = data.quantity > 1 ? ` (all ${data.quantity} tickets in this registration)` : '';
-      render('Registration cancelled', `"${escapeHtml(data.eventTitle || '')}"${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}. Your spot has been freed up for other participants.`, 'ok', 'Done',
-        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+      const quantityNote = data.quantity > 1 ? ` (все ${data.quantity} билета из этой регистрации)` : '';
+      render('Регистрация отменена', `«${escapeHtml(data.eventTitle || '')}»${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}. Место освобождено для других участников.`, 'ok', 'Готово',
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
     } else if (res.status === 404 || (data && data.error === 'not_registered')) {
-      render('Already cancelled', 'This registration was already cancelled earlier (for example, if you already clicked this link) — nothing left to cancel.', 'warn', null,
-        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+      render('Уже отменено', 'Эта регистрация уже была отменена раньше (например, если вы уже нажимали эту ссылку) — повторно отменять нечего.', 'warn', null,
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
     } else if (data && data.error === 'bad_cancel_token') {
-      render('Link is not valid', 'We could not verify the cancellation code — try opening the link from the email again, or cancel from your account dashboard.', 'warn', null,
-        '<a href="/en/account/dashboard"><button>Account dashboard →</button></a>');
+      render('Ссылка недействительна', 'Не удалось проверить код отмены — попробуйте открыть ссылку из письма ещё раз или отмените регистрацию из личного кабинета.', 'warn', null,
+        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
     } else {
-      render('Could not cancel', 'The server could not process the request — try again in a minute, or cancel from your account dashboard.', 'warn', null,
-        '<button onclick="doCancel()">Try again</button>');
+      render('Не получилось отменить', 'Сервер не смог обработать запрос — попробуйте ещё раз через минуту или отмените из личного кабинета.', 'warn', null,
+        '<button onclick="doCancel()">Повторить</button>');
     }
   } catch (e) {
-    render('Could not cancel', 'Could not reach the server. The usual cause is a VPN: the page itself loads through it, but the service is hosted in Russia and the request does not get through. Try turning the VPN off and repeating.', 'warn', null,
-      '<button onclick="doCancel()">Try again</button>');
+    // pack-v334: сюда попадаем только когда ответа не пришло вовсе —
+    // сервер, ответивший ошибкой, обрабатывается веткой выше. Самая
+    // частая причина — включённый VPN: страница открывается (GitHub
+    // Pages), а до API в Yandex Cloud запрос не доходит. Прежний текст
+    // «проверьте соединение» уводил в сторону.
+    render('Не получилось отменить', 'К сожалению, не удалось связаться с сервером. Чаще всего мешает включённый VPN — отключите его и попробуйте снова.', 'warn', null,
+      '<button onclick="doCancel()">Повторить</button>');
   }
 }
 

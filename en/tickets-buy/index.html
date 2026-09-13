@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
+<!-- СГЕНЕРИРОВАНО build_tickets_buy_en.py из Site/tickets-buy/index.html.
+     Руками не править — правка исчезнет при следующей сборке.
+     Менять надо русскую страницу, затем запустить скрипт. -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Купить билет — AELITA PRODUCTION</title>
+<title>Buy a ticket — AELITA PRODUCTION</title>
+<link rel="canonical" href="https://aelita-production.ru/en/tickets-buy/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/tickets-buy/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/tickets-buy/">
 <!--
   AELITA PRODUCTION · Tickets — страница покупки.
   Открывается с ?performance=<id> (см. _tools/Tickets/config/events.js).
@@ -107,7 +114,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .form input{width:100%;background:var(--ink);border:1px solid rgba(217,217,217,.18);color:var(--bone);padding:11px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;border-radius:3px}
 /* pack-v266: пояснения к полям вынесены из placeholder отдельной
    строкой. В placeholder они обрезались на телефоне на середине слова
-   («Телефон * — для чека и связи, если что-т»), а обрезанный текст
+   («Phone * — для чека и связи, если что-т»), а обрезанный текст
    ещё и исчезает целиком, как только человек начинает печатать. */
 .form input + .field-hint{margin-top:-6px}
 .field-hint{font-size:11px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
@@ -138,7 +145,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .retry-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 22px;border-radius:3px;font-size:13px;cursor:pointer;margin:0 6px}
 .success-box{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center;margin-top:20px}
 .success-box h2{color:#B7C9A8;font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;font-size:18px;margin:0 0 12px}
-/* pack-v266: помощь больше не перекрывает «Оплатить». Раньше обе
+/* pack-v266: помощь больше не перекрывает «Pay». Раньше обе
    были position:fixed у нижнего края, у .help-link стоял z-index:5, у
    .bar — ничего: на узком экране пилюля с телефоном ложилась поверх
    кнопки оплаты и та становилась недоступна для нажатия. Теперь у
@@ -151,20 +158,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 </head>
 <body>
 <div class="wrap">
-  <div id="test-banner" style="display:none" class="test-banner">Тестовый режим — реальные деньги не списываются</div>
-  <h1 id="title">Загрузка…</h1>
+  <div id="test-banner" style="display:none" class="test-banner">Test mode — no real money is charged</div>
+  <h1 id="title">Loading…</h1>
   <div class="meta" id="meta"></div>
-  <div id="degraded" style="display:none" class="warn">Идёт дополнительная проверка занятости мест — в редком случае выбранное место может оказаться занято, мы проверим ещё раз и предупредим до оплаты.</div>
+  <div id="degraded" style="display:none" class="warn">We are running an extra availability check — in rare cases a selected seat may turn out to be taken; we will check again and warn you before payment.</div>
 
   <div id="success-block" style="display:none" class="success-box">
-    <h2>Оплата прошла</h2>
-    <p id="success-text">Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.</p>
+    <h2>Payment successful</h2>
+    <p id="success-text">Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.</p>
   </div>
 
   <div id="error-block" style="display:none" class="error-box">
-    <p id="error-text">Не получилось загрузить показ.</p>
-    <button class="retry-btn" onclick="init()">Попробовать снова</button>
-    <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Написать нам</a>
+    <p id="error-text">Could not load the performance.</p>
+    <button class="retry-btn" onclick="init()">Try again</button>
+    <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Write to us</a>
   </div>
 
   <div id="assigned-block" style="display:none">
@@ -173,20 +180,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
          свободное место, было тяжело; на большом экране, наоборот,
          схема мелкая. Кнопки решают оба случая. -->
     <div class="zoom-bar">
-      <span class="zoom-label">Масштаб</span>
-      <button type="button" class="zoom-btn" id="zoom-out" aria-label="Уменьшить схему зала">−</button>
+      <span class="zoom-label">Zoom</span>
+      <button type="button" class="zoom-btn" id="zoom-out" aria-label="Zoom out the seating plan">−</button>
       <span class="zoom-level" id="zoom-level" aria-live="polite">100%</span>
-      <button type="button" class="zoom-btn" id="zoom-in" aria-label="Увеличить схему зала">+</button>
+      <button type="button" class="zoom-btn" id="zoom-in" aria-label="Zoom in the seating plan">+</button>
     </div>
-    <div class="stage">Сцена</div>
+    <div class="stage">Stage</div>
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
     <!-- pack-v272: было статичное «удерживаются 10 минут» — обещание,
          которое до этой версии не выполнялось: холд ставился только
-         при нажатии «Оплатить». Теперь место действительно удержано с
+         при нажатии «Pay». Теперь место действительно удержано с
          момента выбора, и отсчёт показывает реальный остаток. -->
     <div class="hold-bar" id="hold-bar">
-      <span class="hold-label">Держим ваши места</span>
+      <span class="hold-label">Holding your seats</span>
       <span class="hold-time" id="hold-time">—</span>
     </div>
     <div class="picked" id="picked"></div>
@@ -201,20 +208,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   </div>
 
   <div class="form" id="form-block">
-    <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Поля со звёздочкой (*) обязательны для заполнения</div>
-    <input id="f-name" placeholder="Имя *" required>
+    <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
+    <input id="f-name" placeholder="Name *" required>
     <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email *" required>
-    <div class="field-hint">На него придут билеты</div>
-    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон *" required>
-    <div class="field-hint">Для чека и для связи, если что-то пойдёт не так</div>
-    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
+    <div class="field-hint">Your tickets will be sent there</div>
+    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone *" required>
+    <div class="field-hint">For the receipt and in case we need to reach you</div>
+    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/en/privacy/" style="color:var(--gold)">processing of personal data</a></span></label>
     <div class="msg" id="msg"></div>
 
     <!-- pack-v334: предупреждение про VPN. На шести других страницах с
      оплатой оно стоит с pack-v238 («на всех страницах с оплатой»), но
      билетная система появилась позже (pack-v272+) и предупреждение не
      получила — то есть его не было ровно там, где платят чаще всего. -->
-    <p class="vpn-note">К сожалению, при включённом VPN оплата не проходит — отключите его и попробуйте ещё раз.</p>
+    <p class="vpn-note">Unfortunately, payment does not work with a VPN enabled — turn it off and try again.</p>
   </div>
 </div>
 
@@ -222,17 +229,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
      любом шаге (показ не загрузился, места кончились, оплата не
      началась), у человека должен быть выход, не только «попробуйте
      ещё раз». Телефон — быстрее email в моменте живой покупки. -->
-<a class="help-link" href="tel:+79605151690">🆘 Нужна помощь? +7 960 515-16-90</a>
+<a class="help-link" href="tel:+79605151690">🆘 Need help? +7 960 515-16-90</a>
 
 
-<!-- Промокод. Раскрывающееся поле, а не всегда видимое: у большинства
+<!-- Promo code. Раскрывающееся поле, а не всегда видимое: у большинства
      покупателей кода нет, и пустая рамка «введите промокод» над кнопкой
      оплаты только добавляет сомнение «а я что, переплачиваю?». -->
 <div class="promo-wrap" id="promo-wrap">
-  <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()">У меня есть промокод</button>
+  <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()">I have a promo code</button>
   <div class="promo-row" id="promo-row" hidden>
-    <input type="text" id="promo-input" placeholder="Промокод" autocomplete="off" spellcheck="false" maxlength="32">
-    <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Применить</button>
+    <input type="text" id="promo-input" placeholder="Promo code" autocomplete="off" spellcheck="false" maxlength="32">
+    <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Apply</button>
   </div>
   <div class="promo-msg" id="promo-msg"></div>
 </div>
@@ -240,20 +247,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 <!-- pack-v277: подарочная карта — тот же паттерн раскрывающегося поля
      и те же классы, что у промокода (.promo-*), новый CSS не заводим. -->
 <div class="promo-wrap" id="gift-wrap">
-  <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">У меня есть подарочная карта</button>
+  <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">I have a gift card</button>
   <div class="promo-row" id="gift-row" hidden>
     <input type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="21">
-    <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Применить</button>
+    <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Apply</button>
   </div>
   <div class="promo-msg" id="gift-msg"></div>
 </div>
 
 <div class="bar">
   <div class="total">
-    Итого: <span id="total">0 ₽</span>
+    Total: <span id="total">0 ₽</span>
     <span class="total-was" id="total-was" hidden></span>
   </div>
-  <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Оплатить</button>
+  <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Pay</button>
 </div>
 
 <script src="/assets/analytics-events.js"></script>
@@ -281,9 +288,9 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 // выглядит как «сайт открылся, а кнопка не работает». Прежний текст
 // «проверьте интернет» уводил в сторону: интернет у человека
 // работает, он это видит — и делал вывод, что сломан сайт.
-const NET_FAIL_MSG = 'К сожалению, не удалось связаться с сервером оплаты. '
-  + 'Чаще всего мешает включённый VPN — отключите его и попробуйте снова. '
-  + 'Если VPN выключен, напишите нам.';
+const NET_FAIL_MSG = 'Unfortunately, we could not reach the payment server. '
+  + 'The usual cause is a VPN — turn it off and try again. '
+  + 'If your VPN is off, write to us.';
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');
@@ -295,7 +302,7 @@ let data = null;
 // выбора (см. _tools/Tickets/hold-seat.js). sessionStorage, а не
 // localStorage: холд живёт минуты и относится к текущей покупке —
 // переживать закрытие вкладки ему незачем, а вот при возврате с
-// оплаты кнопкой «назад» в той же вкладке он должен сохраниться,
+// оплаты кнопкой «back» в той же вкладке он должен сохраниться,
 // поэтому и не просто переменная в памяти.
 let holdId = null;
 try {
@@ -318,7 +325,7 @@ const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от
 function seatKey(r,s){ return r + '-' + s; }
 
 function showError(text){
-  document.getElementById('title').textContent = 'Не получилось';
+  document.getElementById('title').textContent = 'Something went wrong';
   document.getElementById('error-text').textContent = text;
   document.getElementById('error-block').style.display = 'block';
   document.getElementById('form-block').style.display = 'none';
@@ -338,12 +345,12 @@ function showSuccess(text){
 
 async function init(){
   document.getElementById('error-block').style.display = 'none';
-  document.getElementById('title').textContent = 'Загрузка…';
+  document.getElementById('title').textContent = 'Loading…';
   document.querySelector('.bar').style.display = 'flex';
   document.getElementById('form-block').style.display = 'block';
   // pack-v235: подсказка «неверный формат» прямо под полем, ещё до
-  // клика «Оплатить» — как только человек увёл фокус с поля. init()
-  // может вызываться повторно (кнопка «Попробовать снова») — навешиваем
+  // клика «Pay» — как только человек увёл фокус с поля. init()
+  // может вызываться повторно (кнопка «Try again») — навешиваем
   // слушатели один раз за загрузку страницы, не при каждом вызове.
   if(!window.__aelitaContactWired){
     AELITA_wireContactValidation('f-email', 'email');
@@ -351,12 +358,12 @@ async function init(){
     window.__aelitaContactWired = true;
   }
 
-  if(!performanceId){ showError('В ссылке не указан показ — вернитесь на афишу и выберите спектакль ещё раз.'); return; }
+  if(!performanceId){ showError('The link does not specify a performance — go back to the listings and choose again.'); return; }
 
   // Возврат с оплаты (return_url из create-order.js).
   //
   // ⚠️ pack-v196: раньше здесь просто доверяли параметру aelita_paid=1
-  // и сразу показывали «Оплата прошла». Но return_url — это куда
+  // и сразу показывали «Payment successful». Но return_url — это куда
   // ЮKassa отправляет браузер при ЛЮБОМ исходе: успех, отмена,
   // отклонённая карта — параметр в URL один и тот же. Человек, который
   // передумал или которому отказали в оплате, видел тот же зелёный
@@ -386,37 +393,37 @@ async function init(){
   if(!res.ok){
     // pack-v267: 404 — это не «сервер сломался», а «такого показа нет»
     // (устаревшая ссылка, опечатка в id). Раньше человек с чужой старой
-    // ссылки видел пугающее «Сервер ответил с ошибкой (404)».
+    // ссылки видел пугающее «The server returned an error (404)».
     if(res.status === 404){
-      showError('Такого показа нет — возможно, ссылка устарела. Актуальные даты — в афише: aelita-production.ru/tickets');
+      showError('No such performance — the link may be out of date. Current dates are in the listings: aelita-production.ru/en/tickets');
       return;
     }
-    showError('Сервер ответил с ошибкой (' + res.status + ') — попробуйте ещё раз, если не поможет, напишите нам.');
+    showError('The server returned an error (' + res.status + ') — please try again; if that does not help, write to us.');
     return;
   }
   try{
     freshData = await res.json();
   }catch(e){
-    showError('Сервер прислал что-то непонятное — попробуйте ещё раз, если не поможет, напишите нам.');
+    showError('The server sent something unexpected — please try again; if that does not help, write to us.');
     return;
   }
   data = freshData;
-  if(data.error === 'sales_closed'){ showError('Продажи на этот показ закрыты.'); return; }
-  if(data.error === 'not_on_sale'){ showError('Продажи на этот показ ещё не открыты — попробуйте позже.'); return; }
-  if(data.error){ showError('Показ не найден — возможно, продажи ещё не открыты или ссылка устарела.'); return; }
+  if(data.error === 'sales_closed'){ showError('Sales for this performance are closed.'); return; }
+  if(data.error === 'not_on_sale'){ showError('Sales for this performance have not opened yet — please try later.'); return; }
+  if(data.error){ showError('Performance not found — sales may not be open yet, or the link is out of date.'); return; }
 
   if(data.seating === 'redirect'){
     // Показ переведён на партнёрскую систему (см. config/events.js,
     // «Откат к Ticketscloud») — просто уводим туда, ничего своего не
     // рисуем.
-    document.getElementById('title').textContent = 'Переходим к продаже билетов…';
+    document.getElementById('title').textContent = 'Taking you to the ticket sale…';
     location.href = data.buyUrl;
     return;
   }
 
   document.getElementById('title').textContent = data.title;
   if(data.isTest){ document.getElementById('test-banner').style.display = 'block'; }
-  const dt = data.datetime ? new Date(data.datetime).toLocaleString('ru-RU',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Дата уточняется';
+  const dt = data.datetime ? new Date(data.datetime).toLocaleString('en-GB',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Date to be confirmed';
   document.getElementById('meta').textContent = `${dt} · ${data.venue.name}, ${data.venue.address} · ${data.ageRating}`;
 
   if(data.seating === 'assigned'){
@@ -483,7 +490,7 @@ function renderHall(){
   applyZoom();
 }
 
-// ── Масштаб схемы зала (pack-v281) ────────────────────────────────
+// ── Zoom схемы зала (pack-v281) ────────────────────────────────
 // Базовые размеры берём из CSS, а не хардкодим здесь: на сенсорных
 // экранах действует @media (pointer:coarse) с более крупной клеткой
 // (pack-v270, WCAG 2.2), и «100%» на телефоне обязано означать именно
@@ -555,14 +562,14 @@ function renderZoneLegend(){
   el.innerHTML = '';
   data.zones.forEach((z, i) => {
     const chip = document.createElement('div'); chip.className = 'zone-chip';
-    chip.innerHTML = `<span class="zone-swatch" style="background:${ZONE_COLORS[i]||ZONE_COLORS[ZONE_COLORS.length-1]}"></span>Ряды ${z.rows[0]}–${z.rows[1]} · ${z.price} ₽`;
+    chip.innerHTML = `<span class="zone-swatch" style="background:${ZONE_COLORS[i]||ZONE_COLORS[ZONE_COLORS.length-1]}"></span>Rows ${z.rows[0]}–${z.rows[1]} · ${z.price} ₽`;
     el.appendChild(chip);
   });
 }
 
 // ─── pack-v272: холд мест на момент выбора ────────────────────────
 //
-// До этой версии место резервировалось только при нажатии «Оплатить»,
+// До этой версии место резервировалось только при нажатии «Pay»,
 // то есть всё время заполнения формы выбранные места ничем не были
 // защищены — их мог забрать другой покупатель, и человек узнавал об
 // этом уже после клика. Теперь клик по месту сразу удерживает его на
@@ -618,11 +625,11 @@ async function toggleSeat(row, seat, el){
     return;
   }
 
-  if(selectedSeats.length >= 10){ msgEl.textContent = 'Максимум 10 мест в одном заказе.'; return; }
+  if(selectedSeats.length >= 10){ msgEl.textContent = 'Maximum 10 seats per order.'; return; }
 
   // Место занимаем на сервере ДО того, как показать выбранным — иначе
   // получилось бы прежнее враньё: подсвечено как ваше, а на самом деле
-  // ничьё. Пока запрос летит, место недоступно для повторного клика.
+  // ничьё. Пока запрос летит, seat недоступно для повторного клика.
   el.onclick = null;
   el.style.opacity = '.5';
   let r;
@@ -653,34 +660,34 @@ async function toggleSeat(row, seat, el){
       const si = selectedSeats.findIndex(s => s.row===tr && s.seat===ts);
       if(si >= 0) selectedSeats.splice(si,1);
     });
-    msgEl.textContent = 'Это место только что заняли — выберите другое.';
+    msgEl.textContent = 'That seat has just been taken — please choose another.';
     invalidateDiscounts();
     updateTotal();
     return;
   }
 
   el.onclick = () => toggleSeat(row, seat, el);
-  msgEl.textContent = 'Не удалось занять место — проверьте связь и попробуйте ещё раз.';
+  msgEl.textContent = 'Could not hold the seat — check your connection and try again.';
 }
 
 function renderPicked(){
   const el = document.getElementById('picked');
   el.innerHTML = '';
   if(!data || data.seating !== 'assigned') return;
-  // Порядок — как на схеме (ряд, потом место), а не в порядке кликов:
+  // Порядок — как на схеме (row, потом место), а не в порядке кликов:
   // так список читается вместе с залом, а не как история действий.
   const sorted = [...selectedSeats].sort((a,b)=> a.row-b.row || a.seat-b.seat);
   sorted.forEach(s => {
     const chip = document.createElement('div');
     chip.className = 'picked-chip';
     const label = document.createElement('span');
-    label.textContent = `${s.row} ряд, ${s.seat} место`;
+    label.textContent = `Row ${s.row}, seat ${s.seat}`;
     const price = document.createElement('span');
     price.className = 'chip-price';
     price.textContent = s.price + ' ₽';
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.setAttribute('aria-label', `Убрать место: ряд ${s.row}, место ${s.seat}`);
+    btn.setAttribute('aria-label', `Remove seat: row ${s.row}, seat ${s.seat}`);
     btn.textContent = '×';
     btn.onclick = () => {
       const seatEl = document.querySelector(`.seat[data-row="${s.row}"][data-seat="${s.seat}"]`);
@@ -729,7 +736,7 @@ function tickHold(){
     });
     invalidateDiscounts();
     updateTotal();
-    document.getElementById('msg').textContent = 'Время удержания истекло — выберите места заново.';
+    document.getElementById('msg').textContent = 'The hold has expired — please select your seats again.';
     return;
   }
   const total = Math.ceil(left/1000);
@@ -764,7 +771,7 @@ function changeQty(delta){
   updateTotal();
 }
 
-// ── Промокод и подарочная карта ─────────────────────────────────────
+// ── Promo code и подарочная карта ─────────────────────────────────────
 // Принятый сервером код(ы) и посчитанная СЕРВЕРОМ сумма. Считает ВСЕГДА
 // сервер (check-promo.js/check-gift-code.js той же функцией, что и
 // create-order.js) — на клиенте формулы скидки нет намеренно, иначе
@@ -809,23 +816,23 @@ function giftMsg(text, cls){
 // Человеческие формулировки причин отказа — коды приходят с сервера
 // (см. config/promocodes.js: resolvePromoCode).
 const PROMO_REASONS = {
-  unknown: 'Такого промокода нет — проверьте написание.',
-  expired: 'Срок действия промокода истёк.',
-  not_for_this_performance: 'Этот промокод не действует на выбранный спектакль.',
-  misconfigured: 'С этим промокодом что-то не так — напишите нам, разберёмся.',
-  empty: 'Введите промокод.',
+  unknown: 'No such promo code — check the spelling.',
+  expired: 'The promo code has expired.',
+  not_for_this_performance: 'This promo code does not apply to the selected performance.',
+  misconfigured: 'Something is wrong with this promo code — write to us and we will sort it out.',
+  empty: 'Enter a promo code.',
   // pack-v279: у промокода бывает лимит числа применений — см.
   // config/promocodes.js maxUses.
-  limit_reached: 'Лимит по этому промокоду исчерпан.',
+  limit_reached: 'This promo code has reached its usage limit.',
 };
 
 // Симметрично PROMO_REASONS — коды из check-gift-code.js/create-order.js.
 const GIFT_REASONS = {
-  not_found: 'Такой карты нет — проверьте код.',
-  inactive: 'Эта карта больше не активна.',
-  depleted: 'На карте не осталось средств.',
-  covered_by_promo: 'Промокод уже покрывает всю сумму — карта не понадобилась.',
-  empty: 'Введите код карты.',
+  not_found: 'No such gift card — check the code.',
+  inactive: 'This gift card is no longer active.',
+  depleted: 'There are no funds left on the card.',
+  covered_by_promo: 'The promo code already covers the full amount — the gift card was not needed.',
+  empty: 'Enter the gift card code.',
 };
 
 function seatsOrQtyPayload(){
@@ -842,10 +849,10 @@ async function applyPromo(){
   if(!code){ promoMsg(PROMO_REASONS.empty, 'err'); return; }
   // Нечего проверять, пока не выбраны места — сумма ещё неизвестна.
   if(data.seating === 'assigned' && selectedSeats.length === 0){
-    promoMsg('Сначала выберите места — потом посчитаем скидку.', 'err');
+    promoMsg('Select your seats first — then we will calculate the discount.', 'err');
     return;
   }
-  btn.disabled = true; promoMsg('Проверяем…');
+  btn.disabled = true; promoMsg('Checking…');
   const payload = { performance_id: performanceId, promo_code: code, ...seatsOrQtyPayload() };
   if(appliedGift) payload.gift_code = appliedGift;
   try{
@@ -854,24 +861,24 @@ async function applyPromo(){
     });
     const out = await res.json();
     if(!res.ok){
-      promoMsg('Не удалось проверить промокод — попробуйте ещё раз.', 'err');
+      promoMsg('Could not check the promo code — please try again.', 'err');
     } else if(out.valid){
       appliedPromo = out.promo_code;
       combinedFinalAmount = out.final_amount;
       giftUsedAmount = out.gift_used_amount || 0;
       const saved = (out.original_amount - out.final_amount).toFixed(2).replace(/\.00$/,'');
-      promoMsg(`Промокод ${out.promo_code} применён — скидка ${saved} ₽.`, 'ok');
-      // pack-v278: нулевой заказ поддержан — при клике «Оплатить» на
+      promoMsg(`Promo code ${out.promo_code} applied — discount ${saved} ₽.`, 'ok');
+      // pack-v278: нулевой заказ поддержан — при клике «Pay» на
       // такой сумме ЮKassa не понадобится вообще (см. create-order.js).
       if(out.zero_amount){
-        promoMsg('Промокод покрывает всю сумму — доплаты не потребуется.', 'ok');
+        promoMsg('The promo code covers the full amount — no payment is required.', 'ok');
       }
     } else {
       appliedPromo = null;
-      promoMsg(PROMO_REASONS[out.reason] || 'Промокод не применён.', 'err');
+      promoMsg(PROMO_REASONS[out.reason] || 'Promo code not applied.', 'err');
     }
   }catch(e){
-    promoMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+    promoMsg('The network is not responding — please try again.', 'err');
   }
   btn.disabled = false;
   updateTotal();
@@ -883,10 +890,10 @@ async function applyGift(){
   const code = input.value.trim().toUpperCase();
   if(!code){ giftMsg(GIFT_REASONS.empty, 'err'); return; }
   if(data.seating === 'assigned' && selectedSeats.length === 0){
-    giftMsg('Сначала выберите места — потом посчитаем сумму.', 'err');
+    giftMsg('Select your seats first — then we will calculate the total.', 'err');
     return;
   }
-  btn.disabled = true; giftMsg('Проверяем…');
+  btn.disabled = true; giftMsg('Checking…');
   const payload = { performance_id: performanceId, gift_code: code, ...seatsOrQtyPayload() };
   if(appliedPromo) payload.promo_code = appliedPromo;
   try{
@@ -895,28 +902,28 @@ async function applyGift(){
     });
     const out = await res.json();
     if(!res.ok){
-      giftMsg('Не удалось проверить карту — попробуйте ещё раз.', 'err');
+      giftMsg('Could not check the gift card — please try again.', 'err');
     } else if(out.valid){
       appliedGift = code;
       combinedFinalAmount = out.final_amount;
       giftUsedAmount = out.gift_used_amount || 0;
       const rest = out.available_amount - out.gift_used_amount;
       giftMsg(
-        `Карта применена — списано ${out.gift_used_amount} ₽` +
-        (rest > 0 ? `, на карте останется ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : ', остаток исчерпан.'),
+        `Gift card applied — charged ${out.gift_used_amount} ₽` +
+        (rest > 0 ? `, remaining on the card: ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : ', the balance is used up.'),
         'ok'
       );
-      // pack-v278: нулевой заказ поддержан — при клике «Оплатить» на
+      // pack-v278: нулевой заказ поддержан — при клике «Pay» на
       // такой сумме ЮKassa не понадобится вообще (см. create-order.js).
       if(out.zero_amount){
-        giftMsg('Карта покрывает всю сумму — доплаты не потребуется.', 'ok');
+        giftMsg('The gift card covers the full amount — no payment is required.', 'ok');
       }
     } else {
       appliedGift = null;
-      giftMsg(GIFT_REASONS[out.reason] || 'Карта не применена.', 'err');
+      giftMsg(GIFT_REASONS[out.reason] || 'Gift card not applied.', 'err');
     }
   }catch(e){
-    giftMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+    giftMsg('The network is not responding — please try again.', 'err');
   }
   btn.disabled = false;
   updateTotal();
@@ -952,13 +959,13 @@ function updateTotal(){
 function invalidatePromo(){
   if(appliedPromo === null) return;
   appliedPromo = null; combinedFinalAmount = null;
-  promoMsg('Выбор изменился — примените промокод заново.', 'err');
+  promoMsg('Your selection has changed — apply the promo code again.', 'err');
 }
 
 function invalidateGift(){
   if(appliedGift === null) return;
   appliedGift = null; combinedFinalAmount = null;
-  giftMsg('Выбор изменился — примените карту заново.', 'err');
+  giftMsg('Your selection has changed — apply the gift card again.', 'err');
 }
 
 function invalidateDiscounts(){
@@ -979,32 +986,32 @@ async function submitOrder(){
   // ОБЯЗАТЕЛЕН (раньше был опционален) — нужен для чека (54-ФЗ, см.
   // _tools/Tickets/create-order.js).
   if(!name){
-    AELITA_showFieldError(nameEl, 'Укажите имя');
-    msgEl.textContent = 'Укажите имя.';
+    AELITA_showFieldError(nameEl, 'Enter your name');
+    msgEl.textContent = 'Enter your name.';
     nameEl.focus();
     return;
   }
   AELITA_clearFieldError(nameEl);
   if(!AELITA_isValidEmail(email)){
-    AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
-    msgEl.textContent = 'Проверьте email — на него придут билеты.';
+    AELITA_showFieldError(emailEl, 'Check your email address — there seems to be a typo');
+    msgEl.textContent = 'Check your email address — the tickets will be sent there.';
     emailEl.focus();
     return;
   }
   AELITA_clearFieldError(emailEl);
   if(!AELITA_normalizePhone(contact)){
-    AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
-    msgEl.textContent = 'Укажите корректный телефон — он нужен для чека и на случай, если понадобится связаться.';
+    AELITA_showFieldError(phoneEl, 'Check your phone number — it looks incomplete or incorrect');
+    msgEl.textContent = 'Enter a valid phone number — we need it for the receipt and in case we have to contact you.';
     phoneEl.focus();
     return;
   }
   AELITA_clearFieldError(phoneEl);
   if(!document.getElementById('pdConsent').checked){
-    msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него не оформим заказ.';
+    msgEl.textContent = 'Please tick the consent to personal data processing — we cannot place the order without it.';
     return;
   }
   document.getElementById('buy-btn').disabled = true;
-  msgEl.textContent = 'Оформляем заказ…';
+  msgEl.textContent = 'Placing your order…';
 
   const payload = {
     performance_id: performanceId, name, email, contact, pd_consent: true,
@@ -1016,7 +1023,7 @@ async function submitOrder(){
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
   else payload.quantity = quantity;
-  // Промокод/карту отправляем ТОЛЬКО если сервер их уже подтвердил при
+  // Promo code/карту отправляем ТОЛЬКО если сервер их уже подтвердил при
   // проверке — сумму всё равно пересчитает create-order.js сам.
   if(appliedPromo) payload.promo_code = appliedPromo;
   if(appliedGift) payload.gift_code = appliedGift;
@@ -1027,8 +1034,8 @@ async function submitOrder(){
     });
     if(!res.ok && res.status !== 400 && res.status !== 409){
       // 400/409 — осмысленный отказ с телом (разберём ниже), остальное —
-      // сервер сломался, а не "ваш заказ не прошёл".
-      msgEl.innerHTML = 'Сервер ответил с ошибкой — попробуйте ещё раз. Если повторится, воспользуйтесь кнопкой помощи внизу слева.';
+      // сервер сломался, а не "your order did not go through".
+      msgEl.innerHTML = 'The server returned an error — please try again. If it happens again, use the help button at the bottom left.';
       document.getElementById('buy-btn').disabled = false;
       return;
     }
@@ -1045,9 +1052,9 @@ async function submitOrder(){
         // автоматически, но покупателю уже отдельно ушло письмо с
         // объяснением. Тот же текст, что показывает pollOrderStatus()
         // для платного пути в том же случае.
-        showSuccess('Оплата не потребовалась — скидка покрыла всю сумму. При оформлении произошла редкая техническая накладка с местом, мы уже знаем и свяжемся с вами в ближайшее время.');
+        showSuccess('No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
       } else {
-        showSuccess('Оплата не потребовалась — скидка покрыла всю сумму. Билеты уже летят на почту, проверьте папку «Спам», если через пару минут не появятся.');
+        showSuccess('No payment was needed — the discount covered the full amount. Your tickets are on their way by email; check the Spam folder if they do not arrive within a couple of minutes.');
       }
       return;
     }
@@ -1070,38 +1077,38 @@ async function submitOrder(){
         // pack-v196: раньше человек нигде не видел, что на оплату есть
         // ограниченное время — только README упоминал 10 минут, нигде
         // на странице. Секунда на прочитать перед редиректом лучше, чем
-        // ничего — а если он вернётся кнопкой "назад" браузера, минуты
+        // ничего — а если он вернётся кнопкой "back" браузера, минуты
         // всё равно тикают на сервере независимо от того, смотрит он или нет.
         const mins = Math.max(1, Math.round((new Date(out.hold_expires_at).getTime() - Date.now()) / 60000));
-        msgEl.textContent = `Место(а) удержаны на ${mins} мин. Переходим к оплате…`;
+        msgEl.textContent = `Seat(s) held for ${mins} min. Taking you to payment…`;
       }
       location.href = out.confirmation_url;
       return;
     }
     if(out.error === 'sold_via_partner'){
-      msgEl.textContent = 'Этот показ теперь продаётся у партнёра — переходим…';
+      msgEl.textContent = 'This performance is now sold by a partner — redirecting…';
       location.href = out.buy_url;
       return;
     }
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
-      msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
+      msgEl.innerHTML = 'Someone has just taken some of your selected seats. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and choose others.';
     } else if(out.error === 'gift_card_changed'){
       // pack-v277: гонка за остаток карты между проверкой и оплатой —
       // тот же класс события, что seats_taken, только для денег, не
       // мест. Сбрасываем применённую карту и показываем АКТУАЛЬНЫЙ
       // остаток, который прислал сервер, — не заставляем гадать заново.
       appliedGift = null; combinedFinalAmount = null;
-      giftMsg(`Остаток карты изменился — доступно ${out.available_amount} ₽. Примените карту заново.`, 'err');
+      giftMsg(`The gift card balance has changed — available: ${out.available_amount} ₽. Apply the card again.`, 'err');
       updateTotal();
-      msgEl.textContent = 'Остаток подарочной карты изменился — примените её заново и повторите оплату.';
+      msgEl.textContent = 'The gift card balance has changed — apply it again and repeat the payment.';
     } else if(out.error === 'promo_limit_reached'){
       // pack-v279: та же гонка, что gift_card_changed, только за слот
       // промокода с лимитом (config/promocodes.js maxUses) — кто-то
       // забрал последнее место акции между превью и отправкой заказа.
       appliedPromo = null; combinedFinalAmount = null;
-      promoMsg('Лимит по этому промокоду только что исчерпан — снят с заказа.', 'err');
+      promoMsg('This promo code has just reached its limit — it has been removed from the order.', 'err');
       updateTotal();
-      msgEl.textContent = 'Промокод исчерпан — пересчитали без него, проверьте сумму и оплатите ещё раз.';
+      msgEl.textContent = 'The promo code is used up — we have recalculated without it; check the total and pay again.';
     } else if(out.error === 'finalize_failed'){
       // pack-v278: скидка увела сумму в 0, но что-то пошло не так уже
       // при самой материализации заказа (см. create-order.js — крайне
@@ -1109,35 +1116,35 @@ async function submitOrder(){
       // свои шаги, сюда попадает только совсем непредвиденное).
       // Место(а) к этому моменту, скорее всего, уже отмечены проданными
       // — не предлагаем «попробовать ещё раз», это может задвоить заказ.
-      msgEl.innerHTML = 'Что-то пошло не так при оформлении бесплатного заказа — не пробуйте ещё раз, а позвоните нам, разберёмся: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'Something went wrong with the free order — please do not retry; call us instead and we will sort it out: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
     } else if(out.error === 'duplicate_seats'){
-      msgEl.innerHTML = 'Одно и то же место попало в заказ дважды — возможно, страница была открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать места заново.';
+      msgEl.innerHTML = 'The same seat ended up in the order twice — the page has probably been open for a while. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and select the seats again.';
     } else if(out.error === 'bad_email'){
-      AELITA_showFieldError(document.getElementById('f-email'), 'Проверьте email — похоже, в адресе опечатка');
-      msgEl.textContent = 'Проверьте email.';
+      AELITA_showFieldError(document.getElementById('f-email'), 'Check your email address — there seems to be a typo');
+      msgEl.textContent = 'Check your email address.';
     } else if(out.error === 'bad_phone'){
-      AELITA_showFieldError(document.getElementById('f-contact'), 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
-      msgEl.textContent = 'Проверьте телефон.';
+      AELITA_showFieldError(document.getElementById('f-contact'), 'Check your phone number — it looks incomplete or incorrect');
+      msgEl.textContent = 'Check your phone number.';
     } else if(out.error === 'bad_name'){
-      AELITA_showFieldError(document.getElementById('f-name'), 'Укажите имя');
-      msgEl.textContent = 'Укажите имя.';
+      AELITA_showFieldError(document.getElementById('f-name'), 'Enter your name');
+      msgEl.textContent = 'Enter your name.';
     } else if(out.error === 'pd_consent_required'){
-      msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него оформить заказ нельзя.';
+      msgEl.textContent = 'Please tick the consent to personal data processing — the order cannot be placed without it.';
     } else if(out.error === 'yookassa_unreachable'){
       // Платёжный сервис не ответил. Заказ у нас есть, места удержаны —
       // повтор имеет смысл, и человеку важно знать, что дело не в нём.
-      msgEl.textContent = 'Платёжный сервис не отвечает — это на его стороне, не у вас. Места за вами, попробуйте нажать «Оплатить» ещё раз через минуту.';
+      msgEl.textContent = 'The payment service is not responding — that is on their side, not yours. Your seats are held; try pressing “Pay” again in a minute.';
     } else if(out.error === 'yookassa_rejected'){
       // Повтор тем же способом не поможет — нужен другой канал.
-      msgEl.innerHTML = 'Платёжный сервис отклонил заказ. Повторять смысла нет — позвоните нам, оформим вручную: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'The payment service declined the order. There is no point retrying — call us and we will arrange it manually: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
     } else if(out.error === 'server_misconfigured'){
-      msgEl.innerHTML = 'Онлайн-оплата сейчас не настроена — это наша ошибка, не ваша. Позвоните, продадим билет напрямую: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'Online payment is not configured right now — that is our fault, not yours. Call us and we will sell you the ticket directly: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
     } else if(out.error === 'unknown_or_closed_performance'){
-      msgEl.innerHTML = 'Продажи на этот показ закрылись, пока страница была открыта. <a href="/tickets" style="color:var(--gold)">Посмотреть афишу</a>';
+      msgEl.innerHTML = 'Sales for this performance closed while the page was open. <a href="/en/tickets" style="color:var(--gold)">View the listings</a>';
     } else if(out.error === 'seat_out_of_range' || out.error === 'bad_seat_count' || out.error === 'bad_quantity'){
-      msgEl.innerHTML = 'Выбор мест не сходится с залом — похоже, страница открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать заново.';
+      msgEl.innerHTML = 'Your seat selection does not match the hall — the page has probably been open for a while. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and select again.';
     } else {
-      msgEl.textContent = 'Не удалось оформить заказ, попробуйте ещё раз.';
+      msgEl.textContent = 'Could not place the order, please try again.';
     }
     document.getElementById('buy-btn').disabled = false;
   }catch(e){
@@ -1154,7 +1161,7 @@ async function submitOrder(){
 // 15 попыток (~30 секунд — вебхуку в норме хватает пары секунд,
 // дольше — уже не задержка, а достойный внимания сбой).
 async function pollOrderStatus(){
-  document.getElementById('title').textContent = 'Проверяем оплату…';
+  document.getElementById('title').textContent = 'Checking the payment…';
   document.querySelector('.bar').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
 
@@ -1165,7 +1172,7 @@ async function pollOrderStatus(){
     // вкладка/устройство, или sessionStorage не пережил переход. Честно
     // говорим, что не можем проверить сами, вместо того чтобы соврать
     // про успех или молчать.
-    showError('Не удалось автоматически проверить статус оплаты. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам.');
+    showError('We could not check the payment status automatically. If the money was charged, the tickets will arrive by email within a few minutes — if they do not, write to us.');
     return;
   }
 
@@ -1179,17 +1186,17 @@ async function pollOrderStatus(){
 
     if(out && out.status === 'paid'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showSuccess('Оплата прошла. Билеты уже летят на почту — проверьте папку «Спам», если через пару минут не появятся.');
+      showSuccess('Payment successful. Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.');
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showSuccess('Оплата прошла. При оформлении произошла редкая техническая накладка с местом — мы уже знаем и свяжемся с вами в ближайшее время, деньги не потеряны.');
+      showSuccess('Payment successful. A rare technical issue occurred with the seat — we already know and will contact you shortly; your money is safe.');
       return;
     }
     if(out && out.status === 'canceled'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showError('Оплата не прошла или была отменена — место(а) снова доступны. Вернитесь на шаг назад и попробуйте ещё раз.');
+      showError('The payment failed or was cancelled — the seat(s) are available again. Go back a step and try again.');
       return;
     }
     // 'processing' / 'pending' / сетевая ошибка / неожиданный ответ —
@@ -1199,7 +1206,7 @@ async function pollOrderStatus(){
 
   // Не дождались определённого статуса за отведённое время — не врём
   // ни про успех, ни про провал, честно объясняем и даём контакт.
-  showError('Оплата обрабатывается дольше обычного. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам, ничего не потеряется.');
+  showError('The payment is taking longer than usual. If the money was charged, the tickets will arrive by email within a few minutes — if they do not, write to us; nothing will be lost.');
 }
 
 init();

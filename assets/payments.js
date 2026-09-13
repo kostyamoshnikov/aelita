@@ -422,8 +422,8 @@
         // делал вывод, что сломан сайт. Ветка else не тронута: там
         // сервер ОТВЕТИЛ, и про VPN писать нельзя.
         showPayMsg(msgElId, LANG === 'en'
-          ? 'Could not reach the payment server. The usual cause is a VPN: the page itself loads through it, but the payment service is hosted in Russia and the request does not get through. Try turning the VPN off and repeating. If you have no VPN on — write to us and we will sort it out.'
-          : 'Не удалось связаться с сервером оплаты. Чаще всего причина — включённый VPN: сама страница через него открывается, а платёжный сервис находится в России и запрос до него не доходит. Попробуйте отключить VPN и повторить. Если VPN не включён — напишите нам, разберёмся.');
+          ? 'Unfortunately, we could not reach the payment server. A VPN is the usual cause — turn it off and try again. If your VPN is off, write to us.'
+          : 'К сожалению, не удалось связаться с сервером оплаты. Чаще всего мешает включённый VPN — отключите его и попробуйте снова. Если VPN выключен, напишите нам.');
       } else {
         showPayMsg(msgElId, t.failed);
       }
