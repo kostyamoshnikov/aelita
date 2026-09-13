@@ -15,10 +15,13 @@
 (function () {
   // === Собственная статистика (pack-v110) — дополняет Метрику, не ===
   // === заменяет её. См. Site/README.md, раздел «Аналитика».       ===
-  // ⚠️ ЗАПОЛНИТЬ после деплоя _tools/Analytics/worker.js — URL
-  // воркера выглядит как https://aelita-analytics.ВАШ-SUBDOMAIN.workers.dev
-  // Пока пусто — сбор просто не отправляется никуда, ошибок нет.
-  const OWN_ANALYTICS_URL = '';
+  // ⚠️ Адрес воркера (_tools/Analytics/worker.js) подставляется из
+  // реестра `_tools/Endpoints/endpoints.json` — генератор
+  // `build_endpoints.py`. Править здесь руками бессмысленно:
+  // следующая генерация затрёт.
+  // ПУСТО — рабочее состояние, а не забытый плейсхолдер: сбор просто
+  // не отправляется никуда, ошибок нет. Выкладке сайта это не мешает.
+  const OWN_ANALYTICS_URL = /* ENDPOINT:analytics_worker:BEGIN */''/* ENDPOINT:analytics_worker:END */;
 
   let ownBuffer = [];
   let ownFlushTimer = null;

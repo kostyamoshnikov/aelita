@@ -15,9 +15,12 @@
 (function () {
   'use strict';
 
-  // Заполняется после деплоя веб-приложения (_tools/Reviews/Code.gs) —
-  // см. _tools/Reviews/README.md, шаг 4.
-  var REVIEWS_API_URL = 'https://script.google.com/macros/s/ВСТАВЬТЕ_ID_ПОСЛЕ_ДЕПЛОЯ/exec';
+  // Адрес веб-приложения (_tools/Reviews/Code.gs) подставляется из
+  // реестра `_tools/Endpoints/endpoints.json` — генератор
+  // `build_endpoints.py`. Править здесь руками бессмысленно:
+  // следующая генерация затрёт. Вписать адрес после публикации:
+  //   python3 _tools/Endpoints/build_endpoints.py --set reviews_webapp=https://.../exec
+  var REVIEWS_API_URL = /* ENDPOINT:reviews_webapp:BEGIN */''/* ENDPOINT:reviews_webapp:END */;
 
   // ── Подстраховка на случай недоступности Apps Script (pack-v111) ──
   // Ответ Apps Script Web App непрозрачен для fetch() без preflight
