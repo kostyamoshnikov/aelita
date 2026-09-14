@@ -83,7 +83,7 @@
       namePh: 'Ваше имя',
       textPh: 'Что вам запомнилось?',
       consent: 'Согласен(на) на публикацию отзыва на сайте',
-      pdConsent: 'Согласен(на) на обработку персональных данных',
+      pdConsent: 'Согласен(на) на <a href="/privacy">обработку персональных данных</a>',
       submit: 'Отправить отзыв',
       sending: 'Отправляем…',
       thanksTitle: 'Спасибо!',
@@ -102,7 +102,7 @@
       namePh: 'Your name',
       textPh: 'What stayed with you?',
       consent: 'I agree to have my review published on the site',
-      pdConsent: 'I agree to the processing of my personal data',
+      pdConsent: 'I agree to the <a href="/en/privacy/">processing of my personal data</a>',
       submit: 'Submit review',
       sending: 'Sending…',
       thanksTitle: 'Thank you!',
@@ -206,6 +206,11 @@
         '<input type="text" class="aud-input" id="aud-name" placeholder="' + t.namePh + '" maxlength="80">' +
         '<textarea class="aud-textarea" id="aud-text" placeholder="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
         '<label class="aud-consent"><input type="checkbox" id="aud-consent"> ' + t.consent + '</label>' +
+        // ⚠️ t.pdConsent содержит <a href> на Политику и вставляется
+        // как HTML намеренно: во всех остальных формах сайта ссылка на
+        // /privacy рядом с чекбоксом есть, и только этот виджет просил
+        // согласие без возможности прочитать, на что соглашаешься
+        // (pack-v358). Экранировать эту строку нельзя — ссылка исчезнет.
         '<label class="aud-consent"><input type="checkbox" id="aud-pd-consent"> ' + t.pdConsent + '</label>' +
         '<p class="aud-error" id="aud-error" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +

@@ -416,7 +416,18 @@ a{color:inherit}
 nav{padding:20px 0}
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 :root{--maxw:1320px}
-html{scroll-behavior:smooth}
+/* Переход по #якорю должен останавливаться НИЖЕ фиксированной шапки.
+   Без этого правила браузер ставит цель в самый верх окна, а шапка
+   (nav{position:fixed}) её накрывает: на /press ссылка «Для прессы» со
+   страницы спектакля уводила на нужный блок, но заголовок пресс-релиза
+   оказывался под шапкой, и сверху читалась строка описания — выглядело
+   как переход не туда. Касалось ВСЕХ якорей сайта, не только /press.
+   Замерено на реальном рендере через локальный сервер (не file://:
+   без сервера абсолютный путь /assets/style.css не резолвится, стили
+   не грузятся, и первый замер дал заниженные 72/54px): шапка 114px на
+   мобильном, 119px на десктопе. Значения ниже — высота плюс воздух. */
+html{scroll-behavior:smooth;scroll-padding-top:136px}
+@media(max-width:600px){html{scroll-padding-top:132px}}
 h1,h2,h3,.disp{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
 a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 @keyframes fade-in{from{opacity:0}to{opacity:1}}
