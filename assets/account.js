@@ -302,6 +302,30 @@
     // 401 у этих трёх ручек — невалидный/просроченный токен, сервер не
     // возвращает 401 ни по какой другой причине, см. register.js/
     // cancel.js/my-registrations.js в _tools/Events/).
+    // pack-v363: открыта ли регистрация на событие. Нужна страницам
+    // деловой программы, которые по умолчанию показывают «регистрация
+    // ещё не открыта» и разворачивают форму, только если сервер
+    // подтвердил обратное. Единственный источник правды — поле status
+    // в _tools/Events/config/events.js; страницы его НЕ дублируют.
+    // Запрос без токена и без побочных эффектов (probe:true), поэтому
+    // вызывается и для неавторизованного посетителя.
+    isEventOpen: async function (eventId) {
+      if (!EVENTS_REGISTER_URL) return false;
+      try {
+        var res = await fetch(EVENTS_REGISTER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event_id: String(eventId || ''), probe: true }),
+        });
+        var data = await res.json().catch(function () { return null; });
+        if (data && typeof data.open === 'boolean') return data.open;
+        return !(data && data.error === 'unknown_or_closed_event');
+      } catch (e) {
+        // Сеть недоступна — не обещаем того, чего не знаем.
+        return false;
+      }
+    },
+
     registerForEvent: async function (eventId, opts) {
       opts = opts || {};
       if (!EVENTS_REGISTER_URL) { notConfigured(); return; }
