@@ -82,8 +82,21 @@
       formTitle: 'Оставить отзыв',
       namePh: 'Ваше имя',
       textPh: 'Что вам запомнилось?',
-      consent: 'Согласен(на) на публикацию отзыва на сайте',
-      pdConsent: 'Согласен(на) на <a href="/privacy">обработку персональных данных</a>',
+      consent: 'Согласен(на) на <a href="/consent#rasprostranenie">публикацию отзыва на сайте</a> (распространение персональных данных)',
+      pdConsent: 'Согласен(на) на <a href="/consent">обработку персональных данных</a>',
+      // ⚠️ Статья 10.1 152-ФЗ и приказ РКН № 18: субъект вправе САМ
+      // установить запреты и условия распространения, а оператор
+      // обязан довести их до сведения неограниченного круга лиц.
+      // До pack-v361 условия были прописаны в тексте согласия
+      // единообразно для всех — то есть человек принимал наши
+      // условия, а не задавал свои. Эти три поля и есть его выбор;
+      // он же показывается рядом с опубликованным отзывом.
+      scopeTitle: 'Как публиковать отзыв',
+      scopeName: 'под именем, которое я указал(а)',
+      scopePseudo: 'под псевдонимом (укажите его в поле имени)',
+      scopeAnon: 'без имени — «Зритель»',
+      noQuote: 'Запрещаю использовать мой отзыв вне сайта (соцсети, афиши, рассылки)',
+      limitNote: 'Автор разрешил публикацию только на этом сайте',
       submit: 'Отправить отзыв',
       sending: 'Отправляем…',
       thanksTitle: 'Спасибо!',
@@ -101,8 +114,14 @@
       formTitle: 'Leave a review',
       namePh: 'Your name',
       textPh: 'What stayed with you?',
-      consent: 'I agree to have my review published on the site',
-      pdConsent: 'I agree to the <a href="/en/privacy/">processing of my personal data</a>',
+      consent: 'I agree to the <a href="/en/consent/#rasprostranenie">publication of my review on the site</a> (dissemination of personal data)',
+      pdConsent: 'I agree to the <a href="/en/consent/">processing of my personal data</a>',
+      scopeTitle: 'How to publish the review',
+      scopeName: 'under the name I have given',
+      scopePseudo: 'under a pseudonym (enter it in the name field)',
+      scopeAnon: 'without a name — “Visitor”',
+      noQuote: 'I prohibit the use of my review outside the site (social media, posters, newsletters)',
+      limitNote: 'The author has permitted publication on this site only',
       submit: 'Submit review',
       sending: 'Sending…',
       thanksTitle: 'Thank you!',
@@ -179,6 +198,12 @@
         '<div class="aud-stars">' + starsHtml(r.rating) + '</div>' +
         '<p class="aud-review-text">' + esc(r.text) + '</p>' +
         '<p class="aud-review-name">' + esc(r.name) + '<span class="aud-review-date">' + esc(r.date) + '</span></p>' +
+        // ⚠️ Запрет, установленный автором, публикуется РЯДОМ с отзывом
+        // намеренно: ч. 9-10 ст. 10.1 152-ФЗ обязывает оператора довести
+        // установленные субъектом запреты и условия до сведения
+        // неограниченного круга лиц. Запрет, известный только нам,
+        // требование не закрывает.
+        (r.no_quote ? '<p class="aud-review-limit">' + t.limitNote + '</p>' : '') +
         '</div>';
     });
     html += '</div>';
@@ -212,6 +237,12 @@
         // согласие без возможности прочитать, на что соглашаешься
         // (pack-v358). Экранировать эту строку нельзя — ссылка исчезнет.
         '<label class="aud-consent"><input type="checkbox" id="aud-pd-consent"> ' + t.pdConsent + '</label>' +
+        '<fieldset class="aud-scope"><legend>' + t.scopeTitle + '</legend>' +
+          '<label class="aud-consent"><input type="radio" name="aud-scope" value="name" checked> ' + t.scopeName + '</label>' +
+          '<label class="aud-consent"><input type="radio" name="aud-scope" value="pseudonym"> ' + t.scopePseudo + '</label>' +
+          '<label class="aud-consent"><input type="radio" name="aud-scope" value="anonymous"> ' + t.scopeAnon + '</label>' +
+          '<label class="aud-consent"><input type="checkbox" id="aud-no-quote"> ' + t.noQuote + '</label>' +
+        '</fieldset>' +
         '<p class="aud-error" id="aud-error" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +
         // Honeypot: скрыто от людей (position off-screen), боты часто
@@ -253,7 +284,12 @@
       submitBtn.disabled = true;
       submitBtn.textContent = t.sending;
 
+      var scopeEl = wrap.querySelector('input[name="aud-scope"]:checked');
+      var nameScope = scopeEl ? scopeEl.value : 'name';
+      var noQuote = wrap.querySelector('#aud-no-quote').checked;
+
       var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent,
+        name_scope: nameScope, no_quote: noQuote,
         website: wrap.querySelector('#aud-website').value }; // honeypot
 
       // Fire-and-forget к Apps Script: ответ CORS-непрозрачный при

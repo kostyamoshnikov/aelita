@@ -424,10 +424,15 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
    как переход не туда. Касалось ВСЕХ якорей сайта, не только /press.
    Замерено на реальном рендере через локальный сервер (не file://:
    без сервера абсолютный путь /assets/style.css не резолвится, стили
-   не грузятся, и первый замер дал заниженные 72/54px): шапка 114px на
-   мобильном, 119px на десктопе. Значения ниже — высота плюс воздух. */
-html{scroll-behavior:smooth;scroll-padding-top:136px}
-@media(max-width:600px){html{scroll-padding-top:132px}}
+   не грузятся, и первый замер дал заниженные 72/54px).
+   ⚠️ Шапка РАЗНОЙ высоты на разных типах страниц: на обычных 114px
+   (мобильный) и 119px (десктоп), на юридических — 143px и 149px, там
+   добавляется строка хлебных крошек. Значения pack-v358 (132/136) были
+   посчитаны по обычной странице и на юридических не срабатывали:
+   заголовок раздела снова уезжал под шапку. Берём по самой высокой
+   плюс воздух. */
+html{scroll-behavior:smooth;scroll-padding-top:168px}
+@media(max-width:600px){html{scroll-padding-top:162px}}
 h1,h2,h3,.disp{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
 a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 @keyframes fade-in{from{opacity:0}to{opacity:1}}
@@ -646,6 +651,18 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 .aud-review-text{color:var(--bone);font-size:14.5px;line-height:1.7;margin:12px 0 16px}
 .aud-review-name{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--sand);display:flex;justify-content:space-between;align-items:baseline}
 .aud-review-date{color:rgba(201,184,163,.5);font-size:11px}
+/* Запрет, установленный автором отзыва (ст. 10.1 152-ФЗ), — тише
+   текста отзыва, но читаемо: это юридически значимая надпись, а не
+   служебная пометка. */
+/* Предупреждение об особенностях показа на странице спектакля
+   (pack-v362). Заметно, но не кричит: это информация для зрителя,
+   который решает, идти ли ему, а не рекламный баннер. */
+.show-warning{border-left:2px solid var(--gold);padding:10px 0 10px 14px;margin:18px 0 0;color:rgba(201,184,163,.85);font-size:14px;line-height:1.6;max-width:640px}
+.show-warning a{color:var(--gold);border-bottom:1px solid rgba(201,184,163,.3)}
+.aud-review-limit{color:rgba(201,184,163,.55);font-size:11px;margin:8px 0 0;font-style:italic}
+.aud-scope{border:1px solid rgba(201,184,163,.18);border-radius:4px;padding:14px 16px 2px;margin:0 0 18px}
+.aud-scope legend{color:rgba(201,184,163,.7);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:0 6px}
+.aud-scope .aud-consent{margin-bottom:12px}
 .aud-stars{letter-spacing:2px}
 .aud-star{color:rgba(232,230,225,.2);font-size:15px}
 .aud-star.on{color:var(--gold)}

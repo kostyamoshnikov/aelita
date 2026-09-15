@@ -576,7 +576,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Пару слов о себе — необязательно</label><textarea placeholder="Что привело, чего ищете…"></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы записаться прямо сейчас — нажмите «Сначала спросить Катю» ниже, мы всё оформим лично.</p>
       <div class="msg" id="payMsg_community" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
       <button class="btn-gold" id="payBtn_community" onclick="AELITA_pay('community', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_community'})">Оплатить — 10 000 ₽/мес →</button>
@@ -659,7 +659,7 @@ p a:hover{opacity:.75}
           <input class="input-clear" id="ent-tg" type="text" autocomplete="off" placeholder="@username">
         </div>
         <div class="field full">
-          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_ent"><span>Согласен(на) на <a href="/privacy" style="color:var(--gold)">обработку персональных данных</a></span></label>
+          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_ent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
           <button class="submit-btn" onclick="handleSubmit_ent()">Записаться</button>
         </div>
       </div>
