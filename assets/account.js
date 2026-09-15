@@ -43,6 +43,7 @@
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
       resending: 'Отправляем письмо…',
+      resentOk: 'Отправлено — проверьте почту',
       resent: 'Письмо с билетом отправлено — проверьте почту, в том числе папку «Спам».',
     },
     en: {
@@ -77,6 +78,7 @@
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
       resending: 'Sending email…',
+      resentOk: 'Sent — check your email',
       resent: 'Ticket email sent — check your inbox, including the spam folder.',
     },
   };
@@ -99,6 +101,10 @@
   var EVENTS_REGISTER_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/register';
   var EVENTS_CANCEL_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/cancel';
   var EVENTS_MY_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/my';
+  // pack-v371: платные билеты в кабинете (раздел «Мои билеты»).
+  var TICKETS_API_BASE = 'https://api.aelita-production.ru/tickets';
+  var TICKETS_MY_ORDERS_URL = TICKETS_API_BASE + '/my-orders';
+  var TICKETS_RESEND_URL = TICKETS_API_BASE + '/resend-ticket';
   var EVENTS_RESEND_URL = EVENTS_API_BASE && EVENTS_API_BASE + '/resend-ticket';
 
   var STORAGE_KEY = 'aelita_account_token';
@@ -522,6 +528,57 @@
         if (opts.onError) opts.onError(errorMessage(data));
         return null;
       } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        return null;
+      }
+    },
+
+    // pack-v371: заказы билетов текущего кабинета. Та же осторожность
+    // с null, что у listEventRegistrations: 401 — «уводить на
+    // /account», остальное — «остаться на странице с ошибкой».
+    listTicketOrders: async function (opts) {
+      opts = opts || {};
+      var token = getToken();
+      if (!token) return null;
+      try {
+        var res = await fetch(TICKETS_MY_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token } });
+        if (res.status === 401) { clearToken(); return null; }
+        var data = await res.json();
+        if (res.ok) return data;
+        if (opts.onError) opts.onError(errorMessage(data));
+        return null;
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        return null;
+      }
+    },
+
+    // Выслать себе билеты повторно. Кнопку блокируем на время запроса:
+    // второе нажатие — второе письмо, а не ускорение первого.
+    resendTicketOrder: async function (orderId, opts) {
+      opts = opts || {};
+      var token = getToken();
+      if (!token) { if (opts.onError) opts.onError(errorMessage({ error: 'auth_required' })); return null; }
+      var buttonEl = opts.buttonEl;
+      var original = buttonEl ? buttonEl.textContent : null;
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.resending; }
+      try {
+        var res = await fetch(TICKETS_RESEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ order_id: orderId }),
+        });
+        var data = await res.json().catch(function () { return null; });
+        if (res.ok && data && data.ok) {
+          if (buttonEl) buttonEl.textContent = t.resentOk;
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+        if (opts.onError) opts.onError(errorMessage(data));
+        return null;
+      } catch (e) {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }

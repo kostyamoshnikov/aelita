@@ -660,9 +660,15 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 .show-warning{border-left:2px solid var(--gold);padding:10px 0 10px 14px;margin:18px 0 0;color:rgba(201,184,163,.85);font-size:14px;line-height:1.6;max-width:640px}
 .show-warning a{color:var(--gold);border-bottom:1px solid rgba(201,184,163,.3)}
 .aud-review-limit{color:rgba(201,184,163,.55);font-size:11px;margin:8px 0 0;font-style:italic}
-.aud-scope{border:1px solid rgba(201,184,163,.18);border-radius:4px;padding:14px 16px 2px;margin:0 0 18px}
-.aud-scope legend{color:rgba(201,184,163,.7);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:0 6px}
-.aud-scope .aud-consent{margin-bottom:12px}
+/* Условия публикации отзыва — дополнительный параметр, а не третье
+   согласие: рамку и заголовок-легенду убрали (pack-v365), они делали
+   блок таким же весомым, как сами согласия. Осталась одна строка со
+   списком и одна необязательная галочка. */
+.aud-scope{margin:2px 0 18px}
+.aud-scope-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--sand);font-size:13px;margin-bottom:12px;cursor:pointer}
+.aud-select{background:rgba(255,255,255,.04);color:var(--bone,#f5f0e8);border:1px solid rgba(201,184,163,.25);border-radius:4px;padding:7px 10px;font-size:13px;font-family:inherit;max-width:100%}
+.aud-select:focus{outline:1px solid var(--gold);outline-offset:2px}
+.aud-scope-check{margin-bottom:0}
 .aud-stars{letter-spacing:2px}
 .aud-star{color:rgba(232,230,225,.2);font-size:15px}
 .aud-star.on{color:var(--gold)}

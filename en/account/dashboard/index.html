@@ -157,6 +157,11 @@ body{max-width:100vw}
       </div>
 
       <div class="acc-section">
+        <h2>My tickets</h2>
+        <div id="ticketOrders"><p style="color:var(--sand)">Loading…</p></div>
+      </div>
+
+      <div class="acc-section">
         <h2>My event registrations</h2>
         <div id="eventRegistrations"><p style="color:var(--sand)">Loading…</p></div>
       </div>
@@ -242,6 +247,14 @@ body{max-width:100vw}
       productEvent: 'Мероприятие',
       emptyPurchases: 'Пока пусто — загляните в <a href="' + TICKETS_URL + '">афишу</a>, если решите на что-нибудь сходить.',
       emptyRegistrations: 'Пока нет активных регистраций — загляните на <a href="' + TICKETS_URL + '">афишу</a>, там же анонсы бесплатных встреч.',
+      emptyTickets: 'Купленных билетов пока нет — загляните в <a href="' + TICKETS_URL + '">афишу</a>.',
+      dateTBA: 'дата уточняется',
+      orderNo: 'Заказ №',
+      ticketsWord: 'билет(ов)',
+      refundedWord: 'возвращено',
+      seatsLabel: 'Места:',
+      freeSeating: 'свободная рассадка',
+      resendTickets: 'Прислать билеты на почту',
       downloadContract: 'Скачать договор',
       qrInEmail: 'QR — в письме с билетом',
       showQrAtEntrance: 'Покажите QR при входе',
@@ -262,6 +275,14 @@ body{max-width:100vw}
       productEvent: 'Event',
       emptyPurchases: 'Nothing here yet — take a look at the <a href="' + TICKETS_URL + '">schedule</a> if you feel like going to something.',
       emptyRegistrations: 'No active registrations yet — take a look at the <a href="' + TICKETS_URL + '">schedule</a>, free meetings are announced there too.',
+      emptyTickets: 'No tickets purchased yet — take a look at the <a href="' + TICKETS_URL + '">schedule</a>.',
+      dateTBA: 'date to be announced',
+      orderNo: 'Order No.',
+      ticketsWord: 'ticket(s)',
+      refundedWord: 'refunded',
+      seatsLabel: 'Seats:',
+      freeSeating: 'free seating',
+      resendTickets: 'Email me the tickets',
       downloadContract: 'Download contract',
       qrInEmail: 'QR is in the ticket email',
       showQrAtEntrance: 'Show the QR at the entrance',
@@ -419,6 +440,53 @@ body{max-width:100vw}
     });
   }
 
+  // pack-v371 — платные билеты в кабинете. До этого раздела покупатель
+  // не видел, что вообще купил билет (OPEN_QUESTIONS.md, вопрос 20).
+  // ⚠️ QR здесь не показывается, в отличие от бесплатных регистраций:
+  // билет живёт в письме, а показ платного билета на экране — отдельное
+  // решение со своими требованиями.
+  function renderTicketOrders(orders) {
+    var el = document.getElementById('ticketOrders');
+    if (!orders || !orders.length) {
+      el.innerHTML = '<div class="empty-state">' + t.emptyTickets + '</div>';
+      return;
+    }
+    el.innerHTML = '<div class="reg-list">' + orders.map(function (o) {
+      var when = o.datetime ? fmtDate(o.datetime) : t.dateTBA;
+      var seats = o.seats && o.seats.length
+        ? t.seatsLabel + ' ' + o.seats.map(function (s) { return s.replace('-', ' ряд, место '); }).join('; ')
+        : t.freeSeating;
+      return '<div class="reg-item">' +
+        '<div class="reg-head"><span class="name">' + escapeHtml(o.title) + '</span>' +
+          '<span class="date">' + escapeHtml(when) + '</span></div>' +
+        '<div class="reg-meta">' + t.orderNo + ' ' + escapeHtml(String(o.orderNumber)) +
+          ' · ' + o.ticketsCount + ' ' + t.ticketsWord +
+          (o.refundedCount ? ' · ' + o.refundedCount + ' ' + t.refundedWord : '') +
+          (o.venue ? ' · ' + escapeHtml(o.venue) : '') + '</div>' +
+        '<div class="reg-actions">' +
+          '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  function onResendTickets(buttonEl) {
+    window.AELITA_account.resendTicketOrder(buttonEl.getAttribute('data-order-id'), {
+      buttonEl: buttonEl,
+      onError: function (msg) { alert(msg); },
+    });
+  }
+
+  function loadTicketOrders() {
+    window.AELITA_account.listTicketOrders({
+      onError: function (msg) {
+        document.getElementById('ticketOrders').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
+      },
+    }).then(function (data) {
+      if (data) renderTicketOrders(data.orders);
+    });
+  }
+
   function loadEventRegistrations() {
     window.AELITA_account.listEventRegistrations({
       onError: function (msg) {
@@ -500,6 +568,7 @@ body{max-width:100vw}
     document.getElementById('acc-email').textContent = data.name ? (data.name + ' · ' + data.email) : data.email;
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
+    loadTicketOrders();
     loadEventRegistrations();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';

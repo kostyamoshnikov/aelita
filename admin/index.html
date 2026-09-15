@@ -245,6 +245,26 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
     </div>
     <div id="ordersBlock"><div class="empty-state">Загружаем…</div></div>
 
+    <!-- pack-v370. Дозавершение заказов, по которым вебхук не
+         отработал: до pack-v369 в ЮKassa не был указан URL уведомлений,
+         и такие заказы остались в статусе «ожидает оплаты» с пустым
+         списком билетов, хотя деньги получены. ЮKassa эти уведомления
+         не повторит — провести можно только отсюда. -->
+    <details class="backfill-box" style="margin-top:18px;border:1px solid rgba(201,184,163,.2);border-radius:6px;padding:12px 14px">
+      <summary style="cursor:pointer;color:var(--sand);font-size:13px">Провести оплату вручную (если заказ не появился после оплаты)</summary>
+      <p style="color:var(--sand);font-size:12px;line-height:1.6;margin:10px 0">
+        Вставьте ID платежей из личного кабинета ЮKassa — по одному в строке.
+        Система запросит платёж у ЮKassa, выпустит билеты и отправит письмо покупателю,
+        ровно как при обычной оплате. Повторный запуск по уже проведённому платежу
+        безопасен: второй раз билеты не выпустятся.
+      </p>
+      <textarea id="backfillIds" class="search" rows="3" placeholder="323b8651-000f-5000-b0..." style="width:100%;max-width:100%;font-family:monospace;font-size:12px"></textarea>
+      <div style="margin-top:10px">
+        <button class="mini-btn" id="backfillBtn">Провести</button>
+        <span id="backfillMsg" style="font-size:12px;color:var(--sand);margin-left:10px"></span>
+      </div>
+    </details>
+
     <!-- TICKETS_TODO.md, п.6 — до этого раздела остаток карты можно
          было узнать только тем же способом, что и покупатель (ввести
          код на tickets-buy), то есть уже ЗНАЯ код заранее. Сценарий
@@ -462,6 +482,10 @@ var ADMIN_REFUND_DOCUMENT_URL = API_BASE && API_BASE + '/refund-document';
 // ADMIN_TODO.md, п.1.1 — список заказов билетов (см.
 // _tools/Admin/tickets-orders.js).
 var ADMIN_ORDERS_URL = API_BASE && API_BASE + '/tickets-orders';
+// pack-v368: выслать билеты повторно (_tools/Admin/tickets-resend.js).
+var ADMIN_RESEND_URL = API_BASE && API_BASE + '/tickets-resend';
+// pack-v370: дозавершение оплаченных заказов (_tools/Admin/tickets-backfill.js).
+var ADMIN_BACKFILL_URL = API_BASE && API_BASE + '/tickets-backfill';
 // TICKETS_TODO.md, п.6 — список подарочных карт (см.
 // _tools/Admin/gift-cards.js).
 var ADMIN_GIFT_CARDS_URL = API_BASE && API_BASE + '/gift-cards';
@@ -1395,13 +1419,86 @@ function renderOrders(orders) {
         '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · ' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</div></div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:11px;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
-      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button></div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' +
+        (o.status === 'paid'
+          ? '<button class="mini-btn" data-ord-action="resend" data-ord-num="' + escapeHtml(o.orderNumber || '') + '">Выслать билеты повторно</button>'
+          : '') +
+        '<span class="ord-resend-msg" id="ord-resend-' + idx + '" style="font-size:12px;color:var(--sand);margin-left:10px"></span>' +
+      '</div>' +
       '<div class="ev-people" id="ord-tickets-' + idx + '">' + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
     '</div>';
   }).join('');
 }
 
-document.getElementById('ordersBlock').addEventListener('click', function (e) {
+document.getElementById('backfillBtn').addEventListener('click', async function () {
+  var btn = this;
+  var msg = document.getElementById('backfillMsg');
+  var ids = document.getElementById('backfillIds').value
+    .split(/[\s,;]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+  if (!ids.length) { msg.textContent = 'Вставьте хотя бы один ID платежа.'; return; }
+  if (ids.length > 20) { msg.textContent = 'За раз не больше 20 платежей.'; return; }
+  // ⚠️ Подтверждение: покупатели получат письма немедленно.
+  if (!confirm('Провести ' + ids.length + ' платеж(ей)? Покупателям уйдут письма с билетами.')) return;
+  btn.disabled = true; msg.textContent = 'Проводим… это может занять до минуты.';
+  try {
+    var res = await fetch(ADMIN_BACKFILL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+      body: JSON.stringify({ payment_ids: ids }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json().catch(function () { return null; });
+    if (res.ok && data && data.ok) {
+      var failed = (data.results || []).filter(function (r) { return !r.ok; });
+      msg.textContent = 'Обработано: ' + data.processed +
+        (failed.length ? ' · с ошибкой: ' + failed.length : '') +
+        ' · проверьте список заказов ниже.';
+      loadOrders();
+    } else {
+      msg.textContent = 'Не получилось провести.';
+    }
+  } catch (err) {
+    msg.textContent = 'Нет связи с сервером.';
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('ordersBlock').addEventListener('click', async function (e) {
+  var resendBtn = e.target.closest('button[data-ord-action="resend"]');
+  if (resendBtn) {
+    // ⚠️ Подтверждение обязательно: покупатель получит письмо немедленно,
+    // отменить отправку нельзя. Случайное нажатие в списке из сотни
+    // заказов иначе уходит человеку молча.
+    var num = resendBtn.dataset.ordNum;
+    if (!confirm('Выслать билеты по заказу № ' + num + ' повторно? Письмо уйдёт на адрес, указанный в заказе.')) return;
+    var msgEl = resendBtn.parentNode.querySelector('.ord-resend-msg');
+    resendBtn.disabled = true; msgEl.textContent = 'Отправляем…';
+    try {
+      var res = await fetch(ADMIN_RESEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+        body: JSON.stringify({ order_number: num }),
+      });
+      if (res.status === 401) { clearToken(); showGate(); return; }
+      var data = await res.json().catch(function () { return null; });
+      if (res.ok && data && data.ok) {
+        msgEl.textContent = 'Отправлено на ' + (data.email || 'адрес из заказа') + ' · билетов: ' + data.tickets;
+      } else {
+        var code = data && data.error;
+        msgEl.textContent =
+          code === 'nothing_to_send' ? 'Все билеты заказа возвращены — отправлять нечего.' :
+          code === 'order_not_paid' ? 'Заказ не оплачен.' :
+          code === 'mail_failed' ? 'Почта не приняла письмо. Проверьте MAIL_USER/MAIL_PASS.' :
+          code === 'order_not_found' ? 'Заказ не найден.' : 'Не получилось отправить.';
+        resendBtn.disabled = false;
+      }
+    } catch (err) {
+      msgEl.textContent = 'Нет связи с сервером.';
+      resendBtn.disabled = false;
+    }
+    return;
+  }
+
   var btn = e.target.closest('button[data-ord-action="toggle"]');
   if (!btn) return;
   var box = document.getElementById('ord-tickets-' + btn.dataset.ordIdx);

@@ -91,9 +91,9 @@
       // единообразно для всех — то есть человек принимал наши
       // условия, а не задавал свои. Эти три поля и есть его выбор;
       // он же показывается рядом с опубликованным отзывом.
-      scopeTitle: 'Как публиковать отзыв',
-      scopeName: 'под именем, которое я указал(а)',
-      scopePseudo: 'под псевдонимом (укажите его в поле имени)',
+      scopeTitle: 'Публиковать отзыв',
+      scopeName: 'под моим именем',
+      scopePseudo: 'под псевдонимом из поля имени',
       scopeAnon: 'без имени — «Зритель»',
       noQuote: 'Запрещаю использовать мой отзыв вне сайта (соцсети, афиши, рассылки)',
       limitNote: 'Автор разрешил публикацию только на этом сайте',
@@ -116,9 +116,9 @@
       textPh: 'What stayed with you?',
       consent: 'I agree to the <a href="/en/consent/#rasprostranenie">publication of my review on the site</a> (dissemination of personal data)',
       pdConsent: 'I agree to the <a href="/en/consent/">processing of my personal data</a>',
-      scopeTitle: 'How to publish the review',
-      scopeName: 'under the name I have given',
-      scopePseudo: 'under a pseudonym (enter it in the name field)',
+      scopeTitle: 'Publish the review',
+      scopeName: 'under my name',
+      scopePseudo: 'under the pseudonym from the name field',
       scopeAnon: 'without a name — “Visitor”',
       noQuote: 'I prohibit the use of my review outside the site (social media, posters, newsletters)',
       limitNote: 'The author has permitted publication on this site only',
@@ -230,19 +230,36 @@
         '</div>' +
         '<input type="text" class="aud-input" id="aud-name" placeholder="' + t.namePh + '" maxlength="80">' +
         '<textarea class="aud-textarea" id="aud-text" placeholder="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
-        '<label class="aud-consent"><input type="checkbox" id="aud-consent"> ' + t.consent + '</label>' +
+        // ⚠️ ТЕКСТ СОГЛАСИЯ ОБЯЗАТЕЛЬНО В <span> (pack-v365).
+        // `.aud-consent` — это flex-контейнер, а голые текстовые узлы
+        // внутри flex становятся ОТДЕЛЬНЫМИ анонимными flex-элементами.
+        // Из-за этого строка «Согласен(на) на [ссылка] (распространение
+        // персональных данных)» разъезжалась на мобильном в три колонки:
+        // текст до ссылки, сама ссылка и текст после неё вставали рядом
+        // как три колонки. Обёртка делает всё это одним элементом,
+        // который переносится нормально.
+        '<label class="aud-consent"><input type="checkbox" id="aud-consent"><span>' + t.consent + '</span></label>' +
         // ⚠️ t.pdConsent содержит <a href> на Политику и вставляется
         // как HTML намеренно: во всех остальных формах сайта ссылка на
         // /privacy рядом с чекбоксом есть, и только этот виджет просил
         // согласие без возможности прочитать, на что соглашаешься
         // (pack-v358). Экранировать эту строку нельзя — ссылка исчезнет.
-        '<label class="aud-consent"><input type="checkbox" id="aud-pd-consent"> ' + t.pdConsent + '</label>' +
-        '<fieldset class="aud-scope"><legend>' + t.scopeTitle + '</legend>' +
-          '<label class="aud-consent"><input type="radio" name="aud-scope" value="name" checked> ' + t.scopeName + '</label>' +
-          '<label class="aud-consent"><input type="radio" name="aud-scope" value="pseudonym"> ' + t.scopePseudo + '</label>' +
-          '<label class="aud-consent"><input type="radio" name="aud-scope" value="anonymous"> ' + t.scopeAnon + '</label>' +
-          '<label class="aud-consent"><input type="checkbox" id="aud-no-quote"> ' + t.noQuote + '</label>' +
-        '</fieldset>' +
+        '<label class="aud-consent"><input type="checkbox" id="aud-pd-consent"><span>' + t.pdConsent + '</span></label>' +
+        // Условия публикации — дополнительный параметр, а не ещё три
+        // галочки в ряд: три радиокнопки весили визуально столько же,
+        // сколько сами согласия, хотя по смыслу это уточнение. Выпадающий
+        // список занимает одну строку и по умолчанию показывает вариант,
+        // который выберут почти все.
+        '<div class="aud-scope">' +
+          '<label class="aud-scope-row" for="aud-name-scope"><span>' + t.scopeTitle + '</span>' +
+            '<select id="aud-name-scope" class="aud-select">' +
+              '<option value="name" selected>' + t.scopeName + '</option>' +
+              '<option value="pseudonym">' + t.scopePseudo + '</option>' +
+              '<option value="anonymous">' + t.scopeAnon + '</option>' +
+            '</select>' +
+          '</label>' +
+          '<label class="aud-consent aud-scope-check"><input type="checkbox" id="aud-no-quote"><span>' + t.noQuote + '</span></label>' +
+        '</div>' +
         '<p class="aud-error" id="aud-error" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +
         // Honeypot: скрыто от людей (position off-screen), боты часто
@@ -284,7 +301,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = t.sending;
 
-      var scopeEl = wrap.querySelector('input[name="aud-scope"]:checked');
+      var scopeEl = wrap.querySelector('#aud-name-scope');
       var nameScope = scopeEl ? scopeEl.value : 'name';
       var noQuote = wrap.querySelector('#aud-no-quote').checked;
 
