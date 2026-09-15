@@ -353,13 +353,14 @@
       onSuccess: function(data){
         document.getElementById('regForm').style.display = 'none';
         var okEl = document.getElementById('regOk');
+        // pack-v364: текст подтверждения переехал в общий
+        // registrationSuccessHtml (/assets/account.js). Здесь была
+        // своя копия с ветками «билетов больше одного» и «письмо не
+        // ушло» — новые страницы лекций (pack-v363) эти ветки не
+        // получили, потому что блок переносили руками. Теперь текст
+        // один на все страницы.
+        okEl.innerHTML = window.AELITA_account.registrationSuccessHtml(data);
         okEl.style.display = 'block';
-        if(data && data.quantity > 1){
-          okEl.querySelector('p').innerHTML = 'Готово — вы зарегистрированы, билетов: ' + data.quantity + '! Все билеты с QR-кодами отправлены на почту одним письмом (проверьте папку «Спам», если не видно). Отменить регистрацию можно в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>.';
-        }
-        if(data && data.mailSent === false){
-          okEl.innerHTML = '<p style="color:var(--gold)">Готово — вы зарегистрированы! Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в <a href="/account/dashboard" style="color:var(--gold)">личном кабинете</a>. Если билет нужен на почту — напишите нам: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>.</p>';
-        }
       },
       onError: function(msg){ msgEl.textContent = msg; },
     });

@@ -121,6 +121,12 @@
     return (data && t.errors[data.error]) || t.fallback;
   }
 
+  function escapeHtml_(s) {
+    var d = document.createElement('div');
+    d.textContent = String(s == null ? '' : s);
+    return d.innerHTML;
+  }
+
   window.AELITA_account = {
     isLoggedIn: function () { return !!getToken(); },
     logout: function () { clearToken(); },
@@ -309,6 +315,72 @@
     // в _tools/Events/config/events.js; страницы его НЕ дублируют.
     // Запрос без токена и без побочных эффектов (probe:true), поэтому
     // вызывается и для неавторизованного посетителя.
+    // pack-v364: единый текст подтверждения регистрации для ВСЕХ
+    // страниц с регистрацией. До этого он был скопирован в разметку
+    // каждой страницы, и копии уже разошлись: страницы встреч
+    // обрабатывали несколько билетов и сбой почты, новые страницы
+    // лекций (pack-v363) — нет, потому что блок переносили руками.
+    // Тот же урок, что с reviews.js (pack-v358): один текст в двух
+    // местах расходится молча.
+    //
+    // Что показываем сверх прежнего — подсмотрено на странице
+    // подтверждения Timepad: АДРЕС ПОЧТЫ, на который ушло письмо
+    // (человек регистрируется через кабинет и не всегда помнит, какой
+    // email там указан — без адреса он не знает, где искать), контакт
+    // поддержки в обычном случае, а не только при сбое, и «как
+    // добраться», пока страница открыта.
+    registrationSuccessHtml: function (data) {
+      data = data || {};
+      var gold = 'style="color:var(--gold)"';
+      var mail = 'aelita.production@yandex.ru';
+      var qty = Number(data.quantity) || 1;
+      var dash = LANG === 'en' ? '/en' : '';
+      var L = LANG === 'en'
+        ? {
+            okFail: function (q) { return 'Done — you are registered' + (q > 1 ? ', tickets: ' + q : '') + '. We could not send the email with your ticket, but the registration is saved — you will find it in your '; },
+            cabinet: 'account', ifNeed: '. If you need the ticket by email, write to us: ',
+            okHead: function (q) { return 'Done — you are registered' + (q > 1 ? ', tickets: ' + q : '') + '! '; },
+            many: function (to) { return 'All tickets with QR codes have been sent in a single email' + to + ' — at the entrance each one shows its own code.'; },
+            one: function (to) { return 'A ticket with a QR code has been sent' + to + '.'; },
+            toMail: ' to ', toDefault: ' to your email',
+            cancel: ' You can cancel the registration in your ',
+            where: 'Where: ', how: 'how to get there', when: 'When: ',
+            spam: 'Email not arrived? Check your spam folder. If it is not there either — write to ',
+            spamTail: ', stating the name of the event.',
+          }
+        : {
+            okFail: function (q) { return 'Готово — вы зарегистрированы' + (q > 1 ? ', билетов: ' + q : '') + '. Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в '; },
+            cabinet: 'личном кабинете', ifNeed: '. Если билет нужен на почту — напишите нам: ',
+            okHead: function (q) { return 'Готово — вы зарегистрированы' + (q > 1 ? ', билетов: ' + q : '') + '! '; },
+            many: function (to) { return 'Все билеты с QR-кодами отправлены одним письмом' + to + ' — на входе каждый показывает свой код.'; },
+            one: function (to) { return 'Билет с QR-кодом отправлен' + to + '.'; },
+            toMail: ' на ', toDefault: ' на почту',
+            cancel: ' Отменить регистрацию можно в ',
+            where: 'Где: ', how: 'как добраться', when: 'Когда: ',
+            spam: 'Письмо не пришло? Загляните в папку «Спам». Если его нет и там — напишите на ',
+            spamTail: ', указав название события.',
+          };
+      var cab = '<a href="' + dash + '/account/dashboard" ' + gold + '>' + L.cabinet + '</a>';
+
+      if (data.mailSent === false) {
+        return '<p ' + gold + '>' + L.okFail(qty) + cab + L.ifNeed +
+          '<a href="mailto:' + mail + '" ' + gold + '>' + mail + '</a>.</p>';
+      }
+
+      var to = data.email ? L.toMail + '<strong>' + escapeHtml_(data.email) + '</strong>' : L.toDefault;
+      var html = '<p ' + gold + '>' + L.okHead(qty) + (qty > 1 ? L.many(to) : L.one(to)) + L.cancel + cab + '.</p>';
+
+      if (data.venueLabel) {
+        html += '<p style="color:var(--sand);font-size:14px;margin-top:10px">' + L.where + escapeHtml_(data.venueLabel) +
+          ' · <a href="https://yandex.ru/maps/?text=' + encodeURIComponent(data.venueLabel) + '" target="_blank" rel="noopener" ' + gold + '>' + L.how + '</a>' +
+          (data.datetimeLabel ? '<br>' + L.when + escapeHtml_(data.datetimeLabel) : '') + '</p>';
+      }
+
+      html += '<p style="color:var(--sand);font-size:13px;margin-top:10px">' + L.spam +
+        '<a href="mailto:' + mail + '" ' + gold + '>' + mail + '</a>' + L.spamTail + '</p>';
+      return html;
+    },
+
     isEventOpen: async function (eventId) {
       if (!EVENTS_REGISTER_URL) return false;
       try {

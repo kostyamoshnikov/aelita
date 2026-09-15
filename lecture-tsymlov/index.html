@@ -208,6 +208,11 @@
         hide('regForm'); show('regClosed'); return;
       }
       if (res && res.error) { msg.textContent = 'Не получилось зарегистрироваться. Попробуйте ещё раз или напишите нам.'; btn.disabled = false; return; }
+      // Текст подтверждения — общий для всех страниц с регистрацией
+      // (см. registrationSuccessHtml в /assets/account.js). Здесь его
+      // не дублируем: копии расходятся.
+      var okEl = document.getElementById('regOk');
+      okEl.innerHTML = window.AELITA_account.registrationSuccessHtml(res);
       hide('regForm'); show('regOk');
     } catch (e) {
       msg.textContent = 'Не получилось связаться с сервером. Чаще всего мешает включённый VPN — отключите его и попробуйте снова.';
