@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>How dance is born and lives in the real world — Mikhail Kazmiruk — AELITA PRODUCTION</title>
-<meta name="description" content="Talk · lecture series opening. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show ">
+<meta name="description" content="Talk. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show">
 <link rel="canonical" href="https://aelita-production.ru/en/lecture-kazmiruk/">
 <link rel="alternate" hreflang="ru" href="https://aelita-production.ru/lecture-kazmiruk/">
 <link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/lecture-kazmiruk/">
@@ -26,12 +26,12 @@
 <meta property="og:url" content="https://aelita-production.ru/en/lecture-kazmiruk/">
 <meta property="og:site_name" content="AELITA PRODUCTION">
 <meta property="og:title" content="How dance is born and lives in the real world — Mikhail Kazmiruk — AELITA PRODUCTION">
-<meta property="og:description" content="Talk · lecture series opening. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show ">
+<meta property="og:description" content="Talk. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show">
 <meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="How dance is born and lives in the real world — Mikhail Kazmiruk — AELITA PRODUCTION">
-<meta name="twitter:description" content="Talk · lecture series opening. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show ">
+<meta name="twitter:description" content="Talk. Mikhail Kazmiruk — Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage. In three years, the “New Dance” programme has produced more than 150 projects — among them the show">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,7 @@
     <div class="meta">October 23 · 18:00 · Red Hall</div>
     <h1>How dance is born and lives in the real world</h1>
     <div class="speaker-line reveal">
-      <img src="https://cuire-fest.ru/assets/speakers/kazmiruk.jpg" alt="Mikhail Kazmiruk">
+      <img src="/images/kazmiruk.jpg" alt="Mikhail Kazmiruk">
       <div class="who">
         <div><a href="/en/kazmiruk">Mikhail Kazmiruk</a></div>
         <div class="role">Curator of the “New Dance” programme at the Alexandrinsky Theatre's New Stage</div>
@@ -107,41 +107,14 @@
   <div class="wrap reveal">
     <span class="eyebrow">Register</span>
     <h2 style="margin-top:14px">Registration for the event</h2>
-    <p class="sub">Free admission, limited seats. To register, you'll need an account on the site — it's also where all your event registrations and ticket purchases are kept; setting one up takes a minute and any email works. After you register, a ticket with a QR code will be emailed to you.</p>
-    <p style="color:var(--gold);font-size:12px;margin-top:6px;margin-bottom:20px">Unfortunately, registration may fail when a VPN is on — please turn it off and try again.</p>
-
-    <div id="regClosed">
-      <p style="color:var(--sand)">Registration for this event is not open yet. Leave your email in our <a href="/#subscribe" style="color:var(--gold)">newsletter</a> or subscribe to the <a href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" style="color:var(--gold)">Telegram bot</a> — we will let you know as soon as it opens.</p>
-    </div>
-
-    <div id="regLoggedOut" style="display:none">
-      <p style="color:var(--sand);margin-bottom:16px">Haven't signed in before? Create an account right here — it takes a minute.</p>
-      <a class="submit-btn" id="regLoginLink" href="/en/account" style="text-decoration:none;display:inline-block">Sign in or register →</a>
-    </div>
-
-    <div id="regAlready" style="display:none">
-      <p style="color:var(--gold)">You are already registered for this event — a ticket with a QR code has been sent to your email. You can manage your registration in your <a href="/en/account/dashboard" style="color:var(--gold)">your account</a>.</p>
-    </div>
-
-    <div id="regForm" style="display:none">
-      <div style="margin-bottom:16px">
-        <label for="regQuantity" style="display:block;color:var(--sand);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Number of tickets</label>
-        <select id="regQuantity" style="background:var(--surface,#1a1a1a);color:var(--bone,#fff);border:1px solid rgba(255,255,255,.2);padding:10px 14px;font-size:15px;border-radius:4px">
-          <option value="1">1 — just me</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <p style="color:var(--sand);font-size:12px;margin-top:6px">Bringing friends? Each person gets their own QR code at the door — one email, with all tickets attached.</p>
-      </div>
-      <button class="submit-btn" id="regBtn" onclick="doRegisterEvent()">Register →</button>
-      <p id="regMsg" style="color:#C98B6B;font-size:13px;margin-top:10px;min-height:16px"></p>
-    </div>
-
-    <div id="regOk" style="display:none">
-      <p style="color:var(--gold)">Done — you're registered! A ticket with a QR code has been emailed to you (check your Spam folder if you don't see it). You can cancel your registration in <a href="/en/account/dashboard" style="color:var(--gold)">your account</a>.</p>
-    </div>
+    <!-- ⚠️ pack-v378: регистрация ведётся на Timepad, не на этом сайте
+         (решение заказчика). Внутренняя система регистрации
+         (pack-v363) для НОВЫХ лекций не используется — см. комментарий
+         в _tools/Events/config/events.js. Когда событие опубликуют на
+         Timepad, здесь одной строкой ставится ссылка вместо этого
+         блока: искать TIMEPAD_URL_PLACEHOLDER по всему Site/. -->
+    <p class="sub">Free entry, limited seats. Registration — on Timepad.</p>
+    <p style="color:var(--sand)">The registration link will appear here once the event is published on Timepad. In the meantime — leave your email in our <a href="/#subscribe" style="color:var(--gold)">newsletter</a> or subscribe to the <a href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" style="color:var(--gold)">Telegram bot</a>: we'll let you know as soon as registration opens. TIMEPAD_URL_PLACEHOLDER</p>
   </div>
 </div>
 
@@ -150,85 +123,15 @@
     <div class="sec-head reveal"><h2>Other business programme events</h2></div>
     <div class="other-grid reveal">
       <a class="other-card" href="/en/lecture-tsymlov" style="color:inherit;text-decoration:none"><span class="tag">Talk</span><h3>Artificial intelligence: what it can already do, and where it gets it wrong</h3><p>Alexey Tsymlov</p></a>
-      <a class="other-card" href="/en/lecture-bychkova" style="color:inherit;text-decoration:none"><span class="tag">Workshop</span><h3>How to sound like someone people want to trust</h3><p>Alena Bychkova</p></a>
-      <a class="other-card" href="/en/lecture-abdulova" style="color:inherit;text-decoration:none"><span class="tag">Talk</span><h3>Art as a Startup: Engineering Attention and Reality</h3><p>Katya Abdulova</p></a>
+      <a class="other-card" href="/en/lecture-bychkova" style="color:inherit;text-decoration:none"><span class="tag">Workshop</span><h3>Without a Teleprompter</h3><p>Alena Bychkova</p></a>
+      <a class="other-card" href="/en/lecture-abdulova" style="color:inherit;text-decoration:none"><span class="tag">Talk</span><h3>Landscapes of Reality</h3><p>Katya Abdulova</p></a>
+      <a class="other-card" href="/en/lecture-gubanova" style="color:inherit;text-decoration:none"><span class="tag">Talk · closing</span><h3>Cities of Art</h3><p>Alexandra Gubanova</p></a>
       <a class="other-card" href="/en/business-program" style="color:inherit;text-decoration:none"><span class="tag">Business programme</span><h3>All talks and workshops</h3><p>The full business programme of the “Tochka Cuire” festival.</p></a>
     </div>
   </div>
 </section>
 
 </main>
-
-<script src="/assets/account.js"></script>
-<script>
-// ── Регистрация на событие деловой программы (pack-v363) ──────────
-// Состояние по умолчанию в разметке — «регистрация ещё не открыта».
-// Единственный источник правды о том, открыта ли она, — поле status
-// в _tools/Events/config/events.js. Страница НЕ дублирует этот флаг:
-// она спрашивает сервер и рисует то, что он ответил. Поэтому
-// открытие регистрации — правка одного файла конфига, а не обход
-// четырёх страниц.
-// Порядок ровно такой же, как на страницах открытых встреч
-// (/workshop-entrepreneurs/), с одним отличием: сначала выясняется,
-// открыта ли регистрация вообще. Открытость живёт в
-// _tools/Events/config/events.js (поле status) и проверяется на
-// СЕРВЕРЕ — register.js возвращает unknown_or_closed_event. Здесь мы
-// лишь не показываем форму, которая всё равно не сработает: даже если
-// этот скрипт обойти, зарегистрироваться не выйдет.
-(function () {
-  const EVENT_ID = 'lecture-kazmiruk';
-  const PAGE_PATH = '/en/lecture-kazmiruk';
-
-  const show = (id) => { const e = document.getElementById(id); if (e) e.style.display = 'block'; };
-  const hide = (id) => { const e = document.getElementById(id); if (e) e.style.display = 'none'; };
-
-  async function init() {
-    // Статус спрашиваем у сервера (probe в _tools/Events/register.js).
-    // Нет ответа или регистрация закрыта — оставляем состояние
-    // «пока не открыта»: оно безопаснее формы, которая не сработает.
-    if (!window.AELITA_account || !(await window.AELITA_account.isEventOpen(EVENT_ID))) return;
-    hide('regClosed');
-
-    const link = document.getElementById('regLoginLink');
-    if (link) link.href = '/en/account?next=' + encodeURIComponent(PAGE_PATH + '?auto_register=1');
-
-    if (!window.AELITA_account || !window.AELITA_account.isLoggedIn()) { show('regLoggedOut'); return; }
-    let data = null;
-    try { data = await window.AELITA_account.listEventRegistrations(); } catch (e) {}
-    const already = data && data.registrations && data.registrations.some(function (r) { return r.eventId === EVENT_ID; });
-    if (already) { show('regAlready'); return; }
-    show('regForm');
-    if (new URLSearchParams(location.search).get('auto_register') === '1') doRegisterEvent();
-  }
-
-  window.doRegisterEvent = async function () {
-    const btn = document.getElementById('regBtn');
-    const msg = document.getElementById('regMsg');
-    const qty = Number((document.getElementById('regQuantity') || {}).value || 1);
-    btn.disabled = true; msg.textContent = '';
-    try {
-      const res = await window.AELITA_account.registerForEvent(EVENT_ID, { quantity: qty });
-      if (res && res.error === 'unknown_or_closed_event') {
-        hide('regForm'); show('regClosed'); return;
-      }
-      if (res && res.error) { msg.textContent = 'Не получилось зарегистрироваться. Попробуйте ещё раз или напишите нам.'; btn.disabled = false; return; }
-      // Текст подтверждения — общий для всех страниц с регистрацией
-      // (см. registrationSuccessHtml в /assets/account.js). Здесь его
-      // не дублируем: копии расходятся.
-      var okEl = document.getElementById('regOk');
-      okEl.innerHTML = window.AELITA_account.registrationSuccessHtml(res);
-      hide('regForm'); show('regOk');
-    } catch (e) {
-      msg.textContent = 'Не получилось связаться с сервером. Чаще всего мешает включённый VPN — отключите его и попробуйте снова.';
-      btn.disabled = false;
-    }
-  };
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
-</script>
-
 
 <footer>
   <div class="wrap">
