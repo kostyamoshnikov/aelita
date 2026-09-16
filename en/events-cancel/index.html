@@ -5,7 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cancel registration — AELITA PRODUCTION</title>
 <!--
-  EN twin of Site/events-cancel/index.html — see its comments for the full reasoning (why cancellation requires a button click, not just opening the link).
+  AELITA PRODUCTION · Events — страница-приёмник ссылки «Отменить
+  регистрацию» из письма (pack-v296, см. Events/register.js и
+  Events/lib/event-cancel-token.js).
+
+  ⚠️ ПОЧЕМУ ОТМЕНА НЕ ПРОИСХОДИТ САМА ПРИ ОТКРЫТИИ ССЫЛКИ. Ссылка —
+  обычный GET-переход по клику в письме, а сама отмена — POST на
+  /events/cancel. Если бы страница отправляла этот POST сама, не
+  дожидаясь действия человека, её выполнил бы и антивирус/почтовый
+  сканер, который открывает ссылки из письма ДО того, как их увидит
+  адресат (обычная практика корпоративной почты) — отмена случилась бы
+  раньше, чем человек вообще прочитал письмо. Кнопка «Да, отменить»
+  здесь не формальность, а единственная защита от этого сценария:
+  сканеры не нажимают кнопки, только загружают страницы.
+
+  Один и тот же токен использован дважды подряд (двойной клик,
+  открытие в двух вкладках) — не ошибка, cancel.js отвечает тем же
+  успехом на уже отменённую регистрацию своим кодом not_registered,
+  который эта страница показывает как «уже было отменено», не как
+  сбой (см. render() ниже).
 -->
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
