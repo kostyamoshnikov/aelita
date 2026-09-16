@@ -131,6 +131,10 @@ section{padding:90px 0}
 .time-item .time{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--gold);font-weight:300}
 .time-item .event{font-size:15px;color:var(--bone)}
 .time-item .event small{display:block;font-size:12px;color:var(--sand);margin-top:3px}
+.tix-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;margin-top:10px;padding:10px 22px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;transition:all .3s}
+.tix-btn:hover{background:var(--gold);color:var(--ink)}
+.tix-btn.reg{border-color:rgba(232,230,225,.4);color:var(--bone)}
+.tix-btn.reg:hover{background:var(--bone);color:var(--ink);border-color:var(--bone)}
 @media(max-width:760px){
   .days-tabs{display:flex;flex-direction:row;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch}
   .day-tab{flex:0 0 auto;min-width:84px;padding:14px 12px;text-align:center}
@@ -302,7 +306,6 @@ section{padding:90px 0}
 <nav class="quicknav" aria-label="Quick page links">
   <div class="quicknav-in">
     <a href="#program">Programme</a>
-    <a href="#schedule">Schedule</a>
     <a href="#schedule" class="gold">Tickets</a>
     <a href="#business">Business programme</a>
     <a href="#exhibitions">Exhibitions</a>
@@ -369,7 +372,7 @@ section{padding:90px 0}
 
       <a class="prog-item" href="/en/meydey">
         <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Gallery · Oct 25</span></div>
-        <div class="prog-title"><h3>Mayday</h3><p class="genre">Physical theatre performance · OMYT</p><p class="desc">A distress signal is sent — but the disaster never comes. A performance-reflection on getting lost inside time without losing touch with your real self. Standing tickets — 1,500 ₽.</p></div>
+        <div class="prog-title"><h3>Mayday</h3><p class="genre">Physical theatre performance · OMYT</p><p class="desc">A distress signal is sent — but the disaster never comes. A performance-reflection on getting lost inside time without losing touch with your real self.</p></div>
         <div class="prog-right"><span class="dur">~45 min</span></div>
       </a>
 
@@ -430,31 +433,31 @@ section{padding:90px 0}
         <div class="time-item"><span class="time">20:00</span><div class="event">Ekaterina Abdulova's mystery play <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · closed show, no public tickets</small></div></div>
       </div>
       <div class="day-content" id="day-1">
-        <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bychkova">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-tsymlov">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>Gallery · registration on Timepad</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl” · <a href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-kazmiruk">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall · <a href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · <a href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bychkova">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-bychkova#join">Register</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-tsymlov">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>Gallery · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-tsymlov#join">Register</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-kazmiruk">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-kazmiruk#join">Register</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
       <div class="day-content" id="day-2">
         <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Market zone open</div></div>
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga<small>Blue Hall · <a href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: quest</div></div>
         <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Workshops for children and adults<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall · <a href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-abdulova">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration on Timepad</small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl” · <a href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Physical Theatre “The Rashomon Effect” — dance company “OMUT”, Saint Petersburg<small>Blue Hall · <a href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-gubanova">“Cities of Art”</a> — Alexandra Gubanova, closing of the business programme<small>Registration on Timepad</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Meditative detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>Red Hall · 16+ · <a href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-abdulova">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-abdulova#join">Register</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Physical Theatre “The Rashomon Effect” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-gubanova">“Cities of Art”</a> — Alexandra Gubanova, closing of the business programme<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-gubanova#join">Register</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Meditative detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
       <div class="day-content" id="day-3">
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/kaliostro">“Cagliostro”</a> — project “Extracurricular Classics”, Kaluga<small>Blue Hall · <a href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · standing tickets — 1,500 ₽ · <a href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall · <a href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl” · <a href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg<small>Blue Hall · <a href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45" target="_blank" rel="noopener" style="color:var(--gold)">Ticket →</a></small></div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/kaliostro">“Cagliostro”</a> — project “Extracurricular Classics”, Kaluga<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · standing tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">Closing slot<small>Programme to be announced</small></div></div>
       </div>
     </div>
