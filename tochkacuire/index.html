@@ -183,23 +183,8 @@ section{padding:90px 0}
 .venue-address strong{color:var(--bone);font-weight:400}
 .venue-address a{color:var(--gold);text-decoration:none}
 @media(max-width:760px){.venue-grid{grid-template-columns:1fr}}
-/* TICKETS */
+/* NEWS SIGN-UP */
   .tickets-sec{background:var(--coal)}
-.ticket-box{background:var(--ink);padding:52px 44px}
-.ticket-price{font-family:'Montserrat',sans-serif;font-size:clamp(48px,7vw,72px);font-weight:200;color:var(--gold);line-height:1;margin-bottom:8px}
-.ticket-per{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
-.ticket-list{list-style:none;display:flex;flex-direction:column;gap:12px}
-.ticket-list li{font-size:14px;color:var(--sand);display:flex;gap:12px;line-height:1.5}
-.ticket-list li::before{content:"✓";color:var(--gold);flex-shrink:0;font-size:13px;line-height:1.5}
-.ticket-list li.star::before{content:"✦";color:rgba(214,181,122,.5)}
-.ticket-list li span{flex:1}
-.show-list{display:flex;flex-direction:column;margin-top:24px;border-top:1px solid rgba(232,230,225,.1)}
-.show-row{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid rgba(232,230,225,.1);text-decoration:none;transition:background .2s}
-.show-row:hover{background:rgba(214,181,122,.06)}
-.show-when{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.05em;color:var(--sand);white-space:nowrap;flex-shrink:0;width:110px}
-.show-title{color:var(--bone);font-size:14px;flex:1}
-.show-go{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--gold);white-space:nowrap;flex-shrink:0}
-@media(max-width:480px){.show-row{flex-direction:column;align-items:flex-start;gap:4px;padding:16px 4px}.show-when{width:auto}.show-title{width:100%}.show-go{margin-top:2px}}
 .form-box{background:var(--ink);padding:52px 44px}
 .form-box h3{font-size:18px;letter-spacing:.18em;font-weight:300;margin-bottom:8px;text-transform:uppercase}
 .form-box p{color:var(--sand);font-size:14px;margin-bottom:28px}
@@ -209,7 +194,7 @@ section{padding:90px 0}
 .field input:focus{outline:none;border-color:var(--gold)}
 .form-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:8px}
 .form-ok{color:var(--gold);font-size:14px;display:none;padding:20px;background:rgba(214,181,122,.08);border-left:2px solid var(--gold)}
-@media(max-width:760px){.ticket-box,.form-box{padding:36px 28px}}
+@media(max-width:760px){.form-box{padding:36px 28px}}
 /* EXTERNAL LINK BANNER */
   .ext-banner{background:linear-gradient(135deg, rgba(214,181,122,.15), rgba(214,181,122,.05));border:1px solid rgba(214,181,122,.3);padding:40px 44px;display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:50px;flex-wrap:wrap}
 .ext-banner p{color:var(--sand);font-size:15px}
@@ -294,7 +279,7 @@ section{padding:90px 0}
     <p class="hero-sub">Ежегодный фестиваль современного искусства</p>
     <p class="hero-meta"><strong>22–25 октября 2026</strong> &nbsp;·&nbsp;Старый Оскол &nbsp;·&nbsp;ЦСИ «Быль»</p>
     <div class="hero-btns">
-      <a class="btn-gold" href="#tickets">Купить билет</a>
+      <a class="btn-gold" href="#schedule">Купить билет</a>
       
     </div>
     <div class="countdown" id="countdown">
@@ -315,7 +300,7 @@ section{padding:90px 0}
   <div class="quicknav-in">
     <a href="#program">Программа</a>
     <a href="#schedule">Расписание</a>
-    <a href="#tickets" class="gold">Билеты</a>
+    <a href="#schedule" class="gold">Билеты</a>
     <a href="#business">Деловая программа</a>
     <a href="#exhibitions">Выставки</a>
     <a href="#venue">Площадка</a>
@@ -421,7 +406,6 @@ section{padding:90px 0}
         <div class="prog-right"><span class="age">18+</span></div>
       </a>
     </div>
-    <div class="prog-note reveal">✸ Продажи билетов на показы 23–25 октября открыты — цена и места видны при выборе конкретного показа, включая «Путешественники» (три даты) и «В ожидании Годо». Все события вне залов — выставки, лекторий, мастер-классы и детский хэппенинг — бесплатные.</div>
   </div>
 </section>
 
@@ -445,26 +429,29 @@ section{padding:90px 0}
       <div class="day-content" id="day-1">
         <div class="time-item"><span class="time">14:00</span><div class="event">Деловая программа: мастер-класс <a href="/lecture-bychkova">«Без суфлёра»</a> — Алёна Бычкова<small>Регистрация на Timepad</small></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Деловая программа: лекция <a href="/lecture-tsymlov">«Искусственный интеллект: что он уже умеет и где ошибается»</a> — Алексей Цымлов<small>Галерея · регистрация на Timepad</small></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль» · <a href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Деловая программа: лекция <a href="/lecture-kazmiruk">«Как рождается и живёт танец в реальном мире»</a> — Михаил Казмирук<small>Красный зал · регистрация на Timepad</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль <a href="/prorochestva">«Пророчества перелётных птиц»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Красный зал</small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль <a href="/prorochestva">«Пророчества перелётных птиц»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Красный зал · <a href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+ · <a href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
       </div>
       <div class="day-content" id="day-2">
         <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Работа зоны маркетов</div></div>
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/pushkin">«Пушкин. Выстрел. Метель»</a> — проект «Внеклассная классика», реж. С. Никифорова, Калуга<small>Синий зал</small></div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/pushkin">«Пушкин. Выстрел. Метель»</a> — проект «Внеклассная классика», реж. С. Никифорова, Калуга<small>Синий зал · <a href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Детская программа: квест</div></div>
         <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Мастер-классы для детей и взрослых<small>Вход свободный</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Интерактивный моноспектакль <a href="/mozgi">«Есть ли у вас мозги?»</a><small>Красный зал</small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Интерактивный моноспектакль <a href="/mozgi">«Есть ли у вас мозги?»</a><small>Красный зал · <a href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Деловая программа: лекция <a href="/lecture-abdulova">«Ландшафты реальности»</a> — Катя Абдулова<small>Регистрация на Timepad</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Пластический спектакль «Эффект Расёмон» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал</small></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль» · <a href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Пластический спектакль «Эффект Расёмон» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал · <a href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Деловая программа: лекция <a href="/lecture-gubanova">«Арт-города»</a> — Александра Губанова, закрытие деловой программы<small>Регистрация на Timepad</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Медитативно-детективный мэшап <a href="/porfiriy">«Порфирий»</a>, реж. Александр Панов<small>Красный зал · 16+</small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Медитативно-детективный мэшап <a href="/porfiriy">«Порфирий»</a>, реж. Александр Панов<small>Красный зал · 16+ · <a href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
       </div>
       <div class="day-content" id="day-3">
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/kaliostro">«Калиостро»</a> — проект «Внеклассная классика», Калуга<small>Синий зал</small></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс «Мэйдэй-3» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея · билеты без мест — 1 500 ₽</small></div></div>
-        <div class="time-item"><span class="time">днём</span><div class="event">Дневной слот: два спектакля<small>Программа уточняется</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль «Запах розового масла» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал</small></div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/kaliostro">«Калиостро»</a> — проект «Внеклассная классика», Калуга<small>Синий зал · <a href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс «Мэйдэй-3» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея · билеты без мест — 1 500 ₽ · <a href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Абсурдистская пьеса <a href="/godo">«В ожидании Годо»</a>, реж. Виктор Деринов, 18+<small>Красный зал · <a href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль» · <a href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль «Запах розового масла» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал · <a href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45" target="_blank" rel="noopener" style="color:var(--gold)">Билет →</a></small></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">Слот-закрытие<small>Программа уточняется</small></div></div>
       </div>
     </div>
@@ -618,12 +605,6 @@ section{padding:90px 0}
       </div>
       <a class="btn-outline" href="https://cuire-fest.ru/opencall-teatr/" target="_blank" rel="noopener">Подать заявку ↗</a>
     </div>
-    <div class="ext-banner reveal" style="margin-top:2px">
-      <div>
-        <p><strong>Open call для художников · тема сезона «Переход»</strong>Приём заявок завершён 15 августа 2026. Ответ получат все подавшие — до 31 августа. Условия следующего сезона будут объявлены на странице проекта.</p>
-      </div>
-      <a class="btn-outline" href="https://cuire-fest.ru/opencall/" target="_blank" rel="noopener">Смотреть условия ↗</a>
-    </div>
   </div>
 </section>
 
@@ -653,41 +634,14 @@ section{padding:90px 0}
   </div>
 </section>
 
-<!-- БИЛЕТЫ -->
-<section id="tickets" class="tickets-sec">
+<!-- НОВОСТИ И ПОЛНАЯ ПРОГРАММА -->
+<section id="updates" class="tickets-sec">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Билеты</span><h2>Один билет — один показ</h2></div>
-    <div class="reveal">
-      <div class="ticket-box" style="max-width:720px">
-        <div class="ticket-price">от 1 000 ₽</div>
-        <div class="ticket-per">Показы 23–25 октября · цена зависит от ряда</div>
-        <div class="show-list" style="margin-top:12px">
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener"><span class="show-when">23 октября, 16:00</span><span class="show-title">«Путешественники» (БлизКо) — 18+, старт у ЦСИ «Быль»</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener"><span class="show-when">23 октября, 19:00</span><span class="show-title">«Пророчества перелётных птиц» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf" target="_blank" rel="noopener"><span class="show-when">23 октября, 20:00</span><span class="show-title">«ИОВ:материал» — открытие фестиваля</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc" target="_blank" rel="noopener"><span class="show-when">24 октября, 11:00</span><span class="show-title">«Пушкин. Выстрел. Метель» (Внеклассная классика, Калуга)</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3" target="_blank" rel="noopener"><span class="show-when">24 октября, 14:00</span><span class="show-title">«Есть ли у вас мозги?»</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba" target="_blank" rel="noopener"><span class="show-when">24 октября, 16:00</span><span class="show-title">«Путешественники» (БлизКо) — 18+, старт у ЦСИ «Быль»</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7" target="_blank" rel="noopener"><span class="show-when">24 октября, 18:00</span><span class="show-title">«Эффект Расёмон» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779" target="_blank" rel="noopener"><span class="show-when">24 октября, 19:00</span><span class="show-title">«Порфирий» 16+, реж. Александр Панов</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469" target="_blank" rel="noopener"><span class="show-when">25 октября, 11:00</span><span class="show-title">«Калиостро» (Внеклассная классика, Калуга)</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211" target="_blank" rel="noopener"><span class="show-when">25 октября, 13:00</span><span class="show-title">«Мэйдэй-3» (ОМУТ, Санкт-Петербург) — Галерея</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c" target="_blank" rel="noopener"><span class="show-when">25 октября, 14:00</span><span class="show-title">«В ожидании Годо» 18+, реж. Виктор Деринов</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84" target="_blank" rel="noopener"><span class="show-when">25 октября, 16:00</span><span class="show-title">«Путешественники» (БлизКо) — 18+, старт у ЦСИ «Быль»</span><span class="show-go">Выбрать места →</span></a>
-          <a class="show-row" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45" target="_blank" rel="noopener"><span class="show-when">25 октября, 19:00</span><span class="show-title">«Запах розового масла» (ОМУТ, Санкт-Петербург)</span><span class="show-go">Выбрать места →</span></a>
-        </div>
-        <ul class="ticket-list" style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(232,230,225,.1)">
-          <li><span>Оплата картой или через СБП. Электронный билет с QR-кодом приходит на почту сразу после оплаты.</span></li>
-          <li class="star"><span>Выставки, лекторий, мастер-классы и детский хэппенинг — бесплатно</span></li>
-          <li><span>Условия покупки и возврата — в <a href="/oferta" style="color:var(--gold)">публичной оферте</a></span></li>
-        </ul>
-      </div>
-    </div>
-
+    <div class="sec-head reveal"><span class="eyebrow">Быть на связи</span><h2>Новости фестиваля и полная программа</h2></div>
     <div class="reveal" style="margin-top:2px">
       <div class="form-box" style="max-width:720px">
         <h3>Быть в курсе программы фестиваля</h3>
-        <p>Продажи на показы 23–25 октября уже открыты — билеты на схеме зала на официальном сайте фестиваля. Оставьте контакты, если хотите получить полную программу и узнавать о новых показах и событиях.</p>
+        <p>Ссылки на билеты — прямо в <a href="#schedule" style="color:var(--gold)">расписании фестиваля</a> выше. Оставьте контакты, если хотите получить полную программу и узнавать о новых показах и событиях.</p>
         <div class="form-col" id="subscribeForm">
           <div class="field"><label>Имя *</label><input type="text" id="sub-name" placeholder="Ваше имя" required></div>
           <div class="field"><label>Email *</label><input type="email" id="sub-email" placeholder="email@example.com"></div>
@@ -937,7 +891,7 @@ section{padding:90px 0}
 <div class="mob-cta" id="mob-cta">
   <span class="mob-cta-title">«Точка Кюри»</span>
   
-  <a class="mob-cta-btn gold" href="#tickets">22–25 октября · Старый Оскол</a>
+  <a class="mob-cta-btn gold" href="#schedule">22–25 октября · Старый Оскол</a>
 </div>
 
 <!-- Модальное окно Спасибо -->
