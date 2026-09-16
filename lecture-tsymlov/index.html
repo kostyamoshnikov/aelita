@@ -103,14 +103,23 @@
   <div class="wrap reveal">
     <span class="eyebrow">Записаться</span>
     <h2 style="margin-top:14px">Регистрация на событие</h2>
-    <!-- ⚠️ pack-v378: регистрация ведётся на Timepad, не на этом сайте
-         (решение заказчика). Внутренняя система регистрации
-         (pack-v363) для НОВЫХ лекций не используется — см. комментарий
-         в _tools/Events/config/events.js. Когда событие опубликуют на
-         Timepad, здесь одной строкой ставится ссылка вместо этого
-         блока: искать TIMEPAD_URL_PLACEHOLDER по всему Site/. -->
+    <!-- ⚠️ pack-v381: событие опубликовано на Timepad (id 4203474),
+         регистрация закрыта. Кнопка ниже — не обычная ссылка, а триггер
+         виджета Timepad (data-timepad-widget-v2="event_register"):
+         клик открывает всплывающую форму регистрации Timepad поверх
+         этой страницы, посетитель никуда не уходит. Требование самого
+         Timepad — id кнопки ДОЛЖЕН быть ровно "timepad_twf_register_4203474",
+         на него завязан triggerSelector в конфиге скрипта; поменяется
+         id — виджет перестанет открываться молча, без ошибки в консоли.
+         Прямая ссылка на страницу события ниже — запасной путь, если
+         скрипт с внешнего домена timepad.ru не загрузился (блокировщик
+         рекламы/скриптов, оффлайн на момент клика). Тот же принцип
+         «страница остаётся рабочей, если внешний скрипт не выполнился»,
+         что и у остальных сторонних встраиваний на сайте. -->
     <p class="sub">Вход свободный, количество мест ограничено. Регистрация — на Timepad.</p>
-    <p style="color:var(--sand)">Ссылка на регистрацию появится здесь, как только событие опубликуют на Timepad. Пока — оставьте почту в <a href="/#subscribe" style="color:var(--gold)">рассылке</a> или подпишитесь на <a href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" style="color:var(--gold)">Telegram-бот</a>: сообщим, как только регистрация откроется. TIMEPAD_URL_PLACEHOLDER</p>
+    <button class="submit-btn" id="timepad_twf_register_4203474">Записаться →</button>
+    <script async="async" defer="defer" charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4203474 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4203474"}}})();</script>
+    <p style="color:var(--sand);font-size:13px;margin-top:16px">Если кнопка не открывает окно регистрации — страница события напрямую: <a href="https://aelita-production.timepad.ru/event/4203474/" target="_blank" rel="noopener" style="color:var(--gold)">aelita-production.timepad.ru/event/4203474</a></p>
   </div>
 </div>
 

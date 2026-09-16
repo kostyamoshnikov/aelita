@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Landscapes of Reality — Katya Abdulova — AELITA PRODUCTION</title>
-<meta name="description" content="Talk. Katya Abdulova — Curator of cultural projects, researcher, producer. Business is used to defending itself against uncertainty with strategy sessions and plans — the artist ">
+<meta name="description" content="Talk. Katya Abdulova — psychologist by training, curator of cultural projects, co-founder of AELITA PRODUCTION. On changing the rules of the game instead of solving the problem within the given ones.">
 <link rel="canonical" href="https://aelita-production.ru/en/lecture-abdulova/">
 <link rel="alternate" hreflang="ru" href="https://aelita-production.ru/lecture-abdulova/">
 <link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/lecture-abdulova/">
@@ -26,12 +26,12 @@
 <meta property="og:url" content="https://aelita-production.ru/en/lecture-abdulova/">
 <meta property="og:site_name" content="AELITA PRODUCTION">
 <meta property="og:title" content="Landscapes of Reality — Katya Abdulova — AELITA PRODUCTION">
-<meta property="og:description" content="Talk. Katya Abdulova — Curator of cultural projects, researcher, producer. Business is used to defending itself against uncertainty with strategy sessions and plans — the artist ">
+<meta property="og:description" content="Talk. Katya Abdulova — psychologist by training, curator of cultural projects, co-founder of AELITA PRODUCTION. On changing the rules of the game instead of solving the problem within the given ones.">
 <meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Landscapes of Reality — Katya Abdulova — AELITA PRODUCTION">
-<meta name="twitter:description" content="Talk. Katya Abdulova — Curator of cultural projects, researcher, producer. Business is used to defending itself against uncertainty with strategy sessions and plans — the artist ">
+<meta name="twitter:description" content="Talk. Katya Abdulova — psychologist by training, curator of cultural projects, co-founder of AELITA PRODUCTION. On changing the rules of the game instead of solving the problem within the given ones.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,7 +85,7 @@
       <img src="/images/abdulova.jpg" alt="Katya Abdulova">
       <div class="who">
         <div><a href="/en/abdulova">Katya Abdulova</a></div>
-        <div class="role">Curator of cultural projects, researcher, producer</div>
+        <div class="role">Curator of cultural projects, researcher, producer, psychologist by training</div>
       </div>
     </div>
     <a class="btn-outline" href="/en/press#lecture-abdulova">For the press</a>
@@ -95,9 +95,10 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>About the talk</h2></div>
-    <p class="desc reveal">Business is used to defending itself against uncertainty with strategy sessions and plans — the artist doesn't fight uncertainty, but plays with it, and always wins: it's artists who create the image of the future and the reality each of us carries in our heads. Launching the festival in Stary Oskol was the same kind of startup: zero budget, no cultural habit among the audience, and total unknown.</p>
-    <p class="desc reveal">The lecture covers how directing tools, systems thinking and creative practice turn a point that doesn't exist on any map into a place of attraction for thousands of people; why contemporary art is really about the hard work of building communities; and how founders can stop searching for a magic “growth” button by learning to create meaning where others see only industrial pipes.</p>
-    <blockquote class="lecture-quote reveal">Nobody wanted an iPhone until Steve Jobs invented it.</blockquote>
+    <p class="desc reveal">Katya Abdulova — curator of cultural projects, researcher, producer, psychologist by training (Higher School of Psychology). Co-founder of AELITA PRODUCTION, curator and producer of the “Tochka Cuire” festival.</p>
+    <p class="desc reveal">The starting point of the talk is anthropologist Gregory Bateson's idea of “third-order learning”: not solving a problem within already given rules, but changing the rules themselves. Katya shows how this works not in theory but in practice — in directing, in business, in working with a team — drawing on a lecture cycle she has already given at the “Tsiolkovsky” festival in Kaluga.</p>
+    <p class="desc reveal">Business is used to defending itself against uncertainty with strategies and plans. The artist doesn't fight uncertainty, but works through it — and that is exactly why they create the image of the future that everyone else later claims as their own.</p>
+    <p class="desc reveal">On how systems thinking and creative practice turn a point that isn't on the map into a point of attraction — and how not only an artist but an entrepreneur too can use this.</p>
   </div>
 </section>
 
@@ -107,14 +108,23 @@
   <div class="wrap reveal">
     <span class="eyebrow">Register</span>
     <h2 style="margin-top:14px">Registration for the event</h2>
-    <!-- ⚠️ pack-v378: регистрация ведётся на Timepad, не на этом сайте
-         (решение заказчика). Внутренняя система регистрации
-         (pack-v363) для НОВЫХ лекций не используется — см. комментарий
-         в _tools/Events/config/events.js. Когда событие опубликуют на
-         Timepad, здесь одной строкой ставится ссылка вместо этого
-         блока: искать TIMEPAD_URL_PLACEHOLDER по всему Site/. -->
+    <!-- ⚠️ pack-v381: событие опубликовано на Timepad (id 4203564),
+         регистрация закрыта. Кнопка ниже — не обычная ссылка, а триггер
+         виджета Timepad (data-timepad-widget-v2="event_register"):
+         клик открывает всплывающую форму регистрации Timepad поверх
+         этой страницы, посетитель никуда не уходит. Требование самого
+         Timepad — id кнопки ДОЛЖЕН быть ровно "timepad_twf_register_4203564",
+         на него завязан triggerSelector в конфиге скрипта; поменяется
+         id — виджет перестанет открываться молча, без ошибки в консоли.
+         Прямая ссылка на страницу события ниже — запасной путь, если
+         скрипт с внешнего домена timepad.ru не загрузился (блокировщик
+         рекламы/скриптов, оффлайн на момент клика). Тот же принцип
+         «страница остаётся рабочей, если внешний скрипт не выполнился»,
+         что и у остальных сторонних встраиваний на сайте. -->
     <p class="sub">Free entry, limited seats. Registration — on Timepad.</p>
-    <p style="color:var(--sand)">The registration link will appear here once the event is published on Timepad. In the meantime — leave your email in our <a href="/#subscribe" style="color:var(--gold)">newsletter</a> or subscribe to the <a href="https://t.me/aelita_production_bot" target="_blank" rel="noopener" style="color:var(--gold)">Telegram bot</a>: we'll let you know as soon as registration opens. TIMEPAD_URL_PLACEHOLDER</p>
+    <button class="submit-btn" id="timepad_twf_register_4203564">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4203564 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4203564"}}})();</script>
+    <p style="color:var(--sand);font-size:13px;margin-top:16px">If the button does not open the registration window — the event page directly:  <a href="https://aelita-production.timepad.ru/event/4203564/" target="_blank" rel="noopener" style="color:var(--gold)">aelita-production.timepad.ru/event/4203564</a></p>
   </div>
 </div>
 
