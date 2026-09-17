@@ -146,6 +146,16 @@ header .sub{
     .ev-ctas{justify-self:start;flex-direction:column;align-items:flex-start;gap:10px}
     .ev-cta{white-space:normal;text-align:center}
   }
+/* Карточка с фото — тестовая (pack-v392), см. tickets/index.html —
+   тот же CSS-блок, дублирован здесь: страница отдельная, общего
+   стиля с /tickets в этом месте нет. */
+.event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:380px}
+.event.has-photo .ev-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 35%;filter:brightness(.38);transition:filter .5s}
+.event.has-photo:hover .ev-bg{filter:brightness(.48)}
+.event.has-photo .ev-overlay{position:relative;z-index:1;min-height:380px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
+.event.has-photo .ev-info{margin:14px 0 18px}
+.event.has-photo .ev-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px}
+@media(max-width:760px){.event.has-photo{min-height:440px}.event.has-photo .ev-overlay{min-height:440px;padding:26px 22px}.event.has-photo .ev-actions{flex-direction:column;align-items:stretch}.event.has-photo .ev-actions>a{display:block;width:100%;box-sizing:border-box;text-align:center}}
 /* флагман */
   .flag{
     display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;
@@ -405,7 +415,9 @@ footer p{color:var(--sand);font-size:14px}
       <button class="filter-btn" onclick="filterCity('osk',this)">Stary Oskol</button>
       <button class="filter-btn" onclick="filterCity('kaluga',this)">Kaluga</button>
     </div>
-    <div class="event reveal" data-city="kaluga">
+    <div class="event reveal has-photo" data-city="kaluga">
+      <img class="ev-bg" src="/images/bred-og.jpg" alt="“And All This Nonsense Too” — a scene from the production" loading="lazy">
+      <div class="ev-overlay">
       <div class="ev-date">10.10<small>Kaluga</small></div>
       <div class="ev-info">
         <h3><a href="/en/bred">{AND ALL THIS NONSENSE TOO}</a></h3>
@@ -415,6 +427,7 @@ footer p{color:var(--sand);font-size:14px}
       </div>
       <div class="ev-actions">
         <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" data-performance-id="bred-2026-10-10">Buy ticket</a> <a class="btn-outline" href="/en/bred">About the production</a>
+      </div>
       </div>
     </div>
     <div class="event reveal" data-city="osk">
