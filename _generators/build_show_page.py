@@ -202,7 +202,6 @@ def build(s):
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
-<div class="curtain" aria-hidden="true"><div class="curtain-l"></div><div class="curtain-r"></div></div>
 <nav>
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>

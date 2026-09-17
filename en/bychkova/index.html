@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=24">
+<link rel="stylesheet" href="/assets/style.css?v=25">
 <style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
@@ -622,11 +622,17 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
   // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
+    if(!('IntersectionObserver' in window)){
+      document.querySelectorAll('.reveal:not(.on)').forEach(function(el){ el.classList.add('on'); });
+      document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){ el.classList.add('line-on'); });
+      return;
+    }
+    var vh = window.innerHeight || document.documentElement.clientHeight;
     document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
-      el.classList.add('on');
+      if(el.getBoundingClientRect().top < vh) el.classList.add('on');
     });
     document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
-      el.classList.add('line-on');
+      if(el.getBoundingClientRect().top < vh) el.classList.add('line-on');
     });
   }, 700);
 </script>
@@ -672,7 +678,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=24"></script>
+<script src="/assets/main.js?v=25"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
