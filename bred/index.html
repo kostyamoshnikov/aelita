@@ -38,6 +38,20 @@
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(26px,5.4vw,58px);letter-spacing:.06em;line-height:1.15;margin-bottom:16px}
 .page-hero .sub{color:var(--sand);font-size:16px;max-width:52ch;margin-bottom:10px}
+/* ⚠️ pack-v394: усиленное затемнение ТОЛЬКО для этой страницы.
+   Общий .hero-overlay в assets/style.css рассчитан на тёмные фото: в
+   середине он уходит в полную прозрачность (rgba(...,0) на 35%). У
+   фотографий вроде rozovoe-maslo (средняя яркость 26 из 255) этого
+   хватает, у bred-1.jpg — нет: 193 из 255 в среднем и 198 в нижней
+   части кадра, где как раз лежат заголовок и подзаголовок. Светлый
+   текст по светлому фону не читался (проверено рендером, а не на глаз).
+   Правка локальная и НЕ трогает общий класс: изменение .hero-overlay в
+   style.css сломало бы шапки остальных страниц спектаклей, которые под
+   него подобраны. Тень под текстом — вторая линия защиты на случай,
+   если кадр в этом месте окажется ещё светлее (другое фото, другой
+   кроп под широкий экран). */
+.page-hero .hero-overlay{background:linear-gradient(to bottom,rgba(11,11,13,.55) 0%,rgba(11,11,13,.35) 30%,rgba(11,11,13,.82) 62%,rgba(11,11,13,.94) 82%,var(--ink) 100%)}
+.page-hero h1,.page-hero .sub,.page-hero .eyebrow{text-shadow:0 2px 18px rgba(11,11,13,.85)}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .pull-quote{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.6vw,26px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:28px;margin:28px 0}
 .logic-row{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}

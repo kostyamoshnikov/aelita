@@ -424,16 +424,16 @@ section{padding:90px 0}
         <button class="day-tab" onclick="showDay(3,this)"><span class="day-num">25</span>Вс · Закрытие</button>
       </div>
       <div class="day-content active" id="day-0">
-        <div class="time-item"><span class="time">17:00</span><div class="event">Пресс-подход, сбор гостей, открытие фестиваля</div></div>
-        <div class="time-item"><span class="time">17:00</span><div class="event">Деловая программа: лекция «Искусство как точка сборки города» — Катя Абдулова<small>Открытие деловой программы · по пригласительным</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Выставочный вернисаж, открытие выставочной программы</div></div>
-        <div class="time-item"><span class="time">18:30</span><div class="event">Деловая программа: лекция «Русский культурный код в современной одежде» — Мария Павлова<small>По пригласительным</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Показ-дефиле бренда <a href="/molodo-zeleno">«Молодо-зелено»</a> — Мария Павлова</div></div>
+        <div class="time-item"><span class="time">15:00</span><div class="event">Пресс-подход, сбор гостей, открытие фестиваля</div></div>
+        <div class="time-item"><span class="time">15:30</span><div class="event">Деловая программа: лекция «Искусство как точка сборки города» — Катя Абдулова<small>Открытие деловой программы · по пригласительным</small></div></div>
+        <div class="time-item"><span class="time">16:30</span><div class="event">Выставочный вернисаж, открытие выставочной программы</div></div>
+        <div class="time-item"><span class="time">17:00</span><div class="event">Деловая программа: лекция <a href="/lecture-tsymlov">«Искусственный интеллект: что он уже умеет и где ошибается»</a> — Алексей Цымлов<small>По пригласительным</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Показ-дефиле бренда <a href="/molodo-zeleno">«Молодо-зелено»</a> — Мария Павлова</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Деловая программа: лекция «Русский культурный код в современной одежде» — Мария Павлова<small>По пригласительным</small></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">Спектакль-мистерия Кати Абдуловой <a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+ · закрытый показ, билеты не продаются</small></div></div>
       </div>
       <div class="day-content" id="day-1">
         <div class="time-item"><span class="time">14:00</span><div class="event">Деловая программа: мастер-класс <a href="/lecture-bychkova">«Без суфлёра»</a> — Алёна Бычкова<small>Регистрация на Timepad</small><a class="tix-btn reg" href="/lecture-bychkova#join">Зарегистрироваться</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Деловая программа: лекция <a href="/lecture-tsymlov">«Искусственный интеллект: что он уже умеет и где ошибается»</a> — Алексей Цымлов<small>Галерея · регистрация на Timepad</small><a class="tix-btn reg" href="/lecture-tsymlov#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль»</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Деловая программа: лекция <a href="/lecture-kazmiruk">«Как рождается и живёт танец в реальном мире»</a> — Михаил Казмирук<small>Красный зал · регистрация на Timepad</small><a class="tix-btn reg" href="/lecture-kazmiruk#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль <a href="/prorochestva">«Пророчества перелётных птиц»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Красный зал</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener">Купить билеты</a></div></div>
@@ -718,7 +718,11 @@ section{padding:90px 0}
 <script>
   // Countdown
   function updateCountdown(){
-    const target = new Date('2026-10-22T17:00:00+03:00');
+    // ⚠️ pack-v394: сбор гостей и открытие сдвинулись с 17:00 на 15:00
+    // (новое расписание 22 октября). Счётчик привязан к началу
+    // фестиваля — без этой правки он показывал бы на два часа больше,
+    // чем осталось, и обнулился бы уже после открытия.
+    const target = new Date('2026-10-22T15:00:00+03:00');
     const now = new Date();
     const diff = target - now;
     if(diff <= 0){

@@ -427,16 +427,16 @@ section{padding:90px 0}
         <button class="day-tab" onclick="showDay(3,this)"><span class="day-num">25</span>Sun · Closing</button>
       </div>
       <div class="day-content active" id="day-0">
-        <div class="time-item"><span class="time">17:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
-        <div class="time-item"><span class="time">17:00</span><div class="event">Business programme: talk “Art as the point where a city comes together” — Katya Abdulova<small>Opening of the business programme · by invitation only</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
-        <div class="time-item"><span class="time">18:30</span><div class="event">Business programme: talk “The Russian Cultural Code in Contemporary Clothing” — Maria Pavlova<small>By invitation only</small></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova</div></div>
+        <div class="time-item"><span class="time">15:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
+        <div class="time-item"><span class="time">15:30</span><div class="event">Business programme: talk “Art as the point where a city comes together” — Katya Abdulova<small>Opening of the business programme · by invitation only</small></div></div>
+        <div class="time-item"><span class="time">16:30</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
+        <div class="time-item"><span class="time">17:00</span><div class="event">Business programme: talk <a href="/en/lecture-tsymlov">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>By invitation only</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Business programme: talk “The Russian Cultural Code in Contemporary Clothing” — Maria Pavlova<small>By invitation only</small></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">A contemporary mystery by Katya Abdulova <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · closed show, no public tickets</small></div></div>
       </div>
       <div class="day-content" id="day-1">
         <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bychkova">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-bychkova#join">Register</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-tsymlov">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>Gallery · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-tsymlov#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-kazmiruk">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-kazmiruk#join">Register</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6" target="_blank" rel="noopener">Buy tickets</a></div></div>
@@ -721,7 +721,11 @@ section{padding:90px 0}
 <script>
   // Countdown
   function updateCountdown(){
-    const target = new Date('2026-10-22T17:00:00+03:00');
+    // ⚠️ pack-v394: сбор гостей и открытие сдвинулись с 17:00 на 15:00
+    // (новое расписание 22 октября). Счётчик привязан к началу
+    // фестиваля — без этой правки он показывал бы на два часа больше,
+    // чем осталось, и обнулился бы уже после открытия.
+    const target = new Date('2026-10-22T15:00:00+03:00');
     const now = new Date();
     const diff = target - now;
     if(diff <= 0){
