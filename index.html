@@ -146,13 +146,13 @@ header .sub{
 /* Карточка с фото — тестовая (pack-v392), см. tickets/index.html —
    тот же CSS-блок, дублирован здесь: страница отдельная, общего
    стиля с /tickets в этом месте нет. */
-.event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:380px}
+.event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:460px}
 .event.has-photo .ev-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 35%;filter:brightness(.38);transition:filter .5s}
 .event.has-photo:hover .ev-bg{filter:brightness(.48)}
-.event.has-photo .ev-overlay{position:relative;z-index:1;min-height:380px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
+.event.has-photo .ev-overlay{position:relative;z-index:1;min-height:460px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
 .event.has-photo .ev-info{margin:14px 0 18px}
 .event.has-photo .ev-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px}
-@media(max-width:760px){.event.has-photo{min-height:440px}.event.has-photo .ev-overlay{min-height:440px;padding:26px 22px}.event.has-photo .ev-actions{flex-direction:column;align-items:stretch}.event.has-photo .ev-actions>a{display:block;width:100%;box-sizing:border-box;text-align:center}}
+@media(max-width:760px){.event.has-photo{min-height:620px}.event.has-photo .ev-overlay{min-height:620px;padding:26px 22px}.event.has-photo .ev-actions{flex-direction:column;align-items:stretch}.event.has-photo .ev-actions>a{display:block;width:100%;box-sizing:border-box;text-align:center}}
 /* флагман */
   .flag{
     display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;
@@ -413,7 +413,7 @@ footer p{color:var(--sand);font-size:14px}
       <button class="filter-btn" onclick="filterCity('kaluga',this)">Калуга</button>
     </div>
     <div class="event reveal has-photo" data-city="kaluga">
-      <img class="ev-bg" src="/images/bred-og.jpg" alt="«И весь этот бред тоже» — сцена из спектакля" loading="lazy">
+      <img class="ev-bg" src="/images/bred-og.jpg" alt="«И весь этот бред тоже» — сцена из спектакля" loading="lazy" style="object-position:56% 30%">
       <div class="ev-overlay">
       <div class="ev-date">10.10<small>Калуга</small></div>
       <div class="ev-info">
@@ -428,7 +428,7 @@ footer p{color:var(--sand);font-size:14px}
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="Фестиваль «Точка Кюри» — кадр с площадки" loading="lazy">
+      <img class="ev-bg" src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="Фестиваль «Точка Кюри» — кадр с площадки" loading="lazy" style="object-position:50% 35%">
       <div class="ev-overlay">
       <div class="ev-date">22–25.10<small>Старый Оскол</small></div>
       <div class="ev-info">
@@ -442,7 +442,7 @@ footer p{color:var(--sand);font-size:14px}
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="/images/iov-card-1.jpg" alt="«ИОВ:материал» — сцена из спектакля" loading="lazy" style="object-position:20% 38%">
+      <img class="ev-bg" src="/images/iov-card-1.jpg" alt="«ИОВ:материал» — сцена из спектакля" loading="lazy" style="object-position:31% 50%">
       <div class="ev-overlay">
       <div class="ev-date">23.10<small>Старый Оскол</small></div>
       <div class="ev-info">
@@ -457,7 +457,7 @@ footer p{color:var(--sand);font-size:14px}
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="/images/porfiriy-card.jpg" alt="«Порфирий» — сцена из спектакля" loading="lazy" style="object-position:28% 32%">
+      <img class="ev-bg" src="/images/porfiriy-card.jpg" alt="«Порфирий» — сцена из спектакля" loading="lazy" style="object-position:17% 50%">
       <div class="ev-overlay">
       <div class="ev-date">24.10<small>Старый Оскол</small></div>
       <div class="ev-info">
@@ -472,7 +472,7 @@ footer p{color:var(--sand);font-size:14px}
       </div>
     </div>
     <div class="event reveal has-photo" data-city="spb">
-      <img class="ev-bg" src="/images/iov-card-2.jpg" alt="«ИОВ:материал» — сцена из спектакля" loading="lazy" style="object-position:50% 48%">
+      <img class="ev-bg" src="/images/iov-card-2.jpg" alt="«ИОВ:материал» — сцена из спектакля" loading="lazy" style="object-position:0% 50%">
       <div class="ev-overlay">
       <div class="ev-date">Октябрь<small>Санкт-Петербург</small></div>
       <div class="ev-info">

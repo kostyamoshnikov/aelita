@@ -62,13 +62,13 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
    на /tochkacuire: object-fit:cover + затемнение фильтром, текст
    абсолютным блоком поверх — единообразно с уже принятым на сайте
    паттерном, не новый способ. */
-.event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:380px}
+.event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:460px}
 .event.has-photo .ev-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 35%;filter:brightness(.38);transition:filter .5s}
 .event.has-photo:hover .ev-bg{filter:brightness(.48)}
-.event.has-photo .ev-overlay{position:relative;z-index:1;min-height:380px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
+.event.has-photo .ev-overlay{position:relative;z-index:1;min-height:460px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
 .event.has-photo .ev-info{margin:14px 0 18px}
 .event.has-photo .ev-actions{flex-direction:row;flex-wrap:wrap;align-items:flex-start}
-@media(max-width:760px){.event.has-photo{min-height:440px}.event.has-photo .ev-overlay{min-height:440px;padding:26px 22px}.event.has-photo .ev-actions{flex-direction:column;align-items:stretch}.event.has-photo .ev-actions>a{display:block;width:100%;box-sizing:border-box;text-align:center}}
+@media(max-width:760px){.event.has-photo{min-height:620px}.event.has-photo .ev-overlay{min-height:620px;padding:26px 22px}.event.has-photo .ev-actions{flex-direction:column;align-items:stretch}.event.has-photo .ev-actions>a{display:block;width:100%;box-sizing:border-box;text-align:center}}
 .notify{background:var(--coal);padding:70px 0;text-align:center;margin-top:80px}
 .notify h2{font-size:clamp(18px,2.4vw,26px);letter-spacing:.28em;margin-bottom:14px}
 .notify p{color:var(--sand);max-width:50ch;margin:0 auto 34px}
@@ -132,7 +132,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       <button class="filter-btn" onclick="filterCity('kaluga',this)">Kaluga</button>
     </div>
     <div class="event reveal has-photo" data-city="kaluga">
-      <img class="ev-bg" src="/images/bred-og.jpg" alt="“And All This Nonsense Too” — a scene from the production" loading="lazy">
+      <img class="ev-bg" src="/images/bred-og.jpg" alt="“And All This Nonsense Too” — a scene from the production" loading="lazy" style="object-position:56% 30%">
       <div class="ev-overlay">
       <div class="ev-date">10.10<small>Kaluga</small></div>
       <div class="ev-info">
@@ -147,7 +147,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="“Tochka Cuire” festival — a shot from the venue" loading="lazy">
+      <img class="ev-bg" src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="“Tochka Cuire” festival — a shot from the venue" loading="lazy" style="object-position:50% 35%">
       <div class="ev-overlay">
       <div class="ev-date">22–25.10<small>Stary Oskol</small></div>
       <div class="ev-info">
@@ -161,7 +161,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="/images/iov-card-1.jpg" alt="“IOV: Material” — a scene from the production" loading="lazy" style="object-position:20% 38%">
+      <img class="ev-bg" src="/images/iov-card-1.jpg" alt="“IOV: Material” — a scene from the production" loading="lazy" style="object-position:31% 50%">
       <div class="ev-overlay">
       <div class="ev-date">23.10<small>Stary Oskol</small></div>
       <div class="ev-info">
@@ -176,7 +176,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </div>
     </div>
     <div class="event reveal has-photo" data-city="osk">
-      <img class="ev-bg" src="/images/porfiriy-card.jpg" alt="“Porfiry” — a scene from the production" loading="lazy" style="object-position:28% 32%">
+      <img class="ev-bg" src="/images/porfiriy-card.jpg" alt="“Porfiry” — a scene from the production" loading="lazy" style="object-position:17% 50%">
       <div class="ev-overlay">
       <div class="ev-date">24.10<small>Stary Oskol</small></div>
       <div class="ev-info">
@@ -191,7 +191,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </div>
     </div>
     <div class="event reveal has-photo" data-city="spb">
-      <img class="ev-bg" src="/images/iov-card-2.jpg" alt="“IOV: Material” — a scene from the production" loading="lazy" style="object-position:50% 48%">
+      <img class="ev-bg" src="/images/iov-card-2.jpg" alt="“IOV: Material” — a scene from the production" loading="lazy" style="object-position:0% 50%">
       <div class="ev-overlay">
       <div class="ev-date">October<small>Saint Petersburg</small></div>
       <div class="ev-info">
