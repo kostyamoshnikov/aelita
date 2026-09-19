@@ -168,6 +168,14 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <p id="success-text">Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.</p>
   </div>
 
+  <!-- pack-v419: ворота кабинета. Стоят ДО схемы зала, а не перед
+       оплатой: захват зала шёл через удержание мест, а не через
+       оплату — см. докстринг _tools/Tickets/hold-seat.js. -->
+  <div id="auth-block" style="display:none" class="error-box">
+    <p id="auth-text">To choose seats, sign in to your account or create one — it only takes a minute.</p>
+    <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/en/account/">Sign in or register</a>
+  </div>
+
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Could not load the performance.</p>
     <button class="retry-btn" onclick="init()">Try again</button>
@@ -324,6 +332,42 @@ const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от
 
 function seatKey(r,s){ return r + '-' + s; }
 
+// pack-v419. Токен кабинета — тот же ключ, что у Site/assets/payments.js.
+// Читаем через try: в приватном режиме и при запрещённых cookies
+// localStorage бросает, и падать из-за этого страница не должна.
+function accountToken(){
+  try { return localStorage.getItem('aelita_account_token') || null; }
+  catch (e) { return null; }
+}
+
+// ⚠️ Ворота, а не просьба. Схема зала не рисуется вовсе, пока нет
+// токена: показать места и отобрать их на первом же клике — хуже, чем
+// честно сказать заранее.
+//
+// Возврат после входа — через ?next=, чтобы человек попал обратно
+// ровно на этот показ, а не на общую афишу. Адрес берём из
+// location, а не собираем руками: в ссылке есть ?performance=, без
+// него страница не знает, что открывать.
+function showAuthGate(){
+  const link = document.getElementById('auth-login-link');
+  if(link) link.href = '/en/account/?next=' + encodeURIComponent(location.pathname + location.search);
+  document.getElementById('title').textContent = 'Account required';
+  document.getElementById('auth-block').style.display = 'block';
+  document.getElementById('form-block').style.display = 'none';
+  document.getElementById('error-block').style.display = 'none';
+  const bar = document.querySelector('.bar');
+  if(bar) bar.style.display = 'none';
+}
+
+// Сессия протухла посреди покупки — это не то же самое, что «не
+// входил»: человек уже что-то выбрал, и текст должен объяснить, что
+// произошло, а не выглядеть как будто он всё сделал не так.
+function showAuthExpired(){
+  const el = document.getElementById('auth-text');
+  if(el) el.textContent = 'Your account session has expired. Sign in again — the seats you picked stay held for a few more minutes.';
+  showAuthGate();
+}
+
 function showError(text){
   document.getElementById('title').textContent = 'Something went wrong';
   document.getElementById('error-text').textContent = text;
@@ -359,6 +403,10 @@ async function init(){
   }
 
   if(!performanceId){ showError('The link does not specify a performance — go back to the listings and choose again.'); return; }
+
+  // pack-v419: ворота кабинета. Раньше сюда пускали кого угодно.
+  if(!accountToken()){ showAuthGate(); return; }
+  document.getElementById('auth-block').style.display = 'none';
 
   // Возврат с оплаты (return_url из create-order.js).
   //
@@ -578,9 +626,11 @@ function renderZoneLegend(){
 /** Возвращает {ok} либо {ok:false, taken:[...]} — молча не глотаем. */
 async function holdRequest(action, seats){
   if(!seats.length) return {ok:true};
+  const token = accountToken();
+  if(!token){ showAuthExpired(); return {ok:false}; }
   const res = await fetch(`${API_BASE}/hold-seat`, {
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
     body: JSON.stringify({
       performance_id: performanceId,
       hold_id: holdId,
@@ -594,7 +644,15 @@ async function holdRequest(action, seats){
     if(out.hold_expires_at) startHoldCountdown(out.hold_expires_at);
     return {ok:true};
   }
+  if(res.status === 401){ showAuthExpired(); return {ok:false}; }
   if(res.status === 409 && out.error === 'seats_taken') return {ok:false, taken: out.seats || []};
+  // pack-v419: потолок считается по всему, что аккаунт держит на этом
+  // показе, — сообщение должно называть число, иначе «не получилось»
+  // выглядит поломкой сайта.
+  if(res.status === 409 && out.error === 'hold_limit_reached'){
+    alert('You can hold no more than ' + (out.limit || 10) + ' seats at a time. Deselect a few and carry on.');
+    return {ok:false};
+  }
   return {ok:false};
 }
 
@@ -747,20 +805,34 @@ function tickHold(){
 }
 
 // Уходя со страницы, освобождаем места сразу, не дожидаясь TTL — тогда
-// они возвращаются в продажу мгновенно. sendBeacon переживает выгрузку
-// вкладки, обычный fetch на этом этапе браузер уже может оборвать.
+// они возвращаются в продажу мгновенно. Обычный fetch браузер на этом
+// этапе может оборвать, поэтому нужен keepalive — он переживает
+// выгрузку вкладки так же, как это делал sendBeacon до pack-v419.
 window.addEventListener('pagehide', () => {
-  if(!selectedSeats.length || !navigator.sendBeacon) return;
+  if(!selectedSeats.length) return;
   // Не освобождаем, если человек ушёл ОПЛАЧИВАТЬ: места должны
   // остаться за ним на странице ЮKassa (там уже действует холд заказа).
   if(window.__aelitaGoingToPayment) return;
+  const token = accountToken();
+  if(!token) return;
+  // ⚠️ pack-v419: здесь был navigator.sendBeacon, и он перестал
+  // годиться — beacon не умеет слать заголовки, а hold-seat теперь
+  // требует Authorization и без него ответит 401. Освобождение просто
+  // не доходило бы, и брошенные места висели бы до истечения TTL.
+  // fetch с keepalive:true — тот же «отправить и не ждать ответа при
+  // уходе со страницы», но с заголовками.
   try{
-    navigator.sendBeacon(`${API_BASE}/hold-seat`, new Blob([JSON.stringify({
-      performance_id: performanceId,
-      hold_id: holdId,
-      action: 'release',
-      seats: selectedSeats.map(s=>({row:s.row, seat:s.seat})),
-    })], {type:'application/json'}));
+    fetch(`${API_BASE}/hold-seat`, {
+      method:'POST',
+      keepalive:true,
+      headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
+      body: JSON.stringify({
+        performance_id: performanceId,
+        hold_id: holdId,
+        action: 'release',
+        seats: selectedSeats.map(s=>({row:s.row, seat:s.seat})),
+      }),
+    });
   }catch(e){}
 });
 
@@ -1028,10 +1100,23 @@ async function submitOrder(){
   if(appliedPromo) payload.promo_code = appliedPromo;
   if(appliedGift) payload.gift_code = appliedGift;
 
+  // pack-v419: заказ, как и удержание места, требует кабинета.
+  const orderToken = accountToken();
+  if(!orderToken){ showAuthExpired(); document.getElementById('buy-btn').disabled = false; return; }
+
   try{
     const res = await fetch(`${API_BASE}/create-order`, {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + orderToken},
+      body: JSON.stringify(payload)
     });
+    if(res.status === 401){
+      // Сессия истекла, пока человек заполнял форму. Места за ним ещё
+      // держатся — об этом и говорит текст в showAuthExpired().
+      showAuthExpired();
+      document.getElementById('buy-btn').disabled = false;
+      return;
+    }
     if(!res.ok && res.status !== 400 && res.status !== 409){
       // 400/409 — осмысленный отказ с телом (разберём ниже), остальное —
       // сервер сломался, а не "your order did not go through".
