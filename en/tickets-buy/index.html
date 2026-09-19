@@ -271,6 +271,41 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Pay</button>
 </div>
 
+<!-- pack-v421: счётчик Метрики на странице оплаты. До этой правки его
+     здесь не было вовсе: main.js (где живут YM_ID и loadMetrika) на
+     /tickets-buy/ не подключается — у страницы свой автономный шаблон
+     без cookie-баннера и без /assets/style.css. Следствия были три:
+     просмотр страницы оплаты не фиксировался, ни одна цель из
+     analytics-events.js отсюда не уходила (track() зовёт window.ym,
+     которого не было), и payments.js не мог взять ClientID
+     (getYmClientId() проверяет window.ym и window.YM_ID) — то есть
+     серверная конверсия «purchase» через Measurement Protocol уходила
+     без привязки к визиту. Здесь ровно тот же код, что в main.js,
+     с той же проверкой согласия: баннера на этой странице нет, но и
+     ставить счётчик без согласия нельзя — согласие даётся на любой
+     другой странице сайта и лежит в том же localStorage.
+     ⚠️ id счётчика продублирован в третий раз (main.js,
+     analytics-events.js, здесь) — при смене счётчика править все три. -->
+<script>
+var YM_ID = 104681911;
+(function(){
+  try { if (!localStorage.getItem('cookies_accepted')) return; } catch (e) { return; }
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  ym(YM_ID, "init", {
+       clickmap:true,
+       trackLinks:true,
+       accurateTrackBounce:true,
+       webvisor:true,
+       ecommerce:"dataLayer",
+       referrer: document.referrer,
+       url: location.href
+  });
+})();
+</script>
 <script src="/assets/analytics-events.js"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()

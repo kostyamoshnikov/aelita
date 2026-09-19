@@ -16,6 +16,13 @@
      В sitemap.xml НЕ добавляется (см. Site/README.md). -->
 <link rel="canonical" href="https://aelita-production.ru/en/ksenia-shamarina/">
 <meta name="robots" content="noindex, follow">
+<!-- PRESERVE_QUERY, pack-v422: meta-refresh теряет строку запроса — QR на
+     печатных материалах и ссылки в постах несут ?utm_*, и после перехода
+     визит приходил на новый адрес без меток, с реферером собственного
+     домена, то есть попадал в «прямые заходы». Этот скрипт выполняется при
+     разборе <head> раньше, чем сработает meta ниже, и переносит ?query и
+     #якорь на новый адрес. Без JS работает прежний meta-refresh. -->
+<script>(function(){try{var q=location.search||"",h=location.hash||"";if(q||h)location.replace("/en/ksenia-shamarina/"+q+h);}catch(e){}})();</script>
 <meta http-equiv="refresh" content="0; url=/en/ksenia-shamarina/">
 <meta name="theme-color" content="#0B0B0D">
 <link rel="shortcut icon" href="/favicon.ico">
