@@ -168,13 +168,25 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <p id="success-text">Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.</p>
   </div>
 
-  <!-- pack-v419: ворота кабинета. Стоят ДО схемы зала, а не перед
-       оплатой: захват зала шёл через удержание мест, а не через
-       оплату — см. докстринг _tools/Tickets/hold-seat.js. -->
+  <!-- pack-v441: ворота кабинета переехали со входа на страницу к шагу
+       оплаты. Раньше (pack-v419) схема зала вообще не рисовалась без
+       токена: человек, пришедший посмотреть, где места и почём, упирался
+       в форму входа и уходил. Теперь смотреть зал, цены и занятость можно
+       свободно, кабинет спрашивается один раз — когда человек нажал
+       «Pay».
+       Компромисс, который это создаёт, честно назван в тексте подсказки:
+       у гостя места НЕ удерживаются на сервере (hold-seat требует
+       авторизации), то есть выбор до входа — это намерение, а не бронь.
+       Прежний довод pack-v419 («показать места и отобрать их на первом
+       клике — хуже, чем сказать заранее») этим и закрывается: мы говорим
+       заранее, но не ценой закрытой двери.
+       Тот же блок обслуживает и протухшую сессию — showAuthExpired(). -->
   <div id="auth-block" style="display:none" class="error-box">
-    <p id="auth-text">To choose seats, sign in to your account or create one — it only takes a minute.</p>
+    <p id="auth-text">To complete the purchase, sign in to your account or create one — it is quick.</p>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/en/account/">Sign in or register</a>
   </div>
+
+  <div id="guest-note" style="display:none" class="warn">You can browse the hall, the prices and the free seats without an account. You will need one at the payment step — and the seats are held for you only once you sign in.</div>
 
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Could not load the performance.</p>
@@ -385,15 +397,80 @@ function accountToken(){
 // ровно на этот показ, а не на общую афишу. Адрес берём из
 // location, а не собираем руками: в ссылке есть ?performance=, без
 // него страница не знает, что открывать.
+// pack-v441: ворота больше НЕ подменяют страницу. Раньше отсюда
+// стирались заголовок, форма и нижняя панель — человек терял и показ, и
+// выбранные места. Теперь блок просто появляется сверху, страница
+// остаётся на месте, а выбор сохраняется, чтобы вернуться к нему после
+// входа (см. rememberSelection / restoreSelection).
 function showAuthGate(){
   const link = document.getElementById('auth-login-link');
   if(link) link.href = '/en/account/?next=' + encodeURIComponent(location.pathname + location.search);
-  document.getElementById('title').textContent = 'Account required';
-  document.getElementById('auth-block').style.display = 'block';
-  document.getElementById('form-block').style.display = 'none';
-  document.getElementById('error-block').style.display = 'none';
-  const bar = document.querySelector('.bar');
-  if(bar) bar.style.display = 'none';
+  const block = document.getElementById('auth-block');
+  block.style.display = 'block';
+  const note = document.getElementById('guest-note');
+  if(note) note.style.display = 'none';
+  block.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// Кнопка должна называть то, что произойдёт по нажатию. У гостя по
+// нажатию произойдёт не оплата, а вход — значит и надпись другая.
+function syncBuyButtonLabel(){
+  const btn = document.getElementById('buy-btn');
+  if(!btn) return;
+  btn.textContent = accountToken() ? 'Pay' : 'Sign in and pay';
+}
+
+// Выбор до входа. Кладём в localStorage, чтобы после возврата из
+// кабинета человек не собирал места заново — и сразу удерживаем их на
+// сервере, теперь уже по-настоящему.
+const PENDING_KEY = 'aelita_pending_selection';
+
+function rememberSelection(){
+  try{
+    localStorage.setItem(PENDING_KEY, JSON.stringify({
+      performance: performanceId,
+      seats: selectedSeats.map(s=>({row:s.row, seat:s.seat})),
+      quantity: quantity,
+      ts: Date.now(),
+    }));
+  }catch(e){}
+}
+
+async function restoreSelection(){
+  if(!accountToken()) return;
+  let saved = null;
+  try{
+    const raw = localStorage.getItem(PENDING_KEY);
+    if(!raw) return;
+    saved = JSON.parse(raw);
+    localStorage.removeItem(PENDING_KEY);
+  }catch(e){ return; }
+  if(!saved || saved.performance !== performanceId) return;
+  // Полчаса — потолок доверия к сохранённому выбору: дальше зал уже
+  // другой, и подставлять места как «ваши» было бы тем самым враньём,
+  // от которого уходили в pack-v272.
+  if(!saved.ts || Date.now() - saved.ts > 30*60*1000) return;
+  if(data.seating !== 'assigned'){
+    if(saved.quantity && saved.quantity > 1){ quantity = saved.quantity; updateTotal(); }
+    return;
+  }
+  const want = (saved.seats || []).slice(0, 10);
+  if(!want.length) return;
+  const r = await holdRequest('hold', want).catch(()=>({ok:false}));
+  const msgEl = document.getElementById('msg');
+  if(!r.ok){
+    if(msgEl) msgEl.textContent = 'While you were signing in, those seats were taken. Please pick again — the free ones are highlighted.';
+    return;
+  }
+  want.forEach(({row, seat}) => {
+    const el = document.querySelector(`.seat[data-row="${row}"][data-seat="${seat}"]`);
+    if(!el || el.classList.contains('taken')) return;
+    selectedSeats.push({row, seat, price: priceForRow(row)});
+    el.classList.add('selected');
+  });
+  invalidateDiscounts();
+  updateTotal();
+  if(msgEl && selectedSeats.length) msgEl.textContent = 'The seats are yours again — you can pay now.';
 }
 
 // Сессия протухла посреди покупки — это не то же самое, что «не
@@ -402,6 +479,11 @@ function showAuthGate(){
 function showAuthExpired(){
   const el = document.getElementById('auth-text');
   if(el) el.textContent = 'Your account session has expired. Sign in again — the seats you picked stay held for a few more minutes.';
+  // pack-v441: выбор сохраняем и здесь. Сессия истекает посреди
+  // заполнения формы чаще, чем кажется, и терять при этом набранные
+  // места — ровно та потеря, ради которой затевалась память выбора.
+  rememberSelection();
+  syncBuyButtonLabel();
   showAuthGate();
 }
 
@@ -441,9 +523,11 @@ async function init(){
 
   if(!performanceId){ showError('The link does not specify a performance — go back to the listings and choose again.'); return; }
 
-  // pack-v419: ворота кабинета. Раньше сюда пускали кого угодно.
-  if(!accountToken()){ showAuthGate(); return; }
+  // pack-v441: гостя пускаем смотреть. Ворота — в submitOrder().
   document.getElementById('auth-block').style.display = 'none';
+  const guestNote = document.getElementById('guest-note');
+  if(guestNote) guestNote.style.display = accountToken() ? 'none' : 'block';
+  syncBuyButtonLabel();
 
   // Возврат с оплаты (return_url из create-order.js).
   //
@@ -516,9 +600,11 @@ async function init(){
     document.getElementById('assigned-block').style.display = 'block';
     renderHall();
     renderZoneLegend();
+    restoreSelection();
   } else {
     document.getElementById('general-block').style.display = 'block';
     updateTotal();
+    restoreSelection();
   }
 }
 
@@ -664,7 +750,11 @@ function renderZoneLegend(){
 async function holdRequest(action, seats){
   if(!seats.length) return {ok:true};
   const token = accountToken();
-  if(!token){ showAuthExpired(); return {ok:false}; }
+  // pack-v441: гость не удерживает места на сервере — hold-seat требует
+  // авторизации. Выбор у него живёт только в браузере, и подсказка
+  // #guest-note говорит об этом прямым текстом. Возвращаем ok, иначе
+  // клик по месту у гостя просто ничего не делал бы.
+  if(!token) return {ok:true, guest:true};
   const res = await fetch(`${API_BASE}/hold-seat`, {
     method:'POST',
     headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
@@ -1137,9 +1227,18 @@ async function submitOrder(){
   if(appliedPromo) payload.promo_code = appliedPromo;
   if(appliedGift) payload.gift_code = appliedGift;
 
-  // pack-v419: заказ, как и удержание места, требует кабинета.
+  // pack-v441: единственные настоящие ворота. Здесь человек уже выбрал
+  // места и увидел сумму — просьба войти в этот момент понятна, в
+  // отличие от формы входа на пустой странице.
   const orderToken = accountToken();
-  if(!orderToken){ showAuthExpired(); document.getElementById('buy-btn').disabled = false; return; }
+  if(!orderToken){
+    rememberSelection();
+    document.getElementById('auth-text').textContent =
+      'To complete the purchase, sign in to your account or create one — it is quick. We will remember the seats you picked and bring them back after you sign in.';
+    showAuthGate();
+    document.getElementById('buy-btn').disabled = false;
+    return;
+  }
 
   try{
     const res = await fetch(`${API_BASE}/create-order`, {
