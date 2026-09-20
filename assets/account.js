@@ -37,9 +37,16 @@
         auth_required: 'Сессия истекла — войдите заново, и регистрация продолжится.',
         bad_event_id: 'Не поняли, о каком мероприятии речь — обновите страницу и попробуйте ещё раз.',
         bad_json: 'Запрос не дошёл целиком — обновите страницу и попробуйте ещё раз.',
+        nothing_to_change: 'Ничего не изменилось — поправьте имя или адрес и сохраните.',
+        name_too_long: 'Имя слишком длинное — до 120 символов.',
+        same_email: 'Это тот же адрес, что и сейчас.',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
+      savingProfile: 'Сохраняем…',
+      profileSaved: 'Сохранено.',
+      emailChanged: 'Адрес изменён. Письма по прошлым заказам остались на старом адресе — если нужны, нажмите «Прислать на почту», теперь они придут на новый.',
+      deletingAccount: 'Удаляем аккаунт…',
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
       resending: 'Отправляем письмо…',
@@ -72,9 +79,16 @@
         auth_required: 'Your session has expired — sign in again and the registration will continue.',
         bad_event_id: "We couldn't tell which event this is — refresh the page and try again.",
         bad_json: "The request didn't arrive in full — refresh the page and try again.",
+        nothing_to_change: 'Nothing changed — edit the name or the address and save.',
+        name_too_long: 'That name is too long — up to 120 characters.',
+        same_email: 'That is the address you already use.',
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
+      savingProfile: 'Saving…',
+      profileSaved: 'Saved.',
+      emailChanged: 'Address changed. Emails about earlier orders stayed at the old address — if you need them, press “Email me the tickets” and they will arrive at the new one.',
+      deletingAccount: 'Deleting the account…',
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
       resending: 'Sending email…',
@@ -95,6 +109,8 @@
   var ME_URL = API_BASE && API_BASE + '/me';
   var CONTRACT_URL = API_BASE && API_BASE + '/contract';
   var CHANGE_PASSWORD_URL = API_BASE && API_BASE + '/change-password';
+  var UPDATE_PROFILE_URL = API_BASE && API_BASE + '/update-profile';
+  var DELETE_ACCOUNT_URL = API_BASE && API_BASE + '/delete-account';
   // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/),
   // отдельный префикс под тем же Gateway, см. _tools/Events/README.md.
   var EVENTS_API_BASE = 'https://api.aelita-production.ru/events';
@@ -296,6 +312,82 @@
           if (opts.onSuccess) opts.onSuccess();
           else alert(t.passwordChanged);
           return;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v439 — правка профиля и удаление аккаунта.
+    //
+    // 401 здесь, как и в changePassword(), означает «пароль не совпал»,
+    // а не «сессия истекла»: токен сервер уже проверил раньше в том же
+    // запросе. Поэтому localStorage не трогаем и никуда не уводим —
+    // иначе человек, один раз ошибшись в пароле, вылетал бы из
+    // кабинета.
+    updateProfile: async function (fields, opts) {
+      opts = opts || {};
+      if (!UPDATE_PROFILE_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.savingProfile; }
+      try {
+        var res = await fetch(UPDATE_PROFILE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(fields),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.ok) {
+          // Адрес сменился — старый токен подписывал старый адрес и
+          // теперь везде отвечал бы 401. Подменяем молча: человек
+          // просил сменить почту, а не войти заново.
+          if (data.token) setToken(data.token);
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+        else alert(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // Удаление аккаунта. Предупреждение о том, ЧТО именно останется
+    // (оплаченные заказы как учётные документы, уже выданные билеты),
+    // показывает страница до вызова — здесь только действие: библиотека
+    // не место для текста, от которого зависит решение человека.
+    deleteAccount: async function (currentPassword, opts) {
+      opts = opts || {};
+      if (!DELETE_ACCOUNT_URL) { notConfigured(); return; }
+      var token = getToken();
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.deletingAccount; }
+      try {
+        var res = await fetch(DELETE_ACCOUNT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ currentPassword: currentPassword }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.deleted) {
+          clearToken();
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
         }
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));

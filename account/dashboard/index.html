@@ -86,7 +86,17 @@ body{max-width:100vw}
 .reg-item .resend-btn:hover{border-color:var(--gold);background:rgba(214,181,122,.08)}
 .reg-item .resend-btn:disabled{opacity:.5;cursor:default}
 .reg-msg{font-size:12px;color:var(--gold);margin-top:6px;text-align:right;max-width:260px}
-.reg-hint{color:var(--sand);font-size:11px;margin-top:6px}
+/* display:block обязателен: margin-top на строчном элементе не
+   работает, и подсказка прилипала к адресу площадки без пробела
+   («…Луначарского, 6Покажите QR при входе») — нашли на живой
+   странице, pack-v439. */
+.reg-hint{display:block;color:var(--sand);font-size:11px;margin-top:6px}
+.acc-hint{color:var(--sand);font-size:13px;line-height:1.55;max-width:560px;margin:0}
+.acc-danger h2{color:#C98B6B}
+.btn-danger{border-color:rgba(201,139,107,.5);color:#C98B6B}
+#pf-message,#del-message{font-size:13px;color:var(--sand);min-height:18px}
+#pf-message.ok,#del-message.ok{color:var(--gold)}
+
 @media(max-width:600px){.reg-item{grid-template-columns:1fr}.reg-item .cancel-btn{justify-self:start}.reg-actions{align-items:flex-start}.reg-msg{text-align:left}}
 @media(max-width:600px){.purchase-item{grid-template-columns:1fr;gap:10px}.purchase-item .amount{justify-self:start}.purchase-item .contract-btn{justify-self:start}}
 </style>
@@ -164,12 +174,35 @@ body{max-width:100vw}
       </div>
 
       <div class="acc-section">
+        <h2>Профиль</h2>
+        <form class="pw-form" id="profile-form" onsubmit="onSaveProfile(event)">
+          <input type="text" id="pf-name" placeholder="Имя" autocomplete="name" maxlength="120" required>
+          <input type="email" id="pf-email" placeholder="Адрес почты" autocomplete="email" required>
+          <input type="password" id="pf-password" placeholder="Текущий пароль — нужен только для смены почты" autocomplete="current-password">
+          <p class="acc-hint">Имя меняется сразу. Смена адреса — это смена логина, поэтому её подтверждает пароль. Заказы и регистрации останутся на месте: мы ищем их по всем адресам вашего аккаунта.</p>
+          <button type="submit" class="btn-outline" id="pf-submit">Сохранить</button>
+          <div id="pf-message"></div>
+        </form>
+      </div>
+
+      <div class="acc-section">
         <h2>Сменить пароль</h2>
         <form class="pw-form" id="pw-form" onsubmit="onChangePassword(event)">
           <input type="password" id="pw-current" placeholder="Текущий пароль" autocomplete="current-password" required>
           <input type="password" id="pw-new" placeholder="Новый пароль (от 8 символов)" autocomplete="new-password" minlength="8" required>
           <button type="submit" class="btn-outline" id="pw-submit">Сохранить новый пароль</button>
           <div id="pw-message"></div>
+        </form>
+      </div>
+
+      <div class="acc-section acc-danger">
+        <h2>Удалить аккаунт</h2>
+        <p class="acc-hint">Удалим адрес, имя, пароль и историю покупок в кабинете. Это необратимо.</p>
+        <p class="acc-hint"><b>Что останется и почему.</b> Оплаченные заказы — первичные учётные документы, они хранятся пять лет по закону о бухучёте, и удалить их по просьбе нельзя. Уже выданные билеты и регистрации продолжают действовать: QR в письме останется рабочим, на показ вы пройдёте. Если место нужно освободить — сначала отмените регистрацию кнопкой выше. Факт удаления мы записываем в журнал уничтожения персональных данных и храним три года — этого требует закон.</p>
+        <form class="pw-form" id="del-form" onsubmit="onDeleteAccount(event)">
+          <input type="password" id="del-password" placeholder="Текущий пароль" autocomplete="current-password" required>
+          <button type="submit" class="btn-outline btn-danger" id="del-submit">Удалить аккаунт навсегда</button>
+          <div id="del-message"></div>
         </form>
       </div>
     </div>
@@ -255,6 +288,8 @@ body{max-width:100vw}
       downloadContract: 'Скачать договор',
       qrInEmail: 'QR — в письме с билетом',
       showQrAtEntrance: 'Покажите QR при входе',
+      passwordNeededForEmail: 'Чтобы сменить адрес, введите текущий пароль.',
+      confirmDelete: 'Удалить аккаунт? Это необратимо. Оплаченные заказы и уже выданные билеты останутся действительными.',
       resendTicket: 'Прислать на почту',
       ticketLabel: 'Билет',
       ticketCheckedIn: 'Прошёл вход',
@@ -283,6 +318,8 @@ body{max-width:100vw}
       downloadContract: 'Download contract',
       qrInEmail: 'QR is in the ticket email',
       showQrAtEntrance: 'Show the QR at the entrance',
+      passwordNeededForEmail: 'To change the address, enter your current password.',
+      confirmDelete: 'Delete the account? This cannot be undone. Paid orders and tickets already issued stay valid.',
       resendTicket: 'Email me the ticket',
       ticketLabel: 'Ticket',
       ticketCheckedIn: 'Checked in',
@@ -505,6 +542,12 @@ body{max-width:100vw}
   }
 
   var lastAccountData = null;
+  var currentEmail = null;
+  // Через LANG, а не строкой: английская страница собирается из этой
+  // генератором (i18n/build_en.py), и жёстко вписанный путь после
+  // каждой пересборки снова уводил бы англоязычного гостя на русскую
+  // главную. Тот же приём, что у TICKETS_URL выше.
+  var ACCOUNT_HOME = LANG === 'en' ? '/en' : '/';
 
   function onExportData() {
     if (!lastAccountData) return;
@@ -529,6 +572,78 @@ body{max-width:100vw}
       onError: function (msg) {
         msgEl.textContent = msg;
       },
+    });
+  }
+
+
+  // Шапка кабинета собирается в одном месте: её перерисовывает и init,
+  // и сохранение профиля. Раньше строка собиралась прямо в init, и
+  // после смены имени в шапке оставалось старое — мелочь, по которой
+  // человек решает, сохранилось вообще или нет.
+  function setGreeting(name) {
+    var el = document.getElementById('acc-email');
+    // Имя пусто у аккаунтов, зарегистрированных до pack-v170 (тогда
+    // поле не спрашивали) — показываем один email, как раньше.
+    el.textContent = name ? (name + ' · ' + currentEmail) : currentEmail;
+  }
+
+  function onSaveProfile(evt) {
+    evt.preventDefault();
+    var msgEl = document.getElementById('pf-message');
+    var submitEl = document.getElementById('pf-submit');
+    var name = document.getElementById('pf-name').value.trim();
+    var email = document.getElementById('pf-email').value.trim().toLowerCase();
+    var password = document.getElementById('pf-password').value;
+    msgEl.textContent = '';
+    msgEl.classList.remove('ok');
+
+    var fields = { name: name };
+    // Адрес отправляем ТОЛЬКО если он правда изменился: иначе сервер
+    // потребовал бы пароль ради сохранения одного имени.
+    var changingEmail = currentEmail && email && email !== currentEmail.toLowerCase();
+    if (changingEmail) {
+      if (!password) { msgEl.textContent = t.passwordNeededForEmail; return; }
+      fields.newEmail = email;
+      fields.currentPassword = password;
+    }
+
+    window.AELITA_account.updateProfile(fields, {
+      buttonEl: submitEl,
+      onSuccess: function (data) {
+        msgEl.textContent = data && data.previousEmail ? t.emailChanged : t.profileSaved;
+        msgEl.classList.add('ok');
+        document.getElementById('pf-password').value = '';
+        if (data && data.email) {
+          currentEmail = data.email;
+          document.getElementById('pf-email').value = data.email;
+        }
+        if (data && data.name) setGreeting(data.name);
+        // Списки перечитываем: после смены адреса их отдаёт уже новый
+        // токен, и убедиться, что история на месте, человек должен
+        // сразу — а не гадать, не потерялась ли она.
+        loadTicketOrders();
+        loadEventRegistrations();
+      },
+      onError: function (msg) { msgEl.textContent = msg; },
+    });
+  }
+
+  function onDeleteAccount(evt) {
+    evt.preventDefault();
+    var msgEl = document.getElementById('del-message');
+    var submitEl = document.getElementById('del-submit');
+    msgEl.textContent = '';
+    msgEl.classList.remove('ok');
+    if (!confirm(t.confirmDelete)) return;
+    window.AELITA_account.deleteAccount(document.getElementById('del-password').value, {
+      buttonEl: submitEl,
+      onSuccess: function () {
+        // Токен библиотека уже стёрла. Уводим на главную, а не на
+        // /account: страница входа сразу после удаления выглядит как
+        // приглашение вернуться, и это неуместно.
+        location.href = ACCOUNT_HOME;
+      },
+      onError: function (msg) { msgEl.textContent = msg; },
     });
   }
 
@@ -560,9 +675,12 @@ body{max-width:100vw}
       return;
     }
     lastAccountData = data;
+    currentEmail = data.email;
+    document.getElementById('pf-name').value = data.name || '';
+    document.getElementById('pf-email').value = data.email || '';
     // data.name пуст у аккаунтов, зарегистрированных до pack-v170 (тогда
     // поле не спрашивали) — показываем email как раньше, не пустую строку.
-    document.getElementById('acc-email').textContent = data.name ? (data.name + ' · ' + data.email) : data.email;
+    setGreeting(data.name);
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
     loadTicketOrders();

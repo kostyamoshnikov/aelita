@@ -134,8 +134,7 @@ section{padding:90px 0}
     <p class="hero-sub">An unorganised dance company</p>
     <p class="hero-dir">Artistic Director — <strong><a href="/en/yulia-bychkova">Yulia Bychkova</a></strong>  ·  Founded in 2020</p>
     <div>
-      <a class="btn-gold" href="#shows">Productions at AELITA PRODUCTION</a>
-      <a class="btn-outline" href="#history">Production history</a>
+      <a class="btn-gold" href="#afisha">Company calendar</a>
       <a class="btn-outline" href="https://koroche-dance.ru" target="_blank" rel="noopener">Company website →</a>
     </div>
   </div>
@@ -220,6 +219,18 @@ section{padding:90px 0}
 </section>
 
 <!-- СПЕКТАКЛИ В AELITA -->
+<!-- АФИША КОМПАНИИ. Карточки между маркерами рисует
+     _tools/DesignSystem/afisha/build_afisha.py из afisha.json,
+     отфильтровав показы спектаклей «Короче». Руками не править. -->
+<section id="afisha">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Company calendar</h2></div>
+<!-- AFISHA:BEGIN -->
+    <p class="afisha-empty">No upcoming performances yet — the company repertoire is below.</p>
+    <!-- AFISHA:END -->
+  </div>
+</section>
+
 <section id="shows">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Productions at AELITA PRODUCTION</h2></div>

@@ -236,8 +236,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 <!-- Всегда на виду, включая экран ошибки — если что-то пошло не так на
      любом шаге (показ не загрузился, места кончились, оплата не
      началась), у человека должен быть выход, не только «попробуйте
-     ещё раз». Телефон — быстрее email в моменте живой покупки. -->
-<a class="help-link" href="tel:+79605151690">🆘 Need help? +7 960 515-16-90</a>
+     ещё раз». pack-v440: здесь была ссылка «позвонить». Заменена на почту —
+     письмо остаётся у человека и у нас в переписке, с ним видно номер
+     заказа и время, а звонок в нерабочее время упирается в тишину. -->
+<a class="help-link" href="mailto:aelita.production@yandex.ru">🆘 Need help? aelita.production@yandex.ru</a>
 
 
 <!-- Promo code. Раскрывающееся поле, а не всегда видимое: у большинства
@@ -1236,7 +1238,7 @@ async function submitOrder(){
       // свои шаги, сюда попадает только совсем непредвиденное).
       // Место(а) к этому моменту, скорее всего, уже отмечены проданными
       // — не предлагаем «попробовать ещё раз», это может задвоить заказ.
-      msgEl.innerHTML = 'Something went wrong with the free order — please do not retry; call us instead and we will sort it out: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'Something went wrong with the free order — please do not retry; email us instead and we will sort it out: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
     } else if(out.error === 'duplicate_seats'){
       msgEl.innerHTML = 'The same seat ended up in the order twice — the page has probably been open for a while. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and select the seats again.';
     } else if(out.error === 'bad_email'){
@@ -1256,9 +1258,9 @@ async function submitOrder(){
       msgEl.textContent = 'The payment service is not responding — that is on their side, not yours. Your seats are held; try pressing “Pay” again in a minute.';
     } else if(out.error === 'yookassa_rejected'){
       // Повтор тем же способом не поможет — нужен другой канал.
-      msgEl.innerHTML = 'The payment service declined the order. There is no point retrying — call us and we will arrange it manually: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'The payment service declined the order. There is no point retrying — email us and we will arrange it manually: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
     } else if(out.error === 'server_misconfigured'){
-      msgEl.innerHTML = 'Online payment is not configured right now — that is our fault, not yours. Call us and we will sell you the ticket directly: <a href="tel:+79605151690" style="color:var(--gold)">+7 960 515-16-90</a>';
+      msgEl.innerHTML = 'Online payment is not configured right now — that is our fault, not yours. Email us and we will sell you the ticket directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
     } else if(out.error === 'unknown_or_closed_performance'){
       msgEl.innerHTML = 'Sales for this performance closed while the page was open. <a href="/en/tickets" style="color:var(--gold)">View the listings</a>';
     } else if(out.error === 'seat_out_of_range' || out.error === 'bad_seat_count' || out.error === 'bad_quantity'){
