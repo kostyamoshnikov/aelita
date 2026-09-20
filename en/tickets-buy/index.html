@@ -118,6 +118,12 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    ещё и исчезает целиком, как только человек начинает печатать. */
 .form input + .field-hint{margin-top:-6px}
 .field-hint{font-size:11px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
+/* pack-v442: личный кабинет прямо в форме покупки */
+.acct-line{font-size:12px;color:var(--sand);margin:0 0 12px;line-height:1.45}
+.acct-line b{color:var(--cream,#E8E6E1);font-weight:400}
+.acct-line a,.acct-guest a{color:var(--gold)}
+.acct-guest{border-top:1px solid rgba(214,181,122,.18);margin:6px 0 10px;padding-top:12px}
+.acct-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .qty{display:flex;align-items:center;gap:14px;justify-content:center;margin:20px 0}
 .qty button{width:36px;height:36px;border-radius:50%;border:1px solid var(--sand);background:transparent;color:var(--bone);font-size:18px;cursor:pointer}
 .qty span{font-size:20px;min-width:24px;text-align:center}
@@ -186,7 +192,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/en/account/">Sign in or register</a>
   </div>
 
-  <div id="guest-note" style="display:none" class="warn">You can browse the hall, the prices and the free seats without an account. You will need one at the payment step — and the seats are held for you only once you sign in.</div>
+  <div id="guest-note" style="display:none" class="warn">Seats and prices are open to everyone. To buy, you need an AELITA account — we will create it right in the form below.</div>
 
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Could not load the performance.</p>
@@ -228,12 +234,25 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   </div>
 
   <div class="form" id="form-block">
+    <!-- pack-v442: кто покупает. Страница сама узнаёт, вошёл ли человек в
+         кабинет (запрос /account/me по сохранённому токену), и подставляет
+         имя и почту — повторно их вводить не нужно. -->
+    <div class="acct-line" id="acct-in" style="display:none">You are signed in as <b id="acct-who"></b> · <a href="#" onclick="acctSignOut();return false">Not you?</a></div>
     <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
     <input id="f-name" placeholder="Name *" required>
     <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email *" required>
     <div class="field-hint">Your tickets will be sent there</div>
     <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone *" required>
     <div class="field-hint">For the receipt and in case we need to reach you</div>
+    <!-- pack-v442: регистрация прямо здесь. Имя и почта для кабинета —
+         те же поля, что для билетов выше, поэтому спрашиваем только
+         пароль. Уходить на /account/ и возвращаться больше не нужно. -->
+    <div class="acct-guest" id="acct-guest" style="display:none">
+      <div class="acct-title" id="acct-title">AELITA account</div>
+      <div class="field-hint" id="acct-hint">Your tickets and orders will live there. Choose a password — we will take your name and email from the fields above.</div>
+      <input id="f-password" type="password" autocomplete="new-password" placeholder="Password * (at least 8 characters)">
+      <div class="field-hint"><a href="#" id="acct-mode-link" onclick="toggleAcctMode();return false">Already have an account? Sign in</a></div>
+    </div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/consent" style="color:var(--gold)">processing of personal data</a></span></label>
     <div class="msg" id="msg"></div>
 
@@ -417,7 +436,196 @@ function showAuthGate(){
 function syncBuyButtonLabel(){
   const btn = document.getElementById('buy-btn');
   if(!btn) return;
-  btn.textContent = accountToken() ? 'Pay' : 'Sign in and pay';
+  // pack-v442: гость больше никуда не уходит — кнопка и регистрирует
+  // (или впускает), и оплачивает. Надпись говорит, что именно будет.
+  if(accountToken()) btn.textContent = 'Pay';
+  else btn.textContent = (typeof acctMode !== 'undefined' && acctMode === 'login')
+    ? 'Sign in and pay' : 'Pay';
+}
+
+// ─── pack-v442: кабинет прямо на странице покупки ──────────────────
+//
+// Схема для человека: пришёл → видит зал и цены → выбирает места →
+// заполняет одну форму → нажимает одну кнопку. Если он уже в кабинете,
+// страница узнаёт это сама и подставляет имя и почту. Если нет — в той
+// же форме появляется одно поле «пароль», и по нажатию кнопки кабинет
+// заводится (или открывается, если почта уже зарегистрирована) и сразу
+// оформляется заказ. Ни перехода на /account/, ни повторного ввода.
+
+const ACCOUNT_API = 'https://api.aelita-production.ru/account';
+const PHONE_KEY = 'aelita_last_phone';
+// Режим формы для гостя: регистрация или вход.
+let acctMode = 'register';
+// Профиль {email, name} — после /me, входа или регистрации.
+let acctProfile = null;
+
+function setToken(tok){
+  try{ tok ? localStorage.setItem('aelita_account_token', tok)
+           : localStorage.removeItem('aelita_account_token'); }catch(e){}
+}
+
+function fillIfEmpty(id, value){
+  const el = document.getElementById(id);
+  if(el && !el.value.trim() && value) el.value = value;
+}
+
+// Состояние «вошёл»: строка «Вы в кабинете как …», блок пароля скрыт.
+function showSignedIn(profile){
+  acctProfile = profile;
+  const who = document.getElementById('acct-who');
+  if(who) who.textContent = profile.name ? `${profile.name} (${profile.email})` : profile.email;
+  document.getElementById('acct-in').style.display = 'block';
+  document.getElementById('acct-guest').style.display = 'none';
+  const note = document.getElementById('guest-note');
+  if(note) note.style.display = 'none';
+  document.getElementById('auth-block').style.display = 'none';
+  fillIfEmpty('f-name', profile.name);
+  fillIfEmpty('f-email', profile.email);
+  syncBuyButtonLabel();
+}
+
+// Состояние «гость»: подсказка сверху, поле пароля в форме.
+function showGuest(){
+  acctProfile = null;
+  document.getElementById('acct-in').style.display = 'none';
+  document.getElementById('acct-guest').style.display = 'block';
+  const note = document.getElementById('guest-note');
+  if(note) note.style.display = 'block';
+  applyAcctMode();
+}
+
+function applyAcctMode(){
+  const login = acctMode === 'login';
+  document.getElementById('acct-hint').textContent = login
+    ? 'Enter your account password — the email is the one in the field above.'
+    : 'Your tickets and orders will live there. Choose a password — we will take your name and email from the fields above.';
+  const pw = document.getElementById('f-password');
+  pw.placeholder = login ? 'Account password *' : 'Password * (at least 8 characters)';
+  pw.autocomplete = login ? 'current-password' : 'new-password';
+  document.getElementById('acct-mode-link').textContent = login
+    ? 'No account? Create one' : 'Already have an account? Sign in';
+  syncBuyButtonLabel();
+}
+
+function toggleAcctMode(){
+  acctMode = acctMode === 'login' ? 'register' : 'login';
+  applyAcctMode();
+  document.getElementById('f-password').focus();
+}
+
+function acctSignOut(){
+  setToken(null);
+  acctMode = 'login';
+  showGuest();
+  document.getElementById('f-password').value = '';
+}
+
+// Кто на странице. Токен в localStorage ещё не значит «вошёл»: сессия
+// могла истечь, аккаунт — быть удалён. Спрашиваем /me. Если сеть
+// недоступна — токену доверяем: заказ всё равно проверит его сам, и
+// ошибка 401 вернёт человека в форму входа прямо здесь же.
+async function detectAccount(){
+  fillIfEmpty('f-contact', (()=>{ try{ return localStorage.getItem(PHONE_KEY); }catch(e){ return null; } })());
+  const token = accountToken();
+  if(!token){ showGuest(); return; }
+  try{
+    const res = await fetch(`${ACCOUNT_API}/me`, {headers:{'Authorization':'Bearer ' + token}});
+    if(res.status === 401){ setToken(null); acctMode = 'login'; showGuest(); return; }
+    if(res.ok){
+      const me = await res.json();
+      showSignedIn({email: me.email, name: me.name || ''});
+      return;
+    }
+  }catch(e){ /* сеть — см. комментарий выше */ }
+  showSignedIn({email: '', name: ''});
+  document.getElementById('acct-in').style.display = 'none';
+}
+
+// Зарегистрировать или впустить гостя одним нажатием «Pay».
+// Возвращает токен или null (сообщение уже показано в #msg).
+async function ensureAccount(name, email){
+  const existing = accountToken();
+  if(existing) return existing;
+  const msgEl = document.getElementById('msg');
+  const pwEl = document.getElementById('f-password');
+  const password = pwEl.value;
+  if(acctMode === 'register' && password.length < 8){
+    AELITA_showFieldError(pwEl, 'Password must be at least 8 characters');
+    msgEl.textContent = 'Choose a password for your account — at least 8 characters.';
+    pwEl.focus();
+    return null;
+  }
+  if(acctMode === 'login' && !password){
+    AELITA_showFieldError(pwEl, 'Enter your password');
+    msgEl.textContent = 'Enter your account password.';
+    pwEl.focus();
+    return null;
+  }
+  AELITA_clearFieldError(pwEl);
+  msgEl.textContent = acctMode === 'login' ? 'Signing you in…' : 'Creating your account…';
+  const url = `${ACCOUNT_API}/${acctMode === 'login' ? 'login' : 'register'}`;
+  const body = acctMode === 'login' ? {email, password} : {name, email, password};
+  let res, out = {};
+  try{
+    res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    try{ out = await res.json(); }catch(e){}
+  }catch(e){
+    msgEl.textContent = 'Could not reach the server — check your connection and press again.';
+    return null;
+  }
+  if(res.ok && out.token){
+    setToken(out.token);
+    pwEl.value = '';
+    showSignedIn({email: out.email || email, name: out.name || name});
+    return out.token;
+  }
+  // Почта уже в кабинете — самый частый случай «регистрации» повторного
+  // покупателя. Не ругаемся, а переключаем форму на вход: пароль от
+  // этого кабинета и есть следующий шаг.
+  if(out.error === 'email_taken'){
+    acctMode = 'login';
+    applyAcctMode();
+    pwEl.value = '';
+    msgEl.innerHTML = 'There is already an account with this email — enter its password. <a href="/en/account/" style="color:var(--gold)">Forgot your password?</a>';
+    pwEl.focus();
+    return null;
+  }
+  if(out.error === 'invalid_credentials'){
+    AELITA_showFieldError(pwEl, 'That password did not work');
+    msgEl.innerHTML = 'That password did not work. <a href="/en/account/" style="color:var(--gold)">Forgot your password?</a>';
+    pwEl.focus();
+    return null;
+  }
+  if(out.error === 'bad_email'){
+    AELITA_showFieldError(document.getElementById('f-email'), 'Check your email');
+    msgEl.textContent = 'Check your email address — there seems to be a typo.';
+    return null;
+  }
+  msgEl.textContent = 'Could not open your account — please try again in a minute.';
+  return null;
+}
+
+// Гость выбирал места без удержания (hold-seat требует авторизации).
+// Сразу после появления токена закрепляем их по-настоящему — до
+// создания заказа, чтобы конфликт всплыл здесь, а не на оплате.
+async function holdGuestSelection(){
+  if(!data || data.seating !== 'assigned' || !selectedSeats.length) return true;
+  const r = await holdRequest('hold', selectedSeats.map(s=>({row:s.row, seat:s.seat})))
+    .catch(()=>({ok:false}));
+  if(r.ok) return true;
+  const msgEl = document.getElementById('msg');
+  if(r.taken && r.taken.length){
+    r.taken.forEach(k => {
+      const idx = selectedSeats.findIndex(s => s.row === k.row && s.seat === k.seat);
+      if(idx >= 0) selectedSeats.splice(idx, 1);
+      markSeatTaken(k.row, k.seat);
+    });
+    updateTotal();
+    msgEl.textContent = 'Your account is ready, but some of the seats were taken meanwhile — they are marked on the plan. Pick others and press “Pay”.';
+  } else {
+    msgEl.textContent = 'Could not hold the seats — please press “Pay” again.';
+  }
+  return false;
 }
 
 // Выбор до входа. Кладём в localStorage, чтобы после возврата из
@@ -477,14 +685,16 @@ async function restoreSelection(){
 // входил»: человек уже что-то выбрал, и текст должен объяснить, что
 // произошло, а не выглядеть как будто он всё сделал не так.
 function showAuthExpired(){
-  const el = document.getElementById('auth-text');
-  if(el) el.textContent = 'Your account session has expired. Sign in again — the seats you picked stay held for a few more minutes.';
-  // pack-v441: выбор сохраняем и здесь. Сессия истекает посреди
-  // заполнения формы чаще, чем кажется, и терять при этом набранные
-  // места — ровно та потеря, ради которой затевалась память выбора.
-  rememberSelection();
-  syncBuyButtonLabel();
-  showAuthGate();
+  // pack-v442: раньше показывали блок со ссылкой на /account/. Теперь
+  // вход есть прямо в форме — переключаем её на ввод пароля, почта уже
+  // стоит в поле. Выбранные места никуда не деваются: страница та же.
+  setToken(null);
+  acctMode = 'login';
+  showGuest();
+  const msgEl = document.getElementById('msg');
+  if(msgEl) msgEl.textContent = 'Your account session has expired — enter your password again and we will carry on.';
+  const pw = document.getElementById('f-password');
+  if(pw){ pw.scrollIntoView({behavior:'smooth', block:'center'}); pw.focus(); }
 }
 
 function showError(text){
@@ -523,11 +733,10 @@ async function init(){
 
   if(!performanceId){ showError('The link does not specify a performance — go back to the listings and choose again.'); return; }
 
-  // pack-v441: гостя пускаем смотреть. Ворота — в submitOrder().
+  // pack-v441: гостя пускаем смотреть. pack-v442: а кто он — узнаём
+  // сами, не дожидаясь нажатия «Pay» (см. detectAccount).
   document.getElementById('auth-block').style.display = 'none';
-  const guestNote = document.getElementById('guest-note');
-  if(guestNote) guestNote.style.display = accountToken() ? 'none' : 'block';
-  syncBuyButtonLabel();
+  detectAccount();
 
   // Возврат с оплаты (return_url из create-order.js).
   //
@@ -1230,15 +1439,18 @@ async function submitOrder(){
   // pack-v441: единственные настоящие ворота. Здесь человек уже выбрал
   // места и увидел сумму — просьба войти в этот момент понятна, в
   // отличие от формы входа на пустой странице.
-  const orderToken = accountToken();
-  if(!orderToken){
-    rememberSelection();
-    document.getElementById('auth-text').textContent =
-      'To complete the purchase, sign in to your account or create one — it is quick. We will remember the seats you picked and bring them back after you sign in.';
-    showAuthGate();
+  // pack-v442: кабинет — здесь же, одним нажатием. Если человек
+  // гость, ensureAccount() заводит кабинет (или впускает в существующий)
+  // из тех же имени и почты, что в форме, и сразу закрепляет места,
+  // выбранные до входа.
+  const hadToken = !!accountToken();
+  const orderToken = await ensureAccount(name, email);
+  if(!orderToken){ document.getElementById('buy-btn').disabled = false; return; }
+  if(!hadToken && !(await holdGuestSelection())){
     document.getElementById('buy-btn').disabled = false;
     return;
   }
+  msgEl.textContent = 'Placing your order…';
 
   try{
     const res = await fetch(`${API_BASE}/create-order`, {
@@ -1261,6 +1473,9 @@ async function submitOrder(){
       return;
     }
     const out = await res.json();
+    // pack-v442: телефон запоминаем на этом устройстве — в профиле кабинета
+    // его нет, а вводить его заново при каждой покупке незачем.
+    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} }
     if(out.zero_amount){
       // pack-v278: скидка (промокод + подарочная карта) покрыла всю
       // сумму — ЮKassa вообще не вызывалась, create-order.js уже
