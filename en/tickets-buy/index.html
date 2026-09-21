@@ -89,10 +89,19 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 /* pack-v272: полоса «Держим места» — живой отсчёт холда, который
    реально стоит на сервере с момента выбора места (hold-seat.js).
    Появляется только когда есть что удерживать. */
-.hold-bar{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--coal);border:1px solid rgba(214,181,122,.35);border-radius:4px;padding:9px 14px;margin:14px 0 0;font-size:13px}
+/* pack-v443: плашка удержания — сверху и липкая, как «Держим места» у
+   Яндекс Афиши. Раньше она стояла под схемой зала: пока человек
+   заполнял форму внизу, отсчёт был за пределами экрана, и истечение
+   времени становилось сюрпризом. Заливка убывает вместе со временем —
+   остаток читается с одного взгляда, без чтения цифр. */
+.hold-bar{display:none;position:sticky;top:10px;z-index:30;align-items:center;justify-content:space-between;gap:12px;
+  background:#0B0B0D;border:1px solid rgba(214,181,122,.45);border-radius:999px;padding:12px 20px;margin:0 0 16px;
+  font-size:14px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.hold-bar::before{content:'';position:absolute;inset:0;width:var(--hold-left,100%);
+  background:linear-gradient(90deg,rgba(214,181,122,.10),rgba(214,181,122,.22));transition:width 1s linear;z-index:-1}
 .hold-bar.on{display:flex}
-.hold-bar .hold-label{color:var(--sand)}
-.hold-bar .hold-time{color:var(--gold);font-variant-numeric:tabular-nums;font-size:15px}
+.hold-bar .hold-label{color:var(--cream,#E8E6E1)}
+.hold-bar .hold-time{color:var(--gold);font-variant-numeric:tabular-nums;font-size:16px}
 /* Последняя минута — предупреждающий цвет, тот же, что у .msg. */
 .hold-bar.urgent{border-color:#C98B6B}
 .hold-bar.urgent .hold-time{color:#C98B6B}
@@ -167,6 +176,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <div id="test-banner" style="display:none" class="test-banner">Test mode — no real money is charged</div>
   <h1 id="title">Loading…</h1>
   <div class="meta" id="meta"></div>
+  <!-- pack-v272: отсчёт показывает реальное удержание, а не обещание.
+       pack-v443: плашка переехала наверх и стала липкой — см. .hold-bar.
+       Показывается только когда места ДЕЙСТВИТЕЛЬНО удержаны на сервере:
+       у гостя (до входа) и на показах без схемы зала удерживать нечего,
+       и отсчёт там был бы выдумкой. -->
+  <div class="hold-bar" id="hold-bar" role="timer" aria-live="off">
+    <span class="hold-label">Holding your seats</span>
+    <span class="hold-time" id="hold-time">—</span>
+  </div>
   <div id="degraded" style="display:none" class="warn">We are running an extra availability check — in rare cases a selected seat may turn out to be taken; we will check again and warn you before payment.</div>
 
   <div id="success-block" style="display:none" class="success-box">
@@ -192,7 +210,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/en/account/">Sign in or register</a>
   </div>
 
-  <div id="guest-note" style="display:none" class="warn">Seats and prices are open to everyone. To buy, you need an AELITA account — we will create it right in the form below.</div>
+  <div id="guest-note" style="display:none" class="warn">To buy, you need an AELITA account — we will create it right in the form below.</div>
 
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Could not load the performance.</p>
@@ -214,14 +232,6 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <div class="stage">Stage</div>
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
-    <!-- pack-v272: было статичное «удерживаются 10 минут» — обещание,
-         которое до этой версии не выполнялось: холд ставился только
-         при нажатии «Pay». Теперь место действительно удержано с
-         момента выбора, и отсчёт показывает реальный остаток. -->
-    <div class="hold-bar" id="hold-bar">
-      <span class="hold-label">Holding your seats</span>
-      <span class="hold-time" id="hold-time">—</span>
-    </div>
     <div class="picked" id="picked"></div>
   </div>
 
@@ -393,6 +403,14 @@ try {
   holdId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2));
 }
 let holdExpiresAt = null;  // ISO-строка от сервера
+// pack-v443: окно удержания для человека. Серверный TTL — 5 минут, и
+// страница продлевает его каждые 90 секунд, поэтому показывать его
+// бессмысленно: отсчёт вечно прыгал бы обратно к 5:00 и ни о чём не
+// говорил. Человеку нужна одна понятная граница, как у Яндекс Афиши:
+// 10 минут с первого выбранного места. Внутри окна продление идёт как
+// раньше, по его истечении — прекращается, места возвращаются в продажу.
+const HOLD_WINDOW_MS = 10 * 60 * 1000;
+let holdWindowEnd = null;
 let holdTicker = null;     // id интервала отсчёта
 let holdRenewTimer = null; // id интервала продления
 
@@ -1094,6 +1112,9 @@ function renderPicked(){
 
 function startHoldCountdown(expiresAtIso){
   holdExpiresAt = expiresAtIso;
+  // Окно открывается один раз — на первом удержании. Повторные ответы
+  // сервера (новое место, продление) его не сдвигают.
+  if(!holdWindowEnd) holdWindowEnd = Date.now() + HOLD_WINDOW_MS;
   document.getElementById('hold-bar').classList.add('on');
   if(holdTicker) clearInterval(holdTicker);
   tickHold();
@@ -1103,6 +1124,7 @@ function startHoldCountdown(expiresAtIso){
   // середине. TTL на сервере 5 минут, продлеваем заметно чаще.
   if(holdRenewTimer) clearInterval(holdRenewTimer);
   holdRenewTimer = setInterval(() => {
+    if(holdWindowEnd && Date.now() >= holdWindowEnd) return;
     if(selectedSeats.length) holdRequest('hold', selectedSeats).catch(()=>{});
   }, 90000);
 }
@@ -1111,17 +1133,23 @@ function stopHoldCountdown(){
   if(holdTicker){ clearInterval(holdTicker); holdTicker = null; }
   if(holdRenewTimer){ clearInterval(holdRenewTimer); holdRenewTimer = null; }
   holdExpiresAt = null;
+  holdWindowEnd = null;
   const bar = document.getElementById('hold-bar');
   bar.classList.remove('on','urgent');
+  bar.style.removeProperty('--hold-left');
 }
 
 function tickHold(){
-  if(!holdExpiresAt) return;
-  const left = new Date(holdExpiresAt).getTime() - Date.now();
+  if(!holdExpiresAt || !holdWindowEnd) return;
+  const left = holdWindowEnd - Date.now();
   const bar = document.getElementById('hold-bar');
   if(left <= 0){
-    // Холд истёк на сервере — честно снимаем выбор, а не оставляем
-    // подсветку мест, которые уже никому не принадлежат.
+    // Окно вышло. Отпускаем места явно — не ждём, пока истечёт
+    // серверный TTL: тогда они вернутся в продажу сразу.
+    const released = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
+    if(released.length) holdRequest('release', released).catch(()=>{});
+    // Честно снимаем выбор, а не оставляем подсветку мест, которые
+    // уже никому не принадлежат.
     stopHoldCountdown();
     selectedSeats = [];
     document.querySelectorAll('.seat.selected').forEach(el => {
@@ -1130,13 +1158,14 @@ function tickHold(){
     });
     invalidateDiscounts();
     updateTotal();
-    document.getElementById('msg').textContent = 'The hold has expired — please select your seats again.';
+    document.getElementById('msg').textContent = 'Time is up — the seats are back on sale. Pick them again if they are still free.';
     return;
   }
   const total = Math.ceil(left/1000);
   const mm = String(Math.floor(total/60)).padStart(2,'0');
   const ss = String(total%60).padStart(2,'0');
   document.getElementById('hold-time').textContent = `${mm}:${ss}`;
+  bar.style.setProperty('--hold-left', (Math.max(0, left) / HOLD_WINDOW_MS * 100).toFixed(2) + '%');
   bar.classList.toggle('urgent', left < 60000);
 }
 
