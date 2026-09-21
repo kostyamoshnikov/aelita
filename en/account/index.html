@@ -221,7 +221,15 @@ body{max-width:100vw}
     try {
       var u = new URL(raw, location.origin);
       if (u.origin !== location.origin) return;
-      NEXT_PATH = u.pathname + u.search + u.hash;
+      // pack-v449: путь после разрешения тоже проверяем. `/.//evil.com`,
+      // `/a/..//evil.com` и `/%2e//evil.com` проходят сравнение источника
+      // (URL собран относительно нашего адреса), но нормализуются в путь
+      // `//evil.com` — а его браузер в location.href читает как адрес
+      // без протокола, то есть чужой сайт. Поэтому: путь не может
+      // начинаться с двух косых, и переходим по ПОЛНОМУ адресу (u.href) —
+      // он содержит наш источник явно, и никакой путь его не перебьёт.
+      if (u.pathname.indexOf('//') === 0) return;
+      NEXT_PATH = u.href;
       document.getElementById('next-hint').style.display = 'block';
     } catch (e) { /* не URL — остаёмся без возврата */ }
   })();

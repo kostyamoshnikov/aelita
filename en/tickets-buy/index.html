@@ -604,13 +604,13 @@ async function ensureAccount(name, email){
     acctMode = 'login';
     applyAcctMode();
     pwEl.value = '';
-    msgEl.innerHTML = 'There is already an account with this email — enter its password. <a href="/en/account/" style="color:var(--gold)">Forgot your password?</a>';
+    msgEl.innerHTML = 'There is already an account with this email — enter its password. <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Forgot your password?</a>';
     pwEl.focus();
     return null;
   }
   if(out.error === 'invalid_credentials'){
     AELITA_showFieldError(pwEl, 'That password did not work');
-    msgEl.innerHTML = 'That password did not work. <a href="/en/account/" style="color:var(--gold)">Forgot your password?</a>';
+    msgEl.innerHTML = 'That password did not work. <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Forgot your password?</a>';
     pwEl.focus();
     return null;
   }
@@ -621,6 +621,41 @@ async function ensureAccount(name, email){
   }
   msgEl.textContent = 'Could not open your account — please try again in a minute.';
   return null;
+}
+
+// pack-v449: «Забыли пароль?» прямо на странице покупки. До этого
+// ссылка вела на /account/ — человек уходил со страницы с выбранными
+// местами, там ещё раз нажимал «Забыли пароль?», а после смены пароля
+// оказывался в кабинете, а не у покупки. Теперь письмо уходит отсюда же,
+// на почту из поля выше, а страница с выбором остаётся открытой: задал
+// новый пароль по ссылке — вернулся на эту вкладку — ввёл его — оплатил.
+async function sendResetFromCheckout(){
+  const msgEl = document.getElementById('msg');
+  const emailEl = document.getElementById('f-email');
+  const email = emailEl.value.trim();
+  if(!email){
+    AELITA_showFieldError(emailEl, 'Enter your email');
+    msgEl.textContent = 'Enter your email above — the link for a new password will be sent there.';
+    emailEl.focus();
+    return;
+  }
+  rememberSelection();
+  msgEl.textContent = 'Sending the email…';
+  try{
+    const res = await fetch(`${ACCOUNT_API}/request-password-reset`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, lang:'en'}),
+    });
+    let out = {};
+    try{ out = await res.json(); }catch(e){}
+    if(res.ok && out.ok){
+      msgEl.textContent = `The link has been sent to ${email} (check your spam folder too). Set a new password via the link, come back to this tab and enter it — your selected seats stay here.`;
+      const pw = document.getElementById('f-password');
+      if(pw){ pw.value = ''; pw.focus(); }
+      return;
+    }
+  }catch(e){}
+  msgEl.innerHTML = 'Could not send the email. Write to us and we will help: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
 }
 
 // Гость выбирал места без удержания (hold-seat требует авторизации).
