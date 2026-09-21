@@ -21,9 +21,9 @@
         bad_name: 'Укажите имя.',
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
-        email_taken: 'Этот email нам уже знаком — попробуйте войти.',
+        email_taken: 'Этот email нам уже знаком — попробуйте войти. Не помните пароль — нажмите «Забыли пароль?» у формы входа.',
         missing_credentials: 'Укажите email и пароль.',
-        invalid_credentials: 'Email или пароль не совпадают — проверьте и попробуйте ещё раз.',
+        invalid_credentials: 'Email или пароль не совпадают — проверьте и попробуйте ещё раз. Не помните пароль — «Забыли пароль?» чуть ниже.',
         storage_unreachable: 'Не достучались до сервера. Попробуйте ещё раз через минуту.',
         server_misconfigured: 'Личный кабинет временно недоступен — напишите нам напрямую.',
         purchase_not_found: 'Не нашли эту покупку в кабинете — обновите страницу и попробуйте ещё раз.',
@@ -40,6 +40,8 @@
         nothing_to_change: 'Ничего не изменилось — поправьте имя или адрес и сохраните.',
         name_too_long: 'Имя слишком длинное — до 120 символов.',
         same_email: 'Это тот же адрес, что и сейчас.',
+        too_many_requests: 'Слишком много запросов на этот адрес — подождите десять минут и попробуйте снова.',
+        bad_reset_link: 'Ссылка недействительна: она устарела, уже использована или пароль с тех пор меняли. Запросите новую на странице входа.',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
@@ -47,6 +49,8 @@
       profileSaved: 'Сохранено.',
       emailChanged: 'Адрес изменён. Письма по прошлым заказам остались на старом адресе — если нужны, нажмите «Прислать на почту», теперь они придут на новый.',
       deletingAccount: 'Удаляем аккаунт…',
+      sendingReset: 'Отправляем письмо…',
+      savingPassword: 'Сохраняем пароль…',
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
       resending: 'Отправляем письмо…',
@@ -63,9 +67,9 @@
         bad_name: 'Please enter your name.',
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
-        email_taken: 'That email is already registered — try signing in instead.',
+        email_taken: "That email is already registered — try signing in. Don't remember the password? Use “Forgot password?” by the sign-in form.",
         missing_credentials: 'Enter your email and password.',
-        invalid_credentials: "Email or password doesn't match — check and try again.",
+        invalid_credentials: "Email or password doesn't match — check and try again. Don't remember the password? “Forgot password?” is just below.",
         storage_unreachable: "Couldn't reach the server. Try again in a moment.",
         server_misconfigured: 'The account is temporarily unavailable — email us directly.',
         purchase_not_found: "Couldn't find that purchase in your account — refresh the page and try again.",
@@ -82,6 +86,8 @@
         nothing_to_change: 'Nothing changed — edit the name or the address and save.',
         name_too_long: 'That name is too long — up to 120 characters.',
         same_email: 'That is the address you already use.',
+        too_many_requests: 'Too many requests for this address — wait ten minutes and try again.',
+        bad_reset_link: 'This link is no longer valid: it has expired, was already used, or the password has changed since. Request a new one on the sign-in page.',
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
@@ -89,6 +95,8 @@
       profileSaved: 'Saved.',
       emailChanged: 'Address changed. Emails about earlier orders stayed at the old address — if you need them, press “Email me the tickets” and they will arrive at the new one.',
       deletingAccount: 'Deleting the account…',
+      sendingReset: 'Sending the email…',
+      savingPassword: 'Saving the password…',
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
       resending: 'Sending email…',
@@ -111,6 +119,8 @@
   var CHANGE_PASSWORD_URL = API_BASE && API_BASE + '/change-password';
   var UPDATE_PROFILE_URL = API_BASE && API_BASE + '/update-profile';
   var DELETE_ACCOUNT_URL = API_BASE && API_BASE + '/delete-account';
+  var REQUEST_RESET_URL = API_BASE && API_BASE + '/request-password-reset';
+  var RESET_PASSWORD_URL = API_BASE && API_BASE + '/reset-password';
   // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/),
   // отдельный префикс под тем же Gateway, см. _tools/Events/README.md.
   var EVENTS_API_BASE = 'https://api.aelita-production.ru/events';
@@ -394,6 +404,65 @@
       } catch (e) {
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v448 — восстановление пароля. Без токена: человек как раз
+    // не может войти. Ответ сервера одинаковый, есть аккаунт или нет
+    // (см. _tools/Account/request-password-reset.js) — поэтому и здесь
+    // успех один на всех: «если адрес есть, письмо в пути».
+    requestPasswordReset: async function (email, opts) {
+      opts = opts || {};
+      if (!REQUEST_RESET_URL) { notConfigured(); return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.sendingReset; }
+      try {
+        var res = await fetch(REQUEST_RESET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ email: email, lang: LANG }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.ok) {
+          if (opts.onSuccess) opts.onSuccess();
+          return true;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    resetPassword: async function (token, newPassword, opts) {
+      opts = opts || {};
+      if (!RESET_PASSWORD_URL) { notConfigured(); return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.savingPassword; }
+      try {
+        var res = await fetch(RESET_PASSWORD_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ token: token, newPassword: newPassword }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.ok) {
+          // Сразу входим: сервер выдал сессию. Без токена (редкий сбой
+          // подписи) — просто без автоматического входа.
+          if (data.token) setToken(data.token);
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
       }

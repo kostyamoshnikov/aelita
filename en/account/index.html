@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=25">
+<link rel="stylesheet" href="/assets/style.css?v=26">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
@@ -53,6 +53,8 @@ body{max-width:100vw}
 .form-note{font-size:12px;color:rgba(201,184,163,.5);margin-top:6px}
 .form-err{font-size:13px;color:#e08a6e;margin-top:6px;display:none}
 @media(max-width:760px){.acc-grid{grid-template-columns:1fr}}
+.forgot-link{color:var(--sand);font-size:13px;text-decoration:underline;align-self:flex-start;margin-top:4px}
+.forgot-ok{color:var(--gold);font-size:13px;line-height:1.5;margin:0}
 </style>
 </head>
 <body>
@@ -117,6 +119,14 @@ body{max-width:100vw}
           <div class="field"><label for="login-password">Password</label><input type="password" id="login-password" placeholder="Password" autocomplete="current-password"></div>
           <button class="btn-gold" id="loginBtn" onclick="doLogin()">Sign in →</button>
           <p class="form-err" id="loginErr"></p>
+          <a href="#" class="forgot-link" onclick="toggleForgot();return false">Forgot password?</a>
+          <div id="forgot-box" style="display:none">
+            <p class="sub" style="margin:6px 0 10px">We will email you a link to set a new password. It works for one hour.</p>
+            <div class="field"><label for="forgot-email">Email</label><input type="email" id="forgot-email" placeholder="email@example.com" autocomplete="email"></div>
+            <button class="btn-gold" id="forgotBtn" onclick="doForgot()">Send the link →</button>
+            <p class="form-err" id="forgotErr"></p>
+            <p class="forgot-ok" id="forgotOk" style="display:none">If this address is registered, the email with the link is on its way. Check your spam folder too.</p>
+          </div>
         </div>
       </div>
 
@@ -176,34 +186,50 @@ body{max-width:100vw}
 <div id="cookie-banner">
   <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
   <div class="cookie-actions">
-    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
   </div>
 </div>
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/account.js"></script>
-<script src="/assets/main.js?v=25"></script>
+<script src="/assets/main.js?v=26"></script>
 <script>
   // ?next=/tickets — куда вернуться после входа (например, сюда привёл
   // клик «Оплатить» на странице без авторизации, см. assets/payments.js).
-  // Валидация против open redirect: только локальный путь с одним '/'
-  // в начале, никаких протоколов и '//' (не aelita-production.ru/../evil.com).
-  // Вычисляется ДО проверки isLoggedIn ниже — если её переставить после,
-  // NEXT_PATH на момент того чтения ещё будет undefined (var hoisting).
+  // Валидация против open redirect. Вычисляется ДО проверки isLoggedIn
+  // ниже — если её переставить после, NEXT_PATH на момент того чтения ещё
+  // будет undefined (var hoisting).
+  //
+  // ⚠️ pack-v448: прежняя проверка («начинается с '/', не с '//', без
+  // '://'») пропускала обратную косую черту: браузер читает `/\evil.com`
+  // как `//evil.com`, то есть ссылка вида /account?next=/\evil.com после
+  // входа уводила на чужой сайт — адрес в письме при этом выглядит как
+  // наш домен. Проверять нужно не строку, а то, КУДА браузер её
+  // разрешит: собрать URL относительно своего адреса и сравнить
+  // источник. Обратная черта и управляющие символы отсекаются ещё до
+  // этого — им в пути нашего сайта взяться неоткуда.
+  // Сообщения проверки формы живут в скрипте, а скрипты генератор
+  // английских страниц не переводит — поэтому язык выбирается здесь, по
+  // lang документа (его генератор ставит). До pack-v448 английский
+  // посетитель видел их по-русски.
+  var EN = document.documentElement.lang === 'en';
   var NEXT_PATH = null;
   (function () {
     var raw = new URLSearchParams(location.search).get('next');
-    if (raw && raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('://')) {
-      NEXT_PATH = raw;
+    if (!raw || raw.charAt(0) !== '/' || /[\\\s]/.test(raw)) return;
+    try {
+      var u = new URL(raw, location.origin);
+      if (u.origin !== location.origin) return;
+      NEXT_PATH = u.pathname + u.search + u.hash;
       document.getElementById('next-hint').style.display = 'block';
-    }
+    } catch (e) { /* не URL — остаёмся без возврата */ }
   })();
 
   // Уже залогинен — незачем показывать форму входа, сразу в кабинет
   // (или туда, откуда пришли, если есть NEXT_PATH).
   if (window.AELITA_account && window.AELITA_account.isLoggedIn()) {
-    location.href = NEXT_PATH || '/account/dashboard';
+    location.href = NEXT_PATH || '/en/account/dashboard';
   }
 
   function showErr(id, message) {
@@ -219,10 +245,10 @@ body{max-width:100vw}
     hideErr('loginErr');
     var email = document.getElementById('login-email').value.trim();
     var password = document.getElementById('login-password').value;
-    if (!email || !password) { showErr('loginErr', 'Укажите email и пароль.'); return; }
+    if (!email || !password) { showErr('loginErr', (EN ? "Enter your email and password." : 'Укажите email и пароль.')); return; }
     window.AELITA_account.login(email, password, {
       buttonEl: document.getElementById('loginBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/account/dashboard'; },
+      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
       onError: function (msg) { showErr('loginErr', msg); },
     });
   }
@@ -232,14 +258,42 @@ body{max-width:100vw}
     var name = document.getElementById('reg-name').value.trim();
     var email = document.getElementById('reg-email').value.trim();
     var password = document.getElementById('reg-password').value;
-    if (!name) { showErr('regErr', 'Укажите имя.'); return; }
-    if (!email || !password) { showErr('regErr', 'Укажите email и пароль.'); return; }
-    if (password.length < 8) { showErr('regErr', 'Пароль должен быть не короче 8 символов.'); return; }
-    if (!document.getElementById('reg-consent').checked) { showErr('regErr', 'Отметьте согласие с офертой и обработкой персональных данных.'); return; }
+    if (!name) { showErr('regErr', (EN ? "Enter your name." : 'Укажите имя.')); return; }
+    if (!email || !password) { showErr('regErr', (EN ? "Enter your email and password." : 'Укажите email и пароль.')); return; }
+    if (password.length < 8) { showErr('regErr', (EN ? "The password must be at least 8 characters." : 'Пароль должен быть не короче 8 символов.')); return; }
+    if (!document.getElementById('reg-consent').checked) { showErr('regErr', (EN ? "Please accept the offer and the personal data processing terms." : 'Отметьте согласие с офертой и обработкой персональных данных.')); return; }
     window.AELITA_account.register(name, email, password, {
       buttonEl: document.getElementById('registerBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/account/dashboard'; },
+      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
       onError: function (msg) { showErr('regErr', msg); },
+    });
+  }
+
+  // pack-v448: восстановление пароля. С v441 кабинет обязателен для
+  // покупки, и без этой ссылки забытый пароль был тупиком: заново
+  // зарегистрироваться нельзя («email уже знаком»), войти — тоже.
+  function toggleForgot() {
+    var box = document.getElementById('forgot-box');
+    var open = box.style.display === 'none';
+    box.style.display = open ? 'block' : 'none';
+    if (open) {
+      // Адрес, уже введённый в форму входа, подставляем — человек
+      // только что его набрал и ошибся паролем, не адресом.
+      var typed = document.getElementById('login-email').value.trim();
+      if (typed) document.getElementById('forgot-email').value = typed;
+      document.getElementById('forgot-email').focus();
+    }
+  }
+
+  function doForgot() {
+    hideErr('forgotErr');
+    document.getElementById('forgotOk').style.display = 'none';
+    var email = document.getElementById('forgot-email').value.trim();
+    if (!email) { showErr('forgotErr', (EN ? "Enter your email." : 'Укажите email.')); return; }
+    window.AELITA_account.requestPasswordReset(email, {
+      buttonEl: document.getElementById('forgotBtn'),
+      onSuccess: function () { document.getElementById('forgotOk').style.display = 'block'; },
+      onError: function (msg) { showErr('forgotErr', msg); },
     });
   }
 
@@ -264,6 +318,9 @@ body{max-width:100vw}
   });
   document.getElementById('reg-password').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') doRegister();
+  });
+  document.getElementById('forgot-email').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') doForgot();
   });
 </script>
 </body>
