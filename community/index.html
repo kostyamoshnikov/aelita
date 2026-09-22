@@ -38,6 +38,16 @@
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
 .hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;color:var(--sand);max-width:640px;line-height:1.6}
+/* pack-v456: вводный абзац разделён на два смысловых слоя — манифест
+   (крупно, с золотой чертой) и «что есть сейчас / что дальше» (две
+   короткие плашки). Одним абзацем серого текста он читался как сноска. */
+.hub-lead{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(19px,2.6vw,26px);line-height:1.5;color:var(--bone);max-width:760px;margin:0;padding-left:22px;border-left:1px solid var(--gold)}
+.hub-lead em{font-style:normal;color:var(--gold)}
+.hub-now{display:grid;grid-template-columns:repeat(2,minmax(0,280px));gap:14px;margin:34px 0 38px}
+.hub-now div{border-top:1px solid rgba(214,181,122,.35);padding-top:14px}
+.hub-now span{display:block;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.hub-now p{margin:0;font-family:'Montserrat',sans-serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--sand)}
+@media (max-width:560px){.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
 /* Перенесено из book-space/index.html (pack-v229) — та же карточка
    Кати переиспользована здесь без credentials-списка, укороченный
    .about-grid тоже отсюда, набор правил идентичен, только без
@@ -80,7 +90,12 @@
   <div class="wrap">
     <p class="eyebrow">AELITA COMMUNITY</p>
     <h1>Комьюнити AELITA PRODUCTION</h1>
-    <p class="sub">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, как устроено мышление — своё и чужое. Сейчас в AELITA COMMUNITY — два книжных потока; со временем появятся другие форматы, не обязательно про книги.</p>
+    <p class="hub-lead">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, <em>как устроено мышление</em> — своё и чужое.</p>
+    <div class="hub-now">
+      <div><span>Сейчас</span><p>Два книжных потока</p></div>
+      <div><span>Дальше</span><p>Другие форматы — не обязательно про книги</p></div>
+    </div>
+    <a class="btn-gold" href="#join-community">Хочу в клуб</a>
   </div>
 </div>
 
