@@ -169,6 +169,18 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    у телефонов с жестовой навигацией. */
 .vpn-note{color:var(--gold);font-size:12px;line-height:1.5;margin-top:10px}
 .help-link{position:fixed;left:16px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5;max-width:calc(100vw - 32px);box-sizing:border-box}
+
+/* pack-v460 (WP-1 R1.9): баннер cookies — вид повторяет общий из
+   /assets/style.css, но живёт здесь: у страницы автономный шаблон. */
+#cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(11,11,13,.97);border-top:1px solid rgba(214,181,122,.2);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;transform:translateY(0);transition:transform .4s ease}
+#cookie-banner.hidden{transform:translateY(110%)}
+#cookie-banner p{color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0;max-width:760px}
+#cookie-banner a{color:var(--gold,#D6B57A)}
+.cookie-actions{display:flex;gap:12px;flex-shrink:0}
+.cookie-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
+.cookie-btn-accept{background:var(--gold,#D6B57A);color:var(--ink,#0B0B0D)}
+.cookie-btn-more{background:transparent;color:rgba(201,184,163,.8);border:1px solid rgba(201,184,163,.3)}
+@media(max-width:700px){#cookie-banner{flex-direction:column;align-items:flex-start;padding:14px 16px;gap:12px}.cookie-actions{width:100%}.cookie-btn{flex:1}}
 </style>
 </head>
 <body>
@@ -331,7 +343,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
      analytics-events.js, здесь) — при смене счётчика править все три. -->
 <script>
 var YM_ID = 104681911;
-(function(){
+// pack-v460 (WP-1 R1.9): инициализация вынесена в функцию — её зовёт и
+// проверка согласия при загрузке, и кнопка «Accept» в баннере ниже.
+function initMetrika(){
   try { if (!localStorage.getItem('cookies_accepted')) return; } catch (e) { return; }
   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
   m[i].l=1*new Date();
@@ -347,7 +361,8 @@ var YM_ID = 104681911;
        referrer: document.referrer,
        url: location.href
   });
-})();
+}
+initMetrika();
 </script>
 <script src="/assets/analytics-events.js"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
@@ -1710,6 +1725,39 @@ async function pollOrderStatus(){
 }
 
 init();
+</script>
+
+<!-- pack-v460 (WP-1 R1.9): баннер cookies. До этой версии его здесь не
+     было: у страницы свой автономный шаблон без /assets/style.css и без
+     main.js. Счётчик при этом стоял и честно проверял согласие — то
+     есть человек, зашедший СРАЗУ сюда (а на страницу оплаты приходят
+     прямо по ссылке из афиши, минуя главную), дать согласие не мог
+     нигде, и статистика по нему не собиралась вовсе. Разметка и стили
+     инлайн, повторяют вид общего баннера. -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/cookies">cookie policy</a> и <a href="/en/privacy/">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+<!-- pack-v460 (WP-1 R1.9): согласие и загрузка счётчика без перезагрузки
+     страницы. Метрика поднимается ровно в момент нажатия «Accept» —
+     иначе первый (и часто единственный) просмотр терялся бы. -->
+<script>
+function acceptCookies() {
+  try { localStorage.setItem('cookies_accepted', '1'); } catch (e) { /* приватный режим — просто не запомним */ }
+  var b = document.getElementById('cookie-banner');
+  if (b) b.classList.add('hidden');
+  initMetrika();
+}
+(function () {
+  var accepted = false;
+  try { accepted = Boolean(localStorage.getItem('cookies_accepted')); } catch (e) { accepted = false; }
+  var b = document.getElementById('cookie-banner');
+  if (accepted && b) b.classList.add('hidden');
+})();
 </script>
 </body>
 </html>

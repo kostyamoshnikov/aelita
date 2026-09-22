@@ -34,10 +34,24 @@ h1{font-family:'Montserrat',system-ui,sans-serif;font-weight:200;letter-spacing:
 .foot{margin-top:48px;color:var(--muted);font-size:13px}
 .foot a{color:var(--gold);text-decoration:none}
 @media(max-width:600px){.wrap{padding:36px 16px 64px}}
+
+/* pack-v460 (WP-1 R1.9): баннер cookies — у страницы автономный шаблон
+   без /assets/style.css, вид повторяет общий баннер сайта. */
+#cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(11,11,13,.97);border-top:1px solid rgba(214,181,122,.2);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;transform:translateY(0);transition:transform .4s ease}
+#cookie-banner.hidden{transform:translateY(110%)}
+#cookie-banner p{color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0;max-width:760px}
+#cookie-banner a{color:var(--gold)}
+.cookie-actions{display:flex;gap:12px;flex-shrink:0}
+.cookie-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
+.cookie-btn-accept{background:var(--gold);color:#0B0B0D}
+.cookie-btn-more{background:transparent;color:rgba(201,184,163,.8);border:1px solid rgba(201,184,163,.3)}
+@media(max-width:700px){#cookie-banner{flex-direction:column;align-items:flex-start;padding:14px 16px;gap:12px}.cookie-actions{width:100%}.cookie-btn{flex:1}}
 </style>
 <script>
 var YM_ID = 104681911;
-(function(){
+// pack-v460 (WP-1 R1.9): инициализация в функции — её зовёт и проверка
+// согласия при загрузке, и кнопка «Принять» в баннере.
+function initMetrika(){
   try { if (!localStorage.getItem('cookies_accepted')) return; } catch (e) { return; }
   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
   m[i].l=1*new Date();
@@ -46,7 +60,8 @@ var YM_ID = 104681911;
   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
   ym(YM_ID, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
        webvisor:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href});
-})();
+}
+initMetrika();
 </script>
 </head>
 <body>
@@ -140,5 +155,26 @@ var YM_ID = 104681911;
   <p class="foot">Updated: September 19, 2026 · <a href="/en/">Home</a> · <a href="/en/press">For press</a></p>
 </div>
 <script src="/assets/analytics-events.js"></script>
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our cookie policy and privacy policy.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+<script>
+function acceptCookies() {
+  try { localStorage.setItem('cookies_accepted', '1'); } catch (e) { /* приватный режим */ }
+  var b = document.getElementById('cookie-banner');
+  if (b) b.classList.add('hidden');
+  initMetrika();
+}
+(function () {
+  var accepted = false;
+  try { accepted = Boolean(localStorage.getItem('cookies_accepted')); } catch (e) { accepted = false; }
+  var b = document.getElementById('cookie-banner');
+  if (accepted && b) b.classList.add('hidden');
+})();
+</script>
 </body>
 </html>
