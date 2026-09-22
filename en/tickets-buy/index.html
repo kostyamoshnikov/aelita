@@ -52,11 +52,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .seat{width:var(--seat-size);height:var(--seat-size);border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
 /* pack-v281: масштабирование схемы зала (кнопки +/− над схемой).
    ⚠️ ПОЧЕМУ ЧЕРЕЗ CSS-ПЕРЕМЕННЫЕ РАЗМЕРА, А НЕ transform:scale().
-   Соблазн — навесить `transform: scale(k)` на .hall и не трогать
+   Соблазн — навесить `transform: scale(k)` на .hall and не трогать
    ничего больше. Так делать нельзя по трём причинам, каждая из
    которых ломает уже работающее:
      1. `transform` НЕ меняет размер элемента для раскладки — контейнер
-        остаётся прежней ширины, и горизонтальная прокрутка (её
+        остаётся прежней ширины, and горизонтальная прокрутка (её
         чинили в pack-v266) при увеличении просто перестала бы
         доставать до правого края зала.
      2. Клетка места визуально росла бы, но её РЕАЛЬНАЯ область
@@ -65,20 +65,20 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
         (WCAG 2.2 SC 2.5.8), вернулась бы при любом зуме.
      3. При дробном масштабе `transform` даёт размытые границы клеток
         на не-Retina экранах — схема зала становится грязной.
-   Переменные размера меняют настоящую геометрию: и раскладку, и
-   область нажатия, и чёткость. Прокрутка, номера рядов по краям
-   (pack-v270) и проход между местами продолжают работать без правок —
+   Переменные размера меняют настоящую геометрию: and раскладку, и
+   область нажатия, and чёткость. Прокрутка, номера рядов по краям
+   (pack-v270) and проход между местами продолжают работать без правок —
    они все выражены в тех же переменных. */
 :root{--seat-size:16px;--seat-gap:2px;--rownum-w:22px;--rownum-fs:9px;--aisle-w:10px}
 /* pack-v270: на сенсорных экранах клетка места 16×16 не проходит
    минимум WCAG 2.2 (SC 2.5.8 Target Size — 24×24 CSS-пикселя), а с
    зазором в 2px эффективная цель ещё меньше. В Синем зале 34 места в
-   ряду — промахнуться и выбрать соседнее место было слишком легко, а
+   ряду — промахнуться and выбрать соседнее место было слишком легко, а
    цена ошибки тут не косметическая: человек платит за не то место.
    Увеличиваем до 24×24 именно по типу указателя, а не по ширине
    экрана: мышью 16px попадаются нормально, пальцем — нет. Ряд от
-   этого становится шире и требует больше прокрутки, но горизонтальная
-   прокрутка зала и так штатная (её починили в pack-v266), а
+   этого становится шире and требует больше прокрутки, но горизонтальная
+   прокрутка зала and так штатная (её починили в pack-v266), а
    непопадание по месту — нет. */
 @media (pointer:coarse){
   :root{--seat-size:24px;--seat-gap:3px;--rownum-w:26px;--rownum-fs:12px}
@@ -89,9 +89,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 /* pack-v272: полоса «Держим места» — живой отсчёт холда, который
    реально стоит на сервере с момента выбора места (hold-seat.js).
    Появляется только когда есть что удерживать. */
-/* pack-v443: плашка удержания — сверху и липкая, как «Держим места» у
+/* pack-v443: плашка удержания — сверху and липкая, как «Держим места» у
    Яндекс Афиши. Раньше она стояла под схемой зала: пока человек
-   заполнял форму внизу, отсчёт был за пределами экрана, и истечение
+   заполнял форму внизу, отсчёт был за пределами экрана, and истечение
    времени становилось сюрпризом. Заливка убывает вместе со временем —
    остаток читается с одного взгляда, без чтения цифр. */
 .hold-bar{display:none;position:sticky;top:10px;z-index:30;align-items:center;justify-content:space-between;gap:12px;
@@ -111,7 +111,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .picked{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
 .picked-chip{display:flex;align-items:center;gap:8px;background:var(--coal);border:1px solid rgba(214,181,122,.3);border-radius:20px;padding:6px 8px 6px 14px;font-size:13px;color:var(--bone)}
 .picked-chip .chip-price{color:var(--sand);font-size:12px}
-/* 28px — проходит минимум WCAG 2.2 SC 2.5.8 (24px), как и клетка
+/* 28px — проходит минимум WCAG 2.2 SC 2.5.8 (24px), как and клетка
    места после pack-v270: снять место по ошибке здесь так же обидно,
    как выбрать не то. */
 .picked-chip button{width:28px;height:28px;flex:0 0 auto;border-radius:50%;border:none;background:transparent;color:var(--sand);font-size:17px;line-height:1;cursor:pointer}
@@ -123,8 +123,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .form input{width:100%;background:var(--ink);border:1px solid rgba(217,217,217,.18);color:var(--bone);padding:11px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;border-radius:3px}
 /* pack-v266: пояснения к полям вынесены из placeholder отдельной
    строкой. В placeholder они обрезались на телефоне на середине слова
-   («Phone * — для чека и связи, если что-т»), а обрезанный текст
-   ещё и исчезает целиком, как только человек начинает печатать. */
+   («Phone * — для чека and связи, если что-т»), а обрезанный текст
+   ещё and исчезает целиком, как только человек начинает печатать. */
 .form input + .field-hint{margin-top:-6px}
 .field-hint{font-size:11px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
 /* pack-v442: личный кабинет прямо в форме покупки */
@@ -163,7 +163,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 /* pack-v266: помощь больше не перекрывает «Pay». Раньше обе
    были position:fixed у нижнего края, у .help-link стоял z-index:5, у
    .bar — ничего: на узком экране пилюля с телефоном ложилась поверх
-   кнопки оплаты и та становилась недоступна для нажатия. Теперь у
+   кнопки оплаты and та становилась недоступна для нажатия. Теперь у
    панели свой слой выше, а помощь поднята НАД панелью (её высота
    ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
    у телефонов с жестовой навигацией. */
@@ -189,10 +189,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <h1 id="title">Loading…</h1>
   <div class="meta" id="meta"></div>
   <!-- pack-v272: отсчёт показывает реальное удержание, а не обещание.
-       pack-v443: плашка переехала наверх и стала липкой — см. .hold-bar.
+       pack-v443: плашка переехала наверх and стала липкой — см. .hold-bar.
        Показывается только когда места ДЕЙСТВИТЕЛЬНО удержаны на сервере:
-       у гостя (до входа) и на показах без схемы зала удерживать нечего,
-       и отсчёт там был бы выдумкой. -->
+       у гостя (до входа) and на показах без схемы зала удерживать нечего,
+       and отсчёт там был бы выдумкой. -->
   <div class="hold-bar" id="hold-bar" role="timer" aria-live="off">
     <span class="hold-label">Holding your seats</span>
     <span class="hold-time" id="hold-time">—</span>
@@ -206,17 +206,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
   <!-- pack-v441: ворота кабинета переехали со входа на страницу к шагу
        оплаты. Раньше (pack-v419) схема зала вообще не рисовалась без
-       токена: человек, пришедший посмотреть, где места и почём, упирался
-       в форму входа и уходил. Теперь смотреть зал, цены и занятость можно
+       токена: человек, пришедший посмотреть, где места and почём, упирался
+       в форму входа and уходил. Теперь смотреть зал, цены and занятость можно
        свободно, кабинет спрашивается один раз — когда человек нажал
        «Pay».
        Компромисс, который это создаёт, честно назван в тексте подсказки:
        у гостя места НЕ удерживаются на сервере (hold-seat требует
        авторизации), то есть выбор до входа — это намерение, а не бронь.
-       Прежний довод pack-v419 («показать места и отобрать их на первом
-       клике — хуже, чем сказать заранее») этим и закрывается: мы говорим
+       Прежний довод pack-v419 («показать места and отобрать их на первом
+       клике — хуже, чем сказать заранее») этим and закрывается: мы говорим
        заранее, но не ценой закрытой двери.
-       Тот же блок обслуживает и протухшую сессию — showAuthExpired(). -->
+       Тот же блок обслуживает and протухшую сессию — showAuthExpired(). -->
   <div id="auth-block" style="display:none" class="error-box">
     <p id="auth-text">To complete the purchase, sign in to your account or create one — it is quick.</p>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/en/account/">Sign in or register</a>
@@ -232,7 +232,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
   <div id="assigned-block" style="display:none">
     <!-- pack-v281: масштаб схемы зала. В Синем зале 34 места в ряду —
-         на телефоне ряд шире экрана втрое, и рассмотреть, где именно
+         на телефоне ряд шире экрана втрое, and рассмотреть, где именно
          свободное место, было тяжело; на большом экране, наоборот,
          схема мелкая. Кнопки решают оба случая. -->
     <div class="zoom-bar">
@@ -257,8 +257,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
   <div class="form" id="form-block">
     <!-- pack-v442: кто покупает. Страница сама узнаёт, вошёл ли человек в
-         кабинет (запрос /account/me по сохранённому токену), и подставляет
-         имя и почту — повторно их вводить не нужно. -->
+         кабинет (запрос /account/me по сохранённому токену), and подставляет
+         имя and почту — повторно их вводить не нужно. -->
     <div class="acct-line" id="acct-in" style="display:none">You are signed in as <b id="acct-who"></b> · <a href="#" onclick="acctSignOut();return false">Not you?</a></div>
     <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
     <input id="f-name" placeholder="Name *" required>
@@ -266,9 +266,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <div class="field-hint">Your tickets will be sent there</div>
     <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone *" required>
     <div class="field-hint">For the receipt and in case we need to reach you</div>
-    <!-- pack-v442: регистрация прямо здесь. Имя и почта для кабинета —
+    <!-- pack-v442: регистрация прямо здесь. Имя and почта для кабинета —
          те же поля, что для билетов выше, поэтому спрашиваем только
-         пароль. Уходить на /account/ и возвращаться больше не нужно. -->
+         пароль. Уходить на /account/ and возвращаться больше не нужно. -->
     <div class="acct-guest" id="acct-guest" style="display:none">
       <div class="acct-title" id="acct-title">AELITA account</div>
       <div class="field-hint" id="acct-hint">Your tickets and orders will live there. Choose a password — we will take your name and email from the fields above.</div>
@@ -280,7 +280,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
     <!-- pack-v334: предупреждение про VPN. На шести других страницах с
      оплатой оно стоит с pack-v238 («на всех страницах с оплатой»), но
-     билетная система появилась позже (pack-v272+) и предупреждение не
+     билетная система появилась позже (pack-v272+) and предупреждение не
      получила — то есть его не было ровно там, где платят чаще всего. -->
     <p class="vpn-note">Unfortunately, payment does not work with a VPN enabled — turn it off and try again.</p>
   </div>
@@ -290,13 +290,13 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
      любом шаге (показ не загрузился, места кончились, оплата не
      началась), у человека должен быть выход, не только «попробуйте
      ещё раз». pack-v440: здесь была ссылка «позвонить». Заменена на почту —
-     письмо остаётся у человека и у нас в переписке, с ним видно номер
-     заказа и время, а звонок в нерабочее время упирается в тишину. -->
+     письмо остаётся у человека and у нас в переписке, с ним видно номер
+     заказа and время, а звонок в нерабочее время упирается в тишину. -->
 <a class="help-link" href="mailto:aelita.production@yandex.ru">🆘 Need help? aelita.production@yandex.ru</a>
 
 
 <!-- Promo code. Раскрывающееся поле, а не всегда видимое: у большинства
-     покупателей кода нет, и пустая рамка «введите промокод» над кнопкой
+     покупателей кода нет, and пустая рамка «введите промокод» над кнопкой
      оплаты только добавляет сомнение «а я что, переплачиваю?». -->
 <div class="promo-wrap" id="promo-wrap">
   <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()">I have a promo code</button>
@@ -308,7 +308,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 </div>
 
 <!-- pack-v277: подарочная карта — тот же паттерн раскрывающегося поля
-     и те же классы, что у промокода (.promo-*), новый CSS не заводим. -->
+     and те же классы, что у промокода (.promo-*), новый CSS не заводим. -->
 <div class="promo-wrap" id="gift-wrap">
   <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">I have a gift card</button>
   <div class="promo-row" id="gift-row" hidden>
@@ -327,24 +327,24 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 </div>
 
 <!-- pack-v421: счётчик Метрики на странице оплаты. До этой правки его
-     здесь не было вовсе: main.js (где живут YM_ID и loadMetrika) на
+     здесь не было вовсе: main.js (где живут YM_ID and loadMetrika) на
      /tickets-buy/ не подключается — у страницы свой автономный шаблон
-     без cookie-баннера и без /assets/style.css. Следствия были три:
+     без cookie-баннера and без /assets/style.css. Следствия были три:
      просмотр страницы оплаты не фиксировался, ни одна цель из
      analytics-events.js отсюда не уходила (track() зовёт window.ym,
-     которого не было), и payments.js не мог взять ClientID
-     (getYmClientId() проверяет window.ym и window.YM_ID) — то есть
+     которого не было), and payments.js не мог взять ClientID
+     (getYmClientId() проверяет window.ym and window.YM_ID) — то есть
      серверная конверсия «purchase» через Measurement Protocol уходила
      без привязки к визиту. Здесь ровно тот же код, что в main.js,
      с той же проверкой согласия: баннера на этой странице нет, но и
      ставить счётчик без согласия нельзя — согласие даётся на любой
-     другой странице сайта и лежит в том же localStorage.
+     другой странице сайта and лежит в том же localStorage.
      ⚠️ id счётчика продублирован в третий раз (main.js,
      analytics-events.js, здесь) — при смене счётчика править все три. -->
 <script>
 var YM_ID = 104681911;
 // pack-v460 (WP-1 R1.9): инициализация вынесена в функцию — её зовёт и
-// проверка согласия при загрузке, и кнопка «Accept» в баннере ниже.
+// проверка согласия при загрузке, and кнопка «Accept» в баннере ниже.
 function initMetrika(){
   try { if (!localStorage.getItem('cookies_accepted')) return; } catch (e) { return; }
   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -369,7 +369,7 @@ initMetrika();
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
      AELITA_isValidEmail/AELITA_normalizePhone/AELITA_showFieldError/
-     AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
+     AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
 <script src="/assets/payments.js"></script>
@@ -381,14 +381,14 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 // pack-v334. Единый текст для случая «ответа не пришло вовсе».
 // ⚠️ Показывать его можно ТОЛЬКО там, где fetch бросил исключение:
 // это значит, что до сервера не дошло. Если сервер ответил — пусть
-// даже ошибкой — причина другая, и про VPN писать нельзя, иначе
+// даже ошибкой — причина другая, and про VPN писать нельзя, иначе
 // человек будет выключать VPN там, где дело не в нём.
 // Почему VPN назван прямо: страница лежит на GitHub Pages (глобальный
-// CDN) и открывается через любой VPN, а оплата идёт в Yandex Cloud,
+// CDN) and открывается через любой VPN, а оплата идёт в Yandex Cloud,
 // куда с зарубежного узла запрос часто не доходит. Снаружи это
 // выглядит как «сайт открылся, а кнопка не работает». Прежний текст
 // «проверьте интернет» уводил в сторону: интернет у человека
-// работает, он это видит — и делал вывод, что сломан сайт.
+// работает, он это видит — and делал вывод, что сломан сайт.
 const NET_FAIL_MSG = 'Unfortunately, we could not reach the payment server. '
   + 'The usual cause is a VPN — turn it off and try again. '
   + 'If your VPN is off, write to us.';
@@ -401,10 +401,10 @@ let data = null;
 
 // pack-v272: идентификатор ЭТОГО браузера для холда мест на момент
 // выбора (см. _tools/Tickets/hold-seat.js). sessionStorage, а не
-// localStorage: холд живёт минуты и относится к текущей покупке —
+// localStorage: холд живёт минуты and относится к текущей покупке —
 // переживать закрытие вкладки ему незачем, а вот при возврате с
 // оплаты кнопкой «back» в той же вкладке он должен сохраниться,
-// поэтому и не просто переменная в памяти.
+// поэтому and не просто переменная в памяти.
 let holdId = null;
 try {
   holdId = sessionStorage.getItem('aelita_hold_id');
@@ -420,7 +420,7 @@ try {
 let holdExpiresAt = null;  // ISO-строка от сервера
 // pack-v443: окно удержания для человека. Серверный TTL — 5 минут, и
 // страница продлевает его каждые 90 секунд, поэтому показывать его
-// бессмысленно: отсчёт вечно прыгал бы обратно к 5:00 и ни о чём не
+// бессмысленно: отсчёт вечно прыгал бы обратно к 5:00 and ни о чём не
 // говорил. Человеку нужна одна понятная граница, как у Яндекс Афиши:
 // 10 минут с первого выбранного места. Внутри окна продление идёт как
 // раньше, по его истечении — прекращается, места возвращаются в продажу.
@@ -434,15 +434,15 @@ const ZONE_COLORS = ['#D6B57A','#C9B8A3','#8C8C8C','#5A5A5A','#3A3A40']; // от
 function seatKey(r,s){ return r + '-' + s; }
 
 // pack-v419. Токен кабинета — тот же ключ, что у Site/assets/payments.js.
-// Читаем через try: в приватном режиме и при запрещённых cookies
-// localStorage бросает, и падать из-за этого страница не должна.
+// Читаем через try: в приватном режиме and при запрещённых cookies
+// localStorage бросает, and падать из-за этого страница не должна.
 function accountToken(){
   try { return localStorage.getItem('aelita_account_token') || null; }
   catch (e) { return null; }
 }
 
 // ⚠️ Ворота, а не просьба. Схема зала не рисуется вовсе, пока нет
-// токена: показать места и отобрать их на первом же клике — хуже, чем
+// токена: показать места and отобрать их на первом же клике — хуже, чем
 // честно сказать заранее.
 //
 // Возврат после входа — через ?next=, чтобы человек попал обратно
@@ -450,7 +450,7 @@ function accountToken(){
 // location, а не собираем руками: в ссылке есть ?performance=, без
 // него страница не знает, что открывать.
 // pack-v441: ворота больше НЕ подменяют страницу. Раньше отсюда
-// стирались заголовок, форма и нижняя панель — человек терял и показ, и
+// стирались заголовок, форма and нижняя панель — человек терял and показ, и
 // выбранные места. Теперь блок просто появляется сверху, страница
 // остаётся на месте, а выбор сохраняется, чтобы вернуться к нему после
 // входа (см. rememberSelection / restoreSelection).
@@ -465,12 +465,12 @@ function showAuthGate(){
 }
 
 // Кнопка должна называть то, что произойдёт по нажатию. У гостя по
-// нажатию произойдёт не оплата, а вход — значит и надпись другая.
+// нажатию произойдёт не оплата, а вход — значит and надпись другая.
 function syncBuyButtonLabel(){
   const btn = document.getElementById('buy-btn');
   if(!btn) return;
-  // pack-v442: гость больше никуда не уходит — кнопка и регистрирует
-  // (или впускает), и оплачивает. Надпись говорит, что именно будет.
+  // pack-v442: гость больше никуда не уходит — кнопка and регистрирует
+  // (или впускает), and оплачивает. Надпись говорит, что именно будет.
   if(accountToken()) btn.textContent = 'Pay';
   else btn.textContent = (typeof acctMode !== 'undefined' && acctMode === 'login')
     ? 'Sign in and pay' : 'Pay';
@@ -478,11 +478,11 @@ function syncBuyButtonLabel(){
 
 // ─── pack-v442: кабинет прямо на странице покупки ──────────────────
 //
-// Схема для человека: пришёл → видит зал и цены → выбирает места →
+// Схема для человека: пришёл → видит зал and цены → выбирает места →
 // заполняет одну форму → нажимает одну кнопку. Если он уже в кабинете,
-// страница узнаёт это сама и подставляет имя и почту. Если нет — в той
-// же форме появляется одно поле «пароль», и по нажатию кнопки кабинет
-// заводится (или открывается, если почта уже зарегистрирована) и сразу
+// страница узнаёт это сама and подставляет имя and почту. Если нет — в той
+// же форме появляется одно поле «пароль», and по нажатию кнопки кабинет
+// заводится (или открывается, если почта уже зарегистрирована) and сразу
 // оформляется заказ. Ни перехода на /account/, ни повторного ввода.
 
 const ACCOUNT_API = 'https://api.aelita-production.ru/account';
@@ -614,7 +614,7 @@ async function ensureAccount(name, email){
   }
   // Почта уже в кабинете — самый частый случай «регистрации» повторного
   // покупателя. Не ругаемся, а переключаем форму на вход: пароль от
-  // этого кабинета и есть следующий шаг.
+  // этого кабинета and есть следующий шаг.
   if(out.error === 'email_taken'){
     acctMode = 'login';
     applyAcctMode();
@@ -697,7 +697,7 @@ async function holdGuestSelection(){
 }
 
 // Выбор до входа. Кладём в localStorage, чтобы после возврата из
-// кабинета человек не собирал места заново — и сразу удерживаем их на
+// кабинета человек не собирал места заново — and сразу удерживаем их на
 // сервере, теперь уже по-настоящему.
 const PENDING_KEY = 'aelita_pending_selection';
 
@@ -723,7 +723,7 @@ async function restoreSelection(){
   }catch(e){ return; }
   if(!saved || saved.performance !== performanceId) return;
   // Полчаса — потолок доверия к сохранённому выбору: дальше зал уже
-  // другой, и подставлять места как «ваши» было бы тем самым враньём,
+  // другой, and подставлять места как «ваши» было бы тем самым враньём,
   // от которого уходили в pack-v272.
   if(!saved.ts || Date.now() - saved.ts > 30*60*1000) return;
   if(data.seating !== 'assigned'){
@@ -750,7 +750,7 @@ async function restoreSelection(){
 }
 
 // Сессия протухла посреди покупки — это не то же самое, что «не
-// входил»: человек уже что-то выбрал, и текст должен объяснить, что
+// входил»: человек уже что-то выбрал, and текст должен объяснить, что
 // произошло, а не выглядеть как будто он всё сделал не так.
 function showAuthExpired(){
   // pack-v442: раньше показывали блок со ссылкой на /account/. Теперь
@@ -809,9 +809,9 @@ async function init(){
   // Возврат с оплаты (return_url из create-order.js).
   //
   // ⚠️ pack-v196: раньше здесь просто доверяли параметру aelita_paid=1
-  // и сразу показывали «Payment successful». Но return_url — это куда
+  // and сразу показывали «Payment successful». Но return_url — это куда
   // ЮKassa отправляет браузер при ЛЮБОМ исходе: успех, отмена,
-  // отклонённая карта — параметр в URL один и тот же. Человек, который
+  // отклонённая карта — параметр в URL один and тот же. Человек, который
   // передумал или которому отказали в оплате, видел тот же зелёный
   // экран успеха, уходил ждать письмо, которое не придёт, а место
   // тихо освобождалось через 10 минут. Теперь — честный опрос
@@ -828,11 +828,11 @@ async function init(){
   }catch(e){
     // pack-v334: сюда попадаем ТОЛЬКО когда ответа не было вовсе —
     // fetch бросает исключение на сетевом сбое, а не на ошибке от
-    // сервера (та уходит в !res.ok ниже). Именно так и выглядит
+    // сервера (та уходит в !res.ok ниже). Именно так and выглядит
     // включённый VPN: страница уже загрузилась (GitHub Pages,
     // глобальный CDN), а до API в Yandex Cloud запрос не доходит.
     // Прежний текст «проверьте интернет» уводил в сторону: интернет у
-    // человека работает, он это видит, и делал вывод, что сломан сайт.
+    // человека работает, он это видит, and делал вывод, что сломан сайт.
     showError(NET_FAIL_MSG);
     return;
   }
@@ -922,7 +922,7 @@ function renderHall(){
       rowEl.appendChild(btn);
     }
     // pack-v270: номер ряда дублируется справа. Ряд Синего зала шире
-    // экрана телефона (34 места), и прокрутив его вправо человек терял
+    // экрана телефона (34 места), and прокрутив его вправо человек терял
     // единственный номер, оставшийся слева за краем, — то есть выбирал
     // место, не видя, какой это ряд. На бумажных схемах зала номер
     // печатают с обеих сторон ровно по этой причине.
@@ -941,7 +941,7 @@ function renderHall(){
 // ── Zoom схемы зала (pack-v281) ────────────────────────────────
 // Базовые размеры берём из CSS, а не хардкодим здесь: на сенсорных
 // экранах действует @media (pointer:coarse) с более крупной клеткой
-// (pack-v270, WCAG 2.2), и «100%» на телефоне обязано означать именно
+// (pack-v270, WCAG 2.2), and «100%» на телефоне обязано означать именно
 // её, а не десктопные 16px. Читаем фактически применённые значения
 // один раз при инициализации.
 var ZOOM_STEPS = [0.75, 1, 1.25, 1.5, 2];
@@ -969,10 +969,10 @@ function applyZoom(){
   var hall = document.getElementById('hall');
 
   // ⚠️ Сохраняем ТОЧКУ ОБЗОРА, а не позицию прокрутки. При изменении
-  // масштаба ширина содержимого меняется, и прежний scrollLeft в
+  // масштаба ширина содержимого меняется, and прежний scrollLeft в
   // пикселях указывал бы на другое место зала — схема «убегала» бы
   // из-под пальца. Запоминаем, какая ДОЛЯ зала была по центру экрана,
-  // и восстанавливаем именно её.
+  // and восстанавливаем именно её.
   var prevCenterRatio = 0.5;
   if(hall && hall.scrollWidth > hall.clientWidth){
     prevCenterRatio = (hall.scrollLeft + hall.clientWidth / 2) / hall.scrollWidth;
@@ -992,7 +992,7 @@ function applyZoom(){
   if(hall){
     // Ширина пересчитывается синхронно после смены переменных, но
     // читаем scrollWidth уже ПОСЛЕ записи — иначе получим старое
-    // значение и вернём обзор не туда.
+    // значение and вернём обзор не туда.
     var target = prevCenterRatio * hall.scrollWidth - hall.clientWidth / 2;
     hall.scrollLeft = Math.max(0, target);
   }
@@ -1019,7 +1019,7 @@ function renderZoneLegend(){
 //
 // До этой версии место резервировалось только при нажатии «Pay»,
 // то есть всё время заполнения формы выбранные места ничем не были
-// защищены — их мог забрать другой покупатель, и человек узнавал об
+// защищены — их мог забрать другой покупатель, and человек узнавал об
 // этом уже после клика. Теперь клик по месту сразу удерживает его на
 // сервере (hold-seat.js), а create-order этот холд перенимает.
 
@@ -1028,7 +1028,7 @@ async function holdRequest(action, seats){
   if(!seats.length) return {ok:true};
   const token = accountToken();
   // pack-v441: гость не удерживает места на сервере — hold-seat требует
-  // авторизации. Выбор у него живёт только в браузере, и подсказка
+  // авторизации. Выбор у него живёт только в браузере, and подсказка
   // #guest-note говорит об этом прямым текстом. Возвращаем ok, иначе
   // клик по месту у гостя просто ничего не делал бы.
   if(!token) return {ok:true, guest:true};
@@ -1169,7 +1169,7 @@ function startHoldCountdown(expiresAtIso){
   if(holdTicker) clearInterval(holdTicker);
   tickHold();
   holdTicker = setInterval(tickHold, 1000);
-  // Продлеваем, пока страница открыта и места выбраны: живой человек,
+  // Продлеваем, пока страница открыта and места выбраны: живой человек,
   // который вдумчиво заполняет форму, не должен терять места на
   // середине. TTL на сервере 5 минут, продлеваем заметно чаще.
   if(holdRenewTimer) clearInterval(holdRenewTimer);
@@ -1230,11 +1230,11 @@ window.addEventListener('pagehide', () => {
   if(window.__aelitaGoingToPayment) return;
   const token = accountToken();
   if(!token) return;
-  // ⚠️ pack-v419: здесь был navigator.sendBeacon, и он перестал
+  // ⚠️ pack-v419: здесь был navigator.sendBeacon, and он перестал
   // годиться — beacon не умеет слать заголовки, а hold-seat теперь
-  // требует Authorization и без него ответит 401. Освобождение просто
-  // не доходило бы, и брошенные места висели бы до истечения TTL.
-  // fetch с keepalive:true — тот же «отправить и не ждать ответа при
+  // требует Authorization and без него ответит 401. Освобождение просто
+  // не доходило бы, and брошенные места висели бы до истечения TTL.
+  // fetch с keepalive:true — тот же «отправить and не ждать ответа при
   // уходе со страницы», но с заголовками.
   try{
     fetch(`${API_BASE}/hold-seat`, {
@@ -1258,16 +1258,16 @@ function changeQty(delta){
   updateTotal();
 }
 
-// ── Promo code и подарочная карта ─────────────────────────────────────
-// Принятый сервером код(ы) и посчитанная СЕРВЕРОМ сумма. Считает ВСЕГДА
+// ── Promo code and подарочная карта ─────────────────────────────────────
+// Принятый сервером код(ы) and посчитанная СЕРВЕРОМ сумма. Считает ВСЕГДА
 // сервер (check-promo.js/check-gift-code.js той же функцией, что и
 // create-order.js) — на клиенте формулы скидки нет намеренно, иначе
-// превью и счёт могли бы разойтись.
+// превью and счёт могли бы разойтись.
 //
 // pack-v277: оба кода можно применить вместе (сначала промокод, потом
 // карта, или наоборот) — каждый из двух проверочных запросов принимает
 // код ВТОРОГО, если он уже применён (см. докстринги check-promo.js/
-// check-gift-code.js), и возвращает ОБЩИЙ final_amount с учётом обоих.
+// check-gift-code.js), and возвращает ОБЩИЙ final_amount с учётом обоих.
 // Поэтому на фронтенде — ОДНА общая переменная итоговой суммы, а не по
 // одной на каждый вид скидки: тот запрос, что выполнился последним,
 // уже знает про оба кода разом.
@@ -1505,7 +1505,7 @@ async function submitOrder(){
     return_url: location.origin + location.pathname + '?performance=' + performanceId + '&aelita_paid=1',
     // pack-v272: этим заказ перенимает холд, поставленный при выборе
     // мест на схеме (hold-seat.js) — иначе покупатель конфликтовал бы
-    // сам с собой и не смог оплатить собственные выбранные места.
+    // сам с собой and не смог оплатить собственные выбранные места.
     hold_id: holdId,
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
@@ -1516,11 +1516,11 @@ async function submitOrder(){
   if(appliedGift) payload.gift_code = appliedGift;
 
   // pack-v441: единственные настоящие ворота. Здесь человек уже выбрал
-  // места и увидел сумму — просьба войти в этот момент понятна, в
+  // места and увидел сумму — просьба войти в этот момент понятна, в
   // отличие от формы входа на пустой странице.
   // pack-v442: кабинет — здесь же, одним нажатием. Если человек
   // гость, ensureAccount() заводит кабинет (или впускает в существующий)
-  // из тех же имени и почты, что в форме, и сразу закрепляет места,
+  // из тех же имени and почты, что в форме, and сразу закрепляет места,
   // выбранные до входа.
   const hadToken = !!accountToken();
   const orderToken = await ensureAccount(name, email);
@@ -1539,7 +1539,7 @@ async function submitOrder(){
     });
     if(res.status === 401){
       // Сессия истекла, пока человек заполнял форму. Места за ним ещё
-      // держатся — об этом и говорит текст в showAuthExpired().
+      // держатся — об этом and говорит текст в showAuthExpired().
       showAuthExpired();
       document.getElementById('buy-btn').disabled = false;
       return;
@@ -1558,8 +1558,8 @@ async function submitOrder(){
     if(out.zero_amount){
       // pack-v278: скидка (промокод + подарочная карта) покрыла всю
       // сумму — ЮKassa вообще не вызывалась, create-order.js уже
-      // материализовал заказ и выслал билеты (см. lib/finalize-order.js).
-      // Никакого редиректа и опроса order-status.js не нужно — ответ
+      // материализовал заказ and выслал билеты (см. lib/finalize-order.js).
+      // Никакого редиректа and опроса order-status.js не нужно — ответ
       // уже окончательный, синхронный.
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
       if(out.seat_conflict){
@@ -1576,7 +1576,7 @@ async function submitOrder(){
     if(out.confirmation_url){
       // pack-v272: уходим на ЮKassa — обработчик pagehide НЕ должен
       // освобождать места: заказ уже перенял холд на себя (владелец
-      // теперь orderId, а не sel:<hold_id>), и отпускать их сейчас
+      // теперь orderId, а не sel:<hold_id>), and отпускать их сейчас
       // означало бы отдать чужому покупателю места, за которые человек
       // прямо сейчас платит. Отсчёт на странице тоже останавливаем —
       // с этого момента действует холд ЗАКАЗА (10 минут), а не выбора.
@@ -1608,9 +1608,9 @@ async function submitOrder(){
     if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
       msgEl.innerHTML = 'Someone has just taken some of your selected seats. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and choose others.';
     } else if(out.error === 'gift_card_changed'){
-      // pack-v277: гонка за остаток карты между проверкой и оплатой —
+      // pack-v277: гонка за остаток карты между проверкой and оплатой —
       // тот же класс события, что seats_taken, только для денег, не
-      // мест. Сбрасываем применённую карту и показываем АКТУАЛЬНЫЙ
+      // мест. Сбрасываем применённую карту and показываем АКТУАЛЬНЫЙ
       // остаток, который прислал сервер, — не заставляем гадать заново.
       appliedGift = null; combinedFinalAmount = null;
       giftMsg(`The gift card balance has changed — available: ${out.available_amount} ₽. Apply the card again.`, 'err');
@@ -1619,7 +1619,7 @@ async function submitOrder(){
     } else if(out.error === 'promo_limit_reached'){
       // pack-v279: та же гонка, что gift_card_changed, только за слот
       // промокода с лимитом (config/promocodes.js maxUses) — кто-то
-      // забрал последнее место акции между превью и отправкой заказа.
+      // забрал последнее место акции между превью and отправкой заказа.
       appliedPromo = null; combinedFinalAmount = null;
       promoMsg('This promo code has just reached its limit — it has been removed from the order.', 'err');
       updateTotal();
@@ -1627,7 +1627,7 @@ async function submitOrder(){
     } else if(out.error === 'finalize_failed'){
       // pack-v278: скидка увела сумму в 0, но что-то пошло не так уже
       // при самой материализации заказа (см. create-order.js — крайне
-      // редкий путь, finalize-order.js сама ловит и алертит почти все
+      // редкий путь, finalize-order.js сама ловит and алертит почти все
       // свои шаги, сюда попадает только совсем непредвиденное).
       // Место(а) к этому моменту, скорее всего, уже отмечены проданными
       // — не предлагаем «попробовать ещё раз», это может задвоить заказ.
@@ -1647,7 +1647,7 @@ async function submitOrder(){
       msgEl.textContent = 'Please tick the consent to personal data processing — the order cannot be placed without it.';
     } else if(out.error === 'yookassa_unreachable'){
       // Платёжный сервис не ответил. Заказ у нас есть, места удержаны —
-      // повтор имеет смысл, и человеку важно знать, что дело не в нём.
+      // повтор имеет смысл, and человеку важно знать, что дело не в нём.
       msgEl.textContent = 'The payment service is not responding — that is on their side, not yours. Your seats are held; try pressing “Pay” again in a minute.';
     } else if(out.error === 'yookassa_rejected'){
       // Повтор тем же способом не поможет — нужен другой канал.
@@ -1664,8 +1664,8 @@ async function submitOrder(){
     document.getElementById('buy-btn').disabled = false;
   }catch(e){
     // Сетевой сбой в момент оформления заказа — тот же признак VPN,
-    // что и при загрузке (см. NET_FAIL_MSG). Здесь он больнее всего:
-    // человек уже выбрал места и заполнил форму.
+    // что and при загрузке (см. NET_FAIL_MSG). Здесь он больнее всего:
+    // человек уже выбрал места and заполнил форму.
     msgEl.textContent = NET_FAIL_MSG;
     document.getElementById('buy-btn').disabled = false;
   }
@@ -1720,7 +1720,7 @@ async function pollOrderStatus(){
   }
 
   // Не дождались определённого статуса за отведённое время — не врём
-  // ни про успех, ни про провал, честно объясняем и даём контакт.
+  // ни про успех, ни про провал, честно объясняем and даём контакт.
   showError('The payment is taking longer than usual. If the money was charged, the tickets will arrive by email within a few minutes — if they do not, write to us; nothing will be lost.');
 }
 
@@ -1728,21 +1728,21 @@ init();
 </script>
 
 <!-- pack-v460 (WP-1 R1.9): баннер cookies. До этой версии его здесь не
-     было: у страницы свой автономный шаблон без /assets/style.css и без
-     main.js. Счётчик при этом стоял и честно проверял согласие — то
+     было: у страницы свой автономный шаблон без /assets/style.css and без
+     main.js. Счётчик при этом стоял and честно проверял согласие — то
      есть человек, зашедший СРАЗУ сюда (а на страницу оплаты приходят
      прямо по ссылке из афиши, минуя главную), дать согласие не мог
-     нигде, и статистика по нему не собиралась вовсе. Разметка и стили
+     нигде, and статистика по нему не собиралась вовсе. Разметка and стили
      инлайн, повторяют вид общего баннера. -->
 <div id="cookie-banner">
-  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/cookies">cookie policy</a> и <a href="/en/privacy/">privacy policy</a>.</p>
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies/">cookie policy</a> and <a href="/en/privacy/">privacy policy</a>.</p>
   <div class="cookie-actions">
     <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
   </div>
 </div>
 
-<!-- pack-v460 (WP-1 R1.9): согласие и загрузка счётчика без перезагрузки
+<!-- pack-v460 (WP-1 R1.9): согласие and загрузка счётчика без перезагрузки
      страницы. Метрика поднимается ровно в момент нажатия «Accept» —
      иначе первый (и часто единственный) просмотр терялся бы. -->
 <script>
