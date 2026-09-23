@@ -54,6 +54,10 @@ a{color:var(--gold)}
 </p>
 <script src="/assets/analytics-events.js"></script>
 <script>
+// pack-v467 (ТЗ клиентских текстов, З-1): язык страницы для строк,
+// которые печатает скрипт. Сборщик EN содержимое <script> не
+// переводит, поэтому пары RU/EN живут прямо здесь.
+const EN = document.documentElement.lang === 'en';
 const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const API_BASE = 'https://api.aelita-production.ru/events';
@@ -101,11 +105,12 @@ async function doCancel(){
     }
   } catch (e) {
     // pack-v334: сюда попадаем только когда ответа не пришло вовсе —
-    // сервер, ответивший ошибкой, обрабатывается веткой выше. Самая
-    // частая причина — включённый VPN: страница открывается (GitHub
-    // Pages), а до API в Yandex Cloud запрос не доходит. Прежний текст
-    // «проверьте соединение» уводил в сторону.
-    render('Не получилось отменить', 'К сожалению, не удалось связаться с сервером. Чаще всего мешает включённый VPN — отключите его и попробуйте снова.', 'warn', null,
+    // сервер, ответивший ошибкой, обрабатывается веткой выше. Частая
+    // причина — VPN: страница открывается (GitHub Pages), а до API в
+    // Yandex Cloud запрос не доходит. pack-v467: VPN назван как
+    // возможная причина, рядом — адрес почты.
+    render(EN ? 'We couldn\u2019t cancel' : 'Не получилось отменить',
+      EN ? "We couldn't reach the server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru" : 'Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru', 'warn', null,
       '<button onclick="doCancel()">Повторить</button>');
   }
 }

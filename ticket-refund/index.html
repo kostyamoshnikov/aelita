@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=26">
+<link rel="stylesheet" href="/assets/style.css?v=27">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -86,9 +86,9 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
     <h1>Возврат билета</h1>
     <p class="lead">Заполните форму — она зафиксирует дату обращения, от которой по <a href="/oferta">оферте</a> считается размер возврата. Раньше для этого нужно было писать письмо и ждать ответа, дошло ли оно.</p>
 
-    <label for="order">Номер заказа</label>
+    <label for="order">Код заказа</label>
     <input type="text" id="order" autocomplete="off" spellcheck="false" placeholder="например, 11111111-2222-3333-4444-555555555555">
-    <p class="hint">Номер заказа указан в письме с билетами — в теме письма и рядом с QR-кодом.</p>
+    <p class="hint">Длинный код из письма с билетами — строка под словами «код заказа». Короткий номер вида № 6 не подойдёт.</p>
 
     <label for="contact">Электронная почта или телефон</label>
     <input type="text" id="contact" autocomplete="off" placeholder="те, что вы указали при покупке">
@@ -164,14 +164,18 @@ function msg(el, text, cls){ const e=$(el); e.textContent=text||''; e.className=
 // fetch бросал исключение, оно не ловилось ни здесь, ни у вызывающих,
 // и страница НАВСЕГДА зависала на «Ищем заказ…» — кнопка оставалась
 // заблокированной, сообщение об ошибке не появлялось. Ровно это и
-// происходило при включённом VPN (страница с GitHub Pages грузится, а
+// происходило с включённым VPN (страница с GitHub Pages грузится, а
 // до API в Yandex Cloud запрос не доходит), то есть человек, которому
 // нужно вернуть билет, упирался в молчащую форму.
 // status 0 = ответа не было; сервер, ответивший ошибкой, сюда не
 // попадает и разбирается по своему коду, как и раньше.
-const NET_FAIL_MSG = 'К сожалению, не удалось связаться с сервером. '
-  + 'Чаще всего мешает включённый VPN — отключите его и попробуйте снова. '
-  + 'Если VPN выключен, напишите на aelita.production@yandex.ru.';
+// pack-v467 (ТЗ клиентских текстов, З-1): язык выбирается в рантайме —
+// строки внутри <script> сборщик EN не переводит.
+// pack-v467 (З-1/З-2): язык страницы для строк из <script>.
+const EN = document.documentElement.lang === 'en';
+const NET_FAIL_MSG = EN
+  ? "We couldn't reach the server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru"
+  : 'Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru';
 
 async function api(payload){
   let res;
@@ -190,7 +194,16 @@ async function api(payload){
 async function lookup(){
   const order = $('order').value.trim();
   const contact = $('contact').value.trim();
-  if(!order || !contact){ msg('lookup-msg','Заполните оба поля.','err'); return; }
+  if(!order || !contact){ msg('lookup-msg', EN ? 'Please fill in both fields.' : 'Заполните оба поля.','err'); return; }
+  // pack-v467 (З-2): частая ошибка — вводят короткий номер «№ 6»
+  // с PDF-билета. Сервер на него ответит «не найдено», и человек
+  // решит, что заказа нет. Отвечаем сами, не дёргая сервер.
+  if(/^\d{1,6}$/.test(order)){
+    msg('lookup-msg', EN
+      ? 'This looks like the short order number. We need the long code from the ticket email.'
+      : 'Это короткий номер заказа, а нужен длинный код из письма с билетами.','err');
+    return;
+  }
   $('btn-lookup').disabled = true; msg('lookup-msg','Ищем заказ…');
   const { status, body } = await api({ action:'lookup', order_number:order, contact });
   $('btn-lookup').disabled = false;
@@ -199,7 +212,9 @@ async function lookup(){
     // ⚠️ Одинаковый текст на «нет заказа» и «контакт не совпал» —
     // разные сообщения превратили бы форму в способ проверять,
     // существует ли чужой заказ (DOCS_TZ 39.2).
-    msg('lookup-msg','Заказ с такими данными не найден. Проверьте номер заказа и контакт — они должны совпадать с указанными при покупке.','err');
+    msg('lookup-msg', EN
+      ? 'Order not found. Check the order code (the long one from the email) and the email or phone — they must match the ones used at purchase.'
+      : 'Заказ не найден. Проверьте код заказа (длинный, из письма) и почту или телефон — они должны совпадать с указанными при покупке.','err');
     return;
   }
   if(status === 429){
@@ -566,7 +581,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=26"></script>
+<script src="/assets/main.js?v=27"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

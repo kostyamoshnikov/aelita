@@ -167,7 +167,6 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    панели свой слой выше, а помощь поднята НАД панелью (её высота
    ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
    у телефонов с жестовой навигацией. */
-.vpn-note{color:var(--gold);font-size:12px;line-height:1.5;margin-top:10px}
 .help-link{position:fixed;left:16px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;z-index:5;max-width:calc(100vw - 32px);box-sizing:border-box}
 
 /* pack-v460 (WP-1 R1.9): баннер cookies — вид повторяет общий из
@@ -278,11 +277,6 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/consent" style="color:var(--gold)">processing of personal data</a></span></label>
     <div class="msg" id="msg"></div>
 
-    <!-- pack-v334: предупреждение про VPN. На шести других страницах с
-     оплатой оно стоит с pack-v238 («на всех страницах с оплатой»), но
-     билетная система появилась позже (pack-v272+) and предупреждение не
-     получила — то есть его не было ровно там, где платят чаще всего. -->
-    <p class="vpn-note">Unfortunately, payment does not work with a VPN enabled — turn it off and try again.</p>
   </div>
 </div>
 
@@ -372,7 +366,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js"></script>
+<script src="/assets/payments.js?v=27"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -389,9 +383,7 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 // выглядит как «сайт открылся, а кнопка не работает». Прежний текст
 // «проверьте интернет» уводил в сторону: интернет у человека
 // работает, он это видит — and делал вывод, что сломан сайт.
-const NET_FAIL_MSG = 'Unfortunately, we could not reach the payment server. '
-  + 'The usual cause is a VPN — turn it off and try again. '
-  + 'If your VPN is off, write to us.';
+const NET_FAIL_MSG = 'We couldn't reach the payment server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru';
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');

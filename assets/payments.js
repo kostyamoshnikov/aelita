@@ -417,13 +417,13 @@
         // до сервера не дошло. Самая частая причина — включённый VPN:
         // страница лежит на GitHub Pages и через VPN открывается, а
         // оплата идёт в Yandex Cloud, куда с зарубежного узла запрос
-        // не доходит. Прежний текст «проверьте интернет» уводил в
-        // сторону — интернет у человека работает, он это видит, и
-        // делал вывод, что сломан сайт. Ветка else не тронута: там
-        // сервер ОТВЕТИЛ, и про VPN писать нельзя.
+        // часто не доходит. pack-v467: VPN назван как возможная
+        // причина, а не как приговор, и рядом стоит адрес почты —
+        // человек с выключенным VPN раньше упирался в тупик. Ветка
+        // else не тронута: там сервер ОТВЕТИЛ, и про VPN писать нельзя.
         showPayMsg(msgElId, LANG === 'en'
-          ? 'Unfortunately, we could not reach the payment server. A VPN is the usual cause — turn it off and try again. If your VPN is off, write to us.'
-          : 'К сожалению, не удалось связаться с сервером оплаты. Чаще всего мешает включённый VPN — отключите его и попробуйте снова. Если VPN выключен, напишите нам.');
+          ? "We couldn't reach the payment server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru"
+          : 'Не получилось связаться с сервером оплаты. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru');
       } else {
         showPayMsg(msgElId, t.failed);
       }
