@@ -74,6 +74,82 @@
     },
   }[LANG];
   window.AELITA_GIFT_ON_PRODUCTS = GIFT_ON_PRODUCTS;
+
+  // ── Статус оплаты продукта после возврата с ЮKassa (З-12, pack-v481,
+  // ВЫКЛЮЧЕНО) ─────────────────────────────────────────────────────────
+  // Пока false — экран возврата (З-3) безусловно говорит «Спасибо! Оплата
+  // прошла», как раньше. true — спрашиваем сервер
+  // (`_tools/Payments/order-status.js`, маршрут /payments/order-status) и
+  // показываем правду: выдано / обрабатывается дольше обычного / не
+  // прошла. Включать ПОСЛЕ создания функции aelita-payments-order-status
+  // и обновления Gateway (функция — только чтение, не денежный путь).
+  // id платежа кладём в sessionStorage перед уходом на ЮKassa; вернулся на
+  // другом устройстве или в другой вкладке — id нет, экран прежний.
+  var PRODUCT_STATUS_POLL = false;
+  var PAY_ID_KEY = 'aelita-last-payment';
+  var RETURNED_FROM_PAYMENT = new URLSearchParams(location.search).get('aelita_paid') === '1';
+  function rememberPayment(id) {
+    if (!id) return;
+    try { sessionStorage.setItem(PAY_ID_KEY, JSON.stringify({ id: String(id), path: location.pathname })); } catch (e) {}
+  }
+  var STATUS_TEXT = {
+    ru: {
+      checking: ['Проверяем оплату…', 'Это несколько секунд.'],
+      canceled: ['Оплата не прошла', 'Деньги не списаны. Можно попробовать ещё раз — форма ниже.'],
+      slow: ['Оплата обрабатывается дольше обычного', 'Если деньги списались, письмо придёт в течение нескольких минут. Если не пришло — напишите нам, ничего не потеряется: aelita.production@yandex.ru'],
+    },
+    en: {
+      checking: ['Checking your payment…', 'This takes a few seconds.'],
+      canceled: ['The payment did not go through', 'No money was charged. You can try again — the form is below.'],
+      slow: ['The payment is taking longer than usual', 'If you were charged, the email will arrive within a few minutes. If it does not, write to us — nothing will be lost: aelita.production@yandex.ru'],
+    },
+  }[LANG];
+  if (PRODUCT_STATUS_POLL && RETURNED_FROM_PAYMENT) {
+    document.addEventListener('DOMContentLoaded', function () {
+      var stored = null;
+      try { stored = JSON.parse(sessionStorage.getItem(PAY_ID_KEY) || 'null'); } catch (e) {}
+      var box = document.getElementById('paymentReturnMsg');
+      if (!stored || !stored.id || stored.path !== location.pathname || !box) return;
+      var h = box.querySelector('h2'), p = box.querySelector('p');
+      if (!h || !p) return;
+      var okH = h.textContent, okP = p.textContent;
+      var set = function (pair) { h.textContent = pair[0]; p.textContent = pair[1]; };
+      set(STATUS_TEXT.checking);
+      var started = Date.now();
+      var poll = async function () {
+        var st = 'unknown';
+        try {
+          var r = await fetch('https://api.aelita-production.ru/payments/order-status?payment_id=' + encodeURIComponent(stored.id));
+          if (r.ok) st = (await r.json()).status;
+        } catch (e) { /* сеть — попробуем ещё раз */ }
+        if (st === 'delivered') { h.textContent = okH; p.textContent = okP; try { sessionStorage.removeItem(PAY_ID_KEY); } catch (e) {} return; }
+        if (st === 'canceled') {
+          set(STATUS_TEXT.canceled);
+          var form = document.getElementById('joinForm');
+          if (form) form.style.display = '';
+          try { sessionStorage.removeItem(PAY_ID_KEY); } catch (e) {}
+          return;
+        }
+        if (Date.now() - started > 60000) { set(STATUS_TEXT.slow); return; }
+        setTimeout(poll, 3000);
+      };
+      poll();
+    });
+  }
+
+  // ── Личное сообщение в PDF сертификата (З-12, pack-v481, ВЫКЛЮЧЕНО) ──
+  // ⚠️ Пара с `_tools/Shared/lib/gift-scope.js → GIFT_MESSAGE_IN_PDF`;
+  // аудит `client_ui` сверяет. Пока false — поле подписано «Пожелание —
+  // передадим, если оформляем вручную» и отдельно не отправляется.
+  var GIFT_MESSAGE_IN_PDF = false;
+  if (GIFT_MESSAGE_IN_PDF) {
+    document.addEventListener('DOMContentLoaded', function () {
+      var lbl = document.querySelector('[data-gift-message-label]');
+      if (lbl) lbl.textContent = LANG === 'en' ? 'Personal message — we will print it on the certificate' : 'Личное сообщение — напечатаем в сертификате';
+      var ta = document.getElementById('j-message');
+      if (ta) ta.maxLength = 300;
+    });
+  }
   if (GIFT_ON_PRODUCTS) {
     document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('[data-gift-code-field]').forEach(function (el) { el.style.display = ''; });
@@ -302,6 +378,14 @@
     var msgElId = opts.msgElId || null;
     var giftEl = document.getElementById(opts.giftFieldId || 'j-gift');
     var giftCode = (GIFT_ON_PRODUCTS && GIFT_PRODUCTS[product] && giftEl) ? giftEl.value.trim().toUpperCase() : '';
+    // З-12: получатель и сообщение для PDF сертификата — только при
+    // GIFT_MESSAGE_IN_PDF и только у подарочной карты.
+    var giftTo, giftMessage;
+    if (GIFT_MESSAGE_IN_PDF && product === 'gift') {
+      var gtEl = document.getElementById('j-recipient'), gmEl = document.getElementById('j-message');
+      giftTo = gtEl && gtEl.value.trim() ? gtEl.value.trim().slice(0, 100) : undefined;
+      giftMessage = gmEl && gmEl.value.trim() ? gmEl.value.trim().slice(0, 300) : undefined;
+    }
     var isGuestCheckout = product === 'program'; // касается ТОЛЬКО входа/логина, не контакта — см. докстринг выше
 
     var nameEl = document.getElementById(opts.nameFieldId || 'j-name');
@@ -401,7 +485,7 @@
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined }),
+        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined, lang: LANG /* З-11 этап 5, ч. 4 (pack-v479) */, gift_to: giftTo, gift_message: giftMessage }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {
@@ -426,6 +510,7 @@
       // З-5 Б: карта покрыла всю сумму — платить нечего, заказ уже
       // выдан сервером. Ведём на тот же экран «Спасибо», что и после ЮKassa.
       if (data && data.zero_amount && data.redirect_url) {
+        rememberPayment('gift-' + data.order_id);
         location.href = data.redirect_url;
         return;
       }
@@ -448,6 +533,7 @@
         // restoreFormDraft() уже вызывается при каждой загрузке
         // страницы, так что достаточно просто сохранить здесь.
         saveFormDraft();
+        rememberPayment(data.payment_id);
         location.href = data.confirmation_url;
         return; // уходим со страницы — не нужно возвращать кнопку в исходное состояние
       }

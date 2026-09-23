@@ -366,7 +366,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=29"></script>
+<script src="/assets/payments.js?v=33"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1506,6 +1506,9 @@ async function submitOrder(){
   // проверке — сумму всё равно пересчитает create-order.js сам.
   if(appliedPromo) payload.promo_code = appliedPromo;
   if(appliedGift) payload.gift_code = appliedGift;
+  // З-11 этап 5 (pack-v476): язык страницы — сервер хранит его в заказе;
+  // письмо and PDF на нём — только после включения BILINGUAL_DOCS.
+  payload.lang = document.documentElement.lang === 'en' ? 'en' : 'ru';
 
   // pack-v441: единственные настоящие ворота. Здесь человек уже выбрал
   // места and увидел сумму — просьба войти в этот момент понятна, в

@@ -259,7 +259,7 @@
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.downloadingContract; }
       try {
-        var res = await fetch(CONTRACT_URL + '?paymentId=' + encodeURIComponent(paymentId), {
+        var res = await fetch(CONTRACT_URL + '?paymentId=' + encodeURIComponent(paymentId) + '&lang=' + LANG, { // З-11 этап 5, ч. 5 (pack-v480)
           headers: { Authorization: 'Bearer ' + token },
         });
         if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
@@ -588,7 +588,7 @@
         var res = await fetch(EVENTS_REGISTER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1 }),
+          body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1, lang: LANG }), // З-11 этап 5, ч. 3 (pack-v478): язык письма и первой страницы PDF
         });
         if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
         var data = await res.json();
