@@ -215,3 +215,67 @@ window.addEventListener('load', function () {
     if (el) el.scrollIntoView();
   }
 });
+
+// ── Заявки с форм сайта (ТЗ клиентских текстов, З-6, pack-v469) ─────
+// Один источник вместо тринадцати инлайн-копий sendTelegram/sendFormspree.
+// Раньше обе функции глотали ошибки, ответ Formspree не проверялся, а
+// страница безусловно показывала «спасибо» и очищала поля: при сбое
+// человек терял и заявку, и свой текст, а мы не узнавали о нём вовсе.
+// Теперь успех — только если ХОТЯ БЫ ОДИН канал ответил 2xx.
+// ⚠️ Это временная схема до WP-1 R1.6 («Системы и атрибуция»: формы через
+// свою функцию) — тогда отправка переедет на сервер вместе с этой логикой.
+var AELITA_LEAD = {
+  tg: 'https://withered-glade-64b6.kostyamoshnikov.workers.dev',
+  formspree: 'https://formspree.io/f/meeyowpw',
+};
+// Telegram-воркер шлёт текст с разметкой HTML: «<» в тексте заявки ломал
+// разметку, и Telegram мог отклонить сообщение целиком.
+function aelitaEscHtml(s) {
+  return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+}
+window.AELITA_sendLead = async function (formName, fields) {
+  var keys = Object.keys(fields || {});
+  var lines = ['[AELITA] ' + aelitaEscHtml(formName), ''];
+  keys.forEach(function (k) {
+    var v = String(fields[k] || '').trim();
+    if (v) lines.push('<b>' + aelitaEscHtml(k) + ':</b> ' + aelitaEscHtml(v));
+  });
+  lines.push('', new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }));
+  var fd = new FormData();
+  fd.append('_subject', '[AELITA] ' + formName);
+  keys.forEach(function (k) { fd.append(k, String(fields[k] || '').trim()); });
+  var r = await Promise.allSettled([
+    fetch(AELITA_LEAD.tg, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: lines.join('\n') }) }),
+    fetch(AELITA_LEAD.formspree, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } }),
+  ]);
+  var tgOk = r[0].status === 'fulfilled' && !!r[0].value && r[0].value.ok;
+  var fsOk = r[1].status === 'fulfilled' && !!r[1].value && r[1].value.ok;
+  if (!tgOk || !fsOk) console.warn('Заявка ушла не во все каналы', { form: formName, telegram: tgOk, formspree: fsOk });
+  return tgOk || fsOk;
+};
+var AELITA_LEAD_FAIL = {
+  ru: 'Не получилось отправить — похоже, связь прервалась. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',
+  en: "Couldn't send — the connection seems to have dropped. Try again or write to us: aelita.production@yandex.ru",
+};
+// Сообщение у формы вместо системного alert(). anchorEl — блок успеха
+// формы: сообщение встаёт прямо перед ним, то есть рядом с кнопкой.
+// Тексты передаются парой RU/EN: строки внутри <script> сборщик EN не
+// переводит (i18n/README.md, п. 7), язык выбирается по <html lang>.
+window.AELITA_formMessage = function (anchorEl, ru, en, kind) {
+  if (!anchorEl || !anchorEl.parentNode) return;
+  var text = document.documentElement.lang === 'en' ? (en || ru) : ru;
+  var id = (anchorEl.id || 'form') + '__msg';
+  var p = document.getElementById(id);
+  if (!p) {
+    p = document.createElement('p');
+    p.id = id;
+    p.setAttribute('role', 'alert');
+    anchorEl.parentNode.insertBefore(p, anchorEl);
+  }
+  p.className = 'form-msg form-msg-' + (kind || 'error');
+  p.textContent = text || '';
+  p.hidden = !text;
+};
+window.AELITA_formMessageClear = function (anchorEl) {
+  if (anchorEl) window.AELITA_formMessage(anchorEl, '', '', 'error');
+};

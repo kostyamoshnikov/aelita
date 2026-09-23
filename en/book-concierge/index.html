@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -365,6 +365,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
       <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field" data-gift-code-field style="display:none"><label>Gift card code <span class="opt-mark">— if you have one</span></label><input class="input-clear" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
       <div class="join-field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Shipping address</label><input type="text" id="j-address" placeholder="City, street, house, apartment, postal code"></div>
       <div class="join-field"><label>What's happening in your life right now</label><textarea id="j-situation" placeholder="A couple of words — what matters right now, what you're looking for"></textarea></div>
@@ -376,8 +377,7 @@ p a:hover{opacity:.75}
       <div class="msg" id="payMsg_concierge" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
       <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_concierge'})">Pay — 10,000 ₽/month →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Just send the questionnaire</button>
-      <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
-      <p class="join-note">Fill in the questionnaire above before paying — that way Katya sees your preferences right away. Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <p class="join-note">Fill in the questionnaire above before paying so Katya can see your preferences right away. To pay, you'll need an <a href="/en/account" style="color:var(--gold)">account</a>. Questions: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
     </div>
     <div class="join-ok" id="joinOk">Thank you! Katya will read your questionnaire and get in touch to put together your first selection.</div>
     </div>
@@ -446,7 +446,7 @@ p a:hover{opacity:.75}
 </footer>
 
 <!-- payments.js -->
-<script src="/assets/payments.js?v=27"></script>
+<script src="/assets/payments.js?v=29"></script>
 <script>
   // collectContact() используется ТОЛЬКО для joinClub() (анкета без
   // оплаты, отправка в Telegram/Formspree) — платёж (AELITA_pay) с
@@ -491,8 +491,8 @@ p a:hover{opacity:.75}
     const note = document.getElementById('j-note').value.trim();
     if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
     AELITA_clearFieldError(nameEl);
-    if(!address){ alert('Укажите адрес для отправки книг'); return; }
-    if(!document.getElementById('pdConsent').checked){ alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку'); return; }
+    if(!address){ AELITA_formMessage(document.getElementById('joinOk'), 'Укажите адрес для отправки книг', 'Please enter the delivery address for the books'); return; }
+    if(!document.getElementById('pdConsent').checked){ AELITA_formMessage(document.getElementById('joinOk'), 'Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку', 'Please tick the personal data consent box — we can\'t accept the request without it'); return; }
     const contact = collectContact();
     if(!contact){return;}
     const fields = {
@@ -504,8 +504,8 @@ p a:hover{opacity:.75}
       'Любимая книга': favorite,
       'Ещё': note,
     };
-    await sendTelegram('AELITA BOOK CONCIERGE — анкета', fields);
-    await sendFormspree('AELITA BOOK CONCIERGE — анкета', fields);
+    if (!(await AELITA_sendLead('AELITA BOOK CONCIERGE — анкета', fields))) { AELITA_formMessage(document.getElementById('joinOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    AELITA_formMessageClear(document.getElementById('joinOk'));
     document.getElementById('joinForm').style.display='none';
     document.getElementById('joinOk').style.display='block';
   }
@@ -525,45 +525,9 @@ p a:hover{opacity:.75}
   // Закрыть по Escape
   
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
 
   // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
@@ -617,7 +581,7 @@ p a:hover{opacity:.75}
   <div class="thanks-box">
     <div class="thanks-icon">✦</div>
     <h3>Thank you</h3>
-    <p>Your message has been received. We will get in touch within one working day.</p>
+    <p>Your message has been received. We'll get back to you within a few days.</p>
     <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Close</button>
   </div>
 </div>
@@ -634,7 +598,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/main.js?v=29"></script>
 
 <script>
   // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты

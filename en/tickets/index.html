@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(201,184,163,.3);color:var(--sand);padding:14px 26px;text-decoration:none;white-space:nowrap;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 26px;text-decoration:none;white-space:nowrap;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -294,12 +294,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
   async function subscribe(){
     const v=document.getElementById('subEmail').value.trim();
     if(!v||!v.includes('@'))return;
-    await sendTelegram('Афиша — подписка на старт продаж', {
+    if (!(await AELITA_sendLead('Афиша — подписка на старт продаж', {
       'Email': v,
-    });
-    await sendFormspree('Афиша — подписка на старт продаж', {
-      'Email': v,
-    });
+    }))) { AELITA_formMessage(document.getElementById('subOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    AELITA_formMessageClear(document.getElementById('subOk'));
     document.getElementById('subOk').style.display='block';
     document.getElementById('subEmail').value='';
   }
@@ -331,45 +329,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
   // Закрыть по Escape
   
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
 
   // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
@@ -423,7 +385,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
   <div class="thanks-box">
     <div class="thanks-icon">✦</div>
     <h3>Thank you</h3>
-    <p>Your message has been received. We will get in touch within one working day.</p>
+    <p>Your message has been received. We'll get back to you within a few days.</p>
     <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Close</button>
   </div>
 </div>
@@ -439,7 +401,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/main.js?v=29"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>

@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -84,7 +84,7 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
        единственная защита от перебора чужих заказов (DOCS_TZ 39.2). -->
   <section id="step-lookup">
     <h1>Возврат билета</h1>
-    <p class="lead">Заполните форму — она зафиксирует дату обращения, от которой по <a href="/oferta">оферте</a> считается размер возврата. Раньше для этого нужно было писать письмо и ждать ответа, дошло ли оно.</p>
+    <p class="lead">Заполните форму — дата обращения зафиксируется сразу, от неё по <a href="/oferta">оферте</a> считается сумма возврата.</p>
 
     <label for="order">Код заказа</label>
     <input type="text" id="order" autocomplete="off" spellcheck="false" placeholder="например, 11111111-2222-3333-4444-555555555555">
@@ -111,7 +111,7 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
     <div class="calc" id="calc" hidden>
       <div class="basis" id="calc-basis"></div>
       <div class="sum" id="calc-sum"></div>
-      <div class="warn">Это предварительный расчёт, а не окончательное решение: заявление рассматривается вручную, а по основаниям «болезнь» и «смерть близкого родственника» ещё и с учётом документов.</div>
+      <div class="warn">Это предварительный расчёт. Окончательное решение — после рассмотрения заявления; при болезни или смерти близкого — с учётом документов.</div>
       <div class="warn" id="calc-docs" hidden></div>
     </div>
 
@@ -474,44 +474,8 @@ async function sendRequest(){
     document.getElementById('formBot_c').style.display = (tab === 'bot') ? 'block' : 'none';
   }
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
 
 </script>
 
@@ -581,7 +545,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/main.js?v=29"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

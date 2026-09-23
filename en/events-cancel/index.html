@@ -58,6 +58,20 @@ a{color:var(--gold)}
 // которые печатает скрипт. Сборщик EN содержимое <script> не
 // переводит, поэтому пары RU/EN живут прямо здесь.
 const EN = document.documentElement.lang === 'en';
+// pack-v469 (ТЗ клиентских текстов, З-10): все тексты страницы — парами
+// RU/EN. Сборщик EN строки внутри <script> не переводит (i18n/README,
+// п. 7), и до этого английская страница показывала всё по-русски, кроме
+// сетевой ошибки. ⚠️ EN-строки — без прямых апострофов («couldn't» в
+// литерале в одинарных кавычках ломает весь скрипт), используем ’.
+const tr = (ru, en) => (EN ? en : ru);
+// Ссылки — целыми литералами, а не `${…}/account`: проверка ссылок
+// аудита (links) читает href и в скриптах.
+const CABINET_BTN = EN
+  ? '<a href="/en/account/dashboard"><button>My account →</button></a>'
+  : '<a href="/account/dashboard"><button>Личный кабинет →</button></a>';
+const EVENTS_BTN = EN
+  ? '<a href="/en/"><button class="secondary">All events</button></a>'
+  : '<a href="/"><button class="secondary">Все события</button></a>';
 const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const API_BASE = 'https://api.aelita-production.ru/events';
@@ -70,18 +84,21 @@ function render(titleText, bodyText, statusClass, statusText, actionsHtml){
 }
 
 if(!token){
-  render('Ссылка недействительна', 'В ссылке нет кода отмены — она могла быть скопирована не полностью. Откройте письмо ещё раз и нажмите на ссылку целиком, либо отмените регистрацию из личного кабинета.', 'warn', null,
-    '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+  render(tr('Ссылка недействительна', 'Invalid link'),
+    tr('В ссылке нет кода отмены — она могла быть скопирована не полностью. Откройте письмо ещё раз и нажмите на ссылку целиком, либо отмените регистрацию из личного кабинета.',
+       'The link has no cancellation code — it may have been copied only in part. Open the email again and tap the full link, or cancel the registration from your account.'),
+    'warn', null, CABINET_BTN);
 } else {
-  render('Отмена регистрации', 'Подтвердите отмену — место освободится для других участников.', null, null,
-    '<button id="confirmBtn">Да, отменить</button><button class="secondary" onclick="history.back()">Не отменять</button>');
+  render(tr('Отмена регистрации', 'Cancel registration'),
+    tr('Подтвердите отмену — место освободится для других участников.', 'Please confirm — your place will be freed up for someone else.'), null, null,
+    `<button id="confirmBtn">${tr('Да, отменить', 'Yes, cancel')}</button><button class="secondary" onclick="history.back()">${tr('Не отменять', 'Keep it')}</button>`);
   document.getElementById('confirmBtn').addEventListener('click', doCancel);
 }
 
 async function doCancel(){
   const btn = document.getElementById('confirmBtn');
-  btn.disabled = true;
-  btn.textContent = 'Отменяем…';
+  const retryBtn = `<button onclick="doCancel()">${tr('Повторить', 'Try again')}</button>`;
+  if (btn) { btn.disabled = true; btn.textContent = tr('Отменяем…', 'Cancelling…'); }
   try {
     const res = await fetch(API_BASE + '/cancel', {
       method: 'POST',
@@ -90,18 +107,28 @@ async function doCancel(){
     });
     const data = await res.json().catch(() => null);
     if (res.ok && data && data.ok) {
-      const quantityNote = data.quantity > 1 ? ` (все ${data.quantity} билета из этой регистрации)` : '';
-      render('Регистрация отменена', `«${escapeHtml(data.eventTitle || '')}»${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}. Место освобождено для других участников.`, 'ok', 'Готово',
-        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+      const quantityNote = data.quantity > 1 ? tr(` (все ${data.quantity} билета из этой регистрации)`, ` (all ${data.quantity} tickets in this registration)`) : '';
+      const what = `«${escapeHtml(data.eventTitle || '')}»${data.datetimeLabel ? ', ' + escapeHtml(data.datetimeLabel) : ''}${quantityNote}`;
+      render(tr('Регистрация отменена', 'Registration cancelled'),
+        tr(`${what}. Место освободилось. Жаль, что в этот раз не получится — будем рады видеть вас на следующих встречах.`,
+           `${what}. The place is now free. Sorry you can’t make it this time — we’d love to see you at future events.`),
+        'ok', tr('Готово', 'Done'),
+        CABINET_BTN + EVENTS_BTN);
     } else if (res.status === 404 || (data && data.error === 'not_registered')) {
-      render('Уже отменено', 'Эта регистрация уже была отменена раньше (например, если вы уже нажимали эту ссылку) — повторно отменять нечего.', 'warn', null,
-        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+      render(tr('Уже отменено', 'Already cancelled'),
+        tr('Эта регистрация уже была отменена раньше (например, если вы уже нажимали эту ссылку) — повторно отменять нечего.',
+           'This registration was already cancelled earlier (for example, if you had already used this link) — there is nothing left to cancel.'),
+        'warn', null, CABINET_BTN);
     } else if (data && data.error === 'bad_cancel_token') {
-      render('Ссылка недействительна', 'Не удалось проверить код отмены — попробуйте открыть ссылку из письма ещё раз или отмените регистрацию из личного кабинета.', 'warn', null,
-        '<a href="/account/dashboard"><button>Личный кабинет →</button></a>');
+      render(tr('Ссылка недействительна', 'Invalid link'),
+        tr('Не удалось проверить код отмены — попробуйте открыть ссылку из письма ещё раз или отмените регистрацию из личного кабинета.',
+           'We could not verify the cancellation code — try opening the link from the email again, or cancel the registration from your account.'),
+        'warn', null, CABINET_BTN);
     } else {
-      render('Не получилось отменить', 'Сервер не смог обработать запрос — попробуйте ещё раз через минуту или отмените из личного кабинета.', 'warn', null,
-        '<button onclick="doCancel()">Повторить</button>');
+      render(tr('Не получилось отменить', 'We couldn’t cancel'),
+        tr('Сервер не смог обработать запрос — попробуйте ещё раз через минуту или отмените из личного кабинета.',
+           'The server could not process the request — try again in a minute or cancel from your account.'),
+        'warn', null, retryBtn);
     }
   } catch (e) {
     // pack-v334: сюда попадаем только когда ответа не пришло вовсе —
@@ -109,9 +136,10 @@ async function doCancel(){
     // причина — VPN: страница открывается (GitHub Pages), а до API в
     // Yandex Cloud запрос не доходит. pack-v467: VPN назван как
     // возможная причина, рядом — адрес почты.
-    render(EN ? 'We couldn\u2019t cancel' : 'Не получилось отменить',
-      EN ? "We couldn't reach the server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru" : 'Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru', 'warn', null,
-      '<button onclick="doCancel()">Повторить</button>');
+    render(tr('Не получилось отменить', 'We couldn’t cancel'),
+      tr('Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru',
+         'We couldn’t reach the server. If you’re using a VPN, try without it. If that doesn’t help, write to us: aelita.production@yandex.ru'),
+      'warn', null, retryBtn);
   }
 }
 

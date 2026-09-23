@@ -678,3 +678,7 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 @media(max-width:760px){
   .aud-reviews-grid{grid-template-columns:1fr}
 }
+
+/* Сообщения у форм заявок вместо alert() — ТЗ клиентских текстов, З-6 */
+.form-msg{font-size:13px;line-height:1.5;margin:10px 0}
+.form-msg-error{color:#C98B6B}

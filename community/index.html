@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>body{max-width:100vw}
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
@@ -225,44 +225,8 @@
     document.getElementById('formBot_c').style.display = (tab === 'bot') ? 'block' : 'none';
   }
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
 
   async function submitCommunityForm(){
     const name = document.getElementById('name_c').value.trim();
@@ -275,8 +239,8 @@
     if(!name){ showErr('Укажите имя.'); return; }
     if(!email || !email.includes('@')){ showErr('Укажите почту — на неё придёт ответ.'); return; }
     if(!document.getElementById('consent_c').checked){ showErr('Отметьте согласие на обработку персональных данных.'); return; }
-    await sendTelegram('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
-    await sendFormspree('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream});
+    if (!(await AELITA_sendLead('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream}))) { AELITA_formMessage(document.getElementById('ok_c'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    AELITA_formMessageClear(document.getElementById('ok_c'));
     document.getElementById('ok_c').style.display = 'block';
     document.getElementById('name_c').value = '';
     document.getElementById('email_c').value = '';
@@ -351,7 +315,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/main.js?v=29"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

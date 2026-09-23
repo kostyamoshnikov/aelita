@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -124,7 +124,7 @@
       <div class="field full">
         <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_v"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
         <button class="btn-gold" onclick="handleForm('v')" style="width:fit-content">Отправить заявку</button>
-        <p class="form-ok" id="ok_v">Спасибо! Мы изучим вашу заявку и свяжемся в течение 2 рабочих дней.</p>
+        <p class="form-ok" id="ok_v">Спасибо! Мы изучим вашу заявку и свяжемся в течение нескольких дней.</p>
       </div>
     </div>
     </div>
@@ -198,10 +198,10 @@
     const e=document.getElementById('email_'+id);
     const n=document.getElementById('name_'+id);
     const p=document.getElementById('phone_'+id);
-    if(!e||!e.value.includes('@')||!n||!n.value.trim()){alert('Заполните имя и почту');return;}
-    if(!p||!p.value.trim()){alert('Заполните телефон');return;}
+    if(!e||!e.value.includes('@')||!n||!n.value.trim()){AELITA_formMessage(document.getElementById('ok_'+id), 'Заполните имя и почту', 'Please fill in your name and email');return;}
+    if(!p||!p.value.trim()){AELITA_formMessage(document.getElementById('ok_'+id), 'Заполните телефон', 'Please fill in your phone number');return;}
     const consent=document.getElementById('consent_'+id);
-    if(!consent||!consent.checked){alert('Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку');return;}
+    if(!consent||!consent.checked){AELITA_formMessage(document.getElementById('ok_'+id), 'Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку', 'Please tick the personal data consent box — we can\'t accept the request without it');return;}
     if(id==='v'){
       const fields = {
         'Имя': n.value,
@@ -215,26 +215,21 @@
         'Интересующий спектакль': (document.getElementById('show_v')||{}).value || '',
         'Комментарий': (document.getElementById('msg_v')||{}).value || '',
       };
-      await sendTelegram('Площадкам — заявка', fields);
-      await sendFormspree('Площадкам — заявка', fields);
+      if (!(await AELITA_sendLead('Площадкам — заявка', fields))) { AELITA_formMessage(document.getElementById('ok_'+id), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+      AELITA_formMessageClear(document.getElementById('ok_'+id));
       document.getElementById('ok_v').style.display='block';
       document.querySelectorAll('#form_v input, #form_v textarea').forEach(f=>f.value='');
       return;
     }
     const sel=document.querySelector('#form_'+id+' select');
     const msg=document.querySelector('#form_'+id+' textarea');
-    await sendTelegram('Для организаторов — заявка', {
+    if (!(await AELITA_sendLead('Для организаторов — заявка', {
       'Имя': n.value,
       'Email': e.value,
       'Кто вы': sel ? sel.value : '',
       'Сообщение': msg ? msg.value : '',
-    });
-    await sendFormspree('Для организаторов — заявка', {
-      'Имя': n.value,
-      'Email': e.value,
-      'Кто вы': sel ? sel.value : '',
-      'Сообщение': msg ? msg.value : '',
-    });
+    }))) { AELITA_formMessage(document.getElementById('ok_'+id), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    AELITA_formMessageClear(document.getElementById('ok_'+id));
     document.getElementById('ok_'+id).style.display='block';
     document.querySelectorAll('#form_'+id+' input, #form_'+id+' textarea, #form_'+id+' select').forEach(f=>f.value='');
   }
@@ -273,45 +268,9 @@
   // Закрыть по Escape
   
 
-  const TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
 
-  const FORMSPREE_URL = 'https://formspree.io/f/meeyowpw';
 
-  async function sendFormspree(formName, fields) {
-    try {
-      var data = new FormData();
-      data.append('_subject', '[AELITA] ' + formName);
-      var keys = Object.keys(fields);
-      for (var i = 0; i < keys.length; i++) {
-        data.append(keys[i], String(fields[keys[i]] || '').trim());
-      }
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: data,
-        headers: {'Accept': 'application/json'}
-      });
-    } catch(e) { console.log('Formspree error:', e); }
-  }
 
-  async function sendTelegram(formName, fields) {
-    var lines = ['[AELITA] ' + formName, ''];
-    var keys = Object.keys(fields);
-    for (var i = 0; i < keys.length; i++) {
-      var label = keys[i];
-      var value = String(fields[label] || '').trim();
-      if (value) lines.push('<b>' + label + ':</b> ' + value);
-    }
-    lines.push('');
-    lines.push(new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}));
-    var msgText = lines.join('\n');
-    try {
-      await fetch(TG_WORKER, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({text: msgText})
-      });
-    } catch(e) { console.log('TG error:', e); }
-  }
 
   // Fallback: показываем всё через 700ms если IO не сработал
   setTimeout(function(){
@@ -365,7 +324,7 @@
   <div class="thanks-box">
     <div class="thanks-icon">✦</div>
     <h3>Спасибо</h3>
-    <p>Ваше сообщение получено. Мы свяжемся с вами в течение рабочего дня.</p>
+    <p>Ваше сообщение получено. Мы свяжемся с вами в течение нескольких дней.</p>
     <button class="thanks-close" onclick="document.getElementById('thanks-modal').classList.remove('open')">Закрыть</button>
   </div>
 </div>
@@ -381,7 +340,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/main.js?v=29"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

@@ -506,7 +506,7 @@
         ? {
             okFail: function (q) { return 'Done — you are registered' + (q > 1 ? ', tickets: ' + q : '') + '. We could not send the email with your ticket, but the registration is saved — you will find it in your '; },
             cabinet: 'account', ifNeed: '. If you need the ticket by email, write to us: ',
-            okHead: function (q) { return 'Done — you are registered' + (q > 1 ? ', tickets: ' + q : '') + '! '; },
+            okHead: function (q) { return 'Thank you — you are registered' + (q > 1 ? ', tickets: ' + q : '') + '! '; },
             many: function (to) { return 'All tickets with QR codes have been sent in a single email' + to + ' — at the entrance each one shows its own code.'; },
             one: function (to) { return 'A ticket with a QR code has been sent' + to + '.'; },
             toMail: ' to ', toDefault: ' to your email',
@@ -518,7 +518,7 @@
         : {
             okFail: function (q) { return 'Готово — вы зарегистрированы' + (q > 1 ? ', билетов: ' + q : '') + '. Письмо с билетом отправить не удалось, но регистрация сохранена — найдёте её в '; },
             cabinet: 'личном кабинете', ifNeed: '. Если билет нужен на почту — напишите нам: ',
-            okHead: function (q) { return 'Готово — вы зарегистрированы' + (q > 1 ? ', билетов: ' + q : '') + '! '; },
+            okHead: function (q) { return 'Спасибо, вы зарегистрированы' + (q > 1 ? ', билетов: ' + q : '') + '! '; },
             many: function (to) { return 'Все билеты с QR-кодами отправлены одним письмом' + to + ' — на входе каждый показывает свой код.'; },
             one: function (to) { return 'Билет с QR-кодом отправлен' + to + '.'; },
             toMail: ' на ', toDefault: ' на почту',

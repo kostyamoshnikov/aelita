@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=27">
+<link rel="stylesheet" href="/assets/style.css?v=29">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
@@ -95,6 +95,8 @@ body{max-width:100vw}
    странице, pack-v439. */
 .reg-hint{display:block;color:var(--sand);font-size:11px;margin-top:6px}
 .acc-hint{color:var(--sand);font-size:13px;line-height:1.55;max-width:560px;margin:0}
+.acc-more summary{cursor:pointer;color:var(--gold);font-size:13px;margin-top:8px}
+.acc-more[open] summary{margin-bottom:6px}
 .acc-danger h2{color:#C98B6B}
 .btn-danger{border-color:rgba(201,139,107,.5);color:#C98B6B}
 #pf-message,#del-message{font-size:13px;color:var(--sand);min-height:18px}
@@ -183,7 +185,7 @@ body{max-width:100vw}
           <div id="pf-email-block">
             <input type="email" id="pf-email" placeholder="Email address" autocomplete="email" required>
             <input type="password" id="pf-password" placeholder="Current password — needed only to change the address" autocomplete="current-password">
-            <p class="acc-hint">The name changes straight away. The address is your login, so changing it takes your password. Orders and registrations stay where they are: we look them up by every address your account has had.</p>
+            <p class="acc-hint">Your name changes right away. Changing your email requires your password — your orders and registrations stay with you.</p>
           </div>
           <button type="submit" class="btn-outline" id="pf-submit">Save</button>
           <div id="pf-message"></div>
@@ -202,8 +204,11 @@ body{max-width:100vw}
 
       <div class="acc-section acc-danger">
         <h2>Delete account</h2>
-        <p class="acc-hint">We will delete your address, name, password and the purchase history shown here. This cannot be undone.</p>
-        <p class="acc-hint"><b>What stays, and why.</b> Paid orders are primary accounting records kept for five years by law, and they cannot be deleted on request. Tickets and registrations already issued keep working: the QR in your email stays valid and you will be let in. If you need to free up a seat, cancel the registration above first. We log the deletion itself in the personal-data destruction journal and keep that record for three years, as the law requires.</p>
+        <p class="acc-hint">We'll delete your name, email, password and account history — this can't be undone. Tickets and registrations already issued stay valid.</p>
+        <details class="acc-more">
+          <summary>What we keep by law</summary>
+          <p class="acc-hint">Paid orders are kept for five years under accounting law. A record of the deletion itself is kept for three years in the personal data destruction log. If you need to free up a place at an event, cancel the registration first using the button above.</p>
+        </details>
         <form class="pw-form" id="del-form" onsubmit="onDeleteAccount(event)">
           <input type="password" id="del-password" placeholder="Current password" autocomplete="current-password" required>
           <button type="submit" class="btn-outline btn-danger" id="del-submit">Delete account permanently</button>
@@ -260,8 +265,8 @@ body{max-width:100vw}
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=27"></script>
-<script src="/assets/main.js?v=27"></script>
+<script src="/assets/account.js?v=29"></script>
+<script src="/assets/main.js?v=29"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит

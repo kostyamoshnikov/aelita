@@ -199,8 +199,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
   <div id="degraded" style="display:none" class="warn">We are running an extra availability check — in rare cases a selected seat may turn out to be taken; we will check again and warn you before payment.</div>
 
   <div id="success-block" style="display:none" class="success-box">
-    <h2>Payment successful</h2>
-    <p id="success-text">Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.</p>
+    <h2>Thank you! Payment received</h2>
+    <p id="success-text">Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!</p>
   </div>
 
   <!-- pack-v441: ворота кабинета переехали со входа на страницу к шагу
@@ -366,7 +366,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=27"></script>
+<script src="/assets/payments.js?v=29"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -383,7 +383,7 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 // выглядит как «сайт открылся, а кнопка не работает». Прежний текст
 // «проверьте интернет» уводил в сторону: интернет у человека
 // работает, он это видит — and делал вывод, что сломан сайт.
-const NET_FAIL_MSG = 'We couldn't reach the payment server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru';
+const NET_FAIL_MSG = 'We could not reach the payment server. If you are using a VPN, try without it. If that does not help, write to us: aelita.production@yandex.ru';
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');
@@ -1559,9 +1559,9 @@ async function submitOrder(){
         // автоматически, но покупателю уже отдельно ушло письмо с
         // объяснением. Тот же текст, что показывает pollOrderStatus()
         // для платного пути в том же случае.
-        showSuccess('No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
+        showSuccess('Thank you! No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
       } else {
-        showSuccess('No payment was needed — the discount covered the full amount. Your tickets are on their way by email; check the Spam folder if they do not arrive within a couple of minutes.');
+        showSuccess('Thank you! No payment was needed — the discount covered the full amount. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
       }
       return;
     }
@@ -1693,12 +1693,12 @@ async function pollOrderStatus(){
 
     if(out && out.status === 'paid'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showSuccess('Payment successful. Your tickets are on their way by email — check the Spam folder if they do not arrive within a couple of minutes.');
+      showSuccess('Thank you! Payment received. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showSuccess('Payment successful. A rare technical issue occurred with the seat — we already know and will contact you shortly; your money is safe.');
+      showSuccess('Thank you! Payment received. A rare technical issue occurred with the seat — we already know and will contact you shortly; your money is safe.');
       return;
     }
     if(out && out.status === 'canceled'){

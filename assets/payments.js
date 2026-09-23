@@ -45,6 +45,41 @@
   };
   var t = TEXT[LANG];
 
+  // ── Подарочная карта при оплате консьержа и COMMUNITY (ТЗ клиентских
+  // текстов, З-5 вариант Б, pack-v470) ──────────────────────────────────
+  // ⚠️ Переключатель стоит ПАРОЙ с серверным `_tools/Shared/lib/gift-
+  // scope.js` → GIFT_ON_PRODUCTS; порядок включения — в докстринге там.
+  // Пока false, поле кода на book-space/book-concierge спрятано и код не
+  // отправляется: старый create-payment его молча проигнорировал бы, и
+  // человек заплатил бы полную сумму, думая, что карта учтена. Аудит
+  // `client_ui` проверяет, что оба переключателя в одном положении.
+  var GIFT_ON_PRODUCTS = false;
+  var GIFT_PRODUCTS = { community: true, concierge: true };
+  var GIFT_TEXT = {
+    ru: {
+      not_found: 'Такой код подарочной карты не найден. Проверьте его — он в PDF сертификата, вида AELITA-XXXX-XXXX-XXXX.',
+      inactive: 'Эта подарочная карта не активна. Напишите нам: aelita.production@yandex.ru',
+      depleted: 'На этой подарочной карте не осталось средств. Уберите код, чтобы оплатить без неё.',
+      rate_limited: 'Слишком много попыток ввести код. Подождите 10 минут или напишите нам: aelita.production@yandex.ru',
+      changed: 'Остаток карты только что изменился. Нажмите «Оплатить» ещё раз.',
+      not_applicable: 'Подарочную карту здесь принять нельзя. Уберите код, чтобы оплатить без неё.',
+    },
+    en: {
+      not_found: 'Gift card code not found. Please check it: it is in the gift card PDF and looks like AELITA-XXXX-XXXX-XXXX.',
+      inactive: 'This gift card is not active. Write to us: aelita.production@yandex.ru',
+      depleted: 'There is no balance left on this gift card. Remove the code to pay without it.',
+      rate_limited: 'Too many attempts to enter the code. Wait 10 minutes or write to us: aelita.production@yandex.ru',
+      changed: 'The card balance has just changed. Press Pay again.',
+      not_applicable: 'A gift card cannot be used here. Remove the code to pay without it.',
+    },
+  }[LANG];
+  window.AELITA_GIFT_ON_PRODUCTS = GIFT_ON_PRODUCTS;
+  if (GIFT_ON_PRODUCTS) {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('[data-gift-code-field]').forEach(function (el) { el.style.display = ''; });
+    });
+  }
+
   // ── Валидация email/телефона — тот же паттерн и та же нормализация
   // телефона, что на сервере (_tools/Shared/lib/validate.js, pack-v235)
   // — держать оба места в синхроне вручную, единого общего файла между
@@ -265,6 +300,8 @@
     var comment = opts.comment || '';
     var buttonEl = opts.buttonEl || null;
     var msgElId = opts.msgElId || null;
+    var giftEl = document.getElementById(opts.giftFieldId || 'j-gift');
+    var giftCode = (GIFT_ON_PRODUCTS && GIFT_PRODUCTS[product] && giftEl) ? giftEl.value.trim().toUpperCase() : '';
     var isGuestCheckout = product === 'program'; // касается ТОЛЬКО входа/логина, не контакта — см. докстринг выше
 
     var nameEl = document.getElementById(opts.nameFieldId || 'j-name');
@@ -364,7 +401,7 @@
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest }),
+        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {
@@ -386,6 +423,21 @@
         return;
       }
       var data = await res.json();
+      // З-5 Б: карта покрыла всю сумму — платить нечего, заказ уже
+      // выдан сервером. Ведём на тот же экран «Спасибо», что и после ЮKassa.
+      if (data && data.zero_amount && data.redirect_url) {
+        location.href = data.redirect_url;
+        return;
+      }
+      if (data && (data.error === 'gift_code_invalid' || data.error === 'gift_card_changed' || data.error === 'gift_not_applicable')) {
+        var gmsg = data.error === 'gift_card_changed' ? GIFT_TEXT.changed
+          : data.error === 'gift_not_applicable' ? GIFT_TEXT.not_applicable
+          : (GIFT_TEXT[data.reason] || GIFT_TEXT.not_found);
+        if (giftEl) showFieldError(giftEl, gmsg);
+        showPayMsg(msgElId, gmsg);
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }
+        return;
+      }
       if (data && data.confirmation_url) {
         // pack-v246: сохраняем черновик и перед уходом на ЮKassa, не
         // только перед уходом на /account (goToLogin). Человек часто
