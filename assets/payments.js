@@ -231,7 +231,11 @@
     // location.pathname САМ по себе уже содержит /en/, если страница
     // английская (это реальный путь браузера) — добавлять префикс
     // повторно сюда нельзя, задвоится в /en/en/....
-    location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + location.hash);
+    // pack-v468 (ТЗ клиентских текстов, З-4): в next кладём якорь формы.
+    // Без него человек после входа возвращался в начало длинной
+    // страницы и заново искал, где платил.
+    var anchor = location.hash || (document.getElementById('join') ? '#join' : (document.getElementById('pay') ? '#pay' : ''));
+    location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + anchor);
   }
 
   // product — 'community' | 'concierge' | 'gift' | 'program'. Цену для

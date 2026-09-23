@@ -180,7 +180,7 @@
 
     <div id="regLoggedOut" style="display:none">
       <p style="color:var(--sand);margin-bottom:16px">Ещё не заходили на сайт? Создайте кабинет прямо здесь — это займёт минуту.</p>
-      <a class="submit-btn" href="/account?next=%2Fworkshop-entrepreneurs%3Fauto_register%3D1" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
+      <a class="submit-btn" href="/account?next=%2Fworkshop-entrepreneurs%3Fauto_register%3D1%23join" style="text-decoration:none;display:inline-block">Войти или зарегистрироваться →</a>
     </div>
 
     <div id="regAlready" style="display:none">
@@ -346,6 +346,13 @@
         // один на все страницы.
         okEl.innerHTML = window.AELITA_account.registrationSuccessHtml(data);
         okEl.style.display = 'block';
+        // pack-v468 (З-4): блок встаёт там, где была форма, — если
+        // регистрация запустилась сама после входа (auto_register),
+        // человек этого не увидит. Прокручиваем к нему: сразу и ещё раз
+        // после полной загрузки, когда шрифты и .reveal уже не сдвинут
+        // страницу под курсором.
+        okEl.scrollIntoView({ block: 'center' });
+        window.addEventListener('load', function () { okEl.scrollIntoView({ block: 'center' }); });
       },
       onError: function(msg){ msgEl.textContent = msg; },
     });

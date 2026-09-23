@@ -577,7 +577,7 @@
       // самого начала) — та же логика зашита статично в href на
       // самих страницах мероприятий (regLoggedOut), здесь — подстраховка
       // на редкий гоночный случай.
-      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1'); return; }
+      if (!token) { location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.registering; }
@@ -590,7 +590,7 @@
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1 }),
         });
-        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1'); return; }
+        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
         var data = await res.json();
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);

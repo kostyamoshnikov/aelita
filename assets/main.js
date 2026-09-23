@@ -203,3 +203,15 @@ document.addEventListener('keydown', e=>{
     if(href === path) a.classList.add('active');
   });
 })();
+
+// pack-v468 (ТЗ клиентских текстов, З-4): доводка перехода по якорю.
+// Браузер прыгает к #join сразу при разборе документа, а потом шрифты,
+// картинки и анимации .reveal меняют высоту блоков выше — и человек
+// оказывается не там, куда шёл. Повторяем переход после полной
+// загрузки. Сам якорь не трогаем: адрес в строке остаётся прежним.
+window.addEventListener('load', function () {
+  if (location.hash && location.hash.length > 1) {
+    var el = document.getElementById(location.hash.slice(1));
+    if (el) el.scrollIntoView();
+  }
+});

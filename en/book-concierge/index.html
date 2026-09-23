@@ -151,6 +151,18 @@ p a:hover{opacity:.75}
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
 @media(max-width:375px){section{padding:50px 0}}
+
+/* pack-v468 (ТЗ клиентских текстов, З-3): экран после возврата с оплаты.
+   Раньше уведомление стояло в конце формы, на 58–72% высоты страницы, и
+   его показывали прокруткой `scrollIntoView({behavior:'smooth'})`. Она
+   срабатывала до того, как догрузились шрифты, картинки и анимации
+   `.reveal`, и промахивалась: человек после оплаты видел ту же форму.
+   Теперь блок стоит первым на странице, а форма на это время прячется. */
+.pay-return{padding:48px 0 8px}
+.pay-return .wrap{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center}
+.pay-return h2{margin-bottom:12px}
+.pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
+.pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
 </style>
 <script type="application/ld+json">
 {
@@ -203,6 +215,14 @@ p a:hover{opacity:.75}
 </nav>
 
 <main id="main">
+<div class="pay-return" id="paymentReturnMsg" hidden>
+  <div class="wrap">
+    <h2>Thank you! Payment received</h2>
+    <p>Katya will read your questionnaire and get in touch to put together your first selection. The payment confirmation is in your inbox.</p>
+    <p class="pay-return-note">If the payment didn't go through, you won't be charged. <button type="button" class="pay-return-retry" id="paymentRetryBtn">Pay again</button></p>
+    <p class="pay-return-note">Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
+  </div>
+</div>
 
 <div class="hero">
   <div class="hero-beam" aria-hidden="true"></div>
@@ -358,7 +378,6 @@ p a:hover{opacity:.75}
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Just send the questionnaire</button>
       <p class="join-note">Payment requires signing in to your <a href="/en/account" style="color:var(--gold)">account</a> — if you haven't signed in yet, we'll ask you to sign in or register right before payment, it's quick.</p>
       <p class="join-note">Fill in the questionnaire above before paying — that way Katya sees your preferences right away. Or directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
-      <div class="join-ok" id="paymentReturnMsg">If your payment went through, we've received the notification and Katya will read your questionnaire and get in touch to put together your first pick. If something went wrong or you have questions — write to us: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></div>
     </div>
     <div class="join-ok" id="joinOk">Thank you! Katya will read your questionnaire and get in touch to put together your first selection.</div>
     </div>
@@ -618,16 +637,31 @@ p a:hover{opacity:.75}
 <script src="/assets/main.js?v=27"></script>
 
 <script>
-  // Возврат со страницы оплаты ЮKassa (см. assets/payments.js — метка
-  // aelita_paid в return_url). Не подтверждение самой оплаты (это
-  // асинхронно решает webhook.js на сервере) — просто честное «мы вас
-  // ждали», без чего человек после реальной оплаты видел бы ту же
-  // форму и не понимал, получилось ли.
+  // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты
+  // ЮKassa (метка aelita_paid в return_url, см. assets/payments.js).
+  // Это не подтверждение самой оплаты — её асинхронно решает webhook на
+  // сервере, — а честное «мы вас ждали». Блок лежит первым на странице,
+  // поэтому прокручивать никуда не нужно: достаточно увести страницу
+  // наверх и спрятать форму, чтобы человек не заполнил её второй раз.
   (function () {
     var params = new URLSearchParams(location.search);
     if (params.get('aelita_paid') !== '1') return;
-    var el = document.getElementById('paymentReturnMsg');
-    if (el) { el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    var msg = document.getElementById('paymentReturnMsg');
+    var form = document.getElementById('joinForm');
+    if (msg) msg.hidden = false;
+    if (form) form.style.display = 'none';
+    var retry = document.getElementById('paymentRetryBtn');
+    if (retry) retry.onclick = function () {
+      if (form) form.style.display = '';
+      if (msg) msg.hidden = true;
+      var sec = document.getElementById('join');
+      if (sec) sec.scrollIntoView();
+    };
+    // В адресе возврата может остаться якорь #join — браузер по нему
+    // уедет вниз сам, уже после этого кода. Поэтому наверх уводим и
+    // сейчас, и после полной загрузки.
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function () { window.scrollTo(0, 0); });
     params.delete('aelita_paid');
     var qs = params.toString();
     history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
