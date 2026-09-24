@@ -36,6 +36,31 @@
 <link rel="stylesheet" href="/assets/style.css?v=33">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
+/* pack-v493: портрет Вани — вертикальный, на белом студийном фоне. Общая
+   схема первого экрана (фото на весь экран + градиент, style.css)
+   рассчитана на тёмные сценические кадры: здесь текст ложился на белое
+   и не читался, а лицо оказывалось под текстом (на телефоне) или
+   срезалось по лоб (на широком экране). Поэтому своя раскладка:
+   — телефон: фото во всю ширину сверху, лицо открыто, текст — под ним,
+     на тёмном (градиент уходит в фон к подбородку);
+   — широкий экран: фото справа по высоте экрана, текст слева на тёмном,
+     фото мягко растворяется влево. */
+.dyba-hero{background-color:var(--ink);background-repeat:no-repeat;background-size:100% auto;background-position:center top}
+.dyba-hero .hero-overlay{background:linear-gradient(to bottom,rgba(11,11,13,.10) 0,rgba(11,11,13,.10) 60vw,rgba(11,11,13,.75) 100vw,var(--ink) 125vw,var(--ink) 100%)}
+.dyba-hero .wrap{padding-top:110vw}
+@media(min-width:900px){
+  /* hero-wide.jpg — тот же портрет, но левый край заранее растворён в
+     цвет фона сайта (#0B0B0D), а белый фон чуть приглушён: без этого у
+     фото был жёсткий край посреди экрана. */
+  .dyba-hero{background-image:url('/images/dyba-show/hero-wide.jpg')!important;background-size:auto 100%;background-position:right center}
+  .dyba-hero .hero-overlay{background:linear-gradient(to bottom,rgba(11,11,13,0) 78%,var(--ink) 100%)}
+  /* .page-hero — flex, и .wrap в нём сжимался до ширины текста и
+     вставал по центру — прямо на лицо. width:100% возвращает обычный
+     контейнер сайта (левый край текста = левый край логотипа), а ширину
+     самого текста ограничивают дети. */
+  .dyba-hero .wrap{padding-top:0;width:100%}
+  .dyba-hero .wrap > *{max-width:600px}
+}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
 .page-hero .sub{color:var(--sand);font-size:16px;max-width:52ch;margin-bottom:10px}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -92,7 +117,7 @@
 
 <main id="main">
 
-<div class="page-hero" style="background:url('/images/dyba-show/hero.jpg') center 20%/cover">
+<div class="page-hero dyba-hero" style="background-image:url('/images/dyba-show/hero.jpg')">
   <div class="hero-overlay"></div>
   <div class="wrap">
     <p class="eyebrow">Стендап-концерт<span class="age">18+</span></p>
