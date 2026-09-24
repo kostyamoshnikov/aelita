@@ -134,6 +134,10 @@ p a:hover{opacity:.75}
 @media(max-width:480px){.format-grid{grid-template-columns:1fr}}
 /* ВСТУПИТЬ */
   .join-sec{background:var(--coal);padding:80px 0;text-align:center}
+  .gift-check{padding:80px 0;text-align:center}
+  .gift-check > .wrap > p{margin:14px 0 24px}
+  .gift-check .join-field{text-align:left}
+  .gift-check #gc-result{font-size:15px;color:var(--bone);min-height:1.5em}
 .join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
 .join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
 .join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
@@ -168,17 +172,17 @@ p a:hover{opacity:.75}
 {
   "@context": "https://schema.org",
   "@type": "Product",
-  "name": "Подарочная карта AELITA PRODUCTION",
-  "description": "Любая сумма от 500 до 100 000 ₽ — на билеты на спектакли AELITA PRODUCTION. Получатель сам выберет спектакль и дату.",
+  "name": "AELITA PRODUCTION Gift Card",
+  "description": "Any amount from 500 to 100,000 ₽ towards tickets to AELITA PRODUCTION shows. The recipient chooses the show and the date.",
   "brand": {
     "@type": "Organization",
     "name": "AELITA PRODUCTION"
   },
   "image": "https://aelita-production.ru/images/og-default.jpg",
-  "url": "https://aelita-production.ru/gift-card/",
+  "url": "https://aelita-production.ru/en/gift-card/",
   "offers": {
     "@type": "Offer",
-    "url": "https://aelita-production.ru/gift-card/",
+    "url": "https://aelita-production.ru/en/gift-card/",
     "priceSpecification": {
       "@type": "PriceSpecification",
       "minPrice": "500",
@@ -330,7 +334,7 @@ p a:hover{opacity:.75}
       <div class="join-field"><label>Your email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label>Your Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
       <div class="join-field"><label>Your phone or Telegram</label><input type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
-      <div class="join-field"><label>Wishes — we'll pass them on if we prepare the certificate by hand</label><textarea id="j-message" placeholder="For example, what to write in the greeting"></textarea></div>
+      <div class="join-field"><label data-gift-message-label>Wishes — we'll pass them on if we prepare the certificate by hand</label><textarea id="j-message" placeholder="For example, what to write in the greeting"></textarea></div>
       <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To arrange a gift right now — email us directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, we'll help set it up.</p>
       <div class="msg" id="payMsg_gift" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
@@ -339,6 +343,24 @@ p a:hover{opacity:.75}
     </div>
   </div>
 </div>
+
+<!-- ПРОВЕРИТЬ ОСТАТОК (pack-v487). На этот якорь (#check) ведут PDF
+     сертификата («Проверить остаток: …/gift-card/#check») и ответ в FAQ,
+     а раздела на странице не было — ссылка вела в никуда. Сервер режим
+     «только баланс» умеет давно: POST /tickets/check-gift-code без
+     performance_id (Tickets/check-gift-code.js), он же считает попытки. -->
+<section id="check" class="gift-check">
+  <div class="wrap" style="max-width:640px">
+    <span class="eyebrow">Already have a card</span>
+    <h2 style="margin-top:14px">Check the balance</h2>
+    <p>Enter the code from the certificate and we'll show how much is left on the card.</p>
+    <div class="join-form">
+      <div class="join-field"><label for="gc-code">Card code</label><input class="input-clear" type="text" id="gc-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
+      <button class="btn-outline" type="button" id="gc-btn">Check</button>
+      <p class="join-note" id="gc-result" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
 
 </main>
 
@@ -386,6 +408,47 @@ p a:hover{opacity:.75}
     </div>
   </div>
 </footer>
+
+<script>
+  // Проверка остатка подарочной карты (pack-v487) — только чтение.
+  (function () {
+    const EN = document.documentElement.lang === 'en';
+    const T = EN ? {
+      empty: 'Enter the card code.', checking: 'Checking…',
+      not_found: 'No such card — please check the code.', inactive: 'This card is no longer active.',
+      rate_limited: 'Too many attempts — please wait a few minutes.', net: "We couldn't reach the server. If you use a VPN, try without it.",
+      ok: (a, i) => `Balance: ${a} ₽ of ${i} ₽.`, zero: 'There is no balance left on this card.',
+    } : {
+      empty: 'Введите код карты.', checking: 'Проверяем…',
+      not_found: 'Такой карты нет — проверьте код.', inactive: 'Эта карта больше не активна.',
+      rate_limited: 'Слишком много попыток — подождите несколько минут.', net: 'Не получилось связаться с сервером. Если включён VPN, попробуйте без него.',
+      ok: (a, i) => `На карте ${a} ₽ из ${i} ₽.`, zero: 'На карте не осталось средств.',
+    };
+    const fmt = (n) => Number(n || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 }).replace(',', '.');
+    const btn = document.getElementById('gc-btn');
+    const inp = document.getElementById('gc-code');
+    const out = document.getElementById('gc-result');
+    if (!btn || !inp || !out) return;
+    async function check() {
+      const code = inp.value.trim().toUpperCase();
+      if (!code) { out.textContent = T.empty; return; }
+      out.textContent = T.checking; btn.disabled = true;
+      try {
+        const r = await fetch('https://api.aelita-production.ru/tickets/check-gift-code', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ gift_code: code }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.status === 429) out.textContent = T.rate_limited;
+        else if (!d.valid) out.textContent = T[d.reason] || T.not_found;
+        else if (!(Number(d.available_amount) > 0)) out.textContent = T.zero;
+        else out.textContent = T.ok(fmt(d.available_amount), fmt(d.initial_amount));
+      } catch (e) { out.textContent = T.net; }
+      btn.disabled = false;
+    }
+    btn.addEventListener('click', check);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+  })();
+</script>
 
 <!-- payments.js -->
 <script src="/assets/payments.js?v=33"></script>

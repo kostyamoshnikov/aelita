@@ -131,6 +131,10 @@ p a:hover{opacity:.75}
 @media(max-width:480px){.format-grid{grid-template-columns:1fr}}
 /* ВСТУПИТЬ */
   .join-sec{background:var(--coal);padding:80px 0;text-align:center}
+  .gift-check{padding:80px 0;text-align:center}
+  .gift-check > .wrap > p{margin:14px 0 24px}
+  .gift-check .join-field{text-align:left}
+  .gift-check #gc-result{font-size:15px;color:var(--bone);min-height:1.5em}
 .join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
 .join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
 .join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
@@ -337,6 +341,24 @@ p a:hover{opacity:.75}
   </div>
 </div>
 
+<!-- ПРОВЕРИТЬ ОСТАТОК (pack-v487). На этот якорь (#check) ведут PDF
+     сертификата («Проверить остаток: …/gift-card/#check») и ответ в FAQ,
+     а раздела на странице не было — ссылка вела в никуда. Сервер режим
+     «только баланс» умеет давно: POST /tickets/check-gift-code без
+     performance_id (Tickets/check-gift-code.js), он же считает попытки. -->
+<section id="check" class="gift-check">
+  <div class="wrap" style="max-width:640px">
+    <span class="eyebrow">Уже есть карта</span>
+    <h2 style="margin-top:14px">Проверить остаток</h2>
+    <p>Введите код с сертификата — покажем, сколько на карте осталось.</p>
+    <div class="join-form">
+      <div class="join-field"><label for="gc-code">Код карты</label><input class="input-clear" type="text" id="gc-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
+      <button class="btn-outline" type="button" id="gc-btn">Проверить</button>
+      <p class="join-note" id="gc-result" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -383,6 +405,47 @@ p a:hover{opacity:.75}
     </div>
   </div>
 </footer>
+
+<script>
+  // Проверка остатка подарочной карты (pack-v487) — только чтение.
+  (function () {
+    const EN = document.documentElement.lang === 'en';
+    const T = EN ? {
+      empty: 'Enter the card code.', checking: 'Checking…',
+      not_found: 'No such card — please check the code.', inactive: 'This card is no longer active.',
+      rate_limited: 'Too many attempts — please wait a few minutes.', net: "We couldn't reach the server. If you use a VPN, try without it.",
+      ok: (a, i) => `Balance: ${a} ₽ of ${i} ₽.`, zero: 'There is no balance left on this card.',
+    } : {
+      empty: 'Введите код карты.', checking: 'Проверяем…',
+      not_found: 'Такой карты нет — проверьте код.', inactive: 'Эта карта больше не активна.',
+      rate_limited: 'Слишком много попыток — подождите несколько минут.', net: 'Не получилось связаться с сервером. Если включён VPN, попробуйте без него.',
+      ok: (a, i) => `На карте ${a} ₽ из ${i} ₽.`, zero: 'На карте не осталось средств.',
+    };
+    const fmt = (n) => Number(n || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 }).replace(',', '.');
+    const btn = document.getElementById('gc-btn');
+    const inp = document.getElementById('gc-code');
+    const out = document.getElementById('gc-result');
+    if (!btn || !inp || !out) return;
+    async function check() {
+      const code = inp.value.trim().toUpperCase();
+      if (!code) { out.textContent = T.empty; return; }
+      out.textContent = T.checking; btn.disabled = true;
+      try {
+        const r = await fetch('https://api.aelita-production.ru/tickets/check-gift-code', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ gift_code: code }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.status === 429) out.textContent = T.rate_limited;
+        else if (!d.valid) out.textContent = T[d.reason] || T.not_found;
+        else if (!(Number(d.available_amount) > 0)) out.textContent = T.zero;
+        else out.textContent = T.ok(fmt(d.available_amount), fmt(d.initial_amount));
+      } catch (e) { out.textContent = T.net; }
+      btn.disabled = false;
+    }
+    btn.addEventListener('click', check);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+  })();
+</script>
 
 <!-- payments.js -->
 <script src="/assets/payments.js?v=33"></script>
