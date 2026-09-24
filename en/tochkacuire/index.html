@@ -73,6 +73,19 @@ section{padding:90px 0}
   .countdown{display:flex;gap:2px;margin:40px 0 0}
   .quicknav{position:sticky;top:0;z-index:40;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(232,230,225,.1);overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
   .quicknav-in{display:inline-flex;gap:4px;padding:12px 20px}
+  /* TOCHKACUIRE_UX_REVIEW п. 2 (pack-v482): общий style.css ставит
+     html/body{overflow-x:hidden} — это делает их контейнером прокрутки и
+     отключает sticky у панели. clip режет горизонтальный вылет так же, но
+     контейнером прокрутки не становится. Только на этой странице. */
+  html,body{overflow-x:clip}
+  /* Шапка сайта fixed (114 px на телефоне, 119 на десктопе) — панель
+     прилипает под ней, а не за ней. Высоту шапки меряет скрипт внизу. */
+  .quicknav{top:var(--qn-top,114px)}
+  /* п. 4: панель шире экрана — затухание справа подсказывает, что пункты
+     есть дальше; снимается, когда долистали до конца (класс at-end). */
+  .quicknav:not(.at-end){-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+  .days-tabs .day-tab:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .venue-route{display:inline-block;margin-top:10px;color:var(--gold)}
   .quicknav a{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);text-decoration:none;padding:8px 14px;border-radius:20px;transition:color .2s,background .2s;flex-shrink:0}
   .quicknav a:hover{color:var(--bone);background:rgba(232,230,225,.06)}
   .quicknav a.gold{color:var(--gold);border:1px solid rgba(214,181,122,.4)}
@@ -289,11 +302,11 @@ section{padding:90px 0}
       <a class="btn-gold" href="#schedule">Buy ticket</a>
       
     </div>
-    <div class="countdown" id="countdown">
-      <div class="cd-item"><div class="cd-num" id="cd-d">—</div><div class="cd-lbl">days</div></div>
-      <div class="cd-item"><div class="cd-num" id="cd-h">—</div><div class="cd-lbl">hours</div></div>
-      <div class="cd-item"><div class="cd-num" id="cd-m">—</div><div class="cd-lbl">minutes</div></div>
-      <div class="cd-item"><div class="cd-num" id="cd-s">—</div><div class="cd-lbl">seconds</div></div>
+    <div class="countdown" id="countdown" role="timer" aria-label="Until the festival opens">
+      <div class="cd-item" aria-hidden="true"><div class="cd-num" id="cd-d">—</div><div class="cd-lbl">days</div></div>
+      <div class="cd-item" aria-hidden="true"><div class="cd-num" id="cd-h">—</div><div class="cd-lbl">hours</div></div>
+      <div class="cd-item" aria-hidden="true"><div class="cd-num" id="cd-m">—</div><div class="cd-lbl">minutes</div></div>
+      <div class="cd-item" aria-hidden="true"><div class="cd-num" id="cd-s">—</div><div class="cd-lbl">seconds</div></div>
     </div>
   </div>
 </div>
@@ -301,17 +314,78 @@ section{padding:90px 0}
 <!-- БЫСТРАЯ НАВИГАЦИЯ — страница длинная (12 разделов), без неё
      сложно найти нужное, не листая всё подряд (см. запрос заказчика).
      Приклеена к верху (sticky), прокручивается по горизонтали на
-     мобильном. Билеты — золотым и первым пунктом после программы,
-     самое частое, что ищут. -->
+     мобильном. Билеты — золотым и первым пунктом (pack-v483: расписание
+     теперь и на странице первое), самое частое, что ищут. -->
 <nav class="quicknav" aria-label="Quick page links">
   <div class="quicknav-in">
-    <a href="#program">Programme</a>
     <a href="#schedule" class="gold">Tickets</a>
+    <a href="#program">Programme</a>
     <a href="#business">Business programme</a>
+    <a href="#kids">For kids</a>
+    <a href="#free">Free</a>
     <a href="#exhibitions">Exhibitions</a>
     <a href="#venue">Venue</a>
   </div>
 </nav>
+
+<!-- РАСПИСАНИЕ — сразу после первого экрана (TOCHKACUIRE_UX_REVIEW п. 3,
+     решение заказчика 24.09.2026, pack-v483): сюда приходят за билетом,
+     поэтому кнопки покупки — на 2-м экране, а не на 7,7-м. Описания
+     спектаклей — ниже, в «Программе»; ссылки из расписания ведут на
+     страницы спектаклей. -->
+<section id="schedule" class="sched">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Schedule</span><h2>Four days of festival</h2></div>
+    <div class="reveal">
+      <div class="days-tabs" role="tablist" aria-label="Festival days">
+        <button class="day-tab active" onclick="showDay(0,this)" role="tab" id="day-tab-0" aria-controls="day-0" aria-selected="true"><span class="day-num">22</span>Thu · Opening</button>
+        <button class="day-tab" onclick="showDay(1,this)" role="tab" id="day-tab-1" aria-controls="day-1" aria-selected="false" tabindex="-1"><span class="day-num">23</span>Fri</button>
+        <button class="day-tab" onclick="showDay(2,this)" role="tab" id="day-tab-2" aria-controls="day-2" aria-selected="false" tabindex="-1"><span class="day-num">24</span>Sat · Family &amp; Dance</button>
+        <button class="day-tab" onclick="showDay(3,this)" role="tab" id="day-tab-3" aria-controls="day-3" aria-selected="false" tabindex="-1"><span class="day-num">25</span>Sun · Closing</button>
+      </div>
+      <div class="day-content active" id="day-0" role="tabpanel" aria-labelledby="day-tab-0">
+        <div class="time-item"><span class="time">15:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
+        <div class="time-item"><span class="time">15:30</span><div class="event">Business programme: talk “Art as the point where a city comes together” — Katya Abdulova<small>Opening of the business programme · by invitation only</small></div></div>
+        <div class="time-item"><span class="time">16:30</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
+        <div class="time-item"><span class="time">17:00</span><div class="event">Business programme: talk <a href="/en/lecture-iskusstvennyy-intellekt">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>By invitation only</small></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova</div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Business programme: talk “The Russian Cultural Code in Contemporary Clothing” — Maria Pavlova<small>By invitation only</small></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">A contemporary mystery by Katya Abdulova <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · closed show, no public tickets</small></div></div>
+      </div>
+      <div class="day-content" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
+        <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+      </div>
+      <div class="day-content" id="day-2" role="tabpanel" aria-labelledby="day-tab-2">
+        <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Market zone open</div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: quest</div></div>
+        <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Workshops for children and adults<small>Free admission</small></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-landshafty-realnosti">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-landshafty-realnosti#join">Register</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Physical Theatre “The Rashomon Effect” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-art-goroda">“Cities of Art”</a> — Alexandra Gubanova, closing of the business programme<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-art-goroda#join">Register</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Meditative detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+      </div>
+      <div class="day-content" id="day-3" role="tabpanel" aria-labelledby="day-tab-3">
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/kaliostro">“Cagliostro”</a> — project “Extracurricular Classics”, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · 60 standing-room tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">Closing slot<small>Programme to be announced</small></div></div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:14px;color:var(--sand)">
+      <strong style="color:var(--bone);display:block;margin-bottom:6px">8 October — prologue</strong>
+      The exhibition “TOCHKA CUIRE. Prologue” opens two weeks ahead and runs until 4 November.
+    </div>
+  </div>
+</section>
 
 <!-- О ФЕСТИВАЛЕ -->
 <section id="about">
@@ -415,61 +489,6 @@ section{padding:90px 0}
   </div>
 </section>
 
-<!-- РАСПИСАНИЕ -->
-<section id="schedule" class="sched">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Schedule</span><h2>Four days of festival</h2></div>
-    <div class="reveal">
-      <div class="days-tabs">
-        <button class="day-tab active" onclick="showDay(0,this)"><span class="day-num">22</span>Thu · Opening</button>
-        <button class="day-tab" onclick="showDay(1,this)"><span class="day-num">23</span>Fri</button>
-        <button class="day-tab" onclick="showDay(2,this)"><span class="day-num">24</span>Sat · Family &amp; Dance</button>
-        <button class="day-tab" onclick="showDay(3,this)"><span class="day-num">25</span>Sun · Closing</button>
-      </div>
-      <div class="day-content active" id="day-0">
-        <div class="time-item"><span class="time">15:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
-        <div class="time-item"><span class="time">15:30</span><div class="event">Business programme: talk “Art as the point where a city comes together” — Katya Abdulova<small>Opening of the business programme · by invitation only</small></div></div>
-        <div class="time-item"><span class="time">16:30</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
-        <div class="time-item"><span class="time">17:00</span><div class="event">Business programme: talk <a href="/en/lecture-iskusstvennyy-intellekt">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>By invitation only</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova</div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Business programme: talk “The Russian Cultural Code in Contemporary Clothing” — Maria Pavlova<small>By invitation only</small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event">A contemporary mystery by Katya Abdulova <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · closed show, no public tickets</small></div></div>
-      </div>
-      <div class="day-content" id="day-1">
-        <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-      </div>
-      <div class="day-content" id="day-2">
-        <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Market zone open</div></div>
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: quest</div></div>
-        <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Workshops for children and adults<small>Free admission</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-landshafty-realnosti">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-landshafty-realnosti#join">Register</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Physical Theatre “The Rashomon Effect” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-art-goroda">“Cities of Art”</a> — Alexandra Gubanova, closing of the business programme<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-art-goroda#join">Register</a></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Meditative detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-      </div>
-      <div class="day-content" id="day-3">
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/kaliostro">“Cagliostro”</a> — project “Extracurricular Classics”, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · 60 standing-room tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event">Closing slot<small>Programme to be announced</small></div></div>
-      </div>
-    </div>
-    <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:14px;color:var(--sand)">
-      <strong style="color:var(--bone);display:block;margin-bottom:6px">8 October — prologue</strong>
-      The exhibition “TOCHKA CUIRE. Prologue” opens two weeks ahead and runs until 4 November.
-    </div>
-  </div>
-</section>
-
 <!-- ДЕЛОВАЯ ПРОГРАММА -->
 <section id="business">
   <div class="wrap">
@@ -508,7 +527,7 @@ section{padding:90px 0}
 </section>
 
 <!-- ДЕТСКАЯ ПРОГРАММА -->
-<section>
+<section id="kids">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Kids' programme</span><h2>Art quest “Kids Aren't Spectators”</h2></div>
     <div class="venue-grid reveal">
@@ -528,7 +547,7 @@ section{padding:90px 0}
 </section>
 
 <!-- БЕСПЛАТНЫЕ СОБЫТИЯ -->
-<section>
+<section id="free">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Free for everyone</span><h2>More than just performances</h2></div>
     <div class="free-grid reveal">
@@ -632,7 +651,8 @@ section{padding:90px 0}
         <div class="venue-address">
           <strong>Centre for Contemporary Art “Byl”</strong><br>
           Stary Oskol, Zhukova district, 38<br>
-          <a href="tel:+79511485036">+7 951 148-50-36</a> · вт–вс, 11:00–20:00
+          <a href="tel:+79511485036">+7 951 148-50-36</a> · вт–вс, 11:00–20:00<br>
+          <a class="venue-route" href="https://yandex.ru/maps/?text=%D0%A1%D1%82%D0%B0%D1%80%D1%8B%D0%B9%20%D0%9E%D1%81%D0%BA%D0%BE%D0%BB%2C%20%D0%BC%D0%BA%D1%80.%20%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D0%B0%2C%2038" target="_blank" rel="noopener">How to get there — open in Yandex Maps →</a>
         </div>
       </div>
       <div class="venue-img">
@@ -740,17 +760,66 @@ section{padding:90px 0}
     document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
     document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
     document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+    // п. 10: цифры скрыты от скринридера (aria-hidden), вместо них —
+    // одна фраза. Раз в минуту, а не каждую секунду: role=timer не
+    // объявляет изменения сам, а постоянно меняющаяся подпись мешает.
+    if (s === 59 || !cdLabelSet) {
+      cdLabelSet = true;
+      document.getElementById('countdown').setAttribute('aria-label',
+        document.documentElement.lang === 'en'
+          ? `Until the festival opens: ${d} days, ${h} hours, ${m} minutes`
+          : `До открытия фестиваля: дней — ${d}, часов — ${h}, минут — ${m}`);
+    }
   }
+  let cdLabelSet = false;
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
   // Tabs расписания
   function showDay(idx, btn){
-    document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.day-tab').forEach(t=>{ t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.tabIndex = -1; });
     document.querySelectorAll('.day-content').forEach(c=>c.classList.remove('active'));
     btn.classList.add('active');
+    btn.setAttribute('aria-selected','true'); btn.tabIndex = 0;
     document.getElementById('day-'+idx).classList.add('active');
   }
+
+  // TOCHKACUIRE_UX_REVIEW п. 9 (pack-v482): переключатель дней — вкладки
+  // с клавиатуры, стрелками влево/вправо, как ждёт скринридер от tablist.
+  document.querySelector('.days-tabs').addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const tabs = [...document.querySelectorAll('.day-tab')];
+    const cur = tabs.findIndex((t) => t.classList.contains('active'));
+    const next = (cur + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+    showDay(next, tabs[next]); tabs[next].focus(); e.preventDefault();
+  });
+
+  // п. 1: «Купить билет» и все ссылки на расписание открывают ближайший
+  // день, где есть билеты, — по умолчанию открыт 22-й (открытие), а в нём
+  // нет ни одной кнопки покупки. Если открытый день уже с билетами (человек
+  // сам переключил) — не трогаем. Регистрация (.reg) — не покупка.
+  document.querySelectorAll('a[href="#schedule"]').forEach((a) => a.addEventListener('click', () => {
+    const hasTix = (el) => el && el.querySelector('a.tix-btn:not(.reg)');
+    if (hasTix(document.querySelector('.day-content.active'))) return;
+    const tabs = [...document.querySelectorAll('.day-tab')];
+    const i = tabs.findIndex((t, k) => hasTix(document.getElementById('day-' + k)));
+    if (i >= 0) showDay(i, tabs[i]);
+  }));
+
+  // п. 4: затухание справа у панели — пока есть что листать.
+  // п. 2: и высота шапки сайта для top панели (--qn-top).
+  (function () {
+    const qn = document.querySelector('.quicknav');
+    if (!qn) return;
+    const hdr = document.querySelector('body > nav');
+    const setTop = () => { if (hdr) document.documentElement.style.setProperty('--qn-top', hdr.offsetHeight + 'px'); };
+    setTop();
+    window.addEventListener('resize', setTop);
+    const upd = () => qn.classList.toggle('at-end', qn.scrollLeft + qn.clientWidth >= qn.scrollWidth - 4);
+    qn.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  })();
 
   // Подписка
   async function subscribe(){
