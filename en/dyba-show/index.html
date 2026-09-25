@@ -48,6 +48,37 @@
      на тёмном (градиент уходит в фон к подбородку);
    — широкий экран: фото справа по высоте экрана, текст слева на тёмном,
      фото мягко растворяется влево. */
+/* pack-v494: «О концерте» разбит на блоки — вводный абзац, карточки
+   фактов, врезка про «Живой уголок», отдельный раздел об артисте
+   (фото + текст, цифры, города чипсами) вместо четырёх длинных абзацев. */
+.dy-lead{font-size:clamp(18px,2.2vw,24px);line-height:1.55;color:var(--bone);max-width:860px;margin:0 0 36px}
+.dy-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(214,181,122,.18);border:1px solid rgba(214,181,122,.18)}
+.dy-fact{background:var(--ink);padding:24px 22px}
+.dy-fact-k{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.dy-fact-v{color:var(--bone);font-size:15px;line-height:1.5;margin:0}
+.dy-note{margin-top:28px;border-left:2px solid var(--gold);padding:6px 0 6px 18px;max-width:760px}
+.dy-note p{color:var(--sand);margin:0}
+.dy-note .dy-fact-k{margin-bottom:8px}
+.dy-note a,.dy-bio-text a{color:var(--gold);border-bottom:1px solid rgba(214,181,122,.35);text-decoration:none}
+.dy-bio{display:grid;grid-template-columns:minmax(220px,340px) 1fr;gap:40px;align-items:start}
+.dy-bio-photo img{width:100%;height:auto;display:block;filter:grayscale(1)}
+.dy-bio-text p{color:var(--sand);line-height:1.7;margin:0 0 14px}
+.dy-bio-text p:first-child{color:var(--bone);font-size:17px}
+.dy-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:48px 0 40px}
+.dy-stat{border-top:1px solid rgba(214,181,122,.3);padding-top:16px}
+.dy-stat-n{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(34px,4vw,52px);color:var(--gold);line-height:1;margin:0 0 10px}
+.dy-stat-l{color:var(--sand);font-size:13px;line-height:1.4;margin:0}
+.dy-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.dy-chip{border:1px solid rgba(214,181,122,.3);color:var(--bone);font-size:13px;padding:6px 12px;white-space:nowrap}
+@media(max-width:900px){
+  .dy-facts{grid-template-columns:1fr 1fr}
+  .dy-bio{grid-template-columns:1fr;gap:24px}
+  .dy-bio-photo{max-width:320px}
+  .dy-stats{grid-template-columns:1fr 1fr;gap:24px 20px}
+}
+@media(max-width:480px){
+  .dy-facts{grid-template-columns:1fr}
+}
 .dyba-hero{background-color:var(--ink);background-repeat:no-repeat;background-size:100% auto;background-position:center top}
 .dyba-hero .hero-overlay{background:linear-gradient(to bottom,rgba(11,11,13,.10) 0,rgba(11,11,13,.10) 60vw,rgba(11,11,13,.75) 100vw,var(--ink) 125vw,var(--ink) 100%)}
 .dyba-hero .wrap{padding-top:110vw}
@@ -128,9 +159,8 @@
     <p class="dir">Author and performer — <strong><a href="/en/vanya-dyba">Vanya Dyba</a></strong>  · 90 minutes</p>
     <p class="sub">“My shows are like a threesome: great to watch, but you will never tell anyone about it” — Vanya Dyba</p>
     <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Part of the “Tochka Cuire” festival programme · closing the festival</p>
-    <p class="show-warning" role="note"><strong>Please note:</strong> Vanya addresses the audience and draws them into the act — the whole format of “Dyba Show” rests on live contact with the audience. <a href="/en/visiting-rules#osobennosti">More in the Visiting Rules</a>.</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
-      <a class="btn-outline" href="/en/tochkacuire#program">“Tochka Cuire” · programme</a>
+      <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_dyba-show" target="_blank" rel="noopener">Buy ticket</a>
       <a class="btn-outline" href="/en/press#dyba-show">For press</a>
     </div>
   </div>
@@ -138,11 +168,43 @@
 
 <section id="about">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>About the project</h2></div>
-    <p class="desc reveal">“Dyba Show” is a solo stand-up concert by Vanya Dyba, an AELITA PRODUCTION resident. An improvised format: part of the comedy is born right on stage, in dialogue with the audience, part is time-tested material Vanya has already carried through three tours of Russia. A mix of intellectual, philosophical themes and plain-spoken Russian storytelling.</p>
-    <p class="desc reveal">This show differs in format from the previous AELITA PRODUCTION evening with Vanya — the mixed-bill concert <a href="/en/corner" style="color:var(--gold)">“Zhivoy Ugolok”</a> in Kaluga, where he was the headliner: there he shared the stage with a creative collective, here the whole concert is his alone.</p>
-    <p class="desc reveal">Ivan Dyba is a Russian stand-up comedian, on stage since 2015, when he joined the creative collective “Zhivoy Ugolok.” By training a social worker, journalist and a master’s graduate in education; by calling — an entrepreneur and creative consultant: head of LIFT TV and of the TOLK music label, co-owner of the restaurant “Patio Pasta &amp; Cocktails.” Married, raising a son.</p>
-    <p class="desc reveal">He has three tours across Russia behind him, and solo concerts in Kaluga, Obninsk, Bryansk, Smolensk, Rostov-on-Don, Krasnodar, Cherepovets, Lipetsk, Tambov, Saint Petersburg, Kazan, Yekaterinburg, Tyumen, Kirov, Kursk, Oryol, Lyudinovo, Maloyaroslavets, Yukhnov and Vologda. A cast member of “A Million-Dollar Story” (TNT), host of the “Vinogradny Podcast.” <a href="/en/vanya-dyba" style="color:var(--gold)">More about Vanya →</a></p>
+    <div class="sec-head reveal"><h2>About the show</h2></div>
+    <p class="dy-lead reveal">“Dyba Show” is a solo stand-up concert by Vanya Dyba, an AELITA PRODUCTION resident. Part of the comedy is born right on stage, in dialogue with the audience, part is time-tested material of his own.</p>
+    <div class="dy-facts reveal">
+      <div class="dy-fact"><p class="dy-fact-k">Format</p><p class="dy-fact-v">Improvisation and his own tested material</p></div>
+      <div class="dy-fact"><p class="dy-fact-k">Themes</p><p class="dy-fact-v">Intellectual and philosophical — in plain-spoken Russian</p></div>
+      <div class="dy-fact"><p class="dy-fact-k">Running time</p><p class="dy-fact-v">90 minutes · 18+</p></div>
+      <div class="dy-fact"><p class="dy-fact-k">When and where</p><p class="dy-fact-v">October 25, 20:00 · CSI “Byl”, Red Hall</p></div>
+    </div>
+    <div class="dy-note reveal">
+      <p class="dy-fact-k">Not to be confused with “Zhivoy Ugolok”</p>
+      <p>In Kaluga, Vanya headlined the mixed-bill concert <a href="/en/corner">“Zhivoy Ugolok”</a> — there he shared the stage with a creative collective. Here the whole evening is his.</p>
+    </div>
+  </div>
+</section>
+
+<section id="artist" style="background:var(--coal)">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Who is Vanya Dyba</h2></div>
+    <div class="dy-bio reveal">
+      <div class="dy-bio-photo"><img src="/images/vanya-dyba.jpg" alt="Vanya Dyba" loading="lazy"></div>
+      <div class="dy-bio-text">
+        <p>A Russian stand-up comedian, on stage since 2015 — when he joined the creative collective “Zhivoy Ugolok.”</p>
+        <p>By training — a social worker, journalist and master’s graduate in education. By calling — an entrepreneur and creative consultant: head of LIFT TV and the TOLK music label, co-owner of the restaurant “Patio Pasta &amp; Cocktails.” Married, raising a son.</p>
+        <p>Host of the “Vinogradny Podcast” — guests have included Alexey Shcherbakov, Sasha Maloy, Zhenya Sidorov, Boris Zeliger, Vasya Medvedev and Nastya Venevitina.</p>
+        <p><a href="/en/vanya-dyba">More about Vanya →</a></p>
+      </div>
+    </div>
+    <div class="dy-stats reveal">
+      <div class="dy-stat"><p class="dy-stat-n">2015</p><p class="dy-stat-l">on stage since</p></div>
+      <div class="dy-stat"><p class="dy-stat-n">3</p><p class="dy-stat-l">tours of Russia</p></div>
+      <div class="dy-stat"><p class="dy-stat-n">20</p><p class="dy-stat-l">cities with solo concerts</p></div>
+      <div class="dy-stat"><p class="dy-stat-n">TNT</p><p class="dy-stat-l">the show “A Million-Dollar Story”</p></div>
+    </div>
+    <div class="dy-cities reveal">
+      <p class="dy-fact-k">Solo concerts</p>
+      <div class="dy-chips"><span class="dy-chip">Kaluga</span><span class="dy-chip">Obninsk</span><span class="dy-chip">Bryansk</span><span class="dy-chip">Smolensk</span><span class="dy-chip">Rostov-on-Don</span><span class="dy-chip">Krasnodar</span><span class="dy-chip">Cherepovets</span><span class="dy-chip">Lipetsk</span><span class="dy-chip">Tambov</span><span class="dy-chip">Saint Petersburg</span><span class="dy-chip">Kazan</span><span class="dy-chip">Yekaterinburg</span><span class="dy-chip">Tyumen</span><span class="dy-chip">Kirov</span><span class="dy-chip">Kursk</span><span class="dy-chip">Oryol</span><span class="dy-chip">Lyudinovo</span><span class="dy-chip">Maloyaroslavets</span><span class="dy-chip">Yukhnov</span><span class="dy-chip">Vologda</span></div>
+    </div>
   </div>
 </section>
 
