@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
@@ -89,8 +89,9 @@
     <p class="dir">Автор идеи и режиссёр — <strong>Дмитрий Турков</strong> &nbsp;·&nbsp;1 час 15 минут + обсуждение</p>
     <p class="sub">Верить нам не надо. Проверим на месте.</p>
     <p style="color:var(--sand);font-size:13px;margin-bottom:10px">В программе фестиваля «Точка Кюри»</p>
+    <p class="hero-when"><strong>24 октября, 14:00</strong> · ЦСИ «Быль», Красный зал</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
-      <a class="btn-outline" href="/tochkacuire#program">«Точка Кюри» · программа</a>
+      <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mozgi" target="_blank" rel="noopener">Купить билет</a>
       <a class="btn-outline" href="/press#mozgi">Для прессы</a>
     </div>
   </div>
@@ -114,9 +115,18 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
-    <p style="color:var(--sand)">24 октября 2026, 14:00 · ЦСИ «Быль», Старый Оскол, мкр. Жукова, 38, Красный зал — в программе фестиваля «Точка Кюри».</p>
-    <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mozgi" style="display:inline-block;margin-top:20px" target="_blank" rel="noopener">Купить билет →</a>
-    <a class="btn-outline" href="/tochkacuire#program" style="display:inline-block;margin-top:20px;margin-left:10px">Программа фестиваля →</a>
+    <div class="show-slot reveal">
+      <div class="show-slot-date"><span class="show-slot-d">24</span><span class="show-slot-m">октября</span><span class="show-slot-t">сб · 14:00</span></div>
+      <div class="show-slot-info">
+        <p class="show-slot-badge">В программе фестиваля «Точка Кюри»</p>
+        <p class="show-slot-venue"><a href="/byl">ЦСИ «Быль»</a>, Красный зал</p>
+        <p class="show-slot-addr">Старый Оскол, мкр. Жукова, 38</p>
+        <div class="show-slot-btns">
+          <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mozgi" target="_blank" rel="noopener">Купить билет →</a>
+          <a class="btn-outline" href="/tochkacuire#program">Программа фестиваля →</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -266,6 +276,12 @@
 </div>
 <!-- /Cookie Banner -->
 
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">«Есть ли у вас мозги?» · 24.10</span>
+  <a class="mob-cta-btn gold" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mozgi" target="_blank" rel="noopener">Купить билет</a>
+</div>
+
 <button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Telegram виджет -->
@@ -279,7 +295,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

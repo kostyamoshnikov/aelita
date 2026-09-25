@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
 section{padding:110px 0}
@@ -115,6 +115,8 @@ header .sub{
   }
 .hero-next > a:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .hero-next .date-line{color:var(--gold);font-size:13px;letter-spacing:.14em;font-family:'Montserrat',sans-serif}
+/* pack-v510: «Афиша и билеты» — на первом экране телефона */
+@media(max-width:600px){header{padding:92px 20px 40px}.hero-mark{width:112px}header h1{margin-top:22px}.hero-rule{margin:20px auto}.hero-next > a{margin-top:12px}}
 .filters{display:flex;gap:12px;margin-bottom:50px;flex-wrap:wrap}
 .filter-btn{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;padding:11px 22px;border:1px solid rgba(201,184,163,.25);color:var(--sand);background:none;cursor:pointer;transition:all .3s}
 .filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold)}
@@ -440,7 +442,7 @@ footer p{color:var(--sand);font-size:14px}
         <span class="badge">First edition</span>
       </div>
       <div class="ev-actions">
-        <a class="btn-outline" href="/en/tochkacuire">About the festival</a>
+        <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_home" target="_blank" rel="noopener">Tickets</a> <a class="btn-outline" href="/en/tochkacuire">About the festival</a>
       </div>
       </div>
     </div>
@@ -450,8 +452,8 @@ footer p{color:var(--sand);font-size:14px}
       <div class="ev-date">23.10<small>Stary Oskol</small></div>
       <div class="ev-info">
         <h3><a href="/en/iov">“IOV: Material”</a></h3>
-        <p><a href="/en/tochkacuire">CSI “Byl”</a></p>
-        <p class="fest">Opening show of the festival <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
+        <p><a href="/en/byl">CSI “Byl”</a></p>
+        <p class="fest">Part of the festival programme <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
         <span class="badge">Pushkin Card</span>
       </div>
       <div class="ev-actions">
@@ -465,7 +467,7 @@ footer p{color:var(--sand);font-size:14px}
       <div class="ev-date">24.10<small>Stary Oskol</small></div>
       <div class="ev-info">
         <h3><a href="/en/porfiriy">“Porfiry”</a></h3>
-        <p><a href="/en/tochkacuire">CSI “Byl”</a></p>
+        <p><a href="/en/byl">CSI “Byl”</a></p>
         <p class="fest">Part of the festival programme <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
         <span class="badge">16+</span>
       </div>
@@ -480,7 +482,7 @@ footer p{color:var(--sand);font-size:14px}
       <div class="ev-date">25.10<small>Stary Oskol</small></div>
       <div class="ev-info">
         <h3><a href="/en/dyba-show">“Dyba Show”</a></h3>
-        <p><a href="/en/tochkacuire">CSI “Byl”</a></p>
+        <p><a href="/en/byl">CSI “Byl”</a></p>
         <p class="fest">Closing the festival <a href="/en/tochkacuire">“Tochka Cuire”</a></p>
         <span class="badge">18+</span>
       </div>
@@ -610,7 +612,7 @@ footer p{color:var(--sand);font-size:14px}
     </div>
     <a href="/en/community" class="card reveal" style="color:inherit;text-decoration:none;display:block">
       <h3>AELITA COMMUNITY</h3>
-      <p>Katya Abdulova's book club — spaces filled with meaning. For people who want to think for themselves.</p>
+      <p>Katya Abdulova’s book club “LEVEL 3” — not about books, but about what we build our own world from. For those who want to think for themselves.</p>
     </a>
   </div>
 </section>
@@ -830,7 +832,7 @@ footer p{color:var(--sand);font-size:14px}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>

@@ -682,3 +682,82 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 /* Сообщения у форм заявок вместо alert() — ТЗ клиентских текстов, З-6 */
 .form-msg{font-size:13px;line-height:1.5;margin:10px 0}
 .form-msg-error{color:#C98B6B}
+
+/* ── pack-v496: карточка показа (секция #afisha на страницах спектаклей) ──
+   Дата отдельным блоком слева, площадка/зал и адрес строками, кнопки
+   одной высоты в flex-ряду. Раньше это была одна строка через «·» и
+   кнопки с ручными margin-left, которые при переносе вставали криво.
+   На телефоне: дата полосой сверху, кнопки друг под другом во всю ширину. */
+.show-slots{display:flex;flex-direction:column;gap:14px;max-width:860px}
+.show-slot{display:grid;grid-template-columns:150px 1fr;border:1px solid rgba(214,181,122,.22);background:var(--ink)}
+.show-slot-date{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 16px;border-right:1px solid rgba(214,181,122,.22);text-align:center}
+.show-slot-d{font-family:'Montserrat',sans-serif;font-weight:200;font-size:56px;line-height:1;color:var(--gold)}
+.show-slot-m{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--bone);margin-top:8px}
+.show-slot-t{font-size:13px;color:var(--sand);margin-top:10px}
+.show-slot-info{padding:26px 28px}
+.show-slot-info p{margin:0}
+.show-slot-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px!important}
+.show-slot-venue{color:var(--bone);font-size:19px;line-height:1.35}
+.show-slot-venue a{color:inherit;border-bottom:1px solid rgba(214,181,122,.35);text-decoration:none}
+.show-slot-addr{color:var(--sand);font-size:14px;margin-top:4px!important}
+.show-slot-note{color:var(--sand);font-size:14px;line-height:1.55;margin-top:12px!important}
+.show-slot-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.show-slot-btns a,.show-slots-after a{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1.2;margin:0}
+.show-slots-after{max-width:860px;margin-top:22px}
+.show-slots-after p{color:var(--sand);font-size:14px;line-height:1.6;margin:0 0 16px}
+@media(max-width:560px){
+  .show-slot{grid-template-columns:1fr}
+  .show-slot-date{flex-direction:row;gap:12px;justify-content:flex-start;align-items:baseline;border-right:none;border-bottom:1px solid rgba(214,181,122,.22);padding:18px 20px}
+  .show-slot-d{font-size:40px}
+  .show-slot-m,.show-slot-t{margin-top:0}
+  .show-slot-info{padding:20px}
+  .show-slot-btns{flex-direction:column}
+  .show-slot-btns a{width:100%}
+}
+/* Строка «когда и где» на первом экране — прямо над кнопкой билета */
+.hero-when{color:var(--sand);font-size:14px;line-height:1.5;margin:0 0 18px}
+.hero-when strong{color:var(--bone);font-weight:400}
+
+/* ── pack-v496: карточка участника команды (.member) кликабельна целиком,
+   если у имени есть ссылка на страницу человека: псевдоэлемент ссылки
+   растягивается на всю карточку. Карточки без ссылки не меняются. */
+.member{position:relative;transition:background .3s}
+.member h3 a::after{content:"";position:absolute;inset:0}
+.member:has(h3 a):hover{background:#232329}
+.member:has(h3 a):hover h3 a{color:var(--gold)!important}
+.member h3 a{transition:color .3s}
+
+/* pack-v510: кнопка действия на первом экране.
+   Правило: на телефоне (360×640) основная кнопка страницы видна без
+   прокрутки. Блок .hero-cta ставится в шапку страницы сразу после
+   заголовка/подзаголовка; проверка — _tools/Audit/tests/first-screen-cta.test.py. */
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:24px}
+.hero-cta .btn-gold,.hero-cta .btn-outline{margin:0}
+.hero-cta .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;border:none}
+.hero-cta .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:14px 28px;text-decoration:none;display:inline-block;background:none}
+.bio-info .hero-cta{margin:0 0 28px}
+@media(max-width:600px){
+  .page-header{padding:122px 0 36px}
+  .hero-cta{margin-top:18px;gap:10px}
+  .hero-cta .btn-gold,.hero-cta .btn-outline{padding:13px 20px;letter-spacing:.16em;font-size:11px}
+  .bio-hero{padding-top:122px!important}
+  .bio-grid{gap:22px!important}
+  .bio-photo{max-width:none!important;height:auto!important}
+  .bio-photo img{aspect-ratio:16/9!important;height:auto!important;object-position:center 22%}
+}
+@media(max-width:600px){
+  .page-hero .wrap{padding-top:120px}
+  .page-hero .eyebrow{margin-bottom:12px}
+  .page-hero .dir{margin-bottom:18px}
+}
+@media(max-width:600px){
+  .page-hero .sub{font-size:15px;line-height:1.6;margin-bottom:22px}
+  .page-hero h1{margin-bottom:14px}
+}
+@media(max-width:600px){
+  .page-hero .sub{font-size:14px!important;line-height:1.55!important;margin-bottom:14px!important}
+  .page-hero h1{font-size:min(28px,8vw)!important;line-height:1.15!important}
+  .bio-grid{gap:16px!important}
+  .bio-info .eyebrow{margin-bottom:10px!important}
+  .bio-role{margin-bottom:16px!important;font-size:12px!important;letter-spacing:.14em!important}
+}

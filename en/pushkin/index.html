@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
@@ -105,8 +105,9 @@
     <p class="dir">Actors <strong>the Kaluga Regional Drama Theatre</strong></p>
     <p class="sub">A stage adaptation of two Alexander Pushkin novellas — “The Shot” and “The Blizzard” — with live classical music.</p>
     <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Guest of the “Tochka Cuire” festival · Extracurricular Classics, Kaluga · 12+</p>
+    <p class="hero-when"><strong>Oct 24, 11:00</strong> · CSI “Byl”, Blue Hall</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
-      <a class="btn-outline" href="/en/tochkacuire#program">October 24 · “Tochka Cuire”</a>
+      <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_pushkin" target="_blank" rel="noopener">Buy ticket</a>
       <a class="btn-outline" href="/en/press#pushkin">For press</a>
     </div>
   </div>
@@ -123,9 +124,18 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Upcoming performances</h2></div>
-    <p style="color:var(--sand)">October 24, 2026, 11:00 · CSI “Byl”, Stary Oskol, Zhukova microdistrict 38, Blue Hall — part of the “Tochka Cuire” festival programme.</p>
-    <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_pushkin" style="display:inline-block;margin-top:20px" target="_blank" rel="noopener">Buy ticket →</a>
-    <a class="btn-outline" href="/en/tochkacuire#program" style="display:inline-block;margin-top:20px;margin-left:10px">Festival programme →</a>
+    <div class="show-slot reveal">
+      <div class="show-slot-date"><span class="show-slot-d">24</span><span class="show-slot-m">October</span><span class="show-slot-t">Sat · 11 am</span></div>
+      <div class="show-slot-info">
+        <p class="show-slot-badge">In the “Tochka Cuire” festival programme</p>
+        <p class="show-slot-venue"><a href="/en/byl">CSI “Byl”</a>, Blue Hall</p>
+        <p class="show-slot-addr">Stary Oskol, Zhukova district, 38</p>
+        <div class="show-slot-btns">
+          <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_pushkin" target="_blank" rel="noopener">Buy ticket →</a>
+          <a class="btn-outline" href="/en/tochkacuire#program">Festival programme →</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -228,6 +238,12 @@
 </div>
 <!-- /Cookie Banner -->
 
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">“Pushkin” · 24 Oct</span>
+  <a class="mob-cta-btn gold" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_pushkin" target="_blank" rel="noopener">Buy ticket</a>
+</div>
+
 <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Telegram виджет -->
@@ -241,7 +257,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

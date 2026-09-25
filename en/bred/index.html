@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(26px,5.4vw,58px);letter-spacing:.06em;line-height:1.15;margin-bottom:16px}
@@ -133,6 +133,7 @@
     <h1>{AND ALL THIS NONSENSE TOO}</h1>
     <p class="dir">Choreographer, performer — <strong><a href="/en/anton-vdovichenko">Anton Vdovichenko</a></strong></p>
     <p class="sub">A suit as an exoskeleton — a collage of images, thoughts and dance techniques, where reflexes are not held back by “cultured behaviour.”</p>
+    <p class="hero-when"><strong>10 October, 6 pm</strong> · Dom Arkhitektora, Kaluga</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
       <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10">Buy ticket</a>
       <a class="btn-outline" href="/en/press#bred">For press</a>
@@ -164,10 +165,18 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Next performance</h2></div>
-    <p style="color:var(--sand)">October 10, 2026, 6:00 PM · <a href="/en/dom-arhitektora" style="color:var(--sand);text-decoration:underline">Dom Arkhitektora</a>, Kaluga · 1,000 ₽</p>
-    <p style="color:var(--cream,#E8E6E1);margin-top:10px">The performance is followed by a discussion with Anton Vdovichenko.</p>
-    <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10" style="display:inline-block;margin-top:20px">Buy ticket →</a>
-    <p style="color:var(--sand);font-size:14px;margin-top:24px"><a href="/en/dom-arhitektora" style="color:var(--gold)">How to get to the venue →</a></p>
+    <div class="show-slot reveal">
+      <div class="show-slot-date"><span class="show-slot-d">10</span><span class="show-slot-m">October</span><span class="show-slot-t">Sat · 6 pm</span></div>
+      <div class="show-slot-info">
+        <p class="show-slot-badge">Show with a discussion</p>
+        <p class="show-slot-venue"><a href="/en/dom-arhitektora">Dom Arkhitektora</a>, Kaluga</p>
+        <p class="show-slot-note">Ticket — 1,000 ₽. After the show — a discussion with Anton Vdovichenko.</p>
+        <div class="show-slot-btns">
+          <a class="btn-gold" href="/tickets-buy/?performance=bred-2026-10-10">Buy ticket →</a>
+          <a class="btn-outline" href="/en/dom-arhitektora">How to get there →</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -301,6 +310,12 @@
 </div>
 <!-- /Cookie Banner -->
 
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">10 Oct · Kaluga</span>
+  <a class="mob-cta-btn gold" href="/tickets-buy/?performance=bred-2026-10-10">Buy ticket</a>
+</div>
+
 <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Telegram виджет -->
@@ -314,7 +329,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script src="/assets/reviews.js"></script>
 <script>AelitaReviews.init('bred');</script>

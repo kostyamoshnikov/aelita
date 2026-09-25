@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
@@ -50,7 +50,7 @@
 .hub-now div{border-top:1px solid rgba(214,181,122,.35);padding-top:14px}
 .hub-now span{display:block;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .hub-now p{margin:0;font-family:'Montserrat',sans-serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--sand)}
-@media (max-width:560px){.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
+@media (max-width:560px){.hub-hero{padding:122px 0 56px}.hub-hero h1{margin:10px 0 18px}.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
 /* Перенесено из book-space/index.html (pack-v229) — та же карточка
    Кати переиспользована здесь без credentials-списка, укороченный
    .about-grid тоже отсюда, набор правил идентичен, только без
@@ -94,11 +94,12 @@
     <p class="eyebrow">AELITA COMMUNITY</p>
     <h1>The AELITA PRODUCTION community</h1>
     <p class="hub-lead">Spaces for people who aren't looking for a ready-made answer, but want to understand <em>how thinking works</em> — their own and other people's.</p>
+    <!-- pack-v510: кнопка поднята над «Сейчас/Дальше» — на первом экране телефона -->
+    <div class="hero-cta"><a class="btn-gold" href="#join-community">I want to join</a></div>
     <div class="hub-now">
       <div><span>Currently</span><p>Two reading streams</p></div>
       <div><span>Next</span><p>Other formats — not necessarily about books</p></div>
     </div>
-    <a class="btn-gold" href="#join-community">I want to join</a>
   </div>
 </div>
 
@@ -107,7 +108,7 @@
     <div class="sec-head reveal"><span class="eyebrow">Community</span><h2>More than one format</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
-        <p>AELITA COMMUNITY is a shared home for formats that don't reduce to ready-made answers. For now it holds one active project — the book club; over time other directions may join it, not necessarily about reading.</p>
+        <p>AELITA COMMUNITY is a shared home for formats that don’t come down to ready-made answers. For now it has one active project — the book club “LEVEL 3”; in time other directions may join it, not necessarily about reading.</p>
         <p>What they'll share is this: not a lecture with ready conclusions, but an environment where the friction between different ways of thinking is itself the mechanism that moves understanding forward.</p>
       </div>
       <div>
@@ -122,15 +123,38 @@
   </div>
 </section>
 
+<!-- pack-v508: название клуба «3 УРОВЕНЬ» — текст Кати Абдуловой (заказчик, 25.09.2026) -->
+<section id="tri-uroven">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Book club</span><h2>Why “LEVEL 3”</h2></div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>I didn’t want a name about books: the club stopped being about books long ago. Or rather, not only about them. A book is just an occasion. An occasion to run into someone else’s coordinate system inside your own head and, for a few hours, allow at least one “uncomfortable thought”: what if the world isn’t arranged the way I’m used to thinking about it?</p>
+    </div>
+    <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 1</p><p style="color:var(--sand);margin:0;line-height:1.6">You read it, got the plot, agreed or argued — and put it back on the shelf.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 2</p><p style="color:var(--sand);margin:0;line-height:1.6">You see ideas, context, connections; you compare them with your own life, take some things on and reject others.</p></div>
+      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 3</p><p style="color:var(--bone);margin:0;line-height:1.6">You stop taking the book apart sentence by sentence and start taking apart the way you take it apart.</p></div>
+    </div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>Why does this particular thought irritate me? Why does this action seem wrong to me? Why am I so sure that success looks exactly like this? What is love to me — and where did I get that from? Why do I call one thing freedom and another irresponsibility?</p>
+      <p>We very often try to change our lives without understanding the laws they are organised by: we look for a new partner with the same idea of love, build a new business with the old idea of success, move to another city and bring our old self along.</p>
+      <p>I’m not very interested in finding yet another “right answer”. What interests me more is the place where it becomes visible why these answers seemed right in the first place. After a good conversation the world physically stays the same — the same people, the same city, the same business — but you see connections between them that you didn’t notice yesterday. Which means there’s already a slightly different reality in front of you.</p>
+      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">We read books. But we actually gather here for something else: to see what we build our own world from.</p>
+      <p style="color:var(--sand);font-size:14px">— <a href="/en/katya-abdulova" style="color:var(--gold)">Katya Abdulova</a>, founder of the club</p>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:760px){.tu-levels{grid-template-columns:1fr!important}}</style>
+
 <section>
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Book club</span><h2>Two tracks</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Book club “LEVEL 3”</span><h2>Two tracks</h2></div>
     <div class="other-grid reveal" style="gap:24px">
       <a class="other-card" href="/en/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Currently reading</span><h3>Main stream</h3><p>Weekly meetings, the season's theme changes — right now it's about why we choose to be together.</p></a>
-      <a class="other-card" href="/en/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">For entrepreneurs</span><h3>Stream for entrepreneurs</h3><p>A separate programme — from the psychology of family and power to the philosophy of thought and language. Currently Level 3.</p></a>
+      <a class="other-card" href="/en/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">For entrepreneurs</span><h3>Stream for entrepreneurs</h3><p>A separate programme — from the psychology of family and power to the philosophy of thinking and language.</p></a>
     </div>
     <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:14px">Both streams are a small-group format, up to 10 people, no ready-made answers or lectures. Meetings are recorded — you can watch at your own pace if you couldn't join live.</p>
-    <p class="desc reveal" style="margin-top:24px"><a href="/en/workshop-main" style="color:var(--gold)">Open meeting of the main stream</a> — <!-- DATE:workshop-2026-09-13:dayMonth:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonth:en:END -->, Калуга (<!-- VENUE:workshop-2026-09-13:venuePredicate:en:BEGIN -->venue to be announced<!-- VENUE:workshop-2026-09-13:venuePredicate:en:END -->), вход свободный. Также — <a href="/en/workshop-entrepreneurs" style="color:var(--gold)">an open meeting of the entrepreneurs stream</a> <!-- DATE:workshop-2026-09-12:dayMonth:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-12:dayMonth:en:END -->, там же.</p>
+    <p class="desc reveal" style="margin-top:24px"><a href="/en/workshop-main" style="color:var(--gold)">Open meeting of the main stream</a> — <!-- DATE:workshop-2026-09-13:dayMonth:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-13:dayMonth:en:END -->, Kaluga (<!-- VENUE:workshop-2026-09-13:venuePredicate:en:BEGIN -->venue to be announced<!-- VENUE:workshop-2026-09-13:venuePredicate:en:END -->), free admission. Also — <a href="/en/workshop-entrepreneurs" style="color:var(--gold)">an open meeting of the entrepreneurs stream</a> <!-- DATE:workshop-2026-09-12:dayMonth:en:BEGIN -->date to be announced<!-- DATE:workshop-2026-09-12:dayMonth:en:END -->, same venue.</p>
   </div>
 </section>
 
@@ -318,7 +342,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

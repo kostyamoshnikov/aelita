@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -186,6 +186,15 @@ p a:hover{opacity:.75}
 .pay-return h2{margin-bottom:12px}
 .pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
 .pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
+/* pack-v510: кнопка действия — на первом экране телефона */
+@media(max-width:600px){
+  .hero{min-height:0;padding-top:122px;padding-bottom:48px}
+  .hero-content{display:flex;flex-direction:column;align-items:flex-start}
+  .hero-content .hero-meta{order:5;margin:28px 0 0}
+  .hero-title{margin-bottom:18px}
+  .hero-divider{margin-bottom:18px}
+  .hero-sub{margin-bottom:6px;line-height:1.65}
+}
 </style>
 <script type="application/ld+json">
 {
@@ -250,7 +259,7 @@ p a:hover{opacity:.75}
 <div class="hero">
   <div class="hero-beam" aria-hidden="true"></div>
   <div class="wrap hero-content">
-    <p class="hero-community">AELITA COMMUNITY</p>
+    <p class="hero-community">AELITA COMMUNITY · книжный клуб «3 УРОВЕНЬ»</p>
     <h1 class="hero-title">Пространство,<br>наполненное<br>смыслом</h1>
     <div class="hero-divider"></div>
     <p class="hero-sub">Еженедельные встречи, на которых мы учимся отделять свои желания от чужих и находим в себе смелость жить.</p>
@@ -281,6 +290,29 @@ p a:hover{opacity:.75}
     </div>
   </div>
 </section>
+
+<!-- pack-v508: название клуба «3 УРОВЕНЬ» — текст Кати Абдуловой (заказчик, 25.09.2026) -->
+<section id="tri-uroven">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Почему «3 УРОВЕНЬ»</h2></div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>Мне не хотелось названия про книги: клуб давно не про книги. Точнее, не только про них. Книга — всего лишь повод. Повод столкнуться с чужой системой координат в своей голове и на несколько часов допустить хотя бы одну «неприятную мысль»: а что, если мир устроен вовсе не так, как я привыкла о нём думать?</p>
+    </div>
+    <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">1 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">2 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
+      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">3 уровень</p><p style="color:var(--bone);margin:0;line-height:1.6">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
+    </div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>Почему меня раздражает именно эта мысль? Почему этот поступок кажется мне неправильным? Почему я вообще уверена, что успех выглядит именно так? Что такое для меня любовь — и откуда я это взяла? Почему одно я называю свободой, а другое безответственностью?</p>
+      <p>Мы очень часто пытаемся изменить свою жизнь, не понимая законов, которыми она организована: ищем другого партнёра с тем же представлением о любви, строим новый бизнес со старым представлением об успехе, уезжаем в другой город и привозим туда прежнего себя.</p>
+      <p>Мне не очень интересно искать ещё один «правильный ответ». Интереснее место, в котором становится видно, почему именно эти ответы вообще казались правильными. После хорошего разговора мир физически остаётся прежним — те же люди, тот же город, тот же бизнес, — но ты видишь между ними связи, которых вчера не замечал. А значит, перед тобой уже немного другая реальность.</p>
+      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
+      <p style="color:var(--sand);font-size:14px">— <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>, основательница клуба</p>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:760px){.tu-levels{grid-template-columns:1fr!important}}</style>
 
 <!-- О КЛУБЕ -->
 <section id="about">
@@ -394,7 +426,7 @@ p a:hover{opacity:.75}
 
     <div class="reveal" style="margin-top:20px;background:var(--coal);border-left:2px solid var(--gold);padding:32px 36px">
       <p style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Отдельный поток · Книжный клуб для предпринимателей</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px"><!-- DATE:workshop-2026-09-12:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:dayMonth:ru:END --> — открытая встреча книжного клуба для предпринимателей, 3 уровень. Вход свободный, требуется регистрация.</p>
+      <p style="color:var(--bone);font-size:17px;margin-bottom:14px"><!-- DATE:workshop-2026-09-12:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:dayMonth:ru:END --> — открытая встреча книжного клуба для предпринимателей. Вход свободный, требуется регистрация.</p>
       <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Калуга, <!-- DATE:workshop-2026-09-12:time:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:time:ru:END -->, <!-- VENUE:workshop-2026-09-12:venuePredicate:ru:BEGIN -->площадка будет объявлена позже<!-- VENUE:workshop-2026-09-12:venuePredicate:ru:END -->.</p>
       <a class="btn-outline" href="/workshop-entrepreneurs">Подробнее и записаться →</a>
     </div>
@@ -615,7 +647,7 @@ p a:hover{opacity:.75}
 </div>
 
 <!-- payments.js -->
-<script src="/assets/payments.js?v=34"></script>
+<script src="/assets/payments.js?v=36"></script>
 <script>
   function switchFormTab_j(tab, btn){
     document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
@@ -640,7 +672,7 @@ p a:hover{opacity:.75}
       </div>
       <div class="om-fact">
         <div class="lbl">Сейчас</div>
-        <div class="val">3 уровень · 14 книг</div>
+        <div class="val">14 книг</div>
       </div>
       <div class="om-fact">
         <div class="lbl">Программа чтения</div>
@@ -909,7 +941,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты

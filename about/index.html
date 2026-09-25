@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>a{color:inherit;text-decoration:none}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
 /* Nav */
@@ -78,6 +78,7 @@
 h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(32px,6vw,72px);letter-spacing:.1em;line-height:1.1;margin-bottom:40px}
 .hero-text{max-width:60ch;color:var(--sand);font-size:clamp(15px,1.6vw,18px);line-height:1.8}
 .hero-text strong{color:var(--bone);font-weight:400}
+@media(max-width:600px){.hero{padding:122px 0 56px}h1{margin-bottom:22px}.hero-text{font-size:14px;line-height:1.65}}
 /* Цифры */
 .stats-section{padding:80px 0;border-bottom:1px solid rgba(232,230,225,.08)}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
@@ -192,6 +193,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
       <strong>AELITA PRODUCTION</strong> — театральная продюсерская компания. Находим яркие таланты и смелые идеи, продюсируем создание, прокат и гастроли спектаклей по всей России.<br><br>
       Работаем на стыке современного театра, хореографии и визуального искусства. Создаём проекты, после которых невозможно смотреть на мир так же.
     </p>
+    <!-- pack-v510: кнопка действия на первом экране -->
+    <div class="hero-cta"><a class="btn-gold" href="/tickets">Афиша и билеты</a><a class="btn-outline" href="/projects">Проекты</a></div>
   </div>
 </section>
 
@@ -415,7 +418,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

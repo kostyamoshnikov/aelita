@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
@@ -89,8 +89,9 @@
     <p class="dir">Режиссёр и хореограф — <strong>Надежда Коханова</strong></p>
     <p class="sub">«Да разве люди когда-нибудь говорят правду? Человек даже себе не во всём признаётся, а не то что другим».</p>
     <p style="color:var(--sand);font-size:13px;margin-bottom:10px">Резиденты OMYT | Танцевальное пространство · Гость фестиваля «Точка Кюри» · Продюсер <a href="/mikhail-kazmiruk" style="color:var(--gold)">Миша Казмирук</a></p>
+    <p class="hero-when"><strong>24 октября, 18:00</strong> · ЦСИ «Быль», Синий зал</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
-      <a class="btn-outline" href="/tochkacuire#program">24 октября · «Точка Кюри»</a>
+      <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=rasyomon" target="_blank" rel="noopener">Купить билет</a>
       <a class="btn-outline" href="/press#rasyomon">Для прессы</a>
     </div>
   </div>
@@ -111,11 +112,18 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
-    <p style="color:var(--sand)">24 октября 2026 · Старый Оскол, ЦСИ «Быль», Синий зал — в программе фестиваля «Точка Кюри».</p>
-    <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=rasyomon" style="display:inline-block;margin-top:20px" target="_blank" rel="noopener">Купить билет →</a>
-    <a class="btn-outline" href="/tochkacuire#program" style="display:inline-block;margin-top:20px;margin-left:10px">Программа фестиваля →</a>
-    <!-- Когда дата назначена — заменить этот блок карточкой показа,
-         по образцу секции #afisha на Site/porfiriy (после первого проката). -->
+    <div class="show-slot reveal">
+      <div class="show-slot-date"><span class="show-slot-d">24</span><span class="show-slot-m">октября</span><span class="show-slot-t">сб · 18:00</span></div>
+      <div class="show-slot-info">
+        <p class="show-slot-badge">В программе фестиваля «Точка Кюри»</p>
+        <p class="show-slot-venue"><a href="/byl">ЦСИ «Быль»</a>, Синий зал</p>
+        <p class="show-slot-addr">Старый Оскол, мкр. Жукова, 38</p>
+        <div class="show-slot-btns">
+          <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=rasyomon" target="_blank" rel="noopener">Купить билет →</a>
+          <a class="btn-outline" href="/tochkacuire#program">Программа фестиваля →</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -270,6 +278,12 @@
 </div>
 <!-- /Cookie Banner -->
 
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">«Эффект Расёмон» · 24.10</span>
+  <a class="mob-cta-btn gold" href="https://cuire-fest.ru/tickets/show/df32c77c-c594-47f2-a429-3bc81eddb5d7?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=rasyomon" target="_blank" rel="noopener">Купить билет</a>
+</div>
+
 <button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Telegram виджет -->
@@ -283,7 +297,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

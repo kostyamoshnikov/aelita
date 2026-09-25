@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=34">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>body{max-width:100vw}
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
@@ -47,7 +47,7 @@
 .hub-now div{border-top:1px solid rgba(214,181,122,.35);padding-top:14px}
 .hub-now span{display:block;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .hub-now p{margin:0;font-family:'Montserrat',sans-serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--sand)}
-@media (max-width:560px){.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
+@media (max-width:560px){.hub-hero{padding:122px 0 56px}.hub-hero h1{margin:10px 0 18px}.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
 /* Перенесено из book-space/index.html (pack-v229) — та же карточка
    Кати переиспользована здесь без credentials-списка, укороченный
    .about-grid тоже отсюда, набор правил идентичен, только без
@@ -91,11 +91,12 @@
     <p class="eyebrow">AELITA COMMUNITY</p>
     <h1>Комьюнити AELITA PRODUCTION</h1>
     <p class="hub-lead">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, <em>как устроено мышление</em> — своё и чужое.</p>
+    <!-- pack-v510: кнопка поднята над «Сейчас/Дальше» — на первом экране телефона -->
+    <div class="hero-cta"><a class="btn-gold" href="#join-community">Хочу в клуб</a></div>
     <div class="hub-now">
       <div><span>Сейчас</span><p>Два книжных потока</p></div>
       <div><span>Дальше</span><p>Другие форматы — не обязательно про книги</p></div>
     </div>
-    <a class="btn-gold" href="#join-community">Хочу в клуб</a>
   </div>
 </div>
 
@@ -104,7 +105,7 @@
     <div class="sec-head reveal"><span class="eyebrow">Комьюнити</span><h2>Больше, чем один формат</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
-        <p>AELITA COMMUNITY — общий дом для форматов, которые не сводятся к готовым ответам. Пока в нём один действующий проект — книжный клуб; со временем к нему могут добавиться и другие направления, не обязательно про чтение.</p>
+        <p>AELITA COMMUNITY — общий дом для форматов, которые не сводятся к готовым ответам. Пока в нём один действующий проект — книжный клуб «3 УРОВЕНЬ»; со временем к нему могут добавиться и другие направления, не обязательно про чтение.</p>
         <p>Общее в них будет одно: не лекция с готовыми выводами, а среда, где трение между разными способами думать — само по себе и есть механизм, который двигает понимание вперёд.</p>
       </div>
       <div>
@@ -119,12 +120,35 @@
   </div>
 </section>
 
+<!-- pack-v508: название клуба «3 УРОВЕНЬ» — текст Кати Абдуловой (заказчик, 25.09.2026) -->
+<section id="tri-uroven">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Почему «3 УРОВЕНЬ»</h2></div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>Мне не хотелось названия про книги: клуб давно не про книги. Точнее, не только про них. Книга — всего лишь повод. Повод столкнуться с чужой системой координат в своей голове и на несколько часов допустить хотя бы одну «неприятную мысль»: а что, если мир устроен вовсе не так, как я привыкла о нём думать?</p>
+    </div>
+    <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">1 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">2 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
+      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">3 уровень</p><p style="color:var(--bone);margin:0;line-height:1.6">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
+    </div>
+    <div class="about-text reveal" style="max-width:760px">
+      <p>Почему меня раздражает именно эта мысль? Почему этот поступок кажется мне неправильным? Почему я вообще уверена, что успех выглядит именно так? Что такое для меня любовь — и откуда я это взяла? Почему одно я называю свободой, а другое безответственностью?</p>
+      <p>Мы очень часто пытаемся изменить свою жизнь, не понимая законов, которыми она организована: ищем другого партнёра с тем же представлением о любви, строим новый бизнес со старым представлением об успехе, уезжаем в другой город и привозим туда прежнего себя.</p>
+      <p>Мне не очень интересно искать ещё один «правильный ответ». Интереснее место, в котором становится видно, почему именно эти ответы вообще казались правильными. После хорошего разговора мир физически остаётся прежним — те же люди, тот же город, тот же бизнес, — но ты видишь между ними связи, которых вчера не замечал. А значит, перед тобой уже немного другая реальность.</p>
+      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
+      <p style="color:var(--sand);font-size:14px">— <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>, основательница клуба</p>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:760px){.tu-levels{grid-template-columns:1fr!important}}</style>
+
 <section>
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Два направления</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Книжный клуб «3 УРОВЕНЬ»</span><h2>Два направления</h2></div>
     <div class="other-grid reveal" style="gap:24px">
       <a class="other-card" href="/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, тема сезона меняется — сейчас про то, зачем мы выбираем быть вместе.</p></a>
-      <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка. Сейчас 3 уровень.</p></a>
+      <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка.</p></a>
     </div>
     <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:14px">Оба потока — камерный формат, до 10 человек, без готовых ответов и лекций. Встречи записываются — можно посмотреть в своём темпе, если не получилось быть на связи вживую.</p>
     <p class="desc reveal" style="margin-top:24px"><a href="/workshop-main" style="color:var(--gold)">Открытая встреча основного потока</a> — <!-- DATE:workshop-2026-09-13:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-13:dayMonth:ru:END -->, Калуга (<!-- VENUE:workshop-2026-09-13:venuePredicate:ru:BEGIN -->площадка будет объявлена позже<!-- VENUE:workshop-2026-09-13:venuePredicate:ru:END -->), вход свободный. Также — <a href="/workshop-entrepreneurs" style="color:var(--gold)">открытая встреча потока для предпринимателей</a> <!-- DATE:workshop-2026-09-12:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:dayMonth:ru:END -->, там же.</p>
@@ -315,7 +339,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=34"></script>
+<script src="/assets/main.js?v=36"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
