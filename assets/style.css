@@ -789,3 +789,19 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
   .txt-note{padding:16px}
   .desc.txt-quote,.txt-quote{padding-left:14px}
 }
+
+/* pack-v517: .photo-hero — шапка спектакля с фото (заказчик 25.09: «текст
+   перекрывает фото»). На телефоне фото стоит отдельной полосой сверху
+   (как у /dyba-show), текст — под ним на тёмном фоне; кнопки подняты над
+   подзаголовком, чтобы «Купить билет» оставался на первом экране.
+   Картинку и кадрирование задаёт сама страница: --hero-img, --hero-pos.
+   На компьютере шапка прежняя (фон из inline-стиля). */
+@media(max-width:600px){
+  .page-hero.photo-hero{background:var(--ink)!important;min-height:0!important;display:block!important}
+  .page-hero.photo-hero::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--ph-h,86vw);background-image:linear-gradient(to bottom,rgba(11,11,13,0) 55%,var(--ink) 96%),var(--hero-img);background-size:cover;background-position:var(--hero-pos,center);background-repeat:no-repeat;z-index:0}
+  .page-hero.photo-hero .hero-overlay{display:none}
+  .page-hero.photo-hero .wrap{position:relative;z-index:2;padding-top:calc(var(--ph-h,86vw) - 18px)!important;padding-bottom:40px;display:flex;flex-direction:column;align-items:flex-start}
+  .page-hero.photo-hero .wrap>*{max-width:100%}
+  .page-hero.photo-hero .hero-btns{order:4;margin:6px 0 20px}
+  .page-hero.photo-hero .wrap>p.sub,.page-hero.photo-hero .wrap>p:not(.eyebrow):not(.dir):not(.hero-when){order:5}
+}

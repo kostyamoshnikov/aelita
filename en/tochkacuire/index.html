@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=38">
+<link rel="stylesheet" href="/assets/style.css?v=40">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -320,11 +320,12 @@ section{padding:90px 0}
   <div class="quicknav-in">
     <a href="#schedule" class="gold">Tickets</a>
     <a href="#program">Programme</a>
+    <a href="#exhibitions">Exhibitions</a>
     <a href="#business">Business programme</a>
     <a href="#kids">For kids</a>
     <a href="#free">Free</a>
-    <a href="#exhibitions">Exhibitions</a>
     <a href="#venue">Venue</a>
+    <a href="/en/festival-team">Team</a>
   </div>
 </nav>
 
@@ -338,21 +339,22 @@ section{padding:90px 0}
     <div class="sec-head reveal"><span class="eyebrow">Schedule</span><h2>Four days of festival</h2></div>
     <div class="reveal">
       <div class="days-tabs" role="tablist" aria-label="Festival days">
-        <button class="day-tab active" onclick="showDay(0,this)" role="tab" id="day-tab-0" aria-controls="day-0" aria-selected="true"><span class="day-num">22</span>Thu · Opening</button>
-        <button class="day-tab" onclick="showDay(1,this)" role="tab" id="day-tab-1" aria-controls="day-1" aria-selected="false" tabindex="-1"><span class="day-num">23</span>Fri</button>
+        <button class="day-tab" onclick="showDay(0,this)" role="tab" id="day-tab-0" aria-controls="day-0" aria-selected="false" tabindex="-1"><span class="day-num">22</span>Thu · Opening</button>
+        <!-- pack-v517: по умолчанию открыт 23 октября (заказчик, 25.09) — 22-е закрытое, по пригласительным -->
+        <button class="day-tab active" onclick="showDay(1,this)" role="tab" id="day-tab-1" aria-controls="day-1" aria-selected="true"><span class="day-num">23</span>Fri</button>
         <button class="day-tab" onclick="showDay(2,this)" role="tab" id="day-tab-2" aria-controls="day-2" aria-selected="false" tabindex="-1"><span class="day-num">24</span>Sat · Family &amp; Dance</button>
         <button class="day-tab" onclick="showDay(3,this)" role="tab" id="day-tab-3" aria-controls="day-3" aria-selected="false" tabindex="-1"><span class="day-num">25</span>Sun · Closing</button>
       </div>
-      <div class="day-content active" id="day-0" role="tabpanel" aria-labelledby="day-tab-0">
+      <div class="day-content" id="day-0" role="tabpanel" aria-labelledby="day-tab-0">
         <div class="time-item"><span class="time">15:00</span><div class="event">Press meet, guest arrival, festival opening</div></div>
         <div class="time-item"><span class="time">15:30</span><div class="event">Business programme: talk <a href="/en/lecture-tochka-sborki">“Art as the point where a city comes together”</a> — Katya Abdulova<small>Opening of the business programme · by invitation only</small></div></div>
         <div class="time-item"><span class="time">16:30</span><div class="event">Exhibition vernissage, opening of the exhibition programme</div></div>
         <div class="time-item"><span class="time">17:00</span><div class="event">Business programme: talk <a href="/en/lecture-iskusstvennyy-intellekt">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — Alexey Tsymlov<small>By invitation only</small></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova</div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Runway show by the <a href="/en/molodo-zeleno">“Molodo-Zeleno”</a> — Maria Pavlova<small>By invitation only</small></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Business programme: talk <a href="/en/lecture-kulturnyy-kod">“The Russian Cultural Code in Contemporary Clothing”</a> — Maria Pavlova<small>By invitation only</small></div></div>
-        <div class="time-item"><span class="time">20:00</span><div class="event">A contemporary mystery by Katya Abdulova <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · closed show, no public tickets</small></div></div>
+        <div class="time-item"><span class="time">20:00</span><div class="event">A contemporary mystery by Katya Abdulova <a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+ · by invitation</small></div></div>
       </div>
-      <div class="day-content" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
+      <div class="day-content active" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
         <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — Alyona Bychkova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — Mikhail Kazmiruk<small>Red Hall · registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
@@ -361,8 +363,8 @@ section{padding:90px 0}
       </div>
       <div class="day-content" id="day-2" role="tabpanel" aria-labelledby="day-tab-2">
         <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Market zone open</div></div>
-        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — project “Extracurricular Classics”, dir. S. Nikiforova, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>0+ · free · <a href="/en/art-kvest#join" style="color:inherit">registration required</a></small></div></div>
+        <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/pushkin">“Pushkin. The Shot. The Blizzard.”</a> — “Extracurricular Classics” project, dir. <a href="/en/svetlana-nikiforova">S. Nikiforova</a>, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/f8d10055-f944-45d0-b2be-e861d81a0dcc?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>0+ · free · registration on Timepad</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
         <div class="time-item"><span class="time">13:00–16:00</span><div class="event">Workshops for children and adults<small>Free admission</small></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-landshafty-realnosti">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration on Timepad</small><a class="tix-btn reg" href="/en/lecture-landshafty-realnosti#join">Register</a></div></div>
@@ -373,7 +375,7 @@ section{padding:90px 0}
       </div>
       <div class="day-content" id="day-3" role="tabpanel" aria-labelledby="day-tab-3">
         <div class="time-item"><span class="time">11:00</span><div class="event"><a href="/en/kaliostro">“Cagliostro”</a> — project “Extracurricular Classics”, Kaluga<small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/b365a90e-7d8f-418c-bc74-25233cd44469?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>0+ · free · <a href="/en/art-kvest#join" style="color:inherit">registration required</a></small></div></div>
+        <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>0+ · free · registration on Timepad</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · 60 standing-room tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
@@ -423,6 +425,7 @@ section{padding:90px 0}
         <p>The name speaks directly to the city's identity: Stary Oskol sits on the Kursk Magnetic Anomaly — the world's largest deposit of magnetic iron ore. The Curie point is the moment when a substance changes state. This is what the festival does.</p>
       </div>
     </div>
+    <p class="reveal" style="margin-top:32px"><a class="btn-outline" href="/en/festival-team">Festival team →</a></p>
   </div>
 </section>
 
@@ -447,19 +450,19 @@ section{padding:90px 0}
 
       <a class="prog-item" href="/en/meydey">
         <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Gallery · Oct 25</span></div>
-        <div class="prog-title"><h3>Mayday</h3><p class="genre">Physical-theatre performance · <a href="/en/omyt" style="color:inherit">OMYT</a></p><p class="desc">A distress signal is sent — but the disaster never comes. A performance-reflection on getting lost inside time without losing touch with your real self.</p></div>
+        <div class="prog-title"><h3>Mayday</h3><p class="genre">Physical theatre performance · OMYT</p><p class="desc">A distress signal is sent — but the disaster never comes. A performance-reflection on getting lost inside time without losing touch with your real self.</p></div>
         <div class="prog-right"><span class="dur">~45 min</span></div>
       </a>
 
       <a class="prog-item" href="/en/rasyomon">
         <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Blue Hall · Oct 24</span></div>
-        <div class="prog-title"><h3>The Rashomon Effect</h3><p class="genre">Physical Theatre <a href="/en/omyt" style="color:inherit">by Nadezhda Kokhanova</a></p><p class="desc">Several truths about one event — through the imagery of Akutagawa and Kurosawa. A reflection on the nature of vice and where it grows from.</p></div>
+        <div class="prog-title"><h3>The Rashomon Effect</h3><p class="genre">A physical theatre piece by Nadezhda Kokhanova</p><p class="desc">Several truths about one event — through the imagery of Akutagawa and Kurosawa. A reflection on the nature of vice and where it grows from.</p></div>
         <div class="prog-right"><span class="dur">~45 min</span></div>
       </a>
 
       <a class="prog-item" href="/en/rozovoe-maslo">
         <div class="prog-left"><span class="badge">Guest · Saint Petersburg</span><span class="hall">Blue Hall · Oct 25</span></div>
-        <div class="prog-title"><h3>The Scent of Rose Oil</h3><p class="genre">Physical-theatre sketch · residents of <a href="/en/omyt" style="color:inherit">OMYT</a></p><p class="desc">Power or peace — and the price paid for the choice. A reflective sketch on the biblical thread of “The Master and Margarita”.</p></div>
+        <div class="prog-title"><h3>The Scent of Rose Oil</h3><p class="genre">Physical theatre sketch · OMYT residents</p><p class="desc">Power or peace — and the price paid for the choice. A reflective sketch on the biblical thread of “The Master and Margarita”.</p></div>
         <div class="prog-right"><span class="dur">~45 min</span></div>
       </a>
 
@@ -490,6 +493,50 @@ section{padding:90px 0}
   </div>
 </section>
 
+<!-- ВЫСТАВКИ -->
+<section id="exhibitions">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Exhibitions</span><h2>Body and Metal</h2></div>
+    <div class="exh-grid reveal">
+      <div class="exh-item">
+        <img src="https://cuire-fest.ru/assets/photo/p09.jpg" alt="TOCHKA CUIRE. Prologue exhibition" loading="lazy">
+        <div class="exh-body">
+          <p class="dates">8 October – 4 November · Prologue</p>
+          <h3><a href="/en/vystavka-prolog" style="color:inherit">TOCHKA CUIRE. Prologue</a></h3>
+          <p>A dialogue between the human body and the material of the future. The body in motion meets metal, fire and the industrial texture of Stary Oskol.</p>
+          <span class="exh-free">Free admission</span>
+        </div>
+      </div>
+      <div class="exh-item">
+        <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Photo exhibition “Archaeology of the Human”" loading="lazy">
+        <div class="exh-body">
+          <p class="dates">14–25 October · Photo exhibition</p>
+          <h3><a href="/en/fotovystavka-ilyina" style="color:inherit">Archaeology of the Human</a></h3>
+          <p>Katya Ilyina’s photo exhibition. The body as an excavation site: what remains of a person when you remove the familiar layer by layer. Opening — 14 October.</p>
+          <span class="exh-free">Free admission</span>
+        </div>
+      </div>
+    </div>
+    <div class="gallery reveal" style="margin-top:4px">
+      <img src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+      <img src="https://cuire-fest.ru/assets/photo/p14.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+      <img src="https://cuire-fest.ru/assets/photo/p10.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+      <img src="https://cuire-fest.ru/assets/photo/p13.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+      <img src="https://cuire-fest.ru/assets/photo/p04.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+      <img src="https://cuire-fest.ru/assets/photo/p08.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ВЫСТАВОЧНАЯ ПРОГРАММА · ПЕРЕХОД -->
+<section id="exhibition-program" style="background:var(--coal)">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">Exhibition programme · Season I</span><h2>Transition</h2></div>
+    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:15px;max-width:60ch">28 artists — one route from entrance to exit, not a list of separate works. October 14–25, TsSI “Byl’.” Curator — Ekaterina Shelgunova. Free entry.</p>
+    <a class="btn-gold" href="/en/exhibition-program" style="display:inline-block">See the full line-up of artists →</a>
+  </div>
+</section>
+
 <!-- ДЕЛОВАЯ ПРОГРАММА -->
 <section id="business">
   <div class="wrap">
@@ -512,17 +559,6 @@ section{padding:90px 0}
         <h3>Galina Mosalova</h3>
         <p class="bio">Screenwriter and showrunner, author of scripts for 10+ productions (2017–2024) — the series “A Land of Great Opportunities”, “Tango on Shards”, “Kultur-Multur” and others. In 2019 graduated from the first cohort of the Moscow Film School's “Showrunner” programme.</p>
       </a>
-    </div>
-  </div>
-</section>
-
-<!-- ДЕФИЛЕ -->
-<section id="defile">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Fashion show</span><h2>“Molodo-Zeleno” runway show</h2></div>
-    <div class="reveal" style="max-width:720px">
-      <p style="color:var(--sand);font-size:15px;margin-bottom:16px">The festival programme includes a runway show by the Kozelsk brand <strong><a href="/en/molodo-zeleno" style="color:var(--gold)">“Molodo-Zeleno”</a></strong> (House of Pavlov) — tradition and modernity, hand embroidery and pearl ornaments in the Russian style. Founder of the brand — Tatiana Pavlova; collection designer — her daughter, Maria Pavlova.</p>
-      <p style="color:var(--sand);font-size:15px">The brand has already collaborated with AELITA PRODUCTION — “Molodo-Zeleno” created the costumes for the show <a href="/en/stories" style="color:var(--gold)">“Stories. Of the Earthly and the Heavenly”</a>.</p>
     </div>
   </div>
 </section>
@@ -577,50 +613,6 @@ section{padding:90px 0}
         <span class="free-badge">Free admission</span>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ВЫСТАВКИ -->
-<section id="exhibitions" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Exhibitions</span><h2>Body and Metal</h2></div>
-    <div class="exh-grid reveal">
-      <div class="exh-item">
-        <img src="https://cuire-fest.ru/assets/photo/p09.jpg" alt="TOCHKA CUIRE. Prologue exhibition" loading="lazy">
-        <div class="exh-body">
-          <p class="dates">8 October – 4 November · Prologue</p>
-          <h3><a href="/en/vystavka-prolog" style="color:inherit">TOCHKA CUIRE. Prologue</a></h3>
-          <p>A dialogue between the human body and the material of the future. The body in motion meets metal, fire and the industrial texture of Stary Oskol.</p>
-          <span class="exh-free">Free admission</span>
-        </div>
-      </div>
-      <div class="exh-item">
-        <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Photo exhibition “Archaeology of the Human”" loading="lazy">
-        <div class="exh-body">
-          <p class="dates">14–25 October · Photo exhibition</p>
-          <h3><a href="/en/fotovystavka-ilyina" style="color:inherit">Archaeology of the Human</a></h3>
-          <p>Katya Ilyina’s photo exhibition. The body as an excavation site: what remains of a person when you remove the familiar layer by layer. Opening — 14 October.</p>
-          <span class="exh-free">Free admission</span>
-        </div>
-      </div>
-    </div>
-    <div class="gallery reveal" style="margin-top:4px">
-      <img src="https://cuire-fest.ru/assets/photo/p06.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-      <img src="https://cuire-fest.ru/assets/photo/p14.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-      <img src="https://cuire-fest.ru/assets/photo/p10.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-      <img src="https://cuire-fest.ru/assets/photo/p13.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-      <img src="https://cuire-fest.ru/assets/photo/p04.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-      <img src="https://cuire-fest.ru/assets/photo/p08.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<!-- ВЫСТАВОЧНАЯ ПРОГРАММА · ПЕРЕХОД -->
-<section id="exhibition-program" style="background:var(--coal)">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Exhibition programme · Season I</span><h2>Transition</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:15px;max-width:60ch">28 artists — one route from entrance to exit, not a list of separate works. October 14–25, TsSI “Byl’.” Curator — Ekaterina Shelgunova. Free entry.</p>
-    <a class="btn-gold" href="/en/exhibition-program" style="display:inline-block">See the full line-up of artists →</a>
   </div>
 </section>
 
@@ -1004,7 +996,7 @@ section{padding:90px 0}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=38"></script>
+<script src="/assets/main.js?v=40"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
