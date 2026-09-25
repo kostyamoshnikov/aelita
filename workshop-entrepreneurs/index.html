@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=36">
+<link rel="stylesheet" href="/assets/style.css?v=38">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -108,8 +108,11 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>От ведущей клуба</h2></div>
-    <p class="desc reveal">Я часто слышу от предпринимателей, что им не хватает ресурсов — денег, времени, людей. И всё чаще думаю: решения, которые мы называем стратегическими, на самом деле упираются не в рынок и не в ресурсы, а в то, есть ли у нас слова для того, чего ещё не существует.</p>
+    <!-- pack-v513: деликатная разбивка текста (как в v512) -->
+    <p class="desc txt-lead reveal">Я часто слышу от предпринимателей, что им не хватает ресурсов — денег, времени, людей. И всё чаще думаю: решения, которые мы называем стратегическими, на самом деле упираются не в рынок и не в ресурсы, а в то, есть ли у нас слова для того, чего ещё не существует.</p>
+    <p class="txt-kicker">Язык решений</p>
     <p class="desc reveal">KPI, воронки, точки роста — это просто слова. Они хорошо описывают то, что уже есть, но бесполезны, когда нужно помыслить то, чего пока нет. Мы пытаемся описать будущее в терминах прошлого — и терпим поражение не потому, что рынок оказался другим, а потому что для новой ситуации не нашлось описаний.</p>
+    <p class="txt-kicker">Что меняется</p>
     <p class="desc reveal">Клуб я не задумывала как инструмент для бизнеса. Но иногда на встречи приходят предприниматели — и через несколько месяцев начинают мыслить системно, видеть структуру там, где раньше им мерещился беспорядок. Они начинают различать слова, которые незаметно управляют их решениями; встречают тех, кому не нужно по сто раз объяснять очевидное; их проекты начинают складываться сами — без насилия над собой и другими.</p>
     <blockquote class="om-quote reveal">Если вам любопытно, как это устроено — что находится внутри вашей головы и определяет ваш выбор, — приходите на открытую встречу.</blockquote>
     <p class="desc reveal">Это открытая, бесплатная встреча — знакомство с форматом перед тем, как присоединиться к <a href="/book-space#predprinimateli" style="color:var(--gold)">постоянному потоку</a> для предпринимателей.</p>
@@ -266,7 +269,7 @@
   </div>
 </footer>
 <!-- account.js -->
-<script src="/assets/account.js?v=36"></script>
+<script src="/assets/account.js?v=38"></script>
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
@@ -426,7 +429,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=36"></script>
+<script src="/assets/main.js?v=38"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=36">
+<link rel="stylesheet" href="/assets/style.css?v=38">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
@@ -85,9 +85,9 @@
   <div class="wrap">
     <p class="eyebrow">Сайт-специфик перформанс</p>
     <h1>Пророчества перелётных птиц</h1>
-    <p class="dir">Хореограф — <strong>Надежда Коханова</strong></p>
+    <p class="dir">Хореограф — <strong><a href="/omyt" style="color:inherit">Надежда Коханова</a></strong></p>
     <p class="sub">Восемь перформерок в костюмах птиц — и театральные бинокли, чтобы вглядеться в хрупкую поэтику движения.</p>
-    <p style="color:var(--sand);font-size:13px;margin-bottom:10px">При участии Пространства танца OMYT · Гость фестиваля «Точка Кюри» · Автор идеи и продюсер <a href="/mikhail-kazmiruk" style="color:var(--gold)">Миша Казмирук</a></p>
+    <p style="color:var(--sand);font-size:13px;margin-bottom:10px">При участии <a href="/omyt" style="color:var(--gold)">Пространства танца OMYT</a> · Гость фестиваля «Точка Кюри» · Автор идеи и продюсер <a href="/mikhail-kazmiruk" style="color:var(--gold)">Миша Казмирук</a></p>
     <p class="hero-when"><strong>23 октября, 19:00</strong> · ЦСИ «Быль», Красный зал</p>
     <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
       <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=prorochestva" target="_blank" rel="noopener">Купить билет</a>
@@ -99,13 +99,18 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>О проекте</h2></div>
-    <p class="desc reveal">Перформанс создан для проекта «Александринский в Александрии. Театральная суббота» — праздничной программы к 200-летию парка Александрия музея-заповедника «Петергоф». Премьера состоялась 11 июля 2026 года в Саду Фермерского дворца парка Александрии.</p>
+    <p class="desc txt-lead reveal">Перформанс создан для проекта «Александринский в Александрии. Театральная суббота» — праздничной программы к 200-летию парка Александрия музея-заповедника «Петергоф». Премьера состоялась 11 июля 2026 года в Саду Фермерского дворца парка Александрии.</p>
+    <p class="txt-kicker reveal">Замысел</p>
     <p class="desc reveal">Вдохновением послужили птицы, которые каждое лето возвращаются в парк Александрия на гнездование. Восемь перформерок в анималистичных костюмах разных видов птиц представляют хореографическую партитуру на языке современного танца и тонких поведенческих наблюдений. Зрителям вручают театральные бинокли — жест, отсылающий к придворной культуре наблюдения и одновременно предлагающий пристально вглядеться в хрупкую поэтику движения.</p>
+    <p class="txt-kicker reveal">Музыка</p>
     <p class="desc reveal">Музыкальную среду создал куратор программ электронной музыки Новой сцены Александринского театра Илья Пучеглазов — на стыке акустических текстур и электронных импульсов, с участием живых инструментов.</p>
     <!-- Источник — опыт AELITA PRODUCTION, не cuire-fest.ru. При сверке
          с фестивальным сайтом не удалять только на основании того,
          что там этого факта нет. -->
-    <p class="desc reveal">AELITA PRODUCTION уже сотрудничала с продюсером <a href="/mikhail-kazmiruk" style="color:var(--gold)">Мишей Казмируком</a> — компания привозила спектакль «Сюжеты. О земном и небесном» на Новую сцену Александринского театра, кураторство показа тоже осуществлял он. А вот с OMYT компания работает впервые.</p>
+    <div class="txt-note reveal">
+      <p class="txt-kicker">С AELITA PRODUCTION</p>
+      <p class="desc">AELITA PRODUCTION уже сотрудничала с продюсером <a href="/mikhail-kazmiruk" style="color:var(--gold)">Мишей Казмируком</a> — компания привозила спектакль «Сюжеты. О земном и небесном» на Новую сцену Александринского театра, кураторство показа тоже осуществлял он. А вот с OMYT компания работает впервые.</p>
+    </div>
   </div>
 </section>
 
@@ -286,7 +291,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=36"></script>
+<script src="/assets/main.js?v=38"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

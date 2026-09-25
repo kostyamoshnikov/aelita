@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=36">
+<link rel="stylesheet" href="/assets/style.css?v=38">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -80,15 +80,18 @@
     <p class="eyebrow">Children’s programme · “Tochka Cuire”</p>
     <div class="meta">24 and 25 October · 12:30 · 60 minutes · 0+</div>
     <h1>Art quest “Kids Aren't Spectators”</h1>
-    <a class="btn-outline" href="/en/tochkacuire#program">Festival programme</a>
+    <!-- pack-v514: кнопка записи на первом экране — ведёт к блоку регистрации Timepad -->
+    <div class="hero-cta"><a class="btn-gold" href="#join">Register</a><a class="btn-outline" href="/en/tochkacuire#program">Festival programme</a></div>
   </div>
 </div>
 
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>About the quest</h2></div>
-    <p class="desc reveal">The contemporary art festival has been taken over by “Grey Screens” — entities that steal colour and emotion. Kids aren't spectators here, but a squad of superheroes ready for a rescue mission: they have just 60 minutes to reboot the art objects and bring back the joy.</p>
+    <p class="desc txt-lead reveal">The contemporary art festival has been taken over by “Grey Screens” — entities that steal colour and emotion. Kids aren't spectators here, but a squad of superheroes ready for a rescue mission: they have just 60 minutes to reboot the art objects and bring back the joy.</p>
+    <p class="txt-kicker reveal">How it works</p>
     <p class="desc reveal">It's a quest story where the child becomes a co-author of the art objects. Collect clues, get paint on your hands, use your imagination, and take control of the exhibition — the quest turns passive contemplation into active creation. The child is the programme's lead artist.</p>
+    <p class="txt-kicker reveal">For adults</p>
     <p class="desc reveal">Take a breather for yourself and make it a treat for your child: while the kids are busy with art, adults can dive into the rest of the festival programme. On Saturday, after the quest, from 1 pm to 4 pm there are workshops for children and adults, and a market in the foyer all day.</p>
     <p class="lecture-quote reveal">Tired of art being “quiet and proper”? At a contemporary art festival, we allow noise.</p>
   </div>
@@ -98,8 +101,18 @@
   <div class="wrap reveal">
     <span class="eyebrow">How to attend</span>
     <h2 style="margin-top:14px">Free, registration required</h2>
-    <!-- pack-v506: квест — сб и вс, 12:30 (заказчик 25.09). Регистрация будет на Timepad — заказчик заведёт событие; кнопку и виджет вставить сюда по образцу /lecture-landshafty-realnosti/ (TASKS.md A10). -->
-    <p class="sub">Two days — Saturday 24 and Sunday 25 October, at 12:30. Participation is free, 0+; 40 places each day; the quest lasts 60 minutes, come for the start. Registration will open on this page in the coming days.</p>
+    <!-- pack-v514: регистрация на Timepad (событие 4220205, заказчик 25.09).
+         Одно событие на оба дня — два сеанса, 24 и 25 октября; день
+         выбирают в форме Timepad. Кнопка — триггер всплывающего виджета:
+         id ДОЛЖЕН быть ровно "timepad_twf_register_4220205" (на него
+         завязан triggerSelector). Прямая ссылка ниже — запасной путь,
+         если скрипт timepad.ru не загрузился. Образец —
+         /lecture-bez-suflera/. ⚠️ 25.09 у сеансов на Timepad ещё не то
+         время — заказчик поправит сам; на сайте верное: 12:30. -->
+    <p class="sub">Two days — Saturday 24 and Sunday 25 October, at 12:30. Participation is free, 0+; 40 places each day; the quest lasts 60 minutes, come for the start. Registration is on Timepad: choose the day in the form.</p>
+    <button class="submit-btn" id="timepad_twf_register_4220205" style="max-width:420px;margin-top:22px">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4220205 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4220205"}}})();</script>
+    <p style="color:var(--sand);font-size:13px;margin-top:16px">If the button does not open the registration window — the event page directly:  <a href="https://aelita-production.timepad.ru/event/4220205/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_art-kvest" target="_blank" rel="noopener" style="color:var(--gold)">aelita-production.timepad.ru/event/4220205</a></p>
     <p style="color:var(--sand);font-size:13px;margin-top:16px">Getting there — <a href="/en/byl" style="color:var(--gold)">CSI “Byl”</a>, Stary Oskol, Zhukova microdistrict 38. Questions — <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a> or +7 960 515-16-90.</p>
   </div>
 </div>
@@ -228,7 +241,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=36"></script>
+<script src="/assets/main.js?v=38"></script>
 
 
 <script>

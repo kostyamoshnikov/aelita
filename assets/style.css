@@ -761,3 +761,31 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
   .bio-info .eyebrow{margin-bottom:10px!important}
   .bio-role{margin-bottom:16px!important;font-size:12px!important;letter-spacing:.14em!important}
 }
+
+/* ── pack-v512: длинный текст — деликатная разбивка ─────────────────────
+   Заказчик, 25.09.2026: там, где текст длиннее экрана телефона, —
+   разделы и акценты «по типу страницы Дыбы, но деликатно». Текст не
+   переписывается: абзацы остаются теми же (их ключи в словаре EN не
+   меняются), добавляются только классы и короткие подзаголовки.
+   .txt-lead    — первый абзац крупнее и светлее (вход в текст);
+   .txt-kicker  — маленький золотой подзаголовок внутри раздела;
+   .txt-quote   — абзац-цитата / образный фрагмент с золотой линией;
+   .txt-note    — врезка с фактом «сбоку» (история сотрудничества,
+                  «в тот же вечер»), рамка, текст приглушён;
+   .txt-disclaimer — служебный текст спектакля (дисклеймер) в пунктирной
+                  рамке. */
+.desc.txt-lead,.txt-lead{font-size:clamp(17px,2vw,21px);line-height:1.6;color:var(--bone)}
+.txt-kicker{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:30px 0 8px;line-height:1.5}
+.desc.txt-quote,.txt-quote{border-left:2px solid var(--gold);padding:2px 0 2px 18px;font-style:italic;color:var(--bone);line-height:1.7;max-width:760px;margin:26px 0}
+.txt-note{margin:30px 0 0;background:rgba(214,181,122,.05);border:1px solid rgba(214,181,122,.18);padding:18px 20px;max-width:760px}
+.txt-note .txt-kicker{margin:0 0 8px}
+/* Подзаголовок не должен наследовать размер и цвет абзацев контейнера
+   (.txt-note p, .bio-info p и т.п. сильнее по специфичности). */
+.txt-note p.txt-kicker,.bio-info p.txt-kicker,main p.txt-kicker{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);line-height:1.5}
+.desc.txt-disclaimer,.txt-disclaimer{margin-top:20px;margin-bottom:6px}
+.txt-note p,.txt-note .desc{margin:0;color:var(--sand);font-size:15px;line-height:1.7}
+.desc.txt-disclaimer,.txt-disclaimer{border:1px dashed rgba(214,181,122,.35);padding:14px 18px;color:var(--sand);font-size:14px;line-height:1.7;max-width:760px}
+@media(max-width:560px){
+  .txt-note{padding:16px}
+  .desc.txt-quote,.txt-quote{padding-left:14px}
+}

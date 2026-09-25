@@ -332,7 +332,13 @@ class="req">`. Если менять структуру этих страниц 
   `partner-card`), `drive_doc_click`, `cuire_fest_outbound_click`
   (общий улов на любую ссылку на cuire-fest.ru, не попавшую в правило
   выше — подстраховка на новый тип ссылки), `pwa_install_click`,
-  `form_submit_click`, `video_sound_on`. Подключён `<script>`-тегом на
+  `form_submit_click`, `video_sound_on`; с pack-v515 ещё
+  `own_tickets_click` (клик «Купить билет» в свою продажу
+  `/tickets-buy/`), `ticket_checkout_click` («Оплатить» там же),
+  `ticket_purchase` (оплата билета подтверждена — по order-status, не
+  по клику; зовётся из `/tickets-buy/` через `window.AELITA_track`),
+  `timepad_register_click` (кнопка-виджет Timepad или ссылка на
+  timepad.ru — лекции, арт-квест). Подключён `<script>`-тегом на
   каждой странице отдельно (не через `main.js`) — при добавлении
   новой страницы не забыть этот тег; с pack-v101 это проверяется
   автоматически (`_tools/Audit/run_audit.py`, категория `analytics`) —
@@ -361,6 +367,24 @@ Measurement Protocol счётчика в переменной окружения
 сверить на тестовом платеже перед запуском рекламы (см. комментарий в
 `webhook.js`).
 
+**⚠️ Что сделать в кабинетах (руками, кодом не сделать) — pack-v515.**
+1. **Метрика → Цели:** цель типа «JavaScript-событие» на каждый
+   идентификатор, иначе `reachGoal` уходит, но в отчёте «Цели» его не
+   видно. Главные (конверсии): `ticket_purchase`,
+   `festival_tickets_click`, `own_tickets_click`,
+   `timepad_register_click`, `ticket_checkout_click`, `form_submit_click`;
+   вспомогательные: `phone_click`, `email_click`, `telegram_bot_click`,
+   `telegram_channel_click`, `tickets_page_click`, `show_card_click`,
+   `person_card_click`, `legal_pdf_download`, `cv_download`,
+   `drive_doc_click`, `cuire_fest_outbound_click`, `pwa_install_click`,
+   `video_sound_on`. Составная цель «Покупка билета» = `own_tickets_click`
+   → `ticket_checkout_click` → `ticket_purchase`.
+2. **VK Реклама:** создать пиксель (ads.vk.com → «Сайты») и вписать id
+   в `VK_PIXEL_ID` в `assets/main.js` — пока `0`, пиксель не грузится.
+3. **Своя статистика** (`_tools/Analytics/`): адрес воркера
+   `analytics_worker` в `_tools/Endpoints/endpoints.json` пуст — система
+   не включена, пока воркер не задеплоен.
+
 **Чего в статистике сознательно нет и почему:**
 - **Ecommerce-событие для внешней продажи билетов** — продажа билетов
   на сами спектакли/фестиваль идёт на cuire-fest.ru, не на этом
@@ -372,8 +396,8 @@ Measurement Protocol счётчика в переменной окружения
   продаж, пришедших с aelita-production.ru), это единственный способ
   увидеть конверсию клика в реальную покупку. Ссылки на
   `cuire-fest.ru/tickets/` теперь идут с UTM-меткой
-  (`utm_source=aelita-site&utm_medium=referral&utm_campaign=site&
-  utm_content=<страница>`) — если фестиваль умеет это фильтровать,
+  (`utm_source=aelita_site&utm_medium=referral&utm_campaign=site&
+  utm_content=<страница>`, проставляет `_tools/DesignSystem/outbound_utm.py`) — если фестиваль умеет это фильтровать,
   этого достаточно для сверки со своей стороны; сама AELITA эти
   переходы дальше cuire-fest.ru всё равно не видит.
 - **Скролл-трекинг** — не реализован. Полезен на длинных страницах

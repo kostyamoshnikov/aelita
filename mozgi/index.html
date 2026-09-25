@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=36">
+<link rel="stylesheet" href="/assets/style.css?v=38">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
@@ -100,15 +100,21 @@
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>О проекте</h2></div>
-    <p class="desc reveal">Интерактивный моноспектакль о невероятных возможностях человеческого мозга и цене научных открытий — про реальные исследования, пациентов и учёных-бунтарей. 16+. 1 час 15 минут + обсуждение.</p>
-    <p class="desc reveal"><em>Дисклеймер: все персонажи и события спектакля реальны. Любые совпадения с людьми и обстоятельствами умышленны.</em><br><em>Предупреждаем: покупая билет, вы даёте согласие на участие в научном эксперименте. Вскрытие не предполагается.</em></p>
+    <p class="desc txt-lead reveal">Интерактивный моноспектакль о невероятных возможностях человеческого мозга и цене научных открытий — про реальные исследования, пациентов и учёных-бунтарей. 16+. 1 час 15 минут + обсуждение.</p>
+    <p class="desc txt-disclaimer reveal"><em>Дисклеймер: все персонажи и события спектакля реальны. Любые совпадения с людьми и обстоятельствами умышленны.</em><br><em>Предупреждаем: покупая билет, вы даёте согласие на участие в научном эксперименте. Вскрытие не предполагается.</em></p>
+    <p class="txt-kicker reveal">Наука или фантастика</p>
     <p class="desc reveal">Можно ли удерживать равновесие с помощью языка? Вернуть движение парализованной руке? Унять боль в конечности, которой давно нет? Похоже на научную фантастику. Но за каждой историей стоят реальные исследования, пациенты и учёные-бунтари, которых сначала считали фриками, безумцами и опасными еретиками.</p>
+    <p class="txt-kicker reveal">Театральный эксперимент</p>
     <p class="desc reveal">Автор идеи и режиссёр Дмитрий Турков собирает научные открытия и человеческие судьбы в провокативный театральный эксперимент. На сцене — актёр Сергей Васин в образе эксцентричного учёного-Мефистофеля. Он превращает зрительный зал то в лабораторию, то в суд присяжных: ставит опыты, предъявляет доказательства и проверяет, насколько легко заставить человека поверить в невозможное. Или не поверить в то, что уже доказано.</p>
+    <p class="txt-kicker reveal">Вам решать</p>
     <p class="desc reveal">Вам предстоит решить: где заканчивается научный прорыв и начинается безумие; можно ли оправдать жестокий эксперимент спасёнными жизнями; всегда ли повреждённая конечность атрофирована — или мозгу просто лень ею пользоваться; и кто вообще управляет вашим мозгом, пока вы уверены, что думаете самостоятельно.</p>
     <!-- Источник — опыт AELITA PRODUCTION, не cuire-fest.ru. При сверке
          с фестивальным сайтом не удалять только на основании того, что
          там этого факта нет. -->
-    <p class="desc reveal">Дмитрий Турков уже ставил для AELITA PRODUCTION — саунд-драму «<a href="/gogol" style="color:var(--gold)">Гоголь.Сюита</a>» по повести Николая Гоголя.</p>
+    <div class="txt-note reveal">
+      <p class="txt-kicker">С AELITA PRODUCTION</p>
+      <p class="desc">Дмитрий Турков уже ставил для AELITA PRODUCTION — саунд-драму «<a href="/gogol" style="color:var(--gold)">Гоголь.Сюита</a>» по повести Николая Гоголя.</p>
+    </div>
   </div>
 </section>
 
@@ -295,7 +301,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=36"></script>
+<script src="/assets/main.js?v=38"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

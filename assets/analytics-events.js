@@ -127,6 +127,11 @@
     ownTrack(goal, params);
   }
 
+  // pack-v515: наружу — для целей, которые наступают не по клику, а по
+  // результату (оплата билета подтверждена, см. /tickets-buy/).
+  window.AELITA_track = track;
+
+
   // Достаёт слаг страницы из внутренней ссылки вида /slug/ или /en/slug/.
   // Для внешних ссылок возвращает href как есть — тоже годится как
   // идентификатор, просто менее компактный.
@@ -159,6 +164,21 @@
       //     на cuire-fest.ru), потом внутренняя страница /tickets ---
       if (href.indexOf('cuire-fest.ru/tickets') !== -1) {
         track('festival_tickets_click', { link_url: href, page: location.pathname });
+        return;
+      }
+      // pack-v515: своя продажа билетов (/tickets-buy/?performance=…,
+      //     например «Бред» 10.10 в Калуге) — до этой правки клик по
+      //     «Купить билет» туда не считался вообще: правило ниже ловит
+      //     только /tickets, а не /tickets-buy.
+      if (href.indexOf('/tickets-buy') !== -1) {
+        var perf = (href.match(/performance=([^&#]+)/) || [])[1] || '';
+        track('own_tickets_click', { link_url: href, performance: perf, page: location.pathname });
+        return;
+      }
+      // pack-v515: регистрация на Timepad (лекции, арт-квест) — прямая
+      //     ссылка на событие; кнопка-виджет ловится ниже, вне <a>.
+      if (href.indexOf('timepad.ru') !== -1) {
+        track('timepad_register_click', { link_url: href, page: location.pathname });
         return;
       }
       if (/\/tickets\/?($|[?#])/.test(href)) {
@@ -212,6 +232,21 @@
         return;
       }
 
+      return;
+    }
+
+    // --- pack-v515: кнопка-виджет Timepad (<button id="timepad_twf_register_<id>">)
+    //     — главная конверсия лекций и арт-квеста; факт регистрации
+    //     видит только Timepad, отсюда виден клик «Записаться» ---
+    var tpBtn = e.target.closest('[id^="timepad_twf_register_"]');
+    if (tpBtn) {
+      track('timepad_register_click', { event_id: tpBtn.id.replace('timepad_twf_register_', ''), page: location.pathname });
+      return;
+    }
+
+    // --- pack-v515: «Оплатить» на странице своей продажи билетов ---
+    if (e.target.closest('#buy-btn')) {
+      track('ticket_checkout_click', { page: location.pathname + location.search });
       return;
     }
 

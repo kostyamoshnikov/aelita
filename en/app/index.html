@@ -274,6 +274,11 @@ footer a{color:var(--gold)}
     navigator.serviceWorker.register('/sw.js');
   }
 </script>
+<!-- pack-v515: main.js — ради счётчика Метрики. Без него на /app не
+     грузилась Метрика вовсе, и цель pwa_install_click (analytics-events.js)
+     уходила в никуда. Баннера cookies на странице нет: счётчик встаёт,
+     только если согласие уже дано на другой странице сайта. -->
 <script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=38"></script>
 </body>
 </html>

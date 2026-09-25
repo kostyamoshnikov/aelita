@@ -366,7 +366,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=36"></script>
+<script src="/assets/payments.js?v=38"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1696,11 +1696,16 @@ async function pollOrderStatus(){
 
     if(out && out.status === 'paid'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      // pack-v515: цель «билет оплачен» — подтверждённый order-status,
+      // не клик. Своей серверной конверсии у билетной системы нет (у
+      // _tools/Payments она есть), поэтому хотя бы так.
+      try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       showSuccess('Thank you! Payment received. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId, seat_conflict: 1 }); }catch(e){}
       showSuccess('Thank you! Payment received. A rare technical issue occurred with the seat — we already know and will contact you shortly; your money is safe.');
       return;
     }
