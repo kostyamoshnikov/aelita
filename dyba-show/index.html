@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=33">
+<link rel="stylesheet" href="/assets/style.css?v=34">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 /* pack-v493: портрет Вани — вертикальный, на белом студийном фоне. Общая
@@ -46,7 +46,7 @@
    — широкий экран: фото справа по высоте экрана, текст слева на тёмном,
      фото мягко растворяется влево. */
 /* pack-v494: «О концерте» разбит на блоки — вводный абзац, карточки
-   фактов, врезка про «Живой уголок», отдельный раздел об артисте
+   фактов, врезка (с v495 — про фестиваль «Точка Кюри»), отдельный раздел об артисте
    (фото + текст, цифры, города чипсами) вместо четырёх длинных абзацев. */
 .dy-lead{font-size:clamp(18px,2.2vw,24px);line-height:1.55;color:var(--bone);max-width:860px;margin:0 0 36px}
 .dy-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(214,181,122,.18);border:1px solid rgba(214,181,122,.18)}
@@ -75,6 +75,35 @@
 }
 @media(max-width:480px){
   .dy-facts{grid-template-columns:1fr}
+}
+/* pack-v495: в hero дата и кнопка билета идут сразу под заголовком
+   (на телефоне текст начинается под фото, и до кнопки приходилось
+   листать); карточка «Ближайшие показы» — дата отдельным блоком,
+   площадка/адрес строками, кнопки одной высоты в ряд. */
+.dy-hero-when{color:var(--sand);font-size:14px;line-height:1.5;margin:0 0 18px}
+.dy-hero-when strong{color:var(--bone);font-weight:400}
+.dy-hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.dy-hero-quote{margin-bottom:0!important}
+.dy-show{display:grid;grid-template-columns:150px 1fr;border:1px solid rgba(214,181,122,.22);background:var(--ink);max-width:860px}
+.dy-show-date{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 16px;border-right:1px solid rgba(214,181,122,.22);text-align:center}
+.dy-show-d{font-family:'Montserrat',sans-serif;font-weight:200;font-size:56px;line-height:1;color:var(--gold)}
+.dy-show-m{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--bone);margin-top:8px}
+.dy-show-t{font-size:13px;color:var(--sand);margin-top:10px}
+.dy-show-info{padding:26px 28px}
+.dy-show-info p{margin:0}
+.dy-show-badge{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px!important}
+.dy-show-venue{color:var(--bone);font-size:19px;line-height:1.35}
+.dy-show-addr{color:var(--sand);font-size:14px;margin-top:4px!important}
+.dy-show-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.dy-show-btns a,.dy-hero-btns a{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1.2;margin:0}
+@media(max-width:560px){
+  .dy-show{grid-template-columns:1fr}
+  .dy-show-date{flex-direction:row;gap:12px;justify-content:flex-start;align-items:baseline;border-right:none;border-bottom:1px solid rgba(214,181,122,.22);padding:18px 20px}
+  .dy-show-d{font-size:40px}
+  .dy-show-m,.dy-show-t{margin-top:0}
+  .dy-show-info{padding:20px}
+  .dy-show-btns{flex-direction:column}
+  .dy-show-btns a{width:100%}
 }
 .dyba-hero{background-color:var(--ink);background-repeat:no-repeat;background-size:100% auto;background-position:center top}
 .dyba-hero .hero-overlay{background:linear-gradient(to bottom,rgba(11,11,13,.10) 0,rgba(11,11,13,.10) 60vw,rgba(11,11,13,.75) 100vw,var(--ink) 125vw,var(--ink) 100%)}
@@ -154,12 +183,12 @@
     <p class="eyebrow">Стендап-концерт<span class="age">18+</span></p>
     <h1>«Дыба шоу»</h1>
     <p class="dir">Автор и исполнитель — <strong><a href="/vanya-dyba">Ваня Дыба</a></strong> &nbsp;·&nbsp;90 минут</p>
-    <p class="sub">«Мои выступления, как секс втроём: круто посмотреть, но никому об этом не расскажешь» — Ваня Дыба</p>
-    <p style="color:var(--sand);font-size:13px;margin-bottom:10px">В программе фестиваля «Точка Кюри» · закрытие фестиваля</p>
-    <div class="hero-btns" style="display:flex;gap:14px;flex-wrap:wrap">
+    <p class="dy-hero-when"><strong>25 октября, 20:00</strong> · ЦСИ «Быль», Старый Оскол · закрытие фестиваля «Точка Кюри»</p>
+    <div class="hero-btns dy-hero-btns">
       <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=dyba-show" target="_blank" rel="noopener">Купить билет</a>
       <a class="btn-outline" href="/press#dyba-show">Для прессы</a>
     </div>
+    <p class="sub dy-hero-quote">«Мои выступления, как секс втроём: круто посмотреть, но никому об этом не расскажешь» — Ваня Дыба</p>
   </div>
 </div>
 
@@ -174,8 +203,8 @@
       <div class="dy-fact"><p class="dy-fact-k">Когда и где</p><p class="dy-fact-v">25 октября, 20:00 · ЦСИ «Быль», Красный зал</p></div>
     </div>
     <div class="dy-note reveal">
-      <p class="dy-fact-k">Не путать с «Живым уголком»</p>
-      <p>В Калуге Ваня был хедлайнером сборного концерта <a href="/corner">«Живой уголок»</a> — там он делил сцену с творческим объединением. Здесь весь вечер его.</p>
+      <p class="dy-fact-k">В программе фестиваля «Точка Кюри»</p>
+      <p>Концерт проходит в рамках <a href="/tochkacuire">«Точки Кюри»</a> — фестиваля современного искусства AELITA в ЦСИ «Быль» (22–25 октября): танец, пластический театр, саунд-драма, выставки. «Дыба шоу» закрывает фестиваль в последний вечер.</p>
     </div>
   </div>
 </section>
@@ -208,9 +237,18 @@
 <section style="background:var(--coal);padding:70px 0" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
-    <p style="color:var(--sand)">25 октября 2026, 20:00 · ЦСИ «Быль», Старый Оскол, мкр. Жукова, 38, Красный зал — в программе фестиваля «Точка Кюри», закрытие фестиваля.</p>
-    <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=dyba-show" style="display:inline-block;margin-top:20px" target="_blank" rel="noopener">Купить билет →</a>
-    <a class="btn-outline" href="/tochkacuire#program" style="display:inline-block;margin-top:20px;margin-left:10px">Программа фестиваля →</a>
+    <div class="dy-show reveal">
+      <div class="dy-show-date"><span class="dy-show-d">25</span><span class="dy-show-m">октября</span><span class="dy-show-t">вс · 20:00</span></div>
+      <div class="dy-show-info">
+        <p class="dy-show-badge">Закрытие фестиваля «Точка Кюри»</p>
+        <p class="dy-show-venue">ЦСИ «Быль», Красный зал</p>
+        <p class="dy-show-addr">Старый Оскол, мкр. Жукова, 38</p>
+        <div class="dy-show-btns">
+          <a class="btn-gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=dyba-show" target="_blank" rel="noopener">Купить билет →</a>
+          <a class="btn-outline" href="/tochkacuire#program">Программа фестиваля →</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -345,6 +383,12 @@
 </div>
 <!-- /Cookie Banner -->
 
+<!-- Мобильный CTA-бар -->
+<div class="mob-cta" id="mob-cta">
+  <span class="mob-cta-title">«Дыба шоу» · 25.10</span>
+  <a class="mob-cta-btn gold" href="https://cuire-fest.ru/tickets/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=dyba-show" target="_blank" rel="noopener">Купить билет</a>
+</div>
+
 <button id="back-to-top" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Telegram виджет -->
@@ -358,7 +402,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=33"></script>
+<script src="/assets/main.js?v=34"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

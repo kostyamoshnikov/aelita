@@ -139,10 +139,16 @@ function updateCtaBar(){
   const bar = document.getElementById('mob-cta');
   if(!bar) return;
   updateCtaBar();
-  const targets = document.querySelectorAll('.hero, #afisha, #subscribe, #contacts, .contact-sec');
+  // .hero-btns — кнопки в шапке страницы (например, «Купить билет» на
+  // /dyba-show): пока они на экране, бар с той же кнопкой не нужен.
+  // Видимые цели храним в Set: колбэк получает только изменившиеся
+  // элементы, и es.some() по ним одним «забывал» остальные видимые.
+  const targets = document.querySelectorAll('.hero, .hero-btns, #afisha, #subscribe, #contacts, .contact-sec');
   if(!targets.length) return;
+  const visible = new Set();
   const obs = new IntersectionObserver(es=>{
-    ctaNearOwn = es.some(e=>e.isIntersecting);
+    es.forEach(e=>{ if(e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
+    ctaNearOwn = visible.size > 0;
     updateCtaBar();
   }, {threshold:0.1});
   targets.forEach(t=>obs.observe(t));
