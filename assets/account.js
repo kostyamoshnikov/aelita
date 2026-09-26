@@ -537,9 +537,15 @@
       var to = data.email ? L.toMail + '<strong>' + escapeHtml_(data.email) + '</strong>' : L.toDefault;
       var html = '<p ' + gold + '>' + L.okHead(qty) + (qty > 1 ? L.many(to) : L.one(to)) + L.cancel + cab + '.</p>';
 
+      // pack-v519: у ЦСИ «Быль» — точка организации в Яндекс Картах
+      // (заказчик, 26.09), а не поиск по адресу.
+      function mapUrl_(label) {
+        if (/Быль|Byl/.test(label)) return 'https://yandex.ru/maps/org/tsentr_sovremennogo_iskusstva_byl/15148799696/';
+        return 'https://yandex.ru/maps/?text=' + encodeURIComponent(label);
+      }
       if (data.venueLabel) {
         html += '<p style="color:var(--sand);font-size:14px;margin-top:10px">' + L.where + escapeHtml_(data.venueLabel) +
-          ' · <a href="https://yandex.ru/maps/?text=' + encodeURIComponent(data.venueLabel) + '" target="_blank" rel="noopener" ' + gold + '>' + L.how + '</a>' +
+          ' · <a href="' + mapUrl_(data.venueLabel) + '" target="_blank" rel="noopener" ' + gold + '>' + L.how + '</a>' +
           (data.datetimeLabel ? '<br>' + L.when + escapeHtml_(data.datetimeLabel) : '') + '</p>';
       }
 

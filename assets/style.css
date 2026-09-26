@@ -805,3 +805,19 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
   .page-hero.photo-hero .hero-btns{order:4;margin:6px 0 20px}
   .page-hero.photo-hero .wrap>p.sub,.page-hero.photo-hero .wrap>p:not(.eyebrow):not(.dir):not(.hero-when){order:5}
 }
+
+/* pack-v519: мобильное меню. Список пунктов — это <nav class="m-menu-links">,
+   и на него же действовало общее правило шапки nav{position:fixed;top:0;
+   left:0;padding:20px 0;background;backdrop-filter} — список вырывался из
+   меню, прилипал к левому краю экрана без отступа, а верх его накрывала
+   полупрозрачная «шапка»: плавно проявлялась только верхняя часть пунктов
+   (заказчик, 26.09). Плюс задержки анимации были прописаны только для
+   первых 6 пунктов из 10. */
+.m-menu .m-menu-links{position:static!important;inset:auto!important;padding:0!important;background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;z-index:auto!important;border:0!important}
+.m-menu{overflow-y:auto;-webkit-overflow-scrolling:touch}
+.m-menu-links a:nth-child(7){transition-delay:.66s}
+.m-menu-links a:nth-child(8){transition-delay:.72s}
+.m-menu-links a:nth-child(9){transition-delay:.78s}
+.m-menu-links a:nth-child(10){transition-delay:.84s}
+.m-menu-links a:nth-child(n+11){transition-delay:.9s}
+@media(max-height:820px){.m-menu{justify-content:flex-start}.m-menu-links a{padding:13px 4px}}
