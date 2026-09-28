@@ -885,3 +885,21 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
   section[style*="padding:80px 0"]{padding-top:48px!important;padding-bottom:48px!important}
   section[style*="padding:70px 0"]{padding-top:44px!important;padding-bottom:44px!important}
 }
+
+/* pack-v528 (заказчик 29.09: «не очень естественно выглядит кнопка»):
+   кнопки .hero-cta из массовой правки pack-v510 (первый экран телефона)
+   были сплошными золотыми плашками сразу под крупным заголовком —
+   на каталожных и биографических страницах это читалось как рекламная
+   вставка. Теперь это тонкая золотая рамка со стрелкой (заливка — при
+   наведении), вторая кнопка — текстовая ссылка. Кнопка по-прежнему на
+   первом экране (аудит first_screen_cta смотрит любую ссылку в .hero-cta). */
+.hero-cta .btn-gold{background:transparent;color:var(--gold);border:1px solid rgba(214,181,122,.55);padding:12px 22px;transition:background .25s,color .25s,border-color .25s}
+.hero-cta .btn-gold::after{content:"→";margin-left:12px;letter-spacing:0;transition:transform .25s;display:inline-block}
+.hero-cta .btn-gold:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.hero-cta .btn-gold:hover::after{transform:translateX(3px)}
+.hero-cta .btn-outline{border:0;border-bottom:1px solid rgba(214,181,122,.35);padding:6px 0;color:var(--bone);opacity:.85}
+.hero-cta .btn-outline:hover{border-bottom-color:var(--gold);opacity:1}
+@media(max-width:600px){
+  .hero-cta .btn-gold{padding:11px 18px}
+  .hero-cta .btn-outline{padding:6px 0}
+}
