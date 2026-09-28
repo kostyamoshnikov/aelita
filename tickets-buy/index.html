@@ -257,7 +257,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
     <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email *" required>
     <div class="field-hint">На него придут билеты</div>
     <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон *" required>
-    <div class="field-hint">Для чека и для связи, если что-то пойдёт не так</div>
+    <div class="field-hint">Телефон — для чека и для связи, если что-то пойдёт не так</div>
     <!-- pack-v442: регистрация прямо здесь. Имя и почта для кабинета —
          те же поля, что для билетов выше, поэтому спрашиваем только
          пароль. Уходить на /account/ и возвращаться больше не нужно. -->
@@ -359,7 +359,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=46"></script>
+<script src="/assets/payments.js?v=47"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1752,5 +1752,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
+<script src="/assets/phone-prefix.js?v=47"></script>
 </body>
 </html>
