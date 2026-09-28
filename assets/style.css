@@ -821,3 +821,67 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
 .m-menu-links a:nth-child(10){transition-delay:.84s}
 .m-menu-links a:nth-child(n+11){transition-delay:.9s}
 @media(max-height:820px){.m-menu{justify-content:flex-start}.m-menu-links a{padding:13px 4px}}
+
+/* pack-v522 (заказчик 28.09): мобильное меню. .m-menu-footer стоял
+   position:absolute;bottom:40px — пока в меню было 6 пунктов, это был
+   низ экрана. С 10 пунктами меню прокручивается (pack-v519), и «низ»
+   оказывался посреди списка: копирайт наезжал на «Личный кабинет», а
+   адрес почты уезжал ниже него. Теперь оба — в потоке, под списком. */
+.m-menu .m-menu-footer{position:static;margin-top:14px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.m-menu .m-menu-contacts{margin-top:28px}
+
+/* pack-v522: фото в шапке спектакля на телефоне (.photo-hero) начиналось
+   от самого верха экрана и уходило под полупрозрачную шапку сайта — над
+   логотипом просвечивали размытые куски кадра, а под шапкой шла резкая
+   граница. Теперь полоса с фото начинается под шапкой и заканчивается
+   там же, где раньше, — текст и «Купить билет» не сдвигаются (проверка
+   first-screen-cta). Высоту шапки main.js кладёт в --nav-h (72px —
+   запасное значение). */
+@media(max-width:600px){
+  .page-hero.photo-hero::before{top:var(--nav-h,72px);height:calc(var(--ph-h,86vw) - var(--nav-h,72px))}
+}
+
+/* pack-v522: лента фильтров, которая на телефоне не влезает в ширину
+   (города в /tickets), — стрелки «листать» по краям. main.js оборачивает
+   .filters в .hscroll и показывает стрелку только там, куда ещё можно
+   прокрутить. */
+.hscroll{position:relative}
+.hscroll-btn{display:none;position:absolute;top:0;bottom:0;width:48px;border:0;padding:0;cursor:pointer;z-index:2;color:var(--gold);font-size:22px;line-height:1;align-items:center}
+.hscroll-btn.next{right:0;justify-content:flex-end;padding-right:4px;background:linear-gradient(to right,rgba(11,11,13,0),var(--ink) 55%)}
+.hscroll-btn.prev{left:0;justify-content:flex-start;padding-left:4px;background:linear-gradient(to left,rgba(11,11,13,0),var(--ink) 55%)}
+.hscroll.can-next .hscroll-btn.next,.hscroll.can-prev .hscroll-btn.prev{display:flex}
+.hscroll-btn:focus-visible{outline:1px solid var(--gold);outline-offset:-2px}
+.hscroll>.filters{margin-bottom:0!important}
+.hscroll{margin-bottom:50px}
+@media(max-width:600px){.hscroll{margin-bottom:20px}}
+
+/* pack-v522: карточки афиши с фото на телефоне. Текст карточки (дата,
+   город, название, площадка, кнопки) занимает больше половины высоты и
+   ложился прямо на лицо (заказчик: «Дыба шоу»). Тот же приём, что у
+   шапок спектаклей в pack-v517: фото — квадратной полосой сверху, текст
+   начинается на её затемнённом низу. Кадрирование — прежнее
+   object-position из самой карточки. body — чтобы перебить стили
+   страницы. */
+@media(max-width:760px){
+  body .event.has-photo{min-height:0;background:var(--ink);container-type:inline-size}
+  body .event.has-photo .ev-bg{inset:auto;top:0;left:0;right:0;height:100vw;height:100cqw;filter:brightness(.72)}
+  body .event.has-photo::before{content:"";position:absolute;left:0;right:0;top:0;height:100vw;height:100cqw;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(11,11,13,0) 45%,rgba(11,11,13,.75) 78%,var(--ink) 100%)}
+  body .event.has-photo:hover .ev-bg{filter:brightness(.8)}
+  body .event.has-photo .ev-overlay{min-height:0;z-index:2;padding-top:calc(100vw - 120px);padding-top:calc(100cqw - 80px)}
+}
+
+/* pack-v522: на телефоне «Написать нам» и «↑» прячутся, пока страницу
+   листают вниз (читают), и возвращаются, когда листают вверх или
+   остановились (main.js ставит .scroll-hide). */
+@media(max-width:760px){
+  #back-to-top.scroll-hide,.tg-widget.scroll-hide{opacity:0!important;transform:translateY(16px)!important;pointer-events:none!important}
+}
+
+/* pack-v522: на телефоне секции с отступом 80/70 px сверху и снизу
+   давали между соседними блоками пустое тёмное поле ~150 px (заказчик:
+   «тёмный блок» на /bred между фотографиями и «Другими проектами»).
+   Отступы у таких секций на телефоне уменьшены. */
+@media(max-width:600px){
+  section[style*="padding:80px 0"]{padding-top:48px!important;padding-bottom:48px!important}
+  section[style*="padding:70px 0"]{padding-top:44px!important;padding-bottom:44px!important}
+}

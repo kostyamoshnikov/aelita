@@ -285,3 +285,82 @@ window.AELITA_formMessage = function (anchorEl, ru, en, kind) {
 window.AELITA_formMessageClear = function (anchorEl) {
   if (anchorEl) window.AELITA_formMessage(anchorEl, '', '', 'error');
 };
+
+// pack-v522: высота шапки сайта → CSS-переменная --nav-h. Нужна шапкам
+// спектаклей с фото (.photo-hero): полоса с фото начинается под шапкой,
+// а не уходит под неё. Шапка меняет высоту между брейкпоинтами, поэтому
+// меряем, а не прописываем число.
+(function () {
+  function setNavH() {
+    var navs = document.querySelectorAll('nav');
+    for (var i = 0; i < navs.length; i++) {
+      if (getComputedStyle(navs[i]).position === 'fixed' && navs[i].offsetHeight) {
+        document.documentElement.style.setProperty('--nav-h', navs[i].offsetHeight + 'px');
+        return;
+      }
+    }
+  }
+  setNavH();
+  window.addEventListener('resize', setNavH);
+  window.addEventListener('load', setNavH);
+})();
+
+// pack-v522: «листалка» для ленты фильтров, которая не влезает в экран
+// (города в /tickets). Стрелка появляется только с той стороны, куда
+// ещё можно прокрутить; по нажатию лента сдвигается на ~2/3 ширины.
+(function () {
+  var en = document.documentElement.lang === 'en';
+  document.querySelectorAll('.filters').forEach(function (strip) {
+    if (strip.parentNode.classList.contains('hscroll')) return;
+    var box = document.createElement('div');
+    box.className = 'hscroll';
+    strip.parentNode.insertBefore(box, strip);
+    box.appendChild(strip);
+    function mk(dir) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hscroll-btn ' + dir;
+      b.textContent = dir === 'next' ? '›' : '‹';
+      b.setAttribute('aria-label', dir === 'next' ? (en ? 'Scroll right' : 'Листать вправо') : (en ? 'Scroll left' : 'Листать влево'));
+      b.addEventListener('click', function () {
+        strip.scrollBy({ left: (dir === 'next' ? 1 : -1) * strip.clientWidth * 0.66, behavior: 'smooth' });
+      });
+      box.appendChild(b);
+    }
+    mk('prev'); mk('next');
+    function upd() {
+      var max = strip.scrollWidth - strip.clientWidth;
+      box.classList.toggle('can-prev', strip.scrollLeft > 4);
+      box.classList.toggle('can-next', max - strip.scrollLeft > 4);
+    }
+    strip.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    // выбранный город — целиком в видимой части
+    strip.addEventListener('click', function (e) {
+      var btn = e.target.closest('.filter-btn');
+      if (btn && btn.scrollIntoView) btn.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    });
+    upd();
+    window.addEventListener('load', upd);
+  });
+})();
+
+// pack-v522: на телефоне плавающие «Написать нам» и «↑» не мешают читать:
+// пока листают вниз — спрятаны, листают вверх или остановились (0,7 с) —
+// снова видны. Сама видимость (порог 400 px, cookie-баннер) — по-прежнему
+// в updateFixedWidgets; здесь только временное скрытие поверх неё.
+(function () {
+  var mq = window.matchMedia('(max-width:760px)');
+  var lastY = window.scrollY, idle = null;
+  function els() { return [document.getElementById('back-to-top'), document.getElementById('tg-widget')].filter(Boolean); }
+  function show() { els().forEach(function (e) { e.classList.remove('scroll-hide'); }); }
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY, dy = y - lastY;
+    lastY = y;
+    if (!mq.matches) { show(); return; }
+    if (dy > 6) els().forEach(function (e) { e.classList.add('scroll-hide'); });
+    else if (dy < -6) show();
+    clearTimeout(idle);
+    idle = setTimeout(show, 700);
+  }, { passive: true });
+})();
