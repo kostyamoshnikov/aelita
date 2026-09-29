@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=52">
+<link rel="stylesheet" href="/assets/style.css?v=54">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -51,7 +51,7 @@
 .dl-box{display:flex;align-items:center;gap:16px;background:var(--coal);padding:24px 28px;margin-top:36px;flex-wrap:wrap}
 .dl-box .txt{color:var(--sand);font-size:13.5px;flex:1;min-width:200px}
 .om-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin:36px 0}
-.om-fact .lbl{font-family:'Montserrat',sans-serif;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.om-fact .lbl{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .om-fact .val{font-size:16px;color:var(--bone);line-height:1.5}
 .om-books{margin:8px 0}
 .om-book{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid rgba(201,184,163,.15)}
@@ -60,7 +60,7 @@
 .om-book .info{flex:1}
 .om-book .title{font-size:15px;color:var(--bone);line-height:1.4}
 .om-book .author{font-size:12.5px;color:var(--sand);margin-top:2px}
-.om-book .note{font-size:11.5px;color:rgba(201,184,163,.55);margin-top:2px;font-style:italic}
+.om-book .note{font-size:12px;color:rgba(201,184,163,.55);margin-top:2px;font-style:italic}
 </style>
 </head>
 <body>
@@ -78,8 +78,8 @@
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/workshop-main/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/workshop-main/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -257,7 +257,7 @@
   </div>
 </footer>
 <!-- account.js -->
-<script src="/assets/account.js?v=52"></script>
+<script src="/assets/account.js?v=54"></script>
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
@@ -410,7 +410,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=52"></script>
+<script src="/assets/main.js?v=54"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

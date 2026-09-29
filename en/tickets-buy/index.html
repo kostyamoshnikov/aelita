@@ -31,13 +31,13 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:'Inter',system
 h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:22px;margin:0 0 4px}
 .wrap{max-width:720px;margin:0 auto;padding:20px}
 .meta{color:var(--sand);font-size:14px;margin-bottom:20px}
-.stage{text-align:center;color:var(--sand);font-size:11px;letter-spacing:.2em;margin:16px 0 10px;text-transform:uppercase}
+.stage{text-align:center;color:var(--sand);font-size:12px;letter-spacing:.2em;margin:16px 0 10px;text-transform:uppercase}
 /* pack-v281: панель масштаба над схемой зала. Оформлена теми же
    средствами, что .mini-btn/.btn-outline в паке (тонкая рамка цвета
    --sand, прозрачный фон, --gold на наведении) — не заимствуем чужой
    стиль круглых белых кнопок с тенью, он не из этой системы. */
 .zoom-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 6px}
-.zoom-bar .zoom-label{margin-right:auto;color:var(--sand);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.zoom-bar .zoom-label{margin-right:auto;color:var(--sand);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 .zoom-btn{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
   background:none;border:1px solid rgba(201,184,163,.35);color:var(--sand);border-radius:3px;
   font-size:18px;line-height:1;font-family:inherit;cursor:pointer;transition:border-color .2s,color .2s}
@@ -116,7 +116,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    как выбрать не то. */
 .picked-chip button{width:28px;height:28px;flex:0 0 auto;border-radius:50%;border:none;background:transparent;color:var(--sand);font-size:17px;line-height:1;cursor:pointer}
 .picked-chip button:hover{color:var(--bone)}
-.zones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;font-size:11px;color:var(--sand)}
+.zones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;font-size:12px;color:var(--sand)}
 .zone-chip{display:flex;align-items:center;gap:5px}
 .zone-swatch{width:10px;height:10px;border-radius:2px}
 .form{background:var(--coal);border-radius:6px;padding:16px;margin-top:20px}
@@ -126,7 +126,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    («Phone * — для чека and связи, если что-т»), а обрезанный текст
    ещё and исчезает целиком, как только человек начинает печатать. */
 .form input + .field-hint{margin-top:-6px}
-.field-hint{font-size:11px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
+.field-hint{font-size:12px;color:var(--sand);opacity:.75;margin-bottom:10px;line-height:1.35}
 /* pack-v442: личный кабинет прямо в форме покупки */
 .acct-line{font-size:12px;color:var(--sand);margin:0 0 12px;line-height:1.45}
 .acct-line b{color:var(--cream,#E8E6E1);font-weight:400}
@@ -176,7 +176,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 #cookie-banner p{color:rgba(201,184,163,.7);font-size:13px;line-height:1.6;margin:0;max-width:760px}
 #cookie-banner a{color:var(--gold,#D6B57A)}
 .cookie-actions{display:flex;gap:12px;flex-shrink:0}
-.cookie-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
+.cookie-btn{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
 .cookie-btn-accept{background:var(--gold,#D6B57A);color:var(--ink,#0B0B0D)}
 .cookie-btn-more{background:transparent;color:rgba(201,184,163,.8);border:1px solid rgba(201,184,163,.3)}
 @media(max-width:700px){#cookie-banner{flex-direction:column;align-items:flex-start;padding:14px 16px;gap:12px}.cookie-actions{width:100%}.cookie-btn{flex:1}}
@@ -188,14 +188,61 @@ body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn,.promo-apply){font-family:'M
 body :is(.btn-gold,.buy-btn,.install-btn){background:var(--gold)!important;color:var(--ink)!important;border:1px solid var(--gold)!important}
 body :is(.retry-btn,.promo-apply){background:transparent!important;color:var(--bone)!important;border:1px solid rgba(214,181,122,.5)!important}
 body :is(.retry-btn,.promo-apply):hover{border-color:var(--gold)!important;color:var(--gold)!important}
-body .promo-apply{font-size:11px!important;letter-spacing:.16em!important;padding:10px 18px!important}
+body .promo-apply{font-size:12px!important;letter-spacing:.16em!important;padding:10px 18px!important}
 body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:not-allowed!important}
-@media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:11px!important;letter-spacing:.16em!important;padding:13px 20px!important}}
+@media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:12px!important;letter-spacing:.16em!important;padding:13px 20px!important}}
 /* pack-v531: поля — как на всём сайте (assets/style.css) */
-html body :where(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]),textarea,select){background:rgba(232,230,225,.05)!important;border:1px solid rgba(201,184,163,.22)!important;border-radius:0!important;color:var(--bone)!important;font-size:14px!important;padding:14px 16px!important;box-shadow:none!important}
+html body :where(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]),textarea,select){background:rgba(232,230,225,.05)!important;border:1px solid rgba(201,184,163,.22)!important;border-radius:0!important;color:var(--bone)!important;font-size:17px!important;padding:14px 16px!important;box-shadow:none!important}
 html body :where(input,textarea,select):focus{border-color:var(--gold)!important;outline:none!important}
 html body :is(input,textarea,select):user-invalid{border-color:#C98B6B!important}
 html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B"],[style*="c98b6b"]){border-color:#C98B6B!important}
+/* pack-v533: размеры текста на странице оплаты — не меньше, чем в
+   кассе МТС Live (замер со скриншотов заказчика 29.09: подсказки ~12 px,
+   подписи and условия ~14 px, текст в полях and кнопка «Pay» ~17 px). */
+html body .field-hint{font-size:13px!important;line-height:1.45!important}
+html body :is(.cb-item,.acct-line,.promo-toggle,.promo-msg,.msg,.picked-chip,.meta){font-size:14px!important}
+html body :is(.warn,.zones,.help-link,.acct-title){font-size:13px!important}
+html body .buy-btn{font-size:16px!important;letter-spacing:.12em!important}
+@media(max-width:600px){html body .buy-btn{font-size:16px!important;letter-spacing:.1em!important;padding:14px 18px!important}}
+
+/* ═══ pack-v534: шаги покупки, подписи полей, строки промокода, шторка ═══ */
+.steps{list-style:none;display:flex;gap:18px;margin:0 0 18px;padding:0;font-size:13px;color:var(--grey,#8a8580)}
+.steps li{display:flex;align-items:center;gap:8px;letter-spacing:.04em}
+.steps li span{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1px solid rgba(214,181,122,.35);border-radius:50%;font-size:12px}
+.steps li.on{color:var(--bone)}
+.steps li.on span{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.steps li.done span{border-color:var(--gold);color:var(--gold)}
+body.step-1 #form-block,body.step-1 .promo-wrap,body.step-1 #guest-note,body.step-1 #step2-sum,body.step-1 #buy-btn{display:none!important}
+body.step-2 #assigned-block,body.step-2 #general-block,body.step-2 #next-btn{display:none!important}
+body:not(.step-1):not(.step-2) #next-btn,body:not(.step-1):not(.step-2) #steps,body:not(.step-2) #step2-sum{display:none!important}
+.step2-sum{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--coal);padding:14px 16px;margin-bottom:14px;font-size:15px;color:var(--bone)}
+.link-btn{background:none;border:0;padding:0;color:var(--gold);font-size:14px;cursor:pointer;border-bottom:1px solid rgba(214,181,122,.35);font-family:inherit}
+.f-title{font-size:17px;color:var(--bone);margin:2px 0 14px}
+.f-label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--sand);margin:4px 0 6px}
+.q-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1px solid rgba(214,181,122,.5);background:transparent;color:var(--gold);font-size:13px;line-height:1;cursor:pointer;padding:0;font-family:inherit;vertical-align:middle}
+.q-btn:hover{border-color:var(--gold)}
+.acct-title{display:flex;align-items:center;gap:8px}
+.hold-bar .hold-label{display:inline-flex;align-items:center;gap:8px}
+/* промокод and подарочная карта — строки со стрелкой, поле по нажатию */
+.promo-wrap{padding-bottom:0!important}
+.promo-toggle{display:flex!important;justify-content:space-between;align-items:center;width:100%;text-decoration:none!important;color:var(--bone)!important;font-size:16px!important;padding:16px 0!important;border-top:1px solid rgba(214,181,122,.18)!important;text-align:left}
+.promo-toggle::after{content:"›";color:var(--gold);font-size:22px;line-height:1;transition:transform .2s}
+.promo-toggle[aria-expanded="true"]::after{transform:rotate(90deg)}
+#gift-wrap{margin-bottom:14px}
+#gift-wrap .promo-toggle{border-bottom:1px solid rgba(214,181,122,.18)!important}
+#gift-wrap .promo-toggle[aria-expanded="true"]{border-bottom:0!important}
+.promo-row{margin:0 0 12px}
+.promo-row[hidden]{display:none!important}
+html body .promo-wrap .promo-toggle{font-size:16px!important}
+/* шторка */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--coal);border-top:1px solid rgba(214,181,122,.3);padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));max-width:640px;margin:0 auto}
+.sheet[hidden],.sheet-overlay[hidden]{display:none}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sheet-head h2{font-size:20px;font-weight:400;margin:0;color:var(--bone);font-family:inherit;text-transform:none;letter-spacing:0}
+.sheet-x{background:transparent;border:1px solid rgba(214,181,122,.35);color:var(--bone);width:40px;height:40px;font-size:16px;cursor:pointer;flex:none}
+.sheet p{font-size:16px;line-height:1.6;color:var(--sand);margin:14px 0 20px}
+.sheet .sheet-ok{width:100%}
 </style>
 </head>
 <body>
@@ -203,13 +250,20 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
   <div id="test-banner" style="display:none" class="test-banner">Test mode — no real money is charged</div>
   <h1 id="title">Loading…</h1>
   <div class="meta" id="meta"></div>
+  <!-- pack-v534: покупка — два шага, как в кассах МТС Live and др.: сначала
+       только билеты (количество или места), потом контакты and оплата.
+       Одна длинная форма со всем сразу пугала количеством полей. -->
+  <ol class="steps" id="steps" aria-label="Purchase steps">
+    <li id="step-l1" class="on"><span>1</span> Tickets</li>
+    <li id="step-l2"><span>2</span> Contacts and payment</li>
+  </ol>
   <!-- pack-v272: отсчёт показывает реальное удержание, а не обещание.
        pack-v443: плашка переехала наверх and стала липкой — см. .hold-bar.
        Показывается только когда места ДЕЙСТВИТЕЛЬНО удержаны на сервере:
        у гостя (до входа) and на показах без схемы зала удерживать нечего,
        and отсчёт там был бы выдумкой. -->
   <div class="hold-bar" id="hold-bar" role="timer" aria-live="off">
-    <span class="hold-label">Holding your seats</span>
+    <span class="hold-label">Holding your seats <button type="button" class="q-btn" onclick="openSheet('hold')" aria-label="What “holding your seats” means">?</button></span>
     <span class="hold-time" id="hold-time">—</span>
   </div>
   <div id="degraded" style="display:none" class="warn">We are running an extra availability check — in rare cases a selected seat may turn out to be taken; we will check again and warn you before payment.</div>
@@ -270,30 +324,40 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
     </div>
   </div>
 
+  <!-- pack-v534: на втором шаге — короткая сводка выбранного вместо схемы -->
+  <div class="step2-sum" id="step2-sum">
+    <span id="step2-sum-text"></span>
+    <button type="button" class="link-btn" onclick="goStep(1)">Change</button>
+  </div>
+
   <div class="form" id="form-block">
     <!-- pack-v442: кто покупает. Страница сама узнаёт, вошёл ли человек в
          кабинет (запрос /account/me по сохранённому токену), and подставляет
          имя and почту — повторно их вводить не нужно. -->
     <div class="acct-line" id="acct-in" style="display:none">You are signed in as <b id="acct-who"></b> · <a href="#" onclick="acctSignOut();return false">Not you?</a></div>
-    <div style="font-size:11px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
-    <input id="f-name" placeholder="Name *" required>
-    <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="Email *" required>
+    <!-- pack-v534: подписи над полями (как в МТС Live), в самом поле —
+         пример. Пояснение про телефон — во всплывающей шторке «?». -->
+    <div class="f-title">Where and to whom to send the tickets</div>
+    <label class="f-label" for="f-name">Name *</label>
+    <input id="f-name" placeholder="John Smith" autocomplete="name" required>
+    <label class="f-label" for="f-email">Email *</label>
+    <input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="ivan@example.ru" required>
     <div class="field-hint">Your tickets will be sent there</div>
-    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone *" required>
-    <div class="field-hint">Phone — for the receipt and in case we need to reach you</div>
+    <label class="f-label" for="f-contact">Phone * <button type="button" class="q-btn" onclick="openSheet('phone')" aria-label="Why we need your phone number">?</button></label>
+    <input id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
     <!-- pack-v442: регистрация прямо здесь. Имя and почта для кабинета —
          те же поля, что для билетов выше, поэтому спрашиваем только
          пароль. Уходить на /account/ and возвращаться больше не нужно. -->
     <div class="acct-guest" id="acct-guest" style="display:none">
-      <div class="acct-title" id="acct-title">AELITA account</div>
-      <div class="field-hint" id="acct-hint">Your tickets and orders will live there. Choose a password — we will take your name and email from the fields above.</div>
-      <input id="f-password" type="password" autocomplete="new-password" placeholder="Password * (at least 8 characters)">
+      <div class="acct-title"><span id="acct-title">AELITA account</span> <button type="button" class="q-btn" onclick="openSheet('acct')" aria-label="What the personal account is">?</button></div>
+      <div class="field-hint" id="acct-hint">Choose a password — we will take your name and email from the fields above.</div>
+      <label class="f-label" for="f-password">Password *</label>
+      <input id="f-password" type="password" autocomplete="new-password" placeholder="At least 8 characters">
       <div class="field-hint"><a href="#" id="acct-mode-link" onclick="toggleAcctMode();return false">Already have an account? Sign in</a></div>
     </div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/consent" style="color:var(--gold)">processing of personal data</a></span></label>
-    <div class="msg" id="msg"></div>
-
   </div>
+  <div class="msg" id="msg"></div>
 </div>
 
 <!-- Всегда на виду, включая экран ошибки — если что-то пошло не так на
@@ -309,7 +373,7 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
      покупателей кода нет, and пустая рамка «введите промокод» над кнопкой
      оплаты только добавляет сомнение «а я что, переплачиваю?». -->
 <div class="promo-wrap" id="promo-wrap">
-  <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()">I have a promo code</button>
+  <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()" aria-expanded="false" aria-controls="promo-row">Promo code</button>
   <div class="promo-row" id="promo-row" hidden>
     <input type="text" id="promo-input" placeholder="Promo code" autocomplete="off" spellcheck="false" maxlength="32">
     <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Apply</button>
@@ -320,7 +384,7 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
 <!-- pack-v277: подарочная карта — тот же паттерн раскрывающегося поля
      and те же классы, что у промокода (.promo-*), новый CSS не заводим. -->
 <div class="promo-wrap" id="gift-wrap">
-  <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()">I have a gift card</button>
+  <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()" aria-expanded="false" aria-controls="gift-row">Gift card</button>
   <div class="promo-row" id="gift-row" hidden>
     <input type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="21">
     <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Apply</button>
@@ -333,7 +397,17 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
     Total: <span id="total">0 ₽</span>
     <span class="total-was" id="total-was" hidden></span>
   </div>
+  <button class="buy-btn" id="next-btn" onclick="goStep(2)">Next</button>
   <button class="buy-btn" id="buy-btn" disabled onclick="submitOrder()">Pay</button>
+</div>
+
+<!-- pack-v534: шторка с пояснениями (телефон, личный кабинет, бронь мест)
+     вместо текста под полями — как «Сервисный сбор» в МТС Live. -->
+<div class="sheet-overlay" id="sheet-overlay" hidden onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <div class="sheet-head"><h2 id="sheet-title"></h2><button type="button" class="sheet-x" onclick="closeSheet()" aria-label="Close">✕</button></div>
+  <p id="sheet-text"></p>
+  <button type="button" class="buy-btn sheet-ok" onclick="closeSheet()">Got it</button>
 </div>
 
 <!-- pack-v421: счётчик Метрики на странице оплаты. До этой правки его
@@ -382,7 +456,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=52"></script>
+<script src="/assets/payments.js?v=54"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -539,9 +613,9 @@ function applyAcctMode(){
   const login = acctMode === 'login';
   document.getElementById('acct-hint').textContent = login
     ? 'Enter your account password — the email is the one in the field above.'
-    : 'Your tickets and orders will live there. Choose a password — we will take your name and email from the fields above.';
+    : 'Choose a password — we will take your name and email from the fields above.';
   const pw = document.getElementById('f-password');
-  pw.placeholder = login ? 'Account password *' : 'Password * (at least 8 characters)';
+  pw.placeholder = login ? 'Account password' : 'At least 8 characters';
   pw.autocomplete = login ? 'current-password' : 'new-password';
   document.getElementById('acct-mode-link').textContent = login
     ? 'No account? Create one' : 'Already have an account? Sign in';
@@ -736,6 +810,7 @@ async function restoreSelection(){
   if(!saved.ts || Date.now() - saved.ts > 30*60*1000) return;
   if(data.seating !== 'assigned'){
     if(saved.quantity && saved.quantity > 1){ quantity = saved.quantity; updateTotal(); }
+    goStep(2);
     return;
   }
   const want = (saved.seats || []).slice(0, 10);
@@ -754,7 +829,7 @@ async function restoreSelection(){
   });
   invalidateDiscounts();
   updateTotal();
-  if(msgEl && selectedSeats.length) msgEl.textContent = 'The seats are yours again — you can pay now.';
+  if(msgEl && selectedSeats.length){ msgEl.textContent = 'The seats are yours again — you can pay now.'; goStep(2); }
 }
 
 // Сессия протухла посреди покупки — это не то же самое, что «не
@@ -880,6 +955,7 @@ async function init(){
   const dt = data.datetime ? new Date(data.datetime).toLocaleString('en-GB',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Date to be confirmed';
   document.getElementById('meta').textContent = `${dt} · ${data.venue.name}, ${data.venue.address} · ${data.ageRating}`;
 
+  goStep(1, {silent:true});
   if(data.seating === 'assigned'){
     if(data.guestCheckDegraded){ document.getElementById('degraded').style.display='block'; }
     document.getElementById('assigned-block').style.display = 'block';
@@ -1217,6 +1293,7 @@ function tickHold(){
     invalidateDiscounts();
     updateTotal();
     document.getElementById('msg').textContent = 'Time is up — the seats are back on sale. Pick them again if they are still free.';
+    if(currentStep === 2) goStep(1);
     return;
   }
   const total = Math.ceil(left/1000);
@@ -1287,6 +1364,7 @@ let giftUsedAmount = 0;       // сколько из скидки — по ка�
 function togglePromo(){
   const row = document.getElementById('promo-row');
   row.hidden = !row.hidden;
+  document.getElementById('promo-toggle').setAttribute('aria-expanded', String(!row.hidden));
   if(!row.hidden) document.getElementById('promo-input').focus();
 }
 
@@ -1299,6 +1377,7 @@ function promoMsg(text, cls){
 function toggleGift(){
   const row = document.getElementById('gift-row');
   row.hidden = !row.hidden;
+  document.getElementById('gift-toggle').setAttribute('aria-expanded', String(!row.hidden));
   if(!row.hidden) document.getElementById('gift-input').focus();
 }
 
@@ -1446,6 +1525,8 @@ function updateTotal(){
     wasEl.hidden = true;
   }
   document.getElementById('buy-btn').disabled = (data.seating==='assigned' && selectedSeats.length===0);
+  document.getElementById('next-btn').disabled = (data.seating==='assigned' && selectedSeats.length===0) || (data.seating!=='assigned' && quantity<1);
+  if(currentStep === 2){ if(data.seating === 'assigned' && selectedSeats.length === 0) goStep(1); else fillStep2Summary(); }
   renderPicked();
 }
 
@@ -1467,6 +1548,79 @@ function invalidateDiscounts(){
   invalidatePromo();
   invalidateGift();
 }
+
+// ─── pack-v534: два шага and шторка с пояснениями ───────────────────
+let currentStep = 1;
+function ticketWord(n){
+  const m10 = n % 10, m100 = n % 100;
+  if(m10 === 1 && m100 !== 11) return 'ticket';
+  if(m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'tickets';
+  return 'tickets';
+}
+function fillStep2Summary(){
+  const el = document.getElementById('step2-sum-text');
+  if(!el || !data) return;
+  if(data.seating === 'assigned'){
+    const n = selectedSeats.length;
+    const list = selectedSeats.map(s => 'row ' + s.row + ', seat ' + s.seat).join('; ');
+    el.textContent = n + ' ' + ticketWord(n) + ': ' + list;
+  } else {
+    el.textContent = quantity + ' ' + ticketWord(quantity) + ' · ' + ((data.price || 0) * quantity) + ' ₽';
+  }
+}
+function goStep(n, opts){
+  opts = opts || {};
+  if(n === 2 && data && data.seating === 'assigned' && selectedSeats.length === 0){
+    document.getElementById('msg').textContent = 'Choose your seats on the seating plan.';
+    return;
+  }
+  const was = currentStep;
+  currentStep = n;
+  document.body.classList.remove('step-1', 'step-2');
+  document.body.classList.add('step-' + n);
+  document.getElementById('step-l1').classList.toggle('on', n === 1);
+  document.getElementById('step-l2').classList.toggle('on', n === 2);
+  document.getElementById('step-l1').classList.toggle('done', n === 2);
+  if(n === 1 && data){
+    const none = data.seating === 'assigned' ? selectedSeats.length === 0 : quantity < 1;
+    document.getElementById('next-btn').disabled = none;
+  }
+  if(n === 2){
+    fillStep2Summary();
+    // «Назад» в браузере/телефоне возвращает к выбору билетов, а не
+    // уводит со страницы.
+    if(!opts.fromPop && was !== 2) history.pushState({aelitaStep: 2}, '');
+  } else if(was === 2 && !opts.fromPop && history.state && history.state.aelitaStep === 2){
+    history.back();
+  }
+  if(!opts.silent) window.scrollTo(0, 0);
+}
+window.addEventListener('popstate', function(e){
+  const st = e.state && e.state.aelitaStep;
+  if(currentStep === 2 && st !== 2) goStep(1, {fromPop: true});
+  else if(currentStep === 1 && st === 2) goStep(2, {fromPop: true});
+});
+const SHEETS = {
+  phone: ['Why a phone number', 'We need your phone number for the receipt and to reach you if something goes wrong with the order — for example, if the time or venue changes. We won’t call or message you without a reason.'],
+  acct: ['Personal account', 'Your account keeps your tickets and orders: you can open them at any time, have them sent to your email again, or return them. To buy, you only need a password — we’ll take your name and email from the fields above.'],
+  hold: ['Holding your seats', 'While the countdown runs, the seats you chose are held for you and nobody else can buy them. If you don’t pay in time, the seats go back on sale — you can choose them again if they’re still free.'],
+};
+let sheetReturnFocus = null;
+function openSheet(key){
+  const s = SHEETS[key]; if(!s) return;
+  sheetReturnFocus = document.activeElement;
+  document.getElementById('sheet-title').textContent = s[0];
+  document.getElementById('sheet-text').textContent = s[1];
+  document.getElementById('sheet-overlay').hidden = false;
+  const sh = document.getElementById('sheet'); sh.hidden = false;
+  sh.querySelector('.sheet-ok').focus();
+}
+function closeSheet(){
+  document.getElementById('sheet-overlay').hidden = true;
+  document.getElementById('sheet').hidden = true;
+  if(sheetReturnFocus && sheetReturnFocus.focus) sheetReturnFocus.focus();
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !document.getElementById('sheet').hidden) closeSheet(); });
 
 async function submitOrder(){
   const name = document.getElementById('f-name').value.trim();
@@ -1775,6 +1929,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=52"></script>
+<script src="/assets/phone-prefix.js?v=54"></script>
 </body>
 </html>
