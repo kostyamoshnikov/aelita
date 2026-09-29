@@ -970,3 +970,105 @@ html body .hero-cta .btn-outline:not(.x-never){border:0!important;border-bottom:
 body .hero-next a{font-family:'Montserrat',sans-serif!important;font-size:12px!important;letter-spacing:.22em!important;padding:15px 30px!important;border:1px solid rgba(214,181,122,.5)!important;color:var(--bone)!important;background:transparent!important;border-radius:0!important}
 body .hero-next a:hover{border-color:var(--gold)!important;color:var(--gold)!important}
 @media(max-width:600px){body .hero-next a{font-size:11px!important;letter-spacing:.16em!important;padding:13px 20px!important}}
+
+/* ═══ pack-v531: единая типографика текста и ссылок (заказчик 29.09) ═══
+   Было 85 сочетаний размера и интервала абзацев (13 / 13,5 / 14 / 14,5 /
+   15 / 15,5 / 16 px). Три ступени:
+     ОСНОВНОЙ     — 16 px / 1,75: связный текст (описания, биографии,
+                    документы, ответы FAQ, подводки разделов);
+     ВТОРОСТЕПЕННЫЙ — 14 px / 1,7: текст в карточках, пунктах, списках,
+                    строки «когда/где» в шапках;
+     ПОДПИСЬ      — 12 px / 1,6: авторы отзывов, источники, пояснения.
+   Абзацы с размером в атрибуте style (единичные акценты) не трогаем.
+   Шапки-обложки (крупные подписи главной, цитаты) — как были. */
+:is(.doc-body p,.doc-body li,p.desc,.bio-info p,.about-text p,.desc-text p,.physics-text p,.ext-banner p,.insight-box p,
+    .tu-levels p,.mars-text p,.dy-bio-text p,p.dy-note,.no-shows p,.join-sec p,.page-hero p.sub,.page-header p.sub,
+    .press-section p.sub,.press-head p.sub,.form-sec p.sub,.follow p,.subscribe p,.team-section p,.contact-sec p,.notify p,
+    .gift-check p,p.afisha-empty,.hub-now p,.about-block p,.extra-block p,.collab-panel p,.become p,.flagship-body p,
+    .film-crew p,.venue-grid p,.txt-note p,.join-form .join-note,.faq-item .faq-lead,.venue-review p,.flag p,
+    .press-contact p,p.lead):not([style*="font-size"]):not(.period):not(.meta):not(.venue-review__who):not(.txt-quote):not(.quote):not(.eyebrow):not(.bio-role):not(.role):not(.tag):not(.badge):not(.status):not(.label):not(.dir):not(.hero-when){
+  font-size:16px!important;line-height:1.75!important}
+:is(.career-item p,.doc-item p,.ev-info p,.format-item p,.free-card p,.pillar p,.book-card p,.katya-card p,.tl-item .tl-desc,
+    .tl-body p,.feature p,.mars-step p,.shop-item p,.exh-body p,.speaker-card .bio,.m-item .m-src,.m-body p,.review .review-text,
+    .show-slot-info p,.faq-points li,.facts-list li,.faq-item p,.mission-item p,.value-item p,.step-item p,.work-card p,
+    .photo-drive p,.form-box p,.show-slots-after p,p.faq-more,.doc-head .doc-meta,p.aud-reviews-empty,.page-hero .hero-when,
+    .page-hero .dir,.hero-content .hero-sub,.hero-content .hero-dir,.hero-content .hero-when,.collab-panel li):not([style*="font-size"]):not(.period):not(.status):not(.author):not(.faq-lead):not(.value-num):not(.mission-num):not(.eyebrow):not(.tag):not(.badge):not(.label){
+  font-size:14px!important;line-height:1.7!important}
+:is(.r-body .r-who,.venue-reviews__note,.venue-reviews__src,.venue-review__who,.dy-stat-l,.book-card .author,.m-updated,
+    .flagship-body .meta){font-size:12px!important;line-height:1.6!important}
+
+/* Ссылки в тексте — один вид: золотой текст и тонкая золотая черта
+   (было 10 вариантов: с подчёркиванием и без, белые, с чертой разной
+   яркости). Касается только ссылок внутри абзацев и пунктов без своего
+   класса — кнопки, карточки, меню и подвал не затронуты. */
+:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:not([class]):not(nav a):not(footer a){
+  color:var(--gold)!important;text-decoration:none!important;border-bottom:1px solid rgba(214,181,122,.35)!important;
+  transition:border-color .2s,color .2s}
+:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:not([class]):not(nav a):not(footer a):hover{
+  border-bottom-color:var(--gold)!important}
+
+/* ═══ pack-v531: заголовки и метки ═══════════════════════════════════
+   H1 — три размера по типу страницы (было 22 варианта, 36–120 px):
+     крупный  .h1-xl — обложки спектаклей и фестиваля: 96 / 44 px;
+     средний  — разделы, спектакли без обложки, люди, лекции, программы:
+               56 / 28 px;
+     малый    — документы, возврат билета: 36 / 22 px.
+   H2 заголовки разделов — один стиль (24 / 17 px, разрядка .3em).
+   H3 — две ступени: заголовок карточки 16 px и крупного блока 20 px.
+   Метки: раздела (.eyebrow) 11 px / .45em и карточки (.tag, .period,
+   .badge, .status) 10 px / .34em — обе золотые. */
+:is(.page-hero,.page-header,.bio-info,.lecture-hero,.hub-hero,.press-head,.hero-content,.hero) h1:not(.h1-xl),h1.h1-md{
+  font-size:56px!important;letter-spacing:.08em!important;line-height:1.15!important;font-weight:200!important}
+h1.h1-xl{font-size:96px!important;letter-spacing:.05em!important;line-height:1!important}
+:is(.doc-head,.rf) h1{font-size:36px!important;letter-spacing:.12em!important;line-height:1.3!important}
+:is(.sec-head,.join-sec,.follow,.subscribe,.notify,.contact-sec,.become,.form-sec,.extra-block,.gift-check,.about-block,.contact-block) h2{
+  font-size:24px!important;font-weight:200!important;letter-spacing:.3em!important;line-height:1.7!important;text-transform:uppercase!important}
+:is(.other-card,.career-item,.work-card,.member,.prog-item,.doc-item,.card,.format-item,.ft-info,.free-card,.speaker-card,.show-card,
+    .pillar,.tl-item,.proj-card,.tl-body,.feature,.mars-step,.v-day,.step-item,.cast-item,.faq-item,.aud-review-form,.form-box,.shop-item)
+  :is(h3,h2.shop-title,h2){font-size:16px!important;font-weight:300!important;letter-spacing:.12em!important;line-height:1.45!important}
+:is(.book-card,.katya-card,.mission-item,.value-item,.exh-body) h3{font-size:20px!important;font-weight:300!important;letter-spacing:.12em!important;line-height:1.4!important}
+:is(.tag,.period,.badge,.status){font-size:10px!important;font-weight:300!important;letter-spacing:.34em!important}
+.eyebrow{font-size:11px!important;font-weight:400!important;letter-spacing:.45em!important;color:var(--gold)!important}
+@media(max-width:600px){
+  :is(.page-hero,.page-header,.bio-info,.lecture-hero,.hub-hero,.press-head,.hero-content,.hero) h1:not(.h1-xl),h1.h1-md{font-size:28px!important}
+  h1.h1-xl{font-size:44px!important}
+  :is(.doc-head,.rf) h1{font-size:22px!important}
+  :is(.sec-head,.join-sec,.follow,.subscribe,.notify,.contact-sec,.become,.form-sec,.extra-block,.gift-check,.about-block,.contact-block) h2{font-size:17px!important}
+  :is(.book-card,.katya-card,.mission-item,.value-item,.exh-body) h3{font-size:18px!important}
+}
+/* подводка в шапке страницы на телефоне — чуть плотнее, чтобы кнопка
+   оставалась на первом экране (аудит first_screen_cta) */
+@media(max-width:600px){#main .page-hero p.sub:not([style*="font-size"]){line-height:1.6!important}}
+
+/* ═══ pack-v531: поля форм ═════════════════════════════════════════════
+   Было 16 вариантов (фон, рамка, скругления 3–4 px в кассе, отзывах и
+   регистрации, разные отступы, два разных красных для ошибки). Одно поле:
+   тёмный фон, тонкая рамка, без скругления, 14 px; фокус — золотая рамка;
+   ошибка — #C98B6B (тот же цвет ставит проверка форм в payments.js).
+   Ошибка подсвечивается только после того, как человек тронул поле
+   (:user-invalid): раньше обязательный телефон с «+7 » (pack-v526) горел
+   красным сразу при открытии страницы. */
+html body :where(main,.modal,.form-box,.join-form,.aud-review-form) :where(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]):not([type=file]):not([type=submit]):not([type=button]):not([tabindex="-1"]),textarea,select){
+  background:rgba(232,230,225,.05)!important;border:1px solid rgba(201,184,163,.22)!important;border-radius:0!important;
+  color:var(--bone)!important;font-size:14px!important;padding:14px 16px!important;box-shadow:none!important}
+html body :where(main,.modal,.form-box,.join-form,.aud-review-form) :where(input,textarea,select):focus{border-color:var(--gold)!important;outline:none!important}
+html body :is(main,.modal,.form-box,.join-form,.aud-review-form) :is(input,textarea,select):not(:user-invalid):invalid{border-color:rgba(201,184,163,.22)}
+html body :is(main,.modal,.form-box,.join-form,.aud-review-form) :is(input,textarea,select):user-invalid{border-color:#C98B6B!important}
+html body :where(.input-clear:invalid:not(:placeholder-shown):not(:focus):not(:user-invalid)){border-color:rgba(201,184,163,.22)!important}
+/* ошибка, которую ставит скрипт формы (style.borderColor = '#C98B6B') */
+html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B"],[style*="c98b6b"]){border-color:#C98B6B!important}
+
+/* ═══ pack-v531: карточки и отступы секций ══════════════════════════════
+   Карточки (32 варианта отступов 22–36 px): одна внутренняя поля 32×28
+   (телефон 26×22), без скругления. Секции: симметричные отступы 56–110 px
+   → 80 px (телефон 48 px); несимметричные (продолжение предыдущего блока,
+   кабинет, магазин, упоминания, шапки) не трогаем. */
+:is(.other-card,.work-card,.proj-card,.show-card,.career-item,.format-item,.free-card,.prog-item,.pillar,.mission-item,.value-item,.step-item,.katya-card){
+  padding:32px 28px!important;border-radius:0!important}
+main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]){
+  padding-top:80px!important;padding-bottom:80px!important}
+@media(max-width:600px){
+  :is(.other-card,.work-card,.proj-card,.show-card,.career-item,.format-item,.free-card,.prog-item,.pillar,.mission-item,.value-item,.step-item,.katya-card){padding:26px 22px!important}
+  main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]){
+    padding-top:48px!important;padding-bottom:48px!important}
+}
