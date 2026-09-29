@@ -173,6 +173,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .cookie-btn-accept{background:var(--gold,#D6B57A);color:var(--ink,#0B0B0D)}
 .cookie-btn-more{background:transparent;color:rgba(201,184,163,.8);border:1px solid rgba(201,184,163,.3)}
 @media(max-width:700px){#cookie-banner{flex-direction:column;align-items:flex-start;padding:14px 16px;gap:12px}.cookie-actions{width:100%}.cookie-btn{flex:1}}
+
+/* pack-v530: единые кнопки — копия правил assets/style.css (у страницы
+   свой шаблон без общих стилей). Основная — золотая заливка; вторичная —
+   тонкая рамка; компактная — 11px, 10×18. */
+body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn,.promo-apply){font-family:'Montserrat',sans-serif!important;font-weight:400!important;text-transform:uppercase!important;font-size:12px!important;letter-spacing:.22em!important;line-height:1.35!important;padding:15px 30px!important;border-radius:0!important;text-decoration:none!important}
+body :is(.btn-gold,.buy-btn,.install-btn){background:var(--gold)!important;color:var(--ink)!important;border:1px solid var(--gold)!important}
+body :is(.retry-btn,.promo-apply){background:transparent!important;color:var(--bone)!important;border:1px solid rgba(214,181,122,.5)!important}
+body :is(.retry-btn,.promo-apply):hover{border-color:var(--gold)!important;color:var(--gold)!important}
+body .promo-apply{font-size:11px!important;letter-spacing:.16em!important;padding:10px 18px!important}
+body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:not-allowed!important}
+@media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:11px!important;letter-spacing:.16em!important;padding:13px 20px!important}}
 </style>
 </head>
 <body>
@@ -359,7 +370,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=49"></script>
+<script src="/assets/payments.js?v=50"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1752,6 +1763,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=49"></script>
+<script src="/assets/phone-prefix.js?v=50"></script>
 </body>
 </html>
