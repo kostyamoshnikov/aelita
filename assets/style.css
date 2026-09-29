@@ -903,3 +903,18 @@ footer p{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9}
   .hero-cta .btn-gold{padding:11px 18px}
   .hero-cta .btn-outline{padding:6px 0}
 }
+
+/* pack-v529 (заказчик 29.09, вариант «Б»): несколько вертикальных линий
+   подряд — пункты FAQ, регалии Кати, отзывы зрителей, выделенные вехи
+   карьеры, шаги «Книжного консьержа», карточки наборов /book-space —
+   смотрелись частоколом. Линию слева заменяет короткое золотое тире перед
+   пунктом. Одиночные цитаты и предупреждения с линией остаются как есть.
+   `body` — чтобы перебить стили страниц. */
+body .faq-points li,body .katya-cred{border-left:0;position:relative;padding-left:24px}
+body .katya-cred{display:block}
+body .faq-points li::before,body .katya-cred::before{content:"";position:absolute;left:0;top:.85em;width:12px;height:1px;background:var(--gold)}
+body .venue-review{border-left:0;padding-left:0}
+body .venue-review::before{content:"";display:block;width:12px;height:1px;background:var(--gold);margin:0 0 12px}
+body .career-item.hl,body .career-item.highlight,body .book-card.current{border-left:0}
+body .career-item.hl .period::before,body .career-item.highlight .period::before,body .book-card.current .status::before,
+.dash-note>p:first-child::before{content:"";display:inline-block;width:12px;height:1px;background:var(--gold);vertical-align:middle;margin-right:10px}
