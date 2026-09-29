@@ -1073,3 +1073,7 @@ main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not(
 /* кабинет: после увеличения полей (17 px) кнопка «Войти» на узком
    телефоне уходила за первый экран — чуть плотнее форма */
 @media(max-width:600px){.acc-grid .form-box{padding:20px 20px!important}.acc-grid .field{gap:6px!important}.acc-grid :where(input){padding:12px 14px!important}}
+/* pack-v535: поля имени и телефона в подписке на старт продаж (/tickets) */
+.notify-fields{display:flex;flex-direction:column;gap:12px;max-width:480px;margin:0 auto 12px}
+.notify-fields input{width:100%}
+.sub-err{color:#C98B6B;font-size:14px;margin-top:10px;text-align:center}

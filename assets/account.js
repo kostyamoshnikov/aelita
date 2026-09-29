@@ -32,6 +32,7 @@
         already_registered: 'Вы уже зарегистрированы на это мероприятие.',
         event_full: 'Мест больше нет — все места заняты.',
         bad_quantity: 'Проверьте количество билетов.',
+        bad_phone: 'Укажите телефон — номер введён не полностью или с ошибкой.',
         not_registered: 'Регистрация не найдена — возможно, уже отменена.',
         mail_failed: 'Не удалось отправить письмо — попробуйте ещё раз через минуту. QR-код для входа виден прямо здесь, в кабинете.',
         auth_required: 'Сессия истекла — войдите заново, и регистрация продолжится.',
@@ -78,6 +79,7 @@
         already_registered: "You're already registered for this event.",
         event_full: 'No spots left — the event is full.',
         bad_quantity: 'Check the number of tickets.',
+        bad_phone: 'Please enter your phone number — it looks incomplete or incorrect.',
         not_registered: "Registration not found — it may already be cancelled.",
         mail_failed: "Couldn't send the email — try again in a minute. Your entry QR code is visible right here in your account.",
         auth_required: 'Your session has expired — sign in again and the registration will continue.',
@@ -594,7 +596,7 @@
         var res = await fetch(EVENTS_REGISTER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1, lang: LANG }), // З-11 этап 5, ч. 3 (pack-v478): язык письма и первой страницы PDF
+          body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1, lang: LANG, phone: opts.phone || '' }), // pack-v535: телефон обязателен // З-11 этап 5, ч. 3 (pack-v478): язык письма и первой страницы PDF
         });
         if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
         var data = await res.json();

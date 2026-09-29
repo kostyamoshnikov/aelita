@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=54">
+<link rel="stylesheet" href="/assets/style.css?v=55">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -191,6 +191,12 @@
     </div>
 
     <div id="regForm" style="display:none">
+      <!-- pack-v535: телефон обязателен (имя — из личного кабинета) -->
+      <div style="margin-bottom:16px">
+        <label for="regPhone" style="display:block;color:var(--sand);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Телефон *</label>
+        <input id="regPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+7 900 123-45-67">
+        <p style="color:var(--sand);font-size:12px;margin-top:6px">Для связи, если изменится время или место встречи.</p>
+      </div>
       <div style="margin-bottom:16px">
         <label for="regQuantity" style="display:block;color:var(--sand);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Количество билетов</label>
         <select id="regQuantity" style="background:var(--surface,#1a1a1a);color:var(--bone,#fff);border:1px solid rgba(255,255,255,.2);padding:10px 14px;font-size:15px;border-radius:4px">
@@ -269,7 +275,7 @@
   </div>
 </footer>
 <!-- account.js -->
-<script src="/assets/account.js?v=54"></script>
+<script src="/assets/account.js?v=55"></script>
 <script>
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
@@ -298,6 +304,7 @@
         // зарегистрироваться, сервер сам вернёт already_registered,
         // если регистрация на самом деле уже есть.
         document.getElementById('regForm').style.display = 'block';
+      try { var lp = localStorage.getItem('aelita_last_phone'); if (lp && !document.getElementById('regPhone').value) document.getElementById('regPhone').value = lp; } catch (e) {}
       },
     });
     var already = data && data.registrations && data.registrations.some(function(r){ return r.eventId === EVENT_ID; });
@@ -335,9 +342,21 @@
     msgEl.textContent = '';
     var qtyEl = document.getElementById('regQuantity');
     var quantity = qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1;
+    // pack-v535: телефон обязателен; последний введённый запоминаем
+    // (тот же ключ, что у кассы), чтобы при возврате после входа в
+    // кабинет регистрация продолжилась сама.
+    var phoneEl = document.getElementById('regPhone');
+    var phone = phoneEl ? phoneEl.value.trim() : '';
+    if (phone.replace(/\D/g, '').length < 10) {
+      msgEl.textContent = 'Укажите телефон — без него не сможем записать.';
+      if (phoneEl) phoneEl.focus();
+      return;
+    }
+    try { localStorage.setItem('aelita_last_phone', phone); } catch (e) {}
     window.AELITA_account.registerForEvent(EVENT_ID, {
       buttonEl: document.getElementById('regBtn'),
       quantity: quantity,
+      phone: phone,
       onSuccess: function(data){
         document.getElementById('regForm').style.display = 'none';
         var okEl = document.getElementById('regOk');
@@ -429,7 +448,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=54"></script>
+<script src="/assets/main.js?v=55"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -440,5 +459,6 @@
     });
   }
 </script>
+<script src="/assets/phone-prefix.js?v=55"></script>
 </body>
 </html>

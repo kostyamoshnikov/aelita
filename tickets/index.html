@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=54">
+<link rel="stylesheet" href="/assets/style.css?v=55">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(201,184,163,.3);color:var(--sand);padding:14px 26px;text-decoration:none;white-space:nowrap;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 26px;text-decoration:none;white-space:nowrap;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -249,10 +249,17 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
     </div>
 
     <div id="notifySite">
+      <!-- pack-v535: имя и телефон обязательны, как во всех формах заявок -->
+      <div class="notify-fields">
+        <input type="text" id="subName" placeholder="Ваше имя *" aria-label="Имя (обязательно)" autocomplete="name" required>
+        <input type="tel" id="subPhone" inputmode="tel" autocomplete="tel" placeholder="Телефон *" aria-label="Телефон (обязательно)" required>
+      </div>
       <div class="sub-form">
-        <input type="email" id="subEmail" placeholder="Ваша почта" aria-label="Электронная почта">
+        <input type="email" id="subEmail" placeholder="Ваша почта *" aria-label="Электронная почта (обязательно)" required>
         <button class="btn-gold" onclick="subscribe()">Подписаться</button>
       </div>
+      <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a> *</span></label>
+      <p class="sub-err" id="subErr" style="display:none"></p>
       <p class="sub-ok" id="subOk">Готово — напишем о старте продаж.</p>
     </div>
 
@@ -321,14 +328,29 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 
 <script>
   async function subscribe(){
+    // pack-v535: имя, телефон, почта и согласие — обязательны; раньше
+    // была только почта и без согласия на обработку данных.
+    const EN = (window.AELITA_isEn&&AELITA_isEn());
+    const name=document.getElementById('subName').value.trim();
+    const phone=document.getElementById('subPhone').value.trim();
     const v=document.getElementById('subEmail').value.trim();
-    if(!v||!v.includes('@'))return;
+    const err=document.getElementById('subErr');
+    const showErr=(m)=>{ err.textContent=m; err.style.display='block'; };
+    err.style.display='none';
+    if(!name){ showErr(EN ? 'Please enter your name.' : 'Укажите имя.'); return; }
+    if(!AELITA_phoneOk(phone)){ showErr(EN ? 'Please enter your phone number.' : 'Укажите телефон.'); return; }
+    if(!v||!v.includes('@')){ showErr(EN ? 'Please enter your email.' : 'Укажите почту.'); return; }
+    if(!document.getElementById('subConsent').checked){ showErr(EN ? 'Please tick the personal data consent box.' : 'Отметьте согласие на обработку персональных данных.'); return; }
     if (!(await AELITA_sendLead('Афиша — подписка на старт продаж', {
+      'Имя': name,
+      'Телефон': phone,
       'Email': v,
     }))) { AELITA_formMessage(document.getElementById('subOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
     AELITA_formMessageClear(document.getElementById('subOk'));
     document.getElementById('subOk').style.display='block';
     document.getElementById('subEmail').value='';
+    document.getElementById('subName').value='';
+    document.getElementById('subPhone').value='';
   }
   // Фильтр афиши по городу. Имя filterCity (не filter) — `filter` это
   // ещё и стандартный метод массивов, а на главной этот скрипт живёт
@@ -430,7 +452,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=54"></script>
+<script src="/assets/main.js?v=55"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>
@@ -442,5 +464,6 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
     });
   }
 </script>
+<script src="/assets/phone-prefix.js?v=55"></script>
 </body>
 </html>

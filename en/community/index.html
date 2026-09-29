@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=54">
+<link rel="stylesheet" href="/assets/style.css?v=55">
 <style>body{max-width:100vw}
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
@@ -176,6 +176,7 @@
       <div style="font-size:12px;color:var(--sand);grid-column:1/-1">Fields marked with an asterisk (*) are required</div>
       <div class="field"><label>Name <span class="req-mark">*</span></label><input type="text" id="name_c" placeholder="Your name" required></div>
       <div class="field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="email_c" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="phone_c" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div class="field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="tg_c" autocomplete="off" placeholder="@username"></div>
       <div class="field">
         <label>Which track are you interested in?</label>
@@ -266,14 +267,18 @@
     const err = document.getElementById('err_c');
     const showErr = (msg) => { err.textContent = msg; err.style.display = 'block'; };
     err.style.display = 'none';
-    if(!name){ showErr('Укажите имя.'); return; }
-    if(!email || !email.includes('@')){ showErr('Укажите почту — на неё придёт ответ.'); return; }
-    if(!document.getElementById('consent_c').checked){ showErr('Отметьте согласие на обработку персональных данных.'); return; }
-    if (!(await AELITA_sendLead('Community — заявка со страницы обзора', {'Имя': name, 'Email': email, 'Telegram': tg, 'Поток': stream}))) { AELITA_formMessage(document.getElementById('ok_c'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    const phone = document.getElementById('phone_c').value.trim();
+    const EN = (window.AELITA_isEn&&AELITA_isEn());
+    if(!name){ showErr(EN ? 'Please enter your name.' : 'Укажите имя.'); return; }
+    if(!AELITA_phoneOk(phone)){ showErr(EN ? 'Please enter your phone number.' : 'Укажите телефон.'); return; }
+    if(!email || !email.includes('@')){ showErr(EN ? 'Please enter your email — our reply will go there.' : 'Укажите почту — на неё придёт ответ.'); return; }
+    if(!document.getElementById('consent_c').checked){ showErr(EN ? 'Please tick the personal data consent box.' : 'Отметьте согласие на обработку персональных данных.'); return; }
+    if (!(await AELITA_sendLead('Community — заявка со страницы обзора', {'Имя': name, 'Телефон': phone, 'Email': email, 'Telegram': tg, 'Поток': stream}))) { AELITA_formMessage(document.getElementById('ok_c'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
     AELITA_formMessageClear(document.getElementById('ok_c'));
     document.getElementById('ok_c').style.display = 'block';
     document.getElementById('name_c').value = '';
     document.getElementById('email_c').value = '';
+    document.getElementById('phone_c').value = '';
     document.getElementById('tg_c').value = '';
     document.getElementById('stream_c').value = '';
   }
@@ -345,7 +350,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=54"></script>
+<script src="/assets/main.js?v=55"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -356,5 +361,6 @@
     });
   }
 </script>
+<script src="/assets/phone-prefix.js?v=55"></script>
 </body>
 </html>

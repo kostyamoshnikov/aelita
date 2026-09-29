@@ -364,3 +364,8 @@ window.AELITA_formMessageClear = function (anchorEl) {
     idle = setTimeout(show, 700);
   }, { passive: true });
 })();
+
+// pack-v535: телефон в формах заявок обязателен (заказчик 29.09). Номер
+// считается введённым, если в нём не меньше 10 цифр (с «+7» — 11).
+window.AELITA_phoneOk = function (v) { return String(v || '').replace(/\D/g, '').length >= 10; };
+window.AELITA_isEn = function () { return (document.documentElement.lang || '').indexOf('en') === 0; };
