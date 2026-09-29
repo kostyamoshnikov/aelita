@@ -981,21 +981,14 @@ body .hero-next a:hover{border-color:var(--gold)!important;color:var(--gold)!imp
      ПОДПИСЬ      — 12 px / 1,6: авторы отзывов, источники, пояснения.
    Абзацы с размером в атрибуте style (единичные акценты) не трогаем.
    Шапки-обложки (крупные подписи главной, цитаты) — как были. */
-:is(.doc-body p,.doc-body li,p.desc,.bio-info p,.about-text p,.desc-text p,.physics-text p,.ext-banner p,.insight-box p,
-    .tu-levels p,.mars-text p,.dy-bio-text p,p.dy-note,.no-shows p,.join-sec p,.page-hero p.sub,.page-header p.sub,
-    .press-section p.sub,.press-head p.sub,.form-sec p.sub,.follow p,.subscribe p,.team-section p,.contact-sec p,.notify p,
-    .gift-check p,p.afisha-empty,.hub-now p,.about-block p,.extra-block p,.collab-panel p,.become p,.flagship-body p,
-    .film-crew p,.venue-grid p,.txt-note p,.join-form .join-note,.faq-item .faq-lead,.venue-review p,.flag p,
-    .press-contact p,p.lead):not([style*="font-size"]):not(.period):not(.meta):not(.venue-review__who):not(.txt-quote):not(.quote):not(.eyebrow):not(.bio-role):not(.role):not(.tag):not(.badge):not(.status):not(.label):not(.dir):not(.hero-when){
-  font-size:16px!important;line-height:1.75!important}
-:is(.career-item p,.doc-item p,.ev-info p,.format-item p,.free-card p,.pillar p,.book-card p,.katya-card p,.tl-item .tl-desc,
-    .tl-body p,.feature p,.mars-step p,.shop-item p,.exh-body p,.speaker-card .bio,.m-item .m-src,.m-body p,.review .review-text,
-    .show-slot-info p,.faq-points li,.facts-list li,.faq-item p,.mission-item p,.value-item p,.step-item p,.work-card p,
-    .photo-drive p,.form-box p,.show-slots-after p,p.faq-more,.doc-head .doc-meta,p.aud-reviews-empty,.page-hero .hero-when,
-    .page-hero .dir,.hero-content .hero-sub,.hero-content .hero-dir,.hero-content .hero-when,.collab-panel li):not([style*="font-size"]):not(.period):not(.status):not(.author):not(.faq-lead):not(.value-num):not(.mission-num):not(.eyebrow):not(.tag):not(.badge):not(.label){
-  font-size:14px!important;line-height:1.7!important}
-:is(.r-body .r-who,.venue-reviews__note,.venue-reviews__src,.venue-review__who,.dy-stat-l,.book-card .author,.m-updated,
-    .flagship-body .meta){font-size:12px!important;line-height:1.6!important}
+/* порядок важен: основной → второстепенный (карточки, в т.ч. p.desc в
+   карточке программы) → подпись; :where — нулевая специфичность, чтобы
+   решал порядок, а не длина селектора. Метки и надписи капсом (классы в
+   :not) — не текст, их размеры не трогаем. */
+:where(.doc-body p,.doc-body li,p.desc,.bio-info p,.about-text p,.desc-text p,.physics-text p,.ext-banner p,.insight-box p,.tu-levels p,.mars-text p,.dy-bio-text p,p.dy-note,.no-shows p,.join-sec p,.page-hero p.sub,.page-header p.sub,.press-section p.sub,.press-head p.sub,.form-sec p.sub,.follow p,.subscribe p,.team-section p,.contact-sec p,.notify p,.gift-check p,p.afisha-empty,.hub-now p,.about-block p,.extra-block p,.collab-panel p,.become p,.flagship-body p,.film-crew p,.venue-grid p,.txt-note p,.join-form .join-note,.venue-review p,.flag p,.press-contact p,p.lead):where(:not([style*="font-size"])):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:16px!important;line-height:1.75!important}
+:where(.career-item p,.doc-item p,.ev-info p,.format-item p,.free-card p,.pillar p,.book-card p,.katya-card p,.tl-item .tl-desc,.tl-body p,.feature p,.mars-step p,.shop-item p,.exh-body p,.speaker-card .bio,.m-item .m-src,.m-body p,.review .review-text,.show-slot-info p,.faq-points li,.facts-list li,.faq-item p,.mission-item p,.value-item p,.step-item p,.work-card p,.photo-drive p,.form-box p,.show-slots-after p,p.faq-more,.doc-head .doc-meta,p.aud-reviews-empty,.page-hero .hero-when,.page-hero .dir,.hero-content .hero-sub,.hero-content .hero-dir,.hero-content .hero-when,.collab-panel li,.prog-item p,.other-card p,.show-card p,.proj-card p):where(:not([style*="font-size"])):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:14px!important;line-height:1.7!important}
+:where(.r-body .r-who,.venue-reviews__note,.venue-reviews__src,.venue-review__who,.dy-stat-l,.book-card .author,.m-updated,.flagship-body .meta,.m-body .m-author,.m-body .m-fiction){font-size:12px!important;line-height:1.6!important}
+.faq-item .faq-lead{font-size:16px!important;line-height:1.75!important}
 
 /* Ссылки в тексте — один вид: золотой текст и тонкая золотая черта
    (было 10 вариантов: с подчёркиванием и без, белые, с чертой разной
@@ -1027,7 +1020,7 @@ h1.h1-xl{font-size:96px!important;letter-spacing:.05em!important;line-height:1!i
     .pillar,.tl-item,.proj-card,.tl-body,.feature,.mars-step,.v-day,.step-item,.cast-item,.faq-item,.aud-review-form,.form-box,.shop-item)
   :is(h3,h2.shop-title,h2){font-size:16px!important;font-weight:300!important;letter-spacing:.12em!important;line-height:1.45!important}
 :is(.book-card,.katya-card,.mission-item,.value-item,.exh-body) h3{font-size:20px!important;font-weight:300!important;letter-spacing:.12em!important;line-height:1.4!important}
-:is(.tag,.period,.badge,.status){font-size:10px!important;font-weight:300!important;letter-spacing:.34em!important}
+:is(.tag,.period,.badge,.status,.ft-role){font-size:10px!important;font-weight:300!important;letter-spacing:.34em!important}
 .eyebrow{font-size:11px!important;font-weight:400!important;letter-spacing:.45em!important;color:var(--gold)!important}
 @media(max-width:600px){
   :is(.page-hero,.page-header,.bio-info,.lecture-hero,.hub-hero,.press-head,.hero-content,.hero) h1:not(.h1-xl),h1.h1-md{font-size:28px!important}
