@@ -1077,3 +1077,10 @@ main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not(
 .notify-fields{display:flex;flex-direction:column;gap:12px;max-width:480px;margin:0 auto 12px}
 .notify-fields input{width:100%}
 .sub-err{color:#C98B6B;font-size:14px;margin-top:10px;text-align:center}
+
+/* pack-v538: на телефоне плавающие «Написать нам», «↑» и панель «Купить
+   билет» закрывали последние строки подвала (контакты, реквизиты) —
+   докрутить до них было нельзя. Подвалу — запас снизу под эти кнопки. */
+@media(max-width:600px){
+  html body footer{padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))!important}
+}

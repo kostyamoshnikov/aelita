@@ -110,6 +110,7 @@ body :is(.retry-btn,.promo-apply):hover{border-color:var(--gold)!important;color
 body .promo-apply{font-size:12px!important;letter-spacing:.16em!important;padding:10px 18px!important}
 body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:not-allowed!important}
 @media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:12px!important;letter-spacing:.16em!important;padding:13px 20px!important}}
+.nav-right{display:flex;align-items:center;margin-left:auto}
 </style>
 </head>
 <body>
@@ -119,9 +120,11 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <a class="nav-back" href="/">← На сайт</a>
+    <div class="nav-right">
+      <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+      <a class="lang-switch" href="/en/app/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    </div>
   </div>
-<a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-<a class="lang-switch" href="/en/app/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
 </nav>
 
 <main id="main">
@@ -287,6 +290,6 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
      уходила в никуда. Баннера cookies на странице нет: счётчик встаёт,
      только если согласие уже дано на другой странице сайта. -->
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=57"></script>
+<script src="/assets/main.js?v=58"></script>
 </body>
 </html>
