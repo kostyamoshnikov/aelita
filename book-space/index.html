@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=55">
+<link rel="stylesheet" href="/assets/style.css?v=57">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -268,14 +268,9 @@ p a:hover{opacity:.75}
         <span class="lbl">Новая группа</span>
         <span class="val">Сентябрь · снова Берн</span>
       </div>
-      <div class="hero-meta-item">
-        <span class="lbl">Приходите бесплатно</span>
-        <span class="val">Открытая встреча · <!-- DATE:workshop-2026-09-12,workshop-2026-09-13:daysRangeDash:ru:BEGIN -->даты будут объявлены<!-- DATE:workshop-2026-09-12,workshop-2026-09-13:daysRangeDash:ru:END --></span>
-      </div>
     </div>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <a class="btn-gold" href="#join">Хочу в клуб</a>
-      <a class="btn-outline" href="#open-meetings" style="margin-left:0">Прийти на бесплатную встречу →</a>
       <a class="btn-outline" href="#season-program" style="margin-left:0">Что читаем</a>
     </div>
   </div>
@@ -417,25 +412,6 @@ p a:hover{opacity:.75}
       <p style="color:var(--bone);font-size:17px;margin-bottom:14px">Первый поток основного комьюнити только что выпустился — в сентябре набираем новую группу.</p>
       <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Формат — 1 книга в месяц, 1 встреча в неделю. Участие — 10 000 ₽ в месяц.</p>
       <a class="btn-gold" href="#join">Записаться в новую группу</a>
-    </div>
-
-    <div id="open-meetings" style="margin-top:44px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Не готовы платить — приходите так</p>
-      <p style="color:var(--sand);font-size:15px;max-width:60ch">Можно просто прийти познакомиться — бесплатно, без обязательств, один раз посмотреть, как это устроено, прежде чем решать про поток.</p>
-    </div>
-
-    <div class="reveal dash-note" style="margin-top:20px;background:var(--coal);padding:32px 36px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Открытая встреча · Основной поток</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px"><!-- DATE:workshop-2026-09-13:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-13:dayMonth:ru:END --> — открытая встреча основного потока. Вход свободный, требуется регистрация.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Калуга, <!-- DATE:workshop-2026-09-13:time:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-13:time:ru:END -->, <!-- VENUE:workshop-2026-09-13:venuePredicate:ru:BEGIN -->площадка будет объявлена позже<!-- VENUE:workshop-2026-09-13:venuePredicate:ru:END -->.</p>
-      <a class="btn-outline" href="/workshop-main">Подробнее и записаться →</a>
-    </div>
-
-    <div class="reveal dash-note" style="margin-top:20px;background:var(--coal);padding:32px 36px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Отдельный поток · Книжный клуб для предпринимателей</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px"><!-- DATE:workshop-2026-09-12:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:dayMonth:ru:END --> — открытая встреча книжного клуба для предпринимателей. Вход свободный, требуется регистрация.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Калуга, <!-- DATE:workshop-2026-09-12:time:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:time:ru:END -->, <!-- VENUE:workshop-2026-09-12:venuePredicate:ru:BEGIN -->площадка будет объявлена позже<!-- VENUE:workshop-2026-09-12:venuePredicate:ru:END -->.</p>
-      <a class="btn-outline" href="/workshop-entrepreneurs">Подробнее и записаться →</a>
     </div>
 
     <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2 id="season-program">Что и когда читаем</h2></div>
@@ -654,7 +630,7 @@ p a:hover{opacity:.75}
 </div>
 
 <!-- payments.js -->
-<script src="/assets/payments.js?v=55"></script>
+<script src="/assets/payments.js?v=57"></script>
 <script>
   function switchFormTab_j(tab, btn){
     document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
@@ -670,7 +646,6 @@ p a:hover{opacity:.75}
     <p class="eyebrow" style="margin-bottom:20px">Второй поток</p>
     <div class="sec-head reveal"><span class="eyebrow">Для предпринимателей</span><h2>Слова для того, чего ещё не существует</h2></div>
     <p class="desc reveal">Отдельная программа AELITA COMMUNITY — не про бизнес-инструменты, а про то, есть ли у нас язык для решений, которые мы называем стратегическими. Ведёт <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>.</p>
-    <p class="desc reveal">Начать проще всего с <a href="/workshop-entrepreneurs" style="color:var(--gold)">открытой встречи <!-- DATE:workshop-2026-09-12:dayMonth:ru:BEGIN -->дата будет объявлена<!-- DATE:workshop-2026-09-12:dayMonth:ru:END --></a> — Калуга, вход свободный: знакомство с форматом перед тем, как присоединиться к потоку.</p>
 
     <div class="om-facts reveal" style="margin:36px 0">
       <div class="om-fact">
@@ -948,7 +923,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=55"></script>
+<script src="/assets/main.js?v=57"></script>
 
 <script>
   // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты
@@ -991,6 +966,6 @@ p a:hover{opacity:.75}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=55"></script>
+<script src="/assets/phone-prefix.js?v=57"></script>
 </body>
 </html>

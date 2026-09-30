@@ -56,3 +56,82 @@
     if (el && el.tagName === 'INPUT' && el.type === 'tel') enhance(el);
   });
 })();
+
+/* pack-v536 (заказчик 29.09): «чтобы не приходилось лишний раз заполнять».
+ * Во всех формах сайта:
+ *   — если человек вошёл в личный кабинет, пустые поля имени, почты и
+ *     телефона заполняются из профиля (всё можно поправить);
+ *   — телефон, введённый один раз, подставляется в любой форме на этом
+ *     устройстве (тот же ключ, что у кассы с pack-v442);
+ *   — введённый телефон сохраняется в профиль кабинета (если вошёл и он
+ *     там другой) — тогда подставится и на другом устройстве.
+ * Страницы самого кабинета и админки — со своей логикой, их не трогаем. */
+(function () {
+  if (/^\/(en\/)?(account|admin)(\/|$)/.test(location.pathname)) return;
+  var TOKEN_KEY = 'aelita_account_token', PHONE_KEY = 'aelita_last_phone', CACHE_KEY = 'aelita_me_cache';
+  var API = 'https://api.aelita-production.ru/account';
+  var profile = null;
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  function token() { return ls(TOKEN_KEY); }
+  function digits(v) { return String(v || '').replace(/\D/g, '').slice(-10); }
+  function isName(el) {
+    if (el.type !== 'text') return false;
+    if (/(org|company|brand|venue|event|project|title|promo|gift|code)/i.test(el.id || '')) return false;
+    return el.getAttribute('autocomplete') === 'name' || /(^|[-_])name([-_]|$)/i.test(el.id || '') || /^(fname|subName)$/.test(el.id || '');
+  }
+  function inputs() { return Array.prototype.slice.call(document.querySelectorAll('input')); }
+  function fill() {
+    var local = ls(PHONE_KEY);
+    inputs().forEach(function (el) {
+      if (el.disabled || el.readOnly || el.value) return;
+      if (el.type === 'tel') { var p = (profile && profile.phone) || local; if (p) el.value = p; }
+      else if (profile && el.type === 'email' && profile.email) el.value = profile.email;
+      else if (profile && profile.name && isName(el)) el.value = profile.name;
+    });
+  }
+  function savePhone(v) {
+    v = String(v || '').trim();
+    if (digits(v).length < 10) return;
+    ls(PHONE_KEY, v);
+    if (!token() || !profile || digits(profile.phone) === digits(v)) return;
+    profile.phone = v;
+    try { sessionStorage.removeItem(CACHE_KEY); } catch (e) {}
+    fetch(API + '/update-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token() },
+      body: JSON.stringify({ phone: v }),
+    }).catch(function () {});
+  }
+  window.AELITA_savePhone = savePhone;
+  function loadProfile() {
+    var t = token(); if (!t) return Promise.resolve(null);
+    try {
+      var c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+      if (c && c.t === t && Date.now() - c.at < 5 * 60 * 1000) return Promise.resolve(c.d);
+    } catch (e) {}
+    return fetch(API + '/me', { headers: { Authorization: 'Bearer ' + t } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (d) { try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ t: t, at: Date.now(), d: { name: d.name || '', email: d.email || '', phone: d.phone || '' } })); } catch (e) {} }
+        return d;
+      })
+      .catch(function () { return null; });
+  }
+  function start() {
+    fill();
+    loadProfile().then(function (d) { if (d) { profile = { name: d.name || '', email: d.email || '', phone: d.phone || '' }; fill(); } });
+    document.addEventListener('change', function (e) { if (e.target && e.target.type === 'tel') savePhone(e.target.value); });
+    // заявки с сайта: телефон из отправленной заявки — в память и профиль
+    if (typeof window.AELITA_sendLead === 'function' && !window.AELITA_sendLead.__aelitaWrapped) {
+      var orig = window.AELITA_sendLead;
+      var wrapped = async function (title, fields) {
+        var r = await orig.apply(this, arguments);
+        if (r && fields && fields['Телефон']) savePhone(fields['Телефон']);
+        return r;
+      };
+      wrapped.__aelitaWrapped = true;
+      window.AELITA_sendLead = wrapped;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

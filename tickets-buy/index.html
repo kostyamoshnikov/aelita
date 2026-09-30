@@ -449,7 +449,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=55"></script>
+<script src="/assets/payments.js?v=57"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1712,7 +1712,7 @@ async function submitOrder(){
     const out = await res.json();
     // pack-v442: телефон запоминаем на этом устройстве — в профиле кабинета
     // его нет, а вводить его заново при каждой покупке незачем.
-    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} }
+    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} if(window.AELITA_savePhone) AELITA_savePhone(contact); }
     if(out.zero_amount){
       // pack-v278: скидка (промокод + подарочная карта) покрыла всю
       // сумму — ЮKassa вообще не вызывалась, create-order.js уже
@@ -1922,6 +1922,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=55"></script>
+<script src="/assets/phone-prefix.js?v=57"></script>
 </body>
 </html>
