@@ -36,17 +36,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 section{padding:70px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;width:100%}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;width:100%}
 .btn-gold:disabled{opacity:.4;cursor:default}
 .sec-head{margin-bottom:50px}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
-p a:hover{opacity:.75}
+@media(hover:hover){p a:hover{opacity:.75}}
 /* HERO — компактный, без полноэкранного beam-эффекта: страница для быстрого сценария, не для долгого просмотра */
 .hero{padding:120px 0 60px;position:relative;overflow:hidden}
 .hero-beam::before{content:"";position:absolute;top:-5%;left:55%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.7) 35%,var(--gold) 65%,transparent);transform:rotate(10deg);transform-origin:top center;box-shadow:0 0 18px 4px rgba(214,181,122,.45),0 0 70px 18px rgba(214,181,122,.15);animation:beam-in 2s ease both}
@@ -54,40 +54,40 @@ p a:hover{opacity:.75}
 .hero-community{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(13px,2vw,18px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .hero-title{font-size:clamp(32px,7vw,64px);letter-spacing:.06em;line-height:1.1;margin-bottom:24px}
 .hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:24px}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:56ch;margin-bottom:28px;line-height:1.8}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:0.875rem;color:var(--sand);max-width:56ch;margin-bottom:28px;line-height:1.8}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
-.hero-meta-item .val{font-size:15px;color:var(--bone)}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:0.9375rem;color:var(--bone)}
 /* ВЫБОР СПЕКТАКЛЯ — карточки-переключатели */
 .show-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 @media(max-width:640px){.show-grid{grid-template-columns:1fr}}
 .show-card{background:var(--coal);border:1px solid transparent;border-left:2px solid transparent;padding:28px 26px;text-align:left;cursor:pointer;font-family:inherit;color:inherit;-webkit-appearance:none;appearance:none;transition:border-color .2s,background .2s;width:100%}
-.show-card:hover{background:#202026}
+@media(hover:hover){.show-card:hover{background:#202026}}
 .show-card.selected{border-left-color:var(--gold);background:#202026}
-.show-card .mark{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.5);margin-bottom:10px;display:block}
+.show-card .mark{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.5);margin-bottom:10px;display:block}
 .show-card.selected .mark{color:var(--gold)}
-.show-card h3{font-size:19px;letter-spacing:.06em;font-weight:300;line-height:1.35}
+.show-card h3{font-size:1.1875rem;letter-spacing:.06em;font-weight:300;line-height:1.35}
 /* ОПЛАТА */
 .pay-sec{background:var(--coal)}
 .pay-box{max-width:440px;margin:0 auto;text-align:center}
-.pay-box .price{font-family:'Montserrat',sans-serif;font-size:44px;color:var(--gold);letter-spacing:.04em;margin-bottom:6px}
-.pay-box .chosen{font-size:14px;color:var(--sand);margin-bottom:28px;min-height:20px}
-.pay-note{font-size:12px;color:rgba(201,184,163,.5);margin-top:16px;line-height:1.7}
+.pay-box .price{font-family:'Montserrat',sans-serif;font-size:2.75rem;color:var(--gold);letter-spacing:.04em;margin-bottom:6px}
+.pay-box .chosen{font-size:0.875rem;color:var(--sand);margin-bottom:28px;min-height:20px}
+.pay-note{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:16px;line-height:1.7}
 .join-field{margin-bottom:12px;text-align:left}
-.join-field label{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-.join-field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s}
 .join-field input:focus{outline:none;border-color:var(--gold)}
 .req-mark{color:var(--gold);font-weight:700}
-.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
-.pay-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left;margin-top:20px}
+.pay-pending-notice{color:var(--sand);font-size:0.875rem;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
+.pay-ok{color:var(--gold);font-size:0.9375rem;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left;margin-top:20px}
 /* КАК ПОЛУЧИТЬ — три коротких шага */
 .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 @media(max-width:760px){.steps-grid{grid-template-columns:1fr}}
 .step-item{background:var(--coal);padding:32px 28px}
-.step-item .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
-.step-item h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:8px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
-.step-item p{color:var(--sand);font-size:13px;line-height:1.7}
+.step-item .num{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.step-item h3{font-size:0.875rem;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:8px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.step-item p{color:var(--sand);font-size:0.8125rem;line-height:1.7}
 @media(max-width:430px){section{padding:50px 0}}
 
 /* pack-v468 (ТЗ клиентских текстов, З-3): экран после возврата с оплаты.
@@ -99,7 +99,7 @@ p a:hover{opacity:.75}
 .pay-return{padding:48px 0 8px}
 .pay-return .wrap{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center}
 .pay-return h2{margin-bottom:12px}
-.pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
+.pay-return-note{font-size:0.8125rem;color:var(--sand);margin-top:10px}
 .pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
 </style>
 <script type="application/ld+json">
@@ -140,8 +140,8 @@ p a:hover{opacity:.75}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/programs/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/programs/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -201,11 +201,11 @@ p a:hover{opacity:.75}
       <div class="price">200 ₽</div>
       <div class="chosen" id="chosenShow">Choose a show above first</div>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on this page is still being connected. To get a programme right now — ask the staff at the stand, card payment is available on the spot.</p>
-      <div style="font-size:12px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required — needed to send the receipt</div>
-      <div class="join-field"><label>Name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
-      <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="msg" id="payMsg_program" style="display:none;color:#C98B6B;font-size:13px;margin:8px 0"></div>
+      <div style="font-size:0.75rem;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required — needed to send the receipt</div>
+      <div class="join-field"><label>Name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" placeholder="Your name" required></div>
+      <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input class="ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="ym-disable-keys" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="msg" id="payMsg_program" style="display:none;color:#C98B6B;font-size:0.8125rem;margin:8px 0"></div>
       <button class="btn-gold" id="payBtn_program" disabled onclick="AELITA_pay('program', {show: window.AELITA_selectedShow, name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_program'})">Pay — 200 ₽ →</button>
             <p class="pay-note">No sign-up needed: your name, email and phone are only for the receipt. After paying, show the payment email at the desk to get your programme. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
@@ -350,9 +350,9 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js?v=58"></script>
+<script src="/assets/payments.js?v=61"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   // Выбор спектакля — переключает карточки, включает кнопку оплаты.
@@ -415,6 +415,6 @@ p a:hover{opacity:.75}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

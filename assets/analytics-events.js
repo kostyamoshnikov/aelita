@@ -131,6 +131,51 @@
   // результату (оплата билета подтверждена, см. /tickets-buy/).
   window.AELITA_track = track;
 
+  // pack-v540: электронная торговля Метрики. В инициализации счётчика
+  // давно стоит ecommerce:"dataLayer", но слой никто не наполнял, и
+  // выручки в отчётах не было. Пак Культурности этот параметр убрал — у
+  // них магазина нет; у Аэлиты продажа идёт на сайте, поэтому наоборот:
+  // кладём подтверждённую покупку. Вызывается только после ответа
+  // order-status «paid» (или нулевого заказа) — не по клику. Один раз на
+  // заказ: повторный показ экрана успеха (обновили страницу) второй
+  // покупки не создаёт.
+  window.AELITA_ecomPurchase = function (order) {
+    try {
+      if (!order || !order.id) return;
+      var key = 'aelita_ecom_' + order.id;
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, '1');
+    } catch (e) { /* без sessionStorage — всё равно отправляем */ }
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      ecommerce: {
+        currencyCode: 'RUB',
+        purchase: {
+          actionField: { id: String(order.id), revenue: Number(order.revenue) || 0 },
+          products: order.products || [],
+        },
+      },
+    });
+  };
+
+  // pack-v540: «начал заполнять форму» — первый ввод в любую форму на
+  // странице (одна цель на форму за визит страницы). Раньше воронка
+  // форм состояла из одной точки «нажал отправить», и нельзя было
+  // отличить «не доходят до формы» от «бросают на середине» (идея из
+  // пака Культурности, их цель brief_start). Только тип поля и имя
+  // формы — содержимое не передаётся никогда.
+  var startedForms = {};
+  document.addEventListener('input', function (e) {
+    var el = e.target;
+    if (!el || !el.matches || !el.matches('input, textarea, select')) return;
+    if (el.type === 'checkbox' || el.type === 'radio' || el.type === 'hidden') return;
+    var box = el.closest('form, [id$="Form"], [id$="-form"], [class*="form"]');
+    var name = box ? (box.id || (box.className && String(box.className).split(' ')[0]) || 'form') : 'page';
+    if (startedForms[name]) return;
+    startedForms[name] = true;
+    track('form_start', { form: name, page: location.pathname });
+  }, true);
+
 
   // Достаёт слаг страницы из внутренней ссылки вида /slug/ или /en/slug/.
   // Для внешних ссылок возвращает href как есть — тоже годится как
@@ -203,8 +248,13 @@
       //     (work-card — страницы спектаклей, show-card — «Человеческое»/
       //     «Послушайте», proj-card — карточки ИОВ и др. на /projects,
       //     prog-item — карточки программы фестиваля на /tochkacuire) ---
-      if (/ (work-card|show-card|proj-card|prog-item) /.test(cls)) {
-        var cardType = cls.match(/ (work-card|show-card|proj-card|prog-item) /)[1];
+      //     ⚠️ pack-v540: + `card` — карточки спектаклей на главной и на
+      //     /projects давно размечены классом `card`, и клик по ним не был
+      //     целью вообще: нашёл браузерный тест metrika-coverage.test.py
+      //     (класс сменили, правило здесь осталось старым — ровно случай
+      //     пака «Короче», их v41).
+      if (/ (work-card|show-card|proj-card|prog-item|card) /.test(cls)) {
+        var cardType = cls.match(/ (work-card|show-card|proj-card|prog-item|card) /)[1];
         track('show_card_click', { link_url: href, slug: slugFromHref(href), card_type: cardType, page: location.pathname });
         return;
       }
@@ -241,6 +291,17 @@
     var tpBtn = e.target.closest('[id^="timepad_twf_register_"]');
     if (tpBtn) {
       track('timepad_register_click', { event_id: tpBtn.id.replace('timepad_twf_register_', ''), page: location.pathname });
+      return;
+    }
+
+    // --- pack-v540: «Оплатить» у подписок, консьержа, сертификата и
+    //     программок (Payments). Раньше клик не был целью: видно было
+    //     только серверную конверсию — нельзя понять, сколько людей нажали
+    //     и не дошли до оплаты. ---
+    var payBtn = e.target.closest('[onclick^="AELITA_pay("]');
+    if (payBtn) {
+      var pm = (payBtn.getAttribute('onclick') || '').match(/^AELITA_pay\('([a-z_]+)'/);
+      track('product_pay_click', { product: pm ? pm[1] : '', page: location.pathname });
       return;
     }
 

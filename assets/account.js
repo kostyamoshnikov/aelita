@@ -546,12 +546,12 @@
         return 'https://yandex.ru/maps/?text=' + encodeURIComponent(label);
       }
       if (data.venueLabel) {
-        html += '<p style="color:var(--sand);font-size:14px;margin-top:10px">' + L.where + escapeHtml_(data.venueLabel) +
+        html += '<p style="color:var(--sand);font-size:0.875rem;margin-top:10px">' + L.where + escapeHtml_(data.venueLabel) +
           ' · <a href="' + mapUrl_(data.venueLabel) + '" target="_blank" rel="noopener" ' + gold + '>' + L.how + '</a>' +
           (data.datetimeLabel ? '<br>' + L.when + escapeHtml_(data.datetimeLabel) : '') + '</p>';
       }
 
-      html += '<p style="color:var(--sand);font-size:13px;margin-top:10px">' + L.spam +
+      html += '<p style="color:var(--sand);font-size:0.8125rem;margin-top:10px">' + L.spam +
         '<a href="mailto:' + mail + '" ' + gold + '>' + mail + '</a>' + L.spamTail + '</p>';
       return html;
     },

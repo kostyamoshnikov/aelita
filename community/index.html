@@ -33,11 +33,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 .hub-hero{padding:150px 0 70px}
 .hub-hero h1{font-size:clamp(32px,6vw,58px);letter-spacing:.02em;line-height:1.15;margin:14px 0 24px}
-.hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;color:var(--sand);max-width:640px;line-height:1.6}
+.hub-hero .sub{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1rem;color:var(--sand);max-width:640px;line-height:1.6}
 /* pack-v456: вводный абзац разделён на два смысловых слоя — манифест
    (крупно, с золотой чертой) и «что есть сейчас / что дальше» (две
    короткие плашки). Одним абзацем серого текста он читался как сноска. */
@@ -45,8 +45,8 @@
 .hub-lead em{font-style:normal;color:var(--gold)}
 .hub-now{display:grid;grid-template-columns:repeat(2,minmax(0,280px));gap:14px;margin:34px 0 38px}
 .hub-now div{border-top:1px solid rgba(214,181,122,.35);padding-top:14px}
-.hub-now span{display:block;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.hub-now p{margin:0;font-family:'Montserrat',sans-serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--sand)}
+.hub-now span{display:block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.hub-now p{margin:0;font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.9375rem;line-height:1.5;color:var(--sand)}
 @media (max-width:560px){.hub-hero{padding:122px 0 56px}.hub-hero h1{margin:10px 0 18px}.hub-now{grid-template-columns:1fr;gap:18px;margin:28px 0 32px}.hub-lead{padding-left:16px}}
 /* Перенесено из book-space/index.html (pack-v229) — та же карточка
    Кати переиспользована здесь без credentials-списка, укороченный
@@ -55,14 +55,14 @@
 .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 .katya-card{background:var(--coal);padding:44px 36px}
-.katya-card .role{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
-.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
-.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:1.375rem;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 <nav>
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
@@ -71,13 +71,13 @@
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/community/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/community/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -90,12 +90,12 @@
   <div class="wrap">
     <p class="eyebrow">AELITA COMMUNITY</p>
     <h1>Комьюнити AELITA PRODUCTION</h1>
-    <p class="hub-lead">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, <em>как устроено мышление</em> — своё и чужое.</p>
+    <p class="hub-lead">Пространства для тех, кому интересно не просто получить готовый ответ, а разобраться, <em>как устроено мышление</em> — своё и чужое.</p>
     <!-- pack-v510: кнопка поднята над «Сейчас/Дальше» — на первом экране телефона -->
-    <div class="hero-cta"><a class="btn-gold" href="#join-community">Хочу в клуб</a></div>
+    <div class="hero-cta"><a class="btn-gold" href="#join-community">Хочу в клуб</a></div>
     <div class="hub-now">
       <div><span>Сейчас</span><p>Два книжных потока</p></div>
-      <div><span>Дальше</span><p>Другие форматы — не обязательно про книги</p></div>
+      <div><span>Дальше</span><p>Другие форматы — не обязательно про книги</p></div>
     </div>
   </div>
 </div>
@@ -105,15 +105,15 @@
     <div class="sec-head reveal"><span class="eyebrow">Комьюнити</span><h2>Больше, чем один формат</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
-        <p>AELITA COMMUNITY — общий дом для форматов, которые не сводятся к готовым ответам. Пока в нём один действующий проект — книжный клуб «3 УРОВЕНЬ»; со временем к нему могут добавиться и другие направления, не обязательно про чтение.</p>
-        <p>Общее в них будет одно: не лекция с готовыми выводами, а среда, где трение между разными способами думать — само по себе и есть механизм, который двигает понимание вперёд.</p>
+        <p>AELITA COMMUNITY — общий дом для форматов, которые не сводятся к готовым ответам. Пока в нём один действующий проект — книжный клуб «3 УРОВЕНЬ»; со временем к нему могут добавиться и другие направления, не обязательно про чтение.</p>
+        <p>Общее в них будет одно: не лекция с готовыми выводами, а среда, где трение между разными способами думать — само по себе и есть механизм, который двигает понимание вперёд.</p>
       </div>
       <div>
         <div class="katya-card">
           <p class="role">Основательница · Архитектор пространств</p>
           <h3>Катя Абдулова</h3>
           <p>Психолог, сертифицированный транзактный аналитик (ITAA), коуч (ACSTH), режиссёр. Основательница <a href="/katya-abdulova">AELITA PRODUCTION</a>.</p>
-          <a class="katya-link" href="/katya-abdulova">Подробнее о Кате →</a>
+          <a class="katya-link" href="/katya-abdulova">Подробнее о Кате →</a>
         </div>
       </div>
     </div>
@@ -125,22 +125,22 @@
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Почему «3 УРОВЕНЬ»</h2></div>
     <div class="about-text reveal" style="max-width:760px">
-      <p>Мне не хотелось названия про книги: клуб давно не про книги. Точнее, не только про них. Книга — всего лишь повод. Повод столкнуться с чужой системой координат в своей голове и на несколько часов допустить хотя бы одну «неприятную мысль»: а что, если мир устроен вовсе не так, как я привыкла о нём думать?</p>
+      <p>Мне не хотелось названия про книги: клуб давно не про книги. Точнее, не только про них. Книга — всего лишь повод. Повод столкнуться с чужой системой координат в своей голове и на несколько часов допустить хотя бы одну «неприятную мысль»: а что, если мир устроен вовсе не так, как я привыкла о нём думать?</p>
     </div>
     <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">1 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">2 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
-      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">3 уровень</p><p style="color:var(--bone);margin:0;line-height:1.6">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">1 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">2 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
+      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">3 уровень</p><p style="color:var(--bone);margin:0;line-height:1.6">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
     </div>
     <div class="about-text reveal" style="max-width:760px">
       <!-- pack-v513: деликатная разбивка текста (как в v512) -->
-      <p class="txt-quote">Почему меня раздражает именно эта мысль? Почему этот поступок кажется мне неправильным? Почему я вообще уверена, что успех выглядит именно так? Что такое для меня любовь — и откуда я это взяла? Почему одно я называю свободой, а другое безответственностью?</p>
+      <p class="txt-quote">Почему меня раздражает именно эта мысль? Почему этот поступок кажется мне неправильным? Почему я вообще уверена, что успех выглядит именно так? Что такое для меня любовь — и откуда я это взяла? Почему одно я называю свободой, а другое безответственностью?</p>
       <p class="txt-kicker">Почему это важно</p>
-      <p>Мы очень часто пытаемся изменить свою жизнь, не понимая законов, которыми она организована: ищем другого партнёра с тем же представлением о любви, строим новый бизнес со старым представлением об успехе, уезжаем в другой город и привозим туда прежнего себя.</p>
-      <p class="txt-kicker">Что происходит на встречах</p>
-      <p>Мне не очень интересно искать ещё один «правильный ответ». Интереснее место, в котором становится видно, почему именно эти ответы вообще казались правильными. После хорошего разговора мир физически остаётся прежним — те же люди, тот же город, тот же бизнес, — но ты видишь между ними связи, которых вчера не замечал. А значит, перед тобой уже немного другая реальность.</p>
-      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
-      <p style="color:var(--sand);font-size:14px">— <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>, основательница клуба</p>
+      <p>Мы очень часто пытаемся изменить свою жизнь, не понимая законов, которыми она организована: ищем другого партнёра с тем же представлением о любви, строим новый бизнес со старым представлением об успехе, уезжаем в другой город и привозим туда прежнего себя.</p>
+      <p class="txt-kicker">Что происходит на встречах</p>
+      <p>Мне не очень интересно искать ещё один «правильный ответ». Интереснее место, в котором становится видно, почему именно эти ответы вообще казались правильными. После хорошего разговора мир физически остаётся прежним — те же люди, тот же город, тот же бизнес, — но ты видишь между ними связи, которых вчера не замечал. А значит, перед тобой уже немного другая реальность.</p>
+      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
+      <p style="color:var(--sand);font-size:0.875rem">— <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>, основательница клуба</p>
     </div>
   </div>
 </section>
@@ -150,17 +150,17 @@
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Книжный клуб «3 УРОВЕНЬ»</span><h2>Два направления</h2></div>
     <div class="other-grid reveal" style="gap:24px">
-      <a class="other-card" href="/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, тема сезона меняется — сейчас про то, зачем мы выбираем быть вместе.</p></a>
-      <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка.</p></a>
+      <a class="other-card" href="/book-space#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, тема сезона меняется — сейчас про то, зачем мы выбираем быть вместе.</p></a>
+      <a class="other-card" href="/book-space#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа — от психологии семьи и власти до философии мышления и языка.</p></a>
     </div>
-    <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:14px">Оба потока — камерный формат, до 10 человек, без готовых ответов и лекций. Встречи записываются — можно посмотреть в своём темпе, если не получилось быть на связи вживую.</p>
+    <p class="desc reveal" style="margin-top:24px;color:var(--sand);font-size:0.875rem">Оба потока — камерный формат, до 10 человек, без готовых ответов и лекций. Встречи записываются — можно посмотреть в своём темпе, если не получилось быть на связи вживую.</p>
   </div>
 </section>
 
 <div class="form-sec" id="join-community">
   <div class="wrap reveal">
-    <div class="sec-head reveal"><span class="eyebrow">Присоединиться</span><h2>Хочу в клуб</h2></div>
-    <p style="color:var(--sand);margin-bottom:36px;font-size:15px">Оставьте заявку так, как удобнее — на сайте или в Telegram-боте. Или сразу: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+    <div class="sec-head reveal"><span class="eyebrow">Присоединиться</span><h2>Хочу в клуб</h2></div>
+    <p style="color:var(--sand);margin-bottom:36px;font-size:0.9375rem">Оставьте заявку так, как удобнее — на сайте или в Telegram-боте. Или сразу: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
 
     <div class="notify-tabs" id="notifyTabs_c">
       <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_c('site', this)">Через сайт</button>
@@ -169,31 +169,31 @@
 
     <div id="formSite_c">
     <div class="form-grid" id="form_c">
-      <div style="font-size:12px;color:var(--sand);grid-column:1/-1">Поля со звёздочкой (*) обязательны для заполнения</div>
-      <div class="field"><label>Имя <span class="req-mark">*</span></label><input type="text" id="name_c" placeholder="Как вас зовут" required></div>
-      <div class="field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="email_c" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="phone_c" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="tg_c" autocomplete="off" placeholder="@username"></div>
+      <div style="font-size:0.75rem;color:var(--sand);grid-column:1/-1">Поля со звёздочкой (*) обязательны для заполнения</div>
+      <div class="field"><label>Имя <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="name_c" placeholder="Как вас зовут" required></div>
+      <div class="field"><label>Email <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="email_c" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="phone_c" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear ym-disable-keys" type="text" id="tg_c" autocomplete="off" placeholder="@username"></div>
       <div class="field">
         <label>Какой поток интересует?</label>
         <select id="stream_c">
-          <option value="">Ещё не решил(а)</option>
+          <option value="">Ещё не решил(а)</option>
           <option>Основной поток</option>
           <option>Для предпринимателей</option>
         </select>
       </div>
       <div class="field full">
-        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_c"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
+        <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_c"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
         <button class="btn-gold" onclick="submitCommunityForm()" style="width:fit-content">Отправить заявку</button>
-        <p class="sub-err" id="err_c" style="color:#e08a6e;margin-top:14px;display:none;font-size:13px;letter-spacing:.04em"></p>
-        <p class="form-ok" id="ok_c">Спасибо! Катя свяжется с вами и расскажет о ближайшей встрече.</p>
+        <p class="sub-err" id="err_c" style="color:#e08a6e;margin-top:14px;display:none;font-size:0.8125rem;letter-spacing:.04em"></p>
+        <p class="form-ok" id="ok_c">Спасибо! Катя свяжется с вами и расскажет о ближайшей встрече.</p>
       </div>
     </div>
     </div>
 
     <div id="formBot_c" style="display:none">
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=community" target="_blank" rel="noopener">Хочу в клуб через бот</a>
-      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
+      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=community" target="_blank" rel="noopener">Хочу в клуб через бот</a>
+      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст заявку нам напрямую.</p>
     </div>
   </div>
 </div>
@@ -213,7 +213,7 @@
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=community" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -238,7 +238,7 @@
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
@@ -346,7 +346,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -357,6 +357,6 @@
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

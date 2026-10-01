@@ -36,39 +36,39 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 .press-head{padding:120px 0 60px;border-bottom:1px solid rgba(232,230,225,.08)}
-.press-head .sub{color:var(--sand);font-size:15px;max-width:60ch;margin-top:12px}
+.press-head .sub{color:var(--sand);font-size:0.9375rem;max-width:60ch;margin-top:12px}
 .press-section{padding:56px 0}
 .press-section:nth-child(even){background:var(--coal)}
-.press-group-title{font-family:'Montserrat',sans-serif;font-weight:300;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:36px 0 4px}
+.press-group-title{font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.8125rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:36px 0 4px}
 .press-group-title:first-child{margin-top:0}
 .doc-list{margin-top:8px}
 .doc-item{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;padding:26px 0;border-bottom:1px solid rgba(232,230,225,.08)}
 .doc-item:first-of-type{border-top:1px solid rgba(232,230,225,.08)}
-.doc-item h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:16px;letter-spacing:.02em;margin-bottom:6px;color:var(--bone)}
+.doc-item h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1rem;letter-spacing:.02em;margin-bottom:6px;color:var(--bone)}
 .doc-item h3 a.show-link{color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px}
-.doc-item h3 a.show-link:hover{text-decoration-color:var(--gold)}
-.doc-item p{color:var(--sand);font-size:13.5px;max-width:60ch}
-.doc-link-pdf{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);border:1px solid rgba(201,184,163,.3);padding:11px 18px;white-space:nowrap;transition:all .3s}
-.doc-link-pdf:hover{border-color:var(--gold);color:var(--gold)}
+@media(hover:hover){.doc-item h3 a.show-link:hover{text-decoration-color:var(--gold)}}
+.doc-item p{color:var(--sand);font-size:0.84375rem;max-width:60ch}
+.doc-link-pdf{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);border:1px solid rgba(201,184,163,.3);padding:11px 18px;white-space:nowrap;transition:all .3s}
+@media(hover:hover){.doc-link-pdf:hover{border-color:var(--gold);color:var(--gold)}}
 .logo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:20px}
 .logo-card{background:var(--ink);padding:28px;display:flex;flex-direction:column;gap:14px}
 .logo-card .swatch{height:260px;display:flex;align-items:center;justify-content:center;background:var(--coal);border-radius:2px}
 .logo-card .swatch img{max-height:230px;max-width:85%}
 .logo-card .swatch.on-bone{background:var(--bone)}
-.logo-card h4{font-family:'Montserrat',sans-serif;font-weight:300;font-size:13px;letter-spacing:.1em;color:var(--bone)}
+.logo-card h4{font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.8125rem;letter-spacing:.1em;color:var(--bone)}
 .logo-card .fmt-links{display:flex;gap:14px;flex-wrap:wrap}
-.logo-card .fmt-links a{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold);padding-bottom:1px}
+.logo-card .fmt-links a{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold);padding-bottom:1px}
 .facts-list{margin-top:16px}
-.facts-list li{color:var(--sand);font-size:14.5px;line-height:1.9;padding-left:20px;position:relative}
+.facts-list li{color:var(--sand);font-size:0.90625rem;line-height:1.9;padding-left:20px;position:relative}
 .facts-list li::before{content:'—';position:absolute;left:0;color:var(--gold)}
 .press-contact{background:var(--coal);padding:36px 40px;margin-top:8px}
 .press-contact a{color:var(--gold)}
 .photo-links{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:14px}
-.photo-links a{color:var(--sand);font-size:13.5px;border-bottom:1px dotted rgba(201,184,163,.4);text-decoration:none}
-.photo-links a:hover{color:var(--gold);border-color:var(--gold)}
+.photo-links a{color:var(--sand);font-size:0.84375rem;border-bottom:1px dotted rgba(201,184,163,.4);text-decoration:none}
+@media(hover:hover){.photo-links a:hover{color:var(--gold);border-color:var(--gold)}}
 @media(max-width:640px){.doc-item{grid-template-columns:1fr;gap:14px}.doc-link-pdf{justify-self:start}.logo-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -87,8 +87,8 @@
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/press/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/press/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -294,8 +294,8 @@
   <div class="wrap">
     <div class="sec-head reveal"><h2>Press contact</h2></div>
     <div class="press-contact reveal">
-      <p style="color:var(--bone);font-size:16px;margin-bottom:6px">Konstantin Moshnikov</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:14px">Producer, SMM, AELITA PRODUCTION</p>
+      <p style="color:var(--bone);font-size:1rem;margin-bottom:6px">Konstantin Moshnikov</p>
+      <p style="color:var(--sand);font-size:0.875rem;margin-bottom:14px">Producer, SMM, AELITA PRODUCTION</p>
       <p><a href="tel:+79605151690">+7 960 515-16-90</a> · <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
   </div>
@@ -413,7 +413,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

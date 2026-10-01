@@ -37,25 +37,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>
-.page-header .sub{color:var(--sand);font-size:16px;max-width:60ch;margin-top:14px;line-height:1.7}
+.page-header .sub{color:var(--sand);font-size:1rem;max-width:60ch;margin-top:14px;line-height:1.7}
 .mentions-list{padding:50px 0 100px}
 .mentions-list .wrap{max-width:860px}
 .m-item{border-top:1px solid rgba(232,230,225,.1);padding:30px 0}
 .m-item:last-of-type{border-bottom:1px solid rgba(232,230,225,.1)}
-.m-meta{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.m-meta{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .m-subj{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(17px,2.2vw,21px);letter-spacing:.03em;line-height:1.45;color:var(--bone);margin:0 0 8px}
-.m-src{color:var(--sand);font-size:14px;margin:0 0 14px}
-.m-link a{color:var(--gold);font-size:15px;line-height:1.7;text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);transition:border-color .3s}
-.m-link a:hover{border-bottom-color:var(--gold)}
+.m-src{color:var(--sand);font-size:0.875rem;margin:0 0 14px}
+.m-link a{color:var(--gold);font-size:0.9375rem;line-height:1.7;text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);transition:border-color .3s}
+@media(hover:hover){.m-link a:hover{border-bottom-color:var(--gold)}}
 .m-link{margin:0}
-.m-updated{margin-top:36px;color:rgba(201,184,163,.6);font-size:13px}
-@media(max-width:600px){.page-header .sub{font-size:15px;line-height:1.6}.mentions-list{padding:30px 0 70px}.m-item{padding:24px 0}}
+.m-updated{margin-top:36px;color:rgba(201,184,163,.6);font-size:0.8125rem}
+@media(max-width:600px){.page-header .sub{font-size:0.9375rem;line-height:1.6}.mentions-list{padding:30px 0 70px}.m-item{padding:24px 0}}
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
   <div class="nav-in">
@@ -65,13 +65,13 @@
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/mentions/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/mentions/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -83,8 +83,8 @@
 <div class="page-header">
   <div class="wrap">
     <p class="eyebrow">Пресса</p>
-    <h1>Упоминания в прессе</h1>
-    <p class="sub">Публикации, анонсы и упоминания проектов AELITA PRODUCTION. Список ведётся вручную и обновляется по мере выхода материалов.</p>
+    <h1>Упоминания в прессе</h1>
+    <p class="sub">Публикации, анонсы и упоминания проектов AELITA PRODUCTION. Список ведётся вручную и обновляется по мере выхода материалов.</p>
     <div class="hero-cta"><a class="btn-gold" href="/press">Материалы для прессы</a></div>
   </div>
 </div>
@@ -93,87 +93,87 @@
   <div class="wrap">
     <div class="m-item reveal">
       <div class="m-meta">Канал · 15 августа 2026</div>
-      <p class="m-subj">«Точка Кюри»: «Переход» — открытый приём заявок</p>
+      <p class="m-subj">«Точка Кюри»: «Переход» — открытый приём заявок</p>
       <p class="m-src">Телеграм-канал «Где выставка»</p>
-      <p class="m-link"><a href="https://t.me/s/gdeart?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Опен-колл кураторского проекта «Точка Кюри»: «Переход» в подборке открытых конкурсов для художников</a></p>
+      <p class="m-link"><a href="https://t.me/s/gdeart?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Опен-колл кураторского проекта «Точка Кюри»: «Переход» в подборке открытых конкурсов для художников</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 29 апреля 2026</div>
-      <p class="m-subj">«ИОВ: материал» — рецензия на премьеру</p>
+      <p class="m-subj">«ИОВ: материал» — рецензия на премьеру</p>
       <p class="m-src">Калужские губернские ведомости · Александра Лисовская</p>
-      <p class="m-link"><a href="https://kgvinfo.ru/novosti/kultura/v-kaluzhskom-innovatsionnom-kulturnom-tsente-poshla-premera-spektaklya-iov-material/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Разбор премьеры 28 апреля в ИКЦ: двое актёров калужского ТЮЗа, Сергей Васин и Виктор Игнатов, и открытый разговор со зрителями после показа</a></p>
+      <p class="m-link"><a href="https://kgvinfo.ru/novosti/kultura/v-kaluzhskom-innovatsionnom-kulturnom-tsente-poshla-premera-spektaklya-iov-material/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Разбор премьеры 28 апреля в ИКЦ: двое актёров калужского ТЮЗа, Сергей Васин и Виктор Игнатов, и открытый разговор со зрителями после показа</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">Отзыв · 29 апреля 2026</div>
-      <p class="m-subj">«ИОВ: материал» — отзыв зрителя</p>
+      <p class="m-subj">«ИОВ: материал» — отзыв зрителя</p>
       <p class="m-src">Quick Tickets, ИКЦ Калуга</p>
-      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Отзыв на следующий день после премьеры в ленте площадки</a></p>
+      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Отзыв на следующий день после премьеры в ленте площадки</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 28 апреля 2026</div>
-      <p class="m-subj">«ИОВ: материал» — фоторепортаж с премьеры</p>
-      <p class="m-src">МК в Калуге · Ирина Родина</p>
-      <p class="m-link"><a href="https://www.mkkaluga.ru/photo/gallery/64470-1265729.html?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«В Калуге представили философскую премьеру “ИОВ:материал”»: фотогалерея из 37 кадров со сцены ИКЦ</a></p>
+      <p class="m-subj">«ИОВ: материал» — фоторепортаж с премьеры</p>
+      <p class="m-src">МК в Калуге · Ирина Родина</p>
+      <p class="m-link"><a href="https://www.mkkaluga.ru/photo/gallery/64470-1265729.html?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«В Калуге представили философскую премьеру “ИОВ:материал”»: фотогалерея из 37 кадров со сцены ИКЦ</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">Канал · 28 апреля 2026</div>
-      <p class="m-subj">«ИОВ: материал» — премьера в сообществе «МК в Калуге»</p>
-      <p class="m-src">ВКонтакте, «МК в Калуге»</p>
-      <p class="m-link"><a href="https://vk.ru/wall-147830639_91111?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Запись о премьере в сообществе издания</a></p>
+      <p class="m-subj">«ИОВ: материал» — премьера в сообществе «МК в Калуге»</p>
+      <p class="m-src">ВКонтакте, «МК в Калуге»</p>
+      <p class="m-link"><a href="https://vk.ru/wall-147830639_91111?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Запись о премьере в сообществе издания</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 23 апреля 2026</div>
-      <p class="m-subj">«ИОВ: материал» — анонс премьеры в Калуге</p>
-      <p class="m-src">МК в Калуге · Ирина Родина</p>
-      <p class="m-link"><a href="https://www.mkkaluga.ru/social/2026/04/23/kaluzhanam-pokazhut-premeru-filosofskogo-spektaklya.html?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Калужанам покажут премьеру философского спектакля»: показы 27 и 28 апреля в Инновационном культурном центре</a></p>
+      <p class="m-subj">«ИОВ: материал» — анонс премьеры в Калуге</p>
+      <p class="m-src">МК в Калуге · Ирина Родина</p>
+      <p class="m-link"><a href="https://www.mkkaluga.ru/social/2026/04/23/kaluzhanam-pokazhut-premeru-filosofskogo-spektaklya.html?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Калужанам покажут премьеру философского спектакля»: показы 27 и 28 апреля в Инновационном культурном центре</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">Отзыв · 10 октября 2025</div>
-      <p class="m-subj">«Инструкция для начинающих странников» — отзывы зрителей</p>
+      <p class="m-subj">«Инструкция для начинающих странников» — отзывы зрителей</p>
       <p class="m-src">Quick Tickets, ИКЦ Калуга</p>
-      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Два развёрнутых отзыва с благодарностью хореографу и команде</a></p>
+      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Два развёрнутых отзыва с благодарностью хореографу и команде</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 4 октября 2025</div>
-      <p class="m-subj">«Сюжеты. О земном и небесном» — гастроли в Петербурге</p>
+      <p class="m-subj">«Сюжеты. О земном и небесном» — гастроли в Петербурге</p>
       <p class="m-src">Собака.ru · Лиза Вельяминова</p>
-      <p class="m-link"><a href="https://www.sobaka.ru/entertainment/weekend/205468?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Гид «Чем заняться в Петербурге со 2 по 5 октября»: показ 4 октября на Новой сцене Александринского театра</a></p>
+      <p class="m-link"><a href="https://www.sobaka.ru/entertainment/weekend/205468?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Гид «Чем заняться в Петербурге со 2 по 5 октября»: показ 4 октября на Новой сцене Александринского театра</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">Площадка · 4 октября 2025</div>
-      <p class="m-subj">«Сюжеты. О земном и небесном» — карточка показа</p>
+      <p class="m-subj">«Сюжеты. О земном и небесном» — карточка показа</p>
       <p class="m-src">Александринский театр</p>
-      <p class="m-link"><a href="https://alexandrinsky.ru/afisha-i-bilety/syuzhety-o-zemnom-i-nebesnom/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Страница показа на Новой сцене — первоисточник, на который ссылается «Собака.ru»</a></p>
+      <p class="m-link"><a href="https://alexandrinsky.ru/afisha-i-bilety/syuzhety-o-zemnom-i-nebesnom/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Страница показа на Новой сцене — первоисточник, на который ссылается «Собака.ru»</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 16 сентября 2025</div>
-      <p class="m-subj">«Сюжеты. О земном и небесном» — интервью Юлии Бычковой</p>
+      <p class="m-subj">«Сюжеты. О земном и небесном» — интервью Юлии Бычковой</p>
       <p class="m-src">Creative40 (Калуга)</p>
-      <p class="m-link"><a href="https://creative40.ru/2025/09/16/sjuzhety-o-zemnom-i-nebesnom-julija-bychkova-o-novom-tancevalnom-spektakle-v-kaluge/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Сюжеты о земном и небесном»: Юлия Бычкова о новом танцевальном спектакле в Калуге</a></p>
+      <p class="m-link"><a href="https://creative40.ru/2025/09/16/sjuzhety-o-zemnom-i-nebesnom-julija-bychkova-o-novom-tancevalnom-spektakle-v-kaluge/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Сюжеты о земном и небесном»: Юлия Бычкова о новом танцевальном спектакле в Калуге</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ · 11 сентября 2025</div>
-      <p class="m-subj">AELITA PRODUCTION в обзоре продюсерских центров Калуги</p>
+      <p class="m-subj">AELITA PRODUCTION в обзоре продюсерских центров Калуги</p>
       <p class="m-src">Creative40 (Калуга)</p>
-      <p class="m-link"><a href="https://creative40.ru/2025/09/11/prodjuserskie-centry-v-kaluge-kto-oni-i-zachem-oni-nuzhny/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Продюсерские центры в Калуге: кто они и зачем они нужны» — обзор местной продюсерской среды</a></p>
+      <p class="m-link"><a href="https://creative40.ru/2025/09/11/prodjuserskie-centry-v-kaluge-kto-oni-i-zachem-oni-nuzhny/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">«Продюсерские центры в Калуге: кто они и зачем они нужны» — обзор местной продюсерской среды</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">Отзыв · 4 марта 2025</div>
-      <p class="m-subj">«Послушайте» — отзыв зрителя</p>
+      <p class="m-subj">«Послушайте» — отзыв зрителя</p>
       <p class="m-src">Quick Tickets, ИКЦ Калуга</p>
-      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Отзыв о танцевальном разговоре со зрителем</a></p>
+      <p class="m-link"><a href="https://quicktickets.ru/kaluga-ikc/reviews?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Отзыв о танцевальном разговоре со зрителем</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ</div>
-      <p class="m-subj">Сюжет в эфире «Утра России. Калуга»</p>
+      <p class="m-subj">Сюжет в эфире «Утра России. Калуга»</p>
       <p class="m-src">ГТРК «Калуга»</p>
-      <p class="m-link"><a href="https://gtrk-kaluga.ru/utro-rossii-kaluga/video-11047?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Видеосюжет в утреннем эфире областной ГТРК</a></p>
+      <p class="m-link"><a href="https://gtrk-kaluga.ru/utro-rossii-kaluga/video-11047?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Видеосюжет в утреннем эфире областной ГТРК</a></p>
     </div>
     <div class="m-item reveal">
       <div class="m-meta">СМИ</div>
-      <p class="m-subj">Материал в «Калужском перекрёстке» (kp40.ru)</p>
+      <p class="m-subj">Материал в «Калужском перекрёстке» (kp40.ru)</p>
       <p class="m-src">kp40.ru / «Калужский перекрёсток»</p>
-      <p class="m-link"><a href="https://www.kp40.ru/news/culture/133444/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Публикация в разделе «Культура»</a></p>
+      <p class="m-link"><a href="https://www.kp40.ru/news/culture/133444/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Публикация в разделе «Культура»</a></p>
     </div>
     <p class="m-updated">Обновлено: 19 сентября 2026</p>
   </div>
@@ -194,7 +194,7 @@
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mentions" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -219,7 +219,7 @@
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br>
       <a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
@@ -283,7 +283,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

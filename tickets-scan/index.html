@@ -38,41 +38,41 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh}
 #gate{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;z-index:50}
-#gate h2{font-size:15px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px;color:var(--sand)}
-#gate input{max-width:280px;text-align:center;font-size:20px;letter-spacing:.1em}
-#gate button{background:var(--gold);color:var(--ink);border:none;padding:14px 28px;border-radius:4px;font-size:14px;cursor:pointer;max-width:280px;width:100%}
-#gate .err{color:var(--warn);font-size:13px;margin:-4px 0 10px;min-height:16px}
+#gate h2{font-size:0.9375rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px;color:var(--sand)}
+#gate input{max-width:280px;text-align:center;font-size:1.25rem;letter-spacing:.1em}
+#gate button{background:var(--gold);color:var(--ink);border:none;padding:14px 28px;border-radius:4px;font-size:0.875rem;cursor:pointer;max-width:280px;width:100%}
+#gate .err{color:var(--warn);font-size:0.8125rem;margin:-4px 0 10px;min-height:16px}
 #app{display:none}
-h1{font-size:16px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px}
-input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);color:var(--bone);padding:16px;font-size:16px;border-radius:4px;margin-bottom:10px}
+h1{font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px}
+input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);color:var(--bone);padding:16px;font-size:1rem;border-radius:4px;margin-bottom:10px}
 .card{background:var(--coal);border-radius:8px;padding:20px;margin-top:16px;text-align:center}
 .card.ok{border:1px solid var(--ok)}
 .card.warn{border:1px solid var(--warn)}
-.name{font-size:20px;margin-bottom:4px}
-.detail{color:var(--sand);font-size:14px;margin-bottom:14px}
-.status{font-size:15px;font-weight:500;padding:6px 0}
+.name{font-size:1.25rem;margin-bottom:4px}
+.detail{color:var(--sand);font-size:0.875rem;margin-bottom:14px}
+.status{font-size:0.9375rem;font-weight:500;padding:6px 0}
 .status.ok{color:var(--ok)}
 .status.warn{color:var(--warn)}
-button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:14px;margin:4px;cursor:pointer}
+button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:0.875rem;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
-#queue-badge{display:none;background:var(--warn);color:var(--ink);font-size:11px;text-transform:uppercase;padding:6px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
-.test-flag{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
-.help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+#queue-badge{display:none;background:var(--warn);color:var(--ink);font-size:0.6875rem;text-transform:uppercase;padding:6px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
+.test-flag{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
 <div id="gate">
   <h2>Код доступа персонала</h2>
   <div class="err" id="gate-err"></div>
-  <input id="gate-input" placeholder="PIN" inputmode="numeric" autocomplete="off">
+  <input class="ym-disable-keys" id="gate-input" placeholder="PIN" inputmode="numeric" autocomplete="off">
   <button id="gate-submit" style="margin-top:6px">Войти</button>
 </div>
 
 <div id="app">
 <h1>Контроль билетов</h1>
-<div id="performance-badge" style="display:none;color:var(--sand);font-size:13px;margin:-10px 0 14px"></div>
+<div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
 <div id="queue-badge"></div>
-<input id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
+<input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
 <video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
 <canvas id="camera-canvas" style="display:none"></canvas>

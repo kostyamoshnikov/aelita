@@ -11,13 +11,13 @@ html,body{height:100%;background:#0B0B0D;color:#E8E6E1;font-family:'Arial',sans-
 body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center}
 .logo{margin-bottom:40px;opacity:.85}
 .logo svg{width:48px;height:56px}
-h1{font-size:13px;letter-spacing:.45em;text-transform:uppercase;color:#E8E6E1;margin-bottom:8px;font-weight:300}
-h1 small{display:block;font-size:12px;letter-spacing:.6em;color:#C9B8A3;margin-top:4px}
+h1{font-size:0.8125rem;letter-spacing:.45em;text-transform:uppercase;color:#E8E6E1;margin-bottom:8px;font-weight:300}
+h1 small{display:block;font-size:0.75rem;letter-spacing:.6em;color:#C9B8A3;margin-top:4px}
 .divider{width:40px;height:1px;background:#D6B57A;margin:32px auto;opacity:.5}
-p{color:#C9B8A3;font-size:14px;line-height:1.7;max-width:28ch;margin-bottom:8px}
-.hint{font-size:12px;color:rgba(201,184,163,.5);margin-top:4px}
-.btn{display:inline-block;margin-top:32px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;padding:13px 28px;border:1px solid rgba(214,181,122,.4);color:#C9B8A3;text-decoration:none;transition:all .3s;cursor:pointer;background:none;-webkit-appearance:none;appearance:none}
-.btn:hover{border-color:#D6B57A;color:#D6B57A}
+p{color:#C9B8A3;font-size:0.875rem;line-height:1.7;max-width:28ch;margin-bottom:8px}
+.hint{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:4px}
+.btn{display:inline-block;margin-top:32px;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:13px 28px;border:1px solid rgba(214,181,122,.4);color:#C9B8A3;text-decoration:none;transition:all .3s;cursor:pointer;background:none;-webkit-appearance:none;appearance:none}
+@media(hover:hover){.btn:hover{border-color:#D6B57A;color:#D6B57A}}
 </style>
 </head>
 <body>
@@ -33,8 +33,8 @@ p{color:#C9B8A3;font-size:14px;line-height:1.7;max-width:28ch;margin-bottom:8px}
 
   <div class="divider"></div>
 
-  <p>Нет подключения к интернету</p>
-  <p class="hint">Проверьте соединение и попробуйте снова</p>
+  <p>Нет подключения к интернету</p>
+  <p class="hint">Проверьте соединение и попробуйте снова</p>
 
   <button class="btn" onclick="window.location.reload()">Обновить страницу</button>
 </body>

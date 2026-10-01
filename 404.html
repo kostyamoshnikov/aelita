@@ -12,25 +12,29 @@
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow-x:hidden}
-body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 nav{padding:20px 0;border-bottom:1px solid rgba(232,230,225,.07)}
 .nav-in{display:flex;justify-content:space-between;align-items:center}
-.logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:14px}
-.logo small{display:block;font-size:8px;letter-spacing:.6em;color:var(--sand);margin-top:2px}
+.logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:0.875rem}
+.logo small{display:block;font-size:0.5rem;letter-spacing:.6em;color:var(--sand);margin-top:2px}
 main{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 24px}
 .code{font-family:'Montserrat',sans-serif;font-size:clamp(80px,15vw,160px);font-weight:200;color:rgba(214,181,122,.12);line-height:1;letter-spacing:.05em;margin-bottom:-20px}
 h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(18px,3vw,28px);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px}
-p{color:var(--sand);font-size:15px;margin-bottom:40px;max-width:40ch;margin-left:auto;margin-right:auto}
+p{color:var(--sand);font-size:0.9375rem;margin-bottom:40px;max-width:40ch;margin-left:auto;margin-right:auto}
 .links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.btn{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;padding:14px 28px;transition:all .3s}
+.btn{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:14px 28px;transition:all .3s}
 .btn-gold{background:var(--gold);color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold:hover{opacity:.85}
+@media(hover:hover){.btn-gold:hover{opacity:.85}}
 .btn-outline{border:1px solid rgba(201,184,163,.35);color:var(--sand);background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+@media(hover:hover){.btn-outline:hover{border-color:var(--gold);color:var(--gold)}}
 footer{padding:24px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
-footer p{color:rgba(201,184,163,.4);font-size:12px}
+footer p{color:rgba(201,184,163,.4);font-size:0.75rem}
+.nf+.nf{margin-top:56px;padding-top:40px;border-top:1px solid rgba(232,230,225,.07)}
+.nf-alt .code{display:none}
+.nf-alt h1{font-size:clamp(16px,2.4vw,22px)}
+.nf-alt p{margin-bottom:28px}
 </style>
 </head>
 <body>
@@ -39,14 +43,29 @@ footer p{color:rgba(201,184,163,.4);font-size:12px}
 </div></nav>
 
 <main>
-  <div>
-    <div class="code">404</div>
-    <h1>Страница не найдена</h1>
-    <p>Возможно, страница была перемещена или её никогда не существовало.</p>
-    <div class="links">
-      <a class="btn btn-gold" href="/">На главную</a>
-      <a class="btn btn-outline" href="/tickets">Афиша</a>
-      <a class="btn btn-outline" href="/projects">Проекты</a>
+  <!-- pack-v540: одна 404 на весь сайт (хостинг отдаёт этот файл и для /en/…),
+       поэтому оба языка на одной странице; первым идёт язык адреса, по
+       которому человек не попал. Без JS — русский, затем английский. -->
+  <div id="nf-wrap">
+    <div class="nf" lang="ru" id="nf-ru">
+      <div class="code">404</div>
+      <h1>Страница не найдена</h1>
+      <p>Возможно, страница была перемещена или её никогда не существовало.</p>
+      <div class="links">
+        <a class="btn btn-gold" href="/">На главную</a>
+        <a class="btn btn-outline" href="/tickets">Афиша</a>
+        <a class="btn btn-outline" href="/projects">Проекты</a>
+      </div>
+    </div>
+    <div class="nf nf-alt" lang="en" id="nf-en">
+      <div class="code">404</div>
+      <h1>Page not found</h1>
+      <p>The page may have moved, or it never existed.</p>
+      <div class="links">
+        <a class="btn btn-gold" href="/en/">Home</a>
+        <a class="btn btn-outline" href="/en/tickets">What’s on</a>
+        <a class="btn btn-outline" href="/en/projects">Projects</a>
+      </div>
     </div>
   </div>
 </main>
@@ -56,8 +75,28 @@ footer p{color:rgba(201,184,163,.4);font-size:12px}
 </div></footer>
 
 <script>
-  // Автоматический редирект через 10 секунд
-  setTimeout(()=>{ window.location.href='/'; }, 10000);
+  // pack-v540: язык — по адресу, по которому не попали (/en/… → английский первым).
+  (function () {
+    var en = /^\/en(\/|$)/.test(location.pathname);
+    if (en) {
+      var w = document.getElementById('nf-wrap'), ru = document.getElementById('nf-ru'), eng = document.getElementById('nf-en');
+      w.insertBefore(eng, ru);
+      eng.classList.remove('nf-alt'); ru.classList.add('nf-alt');
+      document.documentElement.lang = 'en';
+      document.title = 'Page not found — AELITA PRODUCTION';
+    }
+    // Автоматический переход на главную своего языка через 10 секунд.
+    setTimeout(function () { window.location.href = en ? '/en/' : '/'; }, 10000);
+  })();
+</script>
+<!-- pack-v540: у 404 не было счётчика, а это единственное место, где
+     видно битые ссылки, опечатки в напечатанных QR и старые адреса.
+     Метрика грузится только после cookie-согласия (main.js); цель
+     page_not_found несёт адрес, по которому не попали. -->
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=61"></script>
+<script>
+  if (window.AELITA_track) window.AELITA_track('page_not_found', { path: location.pathname + location.search, ref: document.referrer || '' });
 </script>
 </body>
 </html>

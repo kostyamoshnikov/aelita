@@ -33,18 +33,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:50px}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 /* Текстовые ссылки */
   p a,.bio-info a,.desc-text a{color:var(--gold);text-decoration:none;transition:opacity .3s}
-p a:hover{opacity:.75}
+@media(hover:hover){p a:hover{opacity:.75}}
 /* NAV */
   
   
@@ -63,87 +63,87 @@ p a:hover{opacity:.75}
 .hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
 @media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
 .hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:0.875rem;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
-.hero-meta-item .val{font-size:15px;color:var(--bone)}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:0.9375rem;color:var(--bone)}
 /* О КЛУБЕ */
   .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
-.about-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:18px}
-.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:18px;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
+.about-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:18px}
+.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:1.125rem;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
 .katya-card{background:var(--coal);padding:44px 36px}
-.katya-card .role{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
-.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
-.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:1.375rem;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 .katya-credentials{margin-top:24px;border-top:1px solid rgba(232,230,225,.07);padding-top:20px;display:flex;flex-direction:column;gap:8px}
-.katya-cred{font-size:12px;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
+.katya-cred{font-size:0.75rem;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
 /* МАРСИАНСКИЙ */
   .mars{background:var(--coal);padding:80px 0}
 .mars-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .mars-text h2{font-size:clamp(22px,3.5vw,38px);letter-spacing:.1em;margin-bottom:24px;line-height:1.3}
-.mars-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:16px}
+.mars-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:16px}
 .mars-text p strong{color:var(--bone);font-weight:400}
 .mars-diagram{display:flex;flex-direction:column;gap:2px}
 .mars-step{background:var(--ink);padding:28px 24px;display:flex;gap:18px;align-items:start}
-.mars-step .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
-.mars-step h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
-.mars-step p{color:var(--sand);font-size:13px;line-height:1.7}
+.mars-step .num{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
+.mars-step h3{font-size:0.875rem;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.mars-step p{color:var(--sand);font-size:0.8125rem;line-height:1.7}
 @media(max-width:760px){.mars-grid{grid-template-columns:1fr}}
 /* ЧТЕНИЕ */
   .reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .book-card{background:var(--coal);padding:44px 36px;position:relative;overflow:hidden}
 .book-card.current{border-left:2px solid var(--gold)}
-.book-card .status{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.book-card .author{font-size:13px;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
+.book-card .status{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.book-card .author{font-size:0.8125rem;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
 .book-card h3{font-size:clamp(18px,2.4vw,24px);letter-spacing:.1em;font-weight:300;margin-bottom:16px;line-height:1.3}
-.book-card p{color:var(--sand);font-size:14px;line-height:1.75}
-.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
-.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
+.book-card p{color:var(--sand);font-size:0.875rem;line-height:1.75}
+.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
+.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:7.5rem;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
 /* ОТЗЫВЫ */
   .reviews-sec{background:var(--coal)}
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .review{background:var(--ink);padding:40px 36px}
-.review-text{font-size:15px;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
-.review-text::before{content:"«";color:var(--gold);font-size:24px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
-.review-author{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
-.review-context{font-size:12px;color:var(--sand);margin-top:5px}
+.review-text{font-size:0.9375rem;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
+.review-text::before{content:"«";color:var(--gold);font-size:1.5rem;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
+.review-author{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.review-context{font-size:0.75rem;color:var(--sand);margin-top:5px}
 .review.wide{grid-column:1/-1}
 @media(max-width:760px){.reviews-grid{grid-template-columns:1fr}.review.wide{grid-column:1}}
 /* ИНСАЙТ */
   .insight{padding:70px 0}
 .insight-box{background:var(--coal);padding:60px;position:relative;overflow:hidden}
-.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
+.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
 .insight-box h2{font-size:clamp(18px,2.8vw,28px);letter-spacing:.16em;margin-bottom:28px;line-height:1.4}
-.insight-box p{color:var(--sand);font-size:16px;line-height:1.9;max-width:72ch;margin-bottom:16px}
+.insight-box p{color:var(--sand);font-size:1rem;line-height:1.9;max-width:72ch;margin-bottom:16px}
 .insight-box p strong{color:var(--bone);font-weight:400}
 @media(max-width:760px){.insight-box{padding:40px 28px}}
 /* ФОРМАТ */
   .format-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
 .format-item{background:var(--coal);padding:36px 28px}
-.format-item .icon{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
-.format-item h3{font-size:14px;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
-.format-item p{color:var(--sand);font-size:14px;line-height:1.7}
+.format-item .icon{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.format-item h3{font-size:0.875rem;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
+.format-item p{color:var(--sand);font-size:0.875rem;line-height:1.7}
 .format-item strong{color:var(--bone);font-weight:400}
 @media(max-width:900px){.format-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.format-grid{grid-template-columns:1fr}}
 /* ВСТУПИТЬ */
   .join-sec{background:var(--coal);padding:80px 0;text-align:center}
 .join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
-.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
+.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:0.9375rem}
 .join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.join-field label{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s}
 .join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
 .join-field textarea{min-height:90px;resize:vertical}
 .req-mark{color:var(--gold);font-weight:700}
-.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:12px}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:0.75rem}
 .input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
-.join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
-.join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
-.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
+.join-note{font-size:0.75rem;color:rgba(201,184,163,.4);margin-top:6px}
+.join-ok{color:var(--gold);font-size:0.9375rem;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:0.875rem;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -158,7 +158,7 @@ p a:hover{opacity:.75}
 .pay-return{padding:48px 0 8px}
 .pay-return .wrap{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center}
 .pay-return h2{margin-bottom:12px}
-.pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
+.pay-return-note{font-size:0.8125rem;color:var(--sand);margin-top:10px}
 .pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
 /* pack-v510: кнопка действия — на первом экране телефона */
 @media(max-width:600px){
@@ -197,7 +197,7 @@ p a:hover{opacity:.75}
 </script>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
   <div class="nav-in">
@@ -207,13 +207,13 @@ p a:hover{opacity:.75}
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/book-concierge/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/book-concierge/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -224,8 +224,8 @@ p a:hover{opacity:.75}
 <div class="pay-return" id="paymentReturnMsg" hidden>
   <div class="wrap">
     <h2>Спасибо! Оплата прошла</h2>
-    <p>Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку. Подтверждение оплаты — на почте.</p>
-    <p class="pay-return-note">Если оплата не прошла, деньги не спишутся. <button type="button" class="pay-return-retry" id="paymentRetryBtn">Оплатить ещё раз</button></p>
+    <p>Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку. Подтверждение оплаты — на почте.</p>
+    <p class="pay-return-note">Если оплата не прошла, деньги не спишутся. <button type="button" class="pay-return-retry" id="paymentRetryBtn">Оплатить ещё раз</button></p>
     <p class="pay-return-note">Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
   </div>
 </div>
@@ -236,15 +236,15 @@ p a:hover{opacity:.75}
     <p class="hero-community">AELITA BOOK CONCIERGE</p>
     <h1 class="hero-title">Книги,<br>подобранные<br>именно вам</h1>
     <div class="hero-divider"></div>
-    <p class="hero-sub">Заполняете анкету — Катя изучает ваши ответы и собирает персональную подборку из 5 книг. Мы сами покупаем бумажные книги и отправляем их вам с личным письмом от Кати к каждой.</p>
+    <p class="hero-sub">Заполняете анкету — Катя изучает ваши ответы и собирает персональную подборку из 5 книг. Мы сами покупаем бумажные книги и отправляем их вам с личным письмом от Кати к каждой.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="lbl">Одна подборка</span>
-        <span class="val">5 книг + текст от Кати</span>
+        <span class="val">5 книг + текст от Кати</span>
       </div>
       <div class="hero-meta-item">
         <span class="lbl">Стоимость</span>
-        <span class="val">10 000 ₽ в месяц</span>
+        <span class="val">10 000 ₽ в месяц</span>
       </div>
     </div>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -257,28 +257,28 @@ p a:hover{opacity:.75}
 <!-- КАК ЭТО РАБОТАЕТ -->
 <section id="how">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Как это работает</span><h2>Личный подбор от Кати</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Как это работает</span><h2>Личный подбор от Кати</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
-        <p>Катя <strong>лично читает вашу анкету</strong> и думает именно о вас — о том, что происходит в вашей жизни сейчас. Она называет себя архитектором: её работа — понять человека и подобрать книги под него.</p>
-        <p>Вы заполняете анкету — о себе, о том, что сейчас происходит в жизни, какие жанры и темы откликаются, чего не хватает. Катя читает это <strong>лично</strong>, без посредников и без автоматизации, и собирает подборку из пяти книг — с текстом к каждой, объясняющим, почему именно эта книга и именно сейчас.</p>
-        <blockquote class="about-quote">Ты есть только там, где думаешь, чувствуешь, переживаешь, хочешь, поступаешь не как все. Никаких «всех» не существует.</blockquote>
-        <p><strong>Мы сами покупаем бумажные книги и отправляем их вам.</strong> К каждой книге — личное письмо от Кати: почему именно эта книга и именно сейчас. Настоящая посылка с книгами и письмом внутри.</p>
-        <p>Уже больше 13 лет Катя читает и подбирает книги. Здесь этот же навык — направлен лично на вас.</p>
+        <p>Катя <strong>лично читает вашу анкету</strong> и думает именно о вас — о том, что происходит в вашей жизни сейчас. Она называет себя архитектором: её работа — понять человека и подобрать книги под него.</p>
+        <p>Вы заполняете анкету — о себе, о том, что сейчас происходит в жизни, какие жанры и темы откликаются, чего не хватает. Катя читает это <strong>лично</strong>, без посредников и без автоматизации, и собирает подборку из пяти книг — с текстом к каждой, объясняющим, почему именно эта книга и именно сейчас.</p>
+        <blockquote class="about-quote">Ты есть только там, где думаешь, чувствуешь, переживаешь, хочешь, поступаешь не как все. Никаких «всех» не существует.</blockquote>
+        <p><strong>Мы сами покупаем бумажные книги и отправляем их вам.</strong> К каждой книге — личное письмо от Кати: почему именно эта книга и именно сейчас. Настоящая посылка с книгами и письмом внутри.</p>
+        <p>Уже больше 13 лет Катя читает и подбирает книги. Здесь этот же навык — направлен лично на вас.</p>
       </div>
       <div>
         <div class="katya-card">
           <p class="role">Основательница · Архитектор пространств</p>
           <h3>Катя Абдулова</h3>
           <p>Психолог, сертифицированный транзактный аналитик (ITAA), коуч (ACSTH), режиссёр. Основательница <a href="/katya-abdulova">AELITA PRODUCTION</a>.</p>
-          <p>Говорит на «марсианском» — и умеет перевести обратно на человеческий. С терпением, чувствуя ритм каждого.</p>
-          <a class="katya-link" href="/katya-abdulova">Подробнее о Кате →</a>
+          <p>Говорит на «марсианском» — и умеет перевести обратно на человеческий. С терпением, чувствуя ритм каждого.</p>
+          <a class="katya-link" href="/katya-abdulova">Подробнее о Кате →</a>
           <div class="katya-credentials">
-            <span class="katya-cred">ВШП — психолог, 2010</span>
-            <span class="katya-cred">MBA — управление проектами</span>
-            <span class="katya-cred">ITAA — транзактный анализ, 2018</span>
-            <span class="katya-cred">Методология П.Г. Щедровицкого, 2022</span>
-            <span class="katya-cred">РГИСИ — режиссура, 2025</span>
+            <span class="katya-cred">ВШП — психолог, 2010</span>
+            <span class="katya-cred">MBA — управление проектами</span>
+            <span class="katya-cred">ITAA — транзактный анализ, 2018</span>
+            <span class="katya-cred">Методология П.Г. Щедровицкого, 2022</span>
+            <span class="katya-cred">РГИСИ — режиссура, 2025</span>
           </div>
         </div>
       </div>
@@ -289,34 +289,34 @@ p a:hover{opacity:.75}
 <!-- ЧТО ВЫ ПОЛУЧАЕТЕ -->
 <section id="what">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Что вы получаете</span><h2>Одна подборка — четыре шага</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Что вы получаете</span><h2>Одна подборка — четыре шага</h2></div>
     <div class="reading-grid reveal">
       <div class="book-card current">
         <p class="status">Шаг 1</p>
         <p class="author">Анкета</p>
-        <h3>Рассказываете о себе</h3>
-        <p>Что сейчас происходит в жизни, какие жанры и темы откликаются, от какой книги в последний раз не могли оторваться, чего не хватает. Чем честнее анкета — тем точнее подборка.</p>
+        <h3>Рассказываете о себе</h3>
+        <p>Что сейчас происходит в жизни, какие жанры и темы откликаются, от какой книги в последний раз не могли оторваться, чего не хватает. Чем честнее анкета — тем точнее подборка.</p>
         <div class="deco">1</div>
       </div>
       <div class="book-card current">
         <p class="status">Шаг 2</p>
         <p class="author">Личный подбор</p>
-        <h3>Катя читает и думает лично о вас</h3>
-        <p>Без алгоритмов и без списков «лучшее за год» — ответы читает сама Катя и собирает пять книг, которые откликнутся именно вам, именно сейчас.</p>
+        <h3>Катя читает и думает лично о вас</h3>
+        <p>Без алгоритмов и без списков «лучшее за год» — ответы читает сама Катя и собирает пять книг, которые откликнутся именно вам, именно сейчас.</p>
         <div class="deco">2</div>
       </div>
       <div class="book-card current">
         <p class="status">Шаг 3</p>
-        <p class="author">Письмо от Кати</p>
-        <h3>Индивидуальный текст к каждой книге</h3>
-        <p>К каждой из пяти книг — личный текст от Кати в одном письме: почему именно эта книга, что в ней важно лично для вас, с чего начать.</p>
+        <p class="author">Письмо от Кати</p>
+        <h3>Индивидуальный текст к каждой книге</h3>
+        <p>К каждой из пяти книг — личный текст от Кати в одном письме: почему именно эта книга, что в ней важно лично для вас, с чего начать.</p>
         <div class="deco">3</div>
       </div>
       <div class="book-card">
         <p class="status">Шаг 4</p>
-        <p class="author">Мы покупаем и отправляем</p>
-        <h3>Посылка приходит к вам домой</h3>
-        <p>Мы сами покупаем бумажные книги и отправляем вам одной посылкой — с письмом Кати внутри. Никаких ссылок на маркетплейсы, всё уже готово при получении.</p>
+        <p class="author">Мы покупаем и отправляем</p>
+        <h3>Посылка приходит к вам домой</h3>
+        <p>Мы сами покупаем бумажные книги и отправляем вам одной посылкой — с письмом Кати внутри. Никаких ссылок на маркетплейсы, всё уже готово при получении.</p>
         <div class="deco">4</div>
       </div>
     </div>
@@ -331,22 +331,22 @@ p a:hover{opacity:.75}
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Периодичность</h3>
-        <p><strong>Одна подборка в месяц</strong><br>5 книг + текст к каждой от Кати. Подборка приходит вам лично, не позже начала месяца.</p>
+        <p><strong>Одна подборка в месяц</strong><br>5 книг + текст к каждой от Кати. Подборка приходит вам лично, не позже начала месяца.</p>
       </div>
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Личный подбор</h3>
-        <p>Не алгоритм — Катя читает вашу анкету сама и подбирает книги лично для вас, без шаблонов.</p>
+        <p>Не алгоритм — Катя читает вашу анкету сама и подбирает книги лично для вас, без шаблонов.</p>
       </div>
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Доставка</h3>
-        <p>Мы сами покупаем бумажные книги и отправляем их вам с письмом Кати — единой посылкой.</p>
+        <p>Мы сами покупаем бумажные книги и отправляем их вам с письмом Кати — единой посылкой.</p>
       </div>
       <div class="format-item">
         <div class="icon">◈</div>
         <h3>Стоимость</h3>
-        <p><strong>10 000 ₽ в месяц</strong><br>За одну подборку из 5 книг с индивидуальным текстом.</p>
+        <p><strong>10 000 ₽ в месяц</strong><br>За одну подборку из 5 книг с индивидуальным текстом.</p>
       </div>
     </div>
   </div>
@@ -357,8 +357,8 @@ p a:hover{opacity:.75}
   <div class="wrap">
     <span class="eyebrow">Анкета</span>
     <h2 style="margin-top:14px">Заполнить анкету</h2>
-    <p>Расскажите о себе — Катя лично прочитает ответы и соберёт вашу первую подборку.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Одна подборка — 5 книг + письмо от Кати Абдуловой. Мы сами покупаем и отправляем книги вам. Участие — 10 000 ₽ в месяц.</p>
+    <p>Расскажите о себе — Катя лично прочитает ответы и соберёт вашу первую подборку.</p>
+    <p style="color:var(--sand);font-size:0.875rem;margin-top:-8px;margin-bottom:24px">Одна подборка — 5 книг + письмо от Кати Абдуловой. Мы сами покупаем и отправляем книги вам. Участие — 10 000 ₽ в месяц.</p>
 
     <div class="notify-tabs" id="notifyTabs_j">
       <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Через сайт</button>
@@ -367,30 +367,30 @@ p a:hover{opacity:.75}
 
     <div id="formSite_j">
     <div class="join-form" id="joinForm">
-      <div style="font-size:12px;color:var(--sand);margin-bottom:4px">Поля со звёздочкой (*) обязательны для заполнения</div>
-      <div class="join-field"><label>Имя <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Как вас зовут" required></div>
-      <div class="join-field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="join-field" data-gift-code-field style="display:none"><label>Код подарочной карты <span class="opt-mark">— если есть</span></label><input class="input-clear" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
-      <div class="join-field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
-      <div class="join-field"><label>Адрес для отправки книг</label><input type="text" id="j-address" placeholder="Город, улица, дом, квартира, индекс"></div>
-      <div class="join-field"><label>Что сейчас происходит в жизни</label><textarea id="j-situation" placeholder="В двух словах — что сейчас важно, о чём думаете, что ищете"></textarea></div>
-      <div class="join-field"><label>Какие жанры и темы откликаются</label><input type="text" id="j-genres" placeholder="Нон-фикшн, проза, психология, фантастика…"></div>
-      <div class="join-field"><label>Книга, от которой не могли оторваться — необязательно</label><input type="text" id="j-favorite" placeholder="Автор, название"></div>
-      <div class="join-field"><label>Что-то ещё, что стоит знать — необязательно</label><textarea id="j-note" placeholder="Предпочтения по жанрам, темы, которых лучше избегать…"></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
-      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы отправить заявку прямо сейчас — нажмите «Только отправить анкету» ниже, мы свяжемся и оформим оплату лично.</p>
-      <div class="msg" id="payMsg_concierge" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
-      <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_concierge'})">Оплатить — 10 000 ₽/мес →</button>
+      <div style="font-size:0.75rem;color:var(--sand);margin-bottom:4px">Поля со звёздочкой (*) обязательны для заполнения</div>
+      <div class="join-field"><label>Имя <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" placeholder="Как вас зовут" required></div>
+      <div class="join-field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field" data-gift-code-field style="display:none"><label>Код подарочной карты <span class="opt-mark">— если есть</span></label><input class="input-clear ym-disable-keys" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
+      <div class="join-field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear ym-disable-keys" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
+      <div class="join-field"><label>Адрес для отправки книг</label><input class="ym-disable-keys" type="text" id="j-address" placeholder="Город, улица, дом, квартира, индекс"></div>
+      <div class="join-field"><label>Что сейчас происходит в жизни</label><textarea class="ym-disable-keys" id="j-situation" placeholder="В двух словах — что сейчас важно, о чём думаете, что ищете"></textarea></div>
+      <div class="join-field"><label>Какие жанры и темы откликаются</label><input class="ym-disable-keys" type="text" id="j-genres" placeholder="Нон-фикшн, проза, психология, фантастика…"></div>
+      <div class="join-field"><label>Книга, от которой не могли оторваться — необязательно</label><input class="ym-disable-keys" type="text" id="j-favorite" placeholder="Автор, название"></div>
+      <div class="join-field"><label>Что-то ещё, что стоит знать — необязательно</label><textarea class="ym-disable-keys" id="j-note" placeholder="Предпочтения по жанрам, темы, которых лучше избегать…"></textarea></div>
+      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
+      <p class="pay-pending-notice" id="payPendingNotice">Онлайн-оплата на сайте пока подключается. Чтобы отправить заявку прямо сейчас — нажмите «Только отправить анкету» ниже, мы свяжемся и оформим оплату лично.</p>
+      <div class="msg" id="payMsg_concierge" style="display:none;color:#C98B6B;font-size:0.8125rem;margin-top:8px"></div>
+      <button class="btn-gold" id="payBtn_concierge" onclick="AELITA_pay('concierge', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, comment: 'Адрес: ' + document.getElementById('j-address').value + ' | Ситуация: ' + document.getElementById('j-situation').value + ' | Жанры: ' + document.getElementById('j-genres').value + ' | Любимая книга: ' + document.getElementById('j-favorite').value + ' | Ещё: ' + document.getElementById('j-note').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_concierge'})">Оплатить — 10 000 ₽/мес →</button>
       <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Только отправить анкету</button>
-      <p class="join-note">Заполните анкету выше перед оплатой — так Катя сразу увидит ваши предпочтения. Для оплаты понадобится <a href="/account" style="color:var(--gold)">личный кабинет</a>. Вопросы: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <p class="join-note">Заполните анкету выше перед оплатой — так Катя сразу увидит ваши предпочтения. Для оплаты понадобится <a href="/account" style="color:var(--gold)">личный кабинет</a>. Вопросы: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
     </div>
-    <div class="join-ok" id="joinOk">Спасибо! Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку.</div>
+    <div class="join-ok" id="joinOk">Спасибо! Катя прочитает анкету и свяжется с вами, чтобы собрать первую подборку.</div>
     </div>
 
     <div id="formBot_j" style="display:none">
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=book_concierge&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-concierge" target="_blank" rel="noopener">Заполнить анкету в боте</a>
-      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст анкету нам напрямую.</p>
+      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=book_concierge&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-concierge" target="_blank" rel="noopener">Заполнить анкету в боте</a>
+      <p class="notify-bot-note">Бот задаст те же вопросы, что и на сайте, и передаст анкету нам напрямую.</p>
     </div>
   </div>
 </div>
@@ -419,7 +419,7 @@ p a:hover{opacity:.75}
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-concierge" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -444,7 +444,7 @@ p a:hover{opacity:.75}
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
@@ -452,7 +452,7 @@ p a:hover{opacity:.75}
 </footer>
 
 <!-- payments.js -->
-<script src="/assets/payments.js?v=58"></script>
+<script src="/assets/payments.js?v=61"></script>
 <script>
   // collectContact() используется ТОЛЬКО для joinClub() (анкета без
   // оплаты, отправка в Telegram/Formspree) — платёж (AELITA_pay) с
@@ -604,7 +604,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты
@@ -647,6 +647,6 @@ p a:hover{opacity:.75}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

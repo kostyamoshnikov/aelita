@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/en/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AELITA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AELITA COMMUNITY subscription — AELITA PRODUCTION</title>
+<meta name="description" content="Cancel or renew your AELITA COMMUNITY subscription from the email link.">
+<link rel="canonical" href="https://aelita-production.ru/en/account/subscription/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/account/subscription/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/account/subscription/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/account/subscription/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/account/subscription/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/account/subscription/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/account/subscription/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/en/account/subscription/">
+<meta property="og:site_name" content="AELITA PRODUCTION">
+<meta property="og:title" content="AELITA COMMUNITY subscription — AELITA PRODUCTION">
+<meta property="og:description" content="Cancel or renew your AELITA COMMUNITY subscription from the email link.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AELITA COMMUNITY subscription — AELITA PRODUCTION">
+<meta name="twitter:description" content="Cancel or renew your AELITA COMMUNITY subscription from the email link.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=61">
+<style>
+body{max-width:100vw}
+.acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
+.acc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:44px}
+.form-box{background:var(--coal);padding:44px 38px}
+.form-box h3{font-size:1rem;letter-spacing:.16em;font-weight:400;margin-bottom:8px;text-transform:uppercase;color:var(--gold)}
+.form-box p.sub{color:var(--sand);font-size:0.8125rem;margin-bottom:24px}
+.form-col{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--sand)}
+.field input{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s;width:100%}
+.field input:focus{outline:none;border-color:var(--gold)}
+.form-note{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:6px}
+.form-err{font-size:0.8125rem;color:#e08a6e;margin-top:6px;display:none}
+@media(max-width:760px){.acc-grid{grid-template-columns:1fr}}
+.forgot-link{color:var(--sand);font-size:0.8125rem;text-decoration:underline;align-self:flex-start;margin-top:4px}
+.forgot-ok{color:var(--gold);font-size:0.8125rem;line-height:1.5;margin:0}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav>
+<div class="nav-in">
+<a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+<div class="nav-links">
+      <a href="/en/tickets">Schedule</a>
+      <a href="/en/projects">Productions</a>
+      <a href="/en/tochkacuire">Tochka Cuire</a>
+      <a href="/en/shop">Shop</a>
+      <a href="/en/about">About</a>
+      <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/community">Community</a>
+      <a href="/en/contacts">Contact</a>
+    </div>
+<a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+<a class="lang-switch" href="https://aelita-production.ru/account/subscription/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+<button class="burger" aria-label="Menu" onclick="toggleMenu()">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/tochkacuire" onclick="toggleMenu()">Tochka Cuire</a>
+    <a href="/en/shop" onclick="toggleMenu()">Shop</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+    <a href="/en/account" onclick="toggleMenu()">Account</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+<main id="main">
+
+<div class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Subscription</p>
+    <h1>AELITA COMMUNITY</h1>
+  </div>
+</div>
+
+<!-- pack-v542: страница по ссылке из письма о подписке (отмена / продление без входа). Логика — assets/subscription.js -->
+<section style="padding:20px 0 100px">
+  <div class="acc-wrap">
+    <div class="form-box" id="subLink" style="max-width:520px">
+      <p class="sub" id="subLinkTitle" style="color:var(--bone)"></p>
+      <p class="sub" id="subLinkText">Loading…</p>
+      <button type="button" class="btn-gold" id="subLinkBtn" hidden>Cancel subscription</button>
+      <p class="sub" id="subLinkMsg" role="status" aria-live="polite"></p>
+      <p class="sub" style="font-size:0.8125rem">You can also cancel the subscription in your <a href="/en/account/dashboard#subscriptions" style="color:var(--gold)">your account</a>. Questions: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="/en/rezidents" style="margin-top:14px">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+        <a href="/en/press">Press</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/account">Account</a>
+        <a href="/en/collaboration">Collaborate</a>
+        <a href="/en/faq">FAQ</a>
+      </div>
+      <div>
+        <h4>LLC “AELITA PRODUCTION”</h4>
+        <p style="color:var(--sand);font-size:0.8125rem;line-height:1.7">Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>OGRN 1254000006644 · TIN 4000027320</p>
+        <a href="/en/oferta" style="margin-top:14px">Public offer agreement</a>
+        <a href="/en/privacy">Privacy Policy</a>
+        <a href="/en/documents">All documents</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:40px;color:var(--sand);font-size:0.8125rem">© 2026 AELITA PRODUCTION</p>
+  </div>
+</footer>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. By continuing to use the site, you agree to our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=61"></script>
+<script src="/assets/subscription.js?v=61"></script>
+</body>
+</html>

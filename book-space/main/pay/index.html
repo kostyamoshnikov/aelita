@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="АЭЛИТА">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>AELITA COMMUNITY — основной поток — оформить подписку</title>
+<meta name="description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
+<link rel="canonical" href="https://aelita-production.ru/book-space/main/pay/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/book-space/main/pay/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/book-space/main/pay/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/book-space/main/pay/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/book-space/main/pay/">
+<meta property="og:site_name" content="AELITA PRODUCTION">
+<meta property="og:title" content="AELITA COMMUNITY — основной поток — оформить подписку">
+<meta property="og:description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AELITA COMMUNITY — основной поток — оформить подписку">
+<meta name="twitter:description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
+<link rel="stylesheet" href="/assets/style.css?v=61">
+<!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
+<style>
+.sp{padding:110px 0 80px}
+.sp .wrap{max-width:720px}
+.sp h1{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(1.625rem,5vw,2.375rem);line-height:1.2;margin:10px 0 12px;color:var(--bone)}
+.sp-price{font-family:'Montserrat',sans-serif;font-size:1rem;letter-spacing:.06em;color:var(--gold);margin:0 0 14px}
+.sp-lead{color:var(--sand);font-size:0.9375rem;line-height:1.6;margin:0 0 8px}
+.sp-about{display:inline-block;margin:4px 0 22px;color:var(--gold);text-decoration:none;font-size:0.875rem}
+.sp-cta{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 28px}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 28px;text-decoration:none;display:inline-block;border:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.btn-gold[disabled]{opacity:.55;cursor:default}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 28px;text-decoration:none;display:inline-block;background:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.sp-terms{border:1px solid rgba(214,181,122,.28);padding:20px 22px;margin:0 0 30px;background:rgba(255,255,255,.015)}
+.sp-terms h2{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 12px;font-weight:400}
+.sp-when{color:var(--bone);font-size:1rem;line-height:1.55;margin:0 0 12px}
+.sp-terms ul{margin:0 0 12px;padding-left:18px;color:var(--sand);font-size:0.875rem;line-height:1.6}
+.sp-terms p{color:var(--sand);font-size:0.8125rem;line-height:1.6;margin:0 0 8px}
+.sp-terms a,.sp-form a,.sp-box a:not(.btn-gold):not(.btn-outline){color:var(--gold)}
+.sp-form .join-field{margin-bottom:14px}
+.sp-form label{display:block;font-size:0.75rem;color:var(--sand);margin-bottom:6px;letter-spacing:.04em}
+.sp-form select,.sp-form input[type=text],.sp-form input[type=email],.sp-form input[type=tel],.sp-form input[type=password]{width:100%;box-sizing:border-box;background:transparent;border:1px solid rgba(201,184,163,.3);color:var(--bone);padding:13px 14px;font-size:1rem;font-family:inherit}
+.sp-form input[readonly]{opacity:.7}
+.sp-form select option{color:#111}
+.sp-acct{font-size:0.8125rem;color:var(--sand);margin:-4px 0 14px}
+.sp-acct button{background:none;border:none;color:var(--gold);cursor:pointer;padding:6px 0;font:inherit;text-decoration:underline}
+.sp-form .cb-item{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;font-size:0.875rem;color:var(--bone);line-height:1.5;cursor:pointer}
+.sp-form .cb-item input{margin-top:4px;flex:0 0 auto;width:18px;height:18px}
+.sp-note{color:var(--sand);font-size:0.8125rem;line-height:1.55;margin:4px 0 14px;border-left:2px solid var(--gold);padding-left:12px}
+.sp-msg{color:#C98B6B;font-size:0.875rem;margin:10px 0 0;min-height:1em}
+.sp-box{border:1px solid rgba(214,181,122,.45);padding:22px;margin:0 0 28px}
+.sp-box h2{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.375rem;margin:0 0 10px;color:var(--bone)}
+.sp-box p{color:var(--sand);font-size:0.9375rem;line-height:1.6;margin:0 0 10px}
+.sp-gift summary{cursor:pointer;color:var(--gold);font-size:0.8125rem;margin:0 0 10px}
+.sp-small{color:rgba(201,184,163,.75);font-size:0.75rem;line-height:1.55;margin-top:14px}
+@media(max-width:600px){.sp{padding:92px 0 60px}.btn-gold{width:100%;text-align:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "AELITA COMMUNITY — основной поток",
+  "brand": { "@type": "Organization", "name": "AELITA PRODUCTION" },
+  "url": "https://aelita-production.ru/book-space/main/pay/",
+  "offers": {
+    "@type": "Offer",
+    "url": "https://aelita-production.ru/book-space/main/pay/",
+    "priceSpecification": { "@type": "UnitPriceSpecification", "price": "5000", "priceCurrency": "RUB", "unitText": "MONTH" },
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
+      <a href="/tickets">Афиша</a>
+      <a href="/projects">Проекты</a>
+      <a href="/tochkacuire">Точка Кюри</a>
+      <a href="/shop">Магазин</a>
+      <a href="/about">О компании</a>
+      <a href="/collaboration">Сотрудничество</a>
+      <a href="/community">Community</a>
+      <a href="/contacts">Контакты</a>
+    </div>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/book-space/main/pay/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <button class="burger" aria-label="Меню" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main id="main" class="sp" data-plan="community_main" data-price="5 000">
+  <div class="wrap">
+    <span class="eyebrow">AELITA COMMUNITY · подписка</span>
+    <h1>AELITA COMMUNITY — основной поток</h1>
+    <p class="sp-price">5 000 ₽ в месяц, автосписание</p>
+      <p class="sp-lead">Еженедельные встречи книжного клуба «3 УРОВЕНЬ» с Катей Абдуловой: одна книга в месяц, одна встреча в неделю.</p>
+      <p class="sp-lead">Темы меняются от сезона к сезону — сейчас про то, зачем мы выбираем быть вместе.</p>
+    <a class="sp-about" href="/book-space#main-stream">Подробнее о клубе →</a>
+
+    <div class="sp-cta" id="spCta"><a class="btn-gold" href="#spForm" id="spCtaBtn">Оформить подписку — 5 000 ₽/мес</a></div>
+
+    <div class="sp-box" id="spResult" hidden>
+      <h2 id="spResultTitle">Подписка оформлена</h2>
+      <p id="spResultText"></p>
+      <div id="spWhatNext">
+        <p><strong>Что дальше:</strong> организатор свяжется с вами в течение дня и добавит в чат потока. Подтверждение и чек — на почте.</p>
+      </div>
+      <a class="btn-outline" href="/account/dashboard#subscriptions">В личный кабинет</a>
+    </div>
+
+    <div class="sp-box" id="spAlready" hidden>
+      <h2>Подписка оформлена</h2>
+      <p id="spAlreadyText"></p>
+      <div class="sp-cta" style="margin:0">
+        <button type="button" class="btn-gold" id="spResumeBtn" hidden>Возобновить подписку</button>
+        <a class="btn-outline" href="/account/dashboard#subscriptions">В личный кабинет</a>
+      </div>
+      <p class="sp-msg" id="spAlreadyMsg"></p>
+    </div>
+
+    <section class="sp-terms" id="spTerms" aria-labelledby="spTermsTitle">
+      <h2 id="spTermsTitle">Условия подписки</h2>
+      <p class="sp-when" id="spWhen"><strong>5 000 ₽ сегодня</strong>, дальше — каждый месяц в день первой оплаты, до отмены.</p>
+      <ul>
+        <li>Деньги списываются автоматически раз в месяц с карты, которой вы платите. За 3 дня до списания пришлём письмо.</li>
+        <li>Отменить можно в любой момент в личном кабинете: списаний больше не будет, участие сохранится до конца оплаченного месяца.</li>
+        <li>Передумали в первые 7 дней после списания — вернём деньги полностью кнопкой в кабинете.</li>
+      </ul>
+      <p>Подписка: 5 000 ₽ в месяц. Первый платёж — сейчас, дальше деньги списываются автоматически каждый месяц в тот же день. Если такого числа в месяце нет — в последний день месяца. Данные карты хранит платёжный сервис ЮKassa, у нас — только идентификатор способа оплаты. <a href="/oferta#subscription">Полные условия — раздел 14 оферты</a>.</p>
+    </section>
+
+    <div class="sp-form join-form" id="spForm">
+      <div class="join-field"><label for="j-name">Имя <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" autocomplete="name" placeholder="Как вас зовут" required></div>
+      <div class="join-field"><label for="j-email">Email <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field"><label for="j-phone">Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div id="spAcctBlock">
+        <div class="join-field"><label for="j-password" id="spPwLabel">Пароль для личного кабинета <span class="req-mark">*</span></label><input class="ym-disable-keys" type="password" id="j-password" autocomplete="new-password" placeholder="Не короче 8 символов"></div>
+        <p class="sp-acct" id="spAcctHint">В кабинете можно отменить подписку в любой момент. <button type="button" id="spAcctToggle">Уже есть кабинет — войти</button></p>
+      </div>
+      <p class="sp-acct" id="spSignedIn" hidden>Вы в кабинете как <strong id="spSignedInEmail"></strong> — письма и чеки по подписке придут на этот адрес.</p>
+      <details class="sp-gift" id="spGift" data-gift-code-field hidden>
+        <summary>Есть подарочная карта?</summary>
+        <div class="join-field"><label for="j-gift">Код подарочной карты — оплатит первый месяц целиком или частично</label><input class="input-clear ym-disable-keys" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
+      </details>
+      <label class="cb-item"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent">обработку персональных данных</a> <span class="req-mark">*</span></span></label>
+      <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>Соглашаюсь на ежемесячное автоматическое списание 5 000 ₽ с сохранённого способа оплаты до отмены подписки в личном кабинете — по условиям <a href="/oferta#subscription">раздела 14 оферты</a> <span class="req-mark">*</span></span></label>
+      <p class="sp-note" id="spAutopaySoon" hidden>Автосписание включим в ближайшие дни — пришлём письмо, чтобы подключить его в один клик. Сейчас оплачивается первый месяц.</p>
+      <button type="button" class="btn-gold" id="spPayBtn">Оформить подписку — 5 000 ₽/мес</button>
+      <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
+      <p class="sp-small">Оплата — на защищённой странице ЮKassa: карта или СБП. Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space_main_pay" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space_main_pay" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space_main_pay" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space_main_pay" target="_blank" rel="noopener">Дзен</a>
+      </div>
+      <div>
+        <h4>О компании</h4>
+        <a href="/rezidents">Резиденты компании</a>
+        <a href="/team">Команда</a>
+        <a href="/partners">Партнёры</a>
+        <a href="/press">Пресса</a>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="/">Главная</a>
+        <a href="/tickets">Афиша</a>
+        <a href="/projects">Проекты</a>
+        <a href="/shop">Магазин</a>
+        <a href="/account">Личный кабинет</a>
+      </div>
+      <div>
+        <h4>Продукты</h4>
+        <a href="/community">AELITA COMMUNITY</a>
+        <a href="/gift-card">Подарочная карта</a>
+        <a href="/business">Искусство для бизнеса</a>
+        <a href="/collaboration">Сотрудничество</a>
+        <a href="/faq">Частые вопросы</a>
+      </div>
+    </div>
+    <div class="requisites">
+      ООО «АЭЛИТА ПРОДАКШЕН»<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      ОГРН 1254000006644 · ИНН 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/projects" onclick="toggleMenu()">Проекты</a>
+    <a href="/tochkacuire" onclick="toggleMenu()">Точка Кюри</a>
+    <a href="/shop" onclick="toggleMenu()">Магазин</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
+    <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
+    <a href="/community" onclick="toggleMenu()">Community</a>
+    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
+    <a href="/contacts" onclick="toggleMenu()">Контакты</a>
+    <a href="/account" onclick="toggleMenu()">Личный кабинет</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+
+<!-- /Cookie Banner -->
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/payments.js?v=61"></script>
+<script src="/assets/main.js?v=61"></script>
+<script src="/assets/subscription.js?v=61"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
+</body>
+</html>

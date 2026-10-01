@@ -153,6 +153,13 @@
   if (GIFT_ON_PRODUCTS) {
     document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('[data-gift-code-field]').forEach(function (el) { el.style.display = ''; });
+      // pack-v543: на /gift-card обещание COMMUNITY и консьержа появляется
+      // только вместе с выключателем — пока он выключен, картой платят за билеты.
+      document.querySelectorAll('[data-gift-products-text]').forEach(function (el) {
+        el.textContent = LANG === 'en'
+          ? 'Any amount from 500 to 100,000 ₽ — you decide, not us. Tickets, the first month of an AELITA COMMUNITY subscription, a one-off Book Concierge selection, or just “something nice”.'
+          : 'Любая сумма от 500 до 100 000 ₽ — сами решаете, не мы. Билеты, первый месяц подписки на AELITA COMMUNITY, разовая подборка от книжного консьержа или просто «на что-нибудь приятное».';
+      });
     });
   }
 
@@ -188,7 +195,7 @@
       el = document.createElement('div');
       el.id = id;
       el.className = 'field-err';
-      el.style.cssText = 'color:#C98B6B;font-size:12px;margin:-6px 0 10px;min-height:14px';
+      el.style.cssText = 'color:#C98B6B;font-size:0.75rem;margin:-6px 0 10px;min-height:14px';
       inputEl.insertAdjacentElement('afterend', el);
     }
     return el;

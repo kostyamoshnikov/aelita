@@ -36,18 +36,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:50px}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 /* Текстовые ссылки */
   p a,.bio-info a,.desc-text a{color:var(--gold);text-decoration:none;transition:opacity .3s}
-p a:hover{opacity:.75}
+@media(hover:hover){p a:hover{opacity:.75}}
 /* NAV */
   
   
@@ -66,69 +66,69 @@ p a:hover{opacity:.75}
 .hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
 @media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
 .hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:0.875rem;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
-.hero-meta-item .val{font-size:15px;color:var(--bone)}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:0.9375rem;color:var(--bone)}
 /* О КЛУБЕ */
   .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
-.about-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:18px}
-.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:18px;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
+.about-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:18px}
+.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:1.125rem;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
 .katya-card{background:var(--coal);padding:44px 36px}
-.katya-card .role{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
-.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
-.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:1.375rem;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 .katya-credentials{margin-top:24px;border-top:1px solid rgba(232,230,225,.07);padding-top:20px;display:flex;flex-direction:column;gap:8px}
-.katya-cred{font-size:12px;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
+.katya-cred{font-size:0.75rem;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
 /* МАРСИАНСКИЙ */
   .mars{background:var(--coal);padding:80px 0}
 .mars-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .mars-text h2{font-size:clamp(22px,3.5vw,38px);letter-spacing:.1em;margin-bottom:24px;line-height:1.3}
-.mars-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:16px}
+.mars-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:16px}
 .mars-text p strong{color:var(--bone);font-weight:400}
 .mars-diagram{display:flex;flex-direction:column;gap:2px}
 .mars-step{background:var(--ink);padding:28px 24px;display:flex;gap:18px;align-items:start}
-.mars-step .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
-.mars-step h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
-.mars-step p{color:var(--sand);font-size:13px;line-height:1.7}
+.mars-step .num{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
+.mars-step h3{font-size:0.875rem;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.mars-step p{color:var(--sand);font-size:0.8125rem;line-height:1.7}
 @media(max-width:760px){.mars-grid{grid-template-columns:1fr}}
 /* ЧТЕНИЕ */
   .reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .book-card{background:var(--coal);padding:44px 36px;position:relative;overflow:hidden}
 .book-card.current{border-left:2px solid var(--gold)}
-.book-card .status{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.book-card .author{font-size:13px;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
+.book-card .status{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.book-card .author{font-size:0.8125rem;color:var(--sand);letter-spacing:.06em;margin-bottom:8px}
 .book-card h3{font-size:clamp(18px,2.4vw,24px);letter-spacing:.1em;font-weight:300;margin-bottom:16px;line-height:1.3}
-.book-card p{color:var(--sand);font-size:14px;line-height:1.75}
-.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
-.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
+.book-card p{color:var(--sand);font-size:0.875rem;line-height:1.75}
+.book-card .chapters{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.6)}
+.book-card .deco{position:absolute;bottom:-20px;right:-10px;font-family:'Montserrat',sans-serif;font-size:7.5rem;font-weight:200;color:rgba(214,181,122,.04);line-height:1;pointer-events:none;user-select:none}
 @media(max-width:760px){.reading-grid{grid-template-columns:1fr}}
 /* ОТЗЫВЫ */
   .reviews-sec{background:var(--coal)}
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .review{background:var(--ink);padding:40px 36px}
-.review-text{font-size:15px;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
-.review-text::before{content:"«";color:var(--gold);font-size:24px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
-.review-author{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
-.review-context{font-size:12px;color:var(--sand);margin-top:5px}
+.review-text{font-size:0.9375rem;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
+.review-text::before{content:"«";color:var(--gold);font-size:1.5rem;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
+.review-author{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.review-context{font-size:0.75rem;color:var(--sand);margin-top:5px}
 .review.wide{grid-column:1/-1}
 @media(max-width:760px){.reviews-grid{grid-template-columns:1fr}.review.wide{grid-column:1}}
 /* ИНСАЙТ */
   .insight{padding:70px 0}
 .insight-box{background:var(--coal);padding:60px;position:relative;overflow:hidden}
-.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
+.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
 .insight-box h2{font-size:clamp(18px,2.8vw,28px);letter-spacing:.16em;margin-bottom:28px;line-height:1.4}
-.insight-box p{color:var(--sand);font-size:16px;line-height:1.9;max-width:72ch;margin-bottom:16px}
+.insight-box p{color:var(--sand);font-size:1rem;line-height:1.9;max-width:72ch;margin-bottom:16px}
 .insight-box p strong{color:var(--bone);font-weight:400}
 @media(max-width:760px){.insight-box{padding:40px 28px}}
 /* ФОРМАТ */
   .format-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
 .format-item{background:var(--coal);padding:36px 28px}
-.format-item .icon{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
-.format-item h3{font-size:14px;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
-.format-item p{color:var(--sand);font-size:14px;line-height:1.7}
+.format-item .icon{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.format-item h3{font-size:0.875rem;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
+.format-item p{color:var(--sand);font-size:0.875rem;line-height:1.7}
 .format-item strong{color:var(--bone);font-weight:400}
 @media(max-width:900px){.format-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.format-grid{grid-template-columns:1fr}}
@@ -137,20 +137,20 @@ p a:hover{opacity:.75}
   .gift-check{padding:80px 0;text-align:center}
   .gift-check > .wrap > p{margin:14px 0 24px}
   .gift-check .join-field{text-align:left}
-  .gift-check #gc-result{font-size:15px;color:var(--bone);min-height:1.5em}
+  .gift-check #gc-result{font-size:0.9375rem;color:var(--bone);min-height:1.5em}
 .join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
-.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
+.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:0.9375rem}
 .join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.join-field label{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s}
 .join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
 .join-field textarea{min-height:90px;resize:vertical}
 .req-mark{color:var(--gold);font-weight:700}
-.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:12px}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:0.75rem}
 .input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
-.join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
-.join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
-.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
+.join-note{font-size:0.75rem;color:rgba(201,184,163,.4);margin-top:6px}
+.join-ok{color:var(--gold);font-size:0.9375rem;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:0.875rem;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -165,7 +165,7 @@ p a:hover{opacity:.75}
 .pay-return{padding:48px 0 8px}
 .pay-return .wrap{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center}
 .pay-return h2{margin-bottom:12px}
-.pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
+.pay-return-note{font-size:0.8125rem;color:var(--sand);margin-top:10px}
 .pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
 /* pack-v510: кнопка действия — на первом экране телефона */
 @media(max-width:600px){
@@ -219,8 +219,8 @@ p a:hover{opacity:.75}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/gift-card/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/gift-card/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -270,7 +270,7 @@ p a:hover{opacity:.75}
         <p class="status">Step 1</p>
         <p class="author">Amount</p>
         <h3>Choose how much to give</h3>
-        <p>Any amount from 500 to 100,000 ₽ — you decide, not us. A month of AELITA COMMUNITY, a one-off Book Concierge selection, or just “something nice”.</p>
+        <p data-gift-products-text>Any amount from 500 to 100,000 ₽ — you decide, not us. Tickets to a show they have long wanted to see, or just “something nice”.</p>
         <div class="deco">1</div>
       </div>
       <div class="book-card current">
@@ -333,20 +333,20 @@ p a:hover{opacity:.75}
     <span class="eyebrow">JOIN</span>
     <h2 style="margin-top:14px">Get one</h2>
     <p>Enter the amount and your details — the certificate will arrive by email right after payment.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">Enter the amount and your details — after payment we'll get in touch to arrange the certificate.</p>
+    <p style="color:var(--sand);font-size:0.875rem;margin-top:-8px;margin-bottom:24px">Enter the amount and your details — after payment we'll get in touch to arrange the certificate.</p>
 
     <div class="join-form" id="joinForm">
-      <div style="font-size:12px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required</div>
-      <div class="join-field"><label>Any amount from 500 to 100,000 ₽. Pay right here, via YooKassa.</label><input type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
-      <div class="join-field"><label>Your name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
-      <div class="join-field"><label>Your phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="join-field"><label>Your email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="join-field"><label>Your Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
-      <div class="join-field"><label>Your phone or Telegram</label><input type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
-      <div class="join-field"><label data-gift-message-label>Wishes — we'll pass them on if we prepare the certificate by hand</label><textarea id="j-message" placeholder="For example, what to write in the greeting"></textarea></div>
+      <div style="font-size:0.75rem;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required</div>
+      <div class="join-field"><label>Any amount from 500 to 100,000 ₽. Pay right here, via YooKassa.</label><input class="ym-disable-keys" type="number" id="j-amount" placeholder="10000" min="500" max="100000" step="1"></div>
+      <div class="join-field"><label>Your name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" placeholder="Your name" required></div>
+      <div class="join-field"><label>Your phone <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="join-field"><label>Your email <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="join-field"><label>Your Telegram <span class="opt-mark">— optional</span></label><input class="input-clear ym-disable-keys" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
+      <div class="join-field"><label>Your phone or Telegram</label><input class="ym-disable-keys" type="text" id="j-recipient" placeholder="Recipient's name, if you'd like to give it personally"></div>
+      <div class="join-field"><label data-gift-message-label>Wishes — we'll pass them on if we prepare the certificate by hand</label><textarea class="ym-disable-keys" id="j-message" placeholder="For example, what to write in the greeting"></textarea></div>
       <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a></span></label>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To arrange a gift right now — email us directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>, we'll help set it up.</p>
-      <div class="msg" id="payMsg_gift" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
+      <div class="msg" id="payMsg_gift" style="display:none;color:#C98B6B;font-size:0.8125rem;margin-top:8px"></div>
       <button class="btn-gold" id="payBtn_gift" onclick="AELITA_pay('gift', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, amount: document.getElementById('j-amount').value, comment: 'Получатель: ' + document.getElementById('j-recipient').value + ' | Сообщение: ' + document.getElementById('j-message').value + (document.getElementById('j-telegram').value ? ' | TG: ' + document.getElementById('j-telegram').value : ''), buttonEl: this, msgElId: 'payMsg_gift'})">A personal message — optional</button>
       <p class="join-note">To pay, you'll need an <a href="/en/account" style="color:var(--gold)">account</a> — you can sign up right before paying. Questions: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
     </div>
@@ -364,7 +364,7 @@ p a:hover{opacity:.75}
     <h2 style="margin-top:14px">Check the balance</h2>
     <p>Enter the code from the certificate and we'll show how much is left on the card.</p>
     <div class="join-form">
-      <div class="join-field"><label for="gc-code">Card code</label><input class="input-clear" type="text" id="gc-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
+      <div class="join-field"><label for="gc-code">Card code</label><input class="input-clear ym-disable-keys" type="text" id="gc-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
       <button class="btn-outline" type="button" id="gc-btn">Check</button>
       <p class="join-note" id="gc-result" role="status" aria-live="polite"></p>
     </div>
@@ -460,7 +460,7 @@ p a:hover{opacity:.75}
 </script>
 
 <!-- payments.js -->
-<script src="/assets/payments.js?v=58"></script>
+<script src="/assets/payments.js?v=61"></script>
 <script>
   // collectContact() убрана (pack-v235) — AELITA_pay сам проверяет
   // email/телефон через общие хелперы payments.js, на этой странице
@@ -548,7 +548,7 @@ p a:hover{opacity:.75}
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 <script>
   // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты
   // ЮKassa (метка aelita_paid в return_url, см. assets/payments.js).
@@ -590,6 +590,6 @@ p a:hover{opacity:.75}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

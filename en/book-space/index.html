@@ -36,12 +36,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 32px;text-decoration:none;display:inline-block;transition:all .3s;margin-left:14px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 32px;text-decoration:none;display:inline-block;transition:opacity .3s;border:none;cursor:pointer;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:50px}
 /* Галерея — горизontальный scroll-snap, помещается в один экран
    телефона по высоте, вместо вертикального masonry (.photo-gallery
@@ -53,14 +53,14 @@ section{padding:90px 0}
 .gallery-scroll::-webkit-scrollbar{height:5px}
 .gallery-scroll::-webkit-scrollbar-thumb{background:rgba(214,181,122,.35);border-radius:3px}
 .gallery-scroll img{scroll-snap-align:center;flex:0 0 78%;max-width:380px;height:52vh;max-height:440px;min-height:260px;object-fit:cover;border-radius:2px;filter:brightness(.92);transition:filter .3s ease}
-.gallery-scroll img:hover{filter:brightness(1)}
-.gallery-hint{font-size:12px;color:rgba(201,184,163,.5);margin-top:2px}
+@media(hover:hover){.gallery-scroll img:hover{filter:brightness(1)}}
+.gallery-hint{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:2px}
 @media(min-width:640px){.gallery-scroll img{flex:0 0 320px;height:400px}}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 /* Текстовые ссылки */
   p a,.bio-info a,.desc-text a{color:var(--gold);text-decoration:none;transition:opacity .3s}
-p a:hover{opacity:.75}
+@media(hover:hover){p a:hover{opacity:.75}}
 /* NAV */
   
   
@@ -79,84 +79,84 @@ p a:hover{opacity:.75}
 .hero-title{font-size:clamp(38px,8vw,88px);letter-spacing:.06em;line-height:1.05;margin-bottom:28px}
 @media(max-width:900px){.hero-title{font-size:clamp(22px,9vw,78px);letter-spacing:.02em}}
 .hero-divider{width:48px;height:1px;background:rgba(214,181,122,.5);margin-bottom:28px}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;font-size:0.875rem;color:var(--sand);max-width:52ch;margin-bottom:32px;line-height:1.8}
 .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:36px}
 .hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
-.hero-meta-item .val{font-size:15px;color:var(--bone)}
+.hero-meta-item .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sand)}
+.hero-meta-item .val{font-size:0.9375rem;color:var(--bone)}
 /* О КЛУБЕ */
   .about-grid{display:grid;grid-template-columns:1fr 380px;gap:70px;align-items:start}
-.about-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:18px}
-.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:18px;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
+.about-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:18px}
+.about-quote{border-left:1px solid var(--gold);padding-left:24px;margin:32px 0;font-size:1.125rem;color:var(--bone);line-height:1.7;font-style:normal;letter-spacing:.02em}
 .katya-card{background:var(--coal);padding:44px 36px}
-.katya-card .role{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.katya-card h3{font-size:22px;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
-.katya-card p{color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:10px}
-.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
+.katya-card .role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.katya-card h3{font-size:1.375rem;letter-spacing:.1em;font-weight:300;margin-bottom:14px}
+.katya-card p{color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:10px}
+.katya-link{display:inline-block;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35);padding-bottom:3px}
 .katya-credentials{margin-top:24px;border-top:1px solid rgba(232,230,225,.07);padding-top:20px;display:flex;flex-direction:column;gap:8px}
-.katya-cred{font-size:12px;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
+.katya-cred{font-size:0.75rem;color:rgba(201,184,163,.6);padding-left:12px;border-left:1px solid rgba(214,181,122,.25)}
 /* МАРСИАНСКИЙ */
   .mars{background:var(--coal);padding:80px 0}
 .mars-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .mars-text h2{font-size:clamp(22px,3.5vw,38px);letter-spacing:.1em;margin-bottom:24px;line-height:1.3}
-.mars-text p{color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:16px}
+.mars-text p{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:16px}
 .mars-text p strong{color:var(--bone);font-weight:400}
 .mars-diagram{display:flex;flex-direction:column;gap:2px}
 .mars-step{background:var(--ink);padding:28px 24px;display:flex;gap:18px;align-items:start}
-.mars-step .num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
-.mars-step h3{font-size:14px;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
-.mars-step p{color:var(--sand);font-size:13px;line-height:1.7}
+.mars-step .num{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);line-height:1;flex-shrink:0;width:40px}
+.mars-step h3{font-size:0.875rem;letter-spacing:.16em;font-weight:300;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.mars-step p{color:var(--sand);font-size:0.8125rem;line-height:1.7}
 @media(max-width:760px){.mars-grid{grid-template-columns:1fr}}
 .book-list{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px}
 .season-timeline{display:flex;flex-direction:column;gap:1px;background:rgba(232,230,225,.07);margin-top:40px}
 .season-month{background:var(--ink);padding:24px 26px;display:grid;grid-template-columns:76px 1fr;gap:20px;align-items:start}
-.season-month .m-name{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:2px}
-.season-month .m-body h4{font-size:15px;font-weight:400;color:var(--bone);margin-bottom:3px;line-height:1.4}
-.season-month .m-body .m-author{font-size:12px;color:rgba(201,184,163,.7);margin-bottom:8px}
-.season-month .m-body p{font-size:13px;color:var(--sand);line-height:1.65}
-.season-month .m-body .m-fiction{font-size:12px;color:rgba(201,184,163,.6);margin-top:6px;font-style:italic}
+.season-month .m-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:2px}
+.season-month .m-body h4{font-size:0.9375rem;font-weight:400;color:var(--bone);margin-bottom:3px;line-height:1.4}
+.season-month .m-body .m-author{font-size:0.75rem;color:rgba(201,184,163,.7);margin-bottom:8px}
+.season-month .m-body p{font-size:0.8125rem;color:var(--sand);line-height:1.65}
+.season-month .m-body .m-fiction{font-size:0.75rem;color:rgba(201,184,163,.6);margin-top:6px;font-style:italic}
 @media(max-width:600px){.season-month{grid-template-columns:1fr;gap:5px}.season-month .m-name{padding-top:0}}
-.book-list-label{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.book-list-label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
 .book-list ul{list-style:none}
 .book-list li{padding:13px 0;border-top:1px solid rgba(232,230,225,.07)}
 .book-list li:first-child{border-top:none}
-.book-title{display:block;color:var(--bone);font-size:15px;margin-bottom:3px;line-height:1.4}
-.book-author{display:block;color:var(--sand);font-size:13px}
+.book-title{display:block;color:var(--bone);font-size:0.9375rem;margin-bottom:3px;line-height:1.4}
+.book-author{display:block;color:var(--sand);font-size:0.8125rem}
 @media(max-width:760px){.book-list{grid-template-columns:1fr;gap:8px}}
 /* ОТЗЫВЫ */
   .reviews-sec{background:var(--coal)}
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .review{background:var(--ink);padding:40px 36px}
-.review-text{font-size:15px;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
-.review-text::before{content:"«";color:var(--gold);font-size:24px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
-.review-author{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
-.review-context{font-size:12px;color:var(--sand);margin-top:5px}
+.review-text{font-size:0.9375rem;color:var(--bone);line-height:1.85;margin-bottom:24px;font-style:italic}
+.review-text::before{content:"«";color:var(--gold);font-size:1.5rem;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;font-style:normal}
+.review-author{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.review-context{font-size:0.75rem;color:var(--sand);margin-top:5px}
 .review.wide{grid-column:1/-1}
 @media(max-width:760px){.reviews-grid{grid-template-columns:1fr}.review.wide{grid-column:1}}
 /* ИНСАЙТ */
   .insight{padding:70px 0}
 .insight-box{background:var(--coal);padding:60px;position:relative;overflow:hidden}
-.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
+.insight-box::before{content:"«Бессонные мысли»";position:absolute;top:30px;right:40px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.25)}
 .insight-box h2{font-size:clamp(18px,2.8vw,28px);letter-spacing:.16em;margin-bottom:28px;line-height:1.4}
-.insight-box p{color:var(--sand);font-size:16px;line-height:1.9;max-width:72ch;margin-bottom:16px}
+.insight-box p{color:var(--sand);font-size:1rem;line-height:1.9;max-width:72ch;margin-bottom:16px}
 .insight-box p strong{color:var(--bone);font-weight:400}
 @media(max-width:760px){.insight-box{padding:40px 28px}}
 /* ФОРМАТ */
   .format-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
 .format-item{background:var(--coal);padding:36px 28px}
-.format-item .icon{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
-.format-item h3{font-size:14px;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
-.format-item p{color:var(--sand);font-size:14px;line-height:1.7}
+.format-item .icon{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:200;color:rgba(214,181,122,.3);margin-bottom:14px}
+.format-item h3{font-size:0.875rem;letter-spacing:.22em;font-weight:300;margin-bottom:10px;text-transform:uppercase;font-family:'Montserrat',sans-serif;color:var(--gold)}
+.format-item p{color:var(--sand);font-size:0.875rem;line-height:1.7}
 .format-item strong{color:var(--bone);font-weight:400}
 @media(max-width:900px){.format-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.format-grid{grid-template-columns:1fr}}
 /* ВСТУПИТЬ */
   .join-sec{background:var(--coal);padding:80px 0;text-align:center}
 .join-sec h2{font-size:clamp(20px,3vw,32px);letter-spacing:.22em;margin-bottom:16px}
-.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:15px}
+.join-sec p{color:var(--sand);max-width:50ch;margin:0 auto 36px;font-size:0.9375rem}
 .join-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.join-field label{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
-.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .3s}
+.join-field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
+.join-field input,.join-field textarea{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s}
 .join-field input:focus,.join-field textarea:focus{outline:none;border-color:var(--gold)}
 .join-field textarea{min-height:90px;resize:vertical}
 /* Обязательные/необязательные поля — «чёткая зона ввода», чтобы не
@@ -168,11 +168,11 @@ p a:hover{opacity:.75}
    формы, иначе все обязательные поля были бы «красными» с первой же
    секунды). */
 .req-mark{color:var(--gold);font-weight:700}
-.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:12px}
+.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:0.75rem}
 .input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
-.join-note{font-size:12px;color:rgba(201,184,163,.4);margin-top:6px}
-.join-ok{color:var(--gold);font-size:15px;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
-.pay-pending-notice{color:var(--sand);font-size:14px;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
+.join-note{font-size:0.75rem;color:rgba(201,184,163,.4);margin-top:6px}
+.join-ok{color:var(--gold);font-size:0.9375rem;display:none;padding:20px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);text-align:left}
+.pay-pending-notice{color:var(--sand);font-size:0.875rem;display:none;padding:18px 20px;background:rgba(201,184,163,.06);border-left:2px solid var(--sand);text-align:left;margin-bottom:14px;line-height:1.6}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media(max-width:430px){section{padding:60px 0}}
@@ -187,7 +187,7 @@ p a:hover{opacity:.75}
 .pay-return{padding:48px 0 8px}
 .pay-return .wrap{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center}
 .pay-return h2{margin-bottom:12px}
-.pay-return-note{font-size:13px;color:var(--sand);margin-top:10px}
+.pay-return-note{font-size:0.8125rem;color:var(--sand);margin-top:10px}
 .pay-return-retry{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
 /* pack-v510: кнопка действия — на первом экране телефона */
 @media(max-width:600px){
@@ -211,17 +211,32 @@ p a:hover{opacity:.75}
   },
   "image": "https://aelita-production.ru/images/og-default.jpg",
   "url": "https://aelita-production.ru/en/book-space/",
-  "offers": {
-    "@type": "Offer",
-    "url": "https://aelita-production.ru/en/book-space/",
-    "priceSpecification": {
-      "@type": "UnitPriceSpecification",
-      "price": "10000",
-      "priceCurrency": "RUB",
-      "unitText": "MONTH"
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Main stream — subscription",
+      "url": "https://aelita-production.ru/en/book-space/main/pay/",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "5000",
+        "priceCurrency": "RUB",
+        "unitText": "MONTH"
+      },
+      "availability": "https://schema.org/InStock"
     },
-    "availability": "https://schema.org/InStock"
-  }
+    {
+      "@type": "Offer",
+      "name": "Entrepreneurs stream — subscription",
+      "url": "https://aelita-production.ru/en/book-space/business/pay/",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "10000",
+        "priceCurrency": "RUB",
+        "unitText": "MONTH"
+      },
+      "availability": "https://schema.org/InStock"
+    }
+  ]
 }
 </script>
 </head>
@@ -241,8 +256,8 @@ p a:hover{opacity:.75}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/book-space/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/book-space/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -250,14 +265,6 @@ p a:hover{opacity:.75}
 </nav>
 
 <main id="main">
-<div class="pay-return" id="paymentReturnMsg" hidden>
-  <div class="wrap">
-    <h2>Thank you! Payment received</h2>
-    <p>Katya will get in touch about the next meeting. The payment confirmation is in your inbox.</p>
-    <p class="pay-return-note">If the payment didn't go through, you won't be charged. <button type="button" class="pay-return-retry" id="paymentRetryBtn">Pay again</button></p>
-    <p class="pay-return-note">Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
-  </div>
-</div>
 
 <div class="hero">
   <div class="hero-beam" aria-hidden="true"></div>
@@ -273,7 +280,7 @@ p a:hover{opacity:.75}
       </div>
     </div>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <a class="btn-gold" href="#join">I want to join</a>
+      <a class="btn-gold" href="/en/book-space/main/pay">Subscribe — 5,000 ₽/month</a>
       <a class="btn-outline" href="#season-program" style="margin-left:0">What we're reading</a>
     </div>
   </div>
@@ -297,9 +304,9 @@ p a:hover{opacity:.75}
       <p>I didn’t want a name about books: the club stopped being about books long ago. Or rather, not only about them. A book is just an occasion. An occasion to run into someone else’s coordinate system inside your own head and, for a few hours, allow at least one “uncomfortable thought”: what if the world isn’t arranged the way I’m used to thinking about it?</p>
     </div>
     <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 1</p><p style="color:var(--sand);margin:0;line-height:1.6">You read it, got the plot, agreed or argued — and put it back on the shelf.</p></div>
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 2</p><p style="color:var(--sand);margin:0;line-height:1.6">You see ideas, context, connections; you compare them with your own life, take some things on and reject others.</p></div>
-      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 3</p><p style="color:var(--bone);margin:0;line-height:1.6">You stop taking the book apart sentence by sentence and start taking apart the way you take it apart.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 1</p><p style="color:var(--sand);margin:0;line-height:1.6">You read it, got the plot, agreed or argued — and put it back on the shelf.</p></div>
+      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 2</p><p style="color:var(--sand);margin:0;line-height:1.6">You see ideas, context, connections; you compare them with your own life, take some things on and reject others.</p></div>
+      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Level 3</p><p style="color:var(--bone);margin:0;line-height:1.6">You stop taking the book apart sentence by sentence and start taking apart the way you take it apart.</p></div>
     </div>
     <div class="about-text reveal" style="max-width:760px">
       <!-- pack-v513: деликатная разбивка текста (как в v512) -->
@@ -309,7 +316,7 @@ p a:hover{opacity:.75}
       <p class="txt-kicker">What happens at the meetings</p>
       <p>I’m not very interested in finding yet another “right answer”. What interests me more is the place where it becomes visible why these answers seemed right in the first place. After a good conversation the world physically stays the same — the same people, the same city, the same business — but you see connections between them that you didn’t notice yesterday. Which means there’s already a slightly different reality in front of you.</p>
       <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">We read books. But we actually gather here for something else: to see what we build our own world from.</p>
-      <p style="color:var(--sand);font-size:14px">— <a href="/en/katya-abdulova" style="color:var(--gold)">Katya Abdulova</a>, founder of the club</p>
+      <p style="color:var(--sand);font-size:0.875rem">— <a href="/en/katya-abdulova" style="color:var(--gold)">Katya Abdulova</a>, founder of the club</p>
     </div>
   </div>
 </section>
@@ -325,7 +332,7 @@ p a:hover{opacity:.75}
         <p>We often think we're not understood because we “explained badly”, or that the other person “understands badly”. Both are lies. Here we create a form in which understanding can happen.</p>
         <p>AELITA COMMUNITY — <strong>language environment</strong>, a place where people grow into big ideas first, and then into their own — where they learn to tell their own desires from everyone else's, their fate from their parents' scripts, and closeness from economics.</p>
         <blockquote class="about-quote">You truly exist only where you think, feel, experience, want, and act unlike everyone else. There is no such thing as “everyone.” What exists are parental prescriptions, the code of Instagram*-conformity, cultural scripts... But none of that is a person.</blockquote>
-        <p style="font-size:12px;color:rgba(201,184,163,.5);margin-top:-12px">* Instagram is a social network owned by Meta Platforms Inc., whose activities providing Instagram and Facebook within the Russian Federation have been declared extremist and are banned there.</p>
+        <p style="font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:-12px">* Instagram is a social network owned by Meta Platforms Inc., whose activities providing Instagram and Facebook within the Russian Federation have been declared extremist and are banned there.</p>
         <p>To think differently, you need to rebuild yourself. More than once. <strong>Constantly. Ceaselessly. Every minute.</strong></p>
         <p>For over 13 years Katya has been reading books and leading these meetings. A book, a film, a painting, or a play is a tool for her — you can use it, or not.</p>
       </div>
@@ -406,15 +413,15 @@ p a:hover{opacity:.75}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">This season's theme</span><h2>Why we choose to be together</h2></div>
     <div class="reveal" style="max-width:74ch">
-      <p style="color:var(--sand);font-size:16px;line-height:1.9;margin-bottom:20px">Marriage used to rest on religion, economics, and public opinion. Today all three pillars have shaken: women earn their own money, the church is no longer an authority for many, and the word “divorce” surprises no one. There's almost no external reason left for monogamous family — and no one has quite put the internal ones into words.</p>
-      <p style="color:var(--sand);font-size:16px;line-height:1.9">There's no ready-made answer. For a year we'll read — from psychology to philosophy to fiction — and try to piece together our own puzzle: why people choose to wake up next to the same person for a lifetime, and whether there's meaning in that when they could choose otherwise.</p>
+      <p style="color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:20px">Marriage used to rest on religion, economics, and public opinion. Today all three pillars have shaken: women earn their own money, the church is no longer an authority for many, and the word “divorce” surprises no one. There's almost no external reason left for monogamous family — and no one has quite put the internal ones into words.</p>
+      <p style="color:var(--sand);font-size:1rem;line-height:1.9">There's no ready-made answer. For a year we'll read — from psychology to philosophy to fiction — and try to piece together our own puzzle: why people choose to wake up next to the same person for a lifetime, and whether there's meaning in that when they could choose otherwise.</p>
     </div>
 
     <div class="reveal dash-note" style="margin-top:2px;background:var(--coal);padding:32px 36px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">New intake · September</p>
-      <p style="color:var(--bone);font-size:17px;margin-bottom:14px">The first cohort of the main stream has just graduated — we're recruiting a new group in September.</p>
-      <p style="color:var(--sand);font-size:14px;margin-bottom:20px">Format — 1 book a month, 1 meeting a week. Participation — 10,000 ₽ a month.</p>
-      <a class="btn-gold" href="#join">Join the new group</a>
+      <p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">New intake · September</p>
+      <p style="color:var(--bone);font-size:1.0625rem;margin-bottom:14px">The first cohort of the main stream has just graduated — we're recruiting a new group in September.</p>
+      <p style="color:var(--sand);font-size:0.875rem;margin-bottom:20px">Format — 1 book a month, 1 meeting a week. Participation — 5,000 ₽ a month, a subscription with automatic monthly payment.</p>
+      <a class="btn-gold" href="/en/book-space/main/pay">Subscribe — 5,000 ₽/month</a>
     </div>
 
     <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">This season's programme</span><h2 id="season-program">What and when we're reading</h2></div>
@@ -512,10 +519,10 @@ p a:hover{opacity:.75}
       </div>
     </div>
     <div class="reveal" style="max-width:74ch;margin-top:32px">
-      <p style="color:var(--sand);font-size:14px;line-height:1.8;margin-bottom:14px">We don't read the Bible separately, chapter by chapter — we keep it on the table as a basic vocabulary of morality. At every meeting we ask: “How does the New Testament see this? What did it mean to people 2,000 years ago, and how can we understand it now without doing violence to ourselves?”</p>
-      <p style="color:var(--sand);font-size:14px;line-height:1.8">Fiction runs alongside as an extra emotional layer — you read it at your own pace, and at meetings we look at the characters through the psychology and philosophy we've just covered.</p>
+      <p style="color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:14px">We don't read the Bible separately, chapter by chapter — we keep it on the table as a basic vocabulary of morality. At every meeting we ask: “How does the New Testament see this? What did it mean to people 2,000 years ago, and how can we understand it now without doing violence to ourselves?”</p>
+      <p style="color:var(--sand);font-size:0.875rem;line-height:1.8">Fiction runs alongside as an extra emotional layer — you read it at your own pace, and at meetings we look at the characters through the psychology and philosophy we've just covered.</p>
     </div>
-    <p class="reveal" style="color:var(--sand);font-size:15px;line-height:1.9;max-width:70ch;margin-top:40px">If you're tired of slogans like “family is sacred” and want to understand how closeness actually works — we're headed the same way. And beyond the books, the group travels together, goes to the theatre and exhibitions, paints, celebrates birthdays, and builds projects together — some of it is visible in the photos below.</p>
+    <p class="reveal" style="color:var(--sand);font-size:0.9375rem;line-height:1.9;max-width:70ch;margin-top:40px">If you're tired of slogans like “family is sacred” and want to understand how closeness actually works — we're headed the same way. And beyond the books, the group travels together, goes to the theatre and exhibitions, paints, celebrates birthdays, and builds projects together — some of it is visible in the photos below.</p>
   </div>
 </section>
 
@@ -594,54 +601,20 @@ p a:hover{opacity:.75}
 </section>
 
 <!-- ВСТУПИТЬ -->
+<!-- pack-v542: форма «Хочу в клуб» заменена подпиской с автосписанием (ТЗ «Подписка на книжный клуб») -->
 <div class="join-sec" id="join">
   <div class="wrap">
     <span class="eyebrow">Join</span>
     <h2 style="margin-top:14px">I want to join</h2>
-    <p>Write to us — we'll tell you about the next meeting and how to join the group.</p>
-    <p style="color:var(--sand);font-size:14px;margin-top:-8px;margin-bottom:24px">A new group starts in September — this season's theme: exploring the foundations of monogamous family. Participation — 10,000 ₽ a month.</p>
-
-    <div class="notify-tabs" id="notifyTabs_j">
-      <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_j('site', this)">Via website</button>
-      <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_j('bot', this)">Via Telegram bot</button>
+    <p>Participation in the main stream is a subscription: 5,000 ₽ a month, charged automatically on the day of your first payment. You can cancel at any time in your account.</p>
+    <p style="color:var(--sand);font-size:0.875rem;margin-top:-8px;margin-bottom:24px">Theme of the season: exploring the foundations of the monogamous family. After payment the organiser will contact you within a day and add you to the stream chat.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn-gold" href="/en/book-space/main/pay">Subscribe — 5,000 ₽/month</a>
+      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_book-space" target="_blank" rel="noopener" style="margin-left:0">Ask first — on Telegram</a>
     </div>
-
-    <div id="formSite_j">
-    <div class="join-form" id="joinForm">
-      <div style="font-size:12px;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required</div>
-      <div class="join-field"><label>Name <span class="req-mark">*</span></label><input type="text" id="j-name" placeholder="Your name" required></div>
-      <div class="join-field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="join-field"><label>Email <span class="req-mark">*</span></label><input class="input-clear" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="join-field" data-gift-code-field style="display:none"><label>Gift card code <span class="opt-mark">— if you have one</span></label><input class="input-clear" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
-      <div class="join-field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear" type="text" id="j-telegram" autocomplete="off" placeholder="@username"></div>
-      <div class="join-field"><label>A few words about yourself — optional</label><textarea placeholder="What brings you here, what are you looking for..."></textarea></div>
-      <label class="cb-item" style="margin:4px 0 14px"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a></span></label>
-      <p class="pay-pending-notice" id="payPendingNotice">Online payment on the site is still being connected. To sign up right now — click “Ask Katya first” below, we'll set everything up personally.</p>
-      <div class="msg" id="payMsg_community" style="display:none;color:#C98B6B;font-size:13px;margin-top:8px"></div>
-      <button class="btn-gold" id="payBtn_community" onclick="AELITA_pay('community', {name: document.getElementById('j-name').value, email: document.getElementById('j-email').value, phone: document.getElementById('j-phone').value, buttonEl: this, msgElId: 'payMsg_community'})">Pay — 10,000 ₽/month →</button>
-      <button class="btn-outline" onclick="joinClub()" style="margin-left:0">Ask Katya first</button>
-      <p class="join-note">To pay, you'll need an <a href="/en/account" style="color:var(--gold)">account</a> — you can sign up right before paying. Questions: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
-    </div>
-    <div class="join-ok" id="joinOk">Thank you! Katya will get in touch and tell you about the next meeting.</div>
-    </div>
-
-    <div id="formBot_j" style="display:none">
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=community&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_book-space" target="_blank" rel="noopener">I want to join</a>
-      <p class="notify-bot-note">The bot will ask the same questions as the website form and forward your request to us directly.</p>
-    </div>
+    <p class="join-note">To subscribe you will need an <a href="/en/account" style="color:var(--gold)">account</a> — you can create one right on the payment page. Questions: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
   </div>
 </div>
-
-<!-- payments.js -->
-<script src="/assets/payments.js?v=58"></script>
-<script>
-  function switchFormTab_j(tab, btn){
-    document.querySelectorAll('#notifyTabs_j .notify-tab').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('formSite_j').style.display = (tab === 'site') ? 'block' : 'none';
-    document.getElementById('formBot_j').style.display = (tab === 'bot') ? 'block' : 'none';
-  }
-</script>
 
 <!-- ПОТОК ДЛЯ ПРЕДПРИНИМАТЕЛЕЙ -->
 <section id="predprinimateli" style="padding-top:100px;scroll-margin-top:90px">
@@ -666,81 +639,17 @@ p a:hover{opacity:.75}
     </div>
 
     <div class="join-sec" id="join-ent" style="padding:48px 0 0">
-      <span class="eyebrow">Register</span>
-      <h3 style="margin-top:14px;font-size:22px">Register for the entrepreneurs stream</h3>
-      <p class="sub">Leave a request — we'll tell you about the next meeting and the format.</p>
-
-      <div class="notify-tabs" id="notifyTabs_ent">
-        <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_ent('site', this)">Via website</button>
-        <button type="button" class="notify-tab" data-tab="bot" onclick="switchFormTab_ent('bot', this)">Via Telegram bot</button>
-      </div>
-
-      <div id="formSite_ent">
-      <div class="form-grid">
-        <div class="field">
-          <label>Name <span class="req-mark">*</span></label>
-          <input id="ent-name" type="text" placeholder="Your name" required>
-        </div>
-        <div class="field">
-          <label>Phone <span class="req-mark">*</span></label>
-          <input class="input-clear" id="ent-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
-        </div>
-        <div class="field">
-          <label>Email <span class="req-mark">*</span></label>
-          <input class="input-clear" id="ent-email" type="email" inputmode="email" autocomplete="email" placeholder="email@example.com" required>
-        </div>
-        <div class="field">
-          <label>Telegram <span class="opt-mark">— optional</span></label>
-          <input class="input-clear" id="ent-tg" type="text" autocomplete="off" placeholder="@username">
-        </div>
-        <div class="field full">
-          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_ent"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a></span></label>
-          <button class="submit-btn" onclick="handleSubmit_ent()">Register</button>
-        </div>
-      </div>
-      </div>
-      <div class="join-ok" id="entOk" style="display:none">Thank you! We'll reach out and tell you about the next meeting.</div>
-
-      <div id="formBot_ent" style="display:none">
-        <a class="btn-outline" href="https://t.me/aelita_production_bot?start=entrepreneurs_stream&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_book-space" target="_blank" rel="noopener">Register via the bot</a>
-        <p class="notify-bot-note">The bot will ask the same questions as the website form and forward your request to us directly.</p>
+      <span class="eyebrow">Subscription</span>
+      <h3 style="margin-top:14px;font-size:1.375rem">Stream for entrepreneurs — 10,000 ₽ per month</h3>
+      <p class="sub">A subscription charged automatically on the day of your first payment. You can cancel at any time in your account. After payment the organiser will contact you within a day.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn-gold" href="/en/book-space/business/pay">Subscribe — 10,000 ₽/month</a>
+        <a class="btn-outline" href="https://t.me/aelita_production_bot?start=entrepreneurs_stream&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_book-space" target="_blank" rel="noopener" style="margin-left:0">Ask first — on Telegram</a>
       </div>
     </div>
   </div>
 </section>
 
-<script>
-  function switchFormTab_ent(tab, btn){
-    document.querySelectorAll('#notifyTabs_ent .notify-tab').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('formSite_ent').style.display = (tab === 'site') ? 'block' : 'none';
-    document.getElementById('formBot_ent').style.display = (tab === 'bot') ? 'block' : 'none';
-  }
-
-  async function handleSubmit_ent(){
-    const nameEl = document.getElementById('ent-name');
-    const emailEl = document.getElementById('ent-email');
-    const telEl = document.getElementById('ent-tel');
-    const name  = (nameEl?.value || '').trim();
-    const email = (emailEl?.value || '').trim();
-    const tel   = (telEl?.value || '').trim();
-    const tg    = (document.getElementById('ent-tg')?.value || '').trim();
-    if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
-    AELITA_clearFieldError(nameEl);
-    if(!AELITA_isValidEmail(email)){ AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка'); emailEl.focus(); return; }
-    AELITA_clearFieldError(emailEl);
-    if(!AELITA_normalizePhone(tel)){ AELITA_showFieldError(telEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой'); telEl.focus(); return; }
-    AELITA_clearFieldError(telEl);
-    if(!document.getElementById('consent_ent')?.checked){ AELITA_formMessage(document.getElementById('entOk'), 'Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку', 'Please tick the personal data consent box — we can\'t accept the request without it'); return; }
-    const fields = {'Имя': name, 'Email': email, 'Телефон': tel, 'Telegram': tg, 'Поток': 'AELITA COMMUNITY — поток для предпринимателей'};
-    if (!(await AELITA_sendLead('Поток для предпринимателей — заявка', fields))) { AELITA_formMessage(document.getElementById('entOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
-    AELITA_formMessageClear(document.getElementById('entOk'));
-    document.getElementById('formSite_ent').style.display = 'none';
-    document.getElementById('entOk').style.display = 'block';
-  }
-  AELITA_wireContactValidation('ent-email', 'email');
-  AELITA_wireContactValidation('ent-tel', 'phone');
-</script>
 
 </main>
 
@@ -790,54 +699,6 @@ p a:hover{opacity:.75}
 </footer>
 
 <script>
-  // Телефон и email — обязательны на каждой форме сайта, Telegram —
-  // отдельным пунктом, желательным, но не обязательным (см. Site/
-  // README.md, раздел «Обязательные поля форм» — заказчик попросил
-  // именно так после разбора заявок без телефона/почты). pack-v235:
-  // проверка формата (не только «не пусто») через общие хелперы
-  // payments.js, с подсветкой конкретного поля вместо alert().
-  function collectContact(){
-    var phoneEl = document.getElementById('j-phone');
-    var emailEl = document.getElementById('j-email');
-    var phone = phoneEl.value.trim();
-    var email = emailEl.value.trim();
-    var tg = document.getElementById('j-telegram').value.trim();
-    if(!AELITA_normalizePhone(phone)){
-      AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
-      phoneEl.focus();
-      return null;
-    }
-    AELITA_clearFieldError(phoneEl);
-    if(!AELITA_isValidEmail(email)){
-      AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
-      emailEl.focus();
-      return null;
-    }
-    AELITA_clearFieldError(emailEl);
-    var parts = ['Тел: ' + phone, 'Email: ' + email];
-    if(tg) parts.push('TG: ' + tg);
-    return parts.join(' · ');
-  }
-  AELITA_wireContactValidation('j-email', 'email');
-  AELITA_wireContactValidation('j-phone', 'phone');
-
-  async function joinClub(){
-    const nameEl = document.getElementById('j-name');
-    const name = nameEl.value.trim();
-    if(!name){ AELITA_showFieldError(nameEl, 'Укажите имя'); nameEl.focus(); return; }
-    AELITA_clearFieldError(nameEl);
-    if(!document.getElementById('pdConsent').checked){ AELITA_formMessage(document.getElementById('joinOk'), 'Отметьте согласие на обработку персональных данных — без него мы не можем принять заявку', 'Please tick the personal data consent box — we can\'t accept the request without it'); return; }
-    const contact = collectContact();
-    if(!contact){return;}
-    if (!(await AELITA_sendLead('AELITA COMMUNITY — вступление', {
-      'Имя': name,
-      'Контакт': contact,
-    }))) { AELITA_formMessage(document.getElementById('joinOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
-    AELITA_formMessageClear(document.getElementById('joinOk'));
-    document.getElementById('joinForm').style.display='none';
-    document.getElementById('joinOk').style.display='block';
-  }
-
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
   },{threshold:.08});
@@ -925,40 +786,8 @@ p a:hover{opacity:.75}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script>AELITA_showNotConnectedNotice('payPendingNotice');</script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
-<script>
-  // pack-v468 (ТЗ клиентских текстов, З-3). Возврат со страницы оплаты
-  // ЮKassa (метка aelita_paid в return_url, см. assets/payments.js).
-  // Это не подтверждение самой оплаты — её асинхронно решает webhook на
-  // сервере, — а честное «мы вас ждали». Блок лежит первым на странице,
-  // поэтому прокручивать никуда не нужно: достаточно увести страницу
-  // наверх и спрятать форму, чтобы человек не заполнил её второй раз.
-  (function () {
-    var params = new URLSearchParams(location.search);
-    if (params.get('aelita_paid') !== '1') return;
-    var msg = document.getElementById('paymentReturnMsg');
-    var form = document.getElementById('joinForm');
-    if (msg) msg.hidden = false;
-    if (form) form.style.display = 'none';
-    var retry = document.getElementById('paymentRetryBtn');
-    if (retry) retry.onclick = function () {
-      if (form) form.style.display = '';
-      if (msg) msg.hidden = true;
-      var sec = document.getElementById('join');
-      if (sec) sec.scrollIntoView();
-    };
-    // В адресе возврата может остаться якорь #join — браузер по нему
-    // уедет вниз сам, уже после этого кода. Поэтому наверх уводим и
-    // сейчас, и после полной загрузки.
-    window.scrollTo(0, 0);
-    window.addEventListener('load', function () { window.scrollTo(0, 0); });
-    params.delete('aelita_paid');
-    var qs = params.toString();
-    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-  })();
-</script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -969,6 +798,6 @@ p a:hover{opacity:.75}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

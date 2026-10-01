@@ -36,49 +36,49 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>a{color:inherit;text-decoration:none}
-footer a{color:var(--sand);display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
+footer a{color:var(--sand);display:block;margin-bottom:10px;font-size:0.875rem;transition:color .3s}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
 .page-hero{padding:140px 0 70px;border-bottom:1px solid rgba(232,230,225,.08)}
-.eyebrow{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.eyebrow{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
 h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(28px,5vw,52px);letter-spacing:.18em}
-.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;color:var(--sand);font-size:16px;margin-top:14px;max-width:54ch}
+.hero-sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;text-transform:none;letter-spacing:normal;color:var(--sand);font-size:1rem;margin-top:14px;max-width:54ch}
 .team-section{padding:80px 0}
 .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 @media(max-width:760px){.team-grid{grid-template-columns:1fr}}
 .member-card{background:var(--coal);overflow:hidden;display:block;color:inherit;transition:opacity .3s}
-.member-card:hover{opacity:.9}
+@media(hover:hover){.member-card:hover{opacity:.9}}
 .member-photo{position:relative;aspect-ratio:3/4;overflow:hidden}
 .member-photo img{width:100%;height:100%;object-fit:cover;object-position:top;filter:brightness(.85);transition:transform .6s ease}
-.member-card:hover .member-photo img{transform:scale(1.03)}
+@media(hover:hover){.member-card:hover .member-photo img{transform:scale(1.03)}}
 .member-info{padding:36px 40px 44px}
-.member-role{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.member-role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
 .member-name{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,3vw,32px);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
-.member-title{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(232,230,225,.08)}
-.member-bio{color:var(--sand);font-size:14px;line-height:1.8}
+.member-title{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(232,230,225,.08)}
+.member-bio{color:var(--sand);font-size:0.875rem;line-height:1.8}
 .member-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.member-tag{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;border:1px solid rgba(214,181,122,.3);color:var(--sand);padding:6px 12px}
-.member-link{display:inline-block;margin-top:24px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(214,181,122,.4);padding-bottom:2px}
+.member-tag{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;border:1px solid rgba(214,181,122,.3);color:var(--sand);padding:6px 12px}
+.member-link{display:inline-block;margin-top:24px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(214,181,122,.4);padding-bottom:2px}
 .values-section{background:var(--coal);padding:80px 0}
 .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 @media(max-width:760px){.values-grid{grid-template-columns:1fr}}
 .value-item{background:var(--ink);padding:40px 32px}
-.value-num{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;color:var(--gold);margin-bottom:16px}
-.value-item h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:18px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
-.value-item p{color:var(--sand);font-size:14px;line-height:1.75}
-footer h4{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--sand);margin-bottom:20px}
-footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:10px;transition:color .3s}
-.requisites{border-top:1px solid rgba(232,230,225,.06);padding-top:24px;color:rgba(201,184,163,.35);font-size:12px;line-height:1.9}
+.value-num{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;color:var(--gold);margin-bottom:16px}
+.value-item h3{font-family:'Montserrat',sans-serif;font-weight:200;font-size:1.125rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.value-item p{color:var(--sand);font-size:0.875rem;line-height:1.75}
+footer h4{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sand);margin-bottom:20px}
+footer a{display:block;color:rgba(201,184,163,.55);font-size:0.8125rem;margin-bottom:10px;transition:color .3s}
+.requisites{border-top:1px solid rgba(232,230,225,.06);padding-top:24px;color:rgba(201,184,163,.35);font-size:0.75rem;line-height:1.9}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:600px) and (min-width:431px){h1{letter-spacing:.08em}}
-@media(max-width:430px){h1{font-size:clamp(22px,8vw,32px);letter-spacing:.06em} .eyebrow{font-size:12px;letter-spacing:.3em} footer h4{font-size:12px} footer a{font-size:13px}}
-@media(max-width:375px){h1{font-size:clamp(20px,9vw,28px);letter-spacing:.04em} .eyebrow{font-size:12px;letter-spacing:.26em} .member-info{padding:24px 20px 32px}}
-@media(max-width:760px){footer h4{margin-bottom:12px} footer a{margin-bottom:8px;font-size:13px}}
+@media(max-width:430px){h1{font-size:clamp(22px,8vw,32px);letter-spacing:.06em} .eyebrow{font-size:0.75rem;letter-spacing:.3em} footer h4{font-size:0.75rem} footer a{font-size:0.8125rem}}
+@media(max-width:375px){h1{font-size:clamp(20px,9vw,28px);letter-spacing:.04em} .eyebrow{font-size:0.75rem;letter-spacing:.26em} .member-info{padding:24px 20px 32px}}
+@media(max-width:760px){footer h4{margin-bottom:12px} footer a{margin-bottom:8px;font-size:0.8125rem}}
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 <nav>
 <div class="nav-in">
   <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
@@ -87,13 +87,13 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-  <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-  <a class="lang-switch" href="/en/team/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+  <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+  <a class="lang-switch" href="/en/team/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
     <span></span><span></span><span></span>
   </button>
@@ -107,7 +107,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
     <a href="/tochkacuire" onclick="toggleMenu()">Точка Кюри</a>
     <a href="/shop" onclick="toggleMenu()">Магазин</a>
-    <a href="/about" onclick="toggleMenu()">О компании</a>
+    <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
     <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
@@ -125,9 +125,9 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
   <div class="wrap">
     <p class="eyebrow">AELITA PRODUCTION</p>
     <h1>Команда</h1>
-    <p class="hero-sub">Основатели компании — люди, которые создали AELITA PRODUCTION и определяют её развитие.</p>
+    <p class="hero-sub">Основатели компании — люди, которые создали AELITA PRODUCTION и определяют её развитие.</p>
 <!-- pack-v510: кнопка действия на первом экране -->
-<div class="hero-cta"><a class="btn-gold" href="/tickets">Афиша и билеты</a></div>
+<div class="hero-cta"><a class="btn-gold" href="/tickets">Афиша и билеты</a></div>
   </div>
 </div>
 
@@ -143,7 +143,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
           <p class="member-role">Founder</p>
           <div class="member-name">Екатерина<br>Абдулова</div>
           <p class="member-title">Co-Founder & Producer</p>
-          <p class="member-bio">Основательница AELITA PRODUCTION. Десять успешно реализованных проектов за историю существования компании. Режиссёр спектакля «ИОВ:материал».</p>
+          <p class="member-bio">Основательница AELITA PRODUCTION. Десять успешно реализованных проектов за историю существования компании. Режиссёр спектакля «ИОВ:материал».</p>
           <div class="member-tags">
             <span class="member-tag">Продюсирование</span>
             <span class="member-tag">Режиссура</span>
@@ -161,7 +161,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
           <p class="member-role">Co-founder</p>
           <div class="member-name">Константин<br>Мошников</div>
           <p class="member-title">Продюсер · SMM · Артист цирка</p>
-          <p class="member-bio">Более 15 лет артист цирка. Организатор фестивалей «Точка Кюри» и БУФЕСТ 2026. Знает индустрию культуры изнутри — от организации гастролей до работы с государственными площадками.</p>
+          <p class="member-bio">Более 15 лет артист цирка. Организатор фестивалей «Точка Кюри» и БУФЕСТ 2026. Знает индустрию культуры изнутри — от организации гастролей до работы с государственными площадками.</p>
           <div class="member-tags">
             <span class="member-tag">Продюсирование</span>
             <span class="member-tag">SMM</span>
@@ -182,17 +182,17 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
       <div class="value-item">
         <p class="value-num">01</p>
         <h3>Искусство прежде всего</h3>
-        <p>Каждый проект начинается с художественной идеи, а не с коммерческого расчёта. Качество — наш главный приоритет.</p>
+        <p>Каждый проект начинается с художественной идеи, а не с коммерческого расчёта. Качество — наш главный приоритет.</p>
       </div>
       <div class="value-item">
         <p class="value-num">02</p>
         <h3>Знание изнутри</h3>
-        <p>Мы сами — часть театральной индустрии. Это позволяет находить решения, недоступные тем, кто смотрит снаружи.</p>
+        <p>Мы сами — часть театральной индустрии. Это позволяет находить решения, недоступные тем, кто смотрит снаружи.</p>
       </div>
       <div class="value-item">
         <p class="value-num">03</p>
         <h3>Долгосрочные отношения</h3>
-        <p>Работаем не разово, а выстраиваем партнёрства. Каждый проект — начало чего-то большего.</p>
+        <p>Работаем не разово, а выстраиваем партнёрства. Каждый проект — начало чего-то большего.</p>
       </div>
     </div>
   </div>
@@ -213,7 +213,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=team" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -238,7 +238,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br>
       <a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Политика конфиденциальности</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
@@ -247,7 +247,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
 </footer>
 
 <div id="cookie-banner">
-  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
   <div class="cookie-actions">
     <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
@@ -268,7 +268,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
 
 <!-- Telegram виджет -->
 <div class="tg-widget" id="tg-widget">
-  <div class="tg-bubble" id="tg-bubble">Напишите нам — бот ответит мгновенно</div>
+  <div class="tg-bubble" id="tg-bubble">Напишите нам — бот ответит мгновенно</div>
   <a class="tg-btn" href="https://t.me/aelita_production_bot?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=team" target="_blank" rel="noopener" aria-label="Написать в Telegram">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"/></svg>
     Написать нам
@@ -277,7 +277,7 @@ footer a{display:block;color:rgba(201,184,163,.55);font-size:13px;margin-bottom:
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

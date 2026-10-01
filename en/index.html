@@ -36,9 +36,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
-.ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
+.ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
 section{padding:110px 0}
 body{
     background:var(--ink);
@@ -51,7 +51,7 @@ body{
   }
 .eyebrow{
     font-family:'Montserrat',sans-serif;
-    font-size:12px;font-weight:400;
+    font-size:0.75rem;font-weight:400;
     letter-spacing:.45em;text-transform:uppercase;
     color:var(--gold);
   }
@@ -92,7 +92,7 @@ header h1{
   }
 header .sub{
     margin-top:12px;color:var(--sand);
-    font-family:'Montserrat',sans-serif;font-size:12px;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;
     letter-spacing:.3em;text-transform:uppercase;text-indent:.3em;
     animation:rise 1.4s ease both 1.25s;
   }
@@ -105,21 +105,21 @@ header .sub{
     display:inline-flex;flex-direction:column;gap:8px;align-items:center;
     animation:rise 1.4s ease both 1.5s;
   }
-.hero-next .eyebrow{color:var(--sand);font-size:12px;letter-spacing:.4em}
+.hero-next .eyebrow{color:var(--sand);font-size:0.75rem;letter-spacing:.4em}
 .hero-next > a{
     color:var(--bone);text-decoration:none;
     font-family:'Montserrat',sans-serif;font-weight:300;
-    font-size:14px;letter-spacing:.16em;text-transform:uppercase;
+    font-size:0.875rem;letter-spacing:.16em;text-transform:uppercase;
     border:1px solid rgba(214,181,122,.5);
     margin-top:20px;padding:15px 32px;transition:all .35s;
   }
-.hero-next > a:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
-.hero-next .date-line{color:var(--gold);font-size:13px;letter-spacing:.14em;font-family:'Montserrat',sans-serif}
+@media(hover:hover){.hero-next > a:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}}
+.hero-next .date-line{color:var(--gold);font-size:0.8125rem;letter-spacing:.14em;font-family:'Montserrat',sans-serif}
 /* pack-v510: «Афиша и билеты» — на первом экране телефона */
 @media(max-width:600px){header{padding:92px 20px 40px}.hero-mark{width:112px}header h1{margin-top:22px}.hero-rule{margin:20px auto}.hero-next > a{margin-top:12px}}
 .filters{display:flex;gap:12px;margin-bottom:50px;flex-wrap:wrap}
-.filter-btn{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;padding:11px 22px;border:1px solid rgba(201,184,163,.25);color:var(--sand);background:none;cursor:pointer;transition:all .3s}
-.filter-btn.active{border-color:var(--gold);color:var(--gold)}@media(hover:hover){.filter-btn:hover{border-color:var(--gold);color:var(--gold)}}
+.filter-btn{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:11px 22px;border:1px solid rgba(201,184,163,.25);color:var(--sand);background:none;cursor:pointer;transition:all .3s}
+.filter-btn.active{border-color:var(--gold);color:var(--gold)}@media(hover:hover){@media(hover:hover){.filter-btn:hover{border-color:var(--gold);color:var(--gold)}}}
 /* ── sections ─────────────────────── */
   section{padding:110px 0;position:relative}
 .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:60px}
@@ -131,17 +131,17 @@ header .sub{
     padding:34px 0;border-bottom:1px solid rgba(232,230,225,.09);
   }
 .event:first-of-type{border-top:1px solid rgba(232,230,225,.09)}
-.ev-date{font-family:'Montserrat',sans-serif;font-weight:200;font-size:34px;color:var(--gold);line-height:1.15}
-.ev-date small{display:block;font-size:12px;letter-spacing:.3em;color:var(--sand);text-transform:uppercase;margin-top:4px}
-.ev-info h3{font-size:17px;letter-spacing:.16em;font-weight:300;margin-bottom:6px}
-.ev-info .fest{color:var(--gold);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-family:'Montserrat',sans-serif;margin-top:6px}
+.ev-date{font-family:'Montserrat',sans-serif;font-weight:200;font-size:2.125rem;color:var(--gold);line-height:1.15}
+.ev-date small{display:block;font-size:0.75rem;letter-spacing:.3em;color:var(--sand);text-transform:uppercase;margin-top:4px}
+.ev-info h3{font-size:1.0625rem;letter-spacing:.16em;font-weight:300;margin-bottom:6px}
+.ev-info .fest{color:var(--gold);font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;font-family:'Montserrat',sans-serif;margin-top:6px}
 .ev-cta{
-    font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;
     color:var(--sand);border:1px solid rgba(201,184,163,.35);
     padding:13px 22px;text-decoration:none;white-space:nowrap;transition:all .3s;
   }
 .ev-cta.gold{background:var(--gold);color:var(--ink);border-color:var(--gold)}
-.ev-cta.gold:hover{opacity:.85;color:var(--ink)}
+@media(hover:hover){.ev-cta.gold:hover{opacity:.85;color:var(--ink)}}
 .ev-ctas{display:flex;gap:12px}
 @media(max-width:760px){
     .event{grid-template-columns:1fr;gap:12px}
@@ -153,7 +153,7 @@ header .sub{
    стиля с /tickets в этом месте нет. */
 .event.has-photo{position:relative;overflow:hidden;display:block;padding:0;border-bottom:none;min-height:460px}
 .event.has-photo .ev-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 35%;filter:brightness(.38);transition:filter .5s}
-.event.has-photo:hover .ev-bg{filter:brightness(.48)}
+@media(hover:hover){.event.has-photo:hover .ev-bg{filter:brightness(.48)}}
 .event.has-photo .ev-overlay{position:relative;z-index:1;min-height:460px;padding:34px;display:flex;flex-direction:column;justify-content:flex-end}
 .event.has-photo .ev-info{margin:14px 0 18px}
 .event.has-photo .ev-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px}
@@ -173,7 +173,7 @@ header .sub{
     box-shadow:0 0 20px 3px rgba(214,181,122,.5), 0 0 70px 18px rgba(214,181,122,.18);
   }
 .flag-visual span{
-    font-family:'Montserrat',sans-serif;letter-spacing:.4em;font-size:12px;
+    font-family:'Montserrat',sans-serif;letter-spacing:.4em;font-size:0.75rem;
     text-transform:uppercase;color:var(--sand);position:relative;
   }
 .flag h3{font-size:clamp(26px,4vw,42px);letter-spacing:.12em;margin-bottom:26px;line-height:1.3}
@@ -181,15 +181,15 @@ header .sub{
 .flag .quote{
     border-left:1px solid var(--gold);padding-left:22px;
     color:var(--bone);font-style:normal;margin:32px 0;
-    font-size:15px;letter-spacing:.04em;
+    font-size:0.9375rem;letter-spacing:.04em;
   }
 .btn{
     display:inline-block;margin-top:10px;
-    font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;
     color:var(--ink);background:var(--gold);padding:16px 32px;text-decoration:none;
     transition:opacity .3s;
   }
-.btn:hover{opacity:.85}
+@media(hover:hover){.btn:hover{opacity:.85}}
 @media(max-width:900px){.flag{grid-template-columns:1fr;gap:44px}}
 /* манифест */
   .manifest{background:var(--coal);text-align:center}
@@ -202,7 +202,7 @@ header .sub{
 .values{
     margin-top:56px;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;
     color:var(--sand);font-family:'Montserrat',sans-serif;
-    font-size:12px;letter-spacing:.4em;text-transform:uppercase;
+    font-size:0.75rem;letter-spacing:.4em;text-transform:uppercase;
   }
 .values span::after{content:"·";margin-left:18px;color:var(--gold)}
 .values span:last-child::after{content:""}
@@ -213,10 +213,10 @@ header .sub{
     display:flex;flex-direction:column;justify-content:space-between;
     border:1px solid transparent;transition:border-color .35s;position:relative;overflow:hidden;
   }
-.card:hover{border-color:rgba(214,181,122,.4)}
-.card .tag{font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-family:'Montserrat',sans-serif}
-.card h3{font-size:18px;letter-spacing:.14em;font-weight:300;margin:16px 0 10px}
-.card p{color:var(--sand);font-size:13.5px}
+@media(hover:hover){.card:hover{border-color:rgba(214,181,122,.4)}}
+.card .tag{font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-family:'Montserrat',sans-serif}
+.card h3{font-size:1.125rem;letter-spacing:.14em;font-weight:300;margin:16px 0 10px}
+.card p{color:var(--sand);font-size:0.84375rem}
 /* сотрудничество */
   .collab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-bottom:50px}
 .collab-grid .card{min-height:180px}
@@ -229,16 +229,16 @@ header .sub{
 .sub-form{display:flex;gap:0;max-width:480px;margin:0 auto}
 .sub-form input{
     flex:1;background:transparent;border:1px solid rgba(201,184,163,.4);border-right:none;
-    padding:16px 20px;color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;
+    padding:16px 20px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;
   }
 .sub-form input::placeholder{color:rgba(201,184,163,.6)}
 .sub-form button{
     background:var(--gold);border:none;cursor:pointer;
-    font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;
     color:var(--ink);padding:16px 26px;
   }
-.sub-ok{color:var(--gold);margin-top:20px;display:none;font-size:14px;letter-spacing:.06em}
-.sub-err{color:#e08a6e;margin-top:14px;display:none;font-size:13px;letter-spacing:.04em}
+.sub-ok{color:var(--gold);margin-top:20px;display:none;font-size:0.875rem;letter-spacing:.06em}
+.sub-err{color:#e08a6e;margin-top:14px;display:none;font-size:0.8125rem;letter-spacing:.04em}
 @media(max-width:560px){
     .sub-form{flex-direction:column;gap:12px}
     .sub-form input{border-right:1px solid rgba(201,184,163,.4)}
@@ -249,12 +249,12 @@ header .sub{
 @media(max-width:430px){footer{padding-bottom:230px}}
 .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:44px;margin-bottom:60px}
 footer h4{
-    font-family:'Montserrat',sans-serif;font-size:12px;font-weight:400;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;
     letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;
   }
-footer p{color:var(--sand);font-size:14px}
+footer p{color:var(--sand);font-size:0.875rem}
 .requisites{
-    color:rgba(201,184,163,.55);font-size:12px;line-height:1.9;
+    color:rgba(201,184,163,.55);font-size:0.75rem;line-height:1.9;
     border-top:1px solid rgba(232,230,225,.06);padding-top:30px;
   }
 /* scroll reveal */
@@ -265,8 +265,8 @@ footer p{color:var(--sand);font-size:14px}
     html{scroll-behavior:auto}
   }
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
-@media(max-width:430px){.eyebrow{font-size:12px;letter-spacing:.3em} section{padding:60px 0} .ev-date{font-size:clamp(24px,7vw,34px)} .foot-grid{grid-template-columns:1fr} footer h4{font-size:12px}}
-@media(max-width:375px){.eyebrow{font-size:12px;letter-spacing:.26em} section{padding:50px 0}}
+@media(max-width:430px){.eyebrow{font-size:0.75rem;letter-spacing:.3em} section{padding:60px 0} .ev-date{font-size:clamp(24px,7vw,34px)} .foot-grid{grid-template-columns:1fr} footer h4{font-size:0.75rem}}
+@media(max-width:375px){.eyebrow{font-size:0.75rem;letter-spacing:.26em} section{padding:50px 0}}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px} footer h4{margin-bottom:12px} .grid{grid-template-columns:1fr !important}}
 </style>
@@ -367,8 +367,8 @@ footer p{color:var(--sand);font-size:14px}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -637,11 +637,11 @@ footer p{color:var(--sand);font-size:14px}
     <span class="eyebrow">Don't miss it</span>
     <h2 style="margin-top:14px">Be the first to know about performances</h2>
     <p>Ticket sales launches, new cities, behind the scenes and special events — brief and to the point, without spam.</p>
-    <div style="font-size:12px;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
-    <input type="text" id="subName" placeholder="Your name *" aria-label="Name (required)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:15px">
-    <input type="tel" id="subPhone" inputmode="tel" autocomplete="tel" placeholder="Phone *" aria-label="Phone (required)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:15px">
+    <div style="font-size:0.75rem;color:var(--sand);margin-bottom:10px">Fields marked with an asterisk (*) are required</div>
+    <input class="ym-disable-keys" type="text" id="subName" placeholder="Your name *" aria-label="Name (required)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:0.9375rem">
+    <input class="ym-disable-keys" type="tel" id="subPhone" inputmode="tel" autocomplete="tel" placeholder="Phone *" aria-label="Phone (required)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:0.9375rem">
     <div class="sub-form">
-      <input type="email" id="subEmail" placeholder="Your email *" aria-label="Email address (required)" required>
+      <input class="ym-disable-keys" type="email" id="subEmail" placeholder="Your email *" aria-label="Email address (required)" required>
       <button class="btn-gold" onclick="subscribe()">Subscribe</button>
     </div>
     <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a> <span style="color:var(--gold);font-weight:700">*</span></span></label>
@@ -852,7 +852,7 @@ footer p{color:var(--sand);font-size:14px}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>
@@ -864,6 +864,6 @@ footer p{color:var(--sand);font-size:14px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=58"></script>
+<script src="/assets/phone-prefix.js?v=61"></script>
 </body>
 </html>

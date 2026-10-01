@@ -38,7 +38,28 @@
     });
     if (raw(el) === '' || ONLY.test(raw(el))) desc.set.call(el, PREFIX);
     syncValidity(el);
-    el.addEventListener('input', function () { syncValidity(el); });
+    // pack-v540 (перепроверка): человек по привычке набирает номер целиком
+    // — «+7 900…» или «8 900…» — поверх готового «+7 ». Получалось
+    // «+7 79001112233+» или «+7 89001112233», и форма отклоняла номер как
+    // неверный (заметно по журналу незавершённых заказов: bad_phone).
+    // Если после префикса стоит «+» или 11 цифр, начинающихся с 7/8, —
+    // убираем лишнее. Номер без «+7 » в начале (стёрли префикс, зарубежный)
+    // не трогаем.
+    el.addEventListener('input', function () {
+      var v = raw(el);
+      if (v.indexOf(PREFIX) === 0) {
+        var rest = v.slice(PREFIX.length);
+        var digits = rest.replace(/\D/g, '');
+        var fixed = null;
+        if (rest.indexOf('+') !== -1) fixed = digits.length === 11 && /^[78]/.test(digits) ? digits.slice(1) : rest.replace(/\+/g, '');
+        else if (digits.length === 11 && /^[78]/.test(digits)) fixed = digits.slice(1);
+        if (fixed !== null) {
+          desc.set.call(el, PREFIX + fixed);
+          try { el.setSelectionRange(raw(el).length, raw(el).length); } catch (e) {}
+        }
+      }
+      syncValidity(el);
+    });
     // курсор — после «+7 », а не перед ним
     el.addEventListener('focus', function () {
       var v = raw(el);

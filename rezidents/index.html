@@ -33,8 +33,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
-<style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
+<link rel="stylesheet" href="/assets/style.css?v=61">
+<style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
@@ -43,7 +43,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--gold);color:var(--ink)}
   h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase}
-  .eyebrow{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  .eyebrow{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
   
   
   
@@ -58,16 +58,16 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .bio-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;filter:brightness(.85)}
   .bio-info .eyebrow{margin-bottom:16px}
   .bio-info h1{font-size:clamp(28px,5vw,54px);letter-spacing:.1em;line-height:1.1;margin-bottom:10px}
-  .bio-role{font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
-  .bio-info p{color:var(--sand);font-size:15px;line-height:1.85;margin-bottom:14px}
+  .bio-role{font-family:'Montserrat',sans-serif;font-size:0.875rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:28px}
+  .bio-info p{color:var(--sand);font-size:0.9375rem;line-height:1.85;margin-bottom:14px}
   .bio-info p strong{color:var(--bone);font-weight:400}
-  .bio-quote{border-left:1px solid var(--gold);padding-left:20px;margin:24px 0;font-size:15px;color:var(--bone);line-height:1.7;font-style:italic}
+  .bio-quote{border-left:1px solid var(--gold);padding-left:20px;margin:24px 0;font-size:0.9375rem;color:var(--bone);line-height:1.7;font-style:italic}
   .bio-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-  .bio-tag{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:7px 14px}
-  .btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:14px 28px;text-decoration:none;display:inline-block;transition:all .3s;margin-top:24px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-  .btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
-  .btn-gold:hover{opacity:.85}
+  .bio-tag{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:7px 14px}
+  .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:14px 28px;text-decoration:none;display:inline-block;transition:all .3s;margin-top:24px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+  @media(hover:hover){.btn-outline:hover{border-color:var(--gold);color:var(--gold)}}
+  .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
+  @media(hover:hover){.btn-gold:hover{opacity:.85}}
   @media(max-width:900px){.bio-grid{grid-template-columns:1fr}.bio-photo{max-width:320px}}
   section{padding:80px 0}
   .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:44px}
@@ -81,10 +81,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     filter:brightness(.92);
     transition:filter .4s ease;
   }
-  .person-card:hover img{filter:brightness(1)}
+  @media(hover:hover){.person-card:hover img{filter:brightness(1)}}
   .person-overlay{padding:16px 2px 0}
   .person-role{
-    font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.36em;
+    font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;
     text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;
   }
   .person-name{
@@ -93,40 +93,40 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     margin-bottom:6px;
   }
   .person-desc{
-    font-size:12px;color:var(--sand);line-height:1.5;
+    font-size:0.75rem;color:var(--sand);line-height:1.5;
   }
   @media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr)}}
 
   .career-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
   .career-item{background:var(--coal);padding:30px 28px}
-  .career-item .period{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-  .career-item h3{font-size:15px;letter-spacing:.1em;font-weight:300;margin-bottom:6px}
-  .career-item p{color:var(--sand);font-size:13px}
+  .career-item .period{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .career-item h3{font-size:0.9375rem;letter-spacing:.1em;font-weight:300;margin-bottom:6px}
+  .career-item p{color:var(--sand);font-size:0.8125rem}
   .career-item.hl{border-left:2px solid var(--gold)}
   @media(max-width:760px){.career-grid{grid-template-columns:1fr}}
   .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
   .work-card{background:var(--coal);padding:32px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
-  .work-card:hover{border-color:rgba(214,181,122,.35)}
-  .work-card .tag{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
-  .work-card h3{font-size:16px;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
-  .work-card p{color:var(--sand);font-size:13px}
+  @media(hover:hover){.work-card:hover{border-color:rgba(214,181,122,.35)}}
+  .work-card .tag{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+  .work-card h3{font-size:1rem;letter-spacing:.12em;font-weight:300;color:var(--bone);margin:12px 0 8px}
+  .work-card p{color:var(--sand);font-size:0.8125rem}
   @media(max-width:760px){.works-grid{grid-template-columns:1fr}}
   .tour-list{display:flex;flex-wrap:wrap;gap:8px}
-  .tour-tag{font-size:13px;color:var(--sand);border:1px solid rgba(201,184,163,.15);padding:8px 14px}
+  .tour-tag{font-size:0.8125rem;color:var(--sand);border:1px solid rgba(201,184,163,.15);padding:8px 14px}
   footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
   @media(max-width:760px){footer{padding-bottom:210px}}
 @media(max-width:430px){footer{padding-bottom:230px}}
   .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:44px;margin-bottom:50px}
-  footer h4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:14px;transition:color .3s}
-  footer a:hover{color:var(--bone)}
-  .requisites{color:rgba(201,184,163,.5);font-size:12px;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
-  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:12px;margin-bottom:0}
+  footer h4{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  footer a{color:var(--sand);text-decoration:none;display:block;margin-bottom:10px;font-size:0.875rem;transition:color .3s}
+  @media(hover:hover){footer a:hover{color:var(--bone)}}
+  .requisites{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+  .requisites a{display:inline;color:rgba(201,184,163,.5);font-size:0.75rem;margin-bottom:0}
   @media(max-width:760px){
     .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
     footer h4{margin-bottom:12px}
-    footer a{margin-bottom:8px;font-size:13px}
+    footer a{margin-bottom:8px;font-size:0.8125rem}
   }
   @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
   @media(max-width:420px){.foot-grid{grid-template-columns:1fr}}
@@ -184,10 +184,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     text-decoration:none;
     transition:opacity .3s;
   }
-  p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}
+  @media(hover:hover){p a:hover, li a:hover, .desc a:hover, .bio-info a:hover{opacity:.75}}
   /* Footer и nav — оставляем их собственные цвета */
   footer a{color:var(--sand)}
-  footer a:hover{color:var(--bone)}
+  @media(hover:hover){footer a:hover{color:var(--bone)}}
   
   
   /* Hero элементы */
@@ -237,7 +237,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   a:not([class]):not([style]){color:var(--gold)}
   nav a, footer a{color:var(--sand)}
   
-  footer a:hover{color:var(--bone)}
+  @media(hover:hover){footer a:hover{color:var(--bone)}}
 
   /* Запрет горизонтального скролла */
   body{max-width:100vw}
@@ -291,7 +291,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     h1{font-size:clamp(22px,8vw,32px);letter-spacing:.06em}
     h2{font-size:clamp(15px,5vw,20px)}
     .wrap{padding:0 16px}
-    .eyebrow{font-size:12px;letter-spacing:.3em}
+    .eyebrow{font-size:0.75rem;letter-spacing:.3em}
     
     
     section{padding:60px 0}
@@ -304,8 +304,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     .career-grid{grid-template-columns:1fr}
     .team-grid{grid-template-columns:1fr}
     .foot-grid{grid-template-columns:1fr}
-    footer h4{font-size:12px}
-    footer a{font-size:13px}
+    footer h4{font-size:0.75rem}
+    footer a{font-size:0.8125rem}
   }
 
   /* Маленькие телефоны до 375px */
@@ -313,7 +313,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     h1{font-size:clamp(20px,9vw,28px);letter-spacing:.04em}
     h2{font-size:clamp(14px,5.5vw,18px);letter-spacing:.2em}
     .wrap{padding:0 14px}
-    .eyebrow{font-size:12px;letter-spacing:.26em}
+    .eyebrow{font-size:0.75rem;letter-spacing:.26em}
     
     
     
@@ -322,7 +322,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     section{padding:50px 0}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:clamp(32px,10vw,44px)}
-    .stat-label{font-size:12px;letter-spacing:.22em}
+    .stat-label{font-size:0.75rem;letter-spacing:.22em}
     .member-info{padding:24px 20px 32px}
     .bio-photo{height:260px}
     
@@ -348,7 +348,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 <nav>
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
@@ -357,13 +357,13 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/rezidents/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/rezidents/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -374,9 +374,9 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 <div style="padding:140px 0 70px;border-bottom:1px solid rgba(232,230,225,.08)">
   <div class="wrap">
     <h1 class="h1-md" style="margin-top:16px">Резиденты компании</h1>
-    <p style="color:var(--sand);font-size:16px;margin-top:14px;max-width:54ch">Талантливые профессионалы, которые создают новое искусство и определяют будущее театральной сцены. Ядро экосистемы AELITA PRODUCTION.</p>
+    <p style="color:var(--sand);font-size:1rem;margin-top:14px;max-width:54ch">Талантливые профессионалы, которые создают новое искусство и определяют будущее театральной сцены. Ядро экосистемы AELITA PRODUCTION.</p>
 <!-- pack-v510: кнопка действия на первом экране -->
-<div class="hero-cta"><a class="btn-gold" href="/tickets">Афиша и билеты</a></div>
+<div class="hero-cta"><a class="btn-gold" href="/tickets">Афиша и билеты</a></div>
   </div>
 </div>
 <section>
@@ -424,16 +424,16 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <div class="person-overlay">
           <span class="person-role">Стендап-комик · Артист</span>
           <div class="person-name">Ваня<br>Дыба</div>
-          <p class="person-desc">Три тура по России, ТНТ, лейбл ТОЛК, подкаст</p>
+          <p class="person-desc">Три тура по России, ТНТ, лейбл ТОЛК, подкаст</p>
         </div>
       </a>
 
       <a href="/porfiriy" class="person-card">
         <img src="/images/og-default.jpg" alt="Александр Панов" loading="lazy">
         <div class="person-overlay">
-          <span class="person-role">Режиссёр и актёр</span>
+          <span class="person-role">Режиссёр и актёр</span>
           <div class="person-name">Александр<br>Панов</div>
-          <p class="person-desc">Режиссёр и исполнитель спектакля «Порфирий»</p>
+          <p class="person-desc">Режиссёр и исполнитель спектакля «Порфирий»</p>
         </div>
       </a>
 
@@ -455,7 +455,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=rezidents" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -480,7 +480,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
@@ -565,7 +565,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

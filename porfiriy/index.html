@@ -33,19 +33,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=58">
+<link rel="stylesheet" href="/assets/style.css?v=61">
 <style>body{max-width:100vw}
 section{padding:90px 0}
-.btn-outline{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
-.btn-gold{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sec-head{margin-bottom:48px}
 .hero{height:100svh;max-height:100svh;min-height:400px;position:relative;display:flex;align-items:flex-end;padding-bottom:60px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background-image:url('https://thb.tildacdn.com/tild3965-3934-4964-b236-346463333335/-/empty/4639.jpg');background-size:cover;background-position:center top;filter:brightness(.32)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.3) 0%,rgba(11,11,13,.0) 35%,rgba(11,11,13,.85) 72%,var(--ink) 100%)}
 .hero-title{font-size:clamp(52px,11vw,120px);letter-spacing:.06em;line-height:1;margin-bottom:6px}
-.review-text{font-size:14px;color:var(--bone);line-height:1.75;margin-bottom:20px;font-style:italic}
-.photo-drive a{display:inline-block;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 28px;text-decoration:none;transition:opacity .3s}
-.photo-drive a:hover{opacity:.85}
+.review-text{font-size:0.875rem;color:var(--bone);line-height:1.75;margin-bottom:20px;font-style:italic}
+.photo-drive a{display:inline-block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 28px;text-decoration:none;transition:opacity .3s}
+@media(hover:hover){.photo-drive a:hover{opacity:.85}}
 /* ── Фотосетка Порфирий (мозаика) ── */
   .photos-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:8px}
 .ph-1{grid-column:1/7;grid-row:1;height:320px}
@@ -105,7 +105,7 @@ section{padding:90px 0}
 </script>
 </head>
 <body>
-<a class="skip-link" href="#main">Перейти к содержанию</a>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 <nav>
   <div class="nav-in">
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
@@ -114,13 +114,13 @@ section{padding:90px 0}
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
       <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
+      <a href="/about">О компании</a>
       <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/porfiriy/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/porfiriy/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -139,8 +139,8 @@ section{padding:90px 0}
   <div class="wrap hero-content">
     <div class="hero-badge"><span class="eyebrow">Медитативный детектив</span><span class="age">16+</span></div>
     <h1 class="hero-title h1-xl">Порфирий</h1>
-    <p class="hero-sub">Мэшап по Достоевскому и Акутагаве</p>
-    <p class="hero-dir">Режиссёр и исполнитель — <strong>Александр Панов</strong></p>
+    <p class="hero-sub">Мэшап по Достоевскому и Акутагаве</p>
+    <p class="hero-dir">Режиссёр и исполнитель — <strong>Александр Панов</strong></p>
     <p class="hero-when"><strong>24 октября, 19:00</strong> · ЦСИ «Быль», Красный зал</p>
     <div class="hero-btns">
       <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=porfiriy" target="_blank" rel="noopener">Купить билет</a>
@@ -151,11 +151,11 @@ section{padding:90px 0}
 
 <section id="about">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>О спектакле</h2></div>
+    <div class="sec-head reveal"><h2>О спектакле</h2></div>
     <div class="desc-grid reveal">
       <div class="desc-text">
-        <p>Убийство старухи процентщицы. Улик нет. Мотив неизвестен. Подозреваемые разбрелись по бамбуковой роще вперемешку с молоденькими криптомериями.</p>
-        <blockquote class="desc-quote">Медитация. Икигай. Бусидо. Только это поможет Порфирию раскрыть самое зловещее преступление в русской литературе.</blockquote>
+        <p>Убийство старухи процентщицы. Улик нет. Мотив неизвестен. Подозреваемые разбрелись по бамбуковой роще вперемешку с молоденькими криптомериями.</p>
+        <blockquote class="desc-quote">Медитация. Икигай. Бусидо. Только это поможет Порфирию раскрыть самое зловещее преступление в русской литературе.</blockquote>
       </div>
       <div>
         <div class="meta-box">
@@ -175,9 +175,9 @@ section{padding:90px 0}
     <div class="show-slot reveal">
       <div class="show-slot-date"><span class="show-slot-d">24</span><span class="show-slot-m">октября</span><span class="show-slot-t">сб · 19:00</span></div>
       <div class="show-slot-info">
-        <p class="show-slot-badge">В программе фестиваля «Точка Кюри»</p>
+        <p class="show-slot-badge">В программе фестиваля «Точка Кюри»</p>
         <p class="show-slot-venue"><a href="/byl">ЦСИ «Быль»</a>, Красный зал</p>
-        <p class="show-slot-addr">Старый Оскол, мкр. Жукова, 38</p>
+        <p class="show-slot-addr">Старый Оскол, мкр. Жукова, 38</p>
         <div class="show-slot-btns">
           <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=porfiriy" target="_blank" rel="noopener">Купить билет →</a>
           <a class="btn-outline" href="/tochkacuire#program">Программа фестиваля →</a>
@@ -190,7 +190,7 @@ section{padding:90px 0}
 <!-- ФОТО -->
 <section id="photos" style="padding:80px 0">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>Фотографии со спектакля</h2></div>
+    <div class="sec-head reveal"><h2>Фотографии со спектакля</h2></div>
     <div class="photos-grid reveal">
       <div class="ph ph-1"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02253_panuag.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02253_panuag.jpg" alt="Сцена из спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
       <div class="ph ph-2"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC02133_wxp9sa.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC02133_wxp9sa.jpg" alt="Сцена из спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
@@ -203,7 +203,7 @@ section{padding:90px 0}
       <div class="ph ph-9"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01951_vufgxu.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01951_vufgxu.jpg" alt="Сцена из спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
       <div class="ph ph-10"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01890_y2gt43.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01890_y2gt43.jpg" alt="Сцена из спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
     </div>
-  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Фото: <a href="/ekaterina-ilyina">Екатерина Ильина</a></p>
+  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Фото: <a href="/ekaterina-ilyina">Екатерина Ильина</a></p>
   </div>
 </section>
 
@@ -223,7 +223,7 @@ section{padding:90px 0}
       <div class="ph ph-9"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01475_knnvgb.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01475_knnvgb.jpg" alt="Промо-фото спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
       <div class="ph ph-10"><img src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_600,q_auto,f_auto/DSC01454-2_s7ojnm.jpg" data-src="https://res.cloudinary.com/kostyamoshnikov/image/upload/w_1200,q_auto,f_auto/DSC01454-2_s7ojnm.jpg" alt="Промо-фото спектакля «Порфирий» AELITA PRODUCTION" loading="lazy"></div>
     </div>
-  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Фото: Екатерина Ильина</p>
+  <p style="text-align:right;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,184,163,.4)">Фото: Екатерина Ильина</p>
   </div>
 </section>
 
@@ -238,7 +238,7 @@ section{padding:90px 0}
         </video>
       </div>
       <p class="video-label">Тизер спектакля «Порфирий»</p>
-      <p class="video-label"><a href="https://vkvideo.ru/video-229246987_456239086?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=porfiriy" target="_blank" rel="noopener">Смотреть в ВКонтакте →</a></p>
+      <p class="video-label"><a href="https://vkvideo.ru/video-229246987_456239086?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=porfiriy" target="_blank" rel="noopener">Смотреть в ВКонтакте →</a></p>
     </div>
   </div>
 </section>
@@ -247,7 +247,7 @@ section{padding:90px 0}
   <div class="wrap">
     <div class="sec-head reveal"><h2>Команда</h2></div>
     <div class="team-grid reveal">
-      <div class="member"><p class="role">Режиссёр и актёр</p><h3>Александр Панов</h3></div>
+      <div class="member"><p class="role">Режиссёр и актёр</p><h3>Александр Панов</h3></div>
       <div class="member"><p class="role">Второй режиссёр</p><h3><a href="/svetlana-nikiforova" style="color:inherit">Светлана Никифорова</a></h3></div>
       <div class="member"><p class="role">Художник</p><h3>Алексей Васильев</h3></div>
     </div>
@@ -259,22 +259,22 @@ section{padding:90px 0}
     <div class="sec-head reveal"><h2>Отзывы</h2></div>
     <div class="reviews reveal">
       <div class="review">
-        <p class="review-text">«Спектакль „Порфирий“ был прекрасной интеллектуальной игрой, наполненной мемами, любимыми цитатами из Акутагавы, изящными японскими фишками, полными иронии и юмора»</p>
+        <p class="review-text">«Спектакль „Порфирий“ был прекрасной интеллектуальной игрой, наполненной мемами, любимыми цитатами из Акутагавы, изящными японскими фишками, полными иронии и юмора»</p>
         <p class="review-author">Пётр Семак</p>
         <p class="review-src">актёр МДТ</p>
       </div>
       <div class="review">
-        <p class="review-text">«На протяжении часа публика наслаждалась торжеством постмодернизма и иронии, где в ход шли самодельные хокку и цитаты из фильмов Хаяо Миядзаки»</p>
+        <p class="review-text">«На протяжении часа публика наслаждалась торжеством постмодернизма и иронии, где в ход шли самодельные хокку и цитаты из фильмов Хаяо Миядзаки»</p>
         <p class="review-author">Юлия Баталина</p>
         <p class="review-src">издание «Новый компаньон»</p>
       </div>
       <div class="review">
-        <p class="review-text">«Этот спектакль надо показывать молодым людям, во многих спектаклях по Достоевскому не хватает иронии и юмора, здесь это было блистательно продемонстрировано»</p>
+        <p class="review-text">«Этот спектакль надо показывать молодым людям, во многих спектаклях по Достоевскому не хватает иронии и юмора, здесь это было блистательно продемонстрировано»</p>
         <p class="review-author">Татьяна Тихоновец</p>
         <p class="review-src">Заслуженный работник культуры РФ</p>
       </div>
       <div class="review">
-        <p class="review-text">«Искрометно цитируя мемы из соцсетей и явно кайфуя от себя на сцене, актёр переключается из режимов глубокой медитативности в интерактивность с залом»</p>
+        <p class="review-text">«Искрометно цитируя мемы из соцсетей и явно кайфуя от себя на сцене, актёр переключается из режимов глубокой медитативности в интерактивность с залом»</p>
         <p class="review-author">Мила Денёва</p>
         <p class="review-src">Петербургский театральный журнал</p>
       </div>
@@ -286,9 +286,9 @@ section{padding:90px 0}
   <div class="wrap">
     <div class="sec-head reveal"><h2>Другие проекты</h2></div>
     <div class="other-grid reveal">
-      <a class="other-card" href="/iov" style="color:inherit;text-decoration:none"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Кати Абдуловой. 12+</p></a>
-      <a class="other-card" href="/book-space" style="color:inherit;text-decoration:none"><span class="tag">Книжный клуб</span><h3>AELITA COMMUNITY</h3><p>Книжные встречи — пространство, наполненное смыслом.</p></a>
-      <a class="other-card" href="/projects" style="color:inherit;text-decoration:none"><span class="tag">Все проекты</span><h3>Каталог проектов</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
+      <a class="other-card" href="/iov" style="color:inherit;text-decoration:none"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Кати Абдуловой. 12+</p></a>
+      <a class="other-card" href="/book-space" style="color:inherit;text-decoration:none"><span class="tag">Книжный клуб</span><h3>AELITA COMMUNITY</h3><p>Книжные встречи — пространство, наполненное смыслом.</p></a>
+      <a class="other-card" href="/projects" style="color:inherit;text-decoration:none"><span class="tag">Все проекты</span><h3>Каталог проектов</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
     </div>
   </div>
 </section>
@@ -297,7 +297,7 @@ section{padding:90px 0}
 <section style="padding:80px 0" id="audience-reviews">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Отзывы зрителей</h2></div>
-    <noscript><p class="aud-reviews-empty">Чтобы увидеть и оставить отзывы, включите JavaScript в браузере.</p></noscript>
+    <noscript><p class="aud-reviews-empty">Чтобы увидеть и оставить отзывы, включите JavaScript в браузере.</p></noscript>
     <div id="aud-reviews-list"></div>
     <div id="aud-reviews-form-host"></div>
   </div>
@@ -318,7 +318,7 @@ section{padding:90px 0}
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=porfiriy" target="_blank" rel="noopener">Дзен</a>
       </div>
       <div>
-        <h4>О компании</h4>
+        <h4>О компании</h4>
         <a href="/rezidents">Резиденты компании</a>
         <a href="/team">Команда</a>
         <a href="/partners">Партнёры</a>
@@ -343,7 +343,7 @@ section{padding:90px 0}
     </div>
     <div class="requisites">
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
-      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
+      Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
       © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
     </div>
@@ -484,7 +484,7 @@ section{padding:90px 0}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=58"></script>
+<script src="/assets/main.js?v=61"></script>
 
 <script src="/assets/reviews.js"></script>
 <script>AelitaReviews.init('porfiriy');</script>

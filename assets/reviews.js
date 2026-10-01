@@ -228,8 +228,8 @@
         '<div class="aud-stars-input" id="aud-stars-input">' +
           [1, 2, 3, 4, 5].map(function (i) { return '<span class="aud-star-btn" data-val="' + i + '">★</span>'; }).join('') +
         '</div>' +
-        '<input type="text" class="aud-input" id="aud-name" placeholder="' + t.namePh + '" maxlength="80">' +
-        '<textarea class="aud-textarea" id="aud-text" placeholder="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
+        '<input type="text" class="aud-input ym-disable-keys" id="aud-name" placeholder="' + t.namePh + '" maxlength="80">' +
+        '<textarea class="aud-textarea ym-disable-keys" id="aud-text" placeholder="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
         // ⚠️ ТЕКСТ СОГЛАСИЯ ОБЯЗАТЕЛЬНО В <span> (pack-v365).
         // `.aud-consent` — это flex-контейнер, а голые текстовые узлы
         // внутри flex становятся ОТДЕЛЬНЫМИ анонимными flex-элементами.
@@ -265,7 +265,7 @@
         // Honeypot: скрыто от людей (position off-screen), боты часто
         // заполняют все поля формы вслепую — портировано из ReviewsBot
         // Николая Балашова (pack-v70).
-        '<input type="text" id="aud-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">' +
+        '<input class="ym-disable-keys" type="text" id="aud-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">' +
       '</div>' +
       '<p class="aud-thanks" id="aud-thanks" style="display:none"><strong>' + t.thanksTitle + '</strong><br>' + t.thanksBody + '</p>';
 
