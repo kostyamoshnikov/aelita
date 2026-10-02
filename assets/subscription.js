@@ -43,6 +43,7 @@
     ru: {
       plans: { community_main: 'AELITA COMMUNITY — основной поток', community_biz: 'AELITA COMMUNITY — поток для предпринимателей' },
       today: ' сегодня',
+      payFirst: 'Оплатить первый месяц — ',
       whenTail: function (day) { return day > 28 ? ', дальше ' + day + '-го числа каждого месяца (в коротких месяцах — в последний день) — до отмены.' : ', дальше ' + day + '-го числа каждого месяца — до отмены.'; },
       perMonth: ' ₽ в месяц',
       badName: 'Укажите имя',
@@ -104,6 +105,10 @@
       },
       sheetCancel: function (s) { return s.status === 'past_due' || s.status === 'awaiting_autopay' && !s.paidThrough ? 'Списаний больше не будет.' : 'Списаний больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; },
       sheetRefund: function (s) { return 'Вернём ' + rub(s.refund.amount) + ' на карту в течение нескольких дней, участие закончится сегодня.'; },
+      // pack-v544: при отмене согласие на автосписание отзывается, а
+      // «Возобновить» возвращает списания с сохранённой карты — человек
+      // должен видеть это явно, до нажатия (п. 14.2–14.3 оферты).
+      sheetResume: function (s) { return s.hasAutopay ? 'Подписка снова будет действовать. ' + rub(s.amount) + ' спишем ' + d(s.paidThrough) + ' с карты ' + (s.methodTitle || '') + ' и дальше каждый месяц в это число. Отменить можно в любой момент.' : 'Подписка снова будет действовать до ' + d(s.paidThrough) + '. Автосписания нет — продлить можно будет на странице тарифа.'; },
       confirm: 'Подтвердить', keep: 'Не надо',
       card: 'Карта', test: 'тест',
       done: 'Готово.', error: 'Не получилось — попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',
@@ -130,6 +135,7 @@
     en: {
       plans: { community_main: 'AELITA COMMUNITY — main stream', community_biz: 'AELITA COMMUNITY — entrepreneurs stream' },
       today: ' today',
+      payFirst: 'Pay for the first month — ',
       whenTail: function (day) { return day > 28 ? ', then on day ' + day + ' of every month (on the last day in shorter months) — until you cancel.' : ', then on day ' + day + ' of every month — until you cancel.'; },
       perMonth: ' ₽ per month',
       badName: 'Please enter your name',
@@ -190,6 +196,7 @@
       },
       sheetCancel: function (s) { return s.status === 'past_due' ? 'There will be no more charges.' : 'There will be no more charges. Your participation continues until ' + d(s.paidThrough) + '.'; },
       sheetRefund: function (s) { return 'We will refund ' + rub(s.refund.amount) + ' to your card within a few days; your participation ends today.'; },
+      sheetResume: function (s) { return s.hasAutopay ? 'Your subscription will be active again. We will charge ' + rub(s.amount) + ' on ' + d(s.paidThrough) + ' to ' + (s.methodTitle || 'your saved card') + ' and then on that day every month. You can cancel at any time.' : 'Your subscription will be active again until ' + d(s.paidThrough) + '. There are no automatic payments — you can renew on the plan page.'; },
       confirm: 'Confirm', keep: 'Keep it',
       card: 'Card', test: 'test',
       done: 'Done.', error: 'Something went wrong — try again or email us: aelita.production@yandex.ru',
@@ -294,8 +301,16 @@
     // «5 000 ₽ сегодня, дальше 15-го числа каждого месяца».
     // День списания — по Москве (как на сервере), а не по часам браузера.
     var day = new Date(Date.now() + 3 * 3600 * 1000).getUTCDate();
-    $('spWhen').innerHTML = '<strong>' + esc(main.getAttribute('data-price')) + ' ₽' + T.today + '</strong>' + esc(T.whenTail(day));
-    if (!AUTOPAY_LIVE) $('spAutopaySoon').hidden = false;
+    var priceLabel = EN ? main.getAttribute('data-price').replace(' ', ',') : main.getAttribute('data-price');
+    $('spWhen').innerHTML = '<strong>' + esc(priceLabel) + ' ₽' + T.today + '</strong>' + esc(T.whenTail(day));
+    // pack-v545: пока автосписание не включено, кнопка честно говорит,
+    // что оплачивается первый месяц; включено — «Оформить подписку — … ₽/мес».
+    var payBtnLive = btn.textContent;
+    function setAutopayLive(live) {
+      $('spAutopaySoon').hidden = live;
+      btn.textContent = live ? payBtnLive : T.payFirst + priceLabel + ' ₽';
+    }
+    setAutopayLive(AUTOPAY_LIVE);
     if (window.AELITA_GIFT_ON_PRODUCTS) $('spGift').hidden = false;
     // Кнопка на первом экране ведёт к форме и ставит фокус в первое пустое поле.
     $('spCtaBtn').addEventListener('click', function (e) {
@@ -328,7 +343,9 @@
       e.readOnly = true;
     }
 
+    var lastAlready = null;
     function showAlready(s) {
+      lastAlready = s;
       var box = $('spAlready');
       var txt = s.status === 'active' ? T.alreadyActive(s)
         : s.status === 'past_due' ? T.alreadyPastDue(s)
@@ -342,7 +359,9 @@
       $('spCta').hidden = true;
     }
     $('spResumeBtn').addEventListener('click', async function () {
-      var b = this; b.disabled = true;
+      var b = this;
+      if (lastAlready && !(await sheet(T.sheetResume(lastAlready), T.btn.resume))) return;
+      b.disabled = true;
       try {
         var r = await api(SUBS_API, { method: 'POST', body: { action: 'resume', plan: PLAN, test: IS_TEST } });
         if (r.ok) { $('spAlreadyMsg').textContent = T.resumed; showAlready(r.data.subscription); }
@@ -364,7 +383,7 @@
         showSignedIn(me.email);
       } catch (e) { return; }
       var data = await listSubs();
-      if (data && typeof data.enabled === 'boolean') $('spAutopaySoon').hidden = data.enabled;
+      if (data && typeof data.enabled === 'boolean') setAutopayLive(data.enabled);
       var s = pickSub(data, PLAN);
       if (s && s.blocksNewPayment && !returned) showAlready(s);
     }
@@ -619,6 +638,7 @@
       }
       if (act === 'cancel' && !(await sheet(T.sheetCancel(s), T.btn.cancel))) return;
       if (act === 'refund' && !(await sheet(T.sheetRefund(s), T.btn.refund(s)))) return;
+      if (act === 'resume' && !(await sheet(T.sheetResume(s), T.btn.resume))) return;
       el.disabled = true;
       try {
         var r = await api(SUBS_API, { method: 'POST', body: { action: act, plan: s.plan, test: Boolean(s.isTest) } });

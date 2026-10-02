@@ -36,7 +36,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — entrepreneurs stream — subscribe">
 <meta name="twitter:description" content="AELITA COMMUNITY — entrepreneurs stream: a 10,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=61">
+<link rel="stylesheet" href="/assets/style.css?v=63">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:110px 0 80px}
@@ -125,12 +125,11 @@
   <div class="wrap">
     <span class="eyebrow">AELITA COMMUNITY · subscription</span>
     <h1>AELITA COMMUNITY — entrepreneurs stream</h1>
-    <p class="sp-price">10,000 ₽ a month, automatic payment</p>
+    <p class="sp-price">10,000 ₽ per month</p>
       <p class="sp-lead">A separate reading programme for entrepreneurs — from the psychology of family and power to the philosophy of thinking and language.</p>
-      <p class="sp-lead">A small group, meetings with Katya Abdulova, and books after which you talk about your business differently.</p>
     <a class="sp-about" href="/en/book-space#predprinimateli">More about the club →</a>
 
-    <div class="sp-cta" id="spCta"><a class="btn-gold" href="#spForm" id="spCtaBtn">Subscribe — 10,000 ₽/month</a></div>
+    <div class="sp-cta" id="spCta"><a class="btn-gold" href="#spForm" id="spCtaBtn">Subscribe</a></div>
 
     <div class="sp-box" id="spResult" hidden>
       <h2 id="spResultTitle">Subscription confirmed</h2>
@@ -155,11 +154,11 @@
       <h2 id="spTermsTitle">Subscription terms</h2>
       <p class="sp-when" id="spWhen"><strong>10,000 ₽ today</strong>, then every month on the day of your first payment, until you cancel.</p>
       <ul>
-        <li>The money is charged automatically once a month from the card you pay with. We email you 3 days before each payment.</li>
-        <li>Cancel at any time in your account: there will be no more charges, and your participation continues until the end of the paid month.</li>
-        <li>Changed your mind within 7 days of a payment? We refund it in full — there is a button in your account.</li>
+        <li>We email you 3 days before each payment.</li>
+        <li>Cancel any time in your account — the month you have paid for stays yours.</li>
+        <li>Changed your mind within 7 days of a payment? We will refund it.</li>
       </ul>
-      <p>Subscription: 10,000 ₽ a month. The first payment is now; after that the money is charged automatically every month on the same day. If a month has no such day, on its last day. Card details are kept by the YooKassa payment service; we only keep the payment method identifier. <a href="/en/oferta#subscription">Full terms — section 14 of the public offer</a>.</p>
+      <p>Card details are kept by YooKassa. <a href="/en/oferta#subscription">All terms — section 14 of the public offer</a>.</p>
     </section>
 
     <div class="sp-form join-form" id="spForm">
@@ -168,16 +167,16 @@
       <div class="join-field"><label for="j-phone">Phone <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div id="spAcctBlock">
         <div class="join-field"><label for="j-password" id="spPwLabel">Password for your account <span class="req-mark">*</span></label><input class="ym-disable-keys" type="password" id="j-password" autocomplete="new-password" placeholder="At least 8 characters"></div>
-        <p class="sp-acct" id="spAcctHint">You can cancel the subscription in your account at any time. <button type="button" id="spAcctToggle">Already have an account — sign in</button></p>
+        <p class="sp-acct" id="spAcctHint"><button type="button" id="spAcctToggle">Already have an account — sign in</button></p>
       </div>
-      <p class="sp-acct" id="spSignedIn" hidden>Signed in as <strong id="spSignedInEmail"></strong> — subscription emails and receipts will go to this address.</p>
+      <p class="sp-acct" id="spSignedIn" hidden>Signed in as <strong id="spSignedInEmail"></strong> — emails and receipts will go to this address.</p>
       <details class="sp-gift" id="spGift" data-gift-code-field hidden>
         <summary>Have a gift card?</summary>
         <div class="join-field"><label for="j-gift">Gift card code — pays for the first month in full or in part</label><input class="input-clear ym-disable-keys" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
       </details>
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent">processing of my personal data</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>I agree to an automatic monthly charge of 10,000 ₽ from the saved payment method until I cancel the subscription in my account — under the terms of <a href="/en/oferta#subscription">section 14 of the public offer</a> <span class="req-mark">*</span></span></label>
-      <p class="sp-note" id="spAutopaySoon" hidden>Automatic payments will be switched on in the next few days — we will email you so you can connect them in one click. Right now you pay for the first month.</p>
+      <p class="sp-note" id="spAutopaySoon" hidden>Right now you pay for the first month only. We will email you when automatic payments can be switched on.</p>
       <button type="button" class="btn-gold" id="spPayBtn">Subscribe — 10,000 ₽/month</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Payment is on the secure YooKassa page: card or SBP. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
@@ -186,7 +185,7 @@
     <div id="invoiceSection" hidden>
       <p class="sp-acct" style="margin-top:22px"><button type="button" id="invToggle">Pay as a company by invoice</button></p>
       <div class="sp-form join-form" id="invForm" hidden>
-        <p class="sp-note">The invoice goes to the accounts email straight away, with a copy to the participant. Participation starts once the payment reaches our bank account. Paying the invoice means accepting the public offer (section 14); no VAT; the closing document is a certificate of services rendered. Invoices and certificates are issued in Russian.</p>
+        <p class="sp-note">The invoice goes straight to your accounts department, with a copy to the participant. Participation starts once the payment arrives. No VAT; we send a certificate of services after payment. Invoices and certificates are issued in Russian.</p>
         <div class="join-field"><label for="inv-company">Company name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="inv-company" autocomplete="organization" placeholder="Example LLC"></div>
         <div class="join-field"><label for="inv-inn">INN (taxpayer number) <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="text" id="inv-inn" inputmode="numeric" autocomplete="off" placeholder="10 or 12 digits"></div>
         <div class="join-field"><label for="inv-kpp">KPP <span class="opt-mark">— for companies</span></label><input class="input-clear ym-disable-keys" type="text" id="inv-kpp" inputmode="numeric" autocomplete="off" placeholder="9 digits"></div>
@@ -280,9 +279,9 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js?v=61"></script>
-<script src="/assets/main.js?v=61"></script>
-<script src="/assets/subscription.js?v=61"></script>
-<script src="/assets/phone-prefix.js?v=61"></script>
+<script src="/assets/payments.js?v=63"></script>
+<script src="/assets/main.js?v=63"></script>
+<script src="/assets/subscription.js?v=63"></script>
+<script src="/assets/phone-prefix.js?v=63"></script>
 </body>
 </html>

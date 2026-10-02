@@ -33,7 +33,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — основной поток — оформить подписку">
 <meta name="twitter:description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=61">
+<link rel="stylesheet" href="/assets/style.css?v=63">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:110px 0 80px}
@@ -114,12 +114,11 @@
   <div class="wrap">
     <span class="eyebrow">AELITA COMMUNITY · подписка</span>
     <h1>AELITA COMMUNITY — основной поток</h1>
-    <p class="sp-price">5 000 ₽ в месяц, автосписание</p>
+    <p class="sp-price">5 000 ₽ в месяц</p>
       <p class="sp-lead">Еженедельные встречи книжного клуба «3 УРОВЕНЬ» с Катей Абдуловой: одна книга в месяц, одна встреча в неделю.</p>
-      <p class="sp-lead">Темы меняются от сезона к сезону — сейчас про то, зачем мы выбираем быть вместе.</p>
     <a class="sp-about" href="/book-space#main-stream">Подробнее о клубе →</a>
 
-    <div class="sp-cta" id="spCta"><a class="btn-gold" href="#spForm" id="spCtaBtn">Оформить подписку — 5 000 ₽/мес</a></div>
+    <div class="sp-cta" id="spCta"><a class="btn-gold" href="#spForm" id="spCtaBtn">Оформить подписку</a></div>
 
     <div class="sp-box" id="spResult" hidden>
       <h2 id="spResultTitle">Подписка оформлена</h2>
@@ -144,11 +143,11 @@
       <h2 id="spTermsTitle">Условия подписки</h2>
       <p class="sp-when" id="spWhen"><strong>5 000 ₽ сегодня</strong>, дальше — каждый месяц в день первой оплаты, до отмены.</p>
       <ul>
-        <li>Деньги списываются автоматически раз в месяц с карты, которой вы платите. За 3 дня до списания пришлём письмо.</li>
-        <li>Отменить можно в любой момент в личном кабинете: списаний больше не будет, участие сохранится до конца оплаченного месяца.</li>
-        <li>Передумали в первые 7 дней после списания — вернём деньги полностью кнопкой в кабинете.</li>
+        <li>За 3 дня до каждого списания пришлём письмо.</li>
+        <li>Отменить можно в личном кабинете в любой момент — оплаченный месяц остаётся за вами.</li>
+        <li>Передумали в первые 7 дней после списания — вернём деньги.</li>
       </ul>
-      <p>Подписка: 5 000 ₽ в месяц. Первый платёж — сейчас, дальше деньги списываются автоматически каждый месяц в тот же день. Если такого числа в месяце нет — в последний день месяца. Данные карты хранит платёжный сервис ЮKassa, у нас — только идентификатор способа оплаты. <a href="/oferta#subscription">Полные условия — раздел 14 оферты</a>.</p>
+      <p>Данные карты хранит ЮKassa. <a href="/oferta#subscription">Все условия — раздел 14 оферты</a>.</p>
     </section>
 
     <div class="sp-form join-form" id="spForm">
@@ -157,16 +156,16 @@
       <div class="join-field"><label for="j-phone">Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
       <div id="spAcctBlock">
         <div class="join-field"><label for="j-password" id="spPwLabel">Пароль для личного кабинета <span class="req-mark">*</span></label><input class="ym-disable-keys" type="password" id="j-password" autocomplete="new-password" placeholder="Не короче 8 символов"></div>
-        <p class="sp-acct" id="spAcctHint">В кабинете можно отменить подписку в любой момент. <button type="button" id="spAcctToggle">Уже есть кабинет — войти</button></p>
+        <p class="sp-acct" id="spAcctHint"><button type="button" id="spAcctToggle">Уже есть кабинет — войти</button></p>
       </div>
-      <p class="sp-acct" id="spSignedIn" hidden>Вы в кабинете как <strong id="spSignedInEmail"></strong> — письма и чеки по подписке придут на этот адрес.</p>
+      <p class="sp-acct" id="spSignedIn" hidden>Вы вошли как <strong id="spSignedInEmail"></strong> — письма и чеки придут на этот адрес.</p>
       <details class="sp-gift" id="spGift" data-gift-code-field hidden>
         <summary>Есть подарочная карта?</summary>
         <div class="join-field"><label for="j-gift">Код подарочной карты — оплатит первый месяц целиком или частично</label><input class="input-clear ym-disable-keys" type="text" id="j-gift" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AELITA-XXXX-XXXX-XXXX"></div>
       </details>
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent">обработку персональных данных</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>Соглашаюсь на ежемесячное автоматическое списание 5 000 ₽ с сохранённого способа оплаты до отмены подписки в личном кабинете — по условиям <a href="/oferta#subscription">раздела 14 оферты</a> <span class="req-mark">*</span></span></label>
-      <p class="sp-note" id="spAutopaySoon" hidden>Автосписание включим в ближайшие дни — пришлём письмо, чтобы подключить его в один клик. Сейчас оплачивается первый месяц.</p>
+      <p class="sp-note" id="spAutopaySoon" hidden>Сейчас оплачивается только первый месяц. Автосписание подключим позже — пришлём письмо.</p>
       <button type="button" class="btn-gold" id="spPayBtn">Оформить подписку — 5 000 ₽/мес</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Оплата — на защищённой странице ЮKassa: карта или СБП. Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
@@ -249,9 +248,9 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js?v=61"></script>
-<script src="/assets/main.js?v=61"></script>
-<script src="/assets/subscription.js?v=61"></script>
-<script src="/assets/phone-prefix.js?v=61"></script>
+<script src="/assets/payments.js?v=63"></script>
+<script src="/assets/main.js?v=63"></script>
+<script src="/assets/subscription.js?v=63"></script>
+<script src="/assets/phone-prefix.js?v=63"></script>
 </body>
 </html>
