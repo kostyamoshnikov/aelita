@@ -44,6 +44,10 @@
       plans: { community_main: 'AELITA COMMUNITY — основной поток', community_biz: 'AELITA COMMUNITY — поток для предпринимателей' },
       today: ' сегодня',
       payFirst: 'Оплатить первый месяц — ',
+      payNextBtn: 'Оплатить следующий месяц — ',
+      extendTail: function (s) { return ' — участие продлится с ' + d(s.paidThrough) + ' ещё на месяц.'; },
+      alreadyTitle: { active: 'Подписка действует', past_due: 'Списание не прошло', canceled: 'Подписка отменена', invoice: 'Оплачено компанией', other: 'Участие оплачено' },
+      resultPaidTitle: 'Оплата прошла',
       whenTail: function (day) { return day > 28 ? ', дальше ' + day + '-го числа каждого месяца (в коротких месяцах — в последний день) — до отмены.' : ', дальше ' + day + '-го числа каждого месяца — до отмены.'; },
       perMonth: ' ₽ в месяц',
       badName: 'Укажите имя',
@@ -78,11 +82,11 @@
       alreadyActive: function (s) { return 'Следующее списание — ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '.'; },
       alreadyPastDue: function (s) { return 'Последнее списание не прошло — повторим ' + d(s.nextRetryAt) + '. Сменить карту можно в личном кабинете.'; },
       alreadyCanceled: function (s) { return 'Подписка отменена, участие до ' + d(s.paidThrough) + '. Передумали — возобновите без новой оплаты, график прежний.'; },
-      alreadyPaid: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + '. Автосписание не подключено — пришлём письмо, когда его можно будет подключить.'; },
+      alreadyPaid: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + '. За 3 дня до конца пришлём письмо — следующий месяц можно будет оплатить здесь же.'; },
       resumed: 'Подписка снова действует.',
       resultChecking: 'Проверяем оплату…',
       resultOkActive: function (s) { return 'Следующее списание — ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '. Отменить можно в личном кабинете.'; },
-      resultOkAwaiting: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + '. Автосписание включим в ближайшие дни — пришлём письмо, чтобы подключить его в один клик.'; },
+      resultOkAwaiting: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + '. За 3 дня до конца месяца напомним письмом, как оплатить следующий.'; },
       resultOkNoAutopay: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + ', но платёжный сервис не сохранил карту для автосписаний. Чтобы продолжить после этой даты, оформите подписку снова.'; },
       resultSlowTitle: 'Оплата обрабатывается',
       resultSlow: 'Если деньги списались, письмо с подтверждением придёт в течение нескольких минут. Если оплата не прошла — деньги не списаны, попробуйте ещё раз ниже.',
@@ -92,8 +96,8 @@
         active: function (s) { return 'Следующее списание ' + d(s.nextChargeAt) + ' · ' + rub(s.amount); },
         past_due: function (s) { return 'Списание не прошло, повторим ' + d(s.nextRetryAt); },
         canceled: function (s) { return 'Отменена, участие до ' + d(s.paidThrough); },
-        awaiting_autopay: function (s) { return 'Оплачено до ' + d(s.paidThrough) + ', автосписание не подключено'; },
-        no_autopay: function (s) { return 'Оплачено до ' + d(s.paidThrough) + ', автосписание не подключилось'; },
+        awaiting_autopay: function (s) { return 'Оплачено до ' + d(s.paidThrough) + ' · следующий месяц — оплатой на странице потока'; },
+        no_autopay: function (s) { return 'Оплачено до ' + d(s.paidThrough) + ' · карта не сохранилась, следующий месяц — оплатой на странице потока'; },
         suspended: function () { return 'Не действует: три попытки списания не прошли'; },
         invoice: function (s) { return T.invStatus(s); },
         ended: function () { return 'Не действует'; },
@@ -101,9 +105,9 @@
       btn: {
         changeCard: 'Сменить карту', payOther: 'Оплатить другой картой', cancel: 'Отменить подписку',
         refund: function (s) { return 'Отменить и вернуть ' + rub(s.refund.amount); },
-        resume: 'Возобновить подписку', renew: 'Подключить автосписание', again: 'Оформить снова',
+        resume: 'Возобновить подписку', renew: 'Подключить автосписание', again: 'Оформить снова', payNext: 'Оплатить следующий месяц',
       },
-      sheetCancel: function (s) { return s.status === 'past_due' || s.status === 'awaiting_autopay' && !s.paidThrough ? 'Списаний больше не будет.' : 'Списаний больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; },
+      sheetCancel: function (s) { if (!s.hasAutopay && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) return 'Напоминаний об оплате больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; return s.status === 'past_due' || s.status === 'awaiting_autopay' && !s.paidThrough ? 'Списаний больше не будет.' : 'Списаний больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; },
       sheetRefund: function (s) { return 'Вернём ' + rub(s.refund.amount) + ' на карту в течение нескольких дней, участие закончится сегодня.'; },
       // pack-v544: при отмене согласие на автосписание отзывается, а
       // «Возобновить» возвращает списания с сохранённой карты — человек
@@ -136,6 +140,10 @@
       plans: { community_main: 'AELITA COMMUNITY — main stream', community_biz: 'AELITA COMMUNITY — entrepreneurs stream' },
       today: ' today',
       payFirst: 'Pay for the first month — ',
+      payNextBtn: 'Pay for the next month — ',
+      extendTail: function (s) { return ' — your participation is extended from ' + d(s.paidThrough) + ' for another month.'; },
+      alreadyTitle: { active: 'Subscription active', past_due: 'Payment failed', canceled: 'Subscription cancelled', invoice: 'Paid by your company', other: 'Participation paid' },
+      resultPaidTitle: 'Payment received',
       whenTail: function (day) { return day > 28 ? ', then on day ' + day + ' of every month (on the last day in shorter months) — until you cancel.' : ', then on day ' + day + ' of every month — until you cancel.'; },
       perMonth: ' ₽ per month',
       badName: 'Please enter your name',
@@ -170,11 +178,11 @@
       alreadyActive: function (s) { return 'Next payment: ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '.'; },
       alreadyPastDue: function (s) { return 'The last payment did not go through — we will try again on ' + d(s.nextRetryAt) + '. You can change the card in your account.'; },
       alreadyCanceled: function (s) { return 'The subscription is cancelled, participation until ' + d(s.paidThrough) + '. Changed your mind? Resume it without paying again — same schedule.'; },
-      alreadyPaid: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + '. Automatic payments are not connected yet — we will email you when you can connect them.'; },
+      alreadyPaid: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + '. We will email you 3 days before it ends — you can pay for the next month right here.'; },
       resumed: 'The subscription is active again.',
       resultChecking: 'Checking your payment…',
       resultOkActive: function (s) { return 'Next payment: ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '. You can cancel in your account.'; },
-      resultOkAwaiting: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + '. Automatic payments will be switched on in the next few days — we will email you so you can connect them in one click.'; },
+      resultOkAwaiting: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + '. 3 days before the month ends we will email you how to pay for the next one.'; },
       resultOkNoAutopay: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + ', but the payment service did not save your card for automatic payments. To continue after that date, subscribe again.'; },
       resultSlowTitle: 'Your payment is being processed',
       resultSlow: 'If you were charged, a confirmation email will arrive within a few minutes. If the payment did not go through, no money was taken — try again below.',
@@ -183,8 +191,8 @@
         active: function (s) { return 'Next payment ' + d(s.nextChargeAt) + ' · ' + rub(s.amount); },
         past_due: function (s) { return 'The payment failed, we will retry on ' + d(s.nextRetryAt); },
         canceled: function (s) { return 'Cancelled, participation until ' + d(s.paidThrough); },
-        awaiting_autopay: function (s) { return 'Paid until ' + d(s.paidThrough) + ', automatic payments not connected'; },
-        no_autopay: function (s) { return 'Paid until ' + d(s.paidThrough) + ', automatic payments did not connect'; },
+        awaiting_autopay: function (s) { return 'Paid until ' + d(s.paidThrough) + ' · pay for the next month on the stream page'; },
+        no_autopay: function (s) { return 'Paid until ' + d(s.paidThrough) + ' · the card was not saved, pay for the next month on the stream page'; },
         suspended: function () { return 'Inactive: three payment attempts failed'; },
         invoice: function (s) { return T.invStatus(s); },
         ended: function () { return 'Inactive'; },
@@ -192,9 +200,9 @@
       btn: {
         changeCard: 'Change card', payOther: 'Pay with another card', cancel: 'Cancel subscription',
         refund: function (s) { return 'Cancel and refund ' + rub(s.refund.amount); },
-        resume: 'Resume subscription', renew: 'Connect automatic payments', again: 'Subscribe again',
+        resume: 'Resume subscription', renew: 'Connect automatic payments', again: 'Subscribe again', payNext: 'Pay for the next month',
       },
-      sheetCancel: function (s) { return s.status === 'past_due' ? 'There will be no more charges.' : 'There will be no more charges. Your participation continues until ' + d(s.paidThrough) + '.'; },
+      sheetCancel: function (s) { if (!s.hasAutopay && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) return 'We will stop sending payment reminders. Your participation continues until ' + d(s.paidThrough) + '.'; return s.status === 'past_due' ? 'There will be no more charges.' : 'There will be no more charges. Your participation continues until ' + d(s.paidThrough) + '.'; },
       sheetRefund: function (s) { return 'We will refund ' + rub(s.refund.amount) + ' to your card within a few days; your participation ends today.'; },
       sheetResume: function (s) { return s.hasAutopay ? 'Your subscription will be active again. We will charge ' + rub(s.amount) + ' on ' + d(s.paidThrough) + ' to ' + (s.methodTitle || 'your saved card') + ' and then on that day every month. You can cancel at any time.' : 'Your subscription will be active again until ' + d(s.paidThrough) + '. There are no automatic payments — you can renew on the plan page.'; },
       confirm: 'Confirm', keep: 'Keep it',
@@ -306,9 +314,10 @@
     // pack-v545: пока автосписание не включено, кнопка честно говорит,
     // что оплачивается первый месяц; включено — «Оформить подписку — … ₽/мес».
     var payBtnLive = btn.textContent;
+    var renewing = false;
     function setAutopayLive(live) {
-      $('spAutopaySoon').hidden = live;
-      btn.textContent = live ? payBtnLive : T.payFirst + priceLabel + ' ₽';
+      $('spAutopaySoon').hidden = live || renewing;
+      btn.textContent = renewing ? T.payNextBtn + priceLabel + ' ₽' : live ? payBtnLive : T.payFirst + priceLabel + ' ₽';
     }
     setAutopayLive(AUTOPAY_LIVE);
     if (window.AELITA_GIFT_ON_PRODUCTS) $('spGift').hidden = false;
@@ -353,6 +362,7 @@
         : s.status === 'invoice' ? T.invStatus(s)
         : T.alreadyPaid(s);
       $('spAlreadyText').textContent = txt;
+      $('spAlreadyTitle').textContent = T.alreadyTitle[s.status] || T.alreadyTitle.other;
       $('spResumeBtn').hidden = !s.canResume;
       box.hidden = false;
       form.hidden = true;
@@ -383,8 +393,14 @@
         showSignedIn(me.email);
       } catch (e) { return; }
       var data = await listSubs();
-      if (data && typeof data.enabled === 'boolean') setAutopayLive(data.enabled);
       var s = pickSub(data, PLAN);
+      // pack-v546: последние 3 дня оплаченного месяца без автосписания —
+      // страница принимает оплату следующего месяца (продление от paidThrough).
+      if (s && s.live && !s.blocksNewPayment && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) {
+        renewing = true;
+        $('spWhen').innerHTML = '<strong>' + esc(priceLabel) + ' ₽' + T.today + '</strong>' + esc(T.extendTail(s));
+      }
+      setAutopayLive(data && typeof data.enabled === 'boolean' ? data.enabled : AUTOPAY_LIVE);
       if (s && s.blocksNewPayment && !returned) showAlready(s);
     }
 
@@ -404,7 +420,7 @@
         var s = pickSub(data, PLAN);
         var fresh = s && s.live && s.payments && s.payments.length && (Date.now() - new Date(s.payments[s.payments.length - 1].at).getTime() < 30 * 60 * 1000);
         if (fresh) {
-          $('spResultTitle').textContent = EN ? 'Subscription confirmed' : 'Подписка оформлена';
+          $('spResultTitle').textContent = s.status === 'active' ? (EN ? 'Subscription confirmed' : 'Подписка оформлена') : T.resultPaidTitle;
           $('spResultText').textContent = s.status === 'active' ? T.resultOkActive(s) : s.status === 'no_autopay' ? T.resultOkNoAutopay(s) : T.resultOkAwaiting(s);
           $('spWhatNext').hidden = false;
           track('subscription_started', { plan: PLAN });
@@ -591,11 +607,14 @@
         if (s.refund) b.push(['refund', T.btn.refund(s), 'outline']);
       } else if (s.status === 'awaiting_autopay') {
         if (s.canRenew) b.push(['renew', T.btn.renew, 'gold']);
+        // pack-v546: последние 3 дня месяца без автосписания — оплатить следующий.
+        else if (!s.blocksNewPayment) b.push(['again', T.btn.payNext, 'gold']);
         b.push(['cancel', T.btn.cancel, 'outline']);
         if (s.refund) b.push(['refund', T.btn.refund(s), 'outline']);
       } else if (s.status === 'invoice') {
         b.push(s.invoice && s.invoice.noRenew ? ['renew_on', T.btnRenewOn, 'outline'] : ['no_renew', T.btnNoRenew, 'outline']);
       } else if (s.status === 'no_autopay') {
+        if (!s.blocksNewPayment) b.push(['again', T.btn.payNext, 'gold']);
         b.push(['cancel', T.btn.cancel, 'outline']);
         if (s.refund) b.push(['refund', T.btn.refund(s), 'outline']);
       } else {

@@ -33,7 +33,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — основной поток — оформить подписку">
 <meta name="twitter:description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=63">
+<link rel="stylesheet" href="/assets/style.css?v=64">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:110px 0 80px}
@@ -130,7 +130,7 @@
     </div>
 
     <div class="sp-box" id="spAlready" hidden>
-      <h2>Подписка оформлена</h2>
+      <h2 id="spAlreadyTitle">Подписка оформлена</h2>
       <p id="spAlreadyText"></p>
       <div class="sp-cta" style="margin:0">
         <button type="button" class="btn-gold" id="spResumeBtn" hidden>Возобновить подписку</button>
@@ -165,7 +165,7 @@
       </details>
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent">обработку персональных данных</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>Соглашаюсь на ежемесячное автоматическое списание 5 000 ₽ с сохранённого способа оплаты до отмены подписки в личном кабинете — по условиям <a href="/oferta#subscription">раздела 14 оферты</a> <span class="req-mark">*</span></span></label>
-      <p class="sp-note" id="spAutopaySoon" hidden>Сейчас оплачивается только первый месяц. Автосписание подключим позже — пришлём письмо.</p>
+      <p class="sp-note" id="spAutopaySoon" hidden>Сейчас оплачивается только первый месяц — за 3 дня до его конца напомним письмом, как продлить. Автосписание подключим позже.</p>
       <button type="button" class="btn-gold" id="spPayBtn">Оформить подписку — 5 000 ₽/мес</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Оплата — на защищённой странице ЮKassa: карта или СБП. Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
@@ -248,9 +248,9 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js?v=63"></script>
-<script src="/assets/main.js?v=63"></script>
-<script src="/assets/subscription.js?v=63"></script>
-<script src="/assets/phone-prefix.js?v=63"></script>
+<script src="/assets/payments.js?v=64"></script>
+<script src="/assets/main.js?v=64"></script>
+<script src="/assets/subscription.js?v=64"></script>
+<script src="/assets/phone-prefix.js?v=64"></script>
 </body>
 </html>

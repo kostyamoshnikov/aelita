@@ -36,7 +36,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — main stream — subscribe">
 <meta name="twitter:description" content="AELITA COMMUNITY — main stream: a 5,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=63">
+<link rel="stylesheet" href="/assets/style.css?v=64">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:110px 0 80px}
@@ -141,7 +141,7 @@
     </div>
 
     <div class="sp-box" id="spAlready" hidden>
-      <h2>Subscription confirmed</h2>
+      <h2 id="spAlreadyTitle">Subscription confirmed</h2>
       <p id="spAlreadyText"></p>
       <div class="sp-cta" style="margin:0">
         <button type="button" class="btn-gold" id="spResumeBtn" hidden>Resume subscription</button>
@@ -176,7 +176,7 @@
       </details>
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent">processing of my personal data</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>I agree to an automatic monthly charge of 5,000 ₽ from the saved payment method until I cancel the subscription in my account — under the terms of <a href="/en/oferta#subscription">section 14 of the public offer</a> <span class="req-mark">*</span></span></label>
-      <p class="sp-note" id="spAutopaySoon" hidden>Right now you pay for the first month only. We will email you when automatic payments can be switched on.</p>
+      <p class="sp-note" id="spAutopaySoon" hidden>Right now you pay for the first month only — 3 days before it ends we will email you how to continue. Automatic payments will be switched on later.</p>
       <button type="button" class="btn-gold" id="spPayBtn">Subscribe — 5,000 ₽/month</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Payment is on the secure YooKassa page: card or SBP. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
@@ -259,9 +259,9 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/payments.js?v=63"></script>
-<script src="/assets/main.js?v=63"></script>
-<script src="/assets/subscription.js?v=63"></script>
-<script src="/assets/phone-prefix.js?v=63"></script>
+<script src="/assets/payments.js?v=64"></script>
+<script src="/assets/main.js?v=64"></script>
+<script src="/assets/subscription.js?v=64"></script>
+<script src="/assets/phone-prefix.js?v=64"></script>
 </body>
 </html>
