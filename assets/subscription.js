@@ -108,7 +108,7 @@
         resume: 'Возобновить подписку', renew: 'Подключить автосписание', again: 'Оформить снова', payNext: 'Оплатить следующий месяц',
       },
       sheetCancel: function (s) { if (!s.hasAutopay && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) return 'Напоминаний об оплате больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; return s.status === 'past_due' || s.status === 'awaiting_autopay' && !s.paidThrough ? 'Списаний больше не будет.' : 'Списаний больше не будет. Участие сохранится до ' + d(s.paidThrough) + '.'; },
-      sheetRefund: function (s) { return 'Вернём ' + rub(s.refund.amount) + ' на карту в течение нескольких дней, участие закончится сегодня.'; },
+      sheetRefund: function (s) { return 'Вернём ' + rub(s.refund.amount) + (s.refund.full ? '' : ' — за неиспользованные дни этого месяца') + ' на карту в течение нескольких дней, участие закончится сегодня.'; },
       // pack-v544: при отмене согласие на автосписание отзывается, а
       // «Возобновить» возвращает списания с сохранённой карты — человек
       // должен видеть это явно, до нажатия (п. 14.2–14.3 оферты).
@@ -116,8 +116,14 @@
       confirm: 'Подтвердить', keep: 'Не надо',
       card: 'Карта', test: 'тест',
       done: 'Готово.', error: 'Не получилось — попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',
-      refundClosed: 'Вернуть деньги можно только в первые 7 дней после списания.',
+      refundClosed: 'Возвращать нечего: оплаченный месяц уже закончился.',
       notEnabled: 'Автосписание ещё не включено — пришлём письмо, когда его можно будет подключить.',
+      actErr: {
+        charge_in_progress: 'Сейчас идёт списание по подписке — попробуйте через несколько минут.',
+        not_refundable: 'По этой подписке вернуть деньги уже нельзя — обновите страницу.',
+        refund_rejected: 'Платёжный сервис не принял возврат. Напишите нам: aelita.production@yandex.ru — вернём вручную.',
+        yookassa_unreachable: 'Платёжный сервис не ответил — попробуйте через минуту.',
+      },
       cardReturn: 'Если оплата прошла, новая карта сохранится в течение минуты — обновите страницу.',
       // ссылка из письма
       linkBad: 'Ссылка не подошла — возможно, её скопировали не целиком. Отменить подписку можно и в личном кабинете.',
@@ -203,13 +209,19 @@
         resume: 'Resume subscription', renew: 'Connect automatic payments', again: 'Subscribe again', payNext: 'Pay for the next month',
       },
       sheetCancel: function (s) { if (!s.hasAutopay && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) return 'We will stop sending payment reminders. Your participation continues until ' + d(s.paidThrough) + '.'; return s.status === 'past_due' ? 'There will be no more charges.' : 'There will be no more charges. Your participation continues until ' + d(s.paidThrough) + '.'; },
-      sheetRefund: function (s) { return 'We will refund ' + rub(s.refund.amount) + ' to your card within a few days; your participation ends today.'; },
+      sheetRefund: function (s) { return 'We will refund ' + rub(s.refund.amount) + (s.refund.full ? '' : ' for the unused days of this month') + ' to your card within a few days; your participation ends today.'; },
       sheetResume: function (s) { return s.hasAutopay ? 'Your subscription will be active again. We will charge ' + rub(s.amount) + ' on ' + d(s.paidThrough) + ' to ' + (s.methodTitle || 'your saved card') + ' and then on that day every month. You can cancel at any time.' : 'Your subscription will be active again until ' + d(s.paidThrough) + '. There are no automatic payments — you can renew on the plan page.'; },
       confirm: 'Confirm', keep: 'Keep it',
       card: 'Card', test: 'test',
       done: 'Done.', error: 'Something went wrong — try again or email us: aelita.production@yandex.ru',
-      refundClosed: 'A refund is only possible within 7 days after a payment.',
+      refundClosed: 'Nothing to refund: the paid month has already ended.',
       notEnabled: 'Automatic payments are not switched on yet — we will email you when you can connect them.',
+      actErr: {
+        charge_in_progress: 'A subscription payment is being processed right now — try again in a few minutes.',
+        not_refundable: 'A refund is no longer possible for this subscription — refresh the page.',
+        refund_rejected: 'The payment service did not accept the refund. Email us at aelita.production@yandex.ru — we will refund it manually.',
+        yookassa_unreachable: 'The payment service did not respond — try again in a minute.',
+      },
       cardReturn: 'If the payment went through, the new card will be saved within a minute — refresh the page.',
       linkBad: 'This link did not work — perhaps it was not copied in full. You can also cancel the subscription in your account.',
       linkCanceled: 'The subscription is cancelled. A confirmation email is on its way.',
@@ -663,7 +675,7 @@
         var r = await api(SUBS_API, { method: 'POST', body: { action: act, plan: s.plan, test: Boolean(s.isTest) } });
         if (r.data && r.data.confirmation_url) { location.href = r.data.confirmation_url; return; }
         if (r.ok) { note.textContent = T.done; await load(); return; }
-        note.textContent = r.data.error === 'refund_window_closed' ? T.refundClosed : r.data.error === 'autopay_not_enabled' ? T.notEnabled : T.error;
+        note.textContent = (r.data.error === 'refund_window_closed' || r.data.error === 'nothing_to_refund') ? T.refundClosed : r.data.error === 'autopay_not_enabled' ? T.notEnabled : (T.actErr[r.data.error] || T.error);
       } catch (x) { note.textContent = T.error; }
       el.disabled = false;
     });

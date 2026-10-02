@@ -43,6 +43,11 @@
         same_email: 'Это тот же адрес, что и сейчас.',
         too_many_requests: 'Слишком много запросов на этот адрес — подождите десять минут и попробуйте снова.',
         bad_reset_link: 'Ссылка недействительна: она устарела, уже использована или пароль с тех пор меняли. Запросите новую на странице входа.',
+        section_auth: 'Не получилось загрузить этот раздел. Обновите страницу; если повторится — напишите нам: aelita.production@yandex.ru',
+        order_not_found: 'Не нашли этот заказ в вашем кабинете — обновите страницу.',
+        order_not_paid: 'Заказ ещё не оплачен — билеты придут после оплаты.',
+        nothing_to_send: 'В заказе не осталось действующих билетов — все возвращены.',
+        bad_order_id: 'Не поняли, о каком заказе речь — обновите страницу.',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
@@ -90,6 +95,11 @@
         same_email: 'That is the address you already use.',
         too_many_requests: 'Too many requests for this address — wait ten minutes and try again.',
         bad_reset_link: 'This link is no longer valid: it has expired, was already used, or the password has changed since. Request a new one on the sign-in page.',
+        section_auth: "Couldn't load this section. Refresh the page; if it happens again, email us: aelita.production@yandex.ru",
+        order_not_found: "We couldn't find this order in your account — refresh the page.",
+        order_not_paid: 'This order is not paid yet — tickets will arrive after payment.',
+        nothing_to_send: 'There are no valid tickets left in this order — all were refunded.',
+        bad_order_id: "We couldn't tell which order this is — refresh the page.",
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
@@ -691,7 +701,10 @@
       if (!EVENTS_MY_URL) { if (opts.onError) opts.onError(errorMessage({ error: 'server_misconfigured' })); return null; }
       try {
         var res = await fetch(EVENTS_MY_URL, { headers: { Authorization: 'Bearer ' + token } });
-        if (res.status === 401) { clearToken(); return null; }
+        // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
+        // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
+        // человека молча — показываем ошибку раздела (так и нашли 02.10).
+        if (res.status === 401) { if (opts.onError) opts.onError(t.errors.section_auth); return null; }
         var data = await res.json();
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));
@@ -711,7 +724,10 @@
       if (!token) return null;
       try {
         var res = await fetch(TICKETS_MY_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token } });
-        if (res.status === 401) { clearToken(); return null; }
+        // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
+        // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
+        // человека молча — показываем ошибку раздела (так и нашли 02.10).
+        if (res.status === 401) { if (opts.onError) opts.onError(t.errors.section_auth); return null; }
         var data = await res.json();
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));

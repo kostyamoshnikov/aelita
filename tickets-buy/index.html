@@ -451,7 +451,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=64"></script>
+<script src="/assets/payments.js?v=65"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -867,6 +867,8 @@ function showSuccess(text){
   document.getElementById('form-block').style.display = 'none';
   document.getElementById('error-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
+  // pack-v549: промокод и подарочная карта лежат вне формы — после оплаты не нужны.
+  ['promo-wrap', 'gift-wrap'].forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
 }
 
 async function init(){
@@ -1894,14 +1896,14 @@ async function pollOrderStatus(){
       // _tools/Payments она есть), поэтому хотя бы так.
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('Спасибо! Оплата прошла. Билеты уже летят на почту — если через пару минут не появятся, загляните в «Спам». До встречи на спектакле!');
+      showSuccess('Билеты уже летят на почту — если через пару минут не появятся, загляните в «Спам». До встречи на спектакле!');
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId, seat_conflict: 1 }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('Спасибо! Оплата прошла. При оформлении произошла редкая техническая накладка с местом — мы уже знаем и свяжемся с вами в ближайшее время, деньги не потеряны.');
+      showSuccess('При оформлении произошла редкая техническая накладка с местом — мы уже знаем и свяжемся с вами в ближайшее время, деньги не потеряны.');
       return;
     }
     if(out && out.status === 'canceled'){
@@ -1954,6 +1956,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=64"></script>
+<script src="/assets/phone-prefix.js?v=65"></script>
 </body>
 </html>
