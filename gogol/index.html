@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -80,8 +80,8 @@ section{padding:90px 0}
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/gogol/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/gogol/" title="English version">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -136,7 +136,7 @@ section{padding:90px 0}
   </div>
 </section>
 
-<section style="background:var(--coal);padding:70px 0" id="afisha">
+<section class="bg-coal pad-70" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие показы</h2></div>
     <div class="no-shows reveal">
@@ -157,7 +157,7 @@ section{padding:90px 0}
   </div>
 </section>
 
-<section style="padding-top:0" id="reviews">
+<section class="pt-0 own-pad" id="reviews">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Отзывы</h2></div>
     <div class="reviews reveal">
@@ -174,7 +174,7 @@ section{padding:90px 0}
 </section>
 
 <!-- ФОТО -->
-<section id="photos" style="padding:80px 0">
+<section class="pad-80" id="photos">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Фотографии</h2></div>
     <div class="photo-drive reveal">
@@ -185,10 +185,10 @@ section{padding:90px 0}
 </section>
 
 <!-- ВИДЕО -->
-<section style="background:var(--coal);padding:80px 0" id="video">
+<section class="bg-coal pad-80" id="video">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Смотреть</h2></div>
-    <div class="reveal" style="max-width:720px">
+    <div class="reveal w-720">
       <div class="video-wrap">
         <video controls playsinline preload="metadata" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390496/%D0%93%D0%9E%D0%93%D0%9E%D0%9B%D0%AC.%D0%A1%D0%AE%D0%98%D0%A2%D0%90_-_%D0%A1%D0%B0%D1%83%D0%BD%D0%B4-%D0%B4%D1%80%D0%B0%D0%BC%D0%B0_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%B2%D0%B5%D1%81%D1%82%D0%B8_%D0%9D.%D0%92._%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_o72ywg.jpg">
           <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784390496/%D0%93%D0%9E%D0%93%D0%9E%D0%9B%D0%AC.%D0%A1%D0%AE%D0%98%D0%A2%D0%90_-_%D0%A1%D0%B0%D1%83%D0%BD%D0%B4-%D0%B4%D1%80%D0%B0%D0%BC%D0%B0_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%B2%D0%B5%D1%81%D1%82%D0%B8_%D0%9D.%D0%92._%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_o72ywg.mp4" type="video/mp4">
@@ -200,18 +200,18 @@ section{padding:90px 0}
   </div>
 </section>
 
-<section style="background:var(--coal);padding:70px 0">
+<section class="bg-coal pad-70">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Другие проекты</h2></div>
     <div class="other-grid reveal">
-      <a class="other-card" href="/iov" style="color:inherit;text-decoration:none"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Кати Абдуловой. 12+</p></a>
-      <a class="other-card" href="/porfiriy" style="color:inherit;text-decoration:none"><span class="tag">Медитативный детектив</span><h3>Порфирий</h3><p>Мэшап по «Преступлению и наказанию» Достоевского. 16+</p></a>
-      <a class="other-card" href="/projects" style="color:inherit;text-decoration:none"><span class="tag">Все проекты</span><h3>Каталог проектов</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
+      <a class="other-card link-plain" href="/iov"><span class="tag">Мистерия · В прокате</span><h3>ИОВ:материал</h3><p>Современная мистерия Кати Абдуловой. 12+</p></a>
+      <a class="other-card link-plain" href="/porfiriy"><span class="tag">Медитативный детектив</span><h3>Порфирий</h3><p>Мэшап по «Преступлению и наказанию» Достоевского. 16+</p></a>
+      <a class="other-card link-plain" href="/projects"><span class="tag">Все проекты</span><h3>Каталог проектов</h3><p>Все спектакли и фестивали AELITA PRODUCTION.</p></a>
     </div>
   </div>
 </section>
 
-<section style="padding:80px 0" id="audience-reviews">
+<section class="pad-80" id="audience-reviews">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Отзывы зрителей</h2></div>
 <!-- VENUE_REVIEWS:BEGIN — генератор _tools/Reviews/build_venue_reviews.py, руками не править -->
@@ -246,7 +246,7 @@ section{padding:90px 0}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=gogol" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=gogol" target="_blank" rel="noopener">ВКонтакте</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=gogol" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=gogol" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=gogol" target="_blank" rel="noopener">Дзен</a>
@@ -279,7 +279,7 @@ section{padding:90px 0}
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
       Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
-      © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      © 2026 AELITA PRODUCTION<br><a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
     </div>
   </div>
 </footer>
@@ -372,7 +372,7 @@ section{padding:90px 0}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
@@ -61,9 +61,9 @@ body{max-width:100vw}
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <nav>
-<div class="nav-in">
-<a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
-<div class="nav-links">
+  <div class="nav-in">
+    <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+    <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
       <a href="/en/projects">Productions</a>
       <a href="/en/tochkacuire">Tochka Cuire</a>
@@ -73,12 +73,12 @@ body{max-width:100vw}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-<a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-<a class="lang-switch" href="https://aelita-production.ru/account/reset/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
-<button class="burger" aria-label="Menu" onclick="toggleMenu()">
-<span></span><span></span><span></span>
-</button>
-</div>
+    <a class="nav-account" href="/en/account">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/account/reset/" title="Русская версия">RU</a>
+    <button class="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 
@@ -107,7 +107,7 @@ body{max-width:100vw}
   </div>
 </div>
 
-<section style="padding:20px 0 100px">
+<section class="pad-20-100 own-pad">
   <div class="acc-wrap">
     <div class="form-box" style="max-width:460px">
       <div id="reset-form">
@@ -119,7 +119,7 @@ body{max-width:100vw}
         </div>
       </div>
       <div id="reset-bad" style="display:none">
-        <p class="sub">The link has no code in it. Most likely it was cut off when copied — open it from the email in full, or request a new one on the <a href="/en/account/" style="color:var(--gold)">sign-in page</a>.</p>
+        <p class="sub">The link has no code in it. Most likely it was cut off when copied — open it from the email in full, or request a new one on the <a class="tl c-gold" href="/en/account/">sign-in page</a>.</p>
       </div>
     </div>
   </div>
@@ -169,8 +169,8 @@ body{max-width:100vw}
 </div>
 
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/account.js?v=65"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/account.js?v=68"></script>
+<script src="/assets/main.js?v=68"></script>
 <script>
   // pack-v448: страница по ссылке из письма «восстановление пароля»
   // (_tools/Account/request-password-reset.js). Код ссылки — в ?t=.

@@ -144,6 +144,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
 /* Ссылка «Кабинет» в шапке — только на широких экранах: на мобильном
    она бы теснила логотип, EN и бургер, а в самом бургер-меню
    «Личный кабинет» и так есть отдельным пунктом. */
+/* pack-v552: «КАБИНЕТ» и «EN»/«RU» в шапке — раньше style="…" на каждой из ~100 страниц
+   (образец шапки — _tools/DesignSystem/shared-components/nav-ru.html). */
+nav .nav-account,nav .lang-switch{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px}
+/* подвал: отступ перед соцсетями и строка продюсеров «Точки Кюри» (образец — footer-ru.html) */
+footer .foot-grid a.foot-gap{margin-top:14px}
+footer .foot-producers{color:var(--sand);font-size:0.8125rem;margin-bottom:10px}
+footer .foot-producers a{color:var(--gold)}
 @media(hover:hover){.nav-account:hover{color:var(--gold)!important}}
 @media(max-width:760px){.nav-account{display:none}}
 @media(max-width:430px){
@@ -985,8 +992,8 @@ body .hero-next a{font-family:'Montserrat',sans-serif!important;font-size:0.75re
    карточке программы) → подпись; :where — нулевая специфичность, чтобы
    решал порядок, а не длина селектора. Метки и надписи капсом (классы в
    :not) — не текст, их размеры не трогаем. */
-:where(.doc-body p,.doc-body li,p.desc,.bio-info p,.about-text p,.desc-text p,.physics-text p,.ext-banner p,.insight-box p,.tu-levels p,.mars-text p,.dy-bio-text p,p.dy-note,.no-shows p,.join-sec p,.page-hero p.sub,.page-header p.sub,.press-section p.sub,.press-head p.sub,.form-sec p.sub,.follow p,.subscribe p,.team-section p,.contact-sec p,.notify p,.gift-check p,p.afisha-empty,.hub-now p,.about-block p,.extra-block p,.collab-panel p,.become p,.flagship-body p,.film-crew p,.venue-grid p,.txt-note p,.join-form .join-note,.venue-review p,.flag p,.press-contact p,p.lead):where(:not([style*="font-size"])):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:1rem!important;line-height:1.75!important}
-:where(.career-item p,.doc-item p,.ev-info p,.format-item p,.free-card p,.pillar p,.book-card p,.katya-card p,.tl-item .tl-desc,.tl-body p,.feature p,.mars-step p,.shop-item p,.exh-body p,.speaker-card .bio,.m-item .m-src,.m-body p,.review .review-text,.show-slot-info p,.faq-points li,.facts-list li,.faq-item p,.mission-item p,.value-item p,.step-item p,.work-card p,.photo-drive p,.form-box p,.show-slots-after p,p.faq-more,.doc-head .doc-meta,p.aud-reviews-empty,.page-hero .hero-when,.page-hero .dir,.hero-content .hero-sub,.hero-content .hero-dir,.hero-content .hero-when,.collab-panel li,.prog-item p,.other-card p,.show-card p,.proj-card p):where(:not([style*="font-size"])):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:0.875rem!important;line-height:1.7!important}
+:where(.doc-body p,.doc-body li,p.desc,.bio-info p,.about-text p,.desc-text p,.physics-text p,.ext-banner p,.insight-box p,.tu-levels p,.mars-text p,.dy-bio-text p,p.dy-note,.no-shows p,.join-sec p,.page-hero p.sub,.page-header p.sub,.press-section p.sub,.press-head p.sub,.form-sec p.sub,.follow p,.subscribe p,.team-section p,.contact-sec p,.notify p,.gift-check p,p.afisha-empty,.hub-now p,.about-block p,.extra-block p,.collab-panel p,.become p,.flagship-body p,.film-crew p,.venue-grid p,.txt-note p,.join-form .join-note,.venue-review p,.flag p,.press-contact p,p.lead):where(:not([style*="font-size"]):not(.own-size)):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:1rem!important;line-height:1.75!important}
+:where(.career-item p,.doc-item p,.ev-info p,.format-item p,.free-card p,.pillar p,.book-card p,.katya-card p,.tl-item .tl-desc,.tl-body p,.feature p,.mars-step p,.shop-item p,.exh-body p,.speaker-card .bio,.m-item .m-src,.m-body p,.review .review-text,.show-slot-info p,.faq-points li,.facts-list li,.faq-item p,.mission-item p,.value-item p,.step-item p,.work-card p,.photo-drive p,.form-box p,.show-slots-after p,p.faq-more,.doc-head .doc-meta,p.aud-reviews-empty,.page-hero .hero-when,.page-hero .dir,.hero-content .hero-sub,.hero-content .hero-dir,.hero-content .hero-when,.collab-panel li,.prog-item p,.other-card p,.show-card p,.proj-card p):where(:not([style*="font-size"]):not(.own-size)):not(.eyebrow,.bio-role,.role,.tag,.badge,.status,.label,.period,.meta,.txt-kicker,.show-slot-badge,.show-slot-venue,.pnum,.dates,.fest,.video-label,.review-author,.hero-community,.soc-name,.dy-fact-k,.ft-role,.tl-year,.press-group-title,.member-role,.member-title,.install-hint,.already-installed,.big,.txt-lead,.txt-quote,.quote,.venue-review__who,.value-num,.mission-num,.author,.m-author,.m-fiction,.faq-lead){font-size:0.875rem!important;line-height:1.7!important}
 :where(.r-body .r-who,.venue-reviews__note,.venue-reviews__src,.venue-review__who,.dy-stat-l,.book-card .author,.m-updated,.flagship-body .meta,.m-body .m-author,.m-body .m-fiction){font-size:0.75rem!important;line-height:1.6!important}
 .faq-item .faq-lead{font-size:1rem!important;line-height:1.75!important}
 
@@ -994,10 +1001,10 @@ body .hero-next a{font-family:'Montserrat',sans-serif!important;font-size:0.75re
    (было 10 вариантов: с подчёркиванием и без, белые, с чертой разной
    яркости). Касается только ссылок внутри абзацев и пунктов без своего
    класса — кнопки, карточки, меню и подвал не затронуты. */
-:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:not([class]):not(nav a):not(footer a){
+:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:is(:not([class]),.tl):not(nav a):not(footer a){
   color:var(--gold)!important;text-decoration:none!important;border-bottom:1px solid rgba(214,181,122,.35)!important;
   transition:border-color .2s,color .2s}
-:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:not([class]):not(nav a):not(footer a):hover{
+:is(main,section,article,header) :is(p,li,dd,td,blockquote,figcaption) a:is(:not([class]),.tl):not(nav a):not(footer a):hover{
   border-bottom-color:var(--gold)!important}
 
 /* ═══ pack-v531: заголовки и метки ═══════════════════════════════════
@@ -1031,7 +1038,7 @@ h1.h1-xl{font-size:6rem!important;letter-spacing:.05em!important;line-height:1!i
 }
 /* подводка в шапке страницы на телефоне — чуть плотнее, чтобы кнопка
    оставалась на первом экране (аудит first_screen_cta) */
-@media(max-width:600px){#main .page-hero p.sub:not([style*="font-size"]){line-height:1.6!important}}
+@media(max-width:600px){#main .page-hero p.sub:not([style*="font-size"]):not(.own-size){line-height:1.6!important}}
 
 /* ═══ pack-v531: поля форм ═════════════════════════════════════════════
    Было 16 вариантов (фон, рамка, скругления 3–4 px в кассе, отзывах и
@@ -1058,11 +1065,11 @@ html body :is(input,textarea,select):is([style*="201, 139, 107"],[style*="C98B6B
    кабинет, магазин, упоминания, шапки) не трогаем. */
 :is(.other-card,.work-card,.proj-card,.show-card,.career-item,.format-item,.free-card,.prog-item,.pillar,.mission-item,.value-item,.step-item,.katya-card){
   padding:32px 28px!important;border-radius:0!important}
-main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]){
+main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]):not(.own-pad){
   padding-top:80px!important;padding-bottom:80px!important}
 @media(max-width:600px){
   :is(.other-card,.work-card,.proj-card,.show-card,.career-item,.format-item,.free-card,.prog-item,.pillar,.mission-item,.value-item,.step-item,.katya-card){padding:26px 22px!important}
-  main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]){
+  main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not([style*="padding:0"]):not([style*="padding-top"]):not([style*="padding:20px"]):not([style*="padding:40px"]):not([style*="padding:44px"]):not([style*="padding:50px"]):not([style*="padding:60px"]):not([style*="padding:80px 0 100px"]):not([style*="padding:100px 0 90px"]):not(.own-pad){
     padding-top:48px!important;padding-bottom:48px!important}
 }
 
@@ -1113,3 +1120,36 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
    доступна с клавиатуры — Tab попадал в невидимую кнопку. */
 .m-menu-close{visibility:hidden}
 .m-menu-close.visible{visibility:visible}
+
+/* ═══ pack-v553: общие классы вместо частых style="…" на страницах ═══
+   #main — чтобы класс перевешивал правила страниц так же, как это делал
+   style="…" (у вставки наивысший приоритет). own-size / own-pad — метки
+   для правил выше, которые узнают блок по самому атрибуту style
+   ([style*="font-size"], [style*="padding-top"] и т.п.). Сверка
+   вычисленных стилей до/после — см. CHANGELOG pack-v553.
+   .tl — метка «текстовая ссылка»: <a> без class под правилом a:is(:not([class]),.tl) выше. */
+#main .link-plain{color:inherit;text-decoration:none}
+#main .d-block{display:block}
+#main .c-inherit{color:inherit}
+#main .c-gold{color:var(--gold)}
+#main .c-bone{color:var(--bone)}
+#main .link-gold{color:var(--gold);text-decoration:none}
+#main .bg-coal{background:var(--coal)}
+#main .pad-70{padding:70px 0}
+#main .pad-80{padding:80px 0}
+#main .pad-20-100{padding:20px 0 100px}
+#main .pt-0{padding-top:0}
+#main .mt-14{margin-top:14px}
+#main .mt-16{margin-top:16px}
+#main .mt-28{margin-top:28px}
+#main .mt-40{margin-top:40px}
+#main .mt-56{margin-top:56px}
+#main .mb-10{margin-bottom:10px}
+#main .mb-14{margin-bottom:14px}
+#main .mr-14{margin-right:14px}
+#main .w-720{max-width:720px}
+#main .w-760{max-width:760px}
+#main .btn-row-14{display:flex;gap:14px;flex-wrap:wrap}
+#main .note-xs{color:var(--sand);font-size:0.8125rem}
+#main .lh-17{line-height:1.7}
+#main .lead-sm{color:var(--sand);margin-bottom:36px;font-size:0.9375rem}

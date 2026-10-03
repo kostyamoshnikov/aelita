@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 34px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 34px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -90,8 +90,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/partners/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/partners/" title="Русская версия">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -126,7 +126,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <div class="sec-head reveal"><h2>Company partners</h2></div>
     <div class="partners-grid reveal">
 
-      <a class="partner-card" href="/en/koroche" style="color:inherit;text-decoration:none">
+      <a class="partner-card link-plain" href="/en/koroche">
         <span class="partner-name">Dance company “Koroche”</span>
       </a>
 
@@ -134,7 +134,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         <span class="partner-name">ParaPlanov</span>
       </div>
 
-      <a class="partner-card" href="https://malton.ru/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">
+      <a class="partner-card link-plain" href="https://malton.ru/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener">
         <span class="partner-name">Malton</span>
       </a>
 
@@ -150,7 +150,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 <div class="become" id="collaboration">
   <div class="wrap reveal">
     <span class="eyebrow">Join us</span>
-    <h2 style="margin-top:14px">Want to become a partner?</h2>
+    <h2 class="mt-14">Want to become a partner?</h2>
     <p>We are looking for venues, brands, organisations and private investors who share our mission.</p>
     <a class="btn-gold" href="#form">Fill in the form</a>
   </div>
@@ -161,7 +161,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   <div class="wrap">
     <div class="sec-head reveal"><h2>Become a partner</h2></div><!-- pack-v520: заголовок был пуст -->
     <div class="reveal">
-      <p style="color:var(--sand);margin-bottom:36px;font-size:0.9375rem">Submit a request however you prefer — on the website or via the Telegram bot. Or directly by email: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold);text-decoration:none">aelita.production@yandex.ru</a></p>
+      <p class="lead-sm own-size">Submit a request however you prefer — on the website or via the Telegram bot. Or directly by email: <a class="tl link-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
 
       <div class="notify-tabs" id="notifyTabs_p">
         <button type="button" class="notify-tab active" data-tab="site" onclick="switchFormTab_p('site', this)">Via website</button>
@@ -203,7 +203,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
           <textarea class="ym-disable-keys" id="fmsg" placeholder="Tell us about yourself and how you see us working together..."></textarea>
         </div>
         <div class="field full">
-          <label class="cb-item" style="margin-bottom:14px"><input type="checkbox" id="consent_partner"><span>I agree to the <a href="/en/consent" style="color:var(--gold)">processing of my personal data</a></span></label>
+          <label class="cb-item mb-14"><input type="checkbox" id="consent_partner"><span>I agree to the <a class="tl c-gold" href="/en/consent">processing of my personal data</a></span></label>
           <button class="btn-gold" onclick="handleForm()" style="width:fit-content">Send</button>
           <p class="form-ok" id="formOk">Thank you! We'll get back to you within a few days.</p>
         </div>
@@ -236,7 +236,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener" style="margin-top:14px">VKontakte</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener">VKontakte</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_partners" target="_blank" rel="noopener">Dzen</a>
@@ -269,7 +269,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       LLC “AELITA PRODUCTION”<br>
       Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
       OGRN 1254000006644 · TIN 4000027320<br>
-      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents">Legal documents</a> · <a href="/en/oferta">Public Offer</a> · <a href="/en/privacy">Privacy</a> · <a href="/en/cookies">Cookies</a> · <a href="/en/app">App</a>
     </div>
   </div>
 </footer>
@@ -414,7 +414,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -425,6 +425,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=65"></script>
+<script src="/assets/phone-prefix.js?v=68"></script>
 </body>
 </html>

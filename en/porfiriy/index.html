@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -122,8 +122,8 @@ section{padding:90px 0}
       <a href="/en/community">Community</a>
       <a href="/en/contacts">Contact</a>
     </div>
-    <a class="nav-account" href="/en/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">ACCOUNT</a>
-    <a class="lang-switch" href="https://aelita-production.ru/porfiriy/" title="Русская версия" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">RU</a>
+    <a class="nav-account" href="/en/account">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/porfiriy/" title="Русская версия">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -172,7 +172,7 @@ section{padding:90px 0}
   </div>
 </section>
 
-<section style="background:var(--coal);padding:70px 0" id="afisha">
+<section class="bg-coal pad-70" id="afisha">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Upcoming performances</h2></div>
     <div class="show-slot reveal">
@@ -191,7 +191,7 @@ section{padding:90px 0}
 </section>
 
 <!-- ФОТО -->
-<section id="photos" style="padding:80px 0">
+<section class="pad-80" id="photos">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Production photos</h2></div>
     <div class="photos-grid reveal">
@@ -231,10 +231,10 @@ section{padding:90px 0}
 </section>
 
 <!-- ВИДЕО -->
-<section style="background:var(--coal);padding:80px 0" id="video">
+<section class="bg-coal pad-80" id="video">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Watch</h2></div>
-    <div class="reveal" style="max-width:720px">
+    <div class="reveal w-720">
       <div class="video-wrap">
         <video controls playsinline preload="metadata" poster="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_0/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.jpg">
           <source src="https://res.cloudinary.com/kostyamoshnikov/video/upload/v1784385678/%D0%9F%D0%BE%D1%80%D1%84%D0%B8%D1%80%D0%B8%D0%B9_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_t47opv.mp4" type="video/mp4">
@@ -251,13 +251,13 @@ section{padding:90px 0}
     <div class="sec-head reveal"><h2>Team</h2></div>
     <div class="team-grid reveal">
       <div class="member"><p class="role">Director &amp; actor</p><h3>Alexander Panov</h3></div>
-      <div class="member"><p class="role">Assistant director</p><h3><a href="/en/svetlana-nikiforova" style="color:inherit">Svetlana Nikiforova</a></h3></div>
+      <div class="member"><p class="role">Assistant director</p><h3><a class="tl c-inherit" href="/en/svetlana-nikiforova">Svetlana Nikiforova</a></h3></div>
       <div class="member"><p class="role">Set designer</p><h3>Alexey Vasilyev</h3></div>
     </div>
   </div>
 </section>
 
-<section style="padding-top:0" id="reviews">
+<section class="pt-0 own-pad" id="reviews">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Reviews</h2></div>
     <div class="reviews reveal">
@@ -285,19 +285,19 @@ section{padding:90px 0}
   </div>
 </section>
 
-<section style="background:var(--coal);padding:70px 0">
+<section class="bg-coal pad-70">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Other productions</h2></div>
     <div class="other-grid reveal">
-      <a class="other-card" href="/en/iov" style="color:inherit;text-decoration:none"><span class="tag">Mystery Play · In Repertoire</span><h3>IOV: Material</h3><p>A contemporary mystery by Katya Abdulova. 12+</p></a>
-      <a class="other-card" href="/en/book-space" style="color:inherit;text-decoration:none"><span class="tag">Book club</span><h3>AELITA COMMUNITY</h3><p>Book meetings — a space filled with meaning.</p></a>
-      <a class="other-card" href="/en/projects" style="color:inherit;text-decoration:none"><span class="tag">All productions</span><h3>Productions catalogue</h3><p>All AELITA PRODUCTION shows and festivals.</p></a>
+      <a class="other-card link-plain" href="/en/iov"><span class="tag">Mystery Play · In Repertoire</span><h3>IOV: Material</h3><p>A contemporary mystery by Katya Abdulova. 12+</p></a>
+      <a class="other-card link-plain" href="/en/book-space"><span class="tag">Book club</span><h3>AELITA COMMUNITY</h3><p>Book meetings — a space filled with meaning.</p></a>
+      <a class="other-card link-plain" href="/en/projects"><span class="tag">All productions</span><h3>Productions catalogue</h3><p>All AELITA PRODUCTION shows and festivals.</p></a>
     </div>
   </div>
 </section>
 
 
-<section style="padding:80px 0" id="audience-reviews">
+<section class="pad-80" id="audience-reviews">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Audience reviews</h2></div>
     <noscript><p class="aud-reviews-empty">To see and leave reviews, please enable JavaScript in your browser.</p></noscript>
@@ -315,7 +315,7 @@ section{padding:90px 0}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_porfiriy" target="_blank" rel="noopener" style="margin-top:14px">VKontakte</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_porfiriy" target="_blank" rel="noopener">VKontakte</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_porfiriy" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_porfiriy" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_porfiriy" target="_blank" rel="noopener">Dzen</a>
@@ -348,7 +348,7 @@ section{padding:90px 0}
       LLC “AELITA PRODUCTION”<br>
       Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
       OGRN 1254000006644 · TIN 4000027320<br>
-      © 2026 AELITA PRODUCTION<br><a href="/en/documents" style="color:rgba(201,184,163,.5)">Legal documents</a> · <a href="/en/oferta" style="color:rgba(201,184,163,.5)">Public Offer</a> · <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Privacy</a> · <a href="/en/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents">Legal documents</a> · <a href="/en/oferta">Public Offer</a> · <a href="/en/privacy">Privacy</a> · <a href="/en/cookies">Cookies</a> · <a href="/en/app">App</a>
     </div>
   </div>
 </footer>
@@ -487,7 +487,7 @@ section{padding:90px 0}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 
 <script src="/assets/reviews.js"></script>
 <script>AelitaReviews.init('porfiriy');</script>

@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -275,8 +275,8 @@ html{scroll-padding-top:230px}
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/tochkacuire/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/tochkacuire/" title="English version">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -388,7 +388,7 @@ html{scroll-padding-top:230px}
     </div>
     <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:0.875rem;color:var(--sand)">
       <strong style="color:var(--bone);display:block;margin-bottom:6px">8 октября — пролог</strong>
-      Выставка <a href="/vystavka-prolog" style="color:var(--gold)">«ТОЧКА КЮРИ. Пролог»</a> открывается за две недели и работает до 4 ноября. Вход свободный.
+      Выставка <a class="tl c-gold" href="/vystavka-prolog">«ТОЧКА КЮРИ. Пролог»</a> открывается за две недели и работает до 4 ноября. Вход свободный.
     </div>
   </div>
 </section>
@@ -433,10 +433,10 @@ html{scroll-padding-top:230px}
 </section>
 
 <!-- ПРОГРАММА -->
-<section id="program" style="background:var(--coal)">
+<section class="bg-coal" id="program">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Программа</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:0.9375rem">Больше десяти постановок и 15 показов за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада.</p>
+    <p class="reveal lead-sm own-size">Больше десяти постановок и 15 показов за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада.</p>
 
     <div class="prog-grid reveal">
       <a class="prog-item" href="/iov">
@@ -500,7 +500,7 @@ html{scroll-padding-top:230px}
         <img src="https://cuire-fest.ru/assets/photo/p09.jpg" alt="Выставка ТОЧКА КЮРИ. Пролог" loading="lazy">
         <div class="exh-body">
           <p class="dates">8 октября – 4 ноября · Пролог</p>
-          <h3><a href="/vystavka-prolog" style="color:inherit">ТОЧКА КЮРИ. Пролог</a></h3>
+          <h3><a class="tl c-inherit" href="/vystavka-prolog">ТОЧКА КЮРИ. Пролог</a></h3>
           <p>Диалог человеческого тела и материала будущего. Тело в движении встречается с металлом, огнём и индустриальной фактурой Старого Оскола.</p>
           <span class="exh-free">Вход свободный</span>
         </div>
@@ -509,7 +509,7 @@ html{scroll-padding-top:230px}
         <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Фотовыставка Археология человеческого" loading="lazy">
         <div class="exh-body">
           <p class="dates">14–25 октября · Фотовыставка</p>
-          <h3><a href="/fotovystavka-ilyina" style="color:inherit">Археология человеческого</a></h3>
+          <h3><a class="tl c-inherit" href="/fotovystavka-ilyina">Археология человеческого</a></h3>
           <p>Фотовыставка <a href="/ekaterina-ilyina">Кати Ильиной</a>. Тело как раскоп: что остаётся от человека, когда снимаешь слой за слоем привычное. Вернисаж — 14 октября.</p>
           <span class="exh-free">Вход свободный</span>
         </div>
@@ -527,7 +527,7 @@ html{scroll-padding-top:230px}
 </section>
 
 <!-- ВЫСТАВОЧНАЯ ПРОГРАММА · ПЕРЕХОД -->
-<section id="exhibition-program" style="background:var(--coal)">
+<section class="bg-coal" id="exhibition-program">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Выставочная программа · Сезон I</span><h2>Переход</h2></div>
     <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.9375rem;max-width:60ch">28 художников — один маршрут от точки входа до точки выхода, а не список отдельных работ. 14–25 октября, ЦСИ «Быль». Куратор — Екатерина Шелгунова. Вход свободный.</p>
@@ -540,16 +540,16 @@ html{scroll-padding-top:230px}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Деловая программа</span><h2>Разговоры о том, как всё устроено</h2></div>
     <p class="reveal" style="color:var(--sand);margin-bottom:12px;font-size:0.9375rem;max-width:60ch">Лекции и открытые встречи для тех, кто делает культуру и продукты: как живёт современный танец в реальной экономике и что меняет искусственный интеллект в профессии. 23–24 октября — бесплатно, по регистрации; 22 октября — по пригласительным. Катя Абдулова, Мария Павлова, Алёна Бычкова, Михаил Казмирук, Алексей Цымлов, Александра Губанова.</p>
-    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.875rem">Куратор деловой программы — <a href="/alexandra-gubanova" style="color:var(--gold)">Александра Губанова</a>, основатель агентства «ПараПланов».</p>
+    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.875rem">Куратор деловой программы — <a class="tl c-gold" href="/alexandra-gubanova">Александра Губанова</a>, основатель агентства «ПараПланов».</p>
     <a class="btn-gold" href="/business-program" style="display:inline-block">Смотреть деловую программу →</a>
   </div>
 </section>
 
 <!-- КИНО -->
-<section id="cinema" style="background:var(--coal)">
+<section class="bg-coal" id="cinema">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Кино</span><h2>Секция «Кино»</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:36px;font-size:0.9375rem">Кинопрограмма фестиваля — под кураторством сценариста и шоураннера <a href="/galina-mosalova">Галины Мосаловой</a>. Подробности программы уточняются.</p>
+    <p class="reveal lead-sm own-size">Кинопрограмма фестиваля — под кураторством сценариста и шоураннера <a href="/galina-mosalova">Галины Мосаловой</a>. Подробности программы уточняются.</p>
     <div class="speaker-grid reveal" style="grid-template-columns:1fr;max-width:520px">
       <a class="speaker-card" href="/galina-mosalova" style="text-decoration:none;color:inherit;cursor:pointer">
         <div class="speaker-meta">Куратор секции «Кино»</div>
@@ -588,8 +588,8 @@ html{scroll-padding-top:230px}
     <div class="free-grid reveal">
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3><a href="/business-program" style="color:inherit">Лекторий</a></h3>
-        <p>Лекции и мастер-класс деловой программы 23–24 октября — <a href="/lecture-bez-suflera" style="color:var(--gold)">Алёна Бычкова</a>, <a href="/lecture-tanets-v-realnom-mire" style="color:var(--gold)">Михаил Казмирук</a>, <a href="/lecture-landshafty-realnosti" style="color:var(--gold)">Катя Абдулова</a>, <a href="/lecture-art-goroda" style="color:var(--gold)">Александра Губанова</a>. Лекции дня открытия, 22 октября, — по пригласительным.</p>
+        <h3><a class="tl c-inherit" href="/business-program">Лекторий</a></h3>
+        <p>Лекции и мастер-класс деловой программы 23–24 октября — <a class="tl c-gold" href="/lecture-bez-suflera">Алёна Бычкова</a>, <a class="tl c-gold" href="/lecture-tanets-v-realnom-mire">Михаил Казмирук</a>, <a class="tl c-gold" href="/lecture-landshafty-realnosti">Катя Абдулова</a>, <a class="tl c-gold" href="/lecture-art-goroda">Александра Губанова</a>. Лекции дня открытия, 22 октября, — по пригласительным.</p>
         <span class="free-badge">Бесплатно · по регистрации</span>
       </div>
       <div class="free-card">
@@ -600,7 +600,7 @@ html{scroll-padding-top:230px}
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
-        <h3><a href="/art-kvest" style="color:inherit">Квест по лабиринтам искусства</a></h3>
+        <h3><a class="tl c-inherit" href="/art-kvest">Квест по лабиринтам искусства</a></h3>
         <p>Фестиваль захвачен «Серыми Экранами», которые крадут краски и эмоции. У детей 60 минут, чтобы перезагрузить арт-объекты и вернуть радость. 24 и 25 октября, 12:30 и 14:00. 0+/6+.</p>
         <span class="free-badge">Бесплатно · по регистрации</span>
       </div>
@@ -615,7 +615,7 @@ html{scroll-padding-top:230px}
 </section>
 
 <!-- OPEN CALL -->
-<section style="padding-top:0">
+<section class="pt-0 own-pad">
   <div class="wrap">
     <div class="ext-banner reveal">
       <div>
@@ -626,7 +626,7 @@ html{scroll-padding-top:230px}
 </section>
 
 <!-- ПЛОЩАДКА -->
-<section id="venue" style="background:var(--coal)">
+<section class="bg-coal" id="venue">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Площадка 2026</span><h2>ЦСИ «Быль», Старый Оскол</h2></div>
     <div class="venue-grid reveal">
@@ -658,14 +658,14 @@ html{scroll-padding-top:230px}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Быть на связи</span><h2>Новости фестиваля и полная программа</h2></div>
     <div class="reveal" style="margin-top:2px">
-      <div class="form-box" style="max-width:720px">
+      <div class="form-box w-720">
         <h3>Быть в курсе программы фестиваля</h3>
-        <p>Ссылки на билеты — прямо в <a href="#schedule" style="color:var(--gold)">расписании фестиваля</a> выше. Оставьте контакты, если хотите получить полную программу и узнавать о новых показах и событиях.</p>
+        <p>Ссылки на билеты — прямо в <a class="tl c-gold" href="#schedule">расписании фестиваля</a> выше. Оставьте контакты, если хотите получить полную программу и узнавать о новых показах и событиях.</p>
         <div class="form-col" id="subscribeForm">
           <div class="field"><label>Имя *</label><input class="ym-disable-keys" type="text" id="sub-name" placeholder="Ваше имя" required></div>
           <div class="field"><label>Email *</label><input class="ym-disable-keys" type="email" id="sub-email" placeholder="email@example.com"></div>
           <div class="field"><label>Телефон *</label><input class="ym-disable-keys" type="tel" id="sub-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
+          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"><span>Согласен(на) на <a class="tl c-gold" href="/consent">обработку персональных данных</a></span></label>
           <button class="btn-gold" onclick="subscribe()">Подписаться на новости →</button>
         </div>
         <div class="form-ok" id="subOk">✓ Готово! Спасибо — пришлём программу и напишем о новых показах фестиваля «ТОЧКА КЮРИ».</div>
@@ -688,10 +688,10 @@ html{scroll-padding-top:230px}
     <div class="foot-grid">
       <div>
         <h4>AELITA PRODUCTION</h4>
-        <p style="color:var(--sand);font-size:0.8125rem;margin-bottom:10px">Продюсеры: <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова,</a> <a href="/konstantin-moshnikov" style="color:var(--gold)">Константин Мошников</a></p>
+        <p class="foot-producers">Продюсеры: <a href="/katya-abdulova">Катя Абдулова,</a> <a href="/konstantin-moshnikov">Константин Мошников</a></p>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">ВКонтакте</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Дзен</a>
@@ -724,7 +724,7 @@ html{scroll-padding-top:230px}
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
       Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
-      © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      © 2026 AELITA PRODUCTION<br><a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
     </div>
   </div>
 </footer>
@@ -997,7 +997,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1008,6 +1008,6 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=65"></script>
+<script src="/assets/phone-prefix.js?v=68"></script>
 </body>
 </html>

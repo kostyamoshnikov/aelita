@@ -33,7 +33,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
+<link rel="stylesheet" href="/assets/club.css?v=68">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .hero-content{position:relative;z-index:2;animation:rise 1.2s ease both .5s}
@@ -201,12 +202,12 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "AELITA COMMUNITY",
-  "description": "Книжный клуб Кати Абдуловой — встречи и разговоры о книгах и смыслах вне театрального контекста.",
+  "description": "Книжный клуб «3 УРОВЕНЬ» Кати Абдуловой: помесячная подписка, два потока — основной и для предпринимателей, встречи очно и онлайн, все встречи в записи.",
   "brand": {
     "@type": "Organization",
     "name": "AELITA PRODUCTION"
   },
-  "image": "https://aelita-production.ru/images/og-default.jpg",
+  "image": "https://aelita-production.ru/images/community/community-1.jpg",
   "url": "https://aelita-production.ru/book-space/",
   "offers": [
     {
@@ -236,6 +237,78 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Как устроена оплата?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Подписка помесячная: первый месяц оплачивается при оформлении. За 3 дня до конца оплаченного месяца придёт письмо со ссылкой на оплату следующего. Автоматическое списание подключим позже — о нём напишем отдельно."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как отменить подписку?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "В личном кабинете, кнопкой «Отменить подписку». Участие сохранится до конца оплаченного месяца; передумаете — подписку можно возобновить там же."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно ли вернуть деньги?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да. В первые 7 дней после оплаты вернём всю сумму, позже — стоимость неиспользованных дней месяца. Кнопка «Отменить и вернуть» — в личном кабинете; участие заканчивается в день возврата."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно участвовать онлайн?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, по видеосвязи прямо во время встречи. Все встречи записываются — их можно посмотреть в своём темпе."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что будет после оплаты?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Придёт письмо с подтверждением и чеком. В течение дня организатор свяжется с вами и добавит в чат потока — там расписание встреч и книги."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Нужно ли готовиться к встречам?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да: участники читают книгу, делают конспекты и приносят свои вопросы — так рождается разговор. Готовых ответов и лекций не будет."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Нужен ли личный кабинет?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, подписка привязана к личному кабинету — в нём видно, до какого числа оплачено, там же отмена и возврат. Завести его можно прямо на странице оплаты."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно оплатить от компании?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Оплату по счёту от организации подключаем. Пока напишите нам на aelita.production@yandex.ru — подскажем."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -253,8 +326,8 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/book-space/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/book-space/" title="English version">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -276,19 +349,19 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
         <span class="val">Сентябрь · снова Берн</span>
       </div>
     </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div class="btn-row">
       <a class="btn-gold" href="/book-space/main/pay">Оформить подписку — 5 000 ₽/мес</a>
-      <a class="btn-outline" href="#season-program" style="margin-left:0">Что читаем</a>
+      <a class="btn-outline ml-0" href="#season-program">Что читаем</a>
     </div>
   </div>
 </div>
 
-<section style="background:var(--coal);padding:44px 0">
+<section class="sec-coal own-pad">
   <div class="wrap">
-    <p class="eyebrow" style="margin-bottom:20px">Два потока AELITA COMMUNITY</p>
-    <div class="other-grid reveal" style="gap:20px">
-      <a class="other-card" href="#main-stream" style="color:inherit;text-decoration:none"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, темы меняются от сезона к сезону — сейчас про то, зачем мы выбираем быть вместе.</p></a>
-      <a class="other-card" href="#predprinimateli" style="color:inherit;text-decoration:none"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа чтения — от психологии семьи и власти до философии мышления и языка.</p></a>
+    <p class="eyebrow mb-20">Два потока AELITA COMMUNITY</p>
+    <div class="other-grid reveal gap-20">
+      <a class="other-card link-plain" href="#main-stream"><span class="tag">Читаем сейчас</span><h3>Основной поток</h3><p>Еженедельные встречи, темы меняются от сезона к сезону — сейчас про то, зачем мы выбираем быть вместе.</p></a>
+      <a class="other-card link-plain" href="#predprinimateli"><span class="tag">Для предпринимателей</span><h3>Поток для предпринимателей</h3><p>Отдельная программа чтения — от психологии семьи и власти до философии мышления и языка.</p></a>
     </div>
   </div>
 </section>
@@ -297,39 +370,38 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 <section id="tri-uroven">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Книжный клуб</span><h2>Почему «3 УРОВЕНЬ»</h2></div>
-    <div class="about-text reveal" style="max-width:760px">
+    <div class="about-text reveal w-760">
       <p>Мне не хотелось названия про книги: клуб давно не про книги. Точнее, не только про них. Книга — всего лишь повод. Повод столкнуться с чужой системой координат в своей голове и на несколько часов допустить хотя бы одну «неприятную мысль»: а что, если мир устроен вовсе не так, как я привыкла о нём думать?</p>
     </div>
-    <div class="tu-levels reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px">
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">1 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
-      <div style="background:var(--coal);padding:26px 24px"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">2 уровень</p><p style="color:var(--sand);margin:0;line-height:1.6">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
-      <div style="background:var(--coal);padding:26px 24px;border-top:2px solid var(--gold)"><p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px">3 уровень</p><p style="color:var(--bone);margin:0;line-height:1.6">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
+    <div class="tu-levels reveal">
+      <div class="tu-level"><p class="tu-level-name own-size">1 уровень</p><p class="tu-level-text">Прочитал, понял сюжет, согласился или поспорил — вернул на полку.</p></div>
+      <div class="tu-level"><p class="tu-level-name own-size">2 уровень</p><p class="tu-level-text">Видишь идеи, контекст, связи; сопоставляешь с собственной жизнью, что-то присваиваешь, что-то отвергаешь.</p></div>
+      <div class="tu-level tu-level--top"><p class="tu-level-name own-size">3 уровень</p><p class="tu-level-text">Перестаёшь разбирать книгу на предложения и начинаешь разбирать способ, которым ты её разбираешь.</p></div>
     </div>
-    <div class="about-text reveal" style="max-width:760px">
+    <div class="about-text reveal w-760">
       <!-- pack-v513: деликатная разбивка текста (как в v512) -->
       <p class="txt-quote">Почему меня раздражает именно эта мысль? Почему этот поступок кажется мне неправильным? Почему я вообще уверена, что успех выглядит именно так? Что такое для меня любовь — и откуда я это взяла? Почему одно я называю свободой, а другое безответственностью?</p>
       <p class="txt-kicker">Почему это важно</p>
       <p>Мы очень часто пытаемся изменить свою жизнь, не понимая законов, которыми она организована: ищем другого партнёра с тем же представлением о любви, строим новый бизнес со старым представлением об успехе, уезжаем в другой город и привозим туда прежнего себя.</p>
       <p class="txt-kicker">Что происходит на встречах</p>
       <p>Мне не очень интересно искать ещё один «правильный ответ». Интереснее место, в котором становится видно, почему именно эти ответы вообще казались правильными. После хорошего разговора мир физически остаётся прежним — те же люди, тот же город, тот же бизнес, — но ты видишь между ними связи, которых вчера не замечал. А значит, перед тобой уже немного другая реальность.</p>
-      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
-      <p style="color:var(--sand);font-size:0.875rem">— <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>, основательница клуба</p>
+      <p class="pull-quote own-size">Мы читаем книги. Но вообще-то собираемся здесь ради другого: увидеть то, из чего мы сами собираем свой мир.</p>
+      <p class="note-sm own-size">— <a class="c-gold" href="/katya-abdulova">Катя Абдулова</a>, основательница клуба</p>
     </div>
   </div>
 </section>
-<style>@media(max-width:760px){.tu-levels{grid-template-columns:1fr!important}}</style>
 
 <!-- О КЛУБЕ -->
 <section id="about">
   <div class="wrap">
-    <p class="eyebrow" id="main-stream" style="scroll-margin-top:90px">Основной поток</p>
+    <p class="eyebrow anchor-offset" id="main-stream">Основной поток</p>
     <div class="sec-head reveal"><span class="eyebrow">О клубе</span><h2>Архитектура понимания</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
         <p>Мы часто думаем, что нас не понимают, потому что мы «плохо объяснили», или что человек напротив «плохо понимает». И то, и другое — ложь. Здесь мы создаём форму, в которой понимание может возникнуть.</p>
         <p>AELITA COMMUNITY — <strong>языковая среда</strong>, такое место, где люди дорастают сначала до больших, а затем и до своих собственных идей, место, где учатся отделять свои желания от чужих, судьбу от родительских сценариев, а близость от экономики.</p>
         <blockquote class="about-quote">Ты есть только там, где думаешь, чувствуешь, переживаешь, хочешь, поступаешь не как все. Никаких «всех» не существует. Существуют родительские предписания, кодекс инстаграм*-соответствия, культурные скрипты… Но всё это не человек.</blockquote>
-        <p style="font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:-12px">* Instagram — социальная сеть, принадлежащая компании Meta Platforms Inc., деятельность которой по реализации продуктов Instagram и Facebook на территории Российской Федерации признана экстремистской и запрещена.</p>
+        <p class="fine-print own-size">* Instagram — социальная сеть, принадлежащая компании Meta Platforms Inc., деятельность которой по реализации продуктов Instagram и Facebook на территории Российской Федерации признана экстремистской и запрещена.</p>
         <p>Чтобы думать не как все — нужно пересобрать себя. Не раз и даже не два. <strong>Постоянно. Безостановочно. Каждую минуту.</strong></p>
         <p>Уже больше 13 лет Катя читает книги и ведёт встречи. Книга, фильм, картина или спектакль для неё — инструмент: можно использовать, а можно и нет.</p>
       </div>
@@ -358,7 +430,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
   <div class="wrap">
     <div class="mars-grid reveal">
       <div class="mars-text">
-        <span class="eyebrow" style="display:block;margin-bottom:18px">Про марсианский</span>
+        <span class="eyebrow block">Про марсианский</span>
         <h2>Как мы говорим на одном языке и не понимаем друг друга</h2>
         <p>На одной из встреч возник интересный вопрос: достаточно ли просто знать русский язык, чтобы понимать друг друга? Или это <strong>сломанный телефон</strong>, где один говорит одно, второй смотрит через мутное стекло когнитивных искажений и понимает что-то другое, отвечая уже на сгенерированное опытом описание, а не на то, что ему действительно сказали?</p>
         <!-- pack-v513: деликатная разбивка текста (как в v512) -->
@@ -406,22 +478,22 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 </div>
 
 <!-- ЧТЕНИЕ -->
-<section id="reading" style="padding-top:0">
+<section class="pt-0 own-pad" id="reading">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Тема сезона</span><h2>Зачем мы выбираем быть вместе</h2></div>
-    <div class="reveal" style="max-width:74ch">
-      <p style="color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:20px">Раньше брак держался на религии, экономике и общественном мнении. Сегодня все три опоры пошатнулись: женщина зарабатывает сама, церковь для многих перестала быть авторитетом, слово «развод» никого не удивляет. Внешних причин для моногамной семьи почти не осталось — а внутренние никто толком не формулировал.</p>
-      <p style="color:var(--sand);font-size:1rem;line-height:1.9">Готового ответа тут не существует. Год будем читать — от психологии до философии и прозы — и пробовать собрать свой собственный пазл: зачем люди выбирают просыпаться рядом с одним человеком всю жизнь, и есть ли в этом смысл, если можно иначе.</p>
+    <div class="reveal w-74ch">
+      <p class="text-lg-mb own-size">Раньше брак держался на религии, экономике и общественном мнении. Сегодня все три опоры пошатнулись: женщина зарабатывает сама, церковь для многих перестала быть авторитетом, слово «развод» никого не удивляет. Внешних причин для моногамной семьи почти не осталось — а внутренние никто толком не формулировал.</p>
+      <p class="text-lg own-size">Готового ответа тут не существует. Год будем читать — от психологии до философии и прозы — и пробовать собрать свой собственный пазл: зачем люди выбирают просыпаться рядом с одним человеком всю жизнь, и есть ли в этом смысл, если можно иначе.</p>
     </div>
 
-    <div class="reveal dash-note" style="margin-top:2px;background:var(--coal);padding:32px 36px">
-      <p style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Октябрь · «Пир» Платона</p>
-      <p style="color:var(--bone);font-size:1.0625rem;margin-bottom:14px">Присоединиться можно сейчас — по подписке.</p>
-      <p style="color:var(--sand);font-size:0.875rem;margin-bottom:20px">Формат — 1 книга в месяц, 1 встреча в неделю. Участие — 5 000 ₽ в месяц.</p>
+    <div class="reveal dash-note panel-coal">
+      <p class="eyebrow-plain own-size">Октябрь · «Пир» Платона</p>
+      <p class="text-bone-lead own-size">Присоединиться можно сейчас — по подписке.</p>
+      <p class="note-sm-mb own-size">Формат — 1 книга в месяц, 1 встреча в неделю. Участие — 5 000 ₽ в месяц.</p>
       <a class="btn-gold" href="/book-space/main/pay">Оформить подписку — 5 000 ₽/мес</a>
     </div>
 
-    <div class="sec-head reveal" style="margin-top:64px"><span class="eyebrow">Программа сезона</span><h2 id="season-program">Что и когда читаем</h2></div>
+    <div class="sec-head reveal mt-64"><span class="eyebrow">Программа сезона</span><h2 id="season-program">Что и когда читаем</h2></div>
     <div class="season-timeline reveal">
       <div class="season-month">
         <span class="m-name">Сентябрь</span>
@@ -442,7 +514,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Ноябрь</span>
         <div class="m-body">
-          <h4>«Русская семья XI–XIX веков» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение первого кита</span></h4>
+          <h4>«Русская семья XI–XIX веков» <span class="c-muted-light">· Крушение первого кита</span></h4>
           <p class="m-author">Василий Лещенко</p>
           <p>Разбираем семью как экономический институт. Здесь же — как библейские нормы лежали в основе этого уклада.</p>
           <p class="m-fiction">Параллельно: «Гроза» и «Леди Макбет Мценского уезда» — как религиозные и культурные нормы разрушали личность.</p>
@@ -451,7 +523,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Декабрь</span>
         <div class="m-body">
-          <h4>«Агрессия, или Так называемое зло» <span style="color:rgba(201,184,163,.5);font-weight:300">· Крушение второго кита</span></h4>
+          <h4>«Агрессия, или Так называемое зло» <span class="c-muted-light">· Крушение второго кита</span></h4>
           <p class="m-author">Конрад Лоренц</p>
           <p>Смотрим на природу. Если человек создан свободным, то что в нас говорит инстинкт? Почему агрессия и собственничество заложены в нас биологически?</p>
         </div>
@@ -459,7 +531,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Январь</span>
         <div class="m-body">
-          <h4>«Избранное» <span style="color:rgba(201,184,163,.5);font-weight:300">· Внутренний фундамент</span></h4>
+          <h4>«Избранное» <span class="c-muted-light">· Внутренний фундамент</span></h4>
           <p class="m-author">Дональд Вудс Винникотт</p>
           <p>Как младенческий опыт с матерью формирует способность к верности и доверию? Библия здесь — как архетип «безусловной материнской любви».</p>
         </div>
@@ -467,7 +539,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Февраль</span>
         <div class="m-body">
-          <h4>«Отец» <span style="color:rgba(201,184,163,.5);font-weight:300">· Архетип и Божественный отец</span></h4>
+          <h4>«Отец» <span class="c-muted-light">· Архетип и Божественный отец</span></h4>
           <p class="m-author">Луиджи Зойя</p>
           <p>Продолжаем тему детства. Кто такой Отец в психологии и в Ветхом и Новом Завете? Как его отсутствие или присутствие влияет на готовность быть взрослым и брать ответственность за пару?</p>
           <p class="m-fiction">Параллельно: «Гамлет» — мир без отца.</p>
@@ -476,7 +548,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Март</span>
         <div class="m-body">
-          <h4>«Наркомания: патология или поиск инициации» <span style="color:rgba(201,184,163,.5);font-weight:300">· Побег из реальности</span></h4>
+          <h4>«Наркомания: патология или поиск инициации» <span class="c-muted-light">· Побег из реальности</span></h4>
           <p class="m-author">Луиджи Зойя</p>
           <p>Зачем мы ищем острых ощущений? Почему измена — это тоже своего рода наркотик? Что мы пытаемся «убить» в себе, уходя от рутины, и почему Библия называет это грехом?</p>
         </div>
@@ -484,7 +556,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Апрель</span>
         <div class="m-body">
-          <h4>«Секс в человеческой любви» <span style="color:rgba(201,184,163,.5);font-weight:300">· Сценарии и игры</span></h4>
+          <h4>«Секс в человеческой любви» <span class="c-muted-light">· Сценарии и игры</span></h4>
           <p class="m-author">Эрик Берн</p>
           <p>Разбираем, как мы играем в «игры» — как влечение и секс используются как инструмент манипуляции. Сравниваем с нравственными принципами Нового Завета.</p>
         </div>
@@ -492,7 +564,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Май</span>
         <div class="m-body">
-          <h4>«Любовь и страх» <span style="color:rgba(201,184,163,.5);font-weight:300">· Диагноз 2026 года</span></h4>
+          <h4>«Любовь и страх» <span class="c-muted-light">· Диагноз 2026 года</span></h4>
           <p class="m-author">Зигмунт Бауман</p>
           <p>Финальный разбор крушения всех внешних «китов» — социума, церкви, экономики. Почему религия больше не держит, и что происходит с людьми, которые остались одни со своей свободой.</p>
           <p class="m-fiction">Параллельно: «Пока скука не разлучит нас» и «Госпожа Бовари».</p>
@@ -501,7 +573,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Июнь</span>
         <div class="m-body">
-          <h4>«Отношения любви: нормальность и патология» <span style="color:rgba(201,184,163,.5);font-weight:300">· Зрелая любовь</span></h4>
+          <h4>«Отношения любви: нормальность и патология» <span class="c-muted-light">· Зрелая любовь</span></h4>
           <p class="m-author">Отто Кернберг</p>
           <p>Выходим на пик психоанализа. Как выдерживать агрессию, злость и скуку в долгосрочных отношениях и не разрушить их — ответ на вопрос «как сохранять верность добровольно?».</p>
         </div>
@@ -509,17 +581,17 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       <div class="season-month">
         <span class="m-name">Июль</span>
         <div class="m-body">
-          <h4>«Экзистенциальная психотерапия» <span style="color:rgba(201,184,163,.5);font-weight:300">· Экзистенциальный итог и синтез года</span></h4>
+          <h4>«Экзистенциальная психотерапия» <span class="c-muted-light">· Экзистенциальный итог и синтез года</span></h4>
           <p class="m-author">Ирвин Ялом — главы про изоляцию, ответственность и смысл жизни</p>
           <p>Почему мы выбираем одного человека, зная, что умрём в одиночестве? Что такое настоящий смысл против «правил»? Собираем весь пазл заново — смотрим на весь год через призму Платона, Берна и Ялома: что осталось от «заповедей», когда исчезли страх и выгода.</p>
         </div>
       </div>
     </div>
-    <div class="reveal" style="max-width:74ch;margin-top:32px">
-      <p style="color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:14px">Библию не читаем отдельно по главам — держим на столе как базовый словарь морали. На каждой встрече спрашиваем: «А как на это смотрит Новый Завет? Что это значило для людей 2000 лет назад, и как мы теперь можем понять это без насилия над собой?»</p>
-      <p style="color:var(--sand);font-size:0.875rem;line-height:1.8">Художественная литература идёт дополнительным эмоциональным слоем — читаете в своём темпе, а на встречах разбираем героев через призму пройденной психологии и философии.</p>
+    <div class="reveal w-74ch-mt">
+      <p class="note-sm-lh-mb own-size">Библию не читаем отдельно по главам — держим на столе как базовый словарь морали. На каждой встрече спрашиваем: «А как на это смотрит Новый Завет? Что это значило для людей 2000 лет назад, и как мы теперь можем понять это без насилия над собой?»</p>
+      <p class="note-sm-lh own-size">Художественная литература идёт дополнительным эмоциональным слоем — читаете в своём темпе, а на встречах разбираем героев через призму пройденной психологии и философии.</p>
     </div>
-    <p class="reveal" style="color:var(--sand);font-size:0.9375rem;line-height:1.9;max-width:70ch;margin-top:40px">Если вы устали от лозунгов «семья — это святое» и хотите понять, как устроена близость на самом деле — нам по пути. А ещё с группой мы путешествуем, ходим в театр и на выставки, рисуем, отмечаем дни рождения и создаём проекты вместе — часть этого видно в фотографиях ниже.</p>
+    <p class="reveal text-md-wide own-size">Если вы устали от лозунгов «семья — это святое» и хотите понять, как устроена близость на самом деле — нам по пути. А ещё с группой мы путешествуем, ходим в театр и на выставки, рисуем, отмечаем дни рождения и создаём проекты вместе — часть этого видно в фотографиях ниже.</p>
   </div>
 </section>
 
@@ -597,30 +669,87 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
   </div>
 </section>
 
-<!-- ВСТУПИТЬ -->
-<!-- pack-v542: форма «Хочу в клуб» заменена подпиской с автосписанием (ТЗ «Подписка на книжный клуб») -->
-<div class="join-sec" id="join">
+<!-- ВСТУПИТЬ — pack-v551: оба потока карточками + частые вопросы (общий блок с /community, assets/club.css) -->
+<section class="streams-sec" id="join">
   <div class="wrap">
-    <span class="eyebrow">Присоединиться</span>
-    <h2 style="margin-top:14px">Хочу в клуб</h2>
-    <p>Основной поток — 5 000 ₽ в месяц по подписке. Отменить можно в любой момент в личном кабинете.</p>
-    <p style="color:var(--sand);font-size:0.875rem;margin-top:-8px;margin-bottom:24px">После оплаты организатор свяжется с вами в течение дня и добавит в чат потока.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <a class="btn-gold" href="/book-space/main/pay">Оформить подписку — 5 000 ₽/мес</a>
-      <a class="btn-outline" href="https://t.me/aelita_production_bot?start=ask&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener" style="margin-left:0">Сначала спросить — в Telegram</a>
+    <div class="sec-head reveal"><span class="eyebrow">Присоединиться</span><h2>Выберите поток</h2></div>
+    <div class="streams reveal">
+      <article class="stream-card stream-card--main">
+        <p class="stream-tag">Читаем сейчас</p>
+        <h3>Основной поток</h3>
+        <p class="stream-price">5 000 ₽ <span>в месяц</span></p>
+        <ul class="stream-list">
+          <li>Встреча каждую неделю — четыре в месяц</li>
+          <li>Одна книга в месяц; тема сезона — зачем мы выбираем быть вместе</li>
+          <li>Очно или онлайн, все встречи в записи</li>
+          <li>Камерный формат — до 10 человек, чат участников</li>
+        </ul>
+        <a class="btn-gold" href="/book-space/main/pay">Оформить подписку — 5 000 ₽/мес</a>
+        <a class="stream-more" href="/book-space#season-program">Программа сезона →</a>
+      </article>
+      <article class="stream-card">
+        <p class="stream-tag">Для предпринимателей</p>
+        <h3>Поток для предпринимателей</h3>
+        <p class="stream-price">10 000 ₽ <span>в месяц</span></p>
+        <ul class="stream-list">
+          <li>Отдельная программа — 14 книг: от психологии семьи и власти до философии мышления и языка</li>
+          <li>Встречи по расписанию потока — даты сообщаем в чате</li>
+          <li>Очно или онлайн, все встречи в записи</li>
+          <li>Камерный формат — до 10 человек, чат участников</li>
+        </ul>
+        <a class="btn-gold" href="/book-space/business/pay">Оформить подписку — 10 000 ₽/мес</a>
+        <a class="stream-more" href="/book-space#predprinimateli">Подробнее о потоке →</a>
+      </article>
     </div>
-    <p class="join-note">Для подписки понадобится <a href="/account" style="color:var(--gold)">личный кабинет</a> — его можно завести прямо на странице оплаты. Вопросы: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+    <p class="streams-note">Подписка помесячная, отменить можно в любой момент в <a href="/account">личном кабинете</a>. После оплаты организатор свяжется с вами в течение дня и добавит в чат потока.</p>
+    <div class="streams-ask"><a class="btn-outline" href="https://t.me/aelita_production_bot?start=ask&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">Сначала спросить — в Telegram</a></div>
+    <div class="club-faq reveal" id="faq-club">
+      <h3>Частые вопросы</h3>
+        <details>
+          <summary>Как устроена оплата?</summary>
+          <p>Подписка помесячная: первый месяц оплачивается при оформлении. За 3 дня до конца оплаченного месяца придёт письмо со ссылкой на оплату следующего. Автоматическое списание подключим позже — о нём напишем отдельно.</p>
+        </details>
+        <details>
+          <summary>Как отменить подписку?</summary>
+          <p>В личном кабинете, кнопкой «Отменить подписку». Участие сохранится до конца оплаченного месяца; передумаете — подписку можно возобновить там же.</p>
+        </details>
+        <details>
+          <summary>Можно ли вернуть деньги?</summary>
+          <p>Да. В первые 7 дней после оплаты вернём всю сумму, позже — стоимость неиспользованных дней месяца. Кнопка «Отменить и вернуть» — в личном кабинете; участие заканчивается в день возврата.</p>
+        </details>
+        <details>
+          <summary>Можно участвовать онлайн?</summary>
+          <p>Да, по видеосвязи прямо во время встречи. Все встречи записываются — их можно посмотреть в своём темпе.</p>
+        </details>
+        <details>
+          <summary>Что будет после оплаты?</summary>
+          <p>Придёт письмо с подтверждением и чеком. В течение дня организатор свяжется с вами и добавит в чат потока — там расписание встреч и книги.</p>
+        </details>
+        <details>
+          <summary>Нужно ли готовиться к встречам?</summary>
+          <p>Да: участники читают книгу, делают конспекты и приносят свои вопросы — так рождается разговор. Готовых ответов и лекций не будет.</p>
+        </details>
+        <details>
+          <summary>Нужен ли личный кабинет?</summary>
+          <p>Да, подписка привязана к личному кабинету — в нём видно, до какого числа оплачено, там же отмена и возврат. Завести его можно прямо на странице оплаты.</p>
+        </details>
+        <details>
+          <summary>Можно оплатить от компании?</summary>
+          <p>Оплату по счёту от организации подключаем. Пока напишите нам на aelita.production@yandex.ru — подскажем.</p>
+        </details>
+      <p class="faq-terms">Все условия подписки — <a href="/oferta#subscription">раздел 14 оферты</a>.</p>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- ПОТОК ДЛЯ ПРЕДПРИНИМАТЕЛЕЙ -->
-<section id="predprinimateli" style="padding-top:100px;scroll-margin-top:90px">
+<section class="sec-pt-100 anchor-offset own-pad" id="predprinimateli">
   <div class="wrap">
-    <p class="eyebrow" style="margin-bottom:20px">Второй поток</p>
+    <p class="eyebrow mb-20">Второй поток</p>
     <div class="sec-head reveal"><span class="eyebrow">Для предпринимателей</span><h2>Слова для того, чего ещё не существует</h2></div>
-    <p class="desc reveal">Отдельная программа AELITA COMMUNITY — не про бизнес-инструменты, а про то, есть ли у нас язык для решений, которые мы называем стратегическими. Ведёт <a href="/katya-abdulova" style="color:var(--gold)">Катя Абдулова</a>.</p>
+    <p class="desc reveal">Отдельная программа AELITA COMMUNITY — не про бизнес-инструменты, а про то, есть ли у нас язык для решений, которые мы называем стратегическими. Ведёт <a class="c-gold" href="/katya-abdulova">Катя Абдулова</a>.</p>
 
-    <div class="om-facts reveal" style="margin:36px 0">
+    <div class="om-facts reveal my-36">
       <div class="om-fact">
         <div class="lbl">Формат</div>
         <div class="val">Тексты и обсуждение,<br>периодичность уточняется</div>
@@ -631,17 +760,17 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       </div>
       <div class="om-fact">
         <div class="lbl">Программа чтения</div>
-        <div class="val"><a href="/documents-pdf/reading-list-business.pdf" style="color:var(--gold)" target="_blank" rel="noopener">Скачать PDF →</a></div>
+        <div class="val"><a class="c-gold" href="/documents-pdf/reading-list-business.pdf" target="_blank" rel="noopener">Скачать PDF →</a></div>
       </div>
     </div>
 
-    <div class="join-sec" id="join-ent" style="padding:48px 0 0">
+    <div class="join-sec join-sub" id="join-ent">
       <span class="eyebrow">Подписка</span>
-      <h3 style="margin-top:14px;font-size:1.375rem">Поток для предпринимателей — 10 000 ₽ в месяц</h3>
+      <h3 class="h3-sub own-size">Поток для предпринимателей — 10 000 ₽ в месяц</h3>
       <p class="sub">Подписка, отменить можно в любой момент в личном кабинете. После оплаты организатор свяжется с вами в течение дня.</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="btn-row">
         <a class="btn-gold" href="/book-space/business/pay">Оформить подписку — 10 000 ₽/мес</a>
-        <a class="btn-outline" href="https://t.me/aelita_production_bot?start=entrepreneurs_stream&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener" style="margin-left:0">Сначала спросить — в Telegram</a>
+        <a class="btn-outline ml-0" href="https://t.me/aelita_production_bot?start=entrepreneurs_stream&amp;utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">Сначала спросить — в Telegram</a>
       </div>
     </div>
   </div>
@@ -657,7 +786,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">ВКонтакте</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=book-space" target="_blank" rel="noopener">Дзен</a>
@@ -690,7 +819,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
       Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
-      © 2026 AELITA PRODUCTION<br><a href="/documents" style="color:rgba(201,184,163,.5)">Правовые документы</a> · <a href="/oferta" style="color:rgba(201,184,163,.5)">Оферта</a> · <a href="/privacy" style="color:rgba(201,184,163,.5)">Конфиденциальность</a> · <a href="/cookies" style="color:rgba(201,184,163,.5)">Cookies</a>
+      © 2026 AELITA PRODUCTION<br><a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
     </div>
   </div>
 </footer>
@@ -783,7 +912,7 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 
 
 <script>
@@ -795,6 +924,6 @@ a.card,a.work-card,a.other-card{color:inherit;text-decoration:none}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=65"></script>
+<script src="/assets/phone-prefix.js?v=68"></script>
 </body>
 </html>

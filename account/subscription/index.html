@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
@@ -58,9 +58,9 @@ body{max-width:100vw}
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
 <nav>
-<div class="nav-in">
-<a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
-<div class="nav-links">
+  <div class="nav-in">
+    <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+    <div class="nav-links">
       <a href="/tickets">Афиша</a>
       <a href="/projects">Проекты</a>
       <a href="/tochkacuire">Точка Кюри</a>
@@ -70,12 +70,12 @@ body{max-width:100vw}
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-<a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-<a class="lang-switch" href="/en/account/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
-<button class="burger" aria-label="Меню" onclick="toggleMenu()">
-<span></span><span></span><span></span>
-</button>
-</div>
+    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/account/subscription/" title="English version">EN</a>
+    <button class="burger" aria-label="Меню" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 
@@ -105,14 +105,14 @@ body{max-width:100vw}
 </div>
 
 <!-- pack-v542: страница по ссылке из письма о подписке (отмена / продление без входа). Логика — assets/subscription.js -->
-<section style="padding:20px 0 100px">
+<section class="pad-20-100 own-pad">
   <div class="acc-wrap">
     <div class="form-box" id="subLink" style="max-width:520px">
-      <p class="sub" id="subLinkTitle" style="color:var(--bone)"></p>
+      <p class="sub c-bone" id="subLinkTitle"></p>
       <p class="sub" id="subLinkText">Загружаем…</p>
       <button type="button" class="btn-gold" id="subLinkBtn" hidden>Отменить подписку</button>
       <p class="sub" id="subLinkMsg" role="status" aria-live="polite"></p>
-      <p class="sub" style="font-size:0.8125rem">Подписку можно отменить и в <a href="/account/dashboard#subscriptions" style="color:var(--gold)">личном кабинете</a>. Вопросы: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a></p>
+      <p class="sub" style="font-size:0.8125rem">Подписку можно отменить и в <a class="tl c-gold" href="/account/dashboard#subscriptions">личном кабинете</a>. Вопросы: <a class="tl c-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
   </div>
 </section>
@@ -161,7 +161,7 @@ body{max-width:100vw}
 </div>
 
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
-<script src="/assets/subscription.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
+<script src="/assets/subscription.js?v=68"></script>
 </body>
 </html>

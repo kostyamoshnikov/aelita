@@ -1,0 +1,92 @@
+/* AELITA PRODUCTION · книжный клуб — общие блоки /community и /book-space
+   (pack-v551). Выбор потока карточками, частые вопросы о подписке и
+   классы, которые раньше были style="…" прямо в разметке этих двух
+   страниц. Подключается после style.css. */
+
+/* ── Выбор потока ─────────────────────────────────────────────── */
+.streams-sec{background:var(--coal);padding:88px 0}
+.streams-sec .sec-head{margin-bottom:34px}
+.streams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:rgba(214,181,122,.18);border:1px solid rgba(214,181,122,.18)}
+.stream-card{background:var(--ink);padding:36px 34px 32px;display:flex;flex-direction:column;text-align:left}
+.stream-card--main{box-shadow:inset 0 2px 0 var(--gold)}
+.stream-tag{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+.stream-card h3{font-size:clamp(20px,2.4vw,26px);letter-spacing:.06em;line-height:1.3;margin:0 0 18px}
+.stream-price{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(30px,4vw,40px);color:var(--bone);letter-spacing:.02em;margin:0 0 22px;line-height:1}
+.stream-price span{font-size:0.875rem;font-weight:300;color:var(--sand);letter-spacing:.06em;margin-left:6px}
+.stream-list{list-style:none;padding:0;margin:0 0 30px;flex:1}
+.stream-list li{position:relative;padding:0 0 0 22px;margin:0 0 12px;color:var(--sand);font-size:0.9375rem;line-height:1.6}
+.stream-list li::before{content:"";position:absolute;left:0;top:.72em;width:10px;height:1px;background:var(--gold)}
+.stream-card .btn-gold,.stream-card .btn-outline{text-align:center;margin:0}
+.stream-more{display:inline-block;margin-top:16px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.14em;color:var(--sand);text-decoration:none;border-bottom:1px solid rgba(201,184,163,.3);align-self:flex-start}
+@media(hover:hover){.stream-more:hover{color:var(--gold);border-color:var(--gold)}}
+.streams-note{color:var(--sand);font-size:0.875rem;line-height:1.75;max-width:70ch;margin:26px 0 0}
+.streams-note a{color:var(--gold);text-decoration:none}
+.streams-ask{margin-top:22px}
+@media(max-width:760px){
+  .streams-sec{padding:64px 0}
+  .streams{grid-template-columns:1fr}
+  .stream-card{padding:30px 22px 26px}
+  .stream-card .btn-gold{display:block}
+}
+
+/* ── Частые вопросы о подписке ───────────────────────────────── */
+.club-faq{margin-top:56px;max-width:780px}
+.club-faq h3{font-size:clamp(18px,2.2vw,22px);letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+.club-faq details{border-bottom:1px solid rgba(232,230,225,.1)}
+.club-faq summary{list-style:none;cursor:pointer;padding:20px 36px 20px 0;position:relative;color:var(--bone);font-size:1rem;line-height:1.5}
+.club-faq summary::-webkit-details-marker{display:none}
+.club-faq summary::after{content:"+";position:absolute;right:4px;top:16px;font-family:'Montserrat',sans-serif;font-weight:200;font-size:1.5rem;color:var(--gold);transition:transform .25s}
+.club-faq details[open] summary::after{transform:rotate(45deg)}
+.club-faq summary:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+.club-faq details p{color:var(--sand);font-size:0.9375rem;line-height:1.75;margin:0 0 20px;max-width:68ch}
+.club-faq .faq-terms{color:var(--sand);font-size:0.8125rem;margin-top:18px}
+.club-faq .faq-terms a{color:var(--gold);text-decoration:none}
+
+/* ── «Три уровня» ────────────────────────────────────────────── */
+#main .tu-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:32px 0;max-width:980px}
+#main .tu-level{background:var(--coal);padding:26px 24px}
+#main .tu-level--top{border-top:2px solid var(--gold)}
+#main .tu-level-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+#main .tu-level-text{color:var(--sand);margin:0;line-height:1.6}
+#main .tu-level--top .tu-level-text{color:var(--bone)}
+@media(max-width:760px){#main .tu-levels{grid-template-columns:1fr}}
+#main .tu-more{margin-top:8px}
+#main .tu-more a{color:var(--gold);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:0.8125rem;letter-spacing:.08em}
+
+/* ── Вместо style="…" в разметке ─────────────────────────────── */
+#main .w-74ch{max-width:74ch}
+#main .c-muted{color:rgba(201,184,163,.5)}
+#main .c-muted-light{color:rgba(201,184,163,.5);font-weight:300}
+#main .btn-row{display:flex;gap:12px;flex-wrap:wrap}
+#main .btn-row .btn-outline{margin-left:0}
+#main .ml-0{margin-left:0}
+#main .mt-64{margin-top:64px}
+#main .mb-20{margin-bottom:20px}
+#main .my-36{margin:36px 0}
+#main .anchor-offset{scroll-margin-top:90px}
+#main .pull-quote{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--bone);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0 10px}
+#main .quote-sign{color:var(--sand);font-size:0.875rem}
+#main .quote-sign a{color:var(--gold)}
+#main .note-sm{color:var(--sand);font-size:0.875rem}
+#main .note-sm-lh{color:var(--sand);font-size:0.875rem;line-height:1.8}
+#main .note-sm-lh-mb{color:var(--sand);font-size:0.875rem;line-height:1.8;margin-bottom:14px}
+#main .note-sm-mb{color:var(--sand);font-size:0.875rem;margin-bottom:20px}
+#main .text-lg{color:var(--sand);font-size:1rem;line-height:1.9}
+#main .text-lg-mb{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:20px}
+#main .text-md-wide{color:var(--sand);font-size:0.9375rem;line-height:1.9;max-width:70ch;margin-top:40px}
+#main .text-bone-lead{color:var(--bone);font-size:1.0625rem;margin-bottom:14px}
+#main .eyebrow-plain{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+#main .sec-coal{background:var(--coal);padding:44px 0}
+#main .panel-coal{margin-top:2px;background:var(--coal);padding:32px 36px}
+#main .foot-mini-link{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px}
+#main .block{display:block;margin-bottom:18px}
+#main .fine-print{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:-12px}
+#main .join-sub{padding:48px 0 0}
+#main .sec-pt-100{padding-top:100px}
+#main .w-74ch-mt{max-width:74ch;margin-top:32px}
+#main .h3-sub{margin-top:14px;font-size:1.375rem}
+#main .gap-20{gap:20px}
+#main .gap-24{gap:24px}
+@media(max-width:420px){#main .stream-card .btn-gold{padding-left:14px;padding-right:14px;letter-spacing:.14em}}
+
+/* #main — чтобы классы, заменившие style="…", перевешивали правила страниц (.about-text p, section{padding} и т.п.), как это делал style="…". */

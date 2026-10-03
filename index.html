@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=65">
+<link rel="stylesheet" href="/assets/style.css?v=68">
 <style>body{max-width:100vw}
 .ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
 section{padding:110px 0}
@@ -188,6 +188,17 @@ header .sub{
   }
 @media(hover:hover){.btn:hover{opacity:.85}}
 @media(max-width:900px){.flag{grid-template-columns:1fr;gap:44px}}
+/* pack-v550: книжный клуб — второй блок в духе флагмана, зеркально (текст слева) */
+.flag-club .flag-visual{background:var(--coal) center/cover no-repeat}
+.flag-club .flag-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(11,11,13,.85),rgba(11,11,13,.15) 55%,rgba(11,11,13,.35))}
+.flag-club .flag-visual::before{z-index:1;left:86%;opacity:.75}
+.flag-club .flag-visual span{z-index:2}
+.flag-price{font-family:'Montserrat',sans-serif;font-size:0.8125rem;letter-spacing:.08em;color:var(--bone);margin:6px 0 4px}
+.flag-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.flag-actions .btn-line{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.5);padding:15px 28px;text-decoration:none;transition:border-color .3s}
+@media(hover:hover){.flag-actions .btn-line:hover{border-color:var(--gold)}}
+@media(min-width:901px){.flag-club .flag-visual{order:2}}
+@media(max-width:760px){.flag-actions{flex-direction:column;align-items:stretch}.flag-actions a{text-align:center}}
 /* манифест */
   .manifest{background:var(--coal);text-align:center}
 .manifest p.big{
@@ -364,8 +375,8 @@ footer p{color:var(--sand);font-size:0.875rem}
       <a href="/community">Community</a>
       <a href="/contacts">Контакты</a>
     </div>
-    <a class="nav-account" href="/account" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">КАБИНЕТ</a>
-    <a class="lang-switch" href="/en/" title="English version" style="font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px">EN</a>
+    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="lang-switch" href="/en/" title="English version">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
@@ -536,6 +547,25 @@ footer p{color:var(--sand);font-size:0.875rem}
   </div>
 </section>
 
+<section id="club" style="padding-top:40px">
+  <div class="wrap">
+    <div class="flag flag-club reveal">
+      <div class="flag-visual" style="background-image:url('/images/community/community-1.jpg')" role="img" aria-label="Участники книжного клуба AELITA COMMUNITY"><span>3 УРОВЕНЬ · Книжный клуб</span></div>
+      <div>
+        <span class="eyebrow">Книжный клуб</span>
+        <h3>AELITA<br>COMMUNITY</h3>
+        <p>Книжный клуб «3 УРОВЕНЬ» с Катей Абдуловой: одна книга в месяц, встреча каждую неделю — очно или онлайн, все встречи в записи.</p>
+        <p class="flag-price">Основной поток — 5&nbsp;000&nbsp;₽ в&nbsp;месяц<br>Поток для предпринимателей — 10&nbsp;000&nbsp;₽ в&nbsp;месяц</p>
+        <p class="quote">Сначала хаос. Потом — послевкусие из инсайтов.</p>
+        <div class="flag-actions">
+          <a class="btn" href="/community#join-community">Оформить подписку</a>
+          <a class="btn-line" href="/book-space">О клубе</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="manifest">
   <div class="wrap reveal">
     <p class="big">Мы создаём искусство, после которого <em>невозможно смотреть на мир так же</em>, как раньше</p>
@@ -549,11 +579,11 @@ footer p{color:var(--sand);font-size:0.875rem}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">02</span><h2>Проекты</h2></div>
     <div class="grid">
-      <a href="/iov" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/iov" class="card reveal link-plain d-block">
         <div><span class="tag">В прокате</span><h3>«ИОВ:материал»</h3>
         <p>Флагманская мистерия компании. Санкт-Петербург, Старый Оскол.</p></div>
       </a>
-      <a href="/tickets" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/tickets" class="card reveal link-plain d-block">
         <div><span class="tag">Фестиваль</span><h3>«Точка Кюри»</h3>
         <p>Фестиваль в ЦСИ «Быль», Старый Оскол. 22–25 октября 2026.</p></div>
       </a>
@@ -569,28 +599,28 @@ footer p{color:var(--sand);font-size:0.875rem}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">03</span><h2>Среда</h2></div>
     <div class="grid reveal">
-      <a href="/community" class="card" style="color:inherit;text-decoration:none;display:block">
+      <a href="/community" class="card link-plain d-block">
         <div>
           <span class="tag">Книжный клуб</span>
           <h3>AELITA COMMUNITY</h3>
           <p>Пространство, наполненное смыслом. Книжные встречи Кати Абдуловой — для тех, кто хочет думать самостоятельно.</p>
         </div>
       </a>
-      <a href="/team" class="card" style="color:inherit;text-decoration:none;display:block">
+      <a href="/team" class="card link-plain d-block">
         <div>
           <span class="tag">Основатели</span>
           <h3>Команда</h3>
           <p>Катя Абдулова и Константин Мошников — основатели AELITA PRODUCTION.</p>
         </div>
       </a>
-      <a href="/rezidents" class="card" style="color:inherit;text-decoration:none;display:block">
+      <a href="/rezidents" class="card link-plain d-block">
         <div>
           <span class="tag">Резиденты</span>
           <h3>Резиденты</h3>
           <p>Режиссёры, хореографы, художники и артисты — люди, которые создают искусство AELITA PRODUCTION.</p>
         </div>
       </a>
-      <a href="/partners" class="card" style="color:inherit;text-decoration:none;display:block">
+      <a href="/partners" class="card link-plain d-block">
         <div>
           <span class="tag">Партнёры</span>
           <h3>Экосистема</h3>
@@ -605,24 +635,24 @@ footer p{color:var(--sand);font-size:0.875rem}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">04</span><h2>Сотрудничество</h2></div>
     <div class="collab-grid">
-      <a href="/venues" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/venues" class="card reveal link-plain d-block">
         <h3>Площадкам</h3>
         <p>Привозим спектакли на гастроли: от камерных форматов до большой сцены. Техрайдер и условия — по запросу.</p>
       </a>
-      <a href="/partners" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/partners" class="card reveal link-plain d-block">
         <h3>Партнёрам</h3>
         <p>Партнёрство с событием, специальные показы, коллаборации с брендами под ваши задачи.</p>
       </a>
-      <a href="/collaboration" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/collaboration" class="card reveal link-plain d-block">
         <h3>Инвесторам</h3>
         <p>Каталог постановок и фестивальные проекты. Пришлём презентацию и планы сезонов.</p>
       </a>
-      <a href="/creativity" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+      <a href="/creativity" class="card reveal link-plain d-block">
         <h3>Режиссёрам и артистам</h3>
         <p>Ищем яркие таланты и смелые идеи. Есть проект — расскажите, мы читаем всё.</p>
       </a>
     </div>
-    <a href="/community" class="card reveal" style="color:inherit;text-decoration:none;display:block">
+    <a href="/community" class="card reveal link-plain d-block">
       <h3>AELITA COMMUNITY</h3>
       <p>Книжный клуб Кати Абдуловой «3 УРОВЕНЬ» — не про книги, а про то, из чего мы сами собираем свой мир. Для тех, кто хочет думать самостоятельно.</p>
     </a>
@@ -632,7 +662,7 @@ footer p{color:var(--sand);font-size:0.875rem}
 <section class="subscribe" id="subscribe">
   <div class="wrap reveal">
     <span class="eyebrow">Не пропустить</span>
-    <h2 style="margin-top:14px">Первыми узнавайте о показах</h2>
+    <h2 class="mt-14">Первыми узнавайте о показах</h2>
     <p>Старт продаж, новые города, закулисье и специальные события — коротко и по делу, без спама.</p>
     <div style="font-size:0.75rem;color:var(--sand);margin-bottom:10px">Поля со звёздочкой (*) обязательны для заполнения</div>
     <input class="ym-disable-keys" type="text" id="subName" placeholder="Ваше имя *" aria-label="Имя (обязательно)" required style="display:block;width:100%;max-width:480px;margin:0 auto 12px;background:transparent;border:1px solid rgba(232,230,225,.2);color:var(--bone);padding:14px 18px;font-family:'Inter',sans-serif;font-size:0.9375rem">
@@ -641,7 +671,7 @@ footer p{color:var(--sand);font-size:0.875rem}
       <input class="ym-disable-keys" type="email" id="subEmail" placeholder="Ваша почта *" aria-label="Электронная почта (обязательно)" required>
       <button class="btn-gold" onclick="subscribe()">Подписаться</button>
     </div>
-    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a> <span style="color:var(--gold);font-weight:700">*</span></span></label>
+    <label class="cb-item" style="justify-content:center;margin-top:12px"><input type="checkbox" id="subConsent"><span>Согласен(на) на <a class="tl c-gold" href="/consent">обработку персональных данных</a> <span style="color:var(--gold);font-weight:700">*</span></span></label>
     <p class="sub-err" id="subErr"></p>
     <p class="sub-ok" id="subOk">Готово — напишем, как только откроются продажи.</p>
   </div>
@@ -656,7 +686,7 @@ footer p{color:var(--sand);font-size:0.875rem}
         <h4>AELITA PRODUCTION</h4>
         <a href="tel:+79605151690">+7 960 515-16-90</a>
         <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
-        <a href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=home" target="_blank" rel="noopener" style="margin-top:14px">ВКонтакте</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=home" target="_blank" rel="noopener">ВКонтакте</a>
         <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=home" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=home" target="_blank" rel="noopener">YouTube</a>
         <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=home" target="_blank" rel="noopener">Дзен</a>
@@ -688,8 +718,7 @@ footer p{color:var(--sand);font-size:0.875rem}
       ООО «АЭЛИТА ПРОДАКШЕН»<br>
       Юр. адрес: 248016, Калужская область, г. Калуга, ул. Ленина, д. 51<br>
       ОГРН 1254000006644 · ИНН 4000027320<br>
-      © 2026 AELITA PRODUCTION<br>
-      <a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
+      © 2026 AELITA PRODUCTION<br><a href="/documents">Правовые документы</a> · <a href="/oferta">Оферта</a> · <a href="/privacy">Конфиденциальность</a> · <a href="/cookies">Cookies</a> · <a href="/app">Приложение</a>
     </div>
   </div>
 </footer>
@@ -849,7 +878,7 @@ footer p{color:var(--sand);font-size:0.875rem}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=65"></script>
+<script src="/assets/main.js?v=68"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>
@@ -861,6 +890,6 @@ footer p{color:var(--sand);font-size:0.875rem}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=65"></script>
+<script src="/assets/phone-prefix.js?v=68"></script>
 </body>
 </html>
