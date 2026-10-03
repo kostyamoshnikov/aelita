@@ -1749,7 +1749,7 @@ function renderCheckouts() {
         '<div class="ev-when">' + escapeHtml(CO_STAGE_LABELS[c.stage] || c.stage) + (why ? ': ' + escapeHtml(why) : '') +
           (coMaybeActive(c) ? ' · <span style="color:var(--gold)">возможно, ещё оформляет</span>' : '') + '</div>' +
         '<div class="ev-when">' + (seats ? escapeHtml(seats) + ' · ' : '') + 'первое действие ' + fmtGcDate(c.firstSeenAt) + ' · последнее ' + fmtGcDate(c.updatedAt) +
-          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + '</div></div>' +
+          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + (c.reminderSentAt ? ' · письмо-напоминание отправлено ' + new Date(c.reminderSentAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '') + '</div></div>' +
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button></div>' +
