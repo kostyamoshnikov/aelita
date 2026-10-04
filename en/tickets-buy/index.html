@@ -458,7 +458,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=68"></script>
+<script src="/assets/payments.js?v=69"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -948,6 +948,7 @@ async function init(){
     return;
   }
   data = freshData;
+  if(data.error === 'performance_canceled'){ showError('This performance has been cancelled; ticket sales are closed.'); return; }
   if(data.error === 'sales_closed'){ showError('Sales for this performance are closed.'); return; }
   if(data.error === 'not_on_sale'){ showError('Sales for this performance have not opened yet — please try later.'); return; }
   if(data.error){ showError('Performance not found — sales may not be open yet, or the link is out of date.'); return; }
@@ -1963,6 +1964,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=68"></script>
+<script src="/assets/phone-prefix.js?v=69"></script>
 </body>
 </html>

@@ -66,6 +66,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .links-row a{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);padding:10px 18px}
 
 /* Клиенты */
+.sec-gap{margin-top:56px}
 .sec-title{font-family:'Montserrat',sans-serif;font-size:0.8125rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin-bottom:16px}
 .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 .search{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:12px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;width:100%;max-width:320px}
@@ -340,6 +341,30 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          хранилище (см. Tickets/lib/refund-store.js), которое никто не
          открывает: страница /ticket-refund принимала заявления, но
          одобрить их или отклонить было негде. -->
+    <!-- pack-v568 (ТЗ С1, этап 1): перенос показа. Новая дата — поверх
+         каталога (performance-overrides/), письма покупателям со ссылкой
+         «не подходит — вернуть 100%», журнал «кто и когда». Отмена с
+         автоматическим возвратом — следующим этапом. -->
+    <p class="sec-title sec-gap">Показы: перенос</p>
+    <div class="editor-box" id="perfActionBlock">
+      <div class="field">
+        <label for="pa-perf">Показ</label>
+        <select id="pa-perf"><option value="">Загружаем…</option></select>
+      </div>
+      <p class="editor-note" id="pa-preview"></p>
+      <div class="field">
+        <label for="pa-date">Новая дата и время (по Москве)</label>
+        <input type="datetime-local" id="pa-date">
+      </div>
+      <div class="field">
+        <label for="pa-title">Для подтверждения — название спектакля, как в афише</label>
+        <input class="ym-disable-keys" type="text" id="pa-title" autocomplete="off">
+      </div>
+      <p class="editor-note">Билеты и QR-коды остаются действительными, места сохраняются. Каждый покупатель получит письмо с новой датой и ссылкой на возврат 100% — заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p>
+      <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
+      <p class="editor-result" id="paResult"></p>
+    </div>
+
     <p class="sec-title" style="margin-top:56px">Заявления на возврат</p>
     <div id="refundsBlock"><div class="empty-state">Загружаем…</div></div>
 
@@ -1424,6 +1449,92 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
   }
 }
 
+// ── Показы: перенос (pack-v568, ТЗ С1) ────────────────────────────
+var PERF_LIST = [];
+function perfLabel(p) {
+  var d = new Date(p.datetime);
+  var when = isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+  var tag = p.status === 'canceled' ? ' · ОТМЕНЁН' : p.postponed ? ' · перенесён' : p.isTest ? ' · тест' : '';
+  return when + ' · ' + p.title + tag;
+}
+async function loadPerfActions() {
+  var sel = document.getElementById('pa-perf');
+  if (!sel || !ADMIN_PERF_URL) return;
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_PERF_URL, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) return;
+    var data = await res.json();
+    if (!res.ok) throw new Error(errorMessage(data));
+    PERF_LIST = data.performances || [];
+    sel.innerHTML = '<option value="">— выберите показ —</option>' + PERF_LIST.map(function (p) {
+      return '<option value="' + escapeHtml(p.id) + '">' + escapeHtml(perfLabel(p)) + '</option>';
+    }).join('');
+  } catch (e) {
+    sel.innerHTML = '<option value="">Раздел заработает, когда функция aelita-admin-performance-action создана</option>';
+  }
+}
+async function perfPreview() {
+  var id = document.getElementById('pa-perf').value;
+  var el = document.getElementById('pa-preview');
+  el.textContent = '';
+  if (!id) return;
+  el.textContent = 'Считаем заказы…';
+  try {
+    var res = await fetch(ADMIN_PERF_URL + '?performance_id=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
+    var data = await res.json();
+    if (!res.ok) { el.textContent = errorMessage(data); return; }
+    var o = data.orders;
+    var lines = ['Заказов с действующими билетами: ' + o.count + ', билетов: ' + o.tickets + ' (деньгами ' + o.moneyRub + ' ₽, подарочной картой ' + o.giftRub + ' ₽).'];
+    if (data.performance.originalDatetime) lines.push('Исходная дата: ' + new Date(data.performance.originalDatetime).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + '.');
+    if (data.ticketscloudNote) lines.push(data.ticketscloudNote);
+    (data.journal || []).slice(-3).forEach(function (j) {
+      lines.push('Журнал: ' + new Date(j.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' — перенос на ' + new Date(j.to).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ', писем ' + j.sent + (j.failed ? ', не ушло ' + j.failed : '') + '.');
+    });
+    el.textContent = lines.join(' ');
+  } catch (e) {
+    el.textContent = 'Не получилось загрузить сводку.';
+  }
+}
+async function perfPostpone() {
+  var id = document.getElementById('pa-perf').value;
+  var date = document.getElementById('pa-date').value;
+  var title = document.getElementById('pa-title').value;
+  var out = document.getElementById('paResult');
+  out.textContent = '';
+  if (!id || !date || !title.trim()) { out.textContent = 'Выберите показ, новую дату и введите название спектакля.'; return; }
+  var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  if (!confirm('Перенести «' + (p ? p.title : id) + '» на ' + date.replace('T', ' ') + ' (по Москве)? Покупатели получат письма сразу.')) return;
+  var btn = document.getElementById('paPostponeBtn');
+  btn.disabled = true;
+  try {
+    var res = await fetch(ADMIN_PERF_URL, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + getToken(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'postpone', performance_id: id, new_datetime: date, confirm_title: title }),
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      var why = { confirm_title_mismatch: 'Название не совпало с афишей.', datetime_in_past: 'Новая дата уже прошла.', already_started: 'Показ уже начался.', same_datetime: 'Это текущая дата показа.', performance_canceled: 'Показ отменён.', bad_datetime: 'Не понял дату.' }[data.error];
+      out.textContent = why || errorMessage(data);
+      return;
+    }
+    out.textContent = 'Готово: писем отправлено ' + data.sent + (data.alreadySent ? ', уже были отправлены ' + data.alreadySent : '') + (data.failed ? ', не ушло ' + data.failed + ' — нажмите ещё раз с той же датой' : '') + '.';
+    loadPerfActions(); perfPreview();
+  } catch (e) {
+    out.textContent = 'Не получилось связаться с сервером.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var sel = document.getElementById('pa-perf');
+  if (sel) sel.addEventListener('change', perfPreview);
+  var b = document.getElementById('paPostponeBtn');
+  if (b) b.addEventListener('click', perfPostpone);
+});
+
 async function loadRefunds() {
   var el = document.getElementById('refundsBlock');
   if (!ADMIN_REFUNDS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
@@ -1788,6 +1899,7 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
 
 // ── Подписки AELITA COMMUNITY (pack-v542) ─────────────────────────
 var ADMIN_SUBS_URL = API_BASE && API_BASE + '/subscriptions';
+var ADMIN_PERF_URL = API_BASE && API_BASE + '/performance-action'; // pack-v568, ТЗ С1
 var subsData = null;
 var SUB_STATUS = {
   active: 'Списывается', past_due: 'Списание не прошло', canceled: 'Отменена, участие до конца месяца',
@@ -2079,6 +2191,7 @@ async function loadData(opts) {
     // (см. loadEvents: свои ошибки показывает у себя, не роняя эту).
     loadEvents();
     loadRefunds();
+    loadPerfActions(); // pack-v568
     loadOrders();
     loadGiftCards();
     loadSubscriptions();

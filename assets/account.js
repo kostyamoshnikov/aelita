@@ -43,6 +43,14 @@
         same_email: 'Это тот же адрес, что и сейчас.',
         too_many_requests: 'Слишком много запросов на этот адрес — подождите десять минут и попробуйте снова.',
         bad_reset_link: 'Ссылка недействительна: она устарела, уже использована или пароль с тех пор меняли. Запросите новую на странице входа.',
+        // pack-v566 — вход по коду из письма (ТЗ С3)
+        code_invalid: 'Код не подошёл — проверьте цифры в письме.',
+        code_expired: 'Код устарел или уже использован — запросите новый.',
+        code_attempts_exceeded: 'Слишком много неверных попыток — запросите новый код.',
+        code_too_many_requests: 'Слишком много запросов кода — подождите немного (до часа) и попробуйте снова.',
+        account_moved: 'Почта этого кабинета была изменена — войдите с новым адресом.',
+        pd_consent_required: 'Отметьте согласие с офертой и обработкой персональных данных.',
+        login_code_required: 'Подтвердите действие кодом из письма — нажмите «Прислать код».',
         section_auth: 'Не получилось загрузить этот раздел. Обновите страницу; если повторится — напишите нам: aelita.production@yandex.ru',
         order_not_found: 'Не нашли этот заказ в вашем кабинете — обновите страницу.',
         order_not_paid: 'Заказ ещё не оплачен — билеты придут после оплаты.',
@@ -56,6 +64,7 @@
       emailChanged: 'Адрес изменён. Письма по прошлым заказам остались на старом адресе — если нужны, нажмите «Прислать на почту», теперь они придут на новый.',
       deletingAccount: 'Удаляем аккаунт…',
       sendingReset: 'Отправляем письмо…',
+      sendingCode: 'Отправляем код…',
       savingPassword: 'Сохраняем пароль…',
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
@@ -95,6 +104,13 @@
         same_email: 'That is the address you already use.',
         too_many_requests: 'Too many requests for this address — wait ten minutes and try again.',
         bad_reset_link: 'This link is no longer valid: it has expired, was already used, or the password has changed since. Request a new one on the sign-in page.',
+        code_invalid: "That code didn't work — check the digits in the email.",
+        code_expired: 'The code has expired or was already used — request a new one.',
+        code_attempts_exceeded: 'Too many wrong attempts — request a new code.',
+        code_too_many_requests: 'Too many code requests — please wait a while (up to an hour) and try again.',
+        account_moved: 'The email of this account was changed — sign in with the new address.',
+        pd_consent_required: 'Please accept the offer and the personal data processing terms.',
+        login_code_required: 'Confirm with a code from the email — tap “Send code”.',
         section_auth: "Couldn't load this section. Refresh the page; if it happens again, email us: aelita.production@yandex.ru",
         order_not_found: "We couldn't find this order in your account — refresh the page.",
         order_not_paid: 'This order is not paid yet — tickets will arrive after payment.',
@@ -108,6 +124,7 @@
       emailChanged: 'Address changed. Emails about earlier orders stayed at the old address — if you need them, press “Email me the tickets” and they will arrive at the new one.',
       deletingAccount: 'Deleting the account…',
       sendingReset: 'Sending the email…',
+      sendingCode: 'Sending the code…',
       savingPassword: 'Saving the password…',
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
@@ -133,6 +150,13 @@
   var DELETE_ACCOUNT_URL = API_BASE && API_BASE + '/delete-account';
   var REQUEST_RESET_URL = API_BASE && API_BASE + '/request-password-reset';
   var RESET_PASSWORD_URL = API_BASE && API_BASE + '/reset-password';
+  // pack-v566 — вход по коду из письма (ТЗ С3). ⚠️ ВЫКЛЮЧАТЕЛЬ: пока
+  // функции aelita-account-request-login-code и -login-with-code не
+  // созданы и шлюз не обновлён, страница входа код не предлагает
+  // (кнопки скрыты). Включить — LOGIN_BY_CODE = true после выкладки.
+  var LOGIN_BY_CODE = false;
+  var REQUEST_LOGIN_CODE_URL = API_BASE && API_BASE + '/request-login-code';
+  var LOGIN_WITH_CODE_URL = API_BASE && API_BASE + '/login-with-code';
   // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/),
   // отдельный префикс под тем же Gateway, см. _tools/Events/README.md.
   var EVENTS_API_BASE = 'https://api.aelita-production.ru/events';
@@ -315,7 +339,7 @@
         var res = await fetch(CHANGE_PASSWORD_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword }),
+          body: JSON.stringify(opts.loginCode ? { loginCode: opts.loginCode, newPassword: newPassword } : { currentPassword: currentPassword, newPassword: newPassword }),
         });
         if (res.status === 401) {
           var data401 = null;
@@ -402,7 +426,7 @@
         var res = await fetch(DELETE_ACCOUNT_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ currentPassword: currentPassword }),
+          body: JSON.stringify(opts.loginCode ? { loginCode: opts.loginCode } : { currentPassword: currentPassword }),
         });
         var data = null;
         try { data = await res.json(); } catch (e) {}
@@ -418,6 +442,59 @@
         else alert(errorMessage(null));
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v566 (ТЗ С3) — код из письма: для входа и регистрации без
+    // пароля, а в кабинете — для подтверждения смены почты, удаления и
+    // первого пароля у кабинета без пароля. Ответ один для всех адресов.
+    loginByCodeEnabled: function () { return LOGIN_BY_CODE; },
+    requestLoginCode: async function (email, opts) {
+      opts = opts || {};
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.sendingCode; }
+      try {
+        var res = await fetch(REQUEST_LOGIN_CODE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ email: email, lang: LANG }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.ok) { if (opts.onSuccess) opts.onSuccess(); return true; }
+        if (opts.onError) opts.onError(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+    // fields: {email, code, name?, pd_consent?, newsletter_consent?}.
+    // onNeedRegistration — кабинета на этот адрес нет: показать «Имя» и
+    // согласие и прислать тот же код ещё раз уже с ними.
+    loginWithCode: async function (fields, opts) {
+      opts = opts || {};
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.signingIn; }
+      try {
+        var res = await fetch(LOGIN_WITH_CODE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify(fields),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.token) { setToken(data.token); if (opts.onSuccess) opts.onSuccess(data); return data; }
+        if (res.ok && data && data.need_registration) { if (opts.onNeedRegistration) opts.onNeedRegistration(); return null; }
+        if (opts.onError) opts.onError(errorMessage(data));
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+      } finally {
+        // Подпись кнопки страница могла сменить сама (onNeedRegistration —
+        // «Создать кабинет») — тогда не затираем её прежней.
+        if (buttonEl) { buttonEl.disabled = false; if (buttonEl.textContent === t.signingIn) buttonEl.textContent = original; }
       }
     },
 

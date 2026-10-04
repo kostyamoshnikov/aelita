@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=68">
+<link rel="stylesheet" href="/assets/style.css?v=69">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -205,6 +205,17 @@ if (REFUND_BY_NUMBER) {
     if (hint) hint.textContent = 'Длинный код из письма (строка под словами «код заказа») или короткий номер вида № 42.';
   });
 }
+// pack-v568 (ТЗ С1): ссылка из письма о переносе показа —
+// /ticket-refund/?order=<код заказа>&reason=organizer. Код подставляется
+// в поле, причина «Отмена, замена или перенос» выбирается после поиска.
+// Почту или телефон человек вводит сам — защита формы прежняя.
+const LINK_PARAMS = new URLSearchParams(location.search);
+const PREFER_REASON = LINK_PARAMS.get('reason') || '';
+document.addEventListener('DOMContentLoaded', () => {
+  const code = LINK_PARAMS.get('order');
+  if (code && $('order') && !$('order').value) $('order').value = code;
+  if (code && $('contact')) $('contact').focus();
+});
 const NET_FAIL_MSG = EN
   ? "We couldn't reach the server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru"
   : 'Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru';
@@ -284,6 +295,7 @@ function renderOrder(){
   }).join('');
 
   $('reason').innerHTML = REASONS.map(r => '<option value="' + r.id + '">' + r.title + '</option>').join('');
+  if (PREFER_REASON && REASONS.some(r => r.id === PREFER_REASON)) $('reason').value = PREFER_REASON;
   recalc();
 }
 
@@ -577,7 +589,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=68"></script>
+<script src="/assets/main.js?v=69"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

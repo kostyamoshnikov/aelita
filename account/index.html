@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=68">
+<link rel="stylesheet" href="/assets/style.css?v=69">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
@@ -54,6 +54,17 @@ body{max-width:100vw}
 .forgot-ok{color:var(--gold);font-size:0.8125rem;line-height:1.5;margin:0}
 /* pack-v510: кнопка действия — на первом экране телефона */
 @media(max-width:600px){.page-header{padding:122px 0 22px}.page-header h1{font-size:1.375rem}.acc-grid{margin-top:20px}.form-box{padding:28px 22px}.form-box p.sub{margin-bottom:16px}}
+  #code-entry,#code-box,#code-step2,#code-new{display:none}
+  #codeSentOk{display:block}
+  .code-sub{margin:6px 0 10px}
+  .code-cb{margin:4px 0}
+  .code-or{color:var(--sand);font-size:.8125rem;margin:18px 0 10px;text-align:center}
+  #code-entry .btn-outline{width:100%;background:none}
+  .code-input{letter-spacing:.4em;font-size:1.25rem;text-align:center}
+  #code-box .field{margin-top:12px}
+  #code-box .btn-gold{display:block;margin:12px 0 0}
+  #code-box .forgot-link{display:inline-block;margin-top:12px}
+  #code-box .forgot-ok{margin-top:10px}
 </style>
 </head>
 <body>
@@ -126,6 +137,29 @@ body{max-width:100vw}
             <p class="form-err" id="forgotErr"></p>
             <p class="forgot-ok" id="forgotOk" style="display:none">Если такой адрес зарегистрирован, письмо со ссылкой уже в пути. Проверьте и папку «Спам».</p>
           </div>
+          <!-- pack-v566 — вход по коду из письма (ТЗ С3). Показывается, только
+               когда в account.js включён LOGIN_BY_CODE. -->
+          <div id="code-entry">
+            <p class="code-or">или</p>
+            <button type="button" class="btn-outline" id="codeOpenBtn" onclick="openCode()">Войти по коду из письма</button>
+          </div>
+          <div id="code-box">
+            <p class="sub code-sub">Пришлём на почту код из 6 цифр — пароль не нужен. Если кабинета ещё нет, создадим его.</p>
+            <div class="field"><label for="code-email">Email</label><input class="ym-disable-keys" type="email" id="code-email" placeholder="email@example.com" autocomplete="email"></div>
+            <button class="btn-gold" id="codeSendBtn" onclick="doSendCode()">Прислать код →</button>
+            <div id="code-step2">
+              <p class="forgot-ok" id="codeSentOk">Код отправлен. Проверьте и папку «Спам». Код действует 10 минут.</p>
+              <div class="field"><label for="code-value">Код из письма</label><input class="ym-disable-keys code-input" type="text" id="code-value" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></div>
+              <div id="code-new">
+                <p class="sub code-sub">Кабинета на этот адрес ещё нет — создадим его. Как к вам обращаться?</p>
+                <div class="field"><label for="code-name">Имя</label><input class="ym-disable-keys" type="text" id="code-name" placeholder="Как вас зовут" autocomplete="name"></div>
+                <label class="cb-item code-cb"><input type="checkbox" id="code-consent"><span>Согласен(на) с <a class="tl c-gold" href="/oferta">офертой</a> и <a class="tl c-gold" href="/privacy">обработкой персональных данных</a></span></label>
+              </div>
+              <button class="btn-gold" id="codeLoginBtn" onclick="doCodeLogin()">Войти →</button>
+              <a href="#" class="forgot-link" onclick="doSendCode();return false">Прислать код ещё раз</a>
+            </div>
+            <p class="form-err" id="codeErr"></p>
+          </div>
         </div>
       </div>
 
@@ -191,8 +225,8 @@ body{max-width:100vw}
 </div>
 
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/account.js?v=68"></script>
-<script src="/assets/main.js?v=68"></script>
+<script src="/assets/account.js?v=69"></script>
+<script src="/assets/main.js?v=69"></script>
 <script>
   // ?next=/tickets — куда вернуться после входа (например, сюда привёл
   // клик «Оплатить» на странице без авторизации, см. assets/payments.js).
@@ -279,6 +313,56 @@ body{max-width:100vw}
   // pack-v448: восстановление пароля. С v441 кабинет обязателен для
   // покупки, и без этой ссылки забытый пароль был тупиком: заново
   // зарегистрироваться нельзя («email уже знаком»), войти — тоже.
+  // pack-v566 — вход по коду (ТЗ С3).
+  if (window.AELITA_account && window.AELITA_account.loginByCodeEnabled && window.AELITA_account.loginByCodeEnabled()) {
+    document.getElementById('code-entry').style.display = 'block';
+  }
+  function openCode() {
+    document.getElementById('code-entry').style.display = 'none';
+    document.getElementById('code-box').style.display = 'block';
+    var le = document.getElementById('login-email').value.trim();
+    if (le) document.getElementById('code-email').value = le;
+    document.getElementById('code-email').focus();
+  }
+  function doSendCode() {
+    hideErr('codeErr');
+    var email = document.getElementById('code-email').value.trim();
+    if (!email) { showErr('codeErr', (EN ? "Enter your email." : 'Укажите email.')); return; }
+    window.AELITA_account.requestLoginCode(email, {
+      buttonEl: document.getElementById('codeSendBtn'),
+      onSuccess: function () {
+        document.getElementById('code-step2').style.display = 'block';
+        document.getElementById('code-value').focus();
+      },
+      onError: function (msg) { showErr('codeErr', msg); },
+    });
+  }
+  function doCodeLogin() {
+    hideErr('codeErr');
+    var email = document.getElementById('code-email').value.trim();
+    var code = document.getElementById('code-value').value.replace(/\s+/g, '');
+    if (!/^\d{6}$/.test(code)) { showErr('codeErr', (EN ? "Enter the 6-digit code from the email." : 'Введите 6 цифр из письма.')); return; }
+    var fields = { email: email, code: code };
+    var isNew = document.getElementById('code-new').style.display === 'block';
+    if (isNew) {
+      var name = document.getElementById('code-name').value.trim();
+      if (!name) { showErr('codeErr', (EN ? "Enter your name." : 'Укажите имя.')); return; }
+      if (!document.getElementById('code-consent').checked) { showErr('codeErr', (EN ? "Please accept the offer and the personal data processing terms." : 'Отметьте согласие с офертой и обработкой персональных данных.')); return; }
+      fields.name = name;
+      fields.pd_consent = true;
+    }
+    window.AELITA_account.loginWithCode(fields, {
+      buttonEl: document.getElementById('codeLoginBtn'),
+      onSuccess: function () { location.href = NEXT_PATH || '/account/dashboard'; },
+      onNeedRegistration: function () {
+        document.getElementById('code-new').style.display = 'block';
+        document.getElementById('codeLoginBtn').textContent = (EN ? 'Create account →' : 'Создать кабинет →');
+        document.getElementById('code-name').focus();
+      },
+      onError: function (msg) { showErr('codeErr', msg); },
+    });
+  }
+
   function toggleForgot() {
     var box = document.getElementById('forgot-box');
     var open = box.style.display === 'none';
