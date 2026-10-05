@@ -159,6 +159,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 #errorState{padding:40px 20px;text-align:center;color:#e08a6e;background:var(--coal);display:none}
 #errorState .btn-small{margin-top:16px;border-color:rgba(224,138,110,.4);color:#e08a6e}
 @media(hover:hover){#errorState .btn-small:hover{background:rgba(224,138,110,.08)}}
+.table-wrap{overflow-x:auto}.perf-table{width:100%;border-collapse:collapse;font-size:.8125rem}.perf-table th,.perf-table td{padding:6px 8px;border-bottom:1px solid rgba(214,181,122,.15);text-align:left;white-space:nowrap}.perf-warn td{color:#e07a6a}
 </style>
 </head>
 <body>
@@ -257,6 +258,14 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          считаются. Данные — Admin/tickets-orders.js ?view=sales. -->
     <p class="sec-title sec-gap">Продажи по показам <button class="mini-btn" id="salesReloadBtn">Обновить</button></p>
     <div id="salesBlock"><div class="empty-state">Загружаем…</div></div>
+
+    <!-- pack-v576 (ТЗ Н1): скорость шагов покупки по замерам страницы
+         (Tickets/lib/perf-log.js, Admin/tickets-orders.js ?view=perf).
+         Пусто, пока на странице покупки выключен PERF_LOG. -->
+    <p class="sec-title sec-gap">Скорость покупки
+      <select id="perfDays" class="mini-btn"><option value="1">сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option></select>
+      <button class="mini-btn" id="perfReloadBtn">Обновить</button></p>
+    <div id="perfBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
 
     <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button></p>
     <div class="filter-row">
@@ -370,6 +379,16 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          каждому покупателю — возврат (через ЮKassa при CANCEL_REFUND_API=1,
          иначе список «вернуть вручную»), подарочная часть — на карту,
          письмо об отмене, журнал и сводка в Telegram. -->
+    <!-- ТЗ «покупка без зависаний», Н10: баннер на сайте «покупка сейчас
+         может идти медленнее». Включается на 6 часов, гаснет сам. -->
+    <p class="sec-title sec-gap">Баннер о сбое покупки</p>
+    <div class="editor-box" id="noticeBlock">
+      <p class="editor-note">Если покупка тормозит или сломалась — включите: на сайте появится «Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, напишите, поможем» (RU/EN). Сам погаснет через 6 часов.</p>
+      <p class="editor-result" id="noticeState">Состояние загружается…</p>
+      <button class="btn-small" id="noticeOnBtn">Включить на 6 часов</button>
+      <button class="btn-small" id="noticeOffBtn">Снять</button>
+    </div>
+
     <p class="sec-title sec-gap">Показы: перенос и отмена</p>
     <div class="editor-box" id="perfActionBlock">
       <div class="field">
@@ -1519,6 +1538,34 @@ function perfLabel(p) {
   var tag = p.status === 'canceled' ? ' · ОТМЕНЁН' : p.postponed ? ' · перенесён' : p.isTest ? ' · тест' : '';
   return when + ' · ' + p.title + tag;
 }
+// ── Баннер о сбое покупки (ТЗ «покупка без зависаний», Н10) ───────────
+async function noticeCall(body) {
+  var out = document.getElementById('noticeState');
+  try {
+    var res = await fetch(ADMIN_SITE_EDIT_URL, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + getToken(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    var data = await res.json();
+    if (!res.ok) { out.textContent = errorMessage(data); return; }
+    var n = data.notice || {};
+    out.textContent = n.on
+      ? 'Включён до ' + new Date(n.until).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (сайт покажет в течение минуты).'
+      : 'Выключен.';
+  } catch (e) {
+    out.textContent = 'Не получилось связаться с сервером.';
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var on = document.getElementById('noticeOnBtn');
+  var off = document.getElementById('noticeOffBtn');
+  if (!on || !off) return;
+  on.addEventListener('click', function () { noticeCall({ action: 'notice', on: true }); });
+  off.addEventListener('click', function () { noticeCall({ action: 'notice', on: false }); });
+  if (getToken()) noticeCall({ action: 'notice_status' });
+});
+
 async function loadPerfActions() {
   var sel = document.getElementById('pa-perf');
   if (!sel || !ADMIN_PERF_URL) return;
@@ -1873,9 +1920,48 @@ function salesCard(s) {
     (promos ? '<div class="sales-line">Промокоды: ' + escapeHtml(promos) + '</div>' : '') +
     '<div class="sales-actions"><button class="mini-btn" data-sales-act="days">По дням</button>' +
     '<button class="mini-btn" data-sales-act="csv">Зрители — CSV</button>' +
-    '<button class="mini-btn" data-sales-act="pdf">Зрители — PDF</button></div>' +
+    '<button class="mini-btn" data-sales-act="pdf">Зрители — PDF</button>' +
+    (s.seats && s.salesChannel === 'in_house' ? '<button class="mini-btn" data-sales-act="waitlist">Лист ожидания</button>' : '') + '</div>' +
     '<div class="sales-detail"></div></div>';
 }
+// pack-v576 (ТЗ Н1): «Скорость покупки».
+var PERF_STEP_NAMES = { availability: 'Загрузка схемы', 'hold-seat': 'Бронь места', 'create-order': 'Создание заказа', 'order-status': 'Статус оплаты',
+  'check-promo': 'Промокод', 'check-gift-code': 'Подарочная карта', me: 'Кабинет', login: 'Вход', register: 'Регистрация',
+  'request-password-reset': 'Сброс пароля', js: 'Ошибки страницы', other: 'Прочее' };
+function perfMs(v) { return v == null ? '—' : v > 30000 ? '> 30 с' : v >= 1000 ? (v / 1000).toLocaleString('ru-RU') + ' с' : v + ' мс'; }
+function perfPct(x) { return Math.round((x || 0) * 100) + '%'; }
+async function loadPerf() {
+  var el = document.getElementById('perfBlock');
+  if (!el || !ADMIN_ORDERS_URL) return;
+  var token = getToken();
+  if (!token) return;
+  var days = (document.getElementById('perfDays') || {}).value || '7';
+  el.innerHTML = '<div class="empty-state">Загружаем…</div>';
+  try {
+    var res = await fetch(ADMIN_ORDERS_URL + '?view=perf&days=' + encodeURIComponent(days), { headers: { Authorization: 'Bearer ' + token } });
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    var steps = data.steps || [];
+    if (!steps.length) { el.innerHTML = '<div class="empty-state">Замеров пока нет — их присылает страница покупки, когда включён PERF_LOG.</div>'; return; }
+    el.innerHTML = '<div class="table-wrap"><table class="perf-table"><thead><tr><th>Шаг</th><th>Замеров</th><th>Медиана</th><th>90%</th><th>Дольше 5 с</th><th>Без ответа</th><th>Ошибки</th><th>Холодный старт</th><th>Частые коды</th></tr></thead><tbody>' +
+      steps.map(function (s) {
+        var warn = s.noAnswerShare > 0.02 || s.slowShare > 0.1 ? ' class="perf-warn"' : '';
+        return '<tr' + warn + '><td>' + escapeHtml(PERF_STEP_NAMES[s.step] || s.step) + '</td><td>' + s.total + '</td><td>' + perfMs(s.medianMs) + '</td><td>' + perfMs(s.p90Ms) +
+          '</td><td>' + perfPct(s.slowShare) + '</td><td>' + perfPct(s.noAnswerShare) + '</td><td>' + perfPct(s.errorShare) + '</td><td>' + perfPct(s.coldShare) +
+          '</td><td>' + escapeHtml((s.topCodes || []).map(function (c) { return c[0] + ' ×' + c[1]; }).join(', ')) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<div class="sales-line">Медиана и 90% — приблизительно, по корзинам времени. Красным — шаги, где без ответа больше 2% или дольше 5 секунд больше 10% запросов.</div>';
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var rb = document.getElementById('perfReloadBtn');
+  if (rb) rb.addEventListener('click', loadPerf);
+  var sel = document.getElementById('perfDays');
+  if (sel) sel.addEventListener('change', loadPerf);
+});
+
 async function loadSales() {
   var el = document.getElementById('salesBlock');
   if (!el || !ADMIN_ORDERS_URL) return;
@@ -1914,6 +2000,21 @@ async function salesAction(card, act) {
   var auth = { Authorization: 'Bearer ' + getToken() };
   box.textContent = 'Загружаем…';
   try {
+    // ТЗ С4: очередь листа ожидания показа (почты — маской).
+    if (act === 'waitlist') {
+      var rw = await fetch(ADMIN_ORDERS_URL + '?view=waitlist&performance_id=' + encodeURIComponent(id), { headers: auth });
+      var w = await rw.json();
+      if (!rw.ok) { box.textContent = errorMessage(w); return; }
+      var ST = { waiting: 'ждёт', offered: 'место предложено', bought: 'купил(а)', expired: 'не успел(а)', left: 'вышел(ла)', closed: 'закрыто' };
+      box.innerHTML = '<div class="sales-line">Ждут: ' + w.waiting + ', с предложением: ' + w.offered + '.</div>' +
+        (w.entries.length ? '<div class="table-wrap"><table class="perf-table"><thead><tr><th>№</th><th>Имя</th><th>Почта</th><th>Мест</th><th>Статус</th><th>Встал(а)</th></tr></thead><tbody>' +
+          w.entries.map(function (e) {
+            return '<tr><td>' + (e.position || '—') + '</td><td>' + escapeHtml(e.name || '—') + '</td><td>' + escapeHtml(e.email) + '</td><td>' + e.seats + '</td><td>' + escapeHtml(ST[e.status] || e.status) +
+              (e.offerExpiresAt ? ' до ' + escapeHtml(new Date(e.offerExpiresAt).toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit' })) : '') +
+              '</td><td>' + escapeHtml(new Date(e.createdAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })) + '</td></tr>';
+          }).join('') + '</tbody></table></div>' : '<div class="sales-line">Очередь пуста.</div>');
+      return;
+    }
     if (act === 'days') {
       var r1 = await fetch(ADMIN_ORDERS_URL + '?view=sales&performance_id=' + encodeURIComponent(id), { headers: auth });
       var d1 = await r1.json();

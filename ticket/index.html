@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Билет">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Билет — AELITA PRODUCTION</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="/assets/style.css?v=73">
+<!-- ТЗ С5: билет на экране телефона. Данные — по подписанной ссылке из
+     письма или кабинета (GET /tickets/resend-ticket?t=…); после первого
+     открытия страница работает без сети: данные — в localStorage, сама
+     страница и qrcode.js — в кэше sw.js. Один файл на оба языка (?lang=en);
+     EN-копии нет (в SKIP_SLUGS, как у других страниц покупки). -->
+<style>
+body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inter',system-ui,sans-serif;line-height:1.6}
+.tk{max-width:420px;margin:0 auto;padding:28px 20px 48px;text-align:center}
+.tk-brand{font-family:'Montserrat',sans-serif;letter-spacing:.3em;font-size:.75rem;color:#C9B8A3;text-transform:uppercase}
+.tk-title{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.6rem;margin:18px 0 6px}
+.tk-when{color:#D6B57A;font-size:1.05rem}
+.tk-moved{color:#C9B8A3;font-size:.85rem}
+.tk-where{color:#C9B8A3;font-size:.9rem;margin-top:4px}
+.tk-seat{margin:18px 0 6px;font-size:1.25rem}
+.tk-qr{background:#fff;border-radius:12px;padding:16px;margin:16px auto;max-width:280px}
+.tk-qr svg{width:100%;height:auto;display:block}
+.tk-meta{font-size:.8rem;color:#8C8C8C}
+.tk-bad{border:1px solid rgba(224,138,110,.5);color:#e08a6e;padding:16px;border-radius:10px;margin:20px 0}
+.tk-note{font-size:.8rem;color:#8C8C8C;margin-top:18px}
+.tk-btn{display:inline-block;margin-top:14px;padding:11px 18px;border:1px solid rgba(214,181,122,.4);color:#D6B57A;background:none;border-radius:6px;font-size:.85rem;cursor:pointer}
+.tk-hide{display:none}
+</style>
+</head>
+<body>
+<main class="tk">
+  <div class="tk-brand">AELITA PRODUCTION</div>
+  <div id="tkBody"><p class="tk-meta" id="tkLoading">…</p></div>
+  <p class="tk-note" id="tkOffline"></p>
+  <button class="tk-btn tk-hide" id="tkInstall"></button>
+  <p class="tk-note" id="tkHomeHint"></p>
+</main>
+<script src="/assets/qrcode.js"></script>
+<script>
+(function () {
+  var qs = new URLSearchParams(location.search);
+  var TOKEN = qs.get('t') || '';
+  var EN = qs.get('lang') === 'en';
+  if (EN) document.documentElement.lang = 'en';
+  var API = 'https://api.aelita-production.ru/tickets/resend-ticket?t=';
+  var CACHE_KEY = 'aelita_ticket_' + TOKEN.slice(-24);
+  var T = EN ? {
+    title: 'Ticket', loading: 'Loading the ticket…', notFound: 'Ticket not found. Open the link from the email again or check your account.',
+    refunded: 'This ticket is no longer valid: it was returned.', canceled: 'The performance has been cancelled. The refund is processed automatically — see the email.',
+    past: 'The performance has already taken place. Thank you for coming!', row: 'Row', seat: 'Seat', general: 'General admission',
+    moved: 'Postponed from', order: 'Order No.', ticket: 'Ticket', offline: 'No connection — showing the saved ticket.', saved: 'The ticket is saved on this phone and opens without internet.',
+    install: 'Add to home screen', iosHint: 'To keep the ticket on your home screen: Share → “Add to Home Screen”.', test: 'TEST TICKET — not valid',
+    showAtEntrance: 'Show this QR code at the entrance. The PDF ticket from the email works too.', error: 'Could not load the ticket. Check your connection and try again.',
+  } : {
+    title: 'Билет', loading: 'Загружаем билет…', notFound: 'Билет не найден. Откройте ссылку из письма ещё раз или загляните в личный кабинет.',
+    refunded: 'Билет больше не действует: по нему оформлен возврат.', canceled: 'Показ отменён. Деньги возвращаются автоматически — подробности в письме.',
+    past: 'Показ уже прошёл. Спасибо, что были с нами!', row: 'Ряд', seat: 'место', general: 'Свободная рассадка',
+    moved: 'Перенесён с', order: 'Заказ №', ticket: 'Билет', offline: 'Нет связи — показываем сохранённый билет.', saved: 'Билет сохранён на этом телефоне и откроется без интернета.',
+    install: 'Добавить на экран «Домой»', iosHint: 'Чтобы билет был на экране «Домой»: «Поделиться» → «На экран „Домой“».', test: 'ТЕСТОВЫЙ БИЛЕТ — недействителен',
+    showAtEntrance: 'Покажите этот QR-код на входе. Билет PDF из письма тоже подходит.', error: 'Не получилось загрузить билет. Проверьте связь и попробуйте ещё раз.',
+  };
+  document.title = T.title + ' — AELITA PRODUCTION';
+  var $ = function (id) { return document.getElementById(id); };
+  $('tkLoading').textContent = T.loading;
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function when(iso) {
+    try { return new Date(iso).toLocaleString(EN ? 'en-GB' : 'ru-RU', { timeZone: 'Europe/Moscow', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso || ''; }
+  }
+  function render(d) {
+    var h = '';
+    if (d.isTest) h += '<p class="tk-bad">' + esc(T.test) + '</p>';
+    h += '<h1 class="tk-title">' + esc(EN ? d.titleEn : d.title) + '</h1>';
+    if (d.datetime) h += '<div class="tk-when">' + esc(when(d.datetime)) + '</div>';
+    if (d.postponedFrom) h += '<div class="tk-moved">' + esc(T.moved) + ' ' + esc(when(d.postponedFrom)) + '</div>';
+    h += '<div class="tk-where">' + esc(EN ? d.venueEn : d.venue) + '</div>';
+    h += '<div class="tk-seat">' + (d.row ? esc(T.row) + ' ' + d.row + ', ' + esc(T.seat) + ' ' + d.seat : esc(T.general)) + '</div>';
+    if (d.status === 'valid' && d.qrToken && typeof qrcode === 'function') {
+      try {
+        var qr = qrcode(0, 'M'); qr.addData(d.qrToken); qr.make();
+        h += '<div class="tk-qr">' + qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true }) + '</div>';
+        h += '<p class="tk-meta">' + esc(T.showAtEntrance) + '</p>';
+      } catch (e) { /* QR не нарисовался — PDF из письма остаётся */ }
+    } else if (d.status !== 'valid') {
+      h += '<p class="tk-bad">' + esc(T[d.status] || T.notFound) + '</p>';
+    }
+    h += '<p class="tk-meta">' + esc(d.holderName) + (d.orderNumber ? ' · ' + esc(T.order) + ' ' + esc(d.orderNumber) : '') + ' · ' + esc(T.ticket) + ' ' + esc((d.ticketSeries ? d.ticketSeries + ' ' : '') + d.ticketNumber) + '</p>';
+    $('tkBody').innerHTML = h;
+  }
+  function fromCache() { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (e) { return null; } }
+  function toCache(d) { try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); $('tkOffline').textContent = T.saved; } catch (e) { /* приватный режим */ } }
+
+  if (!/^[A-Za-z0-9_.-]{20,400}$/.test(TOKEN)) { $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.notFound) + '</p>'; return; }
+  var cached = fromCache();
+  if (cached) render(cached);
+  fetch(API + encodeURIComponent(TOKEN), { cache: 'no-store' }).then(function (r) {
+    if (r.status === 404) { localStorage.removeItem(CACHE_KEY); $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.notFound) + '</p>'; return null; }
+    return r.ok ? r.json() : Promise.reject(new Error('http'));
+  }).then(function (d) {
+    if (!d) return;
+    render(d);
+    if (d.status === 'valid') toCache(d); else { try { localStorage.removeItem(CACHE_KEY); } catch (e) {} }
+  }).catch(function () {
+    if (cached) $('tkOffline').textContent = T.offline;
+    else $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.error) + '</p>';
+  });
+
+  // На экран «Домой»: Android — системный запрос; iPhone — подсказка.
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); deferred = e;
+    var b = $('tkInstall'); b.textContent = T.install; b.classList.remove('tk-hide');
+    b.onclick = function () { b.classList.add('tk-hide'); deferred.prompt(); };
+  });
+  if (/iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone) $('tkHomeHint').textContent = T.iosHint;
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});
+})();
+</script>
+</body>
+</html>

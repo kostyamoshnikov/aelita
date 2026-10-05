@@ -373,3 +373,37 @@ window.AELITA_formMessageClear = function (anchorEl) {
 // считается введённым, если в нём не меньше 10 цифр (с «+7» — 11).
 window.AELITA_phoneOk = function (v) { return String(v || '').replace(/\D/g, '').length >= 10; };
 window.AELITA_isEn = function () { return (document.documentElement.lang || '').indexOf('en') === 0; };
+
+// ТЗ «покупка без зависаний», Н10: баннер «покупка сейчас может идти
+// медленнее» — включается из админки, гаснет сам через 6 часов. Спрашиваем
+// сервер не чаще раза в 5 минут за визит (sessionStorage); любой сбой —
+// баннера нет, сайт работает как обычно.
+(function () {
+  var URL = 'https://api.aelita-production.ru/tickets/performances-list?notice=1';
+  var CACHE = 'aelita_notice';
+  function show(n) {
+    if (!n || !n.on || !(Date.parse(n.until) > Date.now()) || document.getElementById('aelitaNotice')) return;
+    var en = window.AELITA_isEn && window.AELITA_isEn();
+    var el = document.createElement('div');
+    el.id = 'aelitaNotice';
+    el.setAttribute('role', 'status');
+    el.style.cssText = 'position:relative;z-index:50;background:#2a2418;color:#e8e2d6;border-bottom:1px solid rgba(214,181,122,.4);padding:10px 16px;font:14px/1.5 Georgia,serif;text-align:center';
+    el.textContent = en
+      ? 'Buying tickets may be slower than usual right now — we know and are fixing it. If something goes wrong, write to aelita.production@yandex.ru and we will help.'
+      : 'Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, напишите на aelita.production@yandex.ru, поможем.';
+    document.body.insertBefore(el, document.body.firstChild);
+  }
+  function run() {
+    try {
+      var c = JSON.parse(sessionStorage.getItem(CACHE) || 'null');
+      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); return; }
+    } catch (e) { /* без кэша */ }
+    if (!window.fetch) return;
+    fetch(URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      var n = d && d.notice;
+      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null })); } catch (e) { /* приватный режим */ }
+      show(n);
+    }).catch(function () { /* баннера нет */ });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+})();

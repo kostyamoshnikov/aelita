@@ -160,6 +160,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    панели свой слой выше, а помощь поднята НАД панелью (её высота
    ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
    у телефонов с жестовой навигацией. */
+.help-tg{bottom:calc(68px + 12px + 44px + env(safe-area-inset-bottom,0px))!important}
+.wl-box{margin-top:16px}
+.wl-box .wl-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.wl-box select{background:var(--coal);color:var(--sand);border:1px solid var(--sand);border-radius:6px;padding:6px}
+.site-notice{background:#2a2418;border-bottom:1px solid rgba(214,181,122,.4);padding:10px 16px;text-align:center;font-size:.875rem}
 .help-link{position:fixed;left:16px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));background:var(--coal);border:1px solid var(--sand);color:var(--sand);border-radius:20px;padding:8px 14px;font-size:0.75rem;text-decoration:none;z-index:5;max-width:calc(100vw - 32px);box-sizing:border-box}
 
 /* pack-v460 (WP-1 R1.9): баннер cookies — вид повторяет общий из
@@ -307,6 +312,9 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <div class="hall" id="hall"></div>
     <div class="zones" id="zones"></div>
     <div class="picked" id="picked"></div>
+    <!-- ТЗ С4: лист ожидания — появляется, когда свободных мест нет
+         (и сервер сказал, что очередь включена). -->
+    <div class="warn wl-box" id="waitlist-block" hidden></div>
   </div>
 
   <div id="general-block" style="display:none">
@@ -360,6 +368,9 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
      письмо остаётся у человека и у нас в переписке, с ним видно номер
      заказа и время, а звонок в нерабочее время упирается в тишину. -->
 <a class="help-link" href="mailto:aelita.production@yandex.ru">🆘 Нужна помощь? aelita.production@yandex.ru</a>
+<!-- ТЗ Н6: та же помощь в Telegram — ссылка несёт показ, шаг, ошибку и
+     время (без личных данных), бот сразу пишет команде. -->
+<a class="help-link help-tg" id="help-tg" href="https://t.me/aelita_production_bot?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tickets-buy" target="_blank" rel="noopener">✈️ Помощь в Telegram</a>
 
 
 <!-- Промокод. Раскрывающееся поле, а не всегда видимое: у большинства
@@ -451,7 +462,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=71"></script>
+<script src="/assets/payments.js?v=73"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -469,6 +480,92 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 // «проверьте интернет» уводил в сторону: интернет у человека
 // работает, он это видит — и делал вывод, что сломан сайт.
 const NET_FAIL_MSG = 'Не получилось связаться с сервером оплаты. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: aelita.production@yandex.ru';
+
+// ── pack-v576 (ТЗ Н5, Н1): ограничение времени запросов и замеры ──
+// Раньше у запросов страницы не было предела: зависший ответ сервера
+// выглядел как бесконечная крутилка. Теперь каждый запрос ждёт не
+// дольше REQ_TIMEOUT_MS, после — понятное сообщение (см. тексты ниже).
+// Бронь и заказ ждут дольше остальных: там запись мест и ЮKassa.
+const REQ_TIMEOUT_MS = { 'hold-seat': 15000, 'create-order': 15000 };
+const REQ_TIMEOUT_DEFAULT_MS = 10000;
+// Тексты для «сервер не дождался».
+const SLOW_LOAD_MSG = 'Сервер отвечает дольше обычного. Попробуйте ещё раз через несколько секунд — если не поможет, напишите нам: aelita.production@yandex.ru';
+const SLOW_SEAT_MSG = 'Сервер отвечает дольше обычного — место пока не за вами. Нажмите на него ещё раз через несколько секунд.';
+const SLOW_ORDER_MSG = 'Мы не дождались ответа сервера. Деньги не списаны — оплата ещё не начиналась. Подождите минуту и нажмите «Оплатить» ещё раз; если увидите «места заняты» — возможно, это ваш же незавершённый заказ: он освободит места через 10 минут, или напишите нам — поможем: aelita.production@yandex.ru';
+const SLOW_CHECK_MSG = 'Сервер отвечает дольше обычного — попробуйте ещё раз через несколько секунд.';
+// ⚠️ ВЫКЛЮЧАТЕЛЬ замеров (ТЗ Н1): пока false, замеры только копятся в
+// памяти страницы и никуда не уходят. Включить — после выкладки функции
+// aelita-tickets-availability (приём замеров) и обновления шлюза.
+const PERF_LOG = false;
+const PERF_VISIT = Math.random().toString(36).slice(2, 10);
+const perfQueue = [];
+function perfStepOf(url){
+  const m = String(url).match(/\/(availability|hold-seat|create-order|order-status|check-promo|check-gift-code|me|login|register|request-password-reset)(?:[?#]|$)/);
+  return m ? m[1] : 'other';
+}
+function perfPush(item){
+  if(perfQueue.length < 200) perfQueue.push(item);
+}
+function perfFlush(){
+  if(!PERF_LOG || !perfQueue.length || !navigator.sendBeacon) return;
+  const items = perfQueue.splice(0, 60);
+  try{
+    navigator.sendBeacon(`${API_BASE}/availability?log=1`, new Blob([JSON.stringify({v: PERF_VISIT, items})], {type:'text/plain'}));
+  }catch(e){}
+}
+setInterval(perfFlush, 30000);
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') perfFlush(); });
+window.addEventListener('pagehide', perfFlush);
+// Ошибки JavaScript — короткий текст, без цифр (в них могли бы оказаться номера).
+function perfJsError(msg){
+  perfPush({s:'js', o:'error', ms:0, c: String(msg || '').replace(/\d+/g, '#').replace(/@/g, '').slice(0, 60)});
+}
+window.addEventListener('error', e => perfJsError(e && e.message));
+window.addEventListener('unhandledrejection', e => perfJsError(e && e.reason && (e.reason.message || e.reason)));
+
+// ── ТЗ Н6: «Помощь в Telegram» — код ссылки как в _tools/Shared/lib/help-link.js
+// (h_<r|e><шаг><ЧЧММ>_<показ>__<ошибка>, до 64 символов, без личных данных).
+let lastProblem = null;
+const HELP_STEP = {availability:'av', 'hold-seat':'hs', 'create-order':'co', 'order-status':'os', 'check-promo':'pr', 'check-gift-code':'gc', me:'li', login:'li', register:'li', 'request-password-reset':'li'};
+function helpCode(){
+  const d = new Date();
+  const hhmm = String((d.getUTCHours() + 3) % 24).padStart(2,'0') + String(d.getUTCMinutes()).padStart(2,'0');
+  const lang = document.documentElement.lang === 'en' ? 'e' : 'r';
+  const st = (lastProblem && HELP_STEP[lastProblem.step]) || 'pg';
+  const perf = String(new URLSearchParams(location.search).get('performance') || 'none').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40) || 'none';
+  const head = 'h_' + lang + st + hhmm + '_' + perf + '__';
+  const err = String((lastProblem && lastProblem.code) || '').toLowerCase().replace(/[^a-z0-9_]/g,'_').slice(0, Math.max(0, Math.min(24, 64 - head.length)));
+  return head + err;
+}
+document.addEventListener('click', e => {
+  const a = e.target && e.target.closest && e.target.closest('#help-tg');
+  if(a) a.href = 'https://t.me/aelita_production_bot?start=' + helpCode();
+}, true);
+
+/** fetch с пределом времени и замером. Зависание → ошибка с aelitaTimeout. */
+async function apiFetch(url, opts){
+  const step = perfStepOf(url);
+  const limit = REQ_TIMEOUT_MS[step] || REQ_TIMEOUT_DEFAULT_MS;
+  const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), limit) : null;
+  const t0 = Date.now();
+  try{
+    const res = await fetch(url, Object.assign({}, opts || {}, ctrl ? {signal: ctrl.signal} : {}));
+    let cold = 0;
+    try{ cold = res.headers.get('X-Aelita-Cold') === '1' ? 1 : 0; }catch(e){}
+    perfPush({s: step, o: res.ok ? 'ok' : 'error', ms: Date.now() - t0, c: res.ok ? '' : String(res.status), k: cold});
+    if(!res.ok) lastProblem = {step, code: 'http_' + res.status};
+    return res;
+  }catch(e){
+    const timeout = !!(e && e.name === 'AbortError');
+    perfPush({s: step, o: timeout ? 'timeout' : 'network', ms: Date.now() - t0, c: ''});
+    lastProblem = {step, code: timeout ? 'timeout' : 'network'};
+    if(timeout){ const err = new Error('timeout'); err.aelitaTimeout = true; throw err; }
+    throw e;
+  }finally{
+    if(timer) clearTimeout(timer);
+  }
+}
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');
@@ -639,7 +736,7 @@ async function detectAccount(){
   const token = accountToken();
   if(!token){ showGuest(); return; }
   try{
-    const res = await fetch(`${ACCOUNT_API}/me`, {headers:{'Authorization':'Bearer ' + token}});
+    const res = await apiFetch(`${ACCOUNT_API}/me`, {headers:{'Authorization':'Bearer ' + token}});
     if(res.status === 401){ setToken(null); acctMode = 'login'; showGuest(); return; }
     if(res.ok){
       const me = await res.json();
@@ -684,10 +781,10 @@ async function ensureAccount(name, email){
   const body = acctMode === 'login' ? {email, password} : {name, email, password};
   let res, out = {};
   try{
-    res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    res = await apiFetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
     try{ out = await res.json(); }catch(e){}
   }catch(e){
-    msgEl.textContent = 'Не получилось связаться с сервером — проверьте интернет и нажмите ещё раз.';
+    msgEl.textContent = (e && e.aelitaTimeout) ? SLOW_CHECK_MSG : 'Не получилось связаться с сервером — проверьте интернет и нажмите ещё раз.';
     return null;
   }
   if(res.ok && out.token){
@@ -741,7 +838,7 @@ async function sendResetFromCheckout(){
   rememberSelection();
   msgEl.textContent = 'Отправляем письмо…';
   try{
-    const res = await fetch(`${ACCOUNT_API}/request-password-reset`, {
+    const res = await apiFetch(`${ACCOUNT_API}/request-password-reset`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({email, lang:'ru'}),
     });
@@ -911,8 +1008,15 @@ async function init(){
 
   let res, freshData;
   try{
-    res = await fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
+    // pack-v576 (ТЗ Н5): запрос только читает — одна автоматическая
+    // повторная попытка, если первый не дождался или не дошёл.
+    try{
+      res = await apiFetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
+    }catch(e1){
+      res = await apiFetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(performanceId)}`);
+    }
   }catch(e){
+    if(e && e.aelitaTimeout){ showError(SLOW_LOAD_MSG); return; }
     // pack-v334: сюда попадаем ТОЛЬКО когда ответа не было вовсе —
     // fetch бросает исключение на сетевом сбое, а не на ошибке от
     // сервера (та уходит в !res.ok ниже). Именно так и выглядит
@@ -967,12 +1071,121 @@ async function init(){
     renderHall();
     renderZoneLegend();
     restoreSelection();
+    initWaitlist();
   } else {
     document.getElementById('general-block').style.display = 'block';
     updateTotal();
     restoreSelection();
   }
 }
+
+// ── ТЗ С4: лист ожидания ──────────────────────────────────────────
+// Сервер (availability) говорит, включён ли лист и сколько свободно;
+// своя запись и предложенные места — hold-seat, waitlist_status (со входом).
+// Предложенные места очереди держатся за человеком 30 минут обычной
+// бронью — на схеме они «заняты», поэтому здесь снимаем их из занятых и
+// сразу выбираем.
+async function waitlistCall(action, extra){
+  const token = accountToken();
+  if(!token) return null;
+  try{
+    const res = await apiFetch(`${API_BASE}/hold-seat`, {
+      method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
+      body: JSON.stringify(Object.assign({performance_id: performanceId, action, lang: document.documentElement.lang === 'en' ? 'en' : 'ru'}, extra || {})),
+    });
+    const out = await res.json().catch(() => ({}));
+    return {ok: res.ok, out};
+  }catch(e){ return {ok:false, out:{error: e && e.aelitaTimeout ? 'timeout' : 'network'}}; }
+}
+function wlTime(iso){
+  try{ return new Date(iso).toLocaleTimeString('ru-RU', {timeZone:'Europe/Moscow', hour:'2-digit', minute:'2-digit'}); }catch(e){ return ''; }
+}
+function renderWaitlist(st){
+  const box = document.getElementById('waitlist-block');
+  if(!box) return;
+  const wl = data && data.waitlist;
+  box.hidden = true;
+  box.textContent = '';
+  if(!wl || !wl.enabled) return;
+  if(st && st.status === 'offered' && st.offer){
+    box.hidden = false;
+    box.textContent = 'Это место освободилось для вас из листа ожидания — оно уже выбрано и держится до ' + wlTime(st.offer.expiresAt) + ' по Москве. Осталось оплатить.';
+    return;
+  }
+  if(st && st.status === 'waiting'){
+    box.hidden = false;
+    const p = document.createElement('p');
+    p.textContent = 'Вы в листе ожидания, № ' + st.position + '. Когда место освободится, пришлём письмо на почту кабинета — место будет держаться 30 минут.';
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'zoom-btn'; b.textContent = 'Выйти из очереди';
+    b.onclick = async () => { b.disabled = true; await waitlistCall('waitlist_leave'); renderWaitlist(null); };
+    box.append(p, b);
+    return;
+  }
+  if(wl.free > 0) return;
+  box.hidden = false;
+  const p = document.createElement('p');
+  p.textContent = 'Свободных мест нет. Хотите, сообщим, когда место освободится? Место будет держаться за вами 30 минут.';
+  box.appendChild(p);
+  if(!accountToken()){
+    const n = document.createElement('p');
+    n.textContent = 'Чтобы встать в очередь, войдите в личный кабинет — письмо придёт на его почту.';
+    box.appendChild(n);
+    return;
+  }
+  const row = document.createElement('div'); row.className = 'wl-row';
+  const sel = document.createElement('select'); sel.setAttribute('aria-label', 'Сколько мест');
+  for(let i = 1; i <= 4; i++){ const o = document.createElement('option'); o.value = i; o.textContent = i + (i === 1 ? ' место' : ' места'); sel.appendChild(o); }
+  const lab = document.createElement('label');
+  const cb = document.createElement('input'); cb.type = 'checkbox';
+  lab.append(cb, ' Согласен(на) на обработку персональных данных — ', Object.assign(document.createElement('a'), {href:'/privacy/', target:'_blank', textContent:'политика'}));
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'zoom-btn'; b.textContent = 'Встать в очередь';
+  const msg = document.createElement('p');
+  b.onclick = async () => {
+    if(!cb.checked){ msg.textContent = 'Отметьте согласие на обработку персональных данных.'; return; }
+    b.disabled = true;
+    const r = await waitlistCall('waitlist_join', {seats: Number(sel.value), pd_consent: true});
+    b.disabled = false;
+    if(r && r.ok){ renderWaitlist({status:'waiting', position: r.out.position}); return; }
+    msg.textContent = (r && r.out && r.out.error === 'waitlist_full') ? 'Очередь на этот показ заполнена.' : 'Не получилось — попробуйте ещё раз через несколько секунд.';
+  };
+  row.append(sel, b);
+  box.append(row, lab, msg);
+}
+async function initWaitlist(){
+  const wl = data && data.waitlist;
+  if(!wl || !wl.enabled) return;
+  let st = null;
+  if(accountToken()){
+    const r = await waitlistCall('waitlist_status');
+    st = r && r.ok && r.out ? r.out.waitlist : null;
+  }
+  if(st && st.status === 'offered' && st.offer && Array.isArray(st.offer.seatKeys)){
+    for(const key of st.offer.seatKeys){
+      const [row, seat] = key.split('-').map(Number);
+      if(data.occupied) delete data.occupied[key];
+      if(!selectedSeats.some(x => x.row === row && x.seat === seat)) selectedSeats.push({row, seat, price: priceForRow(row)});
+    }
+    renderHall();
+    updateTotal();
+  }
+  renderWaitlist(st);
+}
+
+// ── ТЗ Н10: баннер «покупка сейчас может идти медленнее» (из админки) ──
+async function loadNotice(){
+  try{
+    const res = await apiFetch(`${API_BASE}/performances-list?notice=1`);
+    const d = res.ok ? await res.json() : null;
+    const n = d && d.notice;
+    if(!n || !n.on || !(Date.parse(n.until) > Date.now()) || document.getElementById('site-notice')) return;
+    const el = document.createElement('div');
+    el.id = 'site-notice'; el.className = 'site-notice'; el.setAttribute('role','status');
+    el.textContent = 'Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, нажмите «Помощь» внизу — поможем.';
+    document.body.insertBefore(el, document.body.firstChild);
+  }catch(e){ /* баннера нет — покупка работает как обычно */ }
+}
+loadNotice();
 
 function priceForRow(row){
   const z = data.zones.find(z => row >= z.rows[0] && row <= z.rows[1]);
@@ -1121,7 +1334,7 @@ async function holdRequest(action, seats){
   // #guest-note говорит об этом прямым текстом. Возвращаем ok, иначе
   // клик по месту у гостя просто ничего не делал бы.
   if(!token) return {ok:true, guest:true};
-  const res = await fetch(`${API_BASE}/hold-seat`, {
+  const res = await apiFetch(`${API_BASE}/hold-seat`, {
     method:'POST',
     headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
     body: JSON.stringify({
@@ -1187,7 +1400,7 @@ async function toggleSeat(row, seat, el){
   try{
     r = await holdRequest('hold', [...selectedSeats, {row, seat}]);
   }catch(e){
-    r = {ok:false};
+    r = {ok:false, slow: !!(e && e.aelitaTimeout)};
   }
   el.style.opacity = '';
 
@@ -1218,7 +1431,7 @@ async function toggleSeat(row, seat, el){
   }
 
   el.onclick = () => toggleSeat(row, seat, el);
-  msgEl.textContent = 'Не удалось занять место — проверьте связь и попробуйте ещё раз.';
+  msgEl.textContent = r.slow ? SLOW_SEAT_MSG : 'Не удалось занять место — проверьте связь и попробуйте ещё раз.';
 }
 
 function renderPicked(){
@@ -1435,7 +1648,7 @@ async function applyPromo(){
   const payload = { performance_id: performanceId, promo_code: code, ...seatsOrQtyPayload() };
   if(appliedGift) payload.gift_code = appliedGift;
   try{
-    const res = await fetch(`${API_BASE}/check-promo`, {
+    const res = await apiFetch(`${API_BASE}/check-promo`, {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
     });
     const out = await res.json();
@@ -1457,7 +1670,7 @@ async function applyPromo(){
       promoMsg(PROMO_REASONS[out.reason] || 'Промокод не применён.', 'err');
     }
   }catch(e){
-    promoMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+    promoMsg((e && e.aelitaTimeout) ? SLOW_CHECK_MSG : 'Сеть не отвечает — попробуйте ещё раз.', 'err');
   }
   btn.disabled = false;
   updateTotal();
@@ -1476,7 +1689,7 @@ async function applyGift(){
   const payload = { performance_id: performanceId, gift_code: code, ...seatsOrQtyPayload() };
   if(appliedPromo) payload.promo_code = appliedPromo;
   try{
-    const res = await fetch(`${API_BASE}/check-gift-code`, {
+    const res = await apiFetch(`${API_BASE}/check-gift-code`, {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
     });
     const out = await res.json();
@@ -1502,7 +1715,7 @@ async function applyGift(){
       giftMsg(GIFT_REASONS[out.reason] || 'Карта не применена.', 'err');
     }
   }catch(e){
-    giftMsg('Сеть не отвечает — попробуйте ещё раз.', 'err');
+    giftMsg((e && e.aelitaTimeout) ? SLOW_CHECK_MSG : 'Сеть не отвечает — попробуйте ещё раз.', 'err');
   }
   btn.disabled = false;
   updateTotal();
@@ -1720,7 +1933,7 @@ async function submitOrder(){
   msgEl.textContent = 'Оформляем заказ…';
 
   try{
-    const res = await fetch(`${API_BASE}/create-order`, {
+    const res = await apiFetch(`${API_BASE}/create-order`, {
       method:'POST',
       headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + orderToken},
       body: JSON.stringify(payload)
@@ -1857,7 +2070,9 @@ async function submitOrder(){
     // Сетевой сбой в момент оформления заказа — тот же признак VPN,
     // что и при загрузке (см. NET_FAIL_MSG). Здесь он больнее всего:
     // человек уже выбрал места и заполнил форму.
-    msgEl.textContent = NET_FAIL_MSG;
+    // pack-v576 (ТЗ Н5): не дождались ответа — честно: деньги не списаны,
+    // повторять сразу не надо (повтор может упереться в собственный заказ).
+    msgEl.textContent = (e && e.aelitaTimeout) ? SLOW_ORDER_MSG : NET_FAIL_MSG;
     document.getElementById('buy-btn').disabled = false;
   }
 }
@@ -1886,7 +2101,7 @@ async function pollOrderStatus(){
   for(let attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
     let res, out;
     try{
-      res = await fetch(`${API_BASE}/order-status?order_id=${encodeURIComponent(stored.orderId)}&payment_id=${encodeURIComponent(stored.paymentId)}`);
+      res = await apiFetch(`${API_BASE}/order-status?order_id=${encodeURIComponent(stored.orderId)}&payment_id=${encodeURIComponent(stored.paymentId)}`);
       out = res.ok ? await res.json() : null;
     }catch(e){ out = null; }
 
@@ -1957,6 +2172,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=71"></script>
+<script src="/assets/phone-prefix.js?v=73"></script>
 </body>
 </html>

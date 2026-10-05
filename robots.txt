@@ -10,5 +10,6 @@ Disallow: /documents-pdf/
 
 # Внутренняя админка — не для индексации, не для публики
 Disallow: /admin
+Disallow: /ticket/
 
 Sitemap: https://aelita-production.ru/sitemap.xml

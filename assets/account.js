@@ -846,6 +846,23 @@
       }
     },
 
+    // ТЗ С2: передать билет / письмо получателю ещё раз.
+    // payload: { action: 'transfer'|'transfer_resend', order_id, ticket_number, to_email?, to_name?, to_lang? }
+    // → { ok, status, data } — разбор ответа на странице (коды отказа свои).
+    transferTicket: async function (payload) {
+      var token = getToken();
+      if (!token) return { ok: false, status: 401, data: { error: 'auth_required' } };
+      try {
+        var res = await fetch(TICKETS_RESEND_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify(payload),
+        });
+        var data = await res.json().catch(function () { return {}; });
+        return { ok: res.ok, status: res.status, data: data };
+      } catch (e) {
+        return { ok: false, status: 0, data: { error: 'network' } };
+      }
+    },
+
     // Выслать себе билеты повторно. Кнопку блокируем на время запроса:
     // второе нажатие — второе письмо, а не ускорение первого.
     resendTicketOrder: async function (orderId, opts) {
