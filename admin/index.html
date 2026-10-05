@@ -94,6 +94,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .mini-btn{font-family:'Montserrat',sans-serif;font-size:0.5625rem;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;border:1px solid rgba(214,181,122,.3);color:var(--gold);background:none;cursor:pointer;white-space:nowrap}
 @media(hover:hover){.mini-btn:hover{background:rgba(214,181,122,.08)}}
 .mini-btn-danger{border-color:rgba(224,138,110,.4);color:#e08a6e}
+.pa-cancel-note{margin-top:28px}
 @media(hover:hover){.mini-btn-danger:hover{background:rgba(224,138,110,.08)}}
 
 /* Модальное окно (подтверждение удаления, форма ручной покупки) */
@@ -131,6 +132,13 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .ev-when{color:var(--sand);font-size:0.75rem;margin-top:2px}
 .ev-count{font-family:'Montserrat',sans-serif;font-size:0.9375rem;color:var(--gold);white-space:nowrap}
 .ev-count .cap{color:var(--sand);font-size:0.75rem}
+/* pack-v571 (ТЗ С6): продажи по показам */
+.sales-line{color:var(--sand);font-size:0.75rem;margin-top:6px;line-height:1.6}
+.sales-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.sales-detail{margin-top:14px}
+.sales-chart{width:100%;max-width:640px;height:auto;display:block;margin-top:10px}
+.sales-chart .bar{fill:var(--gold)}
+.sales-chart .lbl{fill:var(--sand);font-size:0.625rem;font-family:'Inter',sans-serif}
 .ev-qty{color:var(--sand);font-size:0.75rem;font-weight:normal}
 .ev-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .ev-people{margin-top:14px;border-top:1px solid rgba(201,184,163,.12);padding-top:12px;display:none}
@@ -213,6 +221,12 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
     <div class="links-row" id="adminLinks"></div>
 
     <p class="sec-title">Клиенты (<span id="cust-count">0</span>) <button class="mini-btn" id="openAddCustomerBtn" style="margin-left:12px;vertical-align:middle">+ Клиент</button></p>
+    <!-- pack-v572 (ТЗ С9): запрос субъекта ПДн без кабинета — по почте. -->
+    <div class="filter-row">
+      <input type="email" class="search ym-disable-keys" id="exportEmail" placeholder="Собрать данные по почте (запрос субъекта ПДн)…">
+      <button type="button" class="mini-btn" id="exportEmailBtn">Собрать архив</button>
+    </div>
+    <p class="editor-result" id="exportEmailResult"></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="custSearch" placeholder="Поиск по имени или email…">
       <div class="sort-tabs">
@@ -237,6 +251,13 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          OPEN_QUESTIONS.md, вопрос 2 (🔴): без этого списка нечем
          исполнить п. 6.3.3 оферты — автоматический возврат ВСЕМ
          покупателям при отмене показа. -->
+    <!-- pack-v571 (ТЗ С6): сводка продаж по показам — продано, места,
+         выручка деньгами и картами, возвраты, промокоды, график по дням,
+         список зрителей для площадки (CSV и PDF). Тестовые заказы не
+         считаются. Данные — Admin/tickets-orders.js ?view=sales. -->
+    <p class="sec-title sec-gap">Продажи по показам <button class="mini-btn" id="salesReloadBtn">Обновить</button></p>
+    <div id="salesBlock"><div class="empty-state">Загружаем…</div></div>
+
     <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="ordSearch" placeholder="Поиск по имени, email или номеру заказа…">
@@ -345,7 +366,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          каталога (performance-overrides/), письма покупателям со ссылкой
          «не подходит — вернуть 100%», журнал «кто и когда». Отмена с
          автоматическим возвратом — следующим этапом. -->
-    <p class="sec-title sec-gap">Показы: перенос</p>
+    <!-- pack-v569 (ТЗ С1, этап 2): отмена показа. Продажа закрывается,
+         каждому покупателю — возврат (через ЮKassa при CANCEL_REFUND_API=1,
+         иначе список «вернуть вручную»), подарочная часть — на карту,
+         письмо об отмене, журнал и сводка в Telegram. -->
+    <p class="sec-title sec-gap">Показы: перенос и отмена</p>
     <div class="editor-box" id="perfActionBlock">
       <div class="field">
         <label for="pa-perf">Показ</label>
@@ -362,6 +387,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <p class="editor-note">Билеты и QR-коды остаются действительными, места сохраняются. Каждый покупатель получит письмо с новой датой и ссылкой на возврат 100% — заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p>
       <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
+      <p class="editor-note pa-cancel-note">Отмена: продажа закрывается сразу; каждому покупателю — 100% стоимости (деньги — через ЮKassa или вручную, см. строку выше; оплаченное подарочной картой — обратно на карту), билеты аннулируются, письмо об отмене на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём. Название — в поле выше.</p>
+      <button class="btn-small mini-btn-danger" id="paCancelBtn">Отменить показ и вернуть деньги</button>
       <p class="editor-result" id="paResult"></p>
     </div>
 
@@ -764,7 +791,42 @@ document.getElementById('custList').addEventListener('click', function (e) {
   else if (action === 'export') exportCustomer(email);
 });
 
-function exportCustomer(email) {
+// pack-v572 (ТЗ С9): «Экспорт» у клиента и «Собрать данные по почте» —
+// полный архив по запросу субъекта ПДн (data.json + data.pdf): заказы,
+// регистрации, подписки, карты, согласия, заявления. Старый сервер
+// (без export_email) — как раньше, запись из списка.
+async function exportByEmail(email, outEl) {
+  if (!ADMIN_DATA_URL || !email) return false;
+  if (outEl) outEl.textContent = 'Собираем данные — до полуминуты…';
+  try {
+    var res = await fetch(ADMIN_DATA_URL + '?export_email=' + encodeURIComponent(email), { headers: { Authorization: 'Bearer ' + getToken() } });
+    var type = (res.headers.get('Content-Type') || '').toLowerCase();
+    if (res.ok && type.indexOf('application/zip') === 0) {
+      var blob = await res.blob();
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'aelita-data-' + email.replace(/[^a-z0-9]+/gi, '-') + '.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      if (outEl) outEl.textContent = 'Готово: архив скачан. Ответ субъекту — в течение 10 рабочих дней с запроса.';
+      return true;
+    }
+    if (!res.ok) {
+      var data = null; try { data = await res.json(); } catch (e) {}
+      if (outEl) outEl.textContent = data && data.error === 'bad_email' ? 'Проверьте адрес почты.' : 'Не получилось собрать данные: ' + errorMessage(data);
+      return true;
+    }
+    return false;
+  } catch (e) {
+    if (outEl) outEl.textContent = 'Не получилось связаться с сервером.';
+    return true;
+  }
+}
+async function exportCustomer(email) {
+  if (await exportByEmail(email, null)) return;
   var customer = allCustomers.find(function (c) { return c.email === email; });
   if (!customer) return;
   var blob = new Blob([JSON.stringify(customer, null, 2)], { type: 'application/json' });
@@ -1449,7 +1511,7 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
   }
 }
 
-// ── Показы: перенос (pack-v568, ТЗ С1) ────────────────────────────
+// ── Показы: перенос и отмена (pack-v568–v569, ТЗ С1) ──────────────
 var PERF_LIST = [];
 function perfLabel(p) {
   var d = new Date(p.datetime);
@@ -1489,8 +1551,18 @@ async function perfPreview() {
     var lines = ['Заказов с действующими билетами: ' + o.count + ', билетов: ' + o.tickets + ' (деньгами ' + o.moneyRub + ' ₽, подарочной картой ' + o.giftRub + ' ₽).'];
     if (data.performance.originalDatetime) lines.push('Исходная дата: ' + new Date(data.performance.originalDatetime).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + '.');
     if (data.ticketscloudNote) lines.push(data.ticketscloudNote);
+    if (data.performance.status === 'canceled') lines.push('ПОКАЗ ОТМЕНЁН.');
+    lines.push(data.cancelMode === 'api' ? 'При отмене деньги вернутся автоматически через ЮKassa.' : 'При отмене деньги — вручную в кабинете ЮKassa (автовозврат выключен), остальное — автоматически.');
+    if (data.toRefundManually && data.toRefundManually.length) {
+      lines.push('Вернуть вручную: ' + data.toRefundManually.map(function (x) { return '№' + (x.orderNumber || x.orderId) + ' — ' + x.moneyRub + ' ₽'; }).join(', ') + '.');
+    }
     (data.journal || []).slice(-3).forEach(function (j) {
-      lines.push('Журнал: ' + new Date(j.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' — перенос на ' + new Date(j.to).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ', писем ' + j.sent + (j.failed ? ', не ушло ' + j.failed : '') + '.');
+      var when = new Date(j.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+      if (j.action === 'cancel') {
+        lines.push('Журнал: ' + when + ' — отмена, возвращено ' + j.refunded + (j.manual ? ', вручную ' + j.manual : '') + (j.refundFailed ? ', не прошло ' + j.refundFailed : '') + ', писем ' + j.sent + (j.failed ? ', не ушло ' + j.failed : '') + '.');
+        return;
+      }
+      lines.push('Журнал: ' + when + ' — перенос на ' + new Date(j.to).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ', писем ' + j.sent + (j.failed ? ', не ушло ' + j.failed : '') + '.');
     });
     el.textContent = lines.join(' ');
   } catch (e) {
@@ -1528,11 +1600,64 @@ async function perfPostpone() {
     btn.disabled = false;
   }
 }
+async function perfCancel() {
+  var id = document.getElementById('pa-perf').value;
+  var title = document.getElementById('pa-title').value;
+  var out = document.getElementById('paResult');
+  out.textContent = '';
+  if (!id || !title.trim()) { out.textContent = 'Выберите показ и введите название спектакля.'; return; }
+  var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  var again = p && p.status === 'canceled';
+  if (!confirm(again
+    ? 'Показ уже отменён. Повторить: довернуть сбойные заказы и дослать письма?'
+    : 'ОТМЕНИТЬ «' + (p ? p.title : id) + '»? Продажа закроется, покупателям вернутся деньги и уйдут письма. Это не отменить.')) return;
+  var btn = document.getElementById('paCancelBtn');
+  btn.disabled = true;
+  out.textContent = 'Отменяем и возвращаем — это может занять несколько минут…';
+  try {
+    var res = await fetch(ADMIN_PERF_URL, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + getToken(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'cancel', performance_id: id, confirm_title: title }),
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      var why = { confirm_title_mismatch: 'Название не совпало с афишей.', already_started: 'Показ уже начался.', busy: 'Отмена уже идёт — подождите пару минут и обновите.' }[data.error];
+      out.textContent = why || errorMessage(data);
+      return;
+    }
+    var parts = ['Готово: заказов ' + data.orders];
+    if (data.refunded.count) parts.push('возвращено через ЮKassa ' + data.refunded.count + ' (' + data.refunded.moneyRub + ' ₽)');
+    if (data.pending.count) parts.push('в ожидании ' + data.pending.count);
+    if (data.manual.length) parts.push('вернуть вручную ' + data.manual.length + ' — список в Telegram и выше');
+    if (data.failed.length) parts.push('не прошло ' + data.failed.length + ' — подробности в Telegram');
+    if (data.problems.length) parts.push('проблемы: ' + data.problems.length);
+    parts.push('писем ' + data.mail.sent + (data.mail.failed ? ', не ушло ' + data.mail.failed : ''));
+    if (data.notProcessed) parts.push('не успели ' + data.notProcessed + ' — нажмите ещё раз');
+    out.textContent = parts.join(', ') + '.';
+    loadPerfActions(); perfPreview();
+  } catch (e) {
+    out.textContent = 'Не получилось связаться с сервером. Нажмите ещё раз — повтор безопасен.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var eb = document.getElementById('exportEmailBtn');
+  if (eb) eb.addEventListener('click', function () {
+    var v = document.getElementById('exportEmail').value.trim().toLowerCase();
+    var out = document.getElementById('exportEmailResult');
+    if (!v) { out.textContent = 'Введите адрес почты.'; return; }
+    exportByEmail(v, out).then(function (handled) { if (!handled) out.textContent = 'Сервер ещё не обновлён — функция aelita-admin-data из v572.'; });
+  });
+});
 document.addEventListener('DOMContentLoaded', function () {
   var sel = document.getElementById('pa-perf');
   if (sel) sel.addEventListener('change', perfPreview);
   var b = document.getElementById('paPostponeBtn');
   if (b) b.addEventListener('click', perfPostpone);
+  var c = document.getElementById('paCancelBtn');
+  if (c) c.addEventListener('click', perfCancel);
 });
 
 async function loadRefunds() {
@@ -1724,6 +1849,122 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
   a.href = url; a.download = 'aelita-orders.csv';
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
+});
+
+// ── Продажи по показам (pack-v571, ТЗ С6) ─────────────────────────
+function salesWhen(iso) {
+  var d = new Date(iso);
+  return isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+}
+function salesCard(s) {
+  var seatsLine = s.seats
+    ? 'Мест ' + s.seats.capacity + ': продано ' + s.seats.sold + ', в брони ' + s.seats.held + (s.seats.guests != null ? ', пригласительных ' + s.seats.guests : '') + ', свободно ' + s.seats.free + '.'
+    : (s.salesChannel === 'in_house' ? 'Свободная рассадка — вместимость в каталоге не задана.' : 'Продажа через ticketscloud/cuire-fest — здесь только наши заказы.');
+  var promos = (s.promos || []).map(function (p) { return p.code + ' — ' + p.orders + ' зак., скидка ' + fmtMoney(p.discountRub); }).join('; ');
+  var status = s.status === 'canceled' ? ' · ОТМЕНЁН' : s.status === 'closed' ? ' · продажа закрыта' : '';
+  return '<div class="ev-card" data-sales-id="' + escapeHtml(s.id) + '">' +
+    '<div class="ev-head"><div><div class="ev-title">' + escapeHtml(s.title) + status + '</div>' +
+    '<div class="ev-when">' + salesWhen(s.datetime) + ' · заказов ' + s.orders + '</div></div>' +
+    '<div class="ev-count">' + s.tickets.sold + (s.seats ? ' <span class="cap">из ' + s.seats.capacity + '</span>' : ' <span class="cap">билетов</span>') + '</div></div>' +
+    '<div class="sales-line">Выручка: ' + fmtMoney(s.revenue.moneyRub) + ' деньгами' + (s.revenue.giftRub ? ' + ' + fmtMoney(s.revenue.giftRub) + ' подарочными картами' : '') +
+    '. Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
+    '. Вошли по QR: ' + s.tickets.redeemed + '.</div>' +
+    '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
+    (promos ? '<div class="sales-line">Промокоды: ' + escapeHtml(promos) + '</div>' : '') +
+    '<div class="sales-actions"><button class="mini-btn" data-sales-act="days">По дням</button>' +
+    '<button class="mini-btn" data-sales-act="csv">Зрители — CSV</button>' +
+    '<button class="mini-btn" data-sales-act="pdf">Зрители — PDF</button></div>' +
+    '<div class="sales-detail"></div></div>';
+}
+async function loadSales() {
+  var el = document.getElementById('salesBlock');
+  if (!el || !ADMIN_ORDERS_URL) return;
+  var token = getToken();
+  if (!token) return;
+  try {
+    var res = await fetch(ADMIN_ORDERS_URL + '?view=sales', { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) { el.innerHTML = ''; return; }
+    var data = await res.json();
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    var list = data.performances || [];
+    el.innerHTML = list.length ? list.map(salesCard).join('') : '<div class="empty-state">Показов с нашей продажей пока нет.</div>';
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
+  }
+}
+/** График продаж по дням — SVG без библиотек: столбик = билеты за день. */
+function salesChartSvg(days) {
+  if (!days.length) return '<div class="sales-line">Продаж ещё не было.</div>';
+  var w = 640, h = 180, pad = 24, bw = Math.max(4, Math.min(28, (w - pad * 2) / days.length - 4));
+  var max = Math.max.apply(null, days.map(function (d) { return d.tickets; })) || 1;
+  var step = (w - pad * 2) / days.length;
+  var bars = days.map(function (d, i) {
+    var bh = Math.round((h - pad * 2) * d.tickets / max);
+    var x = pad + i * step + (step - bw) / 2, y = h - pad - bh;
+    var label = d.day.slice(8, 10) + '.' + d.day.slice(5, 7);
+    return '<rect class="bar" x="' + x.toFixed(1) + '" y="' + y + '" width="' + bw.toFixed(1) + '" height="' + bh + '"><title>' + label + ': ' + d.tickets + ' бил., ' + d.moneyRub + ' ₽</title></rect>' +
+      '<text class="lbl" x="' + (x + bw / 2).toFixed(1) + '" y="' + (y - 4) + '" text-anchor="middle">' + d.tickets + '</text>' +
+      (days.length <= 16 || i % Math.ceil(days.length / 16) === 0 ? '<text class="lbl" x="' + (x + bw / 2).toFixed(1) + '" y="' + (h - 8) + '" text-anchor="middle">' + label + '</text>' : '');
+  }).join('');
+  return '<svg class="sales-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Продажи по дням">' + bars + '</svg>';
+}
+async function salesAction(card, act) {
+  var id = card.getAttribute('data-sales-id');
+  var box = card.querySelector('.sales-detail');
+  var auth = { Authorization: 'Bearer ' + getToken() };
+  box.textContent = 'Загружаем…';
+  try {
+    if (act === 'days') {
+      var r1 = await fetch(ADMIN_ORDERS_URL + '?view=sales&performance_id=' + encodeURIComponent(id), { headers: auth });
+      var d1 = await r1.json();
+      if (!r1.ok) { box.textContent = errorMessage(d1); return; }
+      var p = d1.performance;
+      box.innerHTML = salesChartSvg(p.byDay || []) +
+        (p.seats && p.seats.guests != null ? '<div class="sales-line">С учётом пригласительных GuestSystem: свободно ' + p.seats.free + '.</div>' : '');
+      return;
+    }
+    if (act === 'pdf') {
+      var r2 = await fetch(ADMIN_ORDERS_URL + '?view=audience&format=pdf&performance_id=' + encodeURIComponent(id), { headers: auth });
+      if (!r2.ok) { box.textContent = 'Не получилось собрать PDF.'; return; }
+      var blob = await r2.blob();
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'aelita-zriteli-' + id + '.pdf';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      box.textContent = '';
+      return;
+    }
+    var r3 = await fetch(ADMIN_ORDERS_URL + '?view=audience&performance_id=' + encodeURIComponent(id), { headers: auth });
+    var d3 = await r3.json();
+    if (!r3.ok) { box.textContent = errorMessage(d3); return; }
+    var rows = [['Ряд', 'Место', 'Имя', 'Заказ', 'Билет', 'Вход']];
+    (d3.rows || []).forEach(function (x) {
+      rows.push([x.row || '', x.seat || '', x.name, x.orderNumber, x.ticketNumber, x.redeemedAt ? fmtDate(x.redeemedAt) : '']);
+    });
+    var csv = rows.map(function (row) {
+      return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
+    }).join('\r\n');
+    var blob2 = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+    var url2 = URL.createObjectURL(blob2);
+    var a2 = document.createElement('a');
+    a2.href = url2; a2.download = 'aelita-zriteli-' + id + '.csv';
+    document.body.appendChild(a2); a2.click(); a2.remove();
+    URL.revokeObjectURL(url2);
+    box.textContent = 'Зрителей: ' + (d3.rows || []).length + '.';
+  } catch (e) {
+    box.textContent = 'Не получилось связаться с сервером.';
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var blk = document.getElementById('salesBlock');
+  if (blk) blk.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-sales-act]');
+    if (!b) return;
+    salesAction(b.closest('[data-sales-id]'), b.getAttribute('data-sales-act'));
+  });
+  var rb = document.getElementById('salesReloadBtn');
+  if (rb) rb.addEventListener('click', loadSales);
 });
 
 async function loadOrders() {
@@ -2192,6 +2433,7 @@ async function loadData(opts) {
     loadEvents();
     loadRefunds();
     loadPerfActions(); // pack-v568
+    loadSales(); // pack-v571
     loadOrders();
     loadGiftCards();
     loadSubscriptions();

@@ -34,20 +34,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=69">
+<link rel="stylesheet" href="/assets/style.css?v=71">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
 .acc-meta{color:var(--sand);font-size:0.875rem;margin-bottom:36px}
 .acc-meta strong{color:var(--bone)}
 .purchase-list{display:flex;flex-direction:column;gap:1px;background:rgba(201,184,163,.15)}
-.purchase-item{background:var(--ink);padding:22px 26px;display:grid;grid-template-columns:1fr auto auto auto;gap:20px;align-items:center}
+.purchase-item{background:var(--ink);padding:22px 26px;display:grid;grid-template-columns:1fr auto auto auto auto;gap:20px;align-items:center}
 .purchase-item .name{font-family:'Montserrat',sans-serif;font-size:0.875rem;letter-spacing:.04em}
 .purchase-item .date{color:var(--sand);font-size:0.8125rem}
 .purchase-item .amount{font-family:'Montserrat',sans-serif;font-size:0.9375rem;color:var(--gold);white-space:nowrap}
 .purchase-item .contract-btn{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sand);background:none;border:1px solid rgba(201,184,163,.3);padding:8px 14px;cursor:pointer;white-space:nowrap;transition:all .2s}
 @media(hover:hover){.purchase-item .contract-btn:hover{border-color:var(--gold);color:var(--gold)}}
 .purchase-item .contract-btn:disabled{opacity:.5;cursor:default}
+/* pack-v573 (ТЗ С7): реквизиты чека — строкой под покупкой */
+.receipt-box{grid-column:1/-1;font-size:0.8125rem;color:var(--sand);line-height:1.6;border-top:1px solid rgba(201,184,163,.15);padding-top:12px;margin-top:4px}
+.receipt-box .name{font-family:'Montserrat',sans-serif;color:var(--gold)}
+.receipt-box .receipt-line{margin-bottom:8px;font-variant-numeric:tabular-nums}
+.receipt-box .receipt-hint{margin:6px 0 0;opacity:.8}
+.reg-item .receipt-box{margin-top:12px}
 .empty-state{padding:60px 20px;text-align:center;color:var(--sand);background:var(--coal)}
 .empty-state a{color:var(--gold)}
 .acc-actions{margin-top:40px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -103,6 +109,7 @@ body{max-width:100vw}
 @media(max-width:600px){.reg-item{grid-template-columns:1fr}.reg-item .cancel-btn{justify-self:start}.reg-actions{align-items:flex-start}.reg-msg{text-align:left}}
 @media(max-width:600px){.purchase-item{grid-template-columns:1fr;gap:10px}.purchase-item .amount{justify-self:start}.purchase-item .contract-btn{justify-self:start}}
   .code-send-btn{margin:-4px 0 6px;padding:10px 16px;font-size:.6875rem}
+  .mp-box{margin-top:22px;padding-top:18px;border-top:1px solid rgba(214,181,122,.15)}
 </style>
 </head>
 <body>
@@ -273,8 +280,8 @@ body{max-width:100vw}
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=69"></script>
-<script src="/assets/main.js?v=69"></script>
+<script src="/assets/account.js?v=71"></script>
+<script src="/assets/main.js?v=71"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -304,11 +311,25 @@ body{max-width:100vw}
       freeSeating: 'свободная рассадка',
       resendTickets: 'Прислать билеты на почту',
       downloadContract: 'Скачать договор',
+      receiptBtn: 'Чек',
+      receiptLoading: 'Ищем чек…',
+      receiptEmail: 'Чек отправлен на почту, указанную при оплате, в день оплаты. Если его нет — проверьте «Спам» или напишите нам.',
+      receiptPending: 'Чек ещё формируется — он придёт на почту, указанную при оплате. Обычно это занимает до суток.',
+      receiptNone: 'По этой покупке чека нет: она оплачена подарочной картой целиком.',
+      receiptPayment: 'Чек прихода',
+      receiptRefund: 'Чек возврата',
+      receiptReq: function (r) { return 'ФН ' + r.fn + ' · ФД ' + r.fd + ' · ФП ' + r.fp; },
+      receiptHint: 'Сам чек — в письме, которое пришло в день оплаты. По этим реквизитам его можно найти и проверить в приложении ФНС «Проверка чеков».',
       qrInEmail: 'QR — в письме с билетом',
       showQrAtEntrance: 'Покажите QR при входе',
       passwordNeededForEmail: 'Чтобы сменить адрес, введите текущий пароль.',
       // pack-v566 — кабинет без пароля (создан входом по коду)
       codeNeeded: 'Введите код из письма — нажмите «Прислать код».',
+      // pack-v575 (ТЗ С8) — настройки писем
+      remindersLabel: 'Напоминать о показах и встречах накануне',
+      remindersHint: 'Билеты, чеки, возвраты и письма об изменении показа приходят всегда.',
+      remindersOn: 'Сохранено: напоминания будут приходить.',
+      remindersOff: 'Сохранено: напоминаний больше не будет.',
       codePlaceholder: 'Код из письма (6 цифр)',
       sendCode: 'Прислать код',
       codeSent: 'Код отправлен на вашу почту — действует 10 минут.',
@@ -342,10 +363,23 @@ body{max-width:100vw}
       freeSeating: 'free seating',
       resendTickets: 'Email me the tickets',
       downloadContract: 'Download contract',
+      receiptBtn: 'Receipt',
+      receiptLoading: 'Looking for the receipt…',
+      receiptEmail: 'The receipt was emailed to the address used at payment on the day of payment. If you cannot find it, check your spam folder or write to us.',
+      receiptPending: 'The receipt is still being issued — it will be emailed to the address used at payment, usually within a day.',
+      receiptNone: 'There is no receipt for this purchase: it was paid with a gift card in full.',
+      receiptPayment: 'Payment receipt',
+      receiptRefund: 'Refund receipt',
+      receiptReq: function (r) { return 'FN ' + r.fn + ' · FD ' + r.fd + ' · FP ' + r.fp; },
+      receiptHint: 'The receipt itself is in the email sent on the day of payment. These details identify it in the Russian Tax Service receipt-check app.',
       qrInEmail: 'QR is in the ticket email',
       showQrAtEntrance: 'Show the QR at the entrance',
       passwordNeededForEmail: 'To change the address, enter your current password.',
       codeNeeded: 'Enter the code from the email — tap “Send code”.',
+      remindersLabel: 'Remind me about performances and events the day before',
+      remindersHint: 'Tickets, receipts, refunds and emails about changes to a performance always come.',
+      remindersOn: 'Saved: reminders will come.',
+      remindersOff: 'Saved: no more reminders.',
       codePlaceholder: 'Code from the email (6 digits)',
       sendCode: 'Send code',
       codeSent: 'The code has been sent to your email — it works for 10 minutes.',
@@ -408,7 +442,9 @@ body{max-width:100vw}
         '<span class="name">' + name + '</span>' +
         '<span class="date">' + fmtDate(p.paidAt) + '</span>' +
         '<span class="amount">' + fmtAmount(p.amount, p.currency) + '</span>' +
-        (pid ? '<button class="contract-btn" data-payment-id="' + pid + '" onclick="onDownloadContract(this)">' + t.downloadContract + '</button>' : '') +
+        (pid ? '<button class="contract-btn" data-payment-id="' + pid + '" onclick="onDownloadContract(this)">' + t.downloadContract + '</button>' +
+          '<button class="contract-btn" data-payment-id="' + pid + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' +
+          '<div class="receipt-box" hidden></div>' : '') +
       '</div>';
     }).join('') + '</div>';
     el.innerHTML = html;
@@ -532,9 +568,36 @@ body{max-width:100vw}
           (o.venue ? ' · ' + escapeHtml(o.venue) : '') + '</div>' +
         '<div class="reg-actions">' +
           '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>' +
+          (o.paymentId ? '<button class="contract-btn" data-payment-id="' + escapeHtml(o.paymentId) + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' : '') +
         '</div>' +
+        (o.paymentId ? '<div class="receipt-box" hidden></div>' : '') +
       '</div>';
     }).join('') + '</div>';
+  }
+
+  // pack-v573 (ТЗ С7): чек по кнопке — блок под покупкой. Повторное
+  // нажатие сворачивает блок.
+  function onReceipt(buttonEl) {
+    var item = buttonEl.closest('.purchase-item, .reg-item');
+    var box = item && item.querySelector('.receipt-box');
+    if (!box) return;
+    if (!box.hidden && box.getAttribute('data-loaded')) { box.hidden = true; return; }
+    box.hidden = false;
+    box.textContent = t.receiptLoading;
+    window.AELITA_account.getReceipts(buttonEl.getAttribute('data-payment-id'), {
+      onError: function (msg) { box.textContent = msg; },
+    }).then(function (data) {
+      if (!data) return;
+      box.setAttribute('data-loaded', '1');
+      if (data.status === 'none') { box.textContent = t.receiptNone; return; }
+      if (data.status === 'pending') { box.textContent = t.receiptPending; return; }
+      if (data.status !== 'registered' || !data.receipts || !data.receipts.length) { box.textContent = t.receiptEmail; return; }
+      box.innerHTML = data.receipts.map(function (r) {
+        return '<div class="receipt-line"><span class="name">' + (r.type === 'refund' ? t.receiptRefund : t.receiptPayment) + '</span> · ' +
+          escapeHtml(r.registeredAt ? fmtDate(r.registeredAt) : '') + ' · ' + escapeHtml(fmtAmount(r.amountRub, 'RUB')) + '<br>' +
+          escapeHtml(t.receiptReq(r)) + '</div>';
+      }).join('') + '<p class="receipt-hint">' + escapeHtml(t.receiptHint) + '</p>';
+    });
   }
 
   function onResendTickets(buttonEl) {
@@ -599,7 +662,16 @@ body{max-width:100vw}
 
   function onExportData() {
     if (!lastAccountData) return;
-    window.AELITA_account.exportData(lastAccountData);
+    // pack-v572 (ТЗ С9): архив собирается на сервере до полуминуты — кнопка
+    // показывает это, ошибка — сообщением.
+    var btn = document.querySelector('[onclick="onExportData()"]');
+    var label = btn ? btn.textContent : '';
+    window.AELITA_account.exportData(lastAccountData, {
+      onStatus: function (msg, kind) {
+        if (btn) { btn.disabled = kind === 'busy'; btn.textContent = kind === 'busy' ? msg : label; }
+        if (kind === 'error') alert(msg);
+      },
+    });
   }
 
   function onChangePassword(evt) {
@@ -747,6 +819,41 @@ body{max-width:100vw}
     if (emailHint) emailHint.textContent = t.emailHintCode;
   }
 
+  // pack-v575 (ТЗ С8): переключатель напоминаний — под формой профиля,
+  // сохраняется сразу при нажатии (без кнопки «Сохранить»).
+  function renderMailPrefs(prefs) {
+    var form = document.getElementById('profile-form');
+    if (!form || document.getElementById('mp-box')) return;
+    var box = document.createElement('div');
+    box.id = 'mp-box';
+    box.className = 'mp-box';
+    var label = document.createElement('label');
+    label.className = 'cb-item';
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'mp-reminders';
+    cb.checked = prefs.reminders !== false;
+    var span = document.createElement('span');
+    span.textContent = t.remindersLabel;
+    label.appendChild(cb); label.appendChild(span);
+    var hint = document.createElement('p');
+    hint.className = 'acc-hint';
+    hint.textContent = t.remindersHint;
+    var msg = document.createElement('div');
+    msg.id = 'mp-message';
+    box.appendChild(label); box.appendChild(hint); box.appendChild(msg);
+    form.insertAdjacentElement('afterend', box);
+    cb.addEventListener('change', function () {
+      var want = cb.checked;
+      cb.disabled = true;
+      msg.textContent = ''; msg.classList.remove('ok');
+      window.AELITA_account.updateProfile({ mailPrefs: { reminders: want } }, {
+        onSuccess: function () { cb.disabled = false; msg.textContent = want ? t.remindersOn : t.remindersOff; msg.classList.add('ok'); },
+        onError: function (m) { cb.disabled = false; cb.checked = !want; msg.textContent = m; },
+      });
+    });
+  }
+
   function doLogout() {
     window.AELITA_account.logout();
     location.href = '/account';
@@ -783,6 +890,7 @@ body{max-width:100vw}
     // поле не спрашивали) — показываем email как раньше, не пустую строку.
     setGreeting(data.name);
     if (data.hasPassword === false) enableCodeConfirm();
+    if (window.AELITA_account.mailPrefsEnabled && window.AELITA_account.mailPrefsEnabled()) renderMailPrefs(data.mailPrefs || { reminders: true });
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
     loadTicketOrders();
@@ -791,7 +899,7 @@ body{max-width:100vw}
     document.getElementById('content').style.display = 'block';
   })();
 </script>
-<script src="/assets/subscription.js?v=69"></script>
-<script src="/assets/phone-prefix.js?v=69"></script>
+<script src="/assets/subscription.js?v=71"></script>
+<script src="/assets/phone-prefix.js?v=71"></script>
 </body>
 </html>

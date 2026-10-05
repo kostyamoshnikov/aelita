@@ -16,6 +16,9 @@
       creating: 'Создаём аккаунт…',
       signingIn: 'Входим…',
       downloadingContract: 'Готовим договор…',
+      preparingExport: 'Собираем ваши данные — это до полуминуты…', // pack-v572, ТЗ С9
+      exportTooMany: 'Выгрузку можно запросить до пяти раз в час — попробуйте позже.',
+      exportFailed: 'Не получилось собрать данные. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru.',
       changingPassword: 'Сохраняем новый пароль…',
       errors: {
         bad_name: 'Укажите имя.',
@@ -77,6 +80,9 @@
       creating: 'Creating account…',
       signingIn: 'Signing in…',
       downloadingContract: 'Preparing the contract…',
+      preparingExport: 'Collecting your data — this takes up to half a minute…', // pack-v572, TZ C9
+      exportTooMany: 'You can request an export up to five times an hour — please try later.',
+      exportFailed: 'Could not collect your data. Please try again or write to us: aelita.production@yandex.ru.',
       changingPassword: 'Saving new password…',
       errors: {
         bad_name: 'Please enter your name.',
@@ -155,6 +161,11 @@
   // созданы и шлюз не обновлён, страница входа код не предлагает
   // (кнопки скрыты). Включить — LOGIN_BY_CODE = true после выкладки.
   var LOGIN_BY_CODE = false;
+  // pack-v575 (ТЗ С8) — переключатель «Напоминать о показах и встречах»
+  // в кабинете. ⚠️ ВЫКЛЮЧАТЕЛЬ интерфейса: пока false, переключателя нет.
+  // Серверная часть (фильтр в напоминаниях, ссылка «не присылать» в
+  // письме) работает всегда.
+  var MAIL_PREFS = false;
   var REQUEST_LOGIN_CODE_URL = API_BASE && API_BASE + '/request-login-code';
   var LOGIN_WITH_CODE_URL = API_BASE && API_BASE + '/login-with-code';
   // pack-v235 — регистрация на бесплатные мероприятия (_tools/Events/),
@@ -449,6 +460,7 @@
     // пароля, а в кабинете — для подтверждения смены почты, удаления и
     // первого пароля у кабинета без пароля. Ответ один для всех адресов.
     loginByCodeEnabled: function () { return LOGIN_BY_CODE; },
+    mailPrefsEnabled: function () { return MAIL_PREFS; },
     requestLoginCode: async function (email, opts) {
       opts = opts || {};
       var buttonEl = opts.buttonEl || null;
@@ -815,6 +827,25 @@
       }
     },
 
+    // pack-v573 (ТЗ С7): реквизиты чека своего платежа (заказ билетов,
+    // покупка, списание подписки). Ссылки на чек ЮKassa не даёт — сам чек
+    // приходит на почту; здесь — ФН, ФД, ФП для приложения ФНС.
+    getReceipts: async function (paymentId, opts) {
+      opts = opts || {};
+      var token = getToken();
+      if (!token) { if (opts.onError) opts.onError(errorMessage({ error: 'auth_required' })); return null; }
+      try {
+        var res = await fetch(TICKETS_MY_ORDERS_URL + '?receipt=' + encodeURIComponent(paymentId), { headers: { Authorization: 'Bearer ' + token } });
+        var data = await res.json();
+        if (res.ok) return data;
+        if (opts.onError) opts.onError(errorMessage(data));
+        return null;
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null));
+        return null;
+      }
+    },
+
     // Выслать себе билеты повторно. Кнопку блокируем на время запроса:
     // второе нажатие — второе письмо, а не ускорение первого.
     resendTicketOrder: async function (orderId, opts) {
@@ -851,7 +882,39 @@
     // отдаёт про аккаунт (email, дата регистрации, покупки), уже есть
     // на странице к моменту, когда кабинет отрисован. Отдельная Cloud
     // Function для этого не нужна.
-    exportData: function (accountData) {
+    // pack-v572 (ТЗ С9): полный архив с сервера — заказы, регистрации,
+    // подписки, карты, согласия, заявления (data.json + data.pdf). Если
+    // сервер ещё старый и отвечает обычным JSON — как раньше, локальный
+    // файл из ответа /account/me.
+    exportData: async function (accountData, opts) {
+      opts = opts || {};
+      var token = getToken();
+      if (ME_URL && token) {
+        if (opts.onStatus) opts.onStatus(t.preparingExport, 'busy');
+        try {
+          var res = await fetch(ME_URL + '?export=1&lang=' + LANG, { headers: { Authorization: 'Bearer ' + token } });
+          var type = (res.headers.get('Content-Type') || '').toLowerCase();
+          if (res.ok && type.indexOf('application/zip') === 0) {
+            var zip = await res.blob();
+            var zurl = URL.createObjectURL(zip);
+            var za = document.createElement('a');
+            za.href = zurl;
+            za.download = 'aelita-my-data.zip';
+            document.body.appendChild(za);
+            za.click();
+            za.remove();
+            setTimeout(function () { URL.revokeObjectURL(zurl); }, 1000);
+            if (opts.onStatus) opts.onStatus('', 'done');
+            return;
+          }
+          if (res.status === 429) { if (opts.onStatus) opts.onStatus(t.exportTooMany, 'error'); else alert(t.exportTooMany); return; }
+          if (!res.ok) { if (opts.onStatus) opts.onStatus(t.exportFailed, 'error'); else alert(t.exportFailed); return; }
+          if (opts.onStatus) opts.onStatus('', 'done');
+        } catch (e) {
+          if (opts.onStatus) opts.onStatus(t.exportFailed, 'error'); else alert(t.exportFailed);
+          return;
+        }
+      }
       var blob = new Blob([JSON.stringify(accountData, null, 2)], { type: 'application/json' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
