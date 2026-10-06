@@ -27,7 +27,7 @@
   // ТЗ). Пока false — на странице оплаты строка «Автосписание включим в
   // ближайшие дни». Вошедшему человеку сервер сам говорит, включено ли
   // (GET /payments/subscriptions → enabled), и это побеждает константу.
-  var AUTOPAY_LIVE = false;
+  var AUTOPAY_LIVE = true;
   // ⚠️ Пара с COMPANY_INVOICES_ENABLED (выпуск 4 ТЗ, оплата от компании по
   // счёту). Обе половины переключает _tools/Payments/subscriptions_switch.py
   // invoices on|off; аудит `subscriptions` сверяет.
