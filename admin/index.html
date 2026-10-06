@@ -110,6 +110,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions .btn-small{flex:1}
 .modal-err{font-size:0.8125rem;color:#e08a6e;margin-top:10px;display:none}
+/* pack-v580: оплата подписки переводом/наличными */
+.mp-btn{flex:1;padding:11px}
+.mp-row{display:flex;gap:10px}
+.mp-row .field{flex:1;min-width:0}
+.mp-hint{font-size:0.75rem;color:var(--sand);margin-top:-6px;margin-bottom:12px}
 .modal-ok{font-size:0.8125rem;color:var(--gold);margin-top:10px}
 
 /* Правки сайта */
@@ -317,7 +322,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
          (маршрут /admin/subscriptions). Счета компаний — выпуск 4 ТЗ, позже. -->
-    <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button> <button class="mini-btn" id="subsResetTestBtn" style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button></p>
+    <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button> <button class="mini-btn" id="subsResetTestBtn" style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button> <button class="mini-btn" id="subsManualBtn">+ Оплата переводом / наличными</button></p>
     <div id="subsSummary" style="color:var(--sand);font-size:0.8125rem;line-height:1.7;margin:0 0 12px"></div>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="subSearch" placeholder="Поиск по имени, email или телефону…">
@@ -328,6 +333,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         <option value="canceled">Отменена, месяц идёт</option>
         <option value="awaiting_autopay">Оплачено, без автосписания</option>
         <option value="no_autopay">Карта не сохранилась</option>
+        <option value="manual">Переводом / наличными</option>
         <option value="suspended">Приостановлена</option>
         <option value="ended">Закончилась</option>
         <option value="ended_week">Закончились за неделю</option>
@@ -487,6 +493,59 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <button class="btn-small btn-ghost" id="addPurchaseCancelBtn" style="flex:1">Отмена</button>
     </div>
     <p class="modal-err" id="addPurchaseErr"></p>
+  </div>
+</div>
+
+<!-- pack-v580 — модалка: оплата подписки переводом на карту или наличными -->
+<div class="modal-overlay" id="manualPayModal">
+  <div class="modal-box">
+    <h3 id="mp-title">Оплата переводом / наличными</h3>
+    <p>Человек заплатил не через сайт. Участие станет действующим до даты, которую посчитаем по числу месяцев; если подписка без карты уже действует — месяцы прибавятся к её сроку. Участнику уйдёт письмо «Оплата получена», за 3 дня до конца — как продлить. Автосписаний нет.</p>
+    <div class="field">
+      <label for="mp-plan">Поток</label>
+      <select id="mp-plan"><option value="community_main">Основной поток</option><option value="community_biz">Для предпринимателей</option></select>
+    </div>
+    <div class="field">
+      <label for="mp-name">Имя и фамилия</label>
+      <input class="ym-disable-keys" type="text" id="mp-name" placeholder="Иван Иванов" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="mp-email">Email</label>
+      <input class="ym-disable-keys" type="email" id="mp-email" placeholder="email@example.com" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="mp-phone">Телефон</label>
+      <input class="ym-disable-keys" type="tel" id="mp-phone" placeholder="+7 900 000-00-00" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="mp-method">Как оплатил</label>
+      <select id="mp-method"><option value="transfer">Переводом на карту</option><option value="cash">Наличными</option></select>
+    </div>
+    <div class="mp-row">
+      <div class="field">
+        <label for="mp-months">Месяцев</label>
+        <select id="mp-months"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+      </div>
+      <div class="field">
+        <label for="mp-amount">Сумма, ₽</label>
+        <input class="ym-disable-keys" type="number" id="mp-amount" min="0" step="1" inputmode="numeric">
+      </div>
+    </div>
+    <div class="field">
+      <label for="mp-date">День оплаты</label>
+      <input class="ym-disable-keys" type="date" id="mp-date">
+    </div>
+    <p class="mp-hint" id="mp-hint"></p>
+    <div class="field">
+      <label for="mp-note">Комментарий (видно только в админке)</label>
+      <input class="ym-disable-keys" type="text" id="mp-note" maxlength="200" placeholder="Например: перевод от мужа, Сбер">
+    </div>
+    <label class="mp-hint"><input type="checkbox" id="mp-test"> тестовая запись</label>
+    <div class="modal-actions">
+      <button class="btn-small mp-btn" id="manualPayConfirmBtn">Внести оплату</button>
+      <button class="btn-small btn-ghost mp-btn" id="manualPayCancelBtn">Отмена</button>
+    </div>
+    <p class="modal-err" id="manualPayErr"></p>
   </div>
 </div>
 
@@ -2247,7 +2306,13 @@ var SUB_STATUS = {
   active: 'Списывается', past_due: 'Списание не прошло', canceled: 'Отменена, участие до конца месяца',
   awaiting_autopay: 'Оплачено до включения автосписания', no_autopay: 'Оплачено, карта не сохранилась',
   suspended: 'Приостановлена (3 отказа)', ended: 'Закончилась',
+  manual: 'Оплачено переводом / наличными', invoice: 'Оплачено компанией по счёту',
 };
+var MANUAL_METHOD = { transfer: 'переводом', cash: 'наличными' };
+function subStatusText(s) {
+  if (s.status === 'manual') return 'Оплачено ' + (MANUAL_METHOD[s.manualMethod] || 'переводом');
+  return SUB_STATUS[s.status] || s.status;
+}
 function fmtDay(ymd) {
   if (!ymd) return '—';
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
@@ -2309,15 +2374,19 @@ function renderSubscriptions() {
     if (['active', 'past_due', 'awaiting_autopay', 'no_autopay'].indexOf(s.status) >= 0) acts.push('<button class="mini-btn" data-sub-act="cancel" data-sub-id="' + s.id + '">Отменить</button>');
     if (s.hasCard && (s.status === 'past_due' || s.status === 'suspended')) acts.push('<button class="mini-btn" data-sub-act="retry" data-sub-id="' + s.id + '">Повторить списание</button>');
     if (s.refundable) acts.push('<button class="mini-btn" data-sub-act="refund" data-sub-id="' + s.id + '">Вернуть списание</button>');
+    // pack-v580: оплата переводом/наличными — продлить ещё раз или закрыть.
+    if (['manual', 'awaiting_autopay', 'no_autopay', 'canceled', 'ended', 'suspended'].indexOf(s.status) >= 0) acts.push('<button class="mini-btn" data-sub-manual="' + s.id + '">' + (s.status === 'manual' ? 'Продлить' : 'Внести оплату переводом / наличными') + '</button>');
+    if (s.status === 'manual') acts.push('<button class="mini-btn" data-sub-act="manual_end" data-sub-id="' + s.id + '">Закрыть сейчас</button>');
     var pays = (s.payments || []).slice().reverse().map(function (p) {
       return '<div class="ev-person"><span class="who">' + (p.ok ? (p.refunded ? 'возвращено' : 'оплачено') : 'отказ' + (p.reason ? ' — ' + escapeHtml(p.reason) : '')) +
-        '<small>' + fmtGcDate(p.at) + ' · ' + fmtMoney(Number(p.amount)) + ' · ' + escapeHtml(p.kind || '') + '</small></span></div>';
+        '<small>' + fmtGcDate(p.at) + ' · ' + fmtMoney(Number(p.amount)) + ' · ' +
+        (p.kind === 'manual' ? escapeHtml((MANUAL_METHOD[p.method] || 'переводом') + (p.months ? ', ' + p.months + ' мес.' : '') + (p.note ? ' — ' + p.note : '')) : escapeHtml(p.kind || '')) + '</small></span></div>';
     }).join('');
     return '<div class="ev-card">' +
       '<div class="ev-head"><div>' +
         '<div class="ev-title">' + (s.isTest ? '[ТЕСТ] ' : '') + escapeHtml(s.planTitle) + ' — ' + escapeHtml(s.name || s.email) + '</div>' +
         '<div class="ev-when">' + escapeHtml(s.email) + (s.phone ? ' · ' + escapeHtml(s.phone) : '') + (s.methodTitle ? ' · ' + escapeHtml(s.methodTitle) : '') + '</div>' +
-        '<div class="ev-when">' + escapeHtml(SUB_STATUS[s.status] || s.status) +
+        '<div class="ev-when">' + escapeHtml(subStatusText(s)) +
           ' · оплачено до ' + fmtDay(s.paidThrough) +
           (s.nextChargeAt ? ' · следующее списание ' + fmtDay(s.nextChargeAt) : '') +
           (s.status === 'past_due' ? ' · повтор ' + fmtDay(s.nextRetryAt) + ', попытка ' + (s.attempt + 1) + ' из 3' : '') +
@@ -2383,7 +2452,8 @@ document.getElementById('subsBlock').addEventListener('click', async function (e
   var act = b.dataset.subAct;
   var q = { cancel: 'Отменить подписку? Списаний больше не будет, участие — до конца оплаченного месяца. Участнику уйдёт письмо.',
     retry: 'Списать с сохранённой карты прямо сейчас?',
-    refund: 'Вернуть последнее списание полностью? Участие закончится сегодня, участнику уйдёт письмо.' }[act];
+    refund: 'Вернуть последнее списание полностью? Участие закончится сегодня, участнику уйдёт письмо.',
+    manual_end: 'Закрыть участие сейчас? Подписка станет «Закончилась», письма участнику не будет. Деньги, если нужно, верните сами.' }[act];
   if (!window.confirm(q)) return;
   b.disabled = true;
   var r = await subsPost({ action: act, id: b.dataset.subId });
@@ -2391,6 +2461,83 @@ document.getElementById('subsBlock').addEventListener('click', async function (e
   if (act === 'retry') window.alert(r.data.outcome === 'succeeded' ? 'Списание прошло.' : r.data.outcome === 'canceled' ? 'Банк снова отказал.' : 'Ждём ответа ЮKassa — статус обновится сам.');
   loadSubscriptions();
 });
+// ── pack-v580: оплата подписки переводом на карту или наличными ──
+var MP_PRICE = { community_main: 5000, community_biz: 10000 };
+var mpOpId = null;
+var mpAmountTouched = false;
+function mpToday() { return new Date(Date.now() + 3 * 3600000).toISOString().slice(0, 10); }
+function mpFullNameOk(v) { return String(v || '').trim().split(/\s+/).filter(function (w) { return /\p{L}.*\p{L}/u.test(w); }).length >= 2; }
+function mpRecalc() {
+  var plan = document.getElementById('mp-plan').value, months = Number(document.getElementById('mp-months').value);
+  if (!mpAmountTouched) document.getElementById('mp-amount').value = MP_PRICE[plan] * months;
+  var s = (subsData && subsData.subscriptions || []).filter(function (x) {
+    return x.plan === plan && x.email === document.getElementById('mp-email').value.trim().toLowerCase() && !!x.isTest === document.getElementById('mp-test').checked;
+  })[0];
+  var today = (subsData && subsData.today) || mpToday();
+  var hint = '';
+  if (s && (s.status === 'active' || s.status === 'past_due')) hint = '⚠️ У этого человека уже подписка с картой (автосписание) — внести перевод нельзя, сначала отмените её.';
+  else if (s && s.paidThrough && s.paidThrough > today && s.status !== 'ended' && s.status !== 'suspended') hint = 'Участие уже оплачено до ' + fmtDay(s.paidThrough) + ' — месяцы прибавятся к этой дате, день оплаты не важен.';
+  else hint = 'Участие будет считаться с дня оплаты.';
+  document.getElementById('mp-hint').textContent = hint;
+}
+function openManualPay(sub) {
+  mpOpId = 'mp' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  mpAmountTouched = false;
+  document.getElementById('mp-title').textContent = sub ? 'Продлить: ' + (sub.name || sub.email) : 'Оплата переводом / наличными';
+  document.getElementById('mp-plan').value = sub ? sub.plan : 'community_main';
+  document.getElementById('mp-name').value = sub ? (sub.name || '') : '';
+  document.getElementById('mp-email').value = sub ? sub.email : '';
+  document.getElementById('mp-phone').value = sub ? (sub.phone || '') : '';
+  document.getElementById('mp-method').value = sub && sub.manualMethod ? sub.manualMethod : 'transfer';
+  document.getElementById('mp-months').value = '1';
+  document.getElementById('mp-date').value = mpToday();
+  document.getElementById('mp-note').value = '';
+  document.getElementById('mp-test').checked = Boolean(sub && sub.isTest);
+  ['mp-plan', 'mp-email'].forEach(function (id) { document.getElementById(id).disabled = Boolean(sub); });
+  document.getElementById('mp-test').disabled = Boolean(sub);
+  document.getElementById('manualPayErr').style.display = 'none';
+  document.getElementById('manualPayConfirmBtn').disabled = false;
+  mpRecalc();
+  document.getElementById('manualPayModal').classList.add('open');
+}
+document.getElementById('subsManualBtn').addEventListener('click', function () { openManualPay(null); });
+document.getElementById('subsBlock').addEventListener('click', function (e) {
+  var b = e.target.closest('button[data-sub-manual]');
+  if (!b) return;
+  var sub = (subsData.subscriptions || []).filter(function (x) { return x.id === b.dataset.subManual; })[0];
+  if (sub) openManualPay(sub);
+});
+['mp-plan', 'mp-months', 'mp-test'].forEach(function (id) { document.getElementById(id).addEventListener('change', mpRecalc); });
+document.getElementById('mp-email').addEventListener('input', mpRecalc);
+document.getElementById('mp-amount').addEventListener('input', function () { mpAmountTouched = true; });
+document.getElementById('manualPayCancelBtn').addEventListener('click', function () { document.getElementById('manualPayModal').classList.remove('open'); });
+document.getElementById('manualPayConfirmBtn').addEventListener('click', async function () {
+  var err = document.getElementById('manualPayErr');
+  var show = function (m) { err.textContent = m; err.style.display = 'block'; };
+  err.style.display = 'none';
+  var v = function (id) { return document.getElementById(id).value.trim(); };
+  if (!mpFullNameOk(v('mp-name'))) return show('Укажите имя и фамилию.');
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('mp-email'))) return show('Проверьте email.');
+  if (v('mp-amount') === '' || Number(v('mp-amount')) < 0) return show('Укажите сумму.');
+  var methodText = document.getElementById('mp-method').value === 'cash' ? 'наличными' : 'переводом';
+  if (!window.confirm('Внести ' + fmtMoney(Number(v('mp-amount'))) + ' ' + methodText + ' за ' + v('mp-months') + ' мес. — ' + v('mp-name') + ', ' + v('mp-email') + '? Участнику уйдёт письмо «Оплата получена».')) return;
+  var btn = this;
+  btn.disabled = true;
+  var r = await subsPost({ action: 'manual_add', plan: v('mp-plan'), name: v('mp-name'), email: v('mp-email'), phone: v('mp-phone'),
+    method: document.getElementById('mp-method').value, months: Number(v('mp-months')), amount: Number(v('mp-amount')),
+    start_date: v('mp-date'), note: v('mp-note'), op_id: mpOpId, test: document.getElementById('mp-test').checked });
+  if (!r.ok) {
+    btn.disabled = false;
+    var e = r.data.error;
+    return show(e === 'card_subscription_active' ? 'У этого человека подписка с картой (автосписание) — сначала отмените её.'
+      : e === 'bad_name' ? 'Укажите имя и фамилию.' : e === 'bad_email' ? 'Проверьте email.' : e === 'bad_phone' ? 'Проверьте телефон или оставьте пустым.'
+      : e === 'bad_start_date' ? 'День оплаты — не раньше чем 2 месяца назад и не позже чем через неделю.' : errorMessage(r.data));
+  }
+  document.getElementById('manualPayModal').classList.remove('open');
+  window.alert((r.data.already ? 'Эта оплата уже была внесена. ' : '') + 'Готово: участие до ' + fmtDay(r.data.subscription.paidThrough) + '.');
+  loadSubscriptions();
+});
+
 document.getElementById('subsResetTestBtn').addEventListener('click', async function () {
   if (!window.confirm('Удалить ВСЕ тестовые подписки? Боевые не затрагиваются.')) return;
   var r = await subsPost({ action: 'reset_test' });
@@ -2403,7 +2550,7 @@ document.getElementById('subsCsvBtn').addEventListener('click', function () {
     var okp = (s.payments || []).filter(function (p) { return p.ok; });
     var got = okp.reduce(function (a, p) { return a + Number(p.amount || 0); }, 0);
     var back = okp.filter(function (p) { return p.refunded; }).reduce(function (a, p) { return a + Number(p.amount || 0); }, 0);
-    rows.push([s.planTitle, s.name || '', s.email, s.phone || '', SUB_STATUS[s.status] || s.status, s.amount, s.paidThrough || '', s.nextChargeAt || '',
+    rows.push([s.planTitle, s.name || '', s.email, s.phone || '', subStatusText(s), s.amount, s.paidThrough || '', s.nextChargeAt || '',
       s.startedAt ? fmtGcDate(s.startedAt) : '', s.canceledAt ? fmtGcDate(s.canceledAt) : '', okp.length, got, back, s.isTest ? 'да' : '']);
   });
   var csv = rows.map(function (row) { return row.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');

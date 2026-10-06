@@ -22,7 +22,7 @@
   var TEXT = {
     ru: {
       notConfigured: 'Оплата на сайте ещё не подключена — напишите нам напрямую, поможем оформить: aelita.production@yandex.ru',
-      badName: 'Укажите имя',
+      badName: 'Укажите имя и фамилию',
       badEmail: 'Проверьте email — похоже, в адресе опечатка',
       badPhone: 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой',
       badAmount: 'Укажите сумму от 500 до 100 000 ₽',
@@ -33,7 +33,7 @@
     },
     en: {
       notConfigured: "Payment isn't connected on the site yet — email us directly and we'll help set it up: aelita.production@yandex.ru",
-      badName: 'Please enter your name',
+      badName: 'Please enter your first and last name',
       badEmail: "Check your email — the address doesn't look right",
       badPhone: "Check your phone number — it looks incomplete or incorrect",
       badAmount: 'Enter an amount between 500 and 100,000 ₽',
@@ -373,6 +373,11 @@
   // opts.msgElId — id элемента, куда вывести сообщение об ошибке или
   // прогрессе (см. showPayMsg выше) — если не передан, используется
   // alert() как отказоустойчивый запасной вариант.
+  // Имя и фамилия: два слова, в каждом не меньше двух букв, любой алфавит.
+  function fullNameOk(v) {
+    return String(v || '').trim().split(/\s+/).filter(function (w) { return /\p{L}.*\p{L}/u.test(w); }).length >= 2;
+  }
+
   window.AELITA_pay = async function (product, opts) {
     opts = opts || {};
     var name = (opts.name || '').trim();
@@ -419,7 +424,10 @@
     // покупки у стойки, см. докстринг выше про 54-ФЗ). Проверяем по
     // очереди и подсвечиваем ИМЕННО то поле, где ошибка — а не одно
     // общее сообщение — так человек сразу видит, что поправить.
-    if (!name) {
+    // pack-v580: в поле формы — имя И фамилия (два слова по 2+ буквы).
+    // Имя из кабинета без поля на странице не проверяем строже, чем
+    // раньше: старые кабинеты с одним именем не должны терять оплату.
+    if (!name || (nameEl && !fullNameOk(name))) {
       showFieldError(nameEl, t.badName);
       showPayMsg(msgElId, t.badName);
       if (nameEl) nameEl.focus();

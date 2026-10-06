@@ -21,7 +21,7 @@
       exportFailed: 'Не получилось собрать данные. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru.',
       changingPassword: 'Сохраняем новый пароль…',
       errors: {
-        bad_name: 'Укажите имя.',
+        bad_name: 'Укажите имя и фамилию.',
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
         email_taken: 'Этот email нам уже знаком — попробуйте войти. Не помните пароль — нажмите «Забыли пароль?» у формы входа.',
@@ -85,7 +85,7 @@
       exportFailed: 'Could not collect your data. Please try again or write to us: aelita.production@yandex.ru.',
       changingPassword: 'Saving new password…',
       errors: {
-        bad_name: 'Please enter your name.',
+        bad_name: 'Please enter your first and last name.',
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
         email_taken: "That email is already registered — try signing in. Don't remember the password? Use “Forgot password?” by the sign-in form.",

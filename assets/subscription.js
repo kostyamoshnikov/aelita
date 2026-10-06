@@ -34,6 +34,11 @@
   var INVOICES_LIVE = false;
   var INVOICE_API = API + '/payments/company-invoice';
 
+  // pack-v580: имя и фамилия — два слова, в каждом не меньше двух букв (любой алфавит).
+  function fullNameOk(v) {
+    return String(v || '').trim().split(/\s+/).filter(function (w) { return /\p{L}.*\p{L}/u.test(w); }).length >= 2;
+  }
+
   var MONTHS = {
     ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -46,11 +51,11 @@
       payFirst: 'Оплатить первый месяц — ',
       payNextBtn: 'Оплатить следующий месяц — ',
       extendTail: function (s) { return ' — участие продлится с ' + d(s.paidThrough) + ' ещё на месяц.'; },
-      alreadyTitle: { active: 'Подписка действует', past_due: 'Списание не прошло', canceled: 'Подписка отменена', invoice: 'Оплачено компанией', other: 'Участие оплачено' },
+      alreadyTitle: { active: 'Подписка действует', past_due: 'Списание не прошло', canceled: 'Подписка отменена', invoice: 'Оплачено компанией', manual: 'Участие оплачено', other: 'Участие оплачено' },
       resultPaidTitle: 'Оплата прошла',
       whenTail: function (day) { return day > 28 ? ', дальше ' + day + '-го числа каждого месяца (в коротких месяцах — в последний день) — до отмены.' : ', дальше ' + day + '-го числа каждого месяца — до отмены.'; },
       perMonth: ' ₽ в месяц',
-      badName: 'Укажите имя',
+      badName: 'Укажите имя и фамилию',
       badEmail: 'Проверьте email — похоже, в адресе опечатка',
       badPhone: 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой',
       needPd: 'Отметьте согласие на обработку персональных данных.',
@@ -100,6 +105,7 @@
         no_autopay: function (s) { return 'Оплачено до ' + d(s.paidThrough) + (s.cardUnlinkedAt ? ' · карта отвязана' : ' · карта не сохранилась') + ', следующий месяц — оплатой на странице потока'; },
         suspended: function () { return 'Не действует: три попытки списания не прошли'; },
         invoice: function (s) { return T.invStatus(s); },
+        manual: function (s) { return T.manualStatus(s); },
         ended: function () { return 'Не действует'; },
       },
       btn: {
@@ -137,11 +143,12 @@
       inv: {
         badCompany: 'Укажите название компании', badInn: 'Проверьте ИНН — 10 цифр у организации, 12 у ИП', badKpp: 'Укажите КПП — 9 цифр',
         badAddress: 'Укажите юридический адрес', badAccEmail: 'Проверьте почту бухгалтерии', badEmail: 'Проверьте email участника',
-        badPhone: 'Проверьте телефон участника', badName: 'Укажите имя участника', needPd: 'Отметьте согласие на обработку персональных данных.',
+        badPhone: 'Проверьте телефон участника', badName: 'Укажите имя и фамилию участника', needPd: 'Отметьте согласие на обработку персональных данных.',
         sending: 'Выставляем счёт…', already: 'У этого участника уже есть действующая подписка на поток — второй счёт не нужен.',
         limited: 'Слишком много запросов — попробуйте через 10 минут или напишите нам: aelita.production@yandex.ru',
         done: function (r) { return 'Счёт № ' + r.number + ' на ' + rub(r.amount) + ' отправлен на почту бухгалтерии, копия — участнику. Оплатить до ' + d(r.due_on) + '.'; },
       },
+      manualStatus: function (s) { return 'Оплачено ' + (s.manual && s.manual.method === 'cash' ? 'наличными' : 'переводом') + ' до ' + d(s.paidThrough) + ' · за 3 дня до конца напомним письмом, как продлить'; },
       invStatus: function (s) { return 'Оплачено компанией' + (s.invoice && s.invoice.company ? ' (' + s.invoice.company + ')' : '') + ' до ' + d(s.paidThrough) + (s.invoice && s.invoice.noRenew ? ' · продление отключено' : ' · за 7 дней до конца компании придёт новый счёт'); },
       btnNoRenew: 'Не продлевать', btnRenewOn: 'Продлевать',
       locale: 'ru-RU',
@@ -152,11 +159,11 @@
       payFirst: 'Pay for the first month — ',
       payNextBtn: 'Pay for the next month — ',
       extendTail: function (s) { return ' — your participation is extended from ' + d(s.paidThrough) + ' for another month.'; },
-      alreadyTitle: { active: 'Subscription active', past_due: 'Payment failed', canceled: 'Subscription cancelled', invoice: 'Paid by your company', other: 'Participation paid' },
+      alreadyTitle: { active: 'Subscription active', past_due: 'Payment failed', canceled: 'Subscription cancelled', invoice: 'Paid by your company', manual: 'Participation paid', other: 'Participation paid' },
       resultPaidTitle: 'Payment received',
       whenTail: function (day) { return day > 28 ? ', then on day ' + day + ' of every month (on the last day in shorter months) — until you cancel.' : ', then on day ' + day + ' of every month — until you cancel.'; },
       perMonth: ' ₽ per month',
-      badName: 'Please enter your name',
+      badName: 'Please enter your first and last name',
       badEmail: "Check your email — the address doesn't look right",
       badPhone: 'Check your phone number — it looks incomplete or incorrect',
       needPd: 'Please tick the personal data consent box.',
@@ -205,6 +212,7 @@
         no_autopay: function (s) { return 'Paid until ' + d(s.paidThrough) + (s.cardUnlinkedAt ? ' · card removed' : ' · the card was not saved') + ', pay for the next month on the stream page'; },
         suspended: function () { return 'Inactive: three payment attempts failed'; },
         invoice: function (s) { return T.invStatus(s); },
+        manual: function (s) { return T.manualStatus(s); },
         ended: function () { return 'Inactive'; },
       },
       btn: {
@@ -237,11 +245,12 @@
       inv: {
         badCompany: 'Enter the company name', badInn: 'Check the INN — 10 digits for a company, 12 for a sole trader', badKpp: 'Enter the KPP — 9 digits',
         badAddress: 'Enter the registered address', badAccEmail: 'Check the accounts email', badEmail: 'Check the participant\'s email',
-        badPhone: 'Check the participant\'s phone', badName: 'Enter the participant\'s name', needPd: 'Please tick the personal data consent box.',
+        badPhone: 'Check the participant\'s phone', badName: 'Enter the participant\'s first and last name', needPd: 'Please tick the personal data consent box.',
         sending: 'Issuing the invoice…', already: 'This participant already has an active subscription to the stream — no second invoice is needed.',
         limited: 'Too many requests — try again in 10 minutes or email us: aelita.production@yandex.ru',
         done: function (r) { return 'Invoice No. ' + r.number + ' for ' + rub(r.amount) + ' has been sent to the accounts email, with a copy to the participant. Payment due by ' + d(r.due_on) + '.'; },
       },
+      manualStatus: function (s) { return 'Paid ' + (s.manual && s.manual.method === 'cash' ? 'in cash' : 'by bank transfer') + ' until ' + d(s.paidThrough) + ' · we will email you 3 days before the end how to continue'; },
       invStatus: function (s) { return 'Paid by the company' + (s.invoice && s.invoice.company ? ' (' + s.invoice.company + ')' : '') + ' until ' + d(s.paidThrough) + (s.invoice && s.invoice.noRenew ? ' · renewal switched off' : ' · a new invoice goes to the company 7 days before the end'); },
       btnNoRenew: 'Do not renew', btnRenewOn: 'Renew',
       locale: 'en-GB',
@@ -379,6 +388,7 @@
         : s.status === 'past_due' ? T.alreadyPastDue(s)
         : s.status === 'canceled' ? T.alreadyCanceled(s)
         : s.status === 'invoice' ? T.invStatus(s)
+        : s.status === 'manual' ? T.manualStatus(s)
         : T.alreadyPaid(s);
       $('spAlreadyText').textContent = txt;
       $('spAlreadyTitle').textContent = T.alreadyTitle[s.status] || T.alreadyTitle.other;
@@ -415,7 +425,7 @@
       var s = pickSub(data, PLAN);
       // pack-v546: последние 3 дня оплаченного месяца без автосписания —
       // страница принимает оплату следующего месяца (продление от paidThrough).
-      if (s && s.live && !s.blocksNewPayment && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay')) {
+      if (s && s.live && !s.blocksNewPayment && s.paidThrough && (s.status === 'awaiting_autopay' || s.status === 'no_autopay' || s.status === 'manual')) {
         renewing = true;
         $('spWhen').innerHTML = '<strong>' + esc(priceLabel) + ' ₽' + T.today + '</strong>' + esc(T.extendTail(s));
       }
@@ -504,7 +514,7 @@
       say('');
       var nameEl = $('j-name'), emailEl = $('j-email'), phoneEl = $('j-phone');
       var name = nameEl.value.trim(), email = emailEl.value.trim(), phone = phoneEl.value.trim();
-      if (!name) return fieldErr(nameEl, T.badName);
+      if (!fullNameOk(name)) return fieldErr(nameEl, T.badName); // pack-v580: имя и фамилия
       if (!window.AELITA_isValidEmail || !window.AELITA_isValidEmail(email)) return fieldErr(emailEl, T.badEmail);
       if (!window.AELITA_normalizePhone || !window.AELITA_normalizePhone(phone)) return fieldErr(phoneEl, T.badPhone);
       if (!$('pdConsent').checked) return say(T.needPd);
@@ -581,7 +591,7 @@
       if (inn.length === 10 && !/^\d{4}[\dA-Z]{2}\d{3}$/.test(kpp)) return err('inv-kpp', T.inv.badKpp);
       if (v('inv-address').length < 10) return err('inv-address', T.inv.badAddress);
       if (!window.AELITA_isValidEmail || !window.AELITA_isValidEmail(v('inv-acc-email'))) return err('inv-acc-email', T.inv.badAccEmail);
-      if (!v('inv-p-name')) return err('inv-p-name', T.inv.badName);
+      if (!fullNameOk(v('inv-p-name'))) return err('inv-p-name', T.inv.badName);
       if (!window.AELITA_isValidEmail(v('inv-p-email'))) return err('inv-p-email', T.inv.badEmail);
       if (!window.AELITA_normalizePhone || !window.AELITA_normalizePhone(v('inv-p-phone'))) return err('inv-p-phone', T.inv.badPhone);
       if (!$('invConsent').checked) { msg.textContent = T.inv.needPd; return; }
@@ -662,6 +672,9 @@
         if (s.refund) b.push(['refund', T.btn.refund(s), 'outline']);
       } else if (s.status === 'invoice') {
         b.push(s.invoice && s.invoice.noRenew ? ['renew_on', T.btnRenewOn, 'outline'] : ['no_renew', T.btnNoRenew, 'outline']);
+      } else if (s.status === 'manual') {
+        // pack-v580: оплачено переводом/наличными — отменять нечего; в последние 3 дня можно перейти на карту.
+        if (!s.blocksNewPayment) b.push(['again', T.btn.payNext, 'gold']);
       } else if (s.status === 'no_autopay') {
         if (!s.blocksNewPayment) b.push(['again', T.btn.payNext, 'gold']);
         b.push(['cancel', T.btn.cancel, 'outline']);

@@ -346,7 +346,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <!-- pack-v534: подписи над полями (как в МТС Live), в самом поле —
          пример. Пояснение про телефон — во всплывающей шторке «?». -->
     <div class="f-title">Where and to whom to send the tickets</div>
-    <label class="f-label" for="f-name">Name *</label>
+    <label class="f-label" for="f-name">First and last name *</label>
     <input class="ym-disable-keys" id="f-name" placeholder="John Smith" autocomplete="name" required>
     <label class="f-label" for="f-email">Email *</label>
     <input class="ym-disable-keys" id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="ivan@example.ru" required>
@@ -469,7 +469,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=74"></script>
+<script src="/assets/payments.js?v=75"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1865,6 +1865,12 @@ function closeSheet(){
 }
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !document.getElementById('sheet').hidden) closeSheet(); });
 
+// Имя and фамилия: два слова, в каждом не меньше двух букв (любой алфавит;
+// «Анна-Мария Ли» проходит, «Анастасия» and «А Б» — нет).
+function AELITA_fullNameOk(v){
+  return String(v || '').trim().split(/\s+/).filter(function(w){ return /\p{L}.*\p{L}/u.test(w); }).length >= 2;
+}
+
 async function submitOrder(){
   const name = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim();
@@ -1877,9 +1883,12 @@ async function submitOrder(){
   // не одно общее сообщение «заполните всё правильно». Телефон теперь
   // ОБЯЗАТЕЛЕН (раньше был опционален) — нужен для чека (54-ФЗ, см.
   // _tools/Tickets/create-order.js).
-  if(!name){
-    AELITA_showFieldError(nameEl, 'Enter your name');
-    msgEl.textContent = 'Enter your name.';
+  // pack-v580: имя И фамилия — два слова, в каждом хотя бы две буквы.
+  // В списке покупателей в админке иначе остаются «Анастасия» без
+  // фамилии, and на входе по списку человека не найти.
+  if(!AELITA_fullNameOk(name)){
+    AELITA_showFieldError(nameEl, 'Enter your first and last name');
+    msgEl.textContent = 'Enter your first and last name.';
     nameEl.focus();
     return;
   }
@@ -2052,8 +2061,8 @@ async function submitOrder(){
       AELITA_showFieldError(document.getElementById('f-contact'), 'Check your phone number — it looks incomplete or incorrect');
       msgEl.textContent = 'Check your phone number.';
     } else if(out.error === 'bad_name'){
-      AELITA_showFieldError(document.getElementById('f-name'), 'Enter your name');
-      msgEl.textContent = 'Enter your name.';
+      AELITA_showFieldError(document.getElementById('f-name'), 'Enter your first and last name');
+      msgEl.textContent = 'Enter your first and last name.';
     } else if(out.error === 'pd_consent_required'){
       msgEl.textContent = 'Please tick the consent to personal data processing — the order cannot be placed without it.';
     } else if(out.error === 'yookassa_unreachable'){
@@ -2179,6 +2188,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=74"></script>
+<script src="/assets/phone-prefix.js?v=75"></script>
 </body>
 </html>
