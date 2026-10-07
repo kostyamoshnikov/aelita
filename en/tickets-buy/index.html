@@ -159,6 +159,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .error-box p{color:var(--sand);margin:0 0 16px}
 .retry-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 22px;border-radius:3px;font-size:0.8125rem;cursor:pointer;margin:0 6px}
 .success-box{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center;margin-top:20px}
+.after-pay{display:none;margin-top:18px}
+.after-pay .retry-btn{display:inline-block;margin:6px;text-decoration:none}
+.after-note{color:var(--sand);margin:14px 0 4px}
+.after-msg{color:var(--sand);margin:10px 0 0;min-height:1.2em}
+.err-cabinet{display:none;text-decoration:none}
 .success-box h2{color:#B7C9A8;font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;font-size:1.125rem;margin:0 0 12px}
 /* pack-v266: помощь больше не перекрывает «Pay». Раньше обе
    были position:fixed у нижнего края, у .help-link стоял z-index:5, у
@@ -276,6 +281,13 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
   <div id="success-block" style="display:none" class="success-box">
     <h2>Thank you! Payment received</h2>
     <p id="success-text">Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!</p>
+    <!-- pack-v581 (ТЗ Н7): что будет дальше and когда — and что сделать, если не пришло. -->
+    <div id="after-pay" class="after-pay">
+      <p class="after-note">The email with your tickets arrives within 5 minutes. Not there? Check the Spam folder or send the tickets again.</p>
+      <button type="button" class="retry-btn" id="resend-btn" onclick="resendTickets()">Send the tickets again</button>
+      <a class="retry-btn" href="/en/account/dashboard/">My tickets in the account</a>
+      <p id="resend-msg" class="after-msg" role="status" aria-live="polite"></p>
+    </div>
   </div>
 
   <!-- pack-v441: ворота кабинета переехали со входа на страницу к шагу
@@ -302,6 +314,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <p id="error-text">Could not load the performance.</p>
     <button class="retry-btn" onclick="init()">Try again</button>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Write to us</a>
+    <a class="retry-btn err-cabinet" id="err-cabinet" href="/en/account/dashboard/">My tickets in the account</a>
   </div>
 
   <div id="assigned-block" style="display:none">
@@ -469,7 +482,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=75"></script>
+<script src="/assets/payments.js?v=76"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -958,14 +971,64 @@ function showError(text){
   document.getElementById('title').textContent = 'Something went wrong';
   document.getElementById('error-text').textContent = text;
   document.getElementById('error-block').style.display = 'block';
+  document.getElementById('err-cabinet').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
+}
+
+// pack-v581 (ТЗ Н7): после оплаты — что будет дальше and когда.
+// Номер заказа запоминаем до очистки sessionStorage: по нему кнопка
+// «Send the tickets again» вызывает ту же повторную отправку, что и
+// кабинет (resend-ticket, только свой заказ, адрес — из заказа).
+let paidOrderId = null;
+function showAfterPay(orderId){
+  paidOrderId = orderId || null;
+  const box = document.getElementById('after-pay');
+  box.style.display = 'block';
+  document.getElementById('resend-btn').style.display = paidOrderId ? '' : 'none';
+}
+async function resendTickets(){
+  const btn = document.getElementById('resend-btn');
+  const msg = document.getElementById('resend-msg');
+  const token = accountToken();
+  if(!paidOrderId || !token){ msg.textContent = 'You can send the tickets again from your account, section “My tickets”.'; return; }
+  btn.disabled = true;
+  msg.textContent = 'Sending…';
+  let res, out = {};
+  try{
+    res = await apiFetch(`${API_BASE}/resend-ticket`, {method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token}, body: JSON.stringify({order_id: paidOrderId})});
+    out = await res.json().catch(() => ({}));
+  }catch(e){ res = null; }
+  if(res && res.ok){
+    msg.textContent = 'Sent again to the email in the order. If this one does not arrive within 5 minutes either, write to us and we will send it by hand.';
+    // Повторно — не раньше чем через минуту: почтовый ящик не любит пачки одинаковых писем.
+    setTimeout(function(){ btn.disabled = false; }, 60000);
+    return;
+  }
+  btn.disabled = false;
+  if(res && res.status === 401){ msg.textContent = 'Your account session has expired — sign in and send the tickets from the “My tickets” section.'; return; }
+  if(res && res.status === 409 && out.error === 'order_not_paid'){ msg.textContent = 'The payment is still being confirmed — the tickets will go out by themselves once it is through. Try again in a couple of minutes.'; return; }
+  msg.textContent = 'Could not send — try again in a minute or write to us.';
+}
+function holdUntilText(stored){
+  if(!stored || !stored.holdUntil) return '';
+  const t = new Date(stored.holdUntil).getTime();
+  if(!(t > Date.now())) return '';
+  return ' Your seat is held until ' + wlTime(stored.holdUntil) + ' Moscow time.';
+}
+// После окончательного ответа о платеже (отменён / не проверить) кнопка
+// «Try again» должна открыть схему зала, а не снова опрашивать
+// оплату: init() смотрит на aelita_paid в адресе.
+function leavePaidMode(){
+  params.delete('aelita_paid');
+  try{ history.replaceState(null, '', location.pathname + '?' + params.toString()); }catch(e){}
 }
 
 function showSuccess(text){
   document.getElementById('title').textContent = data && data.title ? data.title : 'AELITA PRODUCTION';
   if(text) document.getElementById('success-text').textContent = text;
   document.getElementById('success-block').style.display = 'block';
+  document.getElementById('after-pay').style.display = 'none';
   document.getElementById('assigned-block').style.display = 'none';
   document.getElementById('general-block').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
@@ -1988,6 +2051,7 @@ async function submitOrder(){
         showSuccess('Thank you! No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
       } else {
         showSuccess('Thank you! No payment was needed — the discount covered the full amount. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
+        showAfterPay(out.order_id);
       }
       return;
     }
@@ -2007,7 +2071,7 @@ async function submitOrder(){
       // обратно — это тот же таб браузера, не новая сессия.
       // pack-v540: + сумма, число билетов and название — для электронной
       // торговли Метрики после подтверждения оплаты (AELITA_ecomPurchase).
-      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: (data && data.title) || ''})); }catch(e){}
+      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: (data && data.title) || '', holdUntil: out.hold_expires_at || null})); }catch(e){}
       if(out.hold_expires_at){
         // pack-v196: раньше человек нигде не видел, что на оплату есть
         // ограниченное время — только README упоминал 10 минут, нигде
@@ -2109,7 +2173,9 @@ async function pollOrderStatus(){
     // вкладка/устройство, или sessionStorage не пережил переход. Честно
     // говорим, что не можем проверить сами, вместо того чтобы соврать
     // про успех или молчать.
-    showError('We could not check the payment status automatically. If the money was charged, the tickets will arrive by email within a few minutes — if they do not, write to us.');
+    leavePaidMode();
+    showError('We could not check the payment status automatically. If the money was charged, the tickets will arrive by email within 5 minutes and the order will appear in your account under “My tickets” — you can send the tickets again from there. Not there? Write to us.');
+    document.getElementById('err-cabinet').style.display = 'inline-block';
     return;
   }
 
@@ -2129,18 +2195,20 @@ async function pollOrderStatus(){
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
       showSuccess('Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
+      showAfterPay(stored.orderId);
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId, seat_conflict: 1 }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('A rare technical issue occurred with the seat — we already know and will contact you shortly; your money is safe.');
+      showSuccess('The payment went through, but the selected seat was taken at the same moment — a rare technical glitch. Your money is safe: an email with details is already in your inbox; we will contact you shortly and offer another seat, and if it does not suit you, we will refund in full.');
       return;
     }
     if(out && out.status === 'canceled'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showError('The payment failed or was cancelled — the seat(s) are available again. Go back a step and try again.');
+      leavePaidMode();
+      showError('The payment did not go through: the bank declined it or the payment was cancelled. No money was charged — if the bank put a temporary hold on it, the bank will release it. The seats are free again: press “Try again”, choose the seats and, if the bank declined, try another card.');
       return;
     }
     // 'processing' / 'pending' / сетевая ошибка / неожиданный ответ —
@@ -2150,7 +2218,8 @@ async function pollOrderStatus(){
 
   // Не дождались определённого статуса за отведённое время — не врём
   // ни про успех, ни про провал, честно объясняем and даём контакт.
-  showError('The payment is taking longer than usual. If the money was charged, the tickets will arrive by email within a few minutes — if they do not, write to us; nothing will be lost.');
+  showError('The payment is taking longer than usual. If the money was charged, it will not be lost: as soon as the bank confirms the payment, the tickets will arrive by email — usually within 5 minutes.' + holdUntilText(stored) + ' Press “Try again” to check once more; the order will also appear in your account under “My tickets”.');
+  document.getElementById('err-cabinet').style.display = 'inline-block';
 }
 
 init();
@@ -2188,6 +2257,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=75"></script>
+<script src="/assets/phone-prefix.js?v=76"></script>
 </body>
 </html>

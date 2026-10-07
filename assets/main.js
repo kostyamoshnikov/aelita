@@ -393,16 +393,87 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
       : 'Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, напишите на aelita.production@yandex.ru, поможем.';
     document.body.insertBefore(el, document.body.firstChild);
   }
+  // pack-v581 (после случая Say Agency, п. 5): отменённый или перенесённый
+  // показ — баннер на странице, где есть ссылка на его покупку, а кнопки
+  // «Купить» у отменённого гаснут. Список приходит тем же запросом
+  // (Tickets/lib/performance-changes.js). Сравнение — по адресу покупки
+  // без utm-меток: у партнёра — страница показа, у нас — ?performance=id.
+  function buyKey(href) {
+    try {
+      var u = new window.URL(href, location.href); // window.: выше в этом блоке URL — строка адреса запроса
+      var perf = u.searchParams.get('performance');
+      if (perf && u.pathname.replace(/^\/en/, '').indexOf('/tickets-buy') === 0) return 'own:' + perf;
+      if (u.hostname !== location.hostname) return 'ext:' + u.hostname + u.pathname.replace(/\/$/, '');
+    } catch (e) { /* не адрес */ }
+    return null;
+  }
+  function changeWhen(iso, en) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleString(en ? 'en-GB' : 'ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+  }
+  function changeText(c, en) {
+    var title = (en && c.titleEn) || c.title || '';
+    var mail = 'aelita.production@yandex.ru';
+    if (c.status === 'canceled') {
+      if (en) return title + ', ' + changeWhen(c.datetime, en) + ': the performance has been cancelled. We will refund the full ticket price to the card you paid with within 10 days — no application needed.' +
+        (c.channel === 'own' ? ' The details are in the email we sent you.' : ' If the money has not arrived, write to ' + mail + ' and give the email you bought the ticket with.');
+      return title + ', ' + changeWhen(c.datetime, en) + ': показ отменён. Стоимость билетов вернём полностью на карту, с которой платили, в течение 10 дней — заявление не нужно.' +
+        (c.channel === 'own' ? ' Подробности — в письме, которое мы вам отправили.' : ' Если деньги не пришли — напишите на ' + mail + ' и укажите почту, на которую покупали билет.');
+    }
+    var was = c.from ? changeWhen(c.from, en) : '';
+    if (en) return title + ': the performance has been moved' + (was ? ' from ' + was : '') + ' to ' + changeWhen(c.datetime, en) + '. Tickets are valid for the new date. If it does not suit you, we will refund the full price — ' +
+      (c.channel === 'own' ? 'use the link in our email or your account.' : 'write to ' + mail + '.');
+    return title + ': показ перенесён' + (was ? ' с ' + was : '') + ' на ' + changeWhen(c.datetime, en) + '. Билеты действуют на новую дату. Если она не подходит — вернём полную стоимость: ' +
+      (c.channel === 'own' ? 'по ссылке из нашего письма или в личном кабинете.' : 'напишите на ' + mail + '.');
+  }
+  function showChanges(list) {
+    if (!list || !list.length || document.getElementById('aelitaChanges')) return;
+    var byKey = {};
+    list.forEach(function (c) {
+      var k = c.channel === 'own' ? 'own:' + c.id : buyKey(c.buyUrl || '');
+      if (k) byKey[k] = c;
+    });
+    var hit = [];
+    var links = document.querySelectorAll('a[href]');
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      var c = byKey[buyKey(a.getAttribute('href'))];
+      if (!c) continue;
+      if (hit.indexOf(c) < 0) hit.push(c);
+      if (c.status === 'canceled') {
+        a.removeAttribute('href');
+        a.removeAttribute('target');
+        a.setAttribute('aria-disabled', 'true');
+        a.classList.add('is-canceled');
+        a.textContent = (window.AELITA_isEn && window.AELITA_isEn()) ? 'Cancelled' : 'Показ отменён';
+      }
+    }
+    if (!hit.length) return;
+    var en = window.AELITA_isEn && window.AELITA_isEn();
+    var el = document.createElement('div');
+    el.id = 'aelitaChanges';
+    el.className = 'show-change';
+    el.setAttribute('role', 'status');
+    hit.forEach(function (c) {
+      var p = document.createElement('p');
+      p.textContent = changeText(c, en);
+      el.appendChild(p);
+    });
+    document.body.insertBefore(el, document.body.firstChild);
+  }
   function run() {
     try {
       var c = JSON.parse(sessionStorage.getItem(CACHE) || 'null');
-      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); return; }
+      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); showChanges(c.ch); return; }
     } catch (e) { /* без кэша */ }
     if (!window.fetch) return;
     fetch(URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var n = d && d.notice;
-      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null })); } catch (e) { /* приватный режим */ }
+      var ch = (d && d.changes) || [];
+      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null, ch: ch })); } catch (e) { /* приватный режим */ }
       show(n);
+      showChanges(ch);
     }).catch(function () { /* баннера нет */ });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();

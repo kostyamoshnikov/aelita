@@ -1976,6 +1976,7 @@ function salesCard(s) {
     '. Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
     '. Вошли по QR: ' + s.tickets.redeemed + '.</div>' +
     '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
+    (!s.isTest && s.status === 'on_sale' && !s.venueConfirmed ? '<div class="sales-line">⚠️ Площадка не подтверждена — впишите в каталог (venueConfirmed), чем подтверждена: договор, письмо площадки.</div>' : '') +
     (promos ? '<div class="sales-line">Промокоды: ' + escapeHtml(promos) + '</div>' : '') +
     '<div class="sales-actions"><button class="mini-btn" data-sales-act="days">По дням</button>' +
     '<button class="mini-btn" data-sales-act="csv">Зрители — CSV</button>' +
@@ -2021,6 +2022,25 @@ document.addEventListener('DOMContentLoaded', function () {
   if (sel) sel.addEventListener('change', loadPerf);
 });
 
+// pack-v581 (после случая Say Agency, п. 1): обязательства перед зрителями —
+// сколько может понадобиться на возвраты, если показы отменят.
+function obligationsHtml(ob) {
+  if (!ob) return '';
+  var shows = (ob.shows || []).map(function (s) {
+    return escapeHtml(s.title) + ' (' + salesWhen(s.datetime) + (s.canceled ? ', отменён' : '') + ') — ' + fmtMoney(s.moneyRub) + ', ' + s.tickets + ' бил.';
+  }).join('; ');
+  return '<div class="ev-card ob-card">' +
+    '<div class="ev-head"><div><div class="ev-title">Обязательства перед зрителями</div>' +
+    '<div class="ev-when">столько может понадобиться на возвраты, если показы отменят</div></div>' +
+    '<div class="ev-count">' + fmtMoney(ob.moneyRub) + '</div></div>' +
+    '<div class="sales-line">Оплачено деньгами за ' + ob.tickets.count + ' бил. на ещё не прошедшие и отменённые показы: ' + fmtMoney(ob.tickets.moneyRub) + '.' +
+    (ob.approvedUnpaid.count ? ' Одобренные, но не выплаченные заявления: ' + ob.approvedUnpaid.count + ' — ' + fmtMoney(ob.approvedUnpaid.moneyRub) + '.' : '') +
+    (ob.newRequests ? ' Заявлений на рассмотрении: ' + ob.newRequests + '.' : '') +
+    (ob.refundsUnread ? ' ⚠️ Заявления не прочитались — сумма без них.' : '') + '</div>' +
+    (shows ? '<div class="sales-line">' + shows + '</div>' : '') +
+    '<div class="sales-line">ЮKassa возвращает из принятых, но ещё не переведённых на счёт платежей; не хватает — списывает с баланса обеспечения возвратов. Деньги за будущие показы лучше не тратить до показа. Подарочная часть не входит — при отмене она возвращается на карту. Продажи системы фестиваля сюда не входят: их заказов у нас нет, хотя деньги приходят в нашу ЮKassa.</div>' +
+    '</div>';
+}
 async function loadSales() {
   var el = document.getElementById('salesBlock');
   if (!el || !ADMIN_ORDERS_URL) return;
@@ -2032,7 +2052,7 @@ async function loadSales() {
     var data = await res.json();
     if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
     var list = data.performances || [];
-    el.innerHTML = list.length ? list.map(salesCard).join('') : '<div class="empty-state">Показов с нашей продажей пока нет.</div>';
+    el.innerHTML = obligationsHtml(data.obligations) + (list.length ? list.map(salesCard).join('') : '<div class="empty-state">Показов с нашей продажей пока нет.</div>');
   } catch (e) {
     el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
   }

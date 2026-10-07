@@ -152,6 +152,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .error-box p{color:var(--sand);margin:0 0 16px}
 .retry-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 22px;border-radius:3px;font-size:0.8125rem;cursor:pointer;margin:0 6px}
 .success-box{background:var(--coal);border:1px solid #B7C9A8;border-radius:6px;padding:32px 20px;text-align:center;margin-top:20px}
+.after-pay{display:none;margin-top:18px}
+.after-pay .retry-btn{display:inline-block;margin:6px;text-decoration:none}
+.after-note{color:var(--sand);margin:14px 0 4px}
+.after-msg{color:var(--sand);margin:10px 0 0;min-height:1.2em}
+.err-cabinet{display:none;text-decoration:none}
 .success-box h2{color:#B7C9A8;font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;font-size:1.125rem;margin:0 0 12px}
 /* pack-v266: помощь больше не перекрывает «Оплатить». Раньше обе
    были position:fixed у нижнего края, у .help-link стоял z-index:5, у
@@ -269,6 +274,13 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
   <div id="success-block" style="display:none" class="success-box">
     <h2>Спасибо! Оплата прошла</h2>
     <p id="success-text">Билеты уже летят на почту — если через пару минут не появятся, загляните в «Спам». До встречи на спектакле!</p>
+    <!-- pack-v581 (ТЗ Н7): что будет дальше и когда — и что сделать, если не пришло. -->
+    <div id="after-pay" class="after-pay">
+      <p class="after-note">Письмо с билетами приходит в течение 5 минут. Не пришло — проверьте «Спам» или пришлите билеты ещё раз.</p>
+      <button type="button" class="retry-btn" id="resend-btn" onclick="resendTickets()">Прислать билеты ещё раз</button>
+      <a class="retry-btn" href="/account/dashboard/">Мои билеты в кабинете</a>
+      <p id="resend-msg" class="after-msg" role="status" aria-live="polite"></p>
+    </div>
   </div>
 
   <!-- pack-v441: ворота кабинета переехали со входа на страницу к шагу
@@ -295,6 +307,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <p id="error-text">Не получилось загрузить показ.</p>
     <button class="retry-btn" onclick="init()">Попробовать снова</button>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Написать нам</a>
+    <a class="retry-btn err-cabinet" id="err-cabinet" href="/account/dashboard/">Мои билеты в кабинете</a>
   </div>
 
   <div id="assigned-block" style="display:none">
@@ -462,7 +475,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=75"></script>
+<script src="/assets/payments.js?v=76"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -951,14 +964,64 @@ function showError(text){
   document.getElementById('title').textContent = 'Не получилось';
   document.getElementById('error-text').textContent = text;
   document.getElementById('error-block').style.display = 'block';
+  document.getElementById('err-cabinet').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
+}
+
+// pack-v581 (ТЗ Н7): после оплаты — что будет дальше и когда.
+// Номер заказа запоминаем до очистки sessionStorage: по нему кнопка
+// «Прислать билеты ещё раз» вызывает ту же повторную отправку, что и
+// кабинет (resend-ticket, только свой заказ, адрес — из заказа).
+let paidOrderId = null;
+function showAfterPay(orderId){
+  paidOrderId = orderId || null;
+  const box = document.getElementById('after-pay');
+  box.style.display = 'block';
+  document.getElementById('resend-btn').style.display = paidOrderId ? '' : 'none';
+}
+async function resendTickets(){
+  const btn = document.getElementById('resend-btn');
+  const msg = document.getElementById('resend-msg');
+  const token = accountToken();
+  if(!paidOrderId || !token){ msg.textContent = 'Билеты можно прислать ещё раз из кабинета, раздел «Мои билеты».'; return; }
+  btn.disabled = true;
+  msg.textContent = 'Отправляем…';
+  let res, out = {};
+  try{
+    res = await apiFetch(`${API_BASE}/resend-ticket`, {method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token}, body: JSON.stringify({order_id: paidOrderId})});
+    out = await res.json().catch(() => ({}));
+  }catch(e){ res = null; }
+  if(res && res.ok){
+    msg.textContent = 'Отправили ещё раз на почту, указанную в заказе. Если и это письмо не придёт за 5 минут — напишите нам, пришлём вручную.';
+    // Повторно — не раньше чем через минуту: почтовый ящик не любит пачки одинаковых писем.
+    setTimeout(function(){ btn.disabled = false; }, 60000);
+    return;
+  }
+  btn.disabled = false;
+  if(res && res.status === 401){ msg.textContent = 'Сеанс в кабинете истёк — войдите и пришлите билеты из раздела «Мои билеты».'; return; }
+  if(res && res.status === 409 && out.error === 'order_not_paid'){ msg.textContent = 'Оплата ещё подтверждается — билеты уйдут сами, как только она пройдёт. Попробуйте через пару минут.'; return; }
+  msg.textContent = 'Не получилось отправить — попробуйте через минуту или напишите нам.';
+}
+function holdUntilText(stored){
+  if(!stored || !stored.holdUntil) return '';
+  const t = new Date(stored.holdUntil).getTime();
+  if(!(t > Date.now())) return '';
+  return ' Место за вами до ' + wlTime(stored.holdUntil) + ' по Москве.';
+}
+// После окончательного ответа о платеже (отменён / не проверить) кнопка
+// «Попробовать снова» должна открыть схему зала, а не снова опрашивать
+// оплату: init() смотрит на aelita_paid в адресе.
+function leavePaidMode(){
+  params.delete('aelita_paid');
+  try{ history.replaceState(null, '', location.pathname + '?' + params.toString()); }catch(e){}
 }
 
 function showSuccess(text){
   document.getElementById('title').textContent = data && data.title ? data.title : 'AELITA PRODUCTION';
   if(text) document.getElementById('success-text').textContent = text;
   document.getElementById('success-block').style.display = 'block';
+  document.getElementById('after-pay').style.display = 'none';
   document.getElementById('assigned-block').style.display = 'none';
   document.getElementById('general-block').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
@@ -1981,6 +2044,7 @@ async function submitOrder(){
         showSuccess('Спасибо! Оплата не потребовалась — скидка покрыла всю сумму. При оформлении произошла редкая техническая накладка с местом, мы уже знаем и свяжемся с вами в ближайшее время.');
       } else {
         showSuccess('Спасибо! Оплата не потребовалась — скидка покрыла всю сумму. Билеты уже летят на почту — если через пару минут не появятся, загляните в «Спам». До встречи на спектакле!');
+        showAfterPay(out.order_id);
       }
       return;
     }
@@ -2000,7 +2064,7 @@ async function submitOrder(){
       // обратно — это тот же таб браузера, не новая сессия.
       // pack-v540: + сумма, число билетов и название — для электронной
       // торговли Метрики после подтверждения оплаты (AELITA_ecomPurchase).
-      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: (data && data.title) || ''})); }catch(e){}
+      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: (data && data.title) || '', holdUntil: out.hold_expires_at || null})); }catch(e){}
       if(out.hold_expires_at){
         // pack-v196: раньше человек нигде не видел, что на оплату есть
         // ограниченное время — только README упоминал 10 минут, нигде
@@ -2102,7 +2166,9 @@ async function pollOrderStatus(){
     // вкладка/устройство, или sessionStorage не пережил переход. Честно
     // говорим, что не можем проверить сами, вместо того чтобы соврать
     // про успех или молчать.
-    showError('Не удалось автоматически проверить статус оплаты. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам.');
+    leavePaidMode();
+    showError('Не удалось автоматически проверить статус оплаты. Если деньги списались, билеты придут на почту в течение 5 минут, а заказ появится в кабинете в разделе «Мои билеты» — оттуда билеты можно прислать ещё раз. Не появился — напишите нам.');
+    document.getElementById('err-cabinet').style.display = 'inline-block';
     return;
   }
 
@@ -2122,18 +2188,20 @@ async function pollOrderStatus(){
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
       showSuccess('Билеты уже летят на почту — если через пару минут не появятся, загляните в «Спам». До встречи на спектакле!');
+      showAfterPay(stored.orderId);
       return;
     }
     if(out && out.status === 'seat_conflict'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId, seat_conflict: 1 }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('При оформлении произошла редкая техническая накладка с местом — мы уже знаем и свяжемся с вами в ближайшее время, деньги не потеряны.');
+      showSuccess('Оплата прошла, но выбранное место в тот же момент оказалось занято — редкая техническая накладка. Деньги не потеряны: письмо с подробностями уже на почте, в ближайшее время мы свяжемся с вами и предложим другое место, а если оно не подойдёт — вернём деньги полностью.');
       return;
     }
     if(out && out.status === 'canceled'){
       try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
-      showError('Оплата не прошла или была отменена — место(а) снова доступны. Вернитесь на шаг назад и попробуйте ещё раз.');
+      leavePaidMode();
+      showError('Оплата не прошла: банк отклонил платёж или оплату отменили. Деньги не списаны — если банк временно их заблокировал, он снимет блокировку сам. Места снова свободны: нажмите «Попробовать снова», выберите места и, если банк отказал, попробуйте другую карту.');
       return;
     }
     // 'processing' / 'pending' / сетевая ошибка / неожиданный ответ —
@@ -2143,7 +2211,8 @@ async function pollOrderStatus(){
 
   // Не дождались определённого статуса за отведённое время — не врём
   // ни про успех, ни про провал, честно объясняем и даём контакт.
-  showError('Оплата обрабатывается дольше обычного. Если деньги списались, билеты придут на почту в течение нескольких минут — если не пришли, напишите нам, ничего не потеряется.');
+  showError('Оплата обрабатывается дольше обычного. Если деньги списались, они не потеряются: как только банк подтвердит платёж, билеты придут на почту — обычно в течение 5 минут.' + holdUntilText(stored) + ' Нажмите «Попробовать снова», чтобы проверить ещё раз; заказ также появится в кабинете в разделе «Мои билеты».');
+  document.getElementById('err-cabinet').style.display = 'inline-block';
 }
 
 init();
@@ -2181,6 +2250,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=75"></script>
+<script src="/assets/phone-prefix.js?v=76"></script>
 </body>
 </html>
