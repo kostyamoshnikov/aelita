@@ -82,8 +82,12 @@
       formTitle: 'Оставить отзыв',
       namePh: 'Ваше имя',
       textPh: 'Что вам запомнилось?',
-      consent: 'Согласен(на) на <a href="/consent#rasprostranenie">публикацию отзыва на сайте</a> (распространение персональных данных)',
-      pdConsent: 'Согласен(на) на <a href="/consent">обработку персональных данных</a>',
+      // pack-v585 (заказчик 07.10): одно поле вместо двух — согласие на
+      // обработку и на публикацию (распространение) одной галочкой. Сами
+      // согласия остаются отдельными документами (/consent и
+      // /consent#rasprostranenie, ст. 10.1 152-ФЗ), на оба — ссылки.
+      consent: 'Согласен(на) на <a href="/consent">обработку персональных данных</a> и <a href="/consent#rasprostranenie">публикацию отзыва на сайте</a> (распространение персональных данных)',
+      moreTitle: 'Дополнительные условия',
       // ⚠️ Статья 10.1 152-ФЗ и приказ РКН № 18: субъект вправе САМ
       // установить запреты и условия распространения, а оператор
       // обязан довести их до сведения неограниченного круга лиц.
@@ -104,8 +108,7 @@
       errName: 'Укажите имя',
       errText: 'Текст отзыва — от 10 до 2000 символов',
       errRating: 'Поставьте оценку',
-      errConsent: 'Нужно согласие на публикацию',
-      errPdConsent: 'Нужно согласие на обработку персональных данных',
+      errConsent: 'Нужно согласие на обработку персональных данных и публикацию отзыва',
       errNetwork: 'Не получилось отправить — попробуйте ещё раз чуть позже.',
     },
     en: {
@@ -114,8 +117,8 @@
       formTitle: 'Leave a review',
       namePh: 'Your name',
       textPh: 'What stayed with you?',
-      consent: 'I agree to the <a href="/en/consent/#rasprostranenie">publication of my review on the site</a> (dissemination of personal data)',
-      pdConsent: 'I agree to the <a href="/en/consent/">processing of my personal data</a>',
+      consent: 'I agree to the <a href="/en/consent/">processing of my personal data</a> and the <a href="/en/consent/#rasprostranenie">publication of my review on the site</a> (dissemination of personal data)',
+      moreTitle: 'Additional conditions',
       scopeTitle: 'Publish the review',
       scopeName: 'under my name',
       scopePseudo: 'under the pseudonym from the name field',
@@ -129,8 +132,7 @@
       errName: 'Please enter your name',
       errText: 'Review text — 10 to 2000 characters',
       errRating: 'Please give a rating',
-      errConsent: 'Publication consent is required',
-      errPdConsent: 'Personal data consent is required',
+      errConsent: 'Consent to data processing and publication is required',
       errNetwork: "Couldn't send it — please try again in a moment.",
     },
   };
@@ -244,12 +246,15 @@
         // /privacy рядом с чекбоксом есть, и только этот виджет просил
         // согласие без возможности прочитать, на что соглашаешься
         // (pack-v358). Экранировать эту строку нельзя — ссылка исчезнет.
-        '<label class="aud-consent"><input type="checkbox" id="aud-pd-consent"><span>' + t.pdConsent + '</span></label>' +
         // Условия публикации — дополнительный параметр, а не ещё три
         // галочки в ряд: три радиокнопки весили визуально столько же,
         // сколько сами согласия, хотя по смыслу это уточнение. Выпадающий
         // список занимает одну строку и по умолчанию показывает вариант,
         // который выберут почти все.
+        // pack-v585: условия публикации — под раскрывающимся пунктом
+        // «Дополнительные условия» (по умолчанию закрыт: значения по
+        // умолчанию подходят почти всем).
+        '<details class="aud-more"><summary>' + t.moreTitle + '</summary>' +
         '<div class="aud-scope">' +
           '<label class="aud-scope-row" for="aud-name-scope"><span>' + t.scopeTitle + '</span>' +
             '<select id="aud-name-scope" class="aud-select">' +
@@ -260,6 +265,7 @@
           '</label>' +
           '<label class="aud-consent aud-scope-check"><input type="checkbox" id="aud-no-quote"><span>' + t.noQuote + '</span></label>' +
         '</div>' +
+        '</details>' +
         '<p class="aud-error" id="aud-error" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +
         // Honeypot: скрыто от людей (position off-screen), боты часто
@@ -288,13 +294,11 @@
       var name = wrap.querySelector('#aud-name').value.trim();
       var text = wrap.querySelector('#aud-text').value.trim();
       var consent = wrap.querySelector('#aud-consent').checked;
-      var pdConsent = wrap.querySelector('#aud-pd-consent').checked;
 
       errorEl.style.display = 'none';
       if (!name) return showError(t.errName);
       if (text.length < 10 || text.length > 2000) return showError(t.errText);
       if (!(rating >= 1 && rating <= 5)) return showError(t.errRating);
-      if (!pdConsent) return showError(t.errPdConsent);
       if (!consent) return showError(t.errConsent);
 
       var submitBtn = wrap.querySelector('#aud-submit');
@@ -305,7 +309,7 @@
       var nameScope = scopeEl ? scopeEl.value : 'name';
       var noQuote = wrap.querySelector('#aud-no-quote').checked;
 
-      var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent,
+      var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent, pd_consent: consent,
         name_scope: nameScope, no_quote: noQuote,
         website: wrap.querySelector('#aud-website').value }; // honeypot
 

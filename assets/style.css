@@ -1158,3 +1158,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .show-change p{margin:0 auto;max-width:860px}
 .show-change p+p{margin-top:8px}
 a.is-canceled{opacity:.55;pointer-events:none;cursor:default}
+/* pack-v585: «Дополнительные условия» в форме отзыва. */
+.aud-more{margin:2px 0 18px}
+.aud-more>summary{cursor:pointer;color:var(--sand);font-size:0.8125rem;list-style:none;display:inline-flex;align-items:center;gap:6px;border-bottom:1px dotted rgba(201,184,163,.5)}
+.aud-more>summary::-webkit-details-marker{display:none}
+.aud-more>summary::after{content:'▾';font-size:0.75rem;transition:transform .15s}
+.aud-more[open]>summary::after{transform:rotate(180deg)}
+.aud-more[open]>.aud-scope{margin-top:14px}
