@@ -59,6 +59,10 @@
         order_not_paid: 'Заказ ещё не оплачен — билеты придут после оплаты.',
         nothing_to_send: 'В заказе не осталось действующих билетов — все возвращены.',
         bad_order_id: 'Не поняли, о каком заказе речь — обновите страницу.',
+        // pack-v592 — подтверждение почты кодом (ревизия 07.10, Б4)
+        registration_expired: 'Регистрация не завершена вовремя или начата заново в другом окне — заполните форму ещё раз, придёт новый код.',
+        email_change_expired: 'Смена почты не завершена вовремя — введите новый адрес и пароль ещё раз, придёт новый код.',
+        login_too_many_attempts: 'Слишком много попыток входа — подождите 15 минут или войдите по ссылке «Забыли пароль?».',
       },
       fallback: 'Что-то пошло не так с нашей стороны. Попробуйте ещё раз — или напишите нам, разберёмся.',
       passwordChanged: 'Пароль изменён.',
@@ -122,6 +126,10 @@
         order_not_paid: 'This order is not paid yet — tickets will arrive after payment.',
         nothing_to_send: 'There are no valid tickets left in this order — all were refunded.',
         bad_order_id: "We couldn't tell which order this is — refresh the page.",
+        // pack-v592 — email confirmation by code (review 07.10, B4)
+        registration_expired: 'The registration was not finished in time or was restarted in another window — fill in the form again and a new code will arrive.',
+        email_change_expired: 'The email change was not finished in time — enter the new address and your password again and a new code will arrive.',
+        login_too_many_attempts: 'Too many sign-in attempts — wait 15 minutes or use “Forgot password?”.',
       },
       fallback: "Something went wrong on our end. Try again — or email us and we'll sort it out.",
       passwordChanged: 'Password changed.',
@@ -210,6 +218,10 @@
     isLoggedIn: function () { return !!getToken(); },
     logout: function () { clearToken(); },
 
+    // pack-v592 (ревизия 07.10, Б4): регистрация в два шага. Первый ответ —
+    // {need_email_code, pending_id}: кабинета ещё нет, код ушёл на почту;
+    // opts.onNeedCode(data) — показать поле для кода. Второй шаг —
+    // confirmRegistration() ниже. Сессия появляется только после кода.
     register: async function (name, email, password, opts) {
       opts = opts || {};
       if (!REGISTER_URL) { notConfigured(); return; }
@@ -220,9 +232,13 @@
         var res = await fetch(REGISTER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          body: JSON.stringify({ name: name, email: email, password: password }),
+          body: JSON.stringify({ name: name, email: email, password: password, lang: LANG }),
         });
         var data = await res.json();
+        if (res.ok && data.need_email_code) {
+          if (opts.onNeedCode) opts.onNeedCode(data);
+          return data;
+        }
         if (res.ok && data.token) {
           setToken(data.token);
           if (opts.onSuccess) opts.onSuccess(data);
@@ -233,6 +249,35 @@
       } catch (e) {
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
+      } finally {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
+      }
+    },
+
+    // pack-v592: второй шаг регистрации — код из письма и pending_id из
+    // ответа первого шага. Успех — сессия, как раньше у register().
+    confirmRegistration: async function (email, code, pendingId, opts) {
+      opts = opts || {};
+      if (!REGISTER_URL) { notConfigured(); return; }
+      var buttonEl = opts.buttonEl || null;
+      var original = buttonEl ? buttonEl.textContent : '';
+      if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.creating; }
+      try {
+        var res = await fetch(REGISTER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ email: email, code: code, pending_id: pendingId }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (res.ok && data && data.token) {
+          setToken(data.token);
+          if (opts.onSuccess) opts.onSuccess(data);
+          return data;
+        }
+        if (opts.onError) opts.onError(errorMessage(data), data);
+      } catch (e) {
+        if (opts.onError) opts.onError(errorMessage(null), null);
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
       }
@@ -399,10 +444,13 @@
         var res = await fetch(UPDATE_PROFILE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
-          body: JSON.stringify(fields),
+          body: JSON.stringify(Object.assign({ lang: LANG }, fields)), // pack-v592: язык письма с кодом
         });
         var data = null;
         try { data = await res.json(); } catch (e) {}
+        // pack-v592: ответ {ok, need_new_email_code} — код ушёл на новый
+        // адрес, смена ещё не состоялась; страница спрашивает код и
+        // присылает {newEmail, newEmailCode} (Account/update-profile.js).
         if (res.ok && data && data.ok) {
           // Адрес сменился — старый токен подписывал старый адрес и
           // теперь везде отвечал бы 401. Подменяем молча: человек

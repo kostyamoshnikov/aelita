@@ -127,6 +127,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .editor-preview{background:rgba(232,230,225,.04);border-left:2px solid var(--gold);padding:16px;font-size:0.8125rem;color:var(--sand);margin:16px 0;display:none;white-space:pre-wrap;word-break:break-word}
 .editor-preview mark{background:rgba(214,181,122,.25);color:var(--gold)}
 .editor-result{font-size:0.8125rem;margin-top:14px;display:none}
+/* pack-v587: пригласительные */
+.editor-box select{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:12px 14px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;width:100%}
+.inv-row{display:flex;gap:12px;flex-wrap:wrap}
+.inv-row .field{flex:1;min-width:140px}
+.inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.inv-mt14{margin-top:14px}
+.inv-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.inv-off{opacity:.55}
+.inv-tag{font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;margin-left:6px}
+.inv-tag.ok{color:#7ec48c}.inv-tag.off{color:#e08a6e}
+.inv-edit{margin-top:14px;border-top:1px solid rgba(201,184,163,.12);padding-top:14px;display:none}
+.inv-edit.open{display:block}
 .editor-result.ok{color:var(--gold)}
 .editor-result.err{color:#e08a6e}
 
@@ -395,6 +406,58 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <button class="btn-small" id="noticeOffBtn">Снять</button>
     </div>
 
+    <p class="sec-title sec-gap">Пригласительные (<span id="inv-total">0</span>)</p>
+    <div class="editor-box" id="invBlock">
+      <div class="field">
+        <label for="inv-event">Событие</label>
+        <select id="inv-event"><option value="">Загружаем…</option></select>
+      </div>
+      <p class="editor-note" id="inv-summary"></p>
+      <div class="inv-tools">
+        <button class="mini-btn" id="invNewBtn">+ Пригласительный</button>
+        <button class="mini-btn" id="invImportBtn">+ Списком</button>
+        <button class="mini-btn" id="invPdfAllBtn">PDF всех действующих</button>
+        <button class="mini-btn" id="invCsvBtn">Скачать CSV</button>
+      </div>
+      <div class="inv-edit" id="inv-form">
+        <div class="inv-row">
+          <div class="field inv-w3"><label for="inv-name">Имя и фамилия гостя</label><input class="ym-disable-keys" type="text" id="inv-name" autocomplete="off" maxlength="120"></div>
+          <div class="field"><label for="inv-persons">На сколько лиц</label><input class="ym-disable-keys" type="number" id="inv-persons" min="1" max="50" value="1"></div>
+          <div class="field"><label for="inv-lang">Язык бланка</label><select id="inv-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+        </div>
+        <div class="inv-row" id="inv-seats-row">
+          <div class="field"><label for="inv-seat-mode">Места</label><select id="inv-seat-mode">
+            <option value="none">Без мест</option>
+            <option value="seats">Указать места сейчас</option>
+            <option value="later">Назначим перед спектаклем (на бланке: «Ваши места назовут при входе»)</option>
+            <option value="entry">Входной — свободные места после 3-го звонка</option>
+          </select></div>
+        </div>
+        <div class="inv-row" id="inv-seat-pick-row">
+          <div class="field"><label for="inv-seat-perf">Показ</label><select id="inv-seat-perf"></select></div>
+          <div class="field inv-w2"><label for="inv-seat-keys">Ряд и места</label><input class="ym-disable-keys" type="text" id="inv-seat-keys" autocomplete="off" placeholder="ряд 5 места 7, 8; 6-1"></div>
+        </div>
+        <p class="editor-note">Мест столько же, сколько лиц. Вписанные места уходят из продажи на этот показ; снятые и места отозванного пригласительного возвращаются в продажу.</p>
+        <div class="field"><label for="inv-note">Заметка (видна только в админке)</label><input class="ym-disable-keys" type="text" id="inv-note" autocomplete="off" maxlength="300"></div>
+        <button class="btn-small" id="invSaveBtn">Выпустить</button>
+        <button class="btn-small btn-ghost" id="invFormCancel">Отмена</button>
+        <p class="editor-result" id="invFormResult"></p>
+      </div>
+      <div class="inv-edit" id="inv-import">
+        <div class="field">
+          <label for="inv-lines">Гости — по одному в строке: «Имя Фамилия — 2» (без числа — на одно лицо)</label>
+          <textarea class="ym-disable-keys" id="inv-lines" rows="8" placeholder="Анна Иванова — 2&#10;Пётр Петров"></textarea>
+        </div>
+        <div class="field"><label for="inv-import-lang">Язык бланков</label><select id="inv-import-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+        <button class="btn-small" id="invImportSave">Выпустить списком</button>
+        <button class="btn-small btn-ghost" id="invImportCancel">Отмена</button>
+        <p class="editor-result" id="invImportResult"></p>
+      </div>
+      <div class="field inv-mt6"><label for="inv-search">Поиск по имени или номеру («места» — кому ещё назначить, «входной»)</label><input class="ym-disable-keys" type="text" id="inv-search" autocomplete="off"></div>
+      <div id="invList"><div class="empty-state">Загружаем…</div></div>
+      <p class="editor-note inv-mt14">События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p>
+    </div>
+
     <p class="sec-title sec-gap">Показы: перенос и отмена</p>
     <div class="editor-box" id="perfActionBlock">
       <div class="field">
@@ -414,6 +477,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
       <p class="editor-note pa-cancel-note">Отмена: продажа закрывается сразу; каждому покупателю — 100% стоимости (деньги — через ЮKassa или вручную, см. строку выше; оплаченное подарочной картой — обратно на карту), билеты аннулируются, письмо об отмене на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём. Название — в поле выше.</p>
       <button class="btn-small mini-btn-danger" id="paCancelBtn">Отменить показ и вернуть деньги</button>
+      <p class="editor-note">Продажа на сайте (pack-v592): закрывается только вручную, здесь — например, в начале спектакля или когда решите. Купленные билеты, места и пригласительные не меняются; страница покупки скажет «продажа закрыта». Название — в поле выше.</p>
+      <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
       <p class="editor-result" id="paResult"></p>
     </div>
 
@@ -667,6 +732,7 @@ var ADMIN_BACKFILL_URL = API_BASE && API_BASE + '/tickets-backfill';
 // TICKETS_TODO.md, п.6 — список подарочных карт (см.
 // _tools/Admin/gift-cards.js).
 var ADMIN_GIFT_CARDS_URL = API_BASE && API_BASE + '/gift-cards';
+var ADMIN_INVITES_URL = API_BASE && API_BASE + '/invites'; // pack-v587
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -702,6 +768,11 @@ var ERRORS = {
   // общие для всех функций Admin
   not_authenticated: 'Сессия истекла — войдите заново.',
   storage_unreachable: 'Не достучались до хранилища. Попробуйте ещё раз через минуту.',
+  // pack-v592: возвраты и продажа
+  ticket_redeemed: 'Билет уже прошёл контроль на входе — сначала отмените проход на странице контроля, потом одобряйте возврат.',
+  bad_transition: 'Это заявление уже обработано — обновите список.',
+  title_mismatch: 'Название не совпадает с афишей.',
+  not_in_house: 'Этот показ продаёт партнёр — закрывать продажу нужно у него.',
   server_misconfigured: 'Админка настроена не полностью — проверьте переменные окружения функции.',
   bad_json: 'Сервер не разобрал запрос. Обновите страницу и попробуйте ещё раз.',
   method_not_allowed: 'Неподдерживаемый запрос — обновите страницу.',
@@ -1595,6 +1666,7 @@ function perfLabel(p) {
   var d = new Date(p.datetime);
   var when = isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
   var tag = p.status === 'canceled' ? ' · ОТМЕНЁН' : p.postponed ? ' · перенесён' : p.isTest ? ' · тест' : '';
+  if (p.salesClosed && p.status !== 'canceled') tag += ' · продажа закрыта'; // pack-v592
   return when + ' · ' + p.title + tag;
 }
 // ── Баннер о сбое покупки (ТЗ «покупка без зависаний», Н10) ───────────
@@ -1764,7 +1836,42 @@ document.addEventListener('DOMContentLoaded', function () {
   if (b) b.addEventListener('click', perfPostpone);
   var c = document.getElementById('paCancelBtn');
   if (c) c.addEventListener('click', perfCancel);
+  var sb = document.getElementById('paSalesBtn');
+  if (sb) sb.addEventListener('click', perfSalesToggle);
+  if (sel) sel.addEventListener('change', perfSalesBtnState);
 });
+
+// ── Закрыть / открыть продажу (pack-v592) ─────────────────────────
+function perfSalesBtnState() {
+  var b = document.getElementById('paSalesBtn');
+  var id = document.getElementById('pa-perf').value;
+  var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  var ok = p && p.salesChannel === 'in_house' && p.status !== 'canceled';
+  b.disabled = !ok;
+  b.textContent = p && p.salesClosed ? 'Открыть продажу' : 'Закрыть продажу';
+}
+async function perfSalesToggle() {
+  var id = document.getElementById('pa-perf').value;
+  var title = document.getElementById('pa-title').value;
+  var out = document.getElementById('paResult');
+  var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  if (!p) return;
+  if (!title.trim()) { out.textContent = 'Введите название спектакля для подтверждения.'; return; }
+  var close = !p.salesClosed;
+  if (!confirm((close ? 'Закрыть' : 'Открыть') + ' продажу билетов на «' + p.title + '»?')) return;
+  var b = document.getElementById('paSalesBtn');
+  b.disabled = true;
+  try {
+    var res = await fetch(ADMIN_PERF_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+      body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title }) });
+    var data = await res.json();
+    if (!res.ok) { out.textContent = data.message || errorMessage(data); b.disabled = false; return; }
+    out.textContent = close ? 'Продажа закрыта.' : 'Продажа открыта.';
+    await loadPerfActions();
+    document.getElementById('pa-perf').value = id;
+    perfSalesBtnState();
+  } catch (e) { out.textContent = 'Не получилось — проверьте связь.'; b.disabled = false; }
+}
 
 async function loadRefunds() {
   var el = document.getElementById('refundsBlock');
@@ -1804,14 +1911,15 @@ function renderOrders(orders) {
     }).join('');
     return '<div class="ev-card">' +
       '<div class="ev-head">' +
-        '<div><div class="ev-title">№ ' + escapeHtml(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
+        '<div><div class="ev-title">' + (o.isTest ? '[ТЕСТ] ' : '') + '№ ' + escapeHtml(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(o.buyerName || '—') + ' · ' + escapeHtml(o.buyerEmail || '') + ' · ' + escapeHtml(o.buyerContact || '') + '</div>' +
         '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · ' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</div></div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:0.6875rem;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' +
         (o.status === 'paid'
-          ? '<button class="mini-btn" data-ord-action="resend" data-ord-num="' + escapeHtml(o.orderNumber || '') + '">Выслать билеты повторно</button>'
+          // pack-v592 (В7): шлём orderId — номер у тестовых и настоящих заказов может совпадать.
+          ? '<button class="mini-btn" data-ord-action="resend" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '" data-ord-test="' + (o.isTest ? '1' : '') + '">Выслать билеты повторно</button>'
           : '') +
         '<span class="ord-resend-msg" id="ord-resend-' + idx + '" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>' +
       '</div>' +
@@ -1860,14 +1968,15 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
     // отменить отправку нельзя. Случайное нажатие в списке из сотни
     // заказов иначе уходит человеку молча.
     var num = resendBtn.dataset.ordNum;
-    if (!confirm('Выслать билеты по заказу № ' + num + ' повторно? Письмо уйдёт на адрес, указанный в заказе.')) return;
+    var oid = resendBtn.dataset.ordId;
+    if (!confirm('Выслать билеты по ' + (resendBtn.dataset.ordTest ? 'ТЕСТОВОМУ ' : '') + 'заказу № ' + num + ' повторно? Письмо уйдёт на адрес, указанный в заказе.')) return;
     var msgEl = resendBtn.parentNode.querySelector('.ord-resend-msg');
     resendBtn.disabled = true; msgEl.textContent = 'Отправляем…';
     try {
       var res = await fetch(ADMIN_RESEND_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
-        body: JSON.stringify({ order_number: num }),
+        body: JSON.stringify(oid ? { order_id: oid, order_number: num } : { order_number: num }),
       });
       if (res.status === 401) { clearToken(); showGate(); return; }
       var data = await res.json().catch(function () { return null; });
@@ -1913,17 +2022,21 @@ function populatePerfFilter(orders) {
   sel.value = current;
 }
 
+// pack-v592 (ревью 07.10, В6): orderNumber — ЧИСЛО; (o.orderNumber || '')
+// .toLowerCase() падал на первом же заказе с номером, и поиск не работал
+// вовсе. Всё приводится к строке; одна функция — для списка и для CSV.
+function orderMatches(o, q, perf) {
+  if (perf && o.performanceId !== perf) return false;
+  if (!q) return true;
+  return String(o.buyerName || '').toLowerCase().includes(q) ||
+    String(o.buyerEmail || '').toLowerCase().includes(q) ||
+    String(o.orderNumber || '').toLowerCase().includes(q) ||
+    String(o.orderId || '').toLowerCase().includes(q);
+}
 function applyOrderFilters() {
   var q = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
   var perf = document.getElementById('ordPerfFilter').value;
-  var filtered = allOrders.filter(function (o) {
-    if (perf && o.performanceId !== perf) return false;
-    if (!q) return true;
-    return (o.buyerName || '').toLowerCase().includes(q) ||
-      (o.buyerEmail || '').toLowerCase().includes(q) ||
-      (o.orderNumber || '').toLowerCase().includes(q) ||
-      (o.orderId || '').toLowerCase().includes(q);
-  });
+  var filtered = allOrders.filter(function (o) { return orderMatches(o, q, perf); });
   renderOrders(filtered);
 }
 document.getElementById('ordSearch').addEventListener('input', applyOrderFilters);
@@ -1938,14 +2051,18 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
   var q = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
   var perf = document.getElementById('ordPerfFilter').value;
   var rows = [['Номер заказа', 'Спектакль', 'Покупатель', 'Email', 'Телефон', 'Статус', 'Создан', 'Оплачен', 'Билетов', 'Погашено', 'Сумма']];
+  // pack-v592 (В7): касса — без тестовых заказов (тестовый магазин ЮKassa,
+  // денег нет); сколько их отброшено — в последней строке файла.
+  var testSkipped = 0;
   allOrders.filter(function (o) {
-    if (perf && o.performanceId !== perf) return false;
-    if (!q) return true;
-    return (o.buyerName || '').toLowerCase().includes(q) || (o.buyerEmail || '').toLowerCase().includes(q) || (o.orderNumber || '').toLowerCase().includes(q);
+    if (!orderMatches(o, q, perf)) return false;
+    if (o.isTest) { testSkipped++; return false; }
+    return true;
   }).forEach(function (o) {
     rows.push([o.orderNumber || '', o.productionTitle || '', o.buyerName || '', o.buyerEmail || '', o.buyerContact || '',
       ORDER_STATUS_LABELS[o.status] || o.status, fmtDate(o.createdAt), o.paidAt ? fmtDate(o.paidAt) : '', o.ticketsCount, o.redeemedCount, o.totalAmount]);
   });
+  if (testSkipped) rows.push(['Тестовые заказы не включены: ' + testSkipped, '', '', '', '', '', '', '', '', '', '']);
   var csv = rows.map(function (row) {
     return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
   }).join('\r\n');
@@ -2316,6 +2433,247 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
   a.href = url; a.download = 'aelita-unfinished-orders.csv';
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
+});
+
+// ── Пригласительные (pack-v587) ─────────────────────────────────
+var INV_EVENTS = [], INV_LIST = [], INV_EDIT_ID = null;
+async function invCall(body) {
+  var res = await fetch(ADMIN_INVITES_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+    body: JSON.stringify(body),
+  });
+  var data = {};
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) throw new Error(data.message || errorMessage(data));
+  return data;
+}
+function invEvent() { return INV_EVENTS.find(function (e) { return e.id === document.getElementById('inv-event').value; }) || null; }
+function invPersonsWord(n) {
+  var m10 = n % 10, m100 = n % 100;
+  return n + ' ' + (m10 === 1 && m100 !== 11 ? 'лицо' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'лица' : 'лиц'));
+}
+function invSeatsText(inv) {
+  if (!inv.seats || !inv.seats.keys || !inv.seats.keys.length) return '';
+  var ev = invEvent();
+  var opt = ev && (ev.seatOptions || []).find(function (o) { return o.id === inv.seats.performanceId; });
+  return (opt ? opt.hall + ': ' : '') + inv.seats.keys.map(function (k) { var p = k.split('-'); return 'ряд ' + p[0] + ' место ' + p[1]; }).join(', ');
+}
+function invShow(el, text, ok) { el.textContent = text; el.className = 'editor-result ' + (ok ? 'ok' : 'err'); el.style.display = text ? 'block' : 'none'; }
+async function loadInviteEvents() {
+  var sel = document.getElementById('inv-event');
+  if (!sel || !ADMIN_INVITES_URL || !getToken()) return;
+  try {
+    var data = await invCall({ action: 'events' });
+    INV_EVENTS = data.events || [];
+    var keep = sel.value;
+    sel.innerHTML = INV_EVENTS.map(function (e) { return '<option value="' + escapeHtml(e.id) + '">' + escapeHtml(e.title) + ' — ' + escapeHtml(e.dateLabel) + (e.canceled ? ' · ПОКАЗ ОТМЕНЁН' : '') + (e.counts && e.counts.invites ? ' · ' + e.counts.invites + ' пригл.' : '') + '</option>'; }).join('');
+    if (keep && INV_EVENTS.some(function (e) { return e.id === keep; })) sel.value = keep;
+    invFillSeatOptions();
+    loadInvites();
+  } catch (e) {
+    sel.innerHTML = '<option value="">Не загрузилось</option>';
+    document.getElementById('invList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') +
+      ' · Если раздел открывается впервые — функция aelita-admin-invites ещё не создана (выкладка).</div>';
+  }
+}
+function invSeatModeUi() {
+  var m = document.getElementById('inv-seat-mode').value;
+  document.getElementById('inv-seat-pick-row').style.display = m === 'seats' && document.getElementById('inv-seats-row').style.display !== 'none' ? '' : 'none';
+}
+function invFillSeatOptions() {
+  var ev = invEvent();
+  var opts = ev ? ev.seatOptions || [] : [];
+  document.getElementById('inv-seats-row').style.display = opts.length ? '' : 'none';
+  if (!opts.length) document.getElementById('inv-seat-mode').value = 'none'; // свободная рассадка — мест нет
+  invSeatModeUi();
+  var off = !!(ev && ev.canceled);
+  ['invNewBtn', 'invImportBtn'].forEach(function (id) { document.getElementById(id).disabled = off; });
+  document.getElementById('inv-seat-perf').innerHTML = opts.map(function (o) {
+    return '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.title) + '</option>';
+  }).join('');
+}
+async function loadInvites() {
+  var ev = invEvent();
+  var el = document.getElementById('invList');
+  if (!ev) { el.innerHTML = '<div class="empty-state">Событий для пригласительных нет.</div>'; return; }
+  try {
+    var data = await invCall({ action: 'list', event_id: ev.id });
+    INV_LIST = data.invites || [];
+    renderInvites();
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>';
+  }
+}
+function renderInvites() {
+  var el = document.getElementById('invList');
+  var active = INV_LIST.filter(function (i) { return i.status === 'active'; });
+  var persons = active.reduce(function (a, i) { return a + i.persons; }, 0);
+  var arrived = active.filter(function (i) { return i.visits; });
+  document.getElementById('inv-total').textContent = active.length;
+  var evc = invEvent();
+  document.getElementById('inv-summary').textContent = (evc && evc.capacity ? 'Мест в зале: ' + evc.capacity.total + (evc.capacity.left !== null ? ', свободно: ' + evc.capacity.left + ' (билеты и пригласительные вместе) · ' : ' · ') : '') + 'Действующих: ' + active.length + ' на ' + invPersonsWord(persons) +
+    ' · прошли на вход: ' + arrived.length +
+    (function () { var n = active.filter(function (i) { return i.seatsLater; }).length; return n ? ' · ждут мест: ' + n : ''; })() +
+    (function () { var n = active.filter(function (i) { return i.entry; }); return n.length ? ' · входных: ' + n.length + ' на ' + invPersonsWord(n.reduce(function (a, i) { return a + i.persons; }, 0)) : ''; })() + (INV_LIST.length > active.length ? ' · отозвано: ' + (INV_LIST.length - active.length) : '');
+  var q = document.getElementById('inv-search').value.trim().toLowerCase();
+  var list = INV_LIST.filter(function (i) { return !q || (q === 'места' && i.seatsLater) || (q === 'входной' && i.entry) || i.name.toLowerCase().indexOf(q) >= 0 || String(i.number) === q.replace(/^№\s*/, ''); });
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (INV_LIST.length ? 'Никого не нашли.' : 'Пригласительных пока нет — «+ Пригласительный» или «+ Списком».') + '</div>'; return; }
+  el.innerHTML = list.map(function (i) {
+    var off = i.status !== 'active';
+    var seats = invSeatsText(i);
+    var acts = off
+      ? '<button class="mini-btn" data-inv="restore" data-id="' + i.id + '">Восстановить</button>' +
+        '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>'
+      : '<button class="mini-btn" data-inv="pdf" data-id="' + i.id + '">PDF</button>' +
+        '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>' +
+        '<button class="mini-btn" data-inv="reissue" data-id="' + i.id + '">Новый QR</button>' +
+        '<button class="mini-btn mini-btn-danger" data-inv="revoke" data-id="' + i.id + '">Отозвать</button>';
+    var hist = (i.history || []).slice().reverse().map(function (h) {
+      return '<div class="ev-person"><span class="who">' + escapeHtml(h.what) + '</span><span class="when">' + fmtGcDate(h.at) + '</span></div>';
+    }).join('');
+    return '<div class="ev-card' + (off ? ' inv-off' : '') + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">№ ' + String(i.number).padStart(3, '0') + ' · ' + escapeHtml(i.name) +
+          (off ? '<span class="inv-tag off">отозван</span>' : (i.visits ? '<span class="inv-tag ok">прошёл(а), ' + fmtGcDate(i.firstVisitAt) + '</span>' : '')) + '</div>' +
+        '<div class="ev-when">На ' + invPersonsWord(i.persons) + (seats ? ' · ' + escapeHtml(seats) : (i.entry ? ' · <b>входной</b> (свободные места после 3-го звонка)' : (i.seatsLater ? ' · <b>места — назначить на входе</b>' : ''))) + (i.lang === 'en' ? ' · бланк на английском' : '') +
+          (i.rev ? ' · QR перевыпущен (' + i.rev + ')' : '') + (i.note ? ' · ' + escapeHtml(i.note) : '') + '</div>' +
+      '</div><div class="ev-count">' + (i.visits ? i.visits + ' прох.' : '') + '</div></div>' +
+      '<div class="ev-actions">' + acts + ' <button class="mini-btn" data-inv="hist" data-id="' + i.id + '">История</button></div>' +
+      '<div class="ev-people" id="inv-hist-' + i.id + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
+    '</div>';
+  }).join('');
+}
+function invOpenForm(inv) {
+  INV_EDIT_ID = inv ? inv.id : null;
+  document.getElementById('inv-import').classList.remove('open');
+  document.getElementById('inv-form').classList.add('open');
+  document.getElementById('inv-name').value = inv ? inv.name : '';
+  document.getElementById('inv-persons').value = inv ? inv.persons : 1;
+  document.getElementById('inv-lang').value = inv ? inv.lang : 'ru';
+  document.getElementById('inv-note').value = inv ? inv.note : '';
+  document.getElementById('inv-seat-perf').value = inv && inv.seats ? inv.seats.performanceId : '';
+  document.getElementById('inv-seat-keys').value = inv && inv.seats ? inv.seats.keys.join(', ') : '';
+  document.getElementById('inv-seat-mode').value = !inv ? 'none' : (inv.seats ? 'seats' : (inv.entry ? 'entry' : (inv.seatsLater ? 'later' : 'none')));
+  invSeatModeUi();
+  document.getElementById('invSaveBtn').textContent = inv ? 'Сохранить' : 'Выпустить';
+  invShow(document.getElementById('invFormResult'), '', true);
+  document.getElementById('inv-name').focus();
+}
+function invDownload(data) {
+  var bin = atob(data.pdf_base64), arr = new Uint8Array(bin.length);
+  for (var k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+  var url = URL.createObjectURL(new Blob([arr], { type: 'application/pdf' }));
+  var a = document.createElement('a');
+  a.href = url; a.download = data.filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var sel = document.getElementById('inv-event');
+  if (!sel) return;
+  sel.addEventListener('change', function () {
+    // Другое событие — открытая правка относится к прежнему: закрыть.
+    INV_EDIT_ID = null;
+    document.getElementById('inv-form').classList.remove('open');
+    document.getElementById('inv-import').classList.remove('open');
+    document.getElementById('invSaveBtn').textContent = 'Выпустить';
+    invFillSeatOptions(); loadInvites();
+  });
+  document.getElementById('inv-seat-mode').addEventListener('change', invSeatModeUi);
+  document.getElementById('inv-search').addEventListener('input', renderInvites);
+  document.getElementById('invNewBtn').addEventListener('click', function () { invOpenForm(null); });
+  document.getElementById('invFormCancel').addEventListener('click', function () { document.getElementById('inv-form').classList.remove('open'); });
+  document.getElementById('invImportBtn').addEventListener('click', function () {
+    document.getElementById('inv-form').classList.remove('open');
+    document.getElementById('inv-import').classList.add('open');
+    invShow(document.getElementById('invImportResult'), '', true);
+  });
+  document.getElementById('invImportCancel').addEventListener('click', function () { document.getElementById('inv-import').classList.remove('open'); });
+  document.getElementById('invSaveBtn').addEventListener('click', async function () {
+    var btn = this, out = document.getElementById('invFormResult'), ev = invEvent();
+    if (!ev) return;
+    var mode = document.getElementById('inv-seat-mode').value;
+    var perf = document.getElementById('inv-seat-perf').value;
+    var keys = mode === 'seats' ? document.getElementById('inv-seat-keys').value.trim() : '';
+    if (mode === 'seats' && !keys) { invShow(document.getElementById('invFormResult'), 'Впишите места или выберите другой вариант в «Места»', false); return; }
+    var body = {
+      action: INV_EDIT_ID ? 'update' : 'create', event_id: ev.id, id: INV_EDIT_ID || undefined,
+      name: document.getElementById('inv-name').value, persons: Number(document.getElementById('inv-persons').value),
+      lang: document.getElementById('inv-lang').value, note: document.getElementById('inv-note').value,
+      seats: perf && keys ? { performance_id: perf, keys: keys } : null,
+      seats_later: mode === 'later',
+      entry: mode === 'entry',
+    };
+    btn.disabled = true;
+    try {
+      var data = await invCall(body);
+      invShow(out, (INV_EDIT_ID ? 'Сохранено' : 'Выпущен № ' + String(data.invite.number).padStart(3, '0')) + '. PDF — кнопкой у пригласительного.', true);
+      if (!INV_EDIT_ID) { document.getElementById('inv-name').value = ''; document.getElementById('inv-seat-keys').value = ''; document.getElementById('inv-note').value = ''; document.getElementById('inv-seat-mode').value = 'none'; invSeatModeUi(); }
+      else document.getElementById('inv-form').classList.remove('open');
+      INV_EDIT_ID = null; document.getElementById('invSaveBtn').textContent = 'Выпустить';
+      await loadInviteEvents(); // pack-v592: и свободные места
+    } catch (e) { invShow(out, e.message, false); }
+    btn.disabled = false;
+  });
+  document.getElementById('invImportSave').addEventListener('click', async function () {
+    var btn = this, out = document.getElementById('invImportResult'), ev = invEvent();
+    if (!ev) return;
+    btn.disabled = true;
+    try {
+      var nLines = document.getElementById('inv-lines').value.split('\n').filter(function (l) { return l.trim(); }).length;
+      if (nLines > 150) throw new Error('За раз — не больше 150 строк (сейчас ' + nLines + '): выпустите список частями');
+      var data = await invCall({ action: 'import', event_id: ev.id, lines: document.getElementById('inv-lines').value, lang: document.getElementById('inv-import-lang').value });
+      var msg = 'Выпущено: ' + data.created.length;
+      if (data.errors.length) msg += '. Не выпущены (' + data.errors.length + '): ' + data.errors.map(function (x) { return '«' + x.line + '» — ' + x.message; }).join('; ');
+      invShow(out, msg, !data.errors.length);
+      if (!data.errors.length) document.getElementById('inv-lines').value = '';
+      await loadInviteEvents(); // pack-v592: и свободные места
+    } catch (e) { invShow(out, e.message, false); }
+    btn.disabled = false;
+  });
+  document.getElementById('invPdfAllBtn').addEventListener('click', async function () {
+    var btn = this, ev = invEvent();
+    if (!ev) return;
+    // По 150 в файл: ответ сервера ограничен по размеру (≈ 3,5 МБ).
+    var ids = INV_LIST.filter(function (i) { return i.status === 'active'; }).map(function (i) { return i.id; });
+    if (!ids.length) { alert('Действующих пригласительных нет'); return; }
+    btn.disabled = true; var old = btn.textContent;
+    try {
+      for (var k = 0; k < ids.length; k += 150) {
+        btn.textContent = ids.length > 150 ? 'Собираем PDF ' + (k / 150 + 1) + ' из ' + Math.ceil(ids.length / 150) + '…' : 'Собираем PDF…';
+        invDownload(await invCall({ action: 'pdf', event_id: ev.id, ids: ids.slice(k, k + 150) }));
+      }
+    } catch (e) { alert(e.message); }
+    btn.disabled = false; btn.textContent = old;
+  });
+  document.getElementById('invCsvBtn').addEventListener('click', function () {
+    var rows = [['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка']];
+    INV_LIST.forEach(function (i) {
+      rows.push([i.number, i.name, i.persons, invSeatsText(i) || (i.entry ? 'входной' : (i.seatsLater ? 'назначить на входе' : '')), i.lang, i.status === 'active' ? 'действует' : 'отозван', i.visits, i.firstVisitAt ? fmtGcDate(i.firstVisitAt) : '', i.note || '']);
+    });
+    var csv = rows.map(function (row) { return row.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
+    var url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a'); a.href = url; a.download = 'aelita-invites-' + document.getElementById('inv-event').value + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+  document.getElementById('invList').addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-inv]');
+    if (!b) return;
+    var act = b.getAttribute('data-inv'), id = b.getAttribute('data-id'), ev = invEvent();
+    var inv = INV_LIST.find(function (x) { return x.id === id; });
+    if (!ev || !inv) return;
+    if (act === 'hist') { document.getElementById('inv-hist-' + id).classList.toggle('open'); return; }
+    if (act === 'edit') { invOpenForm(inv); document.getElementById('inv-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    if (act === 'revoke' && !confirm('Отозвать пригласительный № ' + inv.number + ' (' + inv.name + ')? Он перестанет проходить на входе, места вернутся в продажу.')) return;
+    if (act === 'reissue' && !confirm('Выпустить новый QR для № ' + inv.number + '? Прежний перестанет проходить — гостю нужно отправить новый PDF.')) return;
+    b.disabled = true;
+    try {
+      if (act === 'pdf') invDownload(await invCall({ action: 'pdf', event_id: ev.id, ids: [id] }));
+      else { await invCall({ action: act, event_id: ev.id, id: id }); await loadInviteEvents(); }
+    } catch (err) { alert(err.message); }
+    b.disabled = false;
+  });
 });
 
 // ── Подписки AELITA COMMUNITY (pack-v542) ─────────────────────────
@@ -2701,6 +3059,7 @@ async function loadData(opts) {
     loadEvents();
     loadRefunds();
     loadPerfActions(); // pack-v568
+    loadInviteEvents(); // pack-v587
     loadSales(); // pack-v571
     loadOrders();
     loadGiftCards();

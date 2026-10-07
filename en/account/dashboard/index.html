@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=77">
+<link rel="stylesheet" href="/assets/style.css?v=78">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
@@ -203,7 +203,7 @@ body{max-width:100vw}
           <div id="pf-email-block">
             <input class="ym-disable-keys" type="email" id="pf-email" placeholder="Email address" autocomplete="email" required>
             <input class="ym-disable-keys" type="password" id="pf-password" placeholder="Current password — needed only to change the address" autocomplete="current-password">
-            <p class="acc-hint">Your name changes right away. Changing your email requires your password — your orders and registrations stay with you.</p>
+            <p class="acc-hint">Your name changes right away. Changing your email requires your password and a code sent to the new address — your orders and registrations stay with you.</p>
           </div>
           <button type="submit" class="btn-outline" id="pf-submit">Save</button>
           <div id="pf-message"></div>
@@ -283,8 +283,8 @@ body{max-width:100vw}
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=77"></script>
-<script src="/assets/main.js?v=77"></script>
+<script src="/assets/account.js?v=78"></script>
+<script src="/assets/main.js?v=78"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -323,7 +323,14 @@ body{max-width:100vw}
       transferAskName: 'Имя и фамилия получателя (будут в билете):',
       transferConfirm: function (who) { return 'Передать билет — ' + who + '? Ваш прежний QR этого билета перестанет действовать, новый получит он(а). Передать можно один раз, не позже чем за 3 часа до начала.'; },
       transferDone: function (who) { return 'Билет передан: ' + who + '. Письмо с билетом ушло получателю.'; },
-      transferErr: { too_late: 'Передать уже нельзя: до начала меньше 3 часов.', transfer_limit: 'Этот билет уже передавали — повторная передача недоступна.', same_person: 'Это тот же человек.', bad_email: 'Проверьте почту получателя.', bad_name: 'Укажите имя получателя.', ticket_redeemed: 'По этому билету уже вошли.', ticket_refunded: 'Билет возвращён.', performance_canceled: 'Показ отменён.', transfer_disabled: 'Передача билетов пока недоступна.' },
+      // pack-v592 (ревизия 07.10, Б4): почта старого кабинета не подтверждена
+      verifyEmailHint: 'Подтвердите почту кабинета, чтобы увидеть здесь свои билеты: пришлём на неё код из 6 цифр. Так мы убеждаемся, что билеты видит только владелец ящика.',
+      verifyConfirmBtn: 'Подтвердить',
+      verifyDone: 'Почта подтверждена.',
+      verifyNeedCode: 'Введите 6 цифр из письма.',
+      newEmailCodeAsk: function (to) { return 'Мы отправили код из 6 цифр на ' + to + '. Введите его, чтобы перевести кабинет на этот адрес (код действует 10 минут):'; },
+      newEmailCodeCancelled: 'Адрес не изменён: код не введён. Нажмите «Сохранить» ещё раз, чтобы получить новый код.',
+      transferErr: { refund_requested: 'По этому билету подано заявление на возврат — передать его нельзя.', too_many_requests: 'Письмо получателю уже отправляли несколько раз — попробуйте через час.', too_late: 'Передать уже нельзя: до начала меньше 3 часов.', transfer_limit: 'Этот билет уже передавали — повторная передача недоступна.', same_person: 'Это тот же человек.', bad_email: 'Проверьте почту получателя.', bad_name: 'Укажите имя получателя.', ticket_redeemed: 'По этому билету уже вошли.', ticket_refunded: 'Билет возвращён.', performance_canceled: 'Показ отменён.', transfer_disabled: 'Передача билетов пока недоступна.' },
       ticketPageBtn: function (n, i) { return n > 1 ? 'Билет ' + (i + 1) + ' на телефоне' : 'Билет на телефоне'; },
       receiptLoading: 'Ищем чек…',
       receiptEmail: 'Чек отправлен на почту, указанную при оплате, в день оплаты. Если его нет — проверьте «Спам» или напишите нам.',
@@ -348,7 +355,7 @@ body{max-width:100vw}
       codeSent: 'Код отправлен на вашу почту — действует 10 минут.',
       setPasswordTitle: 'Задать пароль',
       setPasswordHint: 'Кабинет создан входом по коду, пароля у него нет. Задайте его, если хотите входить и так: подтвердите кодом из письма.',
-      emailHintCode: 'Имя меняется сразу. Для смены почты нужен код из письма — заказы и регистрации останутся с вами.',
+      emailHintCode: 'Имя меняется сразу. Для смены почты нужен код из письма на текущий адрес, а затем — код, который придёт на новый, — заказы и регистрации останутся с вами.',
       confirmDelete: 'Удалить аккаунт? Это необратимо. Оплаченные заказы и уже выданные билеты останутся действительными.',
       resendTicket: 'Прислать на почту',
       ticketLabel: 'Билет',
@@ -385,7 +392,14 @@ body{max-width:100vw}
       transferAskName: 'Recipient full name (printed on the ticket):',
       transferConfirm: function (who) { return 'Pass the ticket to ' + who + '? Your previous QR code for this ticket will stop working; they get a new one. A ticket can be passed once, no later than 3 hours before the start.'; },
       transferDone: function (who) { return 'Ticket passed to ' + who + '. The ticket has been emailed to them.'; },
-      transferErr: { too_late: 'It is too late: less than 3 hours before the start.', transfer_limit: 'This ticket has already been passed on once.', same_person: 'That is the same person.', bad_email: 'Please check the recipient email.', bad_name: 'Please enter the recipient name.', ticket_redeemed: 'This ticket has already been used.', ticket_refunded: 'This ticket has been returned.', performance_canceled: 'The performance has been cancelled.', transfer_disabled: 'Passing tickets on is not available yet.' },
+      // pack-v592 (review 07.10, B4): the email of an older account is not confirmed
+      verifyEmailHint: 'Confirm your account email to see your tickets here: we will send a 6-digit code to it. This way only the owner of the mailbox sees the tickets.',
+      verifyConfirmBtn: 'Confirm',
+      verifyDone: 'Email confirmed.',
+      verifyNeedCode: 'Enter the 6 digits from the email.',
+      newEmailCodeAsk: function (to) { return 'We have sent a 6-digit code to ' + to + '. Enter it to switch your account to this address (the code works for 10 minutes):'; },
+      newEmailCodeCancelled: 'The address was not changed: no code entered. Press “Save” again to get a new code.',
+      transferErr: { refund_requested: 'A refund has been requested for this ticket — it cannot be passed on.', too_many_requests: 'The email to the recipient has already been sent several times — please try again in an hour.', too_late: 'It is too late: less than 3 hours before the start.', transfer_limit: 'This ticket has already been passed on once.', same_person: 'That is the same person.', bad_email: 'Please check the recipient email.', bad_name: 'Please enter the recipient name.', ticket_redeemed: 'This ticket has already been used.', ticket_refunded: 'This ticket has been returned.', performance_canceled: 'The performance has been cancelled.', transfer_disabled: 'Passing tickets on is not available yet.' },
       ticketPageBtn: function (n, i) { return n > 1 ? 'Ticket ' + (i + 1) + ' on your phone' : 'Ticket on your phone'; },
       receiptLoading: 'Looking for the receipt…',
       receiptEmail: 'The receipt was emailed to the address used at payment on the day of payment. If you cannot find it, check your spam folder or write to us.',
@@ -408,7 +422,7 @@ body{max-width:100vw}
       codeSent: 'The code has been sent to your email — it works for 10 minutes.',
       setPasswordTitle: 'Set a password',
       setPasswordHint: 'This account was created by signing in with a code and has no password. Set one if you also want to sign in with it: confirm with a code from the email.',
-      emailHintCode: 'Your name changes right away. To change the email, confirm with a code from the email — your orders and registrations stay with you.',
+      emailHintCode: 'Your name changes right away. To change the email, confirm with a code sent to the current address and then with a code sent to the new one — your orders and registrations stay with you.',
       confirmDelete: 'Delete the account? This cannot be undone. Paid orders and tickets already issued stay valid.',
       resendTicket: 'Email me the ticket',
       ticketLabel: 'Ticket',
@@ -585,8 +599,9 @@ body{max-width:100vw}
       return '<div class="reg-item">' +
         '<div class="reg-head"><span class="name">' + escapeHtml(o.title) + '</span>' +
           '<span class="date">' + escapeHtml(when) + '</span></div>' +
-        '<div class="reg-meta">' + t.orderNo + ' ' + escapeHtml(String(o.orderNumber)) +
-          ' · ' + o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) +
+        // pack-v592: получателю переданного билета номер заказа покупателя не приходит (null).
+        '<div class="reg-meta">' + (o.orderNumber != null ? t.orderNo + ' ' + escapeHtml(String(o.orderNumber)) + ' · ' : '') +
+          o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) +
           (o.refundedCount ? ' · ' + o.refundedCount + ' ' + t.refundedWord : '') +
           (o.venue ? ' · ' + escapeHtml(o.venue) : '') + '</div>' +
         '<div class="reg-actions">' +
@@ -669,9 +684,50 @@ body{max-width:100vw}
         document.getElementById('ticketOrders').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
       },
     }).then(function (data) {
-      if (data) renderTicketOrders(data.orders);
+      if (!data) return;
+      // pack-v592 (ревизия 07.10, Б4): почта кабинета не подтверждена —
+      // сервер билетов не отдаёт, предлагаем подтвердить кодом.
+      if (data.emailUnverified && (!data.orders || !data.orders.length)) { renderVerifyEmail(); return; }
+      renderTicketOrders(data.orders);
     });
   }
+
+  // pack-v592 (ревизия 07.10, Б4): подтверждение почты кабинета, заведённого
+  // до pack-v592 без проверки, — код на текущий адрес (Account/update-profile.js,
+  // verifyEmail). После подтверждения разделы перечитываются.
+  function renderVerifyEmail() {
+    var el = document.getElementById('ticketOrders');
+    el.innerHTML = '<div class="empty-state">' + escapeHtml(t.verifyEmailHint) + '</div>' +
+      '<div class="reg-actions">' +
+        '<button class="contract-btn" id="vf-send" onclick="onVerifySend(this)">' + escapeHtml(t.sendCode) + '</button>' +
+        '<input class="ym-disable-keys" type="text" id="vf-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="' + escapeHtml(t.codePlaceholder) + '">' +
+        '<button class="contract-btn" id="vf-confirm" onclick="onVerifyConfirm(this)">' + escapeHtml(t.verifyConfirmBtn) + '</button>' +
+      '</div><p class="acc-hint" id="vf-message" role="status" aria-live="polite"></p>';
+  }
+  function onVerifySend(btn) {
+    var msgEl = document.getElementById('vf-message');
+    window.AELITA_account.updateProfile({ verifyEmail: 'send' }, {
+      buttonEl: btn,
+      onSuccess: function (data) {
+        if (data && data.emailVerified) { loadTicketOrders(); loadEventRegistrations(); return; }
+        msgEl.textContent = t.codeSent;
+        var inp = document.getElementById('vf-code'); if (inp) inp.focus();
+      },
+      onError: function (m) { msgEl.textContent = m; },
+    });
+  }
+  function onVerifyConfirm(btn) {
+    var msgEl = document.getElementById('vf-message');
+    var code = (document.getElementById('vf-code').value || '').replace(/\s+/g, '');
+    if (!/^\d{6}$/.test(code)) { msgEl.textContent = t.verifyNeedCode; return; }
+    window.AELITA_account.updateProfile({ verifyEmailCode: code }, {
+      buttonEl: btn,
+      onSuccess: function () { msgEl.textContent = t.verifyDone; loadTicketOrders(); loadEventRegistrations(); },
+      onError: function (m) { msgEl.textContent = m; },
+    });
+  }
+  window.onVerifySend = onVerifySend;
+  window.onVerifyConfirm = onVerifyConfirm;
 
   function loadEventRegistrations() {
     window.AELITA_account.listEventRegistrations({
@@ -795,7 +851,20 @@ body{max-width:100vw}
 
     window.AELITA_account.updateProfile(fields, {
       buttonEl: submitEl,
-      onSuccess: function (data) {
+      onSuccess: function onProfileSaved(data) {
+        // pack-v592 (ревизия 07.10, Б4): новый адрес подтверждается кодом,
+        // присланным на него; без кода адрес не меняется.
+        if (data && data.need_new_email_code) {
+          document.getElementById('pf-password').value = '';
+          var code = (prompt(t.newEmailCodeAsk(data.newEmail)) || '').replace(/\s+/g, '');
+          if (!code) { msgEl.textContent = t.newEmailCodeCancelled; return; }
+          window.AELITA_account.updateProfile({ newEmail: data.newEmail, newEmailCode: code }, {
+            buttonEl: submitEl,
+            onSuccess: onProfileSaved,
+            onError: function (msg) { msgEl.textContent = msg; },
+          });
+          return;
+        }
         msgEl.textContent = data && data.previousEmail ? t.emailChanged : t.profileSaved;
         msgEl.classList.add('ok');
         document.getElementById('pf-password').value = '';
@@ -960,7 +1029,7 @@ body{max-width:100vw}
     document.getElementById('content').style.display = 'block';
   })();
 </script>
-<script src="/assets/subscription.js?v=77"></script>
-<script src="/assets/phone-prefix.js?v=77"></script>
+<script src="/assets/subscription.js?v=78"></script>
+<script src="/assets/phone-prefix.js?v=78"></script>
 </body>
 </html>

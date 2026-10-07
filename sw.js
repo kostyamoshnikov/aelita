@@ -10,7 +10,7 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 77;
+const SITE_VERSION = 78;
 const CACHE_NAME = `aelita-v${SITE_VERSION}`;
 const STATIC_CACHE = `aelita-static-v${SITE_VERSION}`;
 
@@ -102,7 +102,13 @@ async function networkFirst(request) {
     if (cached) return cached;
     // Офлайн-заглушка для HTML
     if (request.headers.get('accept')?.includes('text/html')) {
-      return cache.match('/offline.html') || new Response(
+      // pack-v592 (ревью 07.10): `cache.match(...) || …` — промис всегда
+      // «истинный», запасной ответ не срабатывал никогда; и offline.html
+      // лежит в STATIC_CACHE (precache), а не в CACHE_NAME. caches.match
+      // ищет во всех кэшах.
+      const offline = await caches.match('/offline.html');
+      if (offline) return offline;
+      return new Response(
         '<html><body style="background:#0B0B0D;color:#E8E6E1;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center"><div><h1 style="font-size:2rem;letter-spacing:.2em">АЭЛИТА</h1><p style="color:#C9B8A3">Нет подключения к интернету</p></div></body></html>',
         { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
       );

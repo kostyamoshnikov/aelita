@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=77">
+<link rel="stylesheet" href="/assets/style.css?v=78">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -430,6 +430,14 @@ async function sendRequest(){
     msg('send-msg', NET_FAIL_MSG, 'err');
     $('btn-send').disabled = false; return;
   }
+  // pack-v592 (оферта п. 6.3.2): после начала показа, до конца его дня —
+  // только по болезни или смерти близкого.
+  if(status === 409 && body && body.error === 'reason_not_allowed_after_start'){
+    msg('send-msg', EN
+      ? 'The performance has already started. Until the end of the performance day a refund is possible only for documented illness or death of a close relative (clause 6.3.2 of the public offer). Choose one of these reasons.'
+      : 'Мероприятие уже началось. До конца дня показа возврат возможен только по болезни или смерти близкого (п. 6.3.2 оферты) — выберите одну из этих причин.','err');
+    $('btn-send').disabled = false; return;
+  }
   if(status === 409){
     msg('send-msg','По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.','err');
     $('btn-send').disabled = false; return;
@@ -461,7 +469,10 @@ async function sendRequest(){
   html += body.mail_sent
     ? '<p>Подтверждение отправлено на вашу почту.</p>'
     : '<p style="color:#E0B87B">Заявление принято, но письмо-подтверждение отправить не удалось. Сохраните номер обращения.</p>';
-  html += '<p style="color:var(--sand);font-size:0.8125rem">Возврат производится в течение 10 рабочих дней с момента получения заявления (п. 6.1 оферты).</p>';
+  // pack-v592 (Д10): срок — дословно п. 6.1 оферты, «в течение 10 дней».
+  html += '<p style="color:var(--sand);font-size:0.8125rem">' + (EN
+    ? 'Refunds are made within 10 days of receiving the application (clause 6.1 of the public offer).'
+    : 'Возврат производится в течение 10 дней с момента получения заявления (п. 6.1 оферты).') + '</p>';
   $('done-body').innerHTML = html;
 }
 </script>
@@ -589,7 +600,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=77"></script>
+<script src="/assets/main.js?v=78"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

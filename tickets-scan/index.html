@@ -32,6 +32,18 @@
   секрет не настроен на бэкенде, staffCodeValid() пропускает всех —
   экран всё равно показывается: лучше спросить лишний раз, чем
   выяснить постфактум, что защиты не было вовсе.
+
+  pack-v592 (ревью 07.10 — _tools/Tickets/REVIEW-2026-10-07.md, Б3, В1–В5):
+  после «Пропустить» — «Пропущен» + «Отменить проход»; повтор и гонка двух
+  контролёров — жёлтое «Уже погашен (в 18:05)» + «Вернуть в действительные»;
+  у каждой карточки свой QR (кнопка гасит ровно тот билет, что на экране);
+  офлайн-очередь — одна отправка за раз, добавленное во время отправки не
+  теряется, ответы повтора видны в плашке; без связи — инструкция и плашка
+  «нет связи»; фокус возвращается в поле сканирования (сканер-пистолет);
+  ошибка сервера — ошибка, а не «сохранено офлайн»; в карточке — дата
+  показа, «ряд 3, место 17», серия и номер билета.
+  Тест: _tools/Audit/tests/tickets-door.test.cjs (настоящий скрипт этой
+  страницы против настоящего ticket-check.js).
 -->
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
@@ -50,13 +62,28 @@ input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);co
 .card.warn{border:1px solid var(--warn)}
 .name{font-size:1.25rem;margin-bottom:4px}
 .detail{color:var(--sand);font-size:0.875rem;margin-bottom:14px}
+.detail-left{text-align:left;line-height:1.6}
 .status{font-size:0.9375rem;font-weight:500;padding:6px 0}
 .status.ok{color:var(--ok)}
 .status.warn{color:var(--warn)}
 button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:0.875rem;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
+#net-badge{display:none;background:#4A1010;border:1px solid var(--warn);color:#F2C6B0;font-size:0.75rem;padding:8px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
+#queue-notes{display:none;background:var(--coal);border:1px solid var(--warn);border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:0.8125rem;line-height:1.5}
+#queue-notes .note{margin-bottom:6px}
+#queue-notes .note.warn{color:#F2C6B0}
+.status.big{font-size:1.5rem}
+button.action:disabled{opacity:.5}
 #queue-badge{display:none;background:var(--warn);color:var(--ink);font-size:0.6875rem;text-transform:uppercase;padding:6px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
 .test-flag{background:#4A1010;border:1px solid #C98B6B;color:#F2C6B0;font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.seat-pick{text-align:left;margin-top:14px;border-top:1px solid rgba(201,184,163,.25);padding-top:12px}
+.seat-pick .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:6px}
+.seat-pick .rl{color:var(--sand);font-size:0.75rem;width:52px;flex:none}
+.seat-pick .st{background:transparent;border:1px solid rgba(201,184,163,.35);color:var(--bone);font-size:0.8125rem;min-width:34px;padding:7px 4px;border-radius:3px;cursor:pointer}
+.seat-pick .st.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.seat-pick .sum{font-size:0.875rem;margin:10px 0;color:var(--sand)}
+.seat-pick .rows{max-height:46vh;overflow:auto}
+.seats-new{color:var(--gold);font-size:1rem;margin:4px 0 12px}
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 </head>
@@ -71,7 +98,9 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 <div id="app">
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
+<div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF»).</div>
 <div id="queue-badge"></div>
+<div id="queue-notes"></div>
 <input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
 <video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
@@ -106,9 +135,15 @@ const API_BASE = 'https://api.aelita-production.ru/tickets';
 
 // ─── Код доступа персонала (pack-v201) ──────────────────────────────
 const STAFF_CODE_KEY = 'aelita-tickets-staff-code';
-function getStaffCode(){ return localStorage.getItem(STAFF_CODE_KEY) || ''; }
-function setStaffCode(v){ localStorage.setItem(STAFF_CODE_KEY, v); }
-function clearStaffCode(){ localStorage.removeItem(STAFF_CODE_KEY); }
+// pack-v592: localStorage может бросить (приватный режим, запрет сайта) —
+// страница контроля от этого не должна падать целиком.
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+function getStaffCode(){ return lsGet(STAFF_CODE_KEY) || ''; }
+function setStaffCode(v){ lsSet(STAFF_CODE_KEY, v); }
+function clearStaffCode(){ lsDel(STAFF_CODE_KEY); }
+function appVisible(){ return document.getElementById('app').style.display === 'block'; }
 function showGate(errMsg){
   document.getElementById('app').style.display = 'none';
   document.getElementById('gate').style.display = 'flex';
@@ -118,7 +153,7 @@ function showGate(errMsg){
 function showApp(){
   document.getElementById('gate').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('scan-input').focus();
+  refocus();
 }
 document.getElementById('gate-submit').addEventListener('click', submitGate);
 document.getElementById('gate-input').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitGate(); });
@@ -126,36 +161,72 @@ function submitGate(){
   const v = document.getElementById('gate-input').value.trim();
   if(!v){ document.getElementById('gate-err').textContent = 'Введите код'; return; }
   setStaffCode(v);
+  document.getElementById('gate-input').value = '';
   showApp();
-  // Сразу проверяем код лёгким запросом ('undo' без orderId — сервер
-  // ответит 401 при неверном коде до проверки самого билета, или
-  // { ok:false } при верном коде и отсутствующем заказе — оба случая
-  // отличимы по HTTP-статусу, см. api()).
-  api('undo', { orderId: '__gate_check__', identifier: '' }).catch((e)=>{
-    if(e instanceof UnauthorizedError){ /* уже обработано в api() — вернёт на gate */ }
-  });
+  // Сразу проверяем код лёгким запросом. pack-v592: 'ping' — без обращения
+  // к заказам (раньше — 'undo' с выдуманным id). Неверный код → 401 →
+  // api() вернёт на экран кода; прочие ответы здесь не важны.
+  api('ping', {}).then(()=>flushQueue()).catch(()=>{});
 }
 if(!getStaffCode()){ showGate(); } else { showApp(); }
+
+// pack-v592 (ревью 07.10, В3): сканер-пистолет печатает в то поле, где
+// фокус. После нажатия кнопки фокус оставался на кнопке (или пропадал
+// вместе с перерисованной карточкой) — следующий билет «не читался».
+// Теперь фокус возвращается в поле после каждого ответа, а любой символ,
+// набранный мимо поля, сам переводит в него.
+// На телефоне с камерой фокус в поле поднимал бы экранную клавиатуру
+// поверх карточки — поэтому только если последний билет пришёл с
+// клавиатуры/сканера-пистолета или у устройства есть мышь.
+let lastScanFrom = null; // 'keys' | 'camera'
+function refocus(){
+  if(!appVisible()) return;
+  if(lastScanFrom === 'camera') return;
+  let fine = false;
+  try{ fine = !!(window.matchMedia && window.matchMedia('(pointer: fine)').matches); }catch(e){}
+  if(!fine && lastScanFrom !== 'keys') return;
+  if(document.querySelector('#seat-pick .seat-pick')) return; // контролёр выбирает места — не мешаем
+  const el = document.getElementById('scan-input');
+  if(document.activeElement !== el){ try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); } }
+}
+document.addEventListener('keydown', (e)=>{
+  if(!appVisible() || e.ctrlKey || e.metaKey || e.altKey) return;
+  const a = document.activeElement;
+  if(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA')) return;
+  if(e.key && e.key.length === 1) document.getElementById('scan-input').focus();
+});
+
+// ─── Время и дата (по Москве) ───────────────────────────────────────
+function fmtTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Moscow'});
+}
+function fmtWhen(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleString('ru-RU', {weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', timeZone:'Europe/Moscow'});
+}
 
 // pack-v196: если страница открыта с ?performance=<id>, привязываем
 // контроль к этому показу — билет с другого показа сервер отклонит
 // явно (см. ticket-check.js, wrong_performance), а не полагается на то,
 // что контролёр сам заметит несовпадающее название в карточке.
+// pack-v592: в плашке — и дата (ИОВ 23.10 и 25.10 иначе неразличимы).
 const expectedPerformanceId = new URLSearchParams(location.search).get('performance') || null;
 if (expectedPerformanceId) {
   fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(expectedPerformanceId)}`)
     .then((r) => r.ok ? r.json() : null)
     .then((d) => {
       const el = document.getElementById('performance-badge');
-      if (d && d.title) { el.textContent = '📍 ' + d.title; el.style.display = 'block'; }
+      if (d && d.error === 'performance_canceled') { el.textContent = '📍 Показ ОТМЕНЁН — билеты на него не действуют'; el.style.display = 'block'; return; }
+      if (d && d.title) { el.textContent = '📍 ' + d.title + (d.datetime ? ' · ' + fmtWhen(d.datetime) : ''); el.style.display = 'block'; }
     })
     .catch(() => {}); // не критично — бейдж чисто информационный, проверка на сервере сработает в любом случае
 }
 
 const QUEUE_KEY = 'aelita-tickets-redeem-queue';
-let currentToken = null;
-let lastOrderId = null;
-let lastIdentifier = null;
+const NOTES_KEY = 'aelita-tickets-queue-notes';
 let wakeLock = null;
 
 async function requestWakeLock(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
@@ -165,9 +236,102 @@ requestWakeLock(); // сразу при загрузке — контролёр 
                     // (тот шлёт нажатия клавиш, не клики мышью/тапы), тогда click-обработчик выше
                     // мог вообще ни разу не сработать за смену, и экран гас бы посреди работы.
 
-function getQueue(){ try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); }catch(e){ return []; } }
-function saveQueue(arr){ localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr.length); }
-function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0){ el.textContent='Не отправлено: '+n; el.style.display='block'; } else el.style.display='none'; }
+// ─── Офлайн-очередь (pack-v592, ревью 07.10, В1) ────────────────────
+// У каждой записи свой id. Отправка — одна за раз (интервал и событие
+// 'online' раньше запускали две сразу); в конце очередь ПЕРЕЧИТЫВАЕТСЯ и
+// из неё убираются только отправленные — добавленное за время отправки
+// не стирается. Ответы повтора не выбрасываются: «уже погашен другим
+// контролёром» и отказы видны в плашке над сканером.
+function itemId(x){ return x.id || ('old-' + x.ts + '-' + String(x.token || '').slice(-12)); }
+function getQueue(){
+  try{ const a = JSON.parse(lsGet(QUEUE_KEY) || '[]'); return Array.isArray(a) ? a.map((x)=>Object.assign({}, x, {id: itemId(x)})) : []; }catch(e){ return []; }
+}
+function saveQueue(arr){ lsSet(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr.length); }
+function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0){ el.textContent='Не отправлено (нет связи): '+n+' — отправим сами'; el.style.display='block'; } else el.style.display='none'; }
+function enqueue(ctx){
+  const arr = getQueue();
+  if(arr.some((x)=>x.token === ctx.token)) return null; // этот билет уже пропущен без связи
+  const item = {id: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8), token: ctx.token, expectedPerformanceId, ts: Date.now(), name: ctx.data && ctx.data.name || ''};
+  arr.push(item);
+  saveQueue(arr);
+  return item;
+}
+function unqueue(id){ saveQueue(getQueue().filter((x)=>x.id !== id)); }
+
+function getNotes(){ try{ const a = JSON.parse(lsGet(NOTES_KEY) || '[]'); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function renderNotes(){
+  const notes = getNotes();
+  const el = document.getElementById('queue-notes');
+  if(!notes.length){ el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.style.display = 'block';
+  el.innerHTML = notes.map((n)=>'<div class="note' + (n.warn ? ' warn' : '') + '">' + escapeHtml(n.text) + '</div>').join('') +
+    '<button class="action secondary" onclick="clearNotes()">Понятно</button>';
+}
+function addNotes(list){
+  if(!list.length) return;
+  const all = getNotes().concat(list).slice(-30);
+  lsSet(NOTES_KEY, JSON.stringify(all));
+  renderNotes();
+}
+function clearNotes(){ lsDel(NOTES_KEY); renderNotes(); refocus(); }
+
+function queueNote(item, data){
+  const who = (data && data.name) || item.name || 'билет';
+  if(data && data.error === 'already_redeemed'){
+    return {warn: true, text: '⚠️ «' + who + '» (пропущен без связи в ' + fmtTime(new Date(item.ts).toISOString()) + ') — этот билет УЖЕ был погашен' + (data.redeemedAt ? ' в ' + fmtTime(data.redeemedAt) : '') + ' на другом устройстве. Возможен повторный проход по одному билету — сообщите администратору.'};
+  }
+  if(data && data.kind === 'invite' && data.alreadyRedeemed){
+    return {warn: true, text: '⚠️ Пригласительный «' + who + '» уже проходил на другом устройстве — возможен повторный проход.'};
+  }
+  return {warn: true, text: '⚠️ «' + who + '» (пропущен без связи) — сервер отказал: ' + failMessage(data || {})};
+}
+
+let flushing = null;
+function flushQueue(){
+  if(flushing) return flushing;
+  flushing = doFlush().catch(()=>{}).then(()=>{ flushing = null; });
+  return flushing;
+}
+const MAX_SERVER_TRIES = 5;
+async function doFlush(){
+  const snapshot = getQueue();
+  if(snapshot.length === 0) return;
+  const done = new Set();
+  const tries = {};
+  const notes = [];
+  let sent = 0;
+  for(const item of snapshot){
+    let data;
+    try{
+      data = await api('redeem', {token: item.token, expected_performance_id: item.expectedPerformanceId || undefined});
+    }catch(e){
+      if(e instanceof NetworkError || e instanceof UnauthorizedError) break; // связи нет / код сменился — остальное тоже не уйдёт
+      // Сервер ответил ошибкой (500) — попробуем позже, но не бесконечно.
+      const n = (item.tries || 0) + 1;
+      if(n >= MAX_SERVER_TRIES){ done.add(item.id); notes.push({warn: true, text: '⚠️ «' + (item.name || 'билет') + '» (пропущен без связи) — сервер так и не принял отметку. Сообщите администратору.'}); }
+      else tries[item.id] = n;
+      continue;
+    }
+    done.add(item.id);
+    if(data && data.ok && !(data.kind === 'invite' && data.alreadyRedeemed)) sent++;
+    else notes.push(queueNote(item, data));
+  }
+  // Перечитываем: за время отправки контролёр мог пропустить ещё кого-то.
+  const rest = getQueue().filter((x)=>!done.has(x.id)).map((x)=>tries[x.id] ? Object.assign({}, x, {tries: tries[x.id]}) : x);
+  saveQueue(rest);
+  if(sent) notes.unshift({warn: false, text: 'Отправлено проходов, сохранённых без связи: ' + sent + '.'});
+  addNotes(notes);
+}
+window.addEventListener('online', ()=>{ setNet(true); flushQueue(); });
+window.addEventListener('offline', ()=>setNet(false));
+setInterval(()=>{ if(getStaffCode()) flushQueue(); }, 15000);
+
+// pack-v592 (В2): плашка «нет связи» — видно заранее, а не только по
+// отказу на очередном билете.
+function setNet(online){
+  const el = document.getElementById('net-badge');
+  el.style.display = online ? 'none' : 'block';
+}
 
 // Различаем «нет связи» (fetch вообще не смог достучаться — TypeError,
 // см. спецификацию fetch()) от «сервер ответил, но с ошибкой» (HTTP-код
@@ -184,14 +348,21 @@ async function api(action, extra){
       body: JSON.stringify({ action, staffCode: getStaffCode(), ...extra })
     });
   }catch(e){
+    setNet(false);
     throw new NetworkError('Нет связи с сервером');
   }
-  if(res.status === 401){
+  setNet(true);
+  if(res.status === 401 || res.status === 429){
     // Код неверный или его сменили — не копим в очередь, не показываем
     // как обычную серверную ошибку: возвращаем на экран ввода кода,
     // чтобы контролёр не долбил сканер вслепую.
+    // pack-v592 (В5): 429 — с этой сети слишком много неверных кодов.
+    let wait = 0;
+    if(res.status === 429){ try{ wait = Math.ceil(((await res.json()).retryAfterMs || 0) / 60000); }catch(e){} }
     clearStaffCode();
-    showGate('Код неверен или устарел — введите снова');
+    showGate(res.status === 429
+      ? 'Слишком много неверных кодов с этой сети — вход закрыт' + (wait ? ' на ' + wait + ' мин.' : '.') + ' Позовите администратора.'
+      : 'Код неверен или устарел — введите снова');
     throw new UnauthorizedError('unauthorized');
   }
   if(!res.ok){
@@ -199,30 +370,16 @@ async function api(action, extra){
     // как обычную ошибку, не кладём в очередь на автоповтор бесконечно.
     throw new Error('Сервер вернул ошибку: ' + res.status);
   }
-  return res.json();
+  try{ return await res.json(); }catch(e){ throw new Error('Сервер вернул не JSON'); }
 }
-
-// Сеть vs логическая ошибка — тот же принцип, что в GuestSystem: сеть
-// не сработала → в очередь и повторить; сервер ответил осмысленно
-// (уже погашен и т.п.) → показать сразу, повторять нет смысла.
-async function flushQueue(){
-  const arr = getQueue();
-  if(arr.length === 0) return;
-  const remaining = [];
-  for(const item of arr){
-    try{ await api('redeem', {token: item.token, expected_performance_id: item.expectedPerformanceId || undefined}); }
-    catch(e){ if(e instanceof NetworkError || e instanceof UnauthorizedError) remaining.push(item); } // сеть или код сменился — не теряем попытку, остальные серверные ошибки на повторе не копим бесконечно
-  }
-  saveQueue(remaining);
-}
-window.addEventListener('online', flushQueue);
-setInterval(flushQueue, 15000);
 
 const input = document.getElementById('scan-input');
 input.addEventListener('keydown', (e) => {
   if(e.key === 'Enter' && input.value.trim()){
-    handleScan(input.value.trim());
+    const v = input.value.trim();
     input.value = '';
+    lastScanFrom = 'keys';
+    handleScan(v);
   }
 });
 
@@ -244,6 +401,7 @@ async function startCamera(){
     // и т.п.) — сканер-пистолет и ручной ввод продолжают работать как
     // раньше, камера просто недоступна в этот раз.
     document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
+    refocus();
     return;
   }
   try{
@@ -253,6 +411,7 @@ async function startCamera(){
     // сканер-пистолет остаётся основным способом.
     document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
     cameraStream = null;
+    refocus();
     return;
   }
   cameraVideo.srcObject = cameraStream;
@@ -260,6 +419,7 @@ async function startCamera(){
   await cameraVideo.play();
   cameraToggleBtn.textContent = '📷 Выключить камеру';
   cameraLoopId = requestAnimationFrame(cameraTick);
+  refocus();
 }
 
 function stopCamera(){
@@ -269,6 +429,7 @@ function stopCamera(){
   cameraStream = null;
   cameraVideo.style.display = 'none';
   cameraToggleBtn.textContent = '📷 Включить камеру';
+  refocus();
 }
 
 function cameraTick(){
@@ -287,6 +448,7 @@ function cameraTick(){
       if(!(code.data === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS)){
         cameraLastCode = code.data;
         cameraLastAt = now;
+        lastScanFrom = 'camera';
         handleScan(code.data);
       }
     }
@@ -294,22 +456,51 @@ function cameraTick(){
   cameraLoopId = requestAnimationFrame(cameraTick);
 }
 
+// ─── Карточки (pack-v592, ревью 07.10, мелочи: «currentToken — один на всё») ──
+// У каждой карточки свой контекст (QR, заказ, билет). Кнопки ссылаются на
+// контекст своей карточки по номеру — «Пропустить» гасит ровно тот билет,
+// что на экране, даже если ответы сервера пришли в другом порядке. Ответ
+// на устаревшую проверку (уже отсканировали следующий) не рисуется.
+const CARDS = {};
+let cardSeq = 0;
+let activeCard = 0;
+let scanSeq = 0;
+function newCard(token, data){
+  const id = ++cardSeq;
+  CARDS[id] = {id, token, data};
+  activeCard = id;
+  for(const k in CARDS){ if(Number(k) < id - 20) delete CARDS[k]; }
+  return CARDS[id];
+}
+function show(html){ document.getElementById('result').innerHTML = html; refocus(); }
+
 async function handleScan(token){
-  currentToken = token;
-  const resultEl = document.getElementById('result');
-  resultEl.innerHTML = '<div class="card">Проверяем…</div>';
+  const seq = ++scanSeq;
+  activeCard = 0;
+  show('<div class="card">Проверяем…</div>');
   let data;
   try{
     data = await api('check', {token, expected_performance_id: expectedPerformanceId || undefined});
   }catch(e){
+    if(seq !== scanSeq) return;
     if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
-    const msg = e instanceof NetworkError
-      ? 'Нет связи — попробуйте ещё раз или используйте ручной ввод позже.'
-      : 'Сервер ответил с ошибкой — попробуйте ещё раз, если не поможет — звоните в «Позвать помощь».';
-    resultEl.innerHTML = `<div class="card warn">${msg}</div>`;
+    if(e instanceof NetworkError){ show(offlineHelp()); return; }
+    show('<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — отсканируйте ещё раз; если не поможет — «Позвать помощь».</div></div>');
     return;
   }
-  render(data);
+  if(seq !== scanSeq) return; // уже отсканировали следующий билет
+  render(data, newCard(token, data));
+}
+
+// pack-v592 (ревью 07.10, В2): совсем без сети проверить билет нельзя —
+// подпись QR проверяет только сервер (секрет на телефон контролёра не
+// кладём). Поэтому — ясная инструкция, что делать.
+function offlineHelp(){
+  return '<div class="card warn"><div class="status warn">НЕТ СВЯЗИ — билет не проверить</div>' +
+    '<div class="detail detail-left">' +
+    '1. Проверьте интернет (Wi-Fi или мобильные данные) и отсканируйте ещё раз.<br>' +
+    '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF». Найдите фамилию и номер билета, отметьте ручкой.<br>' +
+    '3. Сомневаетесь — «Позвать помощь».</div></div>';
 }
 
 // pack-v267: экранирование. Имя покупателя приходит из заказа и
@@ -339,70 +530,273 @@ const CHECK_FAIL_MESSAGES = {
   ticket_refunded: 'За этот билет оформлен возврат — не пропускать. Если человек уверен, что не возвращал билет, позовите администратора.',
   // ТЗ С2: билет передан другому человеку — у этого QR старая версия.
   ticket_transferred: 'Этот билет передан другому человеку, QR устарел — не пропускать. Новый QR — у получателя (письмо или страница билета). Если спорно — к администратору.',
+  // pack-v592 (ревью 07.10, В11, Д2).
+  test_ticket: 'ТЕСТОВЫЙ билет (тестовая оплата) — на настоящий показ не действует. Не пропускать, позовите администратора.',
+  performance_canceled: 'Показ ОТМЕНЁН — билет на него не действует. Не пропускать; про возврат денег — к администратору.',
+  // pack-v587: именные пригласительные.
+  invite_not_found: 'Пригласительный не найден — не пропускать, позовите администратора.',
+  invite_revoked: 'Пригласительный ОТОЗВАН — не пропускать. Если гость уверен, что приглашён, позовите администратора.',
+  invite_reissued: 'Этот QR пригласительного заменён новым — не пропускать по нему. Действует только последний выпущенный; если спорно — к администратору.',
+  invite_wrong_day: 'Пригласительный на ДРУГОЙ день — не пропускать.',
+  invite_event_canceled: 'Показ ОТМЕНЁН — пригласительный на него не действует. Не пропускать, позовите администратора.',
 };
-
-function render(data){
-  const resultEl = document.getElementById('result');
-  if(!data.ok){
-    const msg = data.error === 'wrong_performance'
-      ? `Билет с ДРУГОГО показа${data.actualProduction ? ' («' + escapeHtml(data.actualProduction) + '»)' : ''} — не пропускать`
-      : (CHECK_FAIL_MESSAGES[data.error] || 'Билет не найден или недействителен');
-    resultEl.innerHTML = `<div class="card warn"><div class="status warn">${msg}</div></div>`;
-    return;
+function failMessage(data){
+  if(data.error === 'wrong_performance'){
+    const t = data.actualProduction ? String(data.actualProduction) : '';
+    const what = [t ? (/^«/.test(t) ? t : '«' + t + '»') : '', data.actualDatetime ? fmtWhen(data.actualDatetime) : ''].filter(Boolean).join(', ');
+    return 'Билет с ДРУГОГО показа' + (what ? ' (' + what + ')' : '') + ' — не пропускать';
   }
-  lastOrderId = data.orderId;
-  lastIdentifier = data.seatKey || data.ticketNumber;
-  const already = data.alreadyRedeemed;
-  const testFlag = data.isTest ? '<div class="test-flag">⚠️ Тестовый заказ</div>' : '';
-  resultEl.innerHTML = `
-    <div class="card ${already?'warn':'ok'}">
-      ${testFlag}
-      <div class="name">${escapeHtml(data.name)}</div>
-      <div class="detail">${escapeHtml(data.production)}${data.hall ? ' · ' + escapeHtml(data.hall) : ''}${data.seatKey ? ' · место ' + escapeHtml(String(data.seatKey).replace('-', ' ряд, место ')) : ''}</div>
-      <div class="status ${already?'warn':'ok'}">${already ? 'Уже погашен' : 'Билет действителен'}</div>
-      ${!already ? '<button class="action" onclick="confirmRedeem()">Пропустить</button>' : '<button class="action secondary" onclick="undoRedeem()">Вернуть в действительные</button>'}
-    </div>`;
+  if(data.error === 'invite_wrong_day') return 'Пригласительный на ДРУГОЙ день' + (data.dateLabel ? ' (' + data.dateLabel + ')' : '') + ' — не пропускать';
+  return CHECK_FAIL_MESSAGES[data.error] || 'Билет не найден или недействителен';
 }
 
-async function confirmRedeem(){
+// pack-v587: «2 лица», «5 лиц».
+function personsWord(n){
+  const m10 = n % 10, m100 = n % 100;
+  return n + ' ' + (m10 === 1 && m100 !== 11 ? 'лицо' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'лица' : 'лиц'));
+}
+function seatsText(hall, keys){
+  if(!keys || !keys.length) return '';
+  return (hall ? hall + ': ' : '') + keys.map(function(k){ const p = String(k).split('-'); return 'ряд ' + p[0] + ', место ' + p[1]; }).join('; ');
+}
+function btn(label, act, ctx, secondary){
+  return '<button class="action' + (secondary ? ' secondary' : '') + '" data-act="' + act + '" onclick="cardAct(\'' + act + '\',' + ctx.id + ')">' + label + '</button>';
+}
+
+function render(data, ctx){
+  if(!data.ok && data.error === 'already_redeemed') return renderTicket(data, ctx, 'already');
+  if(!data.ok){
+    show(`<div class="card warn"><div class="status warn">${escapeHtml(failMessage(data))}</div></div>`);
+    return;
+  }
+  if(data.kind === 'invite') return renderInvite(data, ctx, false);
+  renderTicket(data, ctx, data.alreadyRedeemed ? 'already' : 'valid');
+}
+
+// Состояния карточки билета:
+//   valid  — «Билет действителен» + «Пропустить»;
+//   passed — «Пропущен» + «Отменить проход» (pack-v592, ревью 07.10, Б3);
+//   already — жёлтое «Уже погашен (в 18:05)» + «Вернуть в действительные»;
+//   queued — пропущен без связи, в очереди + «Отменить (убрать из очереди)»;
+//   queuedDup — этот QR уже в очереди без связи — повторный проход;
+//   undone — «Возвращён в действительные» + «Пропустить».
+function renderTicket(data, ctx, state){
+  ctx.data = data;
+  const warn = state === 'already' || state === 'queuedDup';
+  const testFlag = data.isTest ? '<div class="test-flag">⚠️ Тестовый заказ</div>' : '';
+  // pack-v592 (мелочи): «ряд 3, место 17» (было «место 3 ряд, место 17»);
+  // номер билета — всегда (у свободной рассадки другого опознавателя нет);
+  // дата показа — в карточке.
+  const where = [escapeHtml(data.production || ''), data.datetime ? escapeHtml(fmtWhen(data.datetime)) : ''].filter(Boolean).join(' · ');
+  const seat = data.seatKey ? escapeHtml(seatsText(data.hall, [data.seatKey])) : (data.hall ? escapeHtml(data.hall) + ' · ' : '') + 'свободная рассадка';
+  const num = data.ticketNumber ? 'Серия ' + escapeHtml(data.ticketSeries || '') + ' № ' + escapeHtml(data.ticketNumber) : '';
+  const at = fmtTime(data.redeemedAt);
+  const status = {
+    valid: 'Билет действителен',
+    passed: 'Пропущен' + (at ? ' в ' + at : ''),
+    already: 'Уже погашен' + (at ? ' (в ' + at + ')' : '') + ' — повторно не пропускать',
+    queued: 'Пропущен (нет связи — сохранено, отправим сами)',
+    queuedDup: 'Этот билет уже пропущен без связи (ждёт отправки) — повторно не пропускать',
+    undone: 'Возвращён в действительные',
+  }[state];
+  const action = {
+    valid: btn('Пропустить', 'redeem', ctx),
+    passed: btn('Отменить проход', 'undo', ctx, true),
+    already: btn('Вернуть в действительные', 'undo', ctx, true),
+    queued: btn('Отменить (убрать из очереди)', 'unqueue', ctx, true),
+    queuedDup: '',
+    undone: btn('Пропустить', 'redeem', ctx),
+  }[state];
+  show(`
+    <div class="card ${warn?'warn':'ok'}" data-state="${state}">
+      ${testFlag}
+      <div class="name">${escapeHtml(data.name || '')}</div>
+      <div class="detail">${where}</div>
+      <div class="detail">${seat}${num ? ' · ' + num : ''}</div>
+      <div class="status ${warn?'warn':'ok'}${state==='passed'?' big':''}">${escapeHtml(status)}</div>
+      ${action}
+    </div>`);
+}
+
+function renderInvite(data, ctx, justPassed){
+  ctx.data = data;
+  const at = data.lastVisitAt ? fmtTime(data.lastVisitAt) : '';
+  // pack-v589: многоразовый QR — только у открытия «Точки Кюри» (выход и
+  // вход весь день); остальные пригласительные — один вход, как билет.
+  const visitsLine = data.multiEntry
+    ? (data.visits
+      ? (justPassed ? 'Проход отмечен — ' + data.visits + '-й за день' : 'Уже проходил(а) сегодня: ' + data.visits + ' раз, последний в ' + at)
+      : 'Сегодня ещё не проходил(а)') + ' · многоразовый: выход и вход весь день'
+    : (data.visits ? (justPassed ? 'Проход отмечен' : 'Прошёл(а) в ' + at) : 'Ещё не проходил(а)');
+  const already = data.alreadyRedeemed && !justPassed;
+  lastInvite = {token: ctx.token, persons: data.persons, justPassed: !!justPassed, ctx};
+  const seats = seatsText(data.hall, data.seats) || (data.entry ? 'ВХОДНОЙ — свободные места после 3-го звонка' : (data.seatsLater ? 'места — назначить на входе' : ''));
+  // pack-v587: места назначают здесь же, электронно (кнопка ниже).
+  const seatBtn = data.canAssignSeats
+    ? (data.seats && data.seats.length
+      ? '<button class="action secondary" onclick="openSeatPick()">Изменить места</button>'
+      : '<button class="action' + (data.seatsLater ? '' : ' secondary') + '" onclick="openSeatPick()">Назначить места</button>')
+    : '';
+  show(`
+    <div class="card ${already ? 'warn' : 'ok'}">
+      <div class="name">${escapeHtml(data.name)}</div>
+      <div class="detail">Пригласительный № ${escapeHtml(String(data.inviteNumber).padStart(3, '0'))} · ${escapeHtml(data.production)}</div>
+      <div class="detail"><b>На ${escapeHtml(personsWord(data.persons))}</b>${seats ? ' · ' + escapeHtml(seats) : ''}</div>
+      <div class="status ${already ? 'warn' : 'ok'}">${already ? 'Уже прошёл(а) — повторный вход по этому пригласительному не предусмотрен' : (justPassed ? 'Пропущен' : 'Пригласительный действителен')}</div>
+      <div class="detail">${escapeHtml(visitsLine)}</div>
+      ${data.seatsAssigned ? '<div class="seats-new">Места назначены — назовите гостю: ' + escapeHtml(seatsText(data.hall, data.seats)) + '</div>' : ''}
+      ${already ? btn('Вернуть в действительные', 'undo', ctx, true) : (justPassed ? btn('Отменить этот проход', 'undo', ctx, true) : btn('Пропустить', 'redeem', ctx))}
+      ${seatBtn}
+      <div id="seat-pick"></div>
+    </div>`);
+}
+
+// ── Назначение мест пригласительному на входе (pack-v587) ──────────
+// Свободные места показа по рядам; контролёр отмечает столько мест,
+// на сколько лиц пригласительный, и назначает. Место сразу уходит из
+// продажи и записывается в пригласительный.
+let lastInvite = null, seatSel = [];
+async function openSeatPick(){
+  const box = document.getElementById('seat-pick');
+  if(!box || !lastInvite) return;
+  box.innerHTML = '<div class="seat-pick"><div class="sum">Загружаем свободные места…</div></div>';
+  let data;
+  try{ data = await api('invite_free_seats', {token: lastInvite.token, expected_performance_id: expectedPerformanceId || undefined}); }
+  catch(e){ if(!(e instanceof UnauthorizedError)) box.innerHTML = '<div class="seat-pick"><div class="sum">Нет связи — попробуйте ещё раз.</div></div>'; return; }
+  if(!data.ok){ box.innerHTML = '<div class="seat-pick"><div class="sum">' + escapeHtml(data.message || 'Места назначить нельзя') + '</div></div>'; return; }
+  seatSel = (data.current || []).slice();
+  const rows = data.free.rows.filter(function(r){ return r.seats.length; });
+  box.innerHTML = '<div class="seat-pick">' +
+    '<div class="sum">' + escapeHtml(data.free.hall) + ' · отметьте ' + escapeHtml(seatsWord(data.persons)) + '. Ряд 1 — у сцены.</div>' +
+    '<div class="rows">' + (rows.length ? rows.map(function(r){
+      return '<div class="row"><span class="rl">ряд ' + r.row + '</span>' + r.seats.map(function(n){
+        const k = r.row + '-' + n;
+        return '<button class="st' + (seatSel.indexOf(k) >= 0 ? ' on' : '') + '" data-k="' + k + '" onclick="toggleSeat(this)">' + n + '</button>';
+      }).join('') + '</div>';
+    }).join('') : '<div class="sum">Свободных мест нет.</div>') + '</div>' +
+    '<div class="sum" id="seat-sum"></div>' +
+    '<button class="action" id="seat-ok" onclick="assignSeats(' + data.persons + ')">Назначить</button>' +
+    '<button class="action secondary" onclick="document.getElementById(\'seat-pick\').innerHTML=\'\';refocus()">Отмена</button>' +
+    '</div>';
+  seatSum(data.persons);
+}
+function seatsWord(n){
+  const m10 = n % 10, m100 = n % 100;
+  return n + ' ' + (m10 === 1 && m100 !== 11 ? 'место' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'места' : 'мест'));
+}
+function toggleSeat(btn){
+  const k = btn.getAttribute('data-k'), i = seatSel.indexOf(k);
+  if(i >= 0) seatSel.splice(i, 1); else seatSel.push(k);
+  btn.classList.toggle('on', i < 0);
+  seatSum(lastInvite.persons);
+}
+function seatSum(persons){
+  const el = document.getElementById('seat-sum'), ok = document.getElementById('seat-ok');
+  if(!el) return;
+  el.textContent = 'Выбрано ' + seatSel.length + ' из ' + persons + (seatSel.length ? ': ' + seatsText('', seatSel) : '');
+  ok.disabled = seatSel.length !== persons;
+  ok.style.opacity = ok.disabled ? .5 : 1;
+}
+async function assignSeats(persons){
+  if(seatSel.length !== persons) return;
+  const ok = document.getElementById('seat-ok');
+  ok.disabled = true;
+  const inv = lastInvite;
+  let data;
+  try{ data = await api('invite_assign_seats', {token: inv.token, keys: seatSel, expected_performance_id: expectedPerformanceId || undefined}); }
+  catch(e){ if(!(e instanceof UnauthorizedError)){ document.getElementById('seat-sum').textContent = 'Нет связи — места не назначены, попробуйте ещё раз.'; ok.disabled = false; } return; }
+  if(!data.ok){
+    document.getElementById('seat-sum').textContent = (data.message || 'Не получилось') + (data.error === 'seat_taken' ? ' — их только что заняли, выберите другие.' : '');
+    if(data.error === 'seat_taken') setTimeout(openSeatPick, 1200); else ok.disabled = false;
+    return;
+  }
+  renderInvite(data, inv.ctx, (data.visits || 0) > 0 && inv.justPassed);
+}
+
+// Кнопки карточек. Пока запрос идёт — кнопка заблокирована (двойное
+// нажатие не шлёт второй запрос).
+async function cardAct(act, id){
+  const ctx = CARDS[id];
+  if(!ctx || ctx.busy) return;
+  ctx.busy = true;
+  const b = document.querySelector('#result button[data-act="' + act + '"]');
+  if(b) b.disabled = true;
   try{
-    const data = await api('redeem', {token: currentToken, expected_performance_id: expectedPerformanceId || undefined});
-    render(data);
+    if(act === 'redeem') await confirmRedeem(ctx);
+    else if(act === 'undo') await undoRedeem(ctx);
+    else if(act === 'unqueue'){
+      unqueue(ctx.queuedId);
+      if(isActive(ctx)) show('<div class="card ok"><div class="status ok">Убран из очереди — проход не засчитан</div></div>');
+    }
+  } finally {
+    ctx.busy = false;
+    if(b) b.disabled = false;
+    refocus();
+  }
+}
+function isActive(ctx){ return activeCard === ctx.id; }
+// Ответ пришёл, когда на экране уже другой билет, — не затираем его, а
+// пишем коротко в плашку.
+function aside(text, warn){ addNotes([{warn: !!warn, text}]); }
+
+async function confirmRedeem(ctx){
+  let data;
+  try{
+    data = await api('redeem', {token: ctx.token, expected_performance_id: expectedPerformanceId || undefined});
   }catch(e){
     if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     if(e instanceof NetworkError){
-      // офлайн — ставим в очередь, показываем оптимистичный результат
-      const arr = getQueue();
-      arr.push({token: currentToken, expectedPerformanceId, ts: Date.now()});
-      saveQueue(arr);
-      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
-    } else {
-      // Настоящая серверная ошибка — НЕ в очередь (переотправка того же
-      // самого запроса вряд ли что-то исправит сама), явно показываем,
-      // чтобы контролёр не пропустил человека дважды по недоразумению.
-      document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — попробуйте ещё раз или позовите помощь.</div></div>';
+      // офлайн — ставим в очередь (проверка этого билета только что прошла
+      // на сервере), показываем результат «пропущен, отправим».
+      const item = enqueue(ctx);
+      if(item) ctx.queuedId = item.id;
+      if(isActive(ctx)) renderTicket(ctx.data, ctx, item ? 'queued' : 'queuedDup');
+      return;
     }
+    // Настоящая серверная ошибка — НЕ в очередь (переотправка того же
+    // самого запроса вряд ли что-то исправит сама), явно показываем,
+    // чтобы контролёр не пропустил человека дважды по недоразумению.
+    if(isActive(ctx)) show('<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — проход НЕ отмечен. Нажмите «Пропустить» ещё раз или позовите помощь.</div>' + btn('Пропустить', 'redeem', ctx) + '</div>');
+    else aside('⚠️ «' + ((ctx.data && ctx.data.name) || 'билет') + '» — сервер ответил с ошибкой, проход НЕ отмечен.', true);
+    return;
   }
+  if(!isActive(ctx)){
+    aside(data.ok ? 'Пропущен: «' + (data.name || '') + '»' : '⚠️ «' + ((ctx.data && ctx.data.name) || '') + '» — ' + (data.error === 'already_redeemed' ? 'уже был погашен' : failMessage(data)), !data.ok);
+    return;
+  }
+  if(data.kind === 'invite'){
+    // Одноразовый, которого только что пропустил другой контролёр, — alreadyRedeemed.
+    if(data.ok) renderInvite(data, ctx, !data.alreadyRedeemed); else render(data, ctx);
+    return;
+  }
+  if(data.ok) renderTicket(data, ctx, 'passed');
+  else render(data, ctx); // already_redeemed — жёлтая карточка; прочее — отказ
 }
 
-async function undoRedeem(){
+async function undoRedeem(ctx){
+  const d = ctx.data || {};
+  const isInvite = d.kind === 'invite';
+  let data;
   try{
-    const data = await api('undo', { orderId: lastOrderId, identifier: lastIdentifier });
-    if(data.ok){
-      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Возвращён в действительные</div></div>';
-    } else {
-      document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div></div>';
-    }
+    data = await api('undo', { orderId: d.orderId, identifier: isInvite ? '' : (d.identifier || d.seatKey || d.ticketNumber) });
   }catch(e){
     if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     // Раньше здесь не было try/catch вообще — сетевой сбой на «Вернуть в
     // действительные» падал необработанным отказом промиса, кнопка
     // просто ничего не делала без единого сообщения контролёру.
-    const msg = e instanceof NetworkError ? 'Нет связи — попробуйте ещё раз.' : 'Сервер ответил с ошибкой — попробуйте ещё раз.';
-    document.getElementById('result').innerHTML = `<div class="card warn"><div class="status warn">${msg}</div></div>`;
+    const msg = e instanceof NetworkError ? 'Нет связи — отмена НЕ сделана, попробуйте ещё раз.' : 'Сервер ответил с ошибкой — отмена НЕ сделана, попробуйте ещё раз.';
+    if(isActive(ctx)) show(`<div class="card warn"><div class="status warn">${msg}</div>${btn('Отменить ещё раз', 'undo', ctx, true)}</div>`);
+    return;
   }
+  if(!isActive(ctx)){ aside(data.ok ? 'Отменён проход: «' + (d.name || '') + '»' : '⚠️ Не удалось отменить проход «' + (d.name || '') + '»', !data.ok); return; }
+  if(!data.ok){ show('<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div>' + btn('Отменить ещё раз', 'undo', ctx, true) + '</div>'); return; }
+  if(isInvite){ show('<div class="card ok"><div class="status ok">Проход отменён</div></div>'); return; }
+  renderTicket(Object.assign({}, d, {alreadyRedeemed: false, redeemedAt: null}), ctx, 'undone');
 }
 
+updateBadge(getQueue().length);
+renderNotes();
+if(!navigator.onLine) setNet(false);
 if(getStaffCode()) flushQueue(); // до ввода кода очередь не трогаем — нечем себя авторизовать
 </script>
 </body>

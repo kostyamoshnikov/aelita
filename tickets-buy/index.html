@@ -475,7 +475,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=77"></script>
+<script src="/assets/payments.js?v=78"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1113,6 +1113,10 @@ async function init(){
   if(data.error === 'not_on_sale'){ showError('Продажи на этот показ ещё не открыты — попробуйте позже.'); return; }
   if(data.error){ showError('Показ не найден — возможно, продажи ещё не открыты или ссылка устарела.'); return; }
 
+  // pack-v592 (ревью 07.10 Б1): вместимость свободной рассадки исчерпана.
+  if(data.seating === 'general' && data.left === 0){ showError('Билеты на этот показ распроданы.'); return; }
+  if(data.seating === 'general' && typeof data.left === 'number' && quantity > data.left){ quantity = Math.max(1, data.left); }
+
   if(data.seating === 'redirect'){
     // Показ переведён на партнёрскую систему (см. config/events.js,
     // «Откат к Ticketscloud») — просто уводим туда, ничего своего не
@@ -1618,7 +1622,9 @@ window.addEventListener('pagehide', () => {
 });
 
 function changeQty(delta){
-  quantity = Math.max(1, Math.min(10, quantity + delta));
+  // pack-v592: не больше, чем осталось (вместимость свободной рассадки).
+  const maxQty = (data && typeof data.left === 'number') ? Math.max(1, Math.min(10, data.left)) : 10;
+  quantity = Math.max(1, Math.min(maxQty, quantity + delta));
   document.getElementById('qty-val').textContent = quantity;
   invalidateDiscounts();
   updateTotal();
@@ -2082,7 +2088,17 @@ async function submitOrder(){
       location.href = out.buy_url;
       return;
     }
-    if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
+    // pack-v592: вместимость, закрытая продажа, отмена — свои причины.
+    if(out.error === 'sold_out'){
+      msgEl.textContent = 'Пока вы оформляли заказ, билеты закончились.';
+    } else if(out.error === 'not_enough_left'){
+      if(data) data.left = out.left;
+      msgEl.textContent = `Осталось меньше билетов, чем вы выбрали: доступно ${out.left}. Уменьшите количество и оплатите ещё раз.`;
+    } else if(out.error === 'sales_closed'){
+      msgEl.textContent = 'Продажа билетов на этот показ закрыта.';
+    } else if(out.error === 'performance_canceled'){
+      msgEl.textContent = 'Этот показ отменён, продажа билетов закрыта.';
+    } else if(out.error === 'seats_taken' || out.error === 'seats_taken_by_guest'){
       msgEl.innerHTML = 'Кто-то только что забрал часть выбранных мест. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать другие.';
     } else if(out.error === 'gift_card_changed'){
       // pack-v277: гонка за остаток карты между проверкой и оплатой —
@@ -2250,6 +2266,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=77"></script>
+<script src="/assets/phone-prefix.js?v=78"></script>
 </body>
 </html>
