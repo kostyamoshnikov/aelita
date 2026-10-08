@@ -322,6 +322,7 @@ body{max-width:100vw}
       transferDone: function (who) { return 'Билет передан: ' + who + '. Письмо с билетом ушло получателю.'; },
       // pack-v592 (ревизия 07.10, Б4): почта старого кабинета не подтверждена
       verifyEmailHint: 'Подтвердите почту кабинета, чтобы увидеть здесь свои билеты: пришлём на неё код из 6 цифр. Так мы убеждаемся, что билеты видит только владелец ящика.',
+      verifyRegsHint: 'Регистрации на встречи тоже появятся после подтверждения почты — кнопка «Прислать код» в разделе «Мои билеты» выше.', // pack-v595
       verifyConfirmBtn: 'Подтвердить',
       verifyDone: 'Почта подтверждена.',
       verifyNeedCode: 'Введите 6 цифр из письма.',
@@ -391,6 +392,7 @@ body{max-width:100vw}
       transferDone: function (who) { return 'Ticket passed to ' + who + '. The ticket has been emailed to them.'; },
       // pack-v592 (review 07.10, B4): the email of an older account is not confirmed
       verifyEmailHint: 'Confirm your account email to see your tickets here: we will send a 6-digit code to it. This way only the owner of the mailbox sees the tickets.',
+      verifyRegsHint: 'Your event registrations will also appear once your email is confirmed — use “Send code” in the “My tickets” section above.', // pack-v595
       verifyConfirmBtn: 'Confirm',
       verifyDone: 'Email confirmed.',
       verifyNeedCode: 'Enter the 6 digits from the email.',
@@ -732,6 +734,10 @@ body{max-width:100vw}
         document.getElementById('eventRegistrations').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
       },
     }).then(function (data) {
+      if (data && data.emailUnverified && (!data.registrations || !data.registrations.length)) { // pack-v595
+        document.getElementById('eventRegistrations').innerHTML = '<div class="empty-state">' + escapeHtml(t.verifyRegsHint) + '</div>';
+        return;
+      }
       if (data) renderEventRegistrations(data.registrations);
     });
   }

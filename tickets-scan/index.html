@@ -98,7 +98,7 @@ button.action:disabled{opacity:.5}
 <div id="app">
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
-<div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF»).</div>
+<div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF») и пригласительных (админка → «Пригласительные» → «PDF всех действующих» или «Скачать CSV»).</div>
 <div id="queue-badge"></div>
 <div id="queue-notes"></div>
 <input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
@@ -220,7 +220,7 @@ if (expectedPerformanceId) {
     .then((d) => {
       const el = document.getElementById('performance-badge');
       if (d && d.error === 'performance_canceled') { el.textContent = '📍 Показ ОТМЕНЁН — билеты на него не действуют'; el.style.display = 'block'; return; }
-      if (d && d.title) { el.textContent = '📍 ' + d.title + (d.datetime ? ' · ' + fmtWhen(d.datetime) : ''); el.style.display = 'block'; }
+      if (d && d.title) { el.textContent = '📍 ' + d.title + (d.datetime ? ' · ' + fmtWhen(d.datetime) : '') + (d.error === 'sales_closed' ? ' · продажа закрыта' : ''); el.style.display = 'block'; } // pack-v595: и при закрытой продаже
     })
     .catch(() => {}); // не критично — бейдж чисто информационный, проверка на сервере сработает в любом случае
 }
@@ -499,7 +499,7 @@ function offlineHelp(){
   return '<div class="card warn"><div class="status warn">НЕТ СВЯЗИ — билет не проверить</div>' +
     '<div class="detail detail-left">' +
     '1. Проверьте интернет (Wi-Fi или мобильные данные) и отсканируйте ещё раз.<br>' +
-    '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF». Найдите фамилию и номер билета, отметьте ручкой.<br>' +
+    '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF»; гостей по пригласительным — по списку «Пригласительные» → «Скачать CSV». Найдите фамилию и номер билета (пригласительного), отметьте ручкой.<br>' +
     '3. Сомневаетесь — «Позвать помощь».</div></div>';
 }
 

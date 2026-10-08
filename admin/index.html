@@ -2081,7 +2081,7 @@ function salesWhen(iso) {
 }
 function salesCard(s) {
   var seatsLine = s.seats
-    ? 'Мест ' + s.seats.capacity + ': продано ' + s.seats.sold + ', в брони ' + s.seats.held + (s.seats.guests != null ? ', пригласительных ' + s.seats.guests : '') + ', свободно ' + s.seats.free + '.'
+    ? 'Мест ' + s.seats.capacity + ': занято ' + s.seats.sold + (s.seats.invites ? ' (из них по нашим пригласительным ' + s.seats.invites + ')' : '') + ', в брони ' + s.seats.held + (s.seats.guests != null ? ', гостей GuestSystem ' + s.seats.guests : '') + ', свободно ' + s.seats.free + '.'
     : (s.salesChannel === 'in_house' ? 'Свободная рассадка — вместимость в каталоге не задана.' : 'Продажа через ticketscloud/cuire-fest — здесь только наши заказы.');
   var promos = (s.promos || []).map(function (p) { return p.code + ' — ' + p.orders + ' зак., скидка ' + fmtMoney(p.discountRub); }).join('; ');
   var status = s.status === 'canceled' ? ' · ОТМЕНЁН' : s.status === 'closed' ? ' · продажа закрыта' : '';
@@ -2098,7 +2098,7 @@ function salesCard(s) {
     '<div class="sales-actions"><button class="mini-btn" data-sales-act="days">По дням</button>' +
     '<button class="mini-btn" data-sales-act="csv">Зрители — CSV</button>' +
     '<button class="mini-btn" data-sales-act="pdf">Зрители — PDF</button>' +
-    (s.seats && s.salesChannel === 'in_house' ? '<button class="mini-btn" data-sales-act="waitlist">Лист ожидания</button>' : '') + '</div>' +
+    (s.seats && s.seating === 'assigned' && s.salesChannel === 'in_house' ? '<button class="mini-btn" data-sales-act="waitlist">Лист ожидания</button>' : '') + '</div>' +
     '<div class="sales-detail"></div></div>';
 }
 // pack-v576 (ТЗ Н1): «Скорость покупки».
@@ -2217,7 +2217,7 @@ async function salesAction(card, act) {
       if (!r1.ok) { box.textContent = errorMessage(d1); return; }
       var p = d1.performance;
       box.innerHTML = salesChartSvg(p.byDay || []) +
-        (p.seats && p.seats.guests != null ? '<div class="sales-line">С учётом пригласительных GuestSystem: свободно ' + p.seats.free + '.</div>' : '');
+        (p.seats && p.seats.guests != null ? '<div class="sales-line">С учётом гостей GuestSystem: свободно ' + p.seats.free + '.</div>' : '');
       return;
     }
     if (act === 'pdf') {
@@ -2436,7 +2436,7 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
 });
 
 // ── Пригласительные (pack-v587) ─────────────────────────────────
-var INV_EVENTS = [], INV_LIST = [], INV_EDIT_ID = null;
+var INV_EVENTS = [], INV_LIST = [], INV_EDIT_ID = null, INV_EDIT_INV = null;
 async function invCall(body) {
   var res = await fetch(ADMIN_INVITES_URL, {
     method: 'POST',
@@ -2546,6 +2546,7 @@ function renderInvites() {
 }
 function invOpenForm(inv) {
   INV_EDIT_ID = inv ? inv.id : null;
+  INV_EDIT_INV = inv || null; // pack-v595: каким пригласительный был, когда открыли правку
   document.getElementById('inv-import').classList.remove('open');
   document.getElementById('inv-form').classList.add('open');
   document.getElementById('inv-name').value = inv ? inv.name : '';
@@ -2605,6 +2606,18 @@ document.addEventListener('DOMContentLoaded', function () {
       seats_later: mode === 'later',
       entry: mode === 'entry',
     };
+    // pack-v595: при правке места отправляем, только если их правда меняли в
+    // форме, и тогда — какими они были при открытии правки. Иначе исправление
+    // имени из списка, загруженного до прохода гостя, снимало места,
+    // назначенные контролёром на входе.
+    if (INV_EDIT_ID && INV_EDIT_INV) {
+      var was = INV_EDIT_INV;
+      var wasMode = was.seats ? 'seats' : (was.entry ? 'entry' : (was.seatsLater ? 'later' : 'none'));
+      var wasKeys = was.seats ? was.seats.keys.join(', ') : '';
+      var seatsTouched = mode !== wasMode || (mode === 'seats' && (keys !== wasKeys || perf !== (was.seats && was.seats.performanceId)));
+      if (!seatsTouched) { delete body.seats; delete body.seats_later; delete body.entry; }
+      else body.if_seats = JSON.stringify(was.seats || null); // места, от которых правили
+    }
     btn.disabled = true;
     try {
       var data = await invCall(body);
@@ -2613,7 +2626,11 @@ document.addEventListener('DOMContentLoaded', function () {
       else document.getElementById('inv-form').classList.remove('open');
       INV_EDIT_ID = null; document.getElementById('invSaveBtn').textContent = 'Выпустить';
       await loadInviteEvents(); // pack-v592: и свободные места
-    } catch (e) { invShow(out, e.message, false); }
+    } catch (e) {
+      invShow(out, e.message, false);
+      // pack-v595: пригласительный изменили с другой стороны — обновить список, правку открыть заново.
+      if (/изменили/.test(e.message)) { await loadInviteEvents(); }
+    }
     btn.disabled = false;
   });
   document.getElementById('invImportSave').addEventListener('click', async function () {
