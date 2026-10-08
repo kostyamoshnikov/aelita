@@ -227,41 +227,32 @@ window.addEventListener('load', function () {
 });
 
 // ── Заявки с форм сайта (ТЗ клиентских текстов, З-6, pack-v469) ─────
-// Один источник вместо тринадцати инлайн-копий sendTelegram/sendFormspree.
-// Раньше обе функции глотали ошибки, ответ Formspree не проверялся, а
-// страница безусловно показывала «спасибо» и очищала поля: при сбое
-// человек терял и заявку, и свой текст, а мы не узнавали о нём вовсе.
-// Теперь успех — только если ХОТЯ БЫ ОДИН канал ответил 2xx.
-// ⚠️ Это временная схема до WP-1 R1.6 («Системы и атрибуция»: формы через
-// свою функцию) — тогда отправка переедет на сервер вместе с этой логикой.
-var AELITA_LEAD = {
-  tg: 'https://withered-glade-64b6.kostyamoshnikov.workers.dev',
-  formspree: 'https://formspree.io/f/meeyowpw',
-};
-// Telegram-воркер шлёт текст с разметкой HTML: «<» в тексте заявки ломал
-// разметку, и Telegram мог отклонить сообщение целиком.
-function aelitaEscHtml(s) {
-  return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+// pack-v601 (решение заказчика 09.10): заявка уходит на НАШ сервер —
+// функция aelita-inbox-leads (_tools/Inbox/leads.js), хранение в Яндекс
+// Облаке (Россия), админка → «Заявки с сайта», уведомление команде шлёт
+// сервер (Telegram + почта). Раньше браузер слал заявку напрямую в
+// Formspree (США) и в личный Cloudflare-воркер — у нас она не хранилась.
+// Успех — только ответ 2xx сервера; иначе форма показывает AELITA_LEAD_FAIL
+// и текст человека остаётся в полях.
+var AELITA_LEAD_URL = 'https://api.aelita-production.ru/leads';
+function aelitaLeadId() {
+  var a = new Uint8Array(10);
+  try { crypto.getRandomValues(a); } catch (e) { for (var i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+  return 'l' + Date.now().toString(36) + '-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
 }
 window.AELITA_sendLead = async function (formName, fields) {
-  var keys = Object.keys(fields || {});
-  var lines = ['[AELITA] ' + aelitaEscHtml(formName), ''];
-  keys.forEach(function (k) {
-    var v = String(fields[k] || '').trim();
-    if (v) lines.push('<b>' + aelitaEscHtml(k) + ':</b> ' + aelitaEscHtml(v));
-  });
-  lines.push('', new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }));
-  var fd = new FormData();
-  fd.append('_subject', '[AELITA] ' + formName);
-  keys.forEach(function (k) { fd.append(k, String(fields[k] || '').trim()); });
-  var r = await Promise.allSettled([
-    fetch(AELITA_LEAD.tg, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: lines.join('\n') }) }),
-    fetch(AELITA_LEAD.formspree, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } }),
-  ]);
-  var tgOk = r[0].status === 'fulfilled' && !!r[0].value && r[0].value.ok;
-  var fsOk = r[1].status === 'fulfilled' && !!r[1].value && r[1].value.ok;
-  if (!tgOk || !fsOk) console.warn('Заявка ушла не во все каналы', { form: formName, telegram: tgOk, formspree: fsOk });
-  return tgOk || fsOk;
+  var clean = {};
+  Object.keys(fields || {}).forEach(function (k) { var v = String(fields[k] || '').trim(); if (v) clean[k] = v; });
+  var body = JSON.stringify({ form: formName, fields: clean, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', page: location.pathname, client_id: aelitaLeadId() });
+  // Одна повторная попытка при обрыве сети — с тем же client_id (сервер не задвоит).
+  for (var attempt = 0; attempt < 2; attempt++) {
+    try {
+      var res = await fetch(AELITA_LEAD_URL, { method: 'POST', body: body });
+      if (res.ok) return true;
+      if (res.status < 500) { console.warn('Заявка не принята', { form: formName, status: res.status }); return false; }
+    } catch (e) { /* сеть — пробуем ещё раз */ }
+  }
+  return false;
 };
 var AELITA_LEAD_FAIL = {
   ru: 'Не получилось отправить — похоже, связь прервалась. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru',

@@ -134,6 +134,9 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.inv-mt14{margin-top:14px}
 .inv-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .inv-off{opacity:.55}
+/* pack-v600: отзывы и заявки бота */
+.rv-text,.ap-fields{font-size:0.875rem;line-height:1.6;margin:10px 0;white-space:pre-wrap;word-break:break-word}
+.ap-fields .ap-label{color:var(--sand)}
 /* pack-v598: выбор мест на схеме зала */
 .inv-map{flex-basis:100%;margin-top:4px}
 .inv-map .inv-map-sum{font-size:0.8125rem;color:var(--sand);margin:8px 0}
@@ -471,6 +474,55 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       <p class="editor-note inv-mt14">События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p>
     </div>
 
+    <!-- pack-v600 (заказчик 08.10): отзывы и заявки бота — у нас, а не в Google Таблицах -->
+    <p class="sec-title sec-gap">Отзывы (<span id="rv-total">0</span>, на модерации: <span id="rv-pending">0</span>)</p>
+    <div class="editor-box" id="rvBlock">
+      <div class="inv-row">
+        <div class="field"><label for="rv-filter">Показать</label><select id="rv-filter">
+          <option value="pending">На модерации</option>
+          <option value="published">Опубликованные</option>
+          <option value="rejected">Отклонённые</option>
+          <option value="">Все</option>
+        </select></div>
+        <div class="field inv-w2"><label for="rv-search">Поиск (имя, текст, спектакль)</label><input class="ym-disable-keys" type="text" id="rv-search" autocomplete="off"></div>
+      </div>
+      <div class="inv-tools"><button class="mini-btn" id="rvReloadBtn">Обновить</button><button class="mini-btn" id="rvXlsxBtn">Таблица (Excel)</button></div>
+      <div id="rvList"><div class="empty-state">Загружаем…</div></div>
+      <p class="editor-note inv-mt14">Отзывы с сайта: чистые по спам-фильтру публикуются сами, подозрительные ждут здесь. «Скрыть» снимает с сайта (видно в течение минуты), «Удалить» — совсем, по просьбе автора. Имя на сайте — как выбрал автор («без имени» — «Зритель»); здесь видно настоящее.</p>
+    </div>
+
+    <p class="sec-title sec-gap">Заявки с сайта (<span id="ld-total">0</span>, новых: <span id="ld-new">0</span>)</p>
+    <div class="editor-box" id="ldBlock">
+      <div class="inv-row">
+        <div class="field"><label for="ld-filter">Показать</label><select id="ld-filter">
+          <option value="new">Новые</option>
+          <option value="done">Обработанные</option>
+          <option value="">Все</option>
+        </select></div>
+        <div class="field"><label for="ld-form">Форма</label><select id="ld-form"><option value="">Все формы</option></select></div>
+        <div class="field inv-w2"><label for="ld-search">Поиск</label><input class="ym-disable-keys" type="text" id="ld-search" autocomplete="off"></div>
+      </div>
+      <div class="inv-tools"><button class="mini-btn" id="ldReloadBtn">Обновить</button><button class="mini-btn" id="ldXlsxBtn">Таблица (Excel)</button></div>
+      <div id="ldList"><div class="empty-state">Загружаем…</div></div>
+      <p class="editor-note inv-mt14">Формы сайта: «Для бизнеса», «Для организаторов», «Площадкам», «Партнёры», «Сотрудничество», «Для творческих», Книжный консьерж, подписки на показы и старт продаж (pack-v601 — раньше уходили в Formspree и в чат, у нас не хранились). Уведомление о каждой — в чат команды и на почту.</p>
+    </div>
+
+    <p class="sec-title sec-gap">Заявки из бота (<span id="ap-total">0</span>, новых: <span id="ap-new">0</span>)</p>
+    <div class="editor-box" id="apBlock">
+      <div class="inv-row">
+        <div class="field"><label for="ap-filter">Показать</label><select id="ap-filter">
+          <option value="new">Новые</option>
+          <option value="done">Обработанные</option>
+          <option value="">Все</option>
+        </select></div>
+        <div class="field"><label for="ap-form">Анкета</label><select id="ap-form"><option value="">Все анкеты</option></select></div>
+        <div class="field inv-w2"><label for="ap-search">Поиск</label><input class="ym-disable-keys" type="text" id="ap-search" autocomplete="off"></div>
+      </div>
+      <div class="inv-tools"><button class="mini-btn" id="apReloadBtn">Обновить</button><button class="mini-btn" id="apXlsxBtn">Таблица (Excel)</button></div>
+      <div id="apList"><div class="empty-state">Загружаем…</div></div>
+      <p class="editor-note inv-mt14">Анкеты из Telegram-бота («Бизнесу», «Площадкам», «Билеты» и др.). Сообщение в чат команды бот по-прежнему шлёт сразу; здесь — учёт: отметить обработанной, выгрузить таблицей.</p>
+    </div>
+
     <p class="sec-title sec-gap">Показы: перенос и отмена</p>
     <div class="editor-box" id="perfActionBlock">
       <div class="field">
@@ -746,6 +798,7 @@ var ADMIN_BACKFILL_URL = API_BASE && API_BASE + '/tickets-backfill';
 // _tools/Admin/gift-cards.js).
 var ADMIN_GIFT_CARDS_URL = API_BASE && API_BASE + '/gift-cards';
 var ADMIN_INVITES_URL = API_BASE && API_BASE + '/invites'; // pack-v587
+var ADMIN_INBOX_URL = API_BASE && API_BASE + '/inbox'; // pack-v600: отзывы и заявки бота
 
 var STORAGE_KEY = 'aelita_admin_token';
 
@@ -2461,6 +2514,224 @@ async function invCall(body) {
   if (!res.ok) throw new Error(data.message || errorMessage(data));
   return data;
 }
+// ── pack-v600: отзывы и заявки из бота (Admin/inbox.js) ─────────────────
+var RV_LIST = [], AP_LIST = [];
+var TG_PROFILE = 'https://t.me/'; // профиль автора заявки (внутренняя ссылка админки — без UTM)
+var RV_STATUS = { published: 'опубликован', pending: 'на модерации', rejected: 'отклонён' };
+var RV_SCOPE = { name: 'под именем', pseudonym: 'под псевдонимом', anonymous: 'без имени («Зритель»)' };
+async function inboxCall(body) {
+  var res = await fetch(ADMIN_INBOX_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() }, body: JSON.stringify(body) });
+  var data = {};
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) throw new Error(data.message || errorMessage(data));
+  return data;
+}
+async function loadReviewsAdmin() {
+  var el = document.getElementById('rvList');
+  if (!el || !ADMIN_INBOX_URL || !getToken()) return;
+  try { RV_LIST = (await inboxCall({ action: 'reviews_list' })).reviews || []; renderReviewsAdmin(); }
+  catch (e) { el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>'; }
+}
+function renderReviewsAdmin() {
+  var el = document.getElementById('rvList');
+  document.getElementById('rv-total').textContent = RV_LIST.length;
+  document.getElementById('rv-pending').textContent = RV_LIST.filter(function (r) { return r.status === 'pending'; }).length;
+  var f = document.getElementById('rv-filter').value, q = document.getElementById('rv-search').value.trim().toLowerCase();
+  var list = RV_LIST.filter(function (r) { return (!f || r.status === f) && (!q || (r.name + ' ' + r.text + ' ' + r.slug).toLowerCase().indexOf(q) >= 0); });
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (RV_LIST.length ? 'Здесь пусто.' : 'Отзывов пока нет.') + '</div>'; return; }
+  el.innerHTML = list.map(function (r) {
+    var stars = '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(0, 5 - r.rating);
+    var acts = (r.status !== 'published' ? '<button class="mini-btn" data-rv="published" data-slug="' + escapeHtml(r.slug) + '" data-id="' + escapeHtml(r.id) + '">Опубликовать</button> ' : '') +
+      (r.status !== 'rejected' ? '<button class="mini-btn" data-rv="rejected" data-slug="' + escapeHtml(r.slug) + '" data-id="' + escapeHtml(r.id) + '">' + (r.status === 'published' ? 'Скрыть' : 'Отклонить') + '</button> ' : '') +
+      '<button class="mini-btn" data-rv="delete" data-slug="' + escapeHtml(r.slug) + '" data-id="' + escapeHtml(r.id) + '">Удалить</button>';
+    return '<div class="ev-card' + (r.status === 'rejected' ? ' inv-off' : '') + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">' + stars + ' · ' + escapeHtml(r.name) + ' <span class="inv-tag ' + (r.status === 'published' ? 'ok' : 'off') + '">' + escapeHtml(RV_STATUS[r.status] || r.status) + '</span></div>' +
+        '<div class="ev-when">/' + escapeHtml(r.slug) + ' · ' + fmtGcDate(r.createdAt) + ' · ' + escapeHtml(RV_SCOPE[r.nameScope] || '') + (r.noQuote ? ' · вне сайта не использовать' : '') + (r.lang === 'en' ? ' · EN' : '') + '</div>' +
+      '</div></div>' +
+      '<p class="rv-text">' + escapeHtml(r.text) + '</p>' +
+      (r.reasons && r.reasons.length ? '<p class="editor-note">Фильтр: ' + escapeHtml(r.reasons.join('; ')) + '</p>' : '') +
+      '<div class="ev-actions">' + acts + '</div></div>';
+  }).join('');
+}
+async function loadAppsAdmin() {
+  var el = document.getElementById('apList');
+  if (!el || !ADMIN_INBOX_URL || !getToken()) return;
+  try {
+    AP_LIST = (await inboxCall({ action: 'apps_list' })).applications || [];
+    var sel = document.getElementById('ap-form'), keep = sel.value;
+    var forms = []; AP_LIST.forEach(function (a) { if (forms.indexOf(a.form) < 0) forms.push(a.form); });
+    sel.innerHTML = '<option value="">Все анкеты</option>' + forms.sort().map(function (x) { return '<option value="' + escapeHtml(x) + '">' + escapeHtml(x) + '</option>'; }).join('');
+    if (forms.indexOf(keep) >= 0) sel.value = keep;
+    renderAppsAdmin();
+  } catch (e) { el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>'; }
+}
+function apFiltered() {
+  var f = document.getElementById('ap-filter').value, fm = document.getElementById('ap-form').value, q = document.getElementById('ap-search').value.trim().toLowerCase();
+  return AP_LIST.filter(function (a) {
+    if (f === 'new' && a.done) return false;
+    if (f === 'done' && !a.done) return false;
+    if (fm && a.form !== fm) return false;
+    if (!q) return true;
+    var hay = [a.form, a.from && a.from.name, a.from && a.from.username].concat((a.fields || []).map(function (x) { return x.value; })).join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0;
+  });
+}
+function renderAppsAdmin() {
+  var el = document.getElementById('apList');
+  document.getElementById('ap-total').textContent = AP_LIST.length;
+  document.getElementById('ap-new').textContent = AP_LIST.filter(function (a) { return !a.done; }).length;
+  var list = apFiltered();
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (AP_LIST.length ? 'Здесь пусто.' : 'Заявок пока нет.') + '</div>'; return; }
+  el.innerHTML = list.map(function (a) {
+    var from = a.from || {};
+    var tgLink = from.username && /^@[A-Za-z0-9_]{3,}$/.test(from.username) ? ' · <a class="tl" href="' + TG_PROFILE + escapeHtml(from.username.slice(1)) + '" target="_blank" rel="noopener">' + escapeHtml(from.username) + '</a>' : (from.username ? ' · ' + escapeHtml(from.username) : '');
+    return '<div class="ev-card' + (a.done ? ' inv-off' : '') + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">' + escapeHtml(a.form) + ' · ' + escapeHtml(from.name || '—') + (a.done ? ' <span class="inv-tag ok">обработана</span>' : ' <span class="inv-tag off">новая</span>') + '</div>' +
+        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + tgLink + (from.chatId ? ' · Telegram ID ' + escapeHtml(from.chatId) : '') + '</div>' +
+      '</div></div>' +
+      '<div class="ap-fields">' + (a.fields || []).map(function (x) { return '<div><span class="ap-label">' + escapeHtml(x.label) + ':</span> ' + escapeHtml(x.value || '—') + '</div>'; }).join('') + '</div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-ap="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ap="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
+  }).join('');
+}
+(function initInboxUi() {
+  var rvList = document.getElementById('rvList'), apList = document.getElementById('apList');
+  if (!rvList || !apList) return;
+  document.getElementById('rv-filter').addEventListener('change', renderReviewsAdmin);
+  document.getElementById('rv-search').addEventListener('input', renderReviewsAdmin);
+  document.getElementById('rvReloadBtn').addEventListener('click', loadReviewsAdmin);
+  ['ap-filter', 'ap-form'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderAppsAdmin); });
+  document.getElementById('ap-search').addEventListener('input', renderAppsAdmin);
+  document.getElementById('apReloadBtn').addEventListener('click', loadAppsAdmin);
+  rvList.addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-rv]'); if (!b) return;
+    var act = b.getAttribute('data-rv'), slug = b.getAttribute('data-slug'), id = b.getAttribute('data-id');
+    if (act === 'delete' && !confirm('Удалить отзыв совсем? Вернуть будет нельзя.')) return;
+    b.disabled = true;
+    try {
+      if (act === 'delete') { await inboxCall({ action: 'review_delete', slug: slug, id: id }); RV_LIST = RV_LIST.filter(function (r) { return !(r.slug === slug && r.id === id); }); }
+      else { var r = (await inboxCall({ action: 'review_status', slug: slug, id: id, status: act })).review; RV_LIST = RV_LIST.map(function (x) { return x.slug === slug && x.id === id ? r : x; }); }
+      renderReviewsAdmin();
+    } catch (err) { alert(err.message); b.disabled = false; }
+  });
+  apList.addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-ap]'); if (!b) return;
+    var act = b.getAttribute('data-ap'), id = b.getAttribute('data-id');
+    if (act === 'delete' && !confirm('Удалить заявку совсем?')) return;
+    b.disabled = true;
+    try {
+      if (act === 'delete') { await inboxCall({ action: 'app_delete', id: id }); AP_LIST = AP_LIST.filter(function (a) { return a.id !== id; }); }
+      else { var a = (await inboxCall({ action: 'app_done', id: id, done: act === 'done' })).application; AP_LIST = AP_LIST.map(function (x) { return x.id === id ? a : x; }); }
+      renderAppsAdmin();
+    } catch (err) { alert(err.message); b.disabled = false; }
+  });
+  document.getElementById('rvXlsxBtn').addEventListener('click', function () {
+    var head = ['Дата', 'Спектакль', 'Оценка', 'Имя', 'Публиковать', 'Вне сайта', 'Текст', 'Статус', 'Фильтр', 'Язык'];
+    var rows = [head].concat(RV_LIST.map(function (r) {
+      return [fmtGcDate(r.createdAt), r.slug, r.rating, r.name, RV_SCOPE[r.nameScope] || '', r.noQuote ? 'запрещено' : 'можно', r.text, RV_STATUS[r.status] || r.status, (r.reasons || []).join('; '), r.lang || 'ru'];
+    }));
+    invSave(xlsxBlob([{ name: 'Отзывы', rows: rows, widths: [22, 18, 7, 24, 18, 11, 60, 14, 30, 6] }]), 'aelita-reviews-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+  });
+  document.getElementById('apXlsxBtn').addEventListener('click', function () {
+    // Лист «Все заявки» + по листу на анкету: у анкет разные вопросы — свои столбцы.
+    var all = [['Получена', 'Анкета', 'Имя', 'Telegram', 'Telegram ID', 'Статус', 'Ответы']];
+    var byForm = {};
+    AP_LIST.forEach(function (a) {
+      var f = a.from || {};
+      all.push([fmtGcDate(a.receivedAt), a.form, f.name || '', f.username || '', f.chatId || '', a.done ? 'обработана' : 'новая', (a.fields || []).map(function (x) { return x.label + ': ' + (x.value || '—'); }).join('\n')]);
+      (byForm[a.form] = byForm[a.form] || []).push(a);
+    });
+    var sheets = [{ name: 'Все заявки', rows: all, widths: [22, 20, 22, 18, 14, 12, 80] }];
+    Object.keys(byForm).sort().forEach(function (form) {
+      var labels = [];
+      byForm[form].forEach(function (a) { (a.fields || []).forEach(function (x) { if (labels.indexOf(x.label) < 0) labels.push(x.label); }); });
+      var rows = [['Получена', 'Имя', 'Telegram', 'Telegram ID', 'Статус'].concat(labels)];
+      byForm[form].forEach(function (a) {
+        var f = a.from || {}, val = {};
+        (a.fields || []).forEach(function (x) { val[x.label] = x.value || ''; });
+        rows.push([fmtGcDate(a.receivedAt), f.name || '', f.username || '', f.chatId || '', a.done ? 'обработана' : 'новая'].concat(labels.map(function (l) { return val[l] || ''; })));
+      });
+      sheets.push({ name: form, rows: rows, widths: [22, 22, 18, 14, 12].concat(labels.map(function () { return 30; })) });
+    });
+    invSave(xlsxBlob(sheets), 'aelita-bot-applications-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+  });
+})();
+
+// ── pack-v601: заявки с форм сайта ──
+var LD_LIST = [];
+async function loadLeadsAdmin() {
+  var el = document.getElementById('ldList');
+  if (!el || !ADMIN_INBOX_URL || !getToken()) return;
+  try {
+    LD_LIST = (await inboxCall({ action: 'leads_list' })).leads || [];
+    var sel = document.getElementById('ld-form'), keep = sel.value;
+    var forms = []; LD_LIST.forEach(function (a) { if (forms.indexOf(a.form) < 0) forms.push(a.form); });
+    sel.innerHTML = '<option value="">Все формы</option>' + forms.sort().map(function (x) { return '<option value="' + escapeHtml(x) + '">' + escapeHtml(x) + '</option>'; }).join('');
+    if (forms.indexOf(keep) >= 0) sel.value = keep;
+    renderLeadsAdmin();
+  } catch (e) { el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>'; }
+}
+function renderLeadsAdmin() {
+  var el = document.getElementById('ldList');
+  document.getElementById('ld-total').textContent = LD_LIST.length;
+  document.getElementById('ld-new').textContent = LD_LIST.filter(function (a) { return !a.done; }).length;
+  var f = document.getElementById('ld-filter').value, fm = document.getElementById('ld-form').value, q = document.getElementById('ld-search').value.trim().toLowerCase();
+  var list = LD_LIST.filter(function (a) {
+    if (f === 'new' && a.done) return false;
+    if (f === 'done' && !a.done) return false;
+    if (fm && a.form !== fm) return false;
+    return !q || [a.form].concat((a.fields || []).map(function (x) { return x.value; })).join(' ').toLowerCase().indexOf(q) >= 0;
+  });
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (LD_LIST.length ? 'Здесь пусто.' : 'Заявок пока нет.') + '</div>'; return; }
+  el.innerHTML = list.map(function (a) {
+    return '<div class="ev-card' + (a.done ? ' inv-off' : '') + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">' + escapeHtml(a.form) + (a.done ? ' <span class="inv-tag ok">обработана</span>' : ' <span class="inv-tag off">новая</span>') + '</div>' +
+        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + '</div>' +
+      '</div></div>' +
+      '<div class="ap-fields">' + (a.fields || []).map(function (x) { return '<div><span class="ap-label">' + escapeHtml(x.label) + ':</span> ' + escapeHtml(x.value || '—') + '</div>'; }).join('') + '</div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-ld="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ld="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
+  }).join('');
+}
+(function initLeadsUi() {
+  var list = document.getElementById('ldList');
+  if (!list) return;
+  ['ld-filter', 'ld-form'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderLeadsAdmin); });
+  document.getElementById('ld-search').addEventListener('input', renderLeadsAdmin);
+  document.getElementById('ldReloadBtn').addEventListener('click', loadLeadsAdmin);
+  list.addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-ld]'); if (!b) return;
+    var act = b.getAttribute('data-ld'), id = b.getAttribute('data-id');
+    if (act === 'delete' && !confirm('Удалить заявку совсем?')) return;
+    b.disabled = true;
+    try {
+      if (act === 'delete') { await inboxCall({ action: 'lead_delete', id: id }); LD_LIST = LD_LIST.filter(function (a) { return a.id !== id; }); }
+      else { var a = (await inboxCall({ action: 'lead_done', id: id, done: act === 'done' })).lead; LD_LIST = LD_LIST.map(function (x) { return x.id === id ? a : x; }); }
+      renderLeadsAdmin();
+    } catch (err) { alert(err.message); b.disabled = false; }
+  });
+  document.getElementById('ldXlsxBtn').addEventListener('click', function () {
+    var all = [['Получена', 'Форма', 'Страница', 'Статус', 'Поля']];
+    var byForm = {};
+    LD_LIST.forEach(function (a) {
+      all.push([fmtGcDate(a.receivedAt), a.form, a.page || '', a.done ? 'обработана' : 'новая', (a.fields || []).map(function (x) { return x.label + ': ' + x.value; }).join('\n')]);
+      (byForm[a.form] = byForm[a.form] || []).push(a);
+    });
+    var sheets = [{ name: 'Все заявки', rows: all, widths: [22, 30, 20, 12, 80] }];
+    Object.keys(byForm).sort().forEach(function (form) {
+      var labels = [];
+      byForm[form].forEach(function (a) { (a.fields || []).forEach(function (x) { if (labels.indexOf(x.label) < 0) labels.push(x.label); }); });
+      var rows = [['Получена', 'Статус'].concat(labels)];
+      byForm[form].forEach(function (a) {
+        var val = {}; (a.fields || []).forEach(function (x) { val[x.label] = x.value; });
+        rows.push([fmtGcDate(a.receivedAt), a.done ? 'обработана' : 'новая'].concat(labels.map(function (l) { return val[l] || ''; })));
+      });
+      sheets.push({ name: form, rows: rows, widths: [22, 12].concat(labels.map(function () { return 30; })) });
+    });
+    invSave(xlsxBlob(sheets), 'aelita-site-leads-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+  });
+})();
 var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
 var INV_WIDTHS = [6, 32, 6, 34, 6, 11, 10, 24, 30];
 function invRow(i, ev) {
@@ -3243,6 +3514,7 @@ async function loadData(opts) {
     loadRefunds();
     loadPerfActions(); // pack-v568
     loadInviteEvents(); // pack-v587
+    loadReviewsAdmin(); loadAppsAdmin(); loadLeadsAdmin(); // pack-v600, v601
     loadSales(); // pack-v571
     loadOrders();
     loadGiftCards();

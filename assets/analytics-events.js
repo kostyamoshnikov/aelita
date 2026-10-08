@@ -320,7 +320,7 @@
   }, true);
 
   // Клик по кнопке отправки форм (handleForm/subscribe/joinClub/handleSubmit и т.п.)
-  // Отмечает попытку отправки; фактическая доставка идёт через Formspree/Telegram-воркер в самих формах.
+  // Отмечает попытку отправки; доставка — AELITA_sendLead (main.js) на наш сервер /leads (pack-v601).
   var FORM_TRIGGERS = ['handleForm', 'subscribe', 'joinClub', 'handleSubmit'];
   document.addEventListener('click', function (e) {
     const el = e.target.closest('[onclick]');

@@ -1,28 +1,28 @@
 // AELITA PRODUCTION — отзывы зрителей.
 // Один модуль на все страницы спектаклей: рендерит уже опубликованные
-// отзывы (fetch к Code.gs-веб-приложению, см. _tools/Reviews/) и
-// отправляет новые через форму. Каждая страница спектакля просто
-// вызывает AelitaReviews.init('slug-спектакля') один раз.
+// отзывы и отправляет новые через форму. Каждая страница спектакля
+// просто вызывает AelitaReviews.init('slug-спектакля') один раз.
 //
-// С автопубликацией (см. _tools/Reviews/README.md, портировано из
-// ReviewsBot Николая Балашова, pack-v70): чистый по спам-фильтру
-// отзыв публикуется сразу на бэкенде, подозрительный — ждёт ручной
-// модерации. Ответ Apps Script непрозрачен для fetch() без preflight
-// (см. комментарий ниже про бэклог) — клиент не может достоверно
-// узнать, какой из двух случаев произошёл, поэтому текст «спасибо»
-// намеренно не утверждает ни того, ни другого.
+// pack-v600: бэкенд — функция aelita-inbox-reviews (_tools/Inbox/
+// reviews.js) в Яндекс Облаке, данные — в России (раньше — Apps Script
+// и Google Таблица, _tools/Reviews/Code.gs, больше не используются).
+// Чистый по спам-фильтру отзыв публикуется сразу, подозрительный — ждёт
+// модерации в админке («Отзывы»). Ответ теперь читается: «опубликован»
+// или «появится после проверки» — по-честному.
 
 (function () {
   'use strict';
 
-  // Адрес веб-приложения (_tools/Reviews/Code.gs) подставляется из
+  // Адрес функции отзывов (pack-v600: _tools/Inbox/reviews.js за шлюзом) подставляется из
   // реестра `_tools/Endpoints/endpoints.json` — генератор
   // `build_endpoints.py`. Править здесь руками бессмысленно:
   // следующая генерация затрёт. Вписать адрес после публикации:
   //   python3 _tools/Endpoints/build_endpoints.py --set reviews_webapp=https://.../exec
-  var REVIEWS_API_URL = /* ENDPOINT:reviews_webapp:BEGIN */''/* ENDPOINT:reviews_webapp:END */;
+  var REVIEWS_API_URL = /* ENDPOINT:reviews_webapp:BEGIN */'https://api.aelita-production.ru/reviews'/* ENDPOINT:reviews_webapp:END */;
 
-  // ── Подстраховка на случай недоступности Apps Script (pack-v111) ──
+  // ── Подстраховка на случай недоступности сервера (pack-v111; с pack-v600
+  //    сервер — наша функция, ответ читается, очередь — только для полного
+  //    сетевого отказа и ответа 5xx; текст ниже — про прежний Apps Script) ──
   // Ответ Apps Script Web App непрозрачен для fetch() без preflight
   // (см. комментарий у самой отправки ниже) — отличить «дошло, но
   // Apps Script упал внутри» от «дошло и всё нормально» с клиента
@@ -61,17 +61,21 @@
     function next() {
       if (i >= list.length) { reviewsBacklogSet([]); return; }
       fetch(REVIEWS_API_URL, { method: 'POST', body: JSON.stringify(list[i].payload) })
-        .then(function () { i++; next(); })
+        .then(function (res) {
+          // pack-v600: доставлено (2xx) или отказ навсегда (4xx, кроме 429:
+          // повтор ничего не изменит) — из очереди убираем; 429 и 5xx —
+          // сервер занят или упал, оставляем до следующего раза.
+          if (res.ok || (res.status >= 400 && res.status < 500 && res.status !== 429)) { i++; next(); }
+          else reviewsBacklogSet(list.slice(i));
+        })
         .catch(function () { reviewsBacklogSet(list.slice(i)); }); // недосланное — оставляем в очереди
     }
     next();
   }
   reviewsBacklogFlush(); // пробуем при каждой загрузке страницы с отзывами
 
-  // Тот же вебхук, что уже использует сайт для остальных форм —
-  // мгновенное уведомление админам прямо с фронтенда (Code.gs шлёт то
-  // же самое вторым, серверным путём, см. комментарий в Code.gs).
-  var TG_WORKER = 'https://withered-glade-64b6.kostyamoshnikov.workers.dev';
+  // pack-v600: уведомление команде шлёт сервер (alert.js → Telegram);
+  // копия текста отзыва с браузера в сторонний вебхук больше не уходит.
 
   var LANG = document.documentElement.lang === 'en' ? 'en' : 'ru';
 
@@ -105,6 +109,10 @@
       sending: 'Отправляем…',
       thanksTitle: 'Спасибо!',
       thanksBody: 'Отзыв отправлен. Если в нём не нашлось признаков спама — он уже опубликован, иначе появится после проверки.',
+      thanksPublished: 'Отзыв опубликован — он уже на странице.',
+      thanksPending: 'Отзыв отправлен и появится после проверки.',
+      thanksQueued: 'Сервер сейчас не ответил — отзыв сохранён в этом браузере и отправится сам, когда вы снова откроете страницу.',
+      errTooMany: 'Слишком много отзывов подряд — попробуйте через час.',
       errName: 'Укажите имя',
       errText: 'Текст отзыва — от 10 до 2000 символов',
       errRating: 'Поставьте оценку',
@@ -129,6 +137,10 @@
       sending: 'Sending…',
       thanksTitle: 'Thank you!',
       thanksBody: "Your review has been sent. If it didn't trip the spam filter, it's already live — otherwise it'll appear after a quick check.",
+      thanksPublished: 'Your review is published — it is already on the page.',
+      thanksPending: 'Your review has been sent and will appear after a quick check.',
+      thanksQueued: "The server didn't respond just now — your review is saved in this browser and will be sent automatically next time you open the page.",
+      errTooMany: 'Too many reviews in a row — please try again in an hour.',
       errName: 'Please enter your name',
       errText: 'Review text — 10 to 2000 characters',
       errRating: 'Please give a rating',
@@ -213,12 +225,18 @@
     updateAggregateRatingSchema(reviews);
   }
 
+  var LOADED = []; // pack-v600: что сейчас показано — чтобы добавить свой отзыв без перезагрузки
   function loadReviews(slug, container) {
     container.innerHTML = '<p class="aud-reviews-empty">' + t.loading + '</p>';
     fetch(REVIEWS_API_URL + '?slug=' + encodeURIComponent(slug))
       .then(function (r) { return r.json(); })
-      .then(function (data) { renderReviews(container, data.reviews || []); })
-      .catch(function () { renderReviews(container, []); });
+      .then(function (data) { LOADED = data.reviews || []; renderReviews(container, LOADED); })
+      .catch(function () { renderReviews(container, LOADED); });
+  }
+  function clientId() {
+    var a = new Uint8Array(12);
+    try { crypto.getRandomValues(a); } catch (e) { for (var i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+    return 'c' + Date.now().toString(36) + '-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
   }
 
   function buildForm(slug) {
@@ -311,27 +329,34 @@
       var noQuote = wrap.querySelector('#aud-no-quote').checked;
 
       var payload = { slug: slug, name: name, rating: rating, text: text, consent: consent, pd_consent: consent,
-        name_scope: nameScope, no_quote: noQuote,
+        name_scope: nameScope, no_quote: noQuote, lang: LANG, client_id: clientId(),
         website: wrap.querySelector('#aud-website').value }; // honeypot
 
-      // Fire-and-forget к Apps Script: ответ CORS-непрозрачный при
-      // простом fetch без preflight, но данные долетают и пишутся в
-      // таблицу — это нормальный, ожидаемый режим для Apps Script
-      // Web App, не ошибка. Полный сетевой отказ (не «непрозрачно», а
-      // именно упавший fetch) — не теряем отзыв молча, кладём в
-      // localStorage-бэклог (см. reviewsBacklogPush выше).
+      // pack-v600: ответ сервера читается. Сеть не ответила вовсе — отзыв
+      // не теряется: в localStorage-очередь, дошлётся при следующем заходе.
       fetch(REVIEWS_API_URL, { method: 'POST', body: JSON.stringify(payload) })
-        .catch(function () { reviewsBacklogPush(payload); });
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            if (res.status === 429) { submitBtn.disabled = false; submitBtn.textContent = t.submit; return showError(t.errTooMany); }
+            if (!res.ok) {
+              if (res.status >= 500) { reviewsBacklogPush(payload); return done(t.thanksQueued); } // сервер упал — дошлём позже
+              submitBtn.disabled = false; submitBtn.textContent = t.submit; return showError(t.errNetwork);
+            }
+            if (data && data.published === true && data.review) {
+              done(t.thanksPublished);
+              var listEl = document.getElementById('aud-reviews-list');
+              if (listEl && !LOADED.some(function (x) { return x.id === data.review.id; })) { LOADED = [data.review].concat(LOADED); renderReviews(listEl, LOADED); }
+            } else done(t.thanksPending);
+          });
+        })
+        .catch(function () { reviewsBacklogPush(payload); done(t.thanksQueued); });
 
-      // Резервное уведомление напрямую с фронтенда — тот же паттерн,
-      // что и у остальных форм сайта (см. sendTelegram в tickets/index.html).
-      fetch(TG_WORKER, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: '[AELITA] Новый отзыв (' + slug + ') — на модерации\n\nИмя: ' + name + '\nОценка: ' + rating + '/5\n\n' + text.substring(0, 400) }),
-      }).catch(function () {});
-
-      wrap.querySelector('.aud-review-form-fields').style.display = 'none';
-      wrap.querySelector('#aud-thanks').style.display = 'block';
+      function done(msg) {
+        wrap.querySelector('.aud-review-form-fields').style.display = 'none';
+        var th = wrap.querySelector('#aud-thanks');
+        th.innerHTML = '<strong>' + t.thanksTitle + '</strong><br>' + esc(msg);
+        th.style.display = 'block';
+      }
     });
 
     return wrap;
