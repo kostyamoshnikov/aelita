@@ -60,6 +60,7 @@
 .kp-list{color:var(--sand);font-size:0.9375rem;line-height:1.7;padding-left:20px}
 .kp-list li{margin-bottom:8px}
 @media(max-width:600px){.kp-item{grid-template-columns:1fr;gap:4px}}
+.submit-btn.btn-narrow{max-width:420px;margin-top:22px}
 </style>
 </head>
 <body>
@@ -93,7 +94,7 @@
     <div class="meta">25 October · 15:00–16:00 · 60 minutes · ages 4–6 · 15 children and 15 adults</div>
     <h1>“A Magical Meeting with the Unicorn”</h1>
     <p class="desc">A play programme by the “Myod” party studio</p>
-    <div class="hero-cta"><a class="btn-gold" href="#join">Registration</a><a class="btn-outline" href="/en/detskaya-programma">The full children’s programme</a></div>
+    <div class="hero-cta"><a class="btn-gold" href="#join">Register</a><a class="btn-outline" href="/en/detskaya-programma">The full children’s programme</a></div>
   </div>
 </div>
 
@@ -113,9 +114,14 @@
   <div class="wrap reveal">
     <span class="eyebrow">How to attend</span>
     <h2 class="mt-14">Free, registration required</h2>
-    <!-- pack-v582: ссылки регистрации на Timepad ещё нет (заказчик 07.10: «пока — регистрация скоро»).
-         Появится — кнопка «Записаться» по образцу /art-kvest#join. -->
-    <p class="sub">Participation is free; every activity requires registration — it will open in the coming days, and the link will appear on this page. The art quest runs at the same time as the workshops — choose activities that do not overlap.</p>
+    <!-- pack-v596: регистрация на Timepad (событие 4246857, заказчик 08.10). Кнопка — триггер
+         всплывающего виджета: id ДОЛЖЕН быть ровно "timepad_twf_register_4246857" (на него
+         завязан triggerSelector). Прямая ссылка ниже — запасной путь, если скрипт
+         timepad.ru не загрузился. Образец — /art-kvest/#join. -->
+    <p class="sub">Participation is free; registration is required — places are limited. The art quest runs at the same time as the workshops — choose activities that don’t overlap.</p>
+    <button class="submit-btn btn-narrow" id="timepad_twf_register_4246857">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4246857 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4246857"}}})();</script>
+    <p class="note-xs mt-16 own-size">If the button does not open the registration window — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4246857/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_edinorozhka" target="_blank" rel="noopener">open the registration page</a></p>
     <p class="note-xs mt-16 own-size">Getting there — <a class="tl c-gold" href="/en/byl">CSI “Byl”</a>, Stary Oskol, Zhukova microdistrict 38. Questions — <a class="tl c-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a> or +7 960 515-16-90.</p>
   </div>
 </div>

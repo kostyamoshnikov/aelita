@@ -60,6 +60,7 @@
 .kp-list{color:var(--sand);font-size:0.9375rem;line-height:1.7;padding-left:20px}
 .kp-list li{margin-bottom:8px}
 @media(max-width:600px){.kp-item{grid-template-columns:1fr;gap:4px}}
+.submit-btn.btn-narrow{max-width:420px;margin-top:22px}
 </style>
 </head>
 <body>
@@ -93,7 +94,7 @@
     <div class="meta">25 октября · 15:00–16:00 · 60 минут · 4–6 лет · 15 детей и 15 взрослых</div>
     <h1>«Волшебная встреча с Единорожкой»</h1>
     <p class="desc">Игровая программа студии праздников «Мёд»</p>
-    <div class="hero-cta"><a class="btn-gold" href="#join">Регистрация</a><a class="btn-outline" href="/detskaya-programma">Вся детская программа</a></div>
+    <div class="hero-cta"><a class="btn-gold" href="#join">Записаться</a><a class="btn-outline" href="/detskaya-programma">Вся детская программа</a></div>
   </div>
 </div>
 
@@ -113,9 +114,14 @@
   <div class="wrap reveal">
     <span class="eyebrow">Как попасть</span>
     <h2 class="mt-14">Бесплатно, по регистрации</h2>
-    <!-- pack-v582: ссылки регистрации на Timepad ещё нет (заказчик 07.10: «пока — регистрация скоро»).
-         Появится — кнопка «Записаться» по образцу /art-kvest#join. -->
-    <p class="sub">Участие бесплатное, на каждое занятие нужна регистрация — она откроется в ближайшие дни, ссылка появится на этой странице. Арт-квест идёт одновременно с мастер-классами — выбирайте занятия, которые не пересекаются.</p>
+    <!-- pack-v596: регистрация на Timepad (событие 4246857, заказчик 08.10). Кнопка — триггер
+         всплывающего виджета: id ДОЛЖЕН быть ровно "timepad_twf_register_4246857" (на него
+         завязан triggerSelector). Прямая ссылка ниже — запасной путь, если скрипт
+         timepad.ru не загрузился. Образец — /art-kvest/#join. -->
+    <p class="sub">Участие бесплатное, регистрация обязательна — места ограничены. Арт-квест идёт одновременно с мастер-классами — выбирайте занятия, которые не пересекаются.</p>
+    <button class="submit-btn btn-narrow" id="timepad_twf_register_4246857">Записаться →</button>
+    <script async="async" defer="defer" charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4246857 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4246857"}}})();</script>
+    <p class="note-xs mt-16 own-size">Если кнопка не открывает окно регистрации — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4246857/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=edinorozhka" target="_blank" rel="noopener">откройте страницу регистрации</a></p>
     <p class="note-xs mt-16 own-size">Как добраться — <a class="tl c-gold" href="/byl">ЦСИ «Быль»</a>, Старый Оскол, мкр. Жукова, 38. Вопросы — <a class="tl c-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a> или +7 960 515-16-90.</p>
   </div>
 </div>
