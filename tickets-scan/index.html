@@ -84,6 +84,14 @@ button.action:disabled{opacity:.5}
 .seat-pick .sum{font-size:0.875rem;margin:10px 0;color:var(--sand)}
 .seat-pick .rows{max-height:46vh;overflow:auto}
 .seats-new{color:var(--gold);font-size:1rem;margin:4px 0 12px}
+/* pack-v598: гость без QR — поиск по фамилии */
+#find-toggle{width:100%;margin:0 0 10px}
+#find-box{display:none;margin-bottom:10px}
+#find-box.open{display:block}
+#find-results .fr{display:block;width:100%;text-align:left;background:var(--coal);border:1px solid rgba(201,184,163,.35);color:var(--bone);border-radius:6px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-size:0.9375rem;line-height:1.4}
+#find-results .fr small{display:block;color:var(--sand);font-size:0.8125rem}
+#find-results .fr.off{opacity:.55;cursor:default}
+#find-results .fr-msg{color:var(--sand);font-size:0.8125rem;margin:4px 0 8px}
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 </head>
@@ -98,11 +106,19 @@ button.action:disabled{opacity:.5}
 <div id="app">
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
-<div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF») и пригласительных (админка → «Пригласительные» → «PDF всех действующих» или «Скачать CSV»).</div>
+<div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF») и пригласительных (админка → «Пригласительные» → «PDF всех действующих» или «Таблица (Excel)»).</div>
 <div id="queue-badge"></div>
 <div id="queue-notes"></div>
 <input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
+<!-- pack-v598: гость с пригласительным пришёл без QR — найти по фамилии или номеру
+     (только с кодом персонала). Выбор из списка дальше идёт обычным путём
+     проверки и «Пропустить», как скан. -->
+<button class="action secondary" id="find-toggle">🔎 Гость без QR — найти по фамилии</button>
+<div id="find-box">
+  <input class="ym-disable-keys" id="find-input" placeholder="Фамилия или № пригласительного" autocomplete="off" enterkeyhint="search">
+  <div id="find-results"></div>
+</div>
 <video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
 <canvas id="camera-canvas" style="display:none"></canvas>
 <div id="result"></div>
@@ -178,7 +194,7 @@ if(!getStaffCode()){ showGate(); } else { showApp(); }
 // На телефоне с камерой фокус в поле поднимал бы экранную клавиатуру
 // поверх карточки — поэтому только если последний билет пришёл с
 // клавиатуры/сканера-пистолета или у устройства есть мышь.
-let lastScanFrom = null; // 'keys' | 'camera'
+let lastScanFrom = null; // 'keys' | 'camera' | 'search' (pack-v598)
 function refocus(){
   if(!appVisible()) return;
   if(lastScanFrom === 'camera') return;
@@ -186,6 +202,7 @@ function refocus(){
   try{ fine = !!(window.matchMedia && window.matchMedia('(pointer: fine)').matches); }catch(e){}
   if(!fine && lastScanFrom !== 'keys') return;
   if(document.querySelector('#seat-pick .seat-pick')) return; // контролёр выбирает места — не мешаем
+  if(document.activeElement && document.activeElement.id === 'find-input') return; // pack-v598: ищет гостя — не мешаем
   const el = document.getElementById('scan-input');
   if(document.activeElement !== el){ try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); } }
 }
@@ -383,6 +400,64 @@ input.addEventListener('keydown', (e) => {
   }
 });
 
+// ─── pack-v598: гость без QR — поиск пригласительного по фамилии / номеру ──
+const findBox = document.getElementById('find-box');
+const findInput = document.getElementById('find-input');
+const findResults = document.getElementById('find-results');
+let findSeq = 0, findTimer = null, FOUND = [];
+document.getElementById('find-toggle').addEventListener('click', () => {
+  const open = !findBox.classList.contains('open');
+  findBox.classList.toggle('open', open);
+  if(open){ findInput.focus(); } else { findInput.value = ''; findResults.innerHTML = ''; refocus(); }
+});
+findInput.addEventListener('input', () => { clearTimeout(findTimer); findTimer = setTimeout(runFind, 400); });
+// Сканер-пистолет «печатает» в поле, где курсор: если контролёр оставил
+// курсор в поиске, QR следующего гостя придёт сюда — узнаём его и
+// проверяем как скан, а поиск закрываем.
+function looksLikeQr(v){ return /^[A-Za-z0-9_-]{16,}\.[0-9a-f]{12}$/.test(v); }
+function closeFind(){ clearTimeout(findTimer); findSeq++; findInput.value = ''; findResults.innerHTML = ''; findBox.classList.remove('open'); }
+findInput.addEventListener('keydown', (e) => {
+  if(e.key !== 'Enter') return;
+  const v = findInput.value.trim();
+  if(looksLikeQr(v) || /^ref:/.test(v)){ closeFind(); lastScanFrom = 'keys'; handleScan(v); return; }
+  clearTimeout(findTimer); runFind();
+});
+async function runFind(){
+  const q = findInput.value.trim();
+  const seq = ++findSeq;
+  if(looksLikeQr(q)) return; // это скан — его обработает Enter
+  if(q.length < 2 && !/^№?\s*\d{1,4}$/.test(q)){ findResults.innerHTML = q ? '<div class="fr-msg">Введите хотя бы две буквы фамилии или номер.</div>' : ''; return; }
+  findResults.innerHTML = '<div class="fr-msg">Ищем…</div>';
+  let data;
+  try{ data = await api('invite_search', {query: q, expected_performance_id: expectedPerformanceId || undefined}); }
+  catch(e){
+    if(seq !== findSeq) return;
+    if(e instanceof UnauthorizedError){ findResults.innerHTML = ''; return; }
+    findResults.innerHTML = '<div class="fr-msg">' + (e instanceof NetworkError ? 'Нет связи — ищите по распечатанной таблице гостей (админка → «Пригласительные» → «Таблица (Excel)»).' : 'Сервер ответил с ошибкой — попробуйте ещё раз.') + '</div>';
+    return;
+  }
+  if(seq !== findSeq) return;
+  if(!data.ok){ findResults.innerHTML = '<div class="fr-msg">' + escapeHtml(data.message || 'Поиск недоступен') + '</div>'; return; }
+  FOUND = data.results || [];
+  if(!FOUND.length){ findResults.innerHTML = '<div class="fr-msg">Не нашли среди пригласительных ' + (data.events ? 'на сегодня' : '— на сегодня событий с пригласительными нет') + '. Проверьте написание; если гость уверен — позовите администратора.</div>'; return; }
+  findResults.innerHTML = FOUND.map((r, i) => {
+    const what = [r.production, r.dateLabel].filter(Boolean).join(' · ');
+    const seat = r.seats && r.seats.length ? seatsText('', r.seats) : (r.entry ? 'входной' : (r.seatsLater ? 'места назначить' : ''));
+    const state = r.status !== 'active' ? 'ОТОЗВАН — не пропускать' : (r.visits ? 'уже проходил: ' + r.visits : '');
+    return '<button class="fr' + (r.ref ? '' : ' off') + '" data-i="' + i + '"' + (r.ref ? '' : ' disabled') + '>№ ' + escapeHtml(String(r.number).padStart(3, '0')) + ' · ' + escapeHtml(r.name) + ' · ' + escapeHtml(personsWord(r.persons)) +
+      '<small>' + escapeHtml([what, seat, state].filter(Boolean).join(' · ')) + '</small></button>';
+  }).join('') + (data.more ? '<div class="fr-msg">Показаны первые 20 — уточните фамилию.</div>' : '');
+}
+findResults.addEventListener('click', (e) => {
+  const b = e.target.closest('.fr[data-i]');
+  if(!b || b.disabled) return;
+  const r = FOUND[Number(b.getAttribute('data-i'))];
+  if(!r || !r.ref) return;
+  closeFind();
+  lastScanFrom = 'search'; // на телефоне — без экранной клавиатуры поверх карточки
+  handleScan(r.ref, true);
+});
+
 // ─── Камера-сканер (pack-v201, дополнение к USB-сканеру/ручному вводу) ──
 let cameraStream = null;
 let cameraLoopId = null;
@@ -474,7 +549,15 @@ function newCard(token, data){
 }
 function show(html){ document.getElementById('result').innerHTML = html; refocus(); }
 
-async function handleScan(token){
+async function handleScan(token, fromSearch){
+  // pack-v598: «ref:» — ссылка на пригласительный из поиска по фамилии; со
+  // сканера и камеры её не принимаем (иначе такую ссылку можно было бы
+  // распечатать как QR). Сервер пропускает её только как поиск персонала.
+  if(!fromSearch && /^ref:/.test(String(token))){
+    activeCard = 0;
+    show('<div class="card warn"><div class="status warn">Это не QR билета или пригласительного — не пропускать. Гостя без QR ищите кнопкой «Гость без QR».</div></div>');
+    return;
+  }
   const seq = ++scanSeq;
   activeCard = 0;
   show('<div class="card">Проверяем…</div>');
@@ -499,7 +582,7 @@ function offlineHelp(){
   return '<div class="card warn"><div class="status warn">НЕТ СВЯЗИ — билет не проверить</div>' +
     '<div class="detail detail-left">' +
     '1. Проверьте интернет (Wi-Fi или мобильные данные) и отсканируйте ещё раз.<br>' +
-    '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF»; гостей по пригласительным — по списку «Пригласительные» → «Скачать CSV». Найдите фамилию и номер билета (пригласительного), отметьте ручкой.<br>' +
+    '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF»; гостей по пригласительным — по списку «Пригласительные» → «Таблица (Excel)» (распечатать заранее). Найдите фамилию и номер билета (пригласительного), отметьте ручкой.<br>' +
     '3. Сомневаетесь — «Позвать помощь».</div></div>';
 }
 

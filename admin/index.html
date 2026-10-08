@@ -134,6 +134,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.inv-mt14{margin-top:14px}
 .inv-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .inv-off{opacity:.55}
+/* pack-v598: выбор мест на схеме зала */
+.inv-map{flex-basis:100%;margin-top:4px}
+.inv-map .inv-map-sum{font-size:0.8125rem;color:var(--sand);margin:8px 0}
+.inv-map .inv-map-rows{max-height:52vh;overflow:auto;border:1px solid rgba(201,184,163,.12);padding:8px}
+.inv-map .inv-map-row{display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-bottom:4px}
+.inv-map .inv-map-rl{color:var(--sand);font-size:0.6875rem;width:48px;flex:none}
+.inv-map .inv-st{background:transparent;border:1px solid rgba(201,184,163,.3);color:var(--bone);font-size:0.75rem;min-width:30px;padding:5px 3px;border-radius:3px;cursor:pointer}
+.inv-map .inv-st.on{background:var(--gold);color:#0B0B0D;border-color:var(--gold)}
+.inv-map .inv-st.taken{opacity:.2;cursor:not-allowed;text-decoration:line-through}
 .inv-tag{font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;margin-left:6px}
 .inv-tag.ok{color:#7ec48c}.inv-tag.off{color:#e08a6e}
 .inv-edit{margin-top:14px;border-top:1px solid rgba(201,184,163,.12);padding-top:14px;display:none}
@@ -417,6 +426,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         <button class="mini-btn" id="invNewBtn">+ Пригласительный</button>
         <button class="mini-btn" id="invImportBtn">+ Списком</button>
         <button class="mini-btn" id="invPdfAllBtn">PDF всех действующих</button>
+        <button class="mini-btn" id="invXlsxBtn">Таблица (Excel)</button>
+        <button class="mini-btn" id="invXlsxAllBtn">Таблица — все события</button>
         <button class="mini-btn" id="invCsvBtn">Скачать CSV</button>
       </div>
       <div class="inv-edit" id="inv-form">
@@ -436,6 +447,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         <div class="inv-row" id="inv-seat-pick-row">
           <div class="field"><label for="inv-seat-perf">Показ</label><select id="inv-seat-perf"></select></div>
           <div class="field inv-w2"><label for="inv-seat-keys">Ряд и места</label><input class="ym-disable-keys" type="text" id="inv-seat-keys" autocomplete="off" placeholder="ряд 5 места 7, 8; 6-1"></div>
+          <div class="field"><label>&nbsp;</label><button type="button" class="mini-btn" id="invMapBtn">Выбрать на схеме</button></div>
+          <div class="inv-map" id="inv-seat-map"></div>
         </div>
         <p class="editor-note">Мест столько же, сколько лиц. Вписанные места уходят из продажи на этот показ; снятые и места отозванного пригласительного возвращаются в продажу.</p>
         <div class="field"><label for="inv-note">Заметка (видна только в админке)</label><input class="ym-disable-keys" type="text" id="inv-note" autocomplete="off" maxlength="300"></div>
@@ -2448,14 +2461,80 @@ async function invCall(body) {
   if (!res.ok) throw new Error(data.message || errorMessage(data));
   return data;
 }
+var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
+var INV_WIDTHS = [6, 32, 6, 34, 6, 11, 10, 24, 30];
+function invRow(i, ev) {
+  return [i.number, i.name, i.persons, invSeatsText(i, ev) || (i.entry ? 'входной' : (i.seatsLater ? 'назначить на входе' : '')), i.lang, i.status === 'active' ? 'действует' : 'отозван', i.visits || 0, i.firstVisitAt ? fmtGcDate(i.firstVisitAt) : '', i.note || ''];
+}
+// Имя листа (≤ 31 знака): дата «22.10» всегда видна, название — сколько влезет.
+function invSheetName(ev) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ev.validFrom || '');
+  var d = m ? m[3] + '.' + m[2] : '';
+  return (d ? d + ' ' : '') + String(ev.title || ev.id).slice(0, 22);
+}
+function invSave(blob, filename) {
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+// ── pack-v597: .xlsx без библиотек — zip без сжатия + минимальный SpreadsheetML.
+// sheets: [{ name, rows: [[ячейки]], widths: [символов] }]; первая строка — заголовок
+// (жирный, закреплён). Числа — числами, остальное — текстом.
+var CRC_TABLE = (function () { var t = [], c; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(bytes) { var c = 0xFFFFFFFF; for (var i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipStore(files) {
+  var enc = new TextEncoder(), parts = [], central = [], offset = 0;
+  function u16(v) { return [v & 255, (v >>> 8) & 255]; }
+  function u32(v) { return [v & 255, (v >>> 8) & 255, (v >>> 16) & 255, (v >>> 24) & 255]; }
+  files.forEach(function (f) {
+    var name = enc.encode(f.name), data = enc.encode(f.data), crc = crc32(data);
+    var head = [].concat(u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0));
+    parts.push(new Uint8Array(head), name, data);
+    central.push([].concat(u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset)), name);
+    offset += head.length + name.length + data.length;
+  });
+  var size = 0;
+  central.forEach(function (c, idx) { if (idx % 2 === 0) { parts.push(new Uint8Array(c)); size += c.length; } else { parts.push(c); size += c.length; } });
+  parts.push(new Uint8Array([].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(size), u32(offset), u16(0))));
+  return new Blob(parts, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+function xmlEsc(v) { return String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function xlsxCol(n) { var s = ''; n++; while (n) { var m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+function xlsxBlob(sheets) {
+  var used = {};
+  sheets.forEach(function (sh) {
+    var base = String(sh.name).replace(/[\[\]:*?\/\\]/g, ' ').replace(/\s+/g, ' ').replace(/^'+|'+$/g, '').trim().slice(0, 28).replace(/'+$/, '').trim() || 'Лист', nm = base, k = 2;
+    while (used[nm.toLowerCase()]) nm = base.slice(0, 26).trim() + ' ' + (k++);
+    used[nm.toLowerCase()] = 1; sh.safe = nm;
+  });
+  var files = [
+    { name: '[Content_Types].xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' + sheets.map(function (_, n) { return '<Override PartName="/xl/worksheets/sheet' + (n + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join('') + '</Types>' },
+    { name: '_rels/.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+    { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets.map(function (sh, n) { return '<sheet name="' + xmlEsc(sh.safe) + '" sheetId="' + (n + 1) + '" r:id="rId' + (n + 1) + '"/>'; }).join('') + '</sheets></workbook>' },
+    { name: 'xl/_rels/workbook.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + sheets.map(function (_, n) { return '<Relationship Id="rId' + (n + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (n + 1) + '.xml"/>'; }).join('') + '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>' },
+    { name: 'xl/styles.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>' },
+  ];
+  sheets.forEach(function (sh, n) {
+    var cols = (sh.widths || []).map(function (w, c) { return '<col min="' + (c + 1) + '" max="' + (c + 1) + '" width="' + w + '" customWidth="1"/>'; }).join('');
+    var rows = sh.rows.map(function (row, r) {
+      return '<row r="' + (r + 1) + '">' + row.map(function (v, c) {
+        var ref = xlsxCol(c) + (r + 1), st = r === 0 ? ' s="1"' : '';
+        if (typeof v === 'number' && isFinite(v)) return '<c r="' + ref + '"' + st + '><v>' + v + '</v></c>';
+        return '<c r="' + ref + '"' + st + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEsc(v == null ? '' : v) + '</t></is></c>';
+      }).join('') + '</row>';
+    }).join('');
+    files.push({ name: 'xl/worksheets/sheet' + (n + 1) + '.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' + (cols ? '<cols>' + cols + '</cols>' : '') + '<sheetData>' + rows + '</sheetData>' + (sh.rows.length > 1 ? '<autoFilter ref="A1:' + xlsxCol(sh.rows[0].length - 1) + sh.rows.length + '"/>' : '') + '</worksheet>' });
+  });
+  return zipStore(files);
+}
 function invEvent() { return INV_EVENTS.find(function (e) { return e.id === document.getElementById('inv-event').value; }) || null; }
 function invPersonsWord(n) {
   var m10 = n % 10, m100 = n % 100;
   return n + ' ' + (m10 === 1 && m100 !== 11 ? 'лицо' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'лица' : 'лиц'));
 }
-function invSeatsText(inv) {
+function invSeatsText(inv, evArg) {
   if (!inv.seats || !inv.seats.keys || !inv.seats.keys.length) return '';
-  var ev = invEvent();
+  var ev = evArg || invEvent();
   var opt = ev && (ev.seatOptions || []).find(function (o) { return o.id === inv.seats.performanceId; });
   return (opt ? opt.hall + ': ' : '') + inv.seats.keys.map(function (k) { var p = k.split('-'); return 'ряд ' + p[0] + ' место ' + p[1]; }).join(', ');
 }
@@ -2480,6 +2559,51 @@ async function loadInviteEvents() {
 function invSeatModeUi() {
   var m = document.getElementById('inv-seat-mode').value;
   document.getElementById('inv-seat-pick-row').style.display = m === 'seats' && document.getElementById('inv-seats-row').style.display !== 'none' ? '' : 'none';
+}
+// pack-v598: выбор мест кликом по схеме зала — свободные места показа (проданные,
+// в корзине и у других пригласительных — зачёркнуты); выбранные пишутся в поле
+// «Ряд и места» в виде «5-7, 5-8», дальше — обычное сохранение.
+var INV_MAP_SEL = [];
+function invKeysFromText(v) {
+  var out = [];
+  String(v || '').split(/[;\n]+/).forEach(function (g) {
+    var pairs = g.match(/\d+\s*[-\/]\s*\d+/g);
+    if (pairs) { pairs.forEach(function (p) { var m = p.split(/\s*[-\/]\s*/); out.push(Number(m[0]) + '-' + Number(m[1])); }); return; }
+    var nums = (g.match(/\d+/g) || []).map(Number);
+    if (nums.length >= 2) nums.slice(1).forEach(function (n) { out.push(nums[0] + '-' + n); });
+  });
+  return out;
+}
+function invMapSum() {
+  var el = document.getElementById('inv-map-sum'); if (!el) return;
+  var need = Number(document.getElementById('inv-persons').value) || 1;
+  el.textContent = 'Выбрано ' + INV_MAP_SEL.length + ' из ' + need + (INV_MAP_SEL.length !== need ? ' — мест должно быть столько же, сколько лиц' : ' ✓') + '. Ряд 1 — у сцены.';
+}
+async function invOpenMap() {
+  var box = document.getElementById('inv-seat-map'), ev = invEvent();
+  var pid = document.getElementById('inv-seat-perf').value;
+  if (!ev) return;
+  if (!pid) { box.innerHTML = '<div class="inv-map-sum">Выберите показ.</div>'; return; }
+  // Каждое нажатие — схема заново (места могли купить, пока форма открыта).
+  box.innerHTML = '<div class="inv-map-sum">Загружаем схему…</div>';
+  try {
+    var data = await invCall({ action: 'free_seats', event_id: ev.id, performance_id: pid, id: INV_EDIT_ID || undefined });
+    var free = data.free, total = {};
+    INV_MAP_SEL = invKeysFromText(document.getElementById('inv-seat-keys').value);
+    var seatsPerRow = (ev.seatOptions || []).find(function (o) { return o.id === pid; });
+    box.setAttribute('data-open', '1');
+    box.innerHTML = '<div class="inv-map-sum">' + escapeHtml(free.hall) + '</div><div class="inv-map-rows">' + free.rows.map(function (r) {
+      var maxSeat = Math.max.apply(null, r.seats.concat([0]));
+      var all = (seatsPerRow && seatsPerRow.seatsPerRow && seatsPerRow.seatsPerRow[r.row - 1]) || maxSeat;
+      var html = '';
+      for (var n = 1; n <= all; n++) {
+        var k = r.row + '-' + n, isFree = r.seats.indexOf(n) >= 0;
+        html += '<button type="button" class="inv-st' + (isFree ? (INV_MAP_SEL.indexOf(k) >= 0 ? ' on' : '') : ' taken') + '" data-k="' + k + '"' + (isFree ? '' : ' disabled title="занято"') + '>' + n + '</button>';
+      }
+      return '<div class="inv-map-row"><span class="inv-map-rl">ряд ' + r.row + '</span>' + html + '</div>';
+    }).join('') + '</div><div class="inv-map-sum" id="inv-map-sum"></div>';
+    invMapSum();
+  } catch (e) { box.innerHTML = '<div class="inv-map-sum">' + escapeHtml(e.message) + '</div>'; }
 }
 function invFillSeatOptions() {
   var ev = invEvent();
@@ -2545,6 +2669,7 @@ function renderInvites() {
   }).join('');
 }
 function invOpenForm(inv) {
+  var mapBox = document.getElementById('inv-seat-map'); mapBox.innerHTML = ''; mapBox.removeAttribute('data-open'); // pack-v598
   INV_EDIT_ID = inv ? inv.id : null;
   INV_EDIT_INV = inv || null; // pack-v595: каким пригласительный был, когда открыли правку
   document.getElementById('inv-import').classList.remove('open');
@@ -2553,7 +2678,12 @@ function invOpenForm(inv) {
   document.getElementById('inv-persons').value = inv ? inv.persons : 1;
   document.getElementById('inv-lang').value = inv ? inv.lang : 'ru';
   document.getElementById('inv-note').value = inv ? inv.note : '';
-  document.getElementById('inv-seat-perf').value = inv && inv.seats ? inv.seats.performanceId : '';
+  var perfSel = document.getElementById('inv-seat-perf');
+  perfSel.value = inv && inv.seats ? inv.seats.performanceId : '';
+  // pack-v598: у нового пригласительного — первый показ списка (раньше значение
+  // оставалось пустым: «Выбрать на схеме» молчал, а вписанные руками места
+  // уходили как «без мест»).
+  if (!perfSel.value && perfSel.options.length) perfSel.selectedIndex = 0;
   document.getElementById('inv-seat-keys').value = inv && inv.seats ? inv.seats.keys.join(', ') : '';
   document.getElementById('inv-seat-mode').value = !inv ? 'none' : (inv.seats ? 'seats' : (inv.entry ? 'entry' : (inv.seatsLater ? 'later' : 'none')));
   invSeatModeUi();
@@ -2582,6 +2712,18 @@ document.addEventListener('DOMContentLoaded', function () {
     invFillSeatOptions(); loadInvites();
   });
   document.getElementById('inv-seat-mode').addEventListener('change', invSeatModeUi);
+  document.getElementById('invMapBtn').addEventListener('click', invOpenMap);
+  document.getElementById('inv-seat-perf').addEventListener('change', function () { var b = document.getElementById('inv-seat-map'); b.innerHTML = ''; b.removeAttribute('data-open'); });
+  document.getElementById('inv-persons').addEventListener('input', invMapSum);
+  document.getElementById('inv-seat-map').addEventListener('click', function (e) {
+    var b = e.target.closest('.inv-st'); if (!b || b.disabled) return;
+    var k = b.getAttribute('data-k'), i = INV_MAP_SEL.indexOf(k);
+    if (i >= 0) INV_MAP_SEL.splice(i, 1); else INV_MAP_SEL.push(k);
+    b.classList.toggle('on', i < 0);
+    INV_MAP_SEL.sort(function (x, y) { var a = x.split('-').map(Number), c = y.split('-').map(Number); return a[0] - c[0] || a[1] - c[1]; });
+    document.getElementById('inv-seat-keys').value = INV_MAP_SEL.join(', ');
+    invMapSum();
+  });
   document.getElementById('inv-search').addEventListener('input', renderInvites);
   document.getElementById('invNewBtn').addEventListener('click', function () { invOpenForm(null); });
   document.getElementById('invFormCancel').addEventListener('click', function () { document.getElementById('inv-form').classList.remove('open'); });
@@ -2598,6 +2740,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var perf = document.getElementById('inv-seat-perf').value;
     var keys = mode === 'seats' ? document.getElementById('inv-seat-keys').value.trim() : '';
     if (mode === 'seats' && !keys) { invShow(document.getElementById('invFormResult'), 'Впишите места или выберите другой вариант в «Места»', false); return; }
+    if (mode === 'seats' && !perf) { invShow(document.getElementById('invFormResult'), 'Выберите показ для мест', false); return; }
     var body = {
       action: INV_EDIT_ID ? 'update' : 'create', event_id: ev.id, id: INV_EDIT_ID || undefined,
       name: document.getElementById('inv-name').value, persons: Number(document.getElementById('inv-persons').value),
@@ -2624,6 +2767,7 @@ document.addEventListener('DOMContentLoaded', function () {
       invShow(out, (INV_EDIT_ID ? 'Сохранено' : 'Выпущен № ' + String(data.invite.number).padStart(3, '0')) + '. PDF — кнопкой у пригласительного.', true);
       if (!INV_EDIT_ID) { document.getElementById('inv-name').value = ''; document.getElementById('inv-seat-keys').value = ''; document.getElementById('inv-note').value = ''; document.getElementById('inv-seat-mode').value = 'none'; invSeatModeUi(); }
       else document.getElementById('inv-form').classList.remove('open');
+      var mapAfter = document.getElementById('inv-seat-map'); mapAfter.innerHTML = ''; mapAfter.removeAttribute('data-open'); INV_MAP_SEL = []; // pack-v598
       INV_EDIT_ID = null; document.getElementById('invSaveBtn').textContent = 'Выпустить';
       await loadInviteEvents(); // pack-v592: и свободные места
     } catch (e) {
@@ -2665,14 +2809,36 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.disabled = false; btn.textContent = old;
   });
   document.getElementById('invCsvBtn').addEventListener('click', function () {
-    var rows = [['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка']];
-    INV_LIST.forEach(function (i) {
-      rows.push([i.number, i.name, i.persons, invSeatsText(i) || (i.entry ? 'входной' : (i.seatsLater ? 'назначить на входе' : '')), i.lang, i.status === 'active' ? 'действует' : 'отозван', i.visits, i.firstVisitAt ? fmtGcDate(i.firstVisitAt) : '', i.note || '']);
-    });
+    var rows = [INV_HEAD].concat(INV_LIST.map(function (i) { return invRow(i, invEvent()); }));
     var csv = rows.map(function (row) { return row.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
-    var url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
-    var a = document.createElement('a'); a.href = url; a.download = 'aelita-invites-' + document.getElementById('inv-event').value + '.csv';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    invSave(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), 'aelita-invites-' + document.getElementById('inv-event').value + '.csv');
+  });
+  // pack-v597 (заказчик 08.10): гостевой список ведётся здесь, Google-таблица
+  // GuestSystem больше не нужна — выгрузка «таблицей» (.xlsx, открывается в
+  // Excel, Google/Яндекс Таблицах, Numbers). Собирается в браузере, без сервера.
+  document.getElementById('invXlsxBtn').addEventListener('click', function () {
+    var ev = invEvent(); if (!ev) return;
+    var rows = [INV_HEAD].concat(INV_LIST.map(function (i) { return invRow(i, ev); }));
+    invSave(xlsxBlob([{ name: invSheetName(ev), rows: rows, widths: INV_WIDTHS }]), 'aelita-invites-' + ev.id + '.xlsx');
+  });
+  document.getElementById('invXlsxAllBtn').addEventListener('click', async function () {
+    var btn = this, old = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Собираем…';
+    try {
+      var all = [['Событие', 'Дата'].concat(INV_HEAD)], sheets = [];
+      for (var k = 0; k < INV_EVENTS.length; k++) {
+        var ev = INV_EVENTS[k];
+        var data = await invCall({ action: 'list', event_id: ev.id });
+        var list = data.invites || [];
+        if (!list.length) continue;
+        var rows = [INV_HEAD];
+        list.forEach(function (i) { var r = invRow(i, ev); rows.push(r); all.push([ev.title, ev.dateLabel].concat(r)); });
+        sheets.push({ name: invSheetName(ev), rows: rows, widths: INV_WIDTHS });
+      }
+      if (!sheets.length) { alert('Пригласительных пока нет ни в одном событии.'); }
+      else invSave(xlsxBlob([{ name: 'Все гости', rows: all, widths: [28, 16].concat(INV_WIDTHS) }].concat(sheets)), 'aelita-invites-all-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+    } catch (e) { alert(e.message); }
+    btn.disabled = false; btn.textContent = old;
   });
   document.getElementById('invList').addEventListener('click', async function (e) {
     var b = e.target.closest('[data-inv]');
