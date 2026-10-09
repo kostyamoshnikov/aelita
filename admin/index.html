@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=82">
+<link rel="stylesheet" href="/assets/fonts.css?v=83">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,7 +40,31 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 /* Шапка данных: заголовок + действия */
 .data-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:40px}
 .data-head h1{margin-bottom:0}
-.data-actions{display:flex;gap:10px;flex-shrink:0;align-items:center}
+.data-actions{display:flex;gap:10px;flex-shrink:0;align-items:center;flex-wrap:wrap}
+/* pack-v610: меню разделов админки (заказчик 09.10: «админка очень разрослась, нужно что-то типо меню») */
+.adm-nav{position:sticky;top:0;z-index:20;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ink);padding:10px 0 12px;margin:-8px 0 28px;border-bottom:1px solid rgba(214,181,122,.18)}
+.adm-nav::-webkit-scrollbar{display:none}
+.adm-nav button{flex:0 0 auto;font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.14em;text-transform:uppercase;padding:9px 13px;border:1px solid rgba(214,181,122,.22);color:var(--sand);background:none;cursor:pointer;white-space:nowrap}
+.adm-nav button.on{border-color:var(--gold);color:var(--gold);background:rgba(214,181,122,.08)}
+.adm-nav .badge{display:inline-block;min-width:16px;margin-left:6px;padding:1px 5px;border-radius:9px;background:var(--gold);color:var(--ink);font-size:0.5625rem;letter-spacing:0;text-align:center}
+.adm-off{display:none!important}
+/* Пояснения — коротко, подробности под «Подробнее» */
+.adm-more{margin:-4px 0 16px;font-size:0.75rem;color:rgba(201,184,163,.6);line-height:1.6}
+.adm-more summary{cursor:pointer;color:var(--sand);letter-spacing:.06em;list-style:none}
+.adm-more summary::-webkit-details-marker{display:none}
+.adm-more summary::before{content:'＋ ';color:var(--gold)}
+.adm-more[open] summary::before{content:'－ '}
+.adm-more p{margin:8px 0 0}
+/* Карточки действий с показом: одно действие — одна карточка */
+.adm-card{border:1px solid rgba(214,181,122,.18);padding:18px 16px 16px;margin:0 0 14px}
+.adm-card.danger{border-color:rgba(224,138,110,.35)}
+.adm-card h3{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone);margin:0 0 8px;font-weight:400}
+.adm-card .lead{font-size:0.8125rem;color:var(--sand);line-height:1.55;margin:0 0 12px}
+.editor-box .btn-small{display:inline-block;margin:4px 0 12px;line-height:1.5}
+.btn-small + .editor-note,.btn-small + .adm-more{margin-top:4px}
+.inv-tools .inv-group{display:flex;gap:8px;flex-wrap:wrap}
+.inv-recount{margin:-6px 0 16px;font-size:0.75rem;color:rgba(201,184,163,.75);line-height:1.6}
+.inv-recount .mini-btn{margin-left:6px}
 .loaded-at{font-size:0.6875rem;color:rgba(201,184,163,.6);white-space:nowrap}
 .btn-small{font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;border:1px solid rgba(214,181,122,.35);color:var(--gold);background:none;cursor:pointer}
 @media(hover:hover){.btn-small:hover{background:rgba(214,181,122,.08)}}
@@ -54,7 +78,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .stat-box .label{font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
 .stat-box .value{font-family:'Montserrat',sans-serif;font-size:clamp(16px,4vw,24px);color:var(--gold);word-break:break-word}
 @media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:420px){.stats-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.stats-grid{grid-template-columns:1fr 1fr}.stat-box{padding:16px 14px}.stat-box .label{letter-spacing:.12em}} /* pack-v610: два столбца и на телефоне — меньше прокрутки */
 
 .byproduct{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px}
 .byproduct .chip{background:var(--coal);padding:10px 16px;font-size:0.8125rem;color:var(--sand)}
@@ -92,7 +116,6 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .mini-btn{font-family:'Montserrat',sans-serif;font-size:0.5625rem;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;border:1px solid rgba(214,181,122,.3);color:var(--gold);background:none;cursor:pointer;white-space:nowrap}
 @media(hover:hover){.mini-btn:hover{background:rgba(214,181,122,.08)}}
 .mini-btn-danger{border-color:rgba(224,138,110,.4);color:#e08a6e}
-.pa-cancel-note{margin-top:28px}
 @media(hover:hover){.mini-btn-danger:hover{background:rgba(224,138,110,.08)}}
 
 /* Модальное окно (подтверждение удаления, форма ручной покупки) */
@@ -220,7 +243,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
   <div class="data-head">
     <div>
       <p class="eyebrow">Только для команды</p>
-      <h1>Клиенты, покупки, статистика</h1>
+      <h1>Админка</h1>
     </div>
     <div class="data-actions">
       <span class="loaded-at" id="loadedAt"></span>
@@ -410,7 +433,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
          может идти медленнее». Включается на 6 часов, гаснет сам. -->
     <p class="sec-title sec-gap">Баннер о сбое покупки</p>
     <div class="editor-box" id="noticeBlock">
-      <p class="editor-note">Если покупка тормозит или сломалась — включите: на сайте появится «Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, напишите, поможем» (RU/EN). Сам погаснет через 6 часов.</p>
+      <p class="editor-note">Покупка тормозит или сломалась — включите, на сайте появится предупреждение. Сам погаснет через 6 часов.</p>
+      <details class="adm-more"><summary>Подробнее</summary><p>Текст на сайте: «Сейчас покупка может идти медленнее обычного — мы знаем и чиним. Если что-то пошло не так, напишите, поможем» (RU/EN).</p></details>
       <p class="editor-result" id="noticeState">Состояние загружается…</p>
       <button class="btn-small" id="noticeOnBtn">Включить на 6 часов</button>
       <button class="btn-small" id="noticeOffBtn">Снять</button>
@@ -423,13 +447,18 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         <select id="inv-event"><option value="">Загружаем…</option></select>
       </div>
       <p class="editor-note" id="inv-summary"></p>
+      <p class="inv-recount" id="inv-recount" hidden></p>
       <div class="inv-tools">
-        <button class="mini-btn" id="invNewBtn">+ Пригласительный</button>
-        <button class="mini-btn" id="invImportBtn">+ Списком</button>
-        <button class="mini-btn" id="invPdfAllBtn">PDF всех действующих</button>
-        <button class="mini-btn" id="invXlsxBtn">Таблица (Excel)</button>
-        <button class="mini-btn" id="invXlsxAllBtn">Таблица — все события</button>
-        <button class="mini-btn" id="invCsvBtn">Скачать CSV</button>
+        <div class="inv-group">
+          <button class="mini-btn" id="invNewBtn">+ Пригласительный</button>
+          <button class="mini-btn" id="invImportBtn">+ Списком</button>
+        </div>
+        <div class="inv-group">
+          <button class="mini-btn" id="invPdfAllBtn">PDF всех</button>
+          <button class="mini-btn" id="invXlsxBtn">Excel</button>
+          <button class="mini-btn" id="invXlsxAllBtn">Excel — все события</button>
+          <button class="mini-btn" id="invCsvBtn">CSV</button>
+        </div>
       </div>
       <div class="inv-edit" id="inv-form">
         <div class="inv-row">
@@ -469,7 +498,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <div class="field inv-mt6"><label for="inv-search">Поиск по имени или номеру («места» — кому ещё назначить, «входной»)</label><input class="ym-disable-keys" type="text" id="inv-search" autocomplete="off"></div>
       <div id="invList"><div class="empty-state">Загружаем…</div></div>
-      <p class="editor-note inv-mt14">События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p>
+      <details class="adm-more inv-mt14"><summary>Как работают пригласительные</summary><p>События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p></details>
     </div>
 
     <!-- pack-v600 (заказчик 08.10): отзывы и заявки бота — у нас, а не в Google Таблицах -->
@@ -486,7 +515,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <div class="inv-tools"><button class="mini-btn" id="rvReloadBtn">Обновить</button><button class="mini-btn" id="rvXlsxBtn">Таблица (Excel)</button></div>
       <div id="rvList"><div class="empty-state">Загружаем…</div></div>
-      <p class="editor-note inv-mt14">Отзывы с сайта: чистые по спам-фильтру публикуются сами, подозрительные ждут здесь. «Скрыть» снимает с сайта (видно в течение минуты), «Удалить» — совсем, по просьбе автора. Имя на сайте — как выбрал автор («без имени» — «Зритель»); здесь видно настоящее.</p>
+      <p class="editor-note inv-mt14">Отзывы с сайта: чистые по спам-фильтру публикуются сами, подозрительные ждут здесь.</p>
+      <details class="adm-more"><summary>Подробнее</summary><p>«Скрыть» снимает с сайта (видно в течение минуты), «Удалить» — совсем, по просьбе автора. Имя на сайте — как выбрал автор («без имени» — «Зритель»); здесь видно настоящее.</p></details>
     </div>
 
     <p class="sec-title sec-gap">Заявки с сайта (<span id="ld-total">0</span>, новых: <span id="ld-new">0</span>)</p>
@@ -502,7 +532,8 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <div class="inv-tools"><button class="mini-btn" id="ldReloadBtn">Обновить</button><button class="mini-btn" id="ldXlsxBtn">Таблица (Excel)</button></div>
       <div id="ldList"><div class="empty-state">Загружаем…</div></div>
-      <p class="editor-note inv-mt14">Формы сайта: «Для бизнеса», «Для организаторов», «Площадкам», «Партнёры», «Сотрудничество», «Для творческих», Книжный консьерж, подписки на показы и старт продаж (pack-v601 — раньше уходили в Formspree и в чат, у нас не хранились). Уведомление о каждой — в чат команды и на почту.</p>
+      <p class="editor-note inv-mt14">Заявки со всех форм сайта; о каждой — уведомление в чат команды и на почту.</p>
+      <details class="adm-more"><summary>Подробнее</summary><p>Формы: «Для бизнеса», «Для организаторов», «Площадкам», «Партнёры», «Сотрудничество», «Для творческих», Книжный консьерж, подписки на показы и старт продаж.</p></details>
     </div>
 
     <p class="sec-title sec-gap">Заявки из бота (<span id="ap-total">0</span>, новых: <span id="ap-new">0</span>)</p>
@@ -518,10 +549,11 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <div class="inv-tools"><button class="mini-btn" id="apReloadBtn">Обновить</button><button class="mini-btn" id="apXlsxBtn">Таблица (Excel)</button></div>
       <div id="apList"><div class="empty-state">Загружаем…</div></div>
-      <p class="editor-note inv-mt14">Анкеты из Telegram-бота («Бизнесу», «Площадкам», «Билеты» и др.). Сообщение в чат команды бот по-прежнему шлёт сразу; здесь — учёт: отметить обработанной, выгрузить таблицей.</p>
+      <p class="editor-note inv-mt14">Анкеты из Telegram-бота: отметить обработанной, выгрузить таблицей.</p>
+      <details class="adm-more"><summary>Подробнее</summary><p>Анкеты «Бизнесу», «Площадкам», «Билеты» и др. Сообщение в чат команды бот по-прежнему шлёт сразу.</p></details>
     </div>
 
-    <p class="sec-title sec-gap">Показы: перенос и отмена</p>
+    <p class="sec-title sec-gap">Показы: продажа, перенос, отмена</p>
     <div class="editor-box" id="perfActionBlock">
       <div class="field">
         <label for="pa-perf">Показ</label>
@@ -529,19 +561,34 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <p class="editor-note" id="pa-preview"></p>
       <div class="field">
-        <label for="pa-date">Новая дата и время (по Москве)</label>
-        <input type="datetime-local" id="pa-date">
-      </div>
-      <div class="field">
         <label for="pa-title">Для подтверждения — название спектакля, как в афише</label>
         <input class="ym-disable-keys" type="text" id="pa-title" autocomplete="off">
       </div>
-      <p class="editor-note">Билеты и QR-коды остаются действительными, места сохраняются. Каждый покупатель получит письмо с новой датой и ссылкой на возврат 100% — заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p>
-      <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
-      <p class="editor-note pa-cancel-note">Отмена: продажа закрывается сразу; каждому покупателю — 100% стоимости (деньги — через ЮKassa или вручную, см. строку выше; оплаченное подарочной картой — обратно на карту), билеты аннулируются, письмо об отмене на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём. Название — в поле выше.</p>
-      <button class="btn-small mini-btn-danger" id="paCancelBtn">Отменить показ и вернуть деньги</button>
-      <p class="editor-note">Продажа на сайте (pack-v592): закрывается только вручную, здесь — например, в начале спектакля или когда решите. Купленные билеты, места и пригласительные не меняются; страница покупки скажет «продажа закрыта». Название — в поле выше.</p>
-      <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
+
+      <div class="adm-card">
+        <h3>Закрыть продажу</h3>
+        <p class="lead">Сайт перестанет продавать билеты на этот показ. Купленное не меняется.</p>
+        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается только вручную, например в начале спектакля. Купленные билеты, места и пригласительные остаются в силе; страница покупки скажет «продажа закрыта».</p></details>
+        <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
+      </div>
+
+      <div class="adm-card">
+        <h3>Перенести показ</h3>
+        <p class="lead">Билеты остаются в силе, покупателям уйдёт письмо с новой датой.</p>
+        <div class="field">
+          <label for="pa-date">Новая дата и время (по Москве)</label>
+          <input type="datetime-local" id="pa-date">
+        </div>
+        <details class="adm-more"><summary>Подробнее</summary><p>Билеты и QR-коды остаются действительными, места сохраняются. В письме — ссылка на возврат 100%: заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p></details>
+        <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
+      </div>
+
+      <div class="adm-card danger">
+        <h3>Отменить показ</h3>
+        <p class="lead">Всем покупателям — возврат 100%, билеты аннулируются.</p>
+        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сразу. Деньги — через ЮKassa или вручную (см. строку под выбором показа); оплаченное подарочной картой — обратно на карту. Письмо об отмене — на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём.</p></details>
+        <button class="btn-small mini-btn-danger" id="paCancelBtn">Отменить показ и вернуть деньги</button>
+      </div>
       <p class="editor-result" id="paResult"></p>
     </div>
 
@@ -2898,6 +2945,30 @@ async function loadInvites() {
     el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>';
   }
 }
+// pack-v610: пересчёт мест по оплаченным заказам. Билеты, проданные до
+// выкладки вместимости (09.10), места не занимали — счётчик показывал
+// «свободно 80» при проданных билетах. Сначала — посчитать, потом — учесть.
+function invRenderRecount(evc) {
+  var box = document.getElementById('inv-recount');
+  if (!box) return;
+  if (!evc || !evc.capacity) { box.hidden = true; return; }
+  box.hidden = false;
+  box.innerHTML = 'Счётчик не сходится с продажами? <button class="mini-btn" id="invRecountBtn" type="button">Сверить с заказами</button>';
+  document.getElementById('invRecountBtn').addEventListener('click', invRecount);
+}
+async function invRecount() {
+  var ev = invEvent(); var box = document.getElementById('inv-recount');
+  if (!ev) return;
+  box.textContent = 'Сверяем с оплаченными заказами…';
+  try {
+    var r = await invCall({ action: 'capacity_recount', event_id: ev.id, apply: false });
+    if (!r.missing) { box.textContent = 'Всё сходится: оплаченных билетов ' + r.tickets + ', все учтены. Свободно ' + r.left + ' из ' + r.capacity + '.'; return; }
+    if (!confirm('Не учтено билетов из оплаченных заказов: ' + r.missing + ' (всего оплачено ' + r.tickets + '). Учесть их — места займутся, свободных станет меньше. Продолжить?')) { box.textContent = 'Не учтено: ' + r.missing + '. Ничего не меняли.'; return; }
+    r = await invCall({ action: 'capacity_recount', event_id: ev.id, apply: true });
+    box.textContent = 'Учтено ' + r.fixed + '. Свободно ' + r.left + ' из ' + r.capacity + '.' + (r.oversold ? ' ⚠️ Продано сверх вместимости: ' + r.oversold + ' — решите, как посадить.' : '') + (r.failed && r.failed.length ? ' Не получилось у ' + r.failed.length + ' заказов — нажмите ещё раз.' : '');
+    loadInviteEvents();
+  } catch (e) { box.textContent = 'Не получилось: ' + (e.message || 'нет связи'); }
+}
 function renderInvites() {
   var el = document.getElementById('invList');
   var active = INV_LIST.filter(function (i) { return i.status === 'active'; });
@@ -2909,9 +2980,10 @@ function renderInvites() {
     ' · прошли на вход: ' + arrived.length +
     (function () { var n = active.filter(function (i) { return i.seatsLater; }).length; return n ? ' · ждут мест: ' + n : ''; })() +
     (function () { var n = active.filter(function (i) { return i.entry; }); return n.length ? ' · входных: ' + n.length + ' на ' + invPersonsWord(n.reduce(function (a, i) { return a + i.persons; }, 0)) : ''; })() + (INV_LIST.length > active.length ? ' · отозвано: ' + (INV_LIST.length - active.length) : '');
+  invRenderRecount(evc);
   var q = document.getElementById('inv-search').value.trim().toLowerCase();
   var list = INV_LIST.filter(function (i) { return !q || (q === 'места' && i.seatsLater) || (q === 'входной' && i.entry) || i.name.toLowerCase().indexOf(q) >= 0 || String(i.number) === q.replace(/^№\s*/, ''); });
-  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (INV_LIST.length ? 'Никого не нашли.' : 'Пригласительных пока нет — «+ Пригласительный» или «+ Списком».') + '</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (INV_LIST.length ? 'Никого не нашли.' : 'Пока нет.') + '</div>'; return; }
   el.innerHTML = list.map(function (i) {
     var off = i.status !== 'active';
     var seats = invSeatsText(i);
@@ -3695,6 +3767,92 @@ function showEditorResult(kind, html) {
 // вводить пароль заново, просто пробуем загрузить данные (если токен
 // истёк — loadData сама вернёт на экран входа при 401).
 if (getToken()) { showData(); } else { showGate(); }
+</script>
+
+<script>
+// pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
+// #content; показывается один раздел, выбранный запоминается (localStorage,
+// если доступен) и пишется в адрес (#раздел) — можно дать ссылку.
+(function () {
+  var GROUPS = [
+    ['overview', 'Обзор', []],
+    ['orders', 'Заказы', ['Заказы билетов', 'Незавершённые заказы', 'Заявления на возврат']],
+    ['shows', 'Показы', ['Показы:', 'Баннер о сбое']],
+    ['invites', 'Пригласительные', ['Пригласительные']],
+    ['inbox', 'Входящие', ['Отзывы', 'Заявки с сайта', 'Заявки из бота']],
+    ['events', 'Регистрации', ['Регистрации на встречи']],
+    ['clients', 'Клиенты', ['Клиенты']],
+    ['money', 'Подписки и карты', ['Подписки', 'Счета компаний', 'Подарочные карты']],
+    ['site', 'Сайт', ['Правки сайта']]
+  ];
+  var OVERVIEW_TITLES = ['Продажи по показам', 'Скорость покупки'];
+  function groupOf(title) {
+    if (OVERVIEW_TITLES.some(function (t) { return title.indexOf(t) === 0; })) return 'overview';
+    for (var i = 0; i < GROUPS.length; i++) {
+      if (GROUPS[i][2].some(function (t) { return title.indexOf(t) === 0; })) return GROUPS[i][0];
+    }
+    return null;
+  }
+  function init() {
+    var c = document.getElementById('content');
+    if (!c || document.getElementById('admNav')) return;
+    var cur = 'overview';
+    Array.prototype.slice.call(c.children).forEach(function (el) {
+      if (el.matches && el.matches('p.sec-title')) {
+        var g = groupOf((el.textContent || '').trim());
+        if (g) cur = g;
+      }
+      el.setAttribute('data-adm-tab', cur);
+    });
+    var nav = document.createElement('nav');
+    nav.className = 'adm-nav'; nav.id = 'admNav'; nav.setAttribute('aria-label', 'Разделы админки');
+    nav.innerHTML = GROUPS.map(function (g) {
+      return '<button type="button" data-adm-tab-btn="' + g[0] + '">' + g[1] + (g[0] === 'inbox' ? '<span class="badge" id="admInboxBadge" hidden></span>' : '') + '</button>';
+    }).join('');
+    c.insertBefore(nav, c.firstChild);
+    nav.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-adm-tab-btn]');
+      if (b) show(b.getAttribute('data-adm-tab-btn'), true);
+    });
+    var start = (location.hash || '').replace('#', '');
+    if (!GROUPS.some(function (g) { return g[0] === start; })) {
+      try { start = localStorage.getItem('aelita_admin_tab') || 'overview'; } catch (e) { start = 'overview'; }
+    }
+    show(start, false);
+    // Счётчик «Входящих»: новые заявки сайта и бота + отзывы на модерации.
+    ['ld-new', 'ap-new', 'rv-pending'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && window.MutationObserver) new MutationObserver(badge).observe(el, { childList: true, characterData: true, subtree: true });
+    });
+    badge();
+  }
+  function badge() {
+    var n = ['ld-new', 'ap-new', 'rv-pending'].reduce(function (a, id) {
+      var el = document.getElementById(id); return a + (el ? Number(el.textContent) || 0 : 0);
+    }, 0);
+    var b = document.getElementById('admInboxBadge');
+    if (b) { b.textContent = n; b.hidden = !n; }
+  }
+  function show(tab, user) {
+    if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
+    var c = document.getElementById('content');
+    Array.prototype.slice.call(c.children).forEach(function (el) {
+      if (el.id === 'admNav') return;
+      el.classList.toggle('adm-off', el.getAttribute('data-adm-tab') !== tab);
+    });
+    Array.prototype.slice.call(document.querySelectorAll('[data-adm-tab-btn]')).forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-adm-tab-btn') === tab);
+    });
+    try { localStorage.setItem('aelita_admin_tab', tab); } catch (e) {}
+    if (user) {
+      try { history.replaceState(null, '', '#' + tab); } catch (e) {}
+      var nav = document.getElementById('admNav');
+      if (nav && nav.getBoundingClientRect().top < 0) nav.scrollIntoView();
+    }
+  }
+  window.AELITA_adminTab = show;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
 </script>
 </body>
 </html>
