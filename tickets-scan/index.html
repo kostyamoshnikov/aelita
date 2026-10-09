@@ -311,6 +311,22 @@ function queueNote(item, data){
   return {warn: true, text: '⚠️ «' + who + '» (пропущен без связи) — сервер отказал: ' + failMessage(data || {})};
 }
 
+// pack-v619: проход из очереди ушёл, а на экране всё ещё его карточка
+// «Пропущен (нет связи…)» с кнопкой «Отменить (убрать из очереди)» —
+// кнопка уже ничего бы не сделала. Обновляем карточку по ответу сервера.
+function settleQueuedCard(item, data){
+  for(const k in CARDS){
+    const c = CARDS[k];
+    if(c.queuedId !== item.id) continue;
+    c.queuedId = null;
+    if(!isActive(c) || !c.data || c.data.kind === 'invite') return;
+    if(data && data.ok) renderTicket(Object.assign({}, c.data, {redeemedAt: data.redeemedAt || null}), c, 'passed');
+    else if(data && data.error === 'already_redeemed') renderTicket(Object.assign({}, c.data, {redeemedAt: data.redeemedAt || null}), c, 'already');
+    else show('<div class="card warn"><div class="status warn">' + escapeHtml(failMessage(data || {})) + '</div></div>');
+    return;
+  }
+}
+
 let flushing = null;
 function flushQueue(){
   if(flushing) return flushing;
@@ -338,6 +354,7 @@ async function doFlush(){
       continue;
     }
     done.add(item.id);
+    settleQueuedCard(item, data);
     if(data && data.ok && !(data.kind === 'invite' && data.alreadyRedeemed)) sent++;
     else notes.push(queueNote(item, data));
   }
@@ -508,11 +525,14 @@ async function startCamera(){
   cameraVideo.style.display = 'block';
   await cameraVideo.play();
   cameraToggleBtn.textContent = '📷 Выключить камеру';
-  cameraLoopId = requestAnimationFrame(cameraTick);
+  const session = ++cameraSession;
+  cameraBusy = false;
+  cameraLoopId = requestAnimationFrame(() => cameraTick(session));
   refocus();
 }
 
 function stopCamera(){
+  cameraSession++;
   if(cameraLoopId) cancelAnimationFrame(cameraLoopId);
   cameraLoopId = null;
   if(cameraStream){ cameraStream.getTracks().forEach((t) => t.stop()); }
@@ -531,28 +551,39 @@ function stopCamera(){
 let barcodeDetector = null;
 let cameraBusy = false;
 let cameraFrame = 0;
+let cameraSession = 0;   // pack-v619: «выкл → вкл» во время await — старый цикл узнаёт, что он лишний
+let cameraLastCheckAt = 0;
+let scanInFlight = 0;    // проверок в пути
 const CAMERA_MAX_SIDE = 800;
 function cameraSeen(text){
   const now = Date.now();
   const same = text === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS;
   cameraLastCode = text;
   cameraLastAt = now;
-  if(same) return;
+  if(same){
+    // Тот же QR всё ещё в кадре. Повторяем проверку, только если на экране
+    // нет карточки (не было связи / ошибка сервера) — раз в 2,5 с, пока
+    // ответ не пришёл; иначе пришлось бы убирать билет из кадра.
+    if(activeCard !== 0 || scanInFlight > 0 || now - cameraLastCheckAt < CAMERA_COOLDOWN_MS) return;
+  }
+  cameraLastCheckAt = now;
   lastScanFrom = 'camera';
   handleScan(text);
 }
-async function cameraTick(){
-  if(!cameraStream) return; // остановлена между кадрами
+async function cameraTick(session){
+  if(!cameraStream || session !== cameraSession) return; // остановлена или перезапущена
   if(!cameraBusy && cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA){
     cameraBusy = true;
     try{
       let text = null;
-      if(barcodeDetector){
+      const det = barcodeDetector;
+      if(det){
         try{
-          const codes = await barcodeDetector.detect(cameraVideo);
+          const codes = await det.detect(cameraVideo);
           if(codes && codes.length && codes[0].rawValue) text = codes[0].rawValue;
-        }catch(e){ barcodeDetector = null; } // сломался — дальше jsQR
+        }catch(e){ if(session === cameraSession && barcodeDetector === det) barcodeDetector = null; } // сломался — дальше jsQR
       }
+      if(session !== cameraSession || !cameraStream) return;
       // Встроенный детектор ничего не нашёл — каждый 4-й кадр ещё и jsQR
       // (бывает, что BarcodeDetector есть, но QR с экрана телефона не видит).
       cameraFrame++;
@@ -568,10 +599,16 @@ async function cameraTick(){
         const code = jsQR(frame.data, w, h, { inversionAttempts: 'attemptBoth' });
         if(code && code.data) text = code.data;
       }
-      if(text && cameraStream) cameraSeen(text);
-    } finally { cameraBusy = false; }
+      if(text) cameraSeen(text);
+    } catch(e) {
+      // кадр не прочитался — пропускаем его, цикл не останавливаем
+    } finally {
+      cameraBusy = false;
+    }
   }
-  if(cameraStream) cameraLoopId = requestAnimationFrame(cameraTick);
+  // pack-v619: следующий кадр — всегда (раньше исключение в кадре тихо
+  // останавливало распознавание при идущем видео).
+  if(cameraStream && session === cameraSession) cameraLoopId = requestAnimationFrame(() => cameraTick(session));
 }
 
 // ─── Карточки (pack-v592, ревью 07.10, мелочи: «currentToken — один на всё») ──
@@ -606,6 +643,7 @@ async function handleScan(token, fromSearch){
   show('<div class="card">Проверяем…</div>');
   let data;
   try{
+    scanInFlight++;
     data = await api('check', {token, expected_performance_id: expectedPerformanceId || undefined});
   }catch(e){
     if(seq !== scanSeq) return;
@@ -613,6 +651,8 @@ async function handleScan(token, fromSearch){
     if(e instanceof NetworkError){ show(offlineHelp()); return; }
     show('<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — отсканируйте ещё раз; если не поможет — «Позвать помощь».</div></div>');
     return;
+  }finally{
+    scanInFlight--;
   }
   if(seq !== scanSeq) return; // уже отсканировали следующий билет
   render(data, newCard(token, data));
