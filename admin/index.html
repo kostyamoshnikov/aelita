@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=83">
+<link rel="stylesheet" href="/assets/fonts.css?v=84">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -41,8 +41,54 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .data-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:40px}
 .data-head h1{margin-bottom:0}
 .data-actions{display:flex;gap:10px;flex-shrink:0;align-items:center;flex-wrap:wrap}
+/* pack-v611: шапка на телефоне — время строкой, «Обновить»/«Выйти» пополам, в экране */
+@media(max-width:600px){.data-actions{width:100%}.data-actions .loaded-at{flex:0 0 100%}.data-actions .btn-small{flex:1 1 0;text-align:center}}
+/* pack-v611: заголовок раздела отдельно, действия — строкой под ним, вторичные — в «Ещё ▾» */
+p.sec-title{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
+p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!important;vertical-align:middle!important}
+.editor-box .inv-tools .btn-small{margin:0}
+.sec-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-4px 0 18px}
+.adm-menu{position:relative;display:inline-block}
+.adm-menu>summary{list-style:none;cursor:pointer}
+.adm-menu>summary::-webkit-details-marker{display:none}
+.adm-menu-list{position:absolute;z-index:15;left:0;top:calc(100% + 6px);min-width:220px;display:flex;flex-direction:column;gap:6px;background:var(--coal);border:1px solid rgba(214,181,122,.3);padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.adm-menu-list .mini-btn{text-align:left;width:100%}
+.adm-menu.right .adm-menu-list{left:auto;right:0}
+.tk-open{all:unset;box-sizing:border-box;display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;padding:6px 8px;margin:0 -8px;border-radius:2px}
+.tk-open:hover,.tk-open:focus-visible{background:rgba(214,181,122,.1);outline:none}
+.tk-open .tk-open-go{font-size:.75rem;color:var(--gold);white-space:nowrap}
+.tk-open[disabled]{opacity:.6;cursor:wait}
+.inv-mail-row{align-items:flex-end}
+#inv-form label.inv-check{display:flex;flex:1 1 220px;align-items:center;justify-content:flex-start;gap:10px;margin:0 0 14px;font-size:.875rem;text-transform:none;letter-spacing:normal;color:var(--bone);cursor:pointer;text-align:left}
+#inv-form label.inv-check input{flex:none;width:18px;height:18px;margin:0;accent-color:var(--gold)}
+.ev-when.inv-mail .ok{color:#8fbf8f}
+.adm-menu.flip-r .adm-menu-list{left:auto;right:0}
+.adm-menu.flip-l .adm-menu-list{right:auto;left:0}
+.adm-menu.flip-fit .adm-menu-list{position:fixed;left:16px;right:16px;top:auto;min-width:0}
+/* Стрелки прокрутки у меню разделов — как у фильтра городов на сайте (.hscroll) */
+.adm-navbox{position:sticky;top:0;z-index:20;background:var(--ink);margin:-8px 0 28px}
+.adm-navbox .adm-nav{position:static;margin:0}
+.adm-hs{display:none;position:absolute;top:0;bottom:1px;width:44px;border:0;padding:0;cursor:pointer;z-index:2;color:var(--gold);font-size:1.375rem;line-height:1;align-items:center;font-family:inherit}
+.adm-hs.next{right:0;justify-content:flex-end;padding-right:2px;background:linear-gradient(to right,rgba(11,11,13,0),var(--ink) 55%)}
+.adm-hs.prev{left:0;justify-content:flex-start;padding-left:2px;background:linear-gradient(to left,rgba(11,11,13,0),var(--ink) 55%)}
+.adm-navbox.can-next .adm-hs.next,.adm-navbox.can-prev .adm-hs.prev{display:flex}
+/* Пустые состояния в админке — компактнее */
+#content .empty-state{padding:22px 18px;font-size:0.875rem}
+/* Пригласительные: главное — крупно, выгрузка — в меню, сверка — внизу */
+.inv-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 20px;padding-bottom:18px;border-bottom:1px solid rgba(214,181,122,.14)}
+.inv-recount{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(214,181,122,.14);font-size:0.75rem;color:rgba(201,184,163,.75);line-height:1.6;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+/* Подписки: сводка плитками */
+.subs-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(201,184,163,.15);margin:0 0 10px}
+.subs-tile{background:var(--coal);padding:14px 16px}
+.subs-tile .t{font-family:'Montserrat',sans-serif;font-size:0.5625rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);margin-bottom:8px}
+.subs-tile .n{font-family:'Montserrat',sans-serif;font-size:1.25rem;color:var(--gold)}
+.subs-tile .d{font-size:0.75rem;color:rgba(201,184,163,.75);margin-top:4px;line-height:1.5}
+.subs-status{font-size:0.8125rem;color:var(--sand);line-height:1.6;margin:0 0 4px}
+.subs-status .ok{color:var(--gold)}
+.subs-status .warn{color:#C98B6B}
+.subs-muted{font-size:0.6875rem;color:rgba(201,184,163,.55);margin:0 0 12px}
 /* pack-v610: меню разделов админки (заказчик 09.10: «админка очень разрослась, нужно что-то типо меню») */
-.adm-nav{position:sticky;top:0;z-index:20;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ink);padding:10px 0 12px;margin:-8px 0 28px;border-bottom:1px solid rgba(214,181,122,.18)}
+.adm-nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ink);padding:10px 0 12px;border-bottom:1px solid rgba(214,181,122,.18)}
 .adm-nav::-webkit-scrollbar{display:none}
 .adm-nav button{flex:0 0 auto;font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.14em;text-transform:uppercase;padding:9px 13px;border:1px solid rgba(214,181,122,.22);color:var(--sand);background:none;cursor:pointer;white-space:nowrap}
 .adm-nav button.on{border-color:var(--gold);color:var(--gold);background:rgba(214,181,122,.08)}
@@ -62,9 +108,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .adm-card .lead{font-size:0.8125rem;color:var(--sand);line-height:1.55;margin:0 0 12px}
 .editor-box .btn-small{display:inline-block;margin:4px 0 12px;line-height:1.5}
 .btn-small + .editor-note,.btn-small + .adm-more{margin-top:4px}
-.inv-tools .inv-group{display:flex;gap:8px;flex-wrap:wrap}
-.inv-recount{margin:-6px 0 16px;font-size:0.75rem;color:rgba(201,184,163,.75);line-height:1.6}
-.inv-recount .mini-btn{margin-left:6px}
+
 .loaded-at{font-size:0.6875rem;color:rgba(201,184,163,.6);white-space:nowrap}
 .btn-small{font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;border:1px solid rgba(214,181,122,.35);color:var(--gold);background:none;cursor:pointer}
 @media(hover:hover){.btn-small:hover{background:rgba(214,181,122,.08)}}
@@ -153,7 +197,6 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 .inv-row{display:flex;gap:12px;flex-wrap:wrap}
 .inv-row .field{flex:1;min-width:140px}
 .inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.inv-mt14{margin-top:14px}
-.inv-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .inv-off{opacity:.55}
 /* pack-v600: отзывы и заявки бота */
 .rv-text,.ap-fields{font-size:0.875rem;line-height:1.6;margin:10px 0;white-space:pre-wrap;word-break:break-word}
@@ -447,18 +490,15 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         <select id="inv-event"><option value="">Загружаем…</option></select>
       </div>
       <p class="editor-note" id="inv-summary"></p>
-      <p class="inv-recount" id="inv-recount" hidden></p>
       <div class="inv-tools">
-        <div class="inv-group">
-          <button class="mini-btn" id="invNewBtn">+ Пригласительный</button>
-          <button class="mini-btn" id="invImportBtn">+ Списком</button>
-        </div>
-        <div class="inv-group">
-          <button class="mini-btn" id="invPdfAllBtn">PDF всех</button>
-          <button class="mini-btn" id="invXlsxBtn">Excel</button>
-          <button class="mini-btn" id="invXlsxAllBtn">Excel — все события</button>
+        <button class="btn-small" id="invNewBtn">+ Пригласительный</button>
+        <button class="btn-small" id="invImportBtn">+ Списком</button>
+        <details class="adm-menu right"><summary class="mini-btn">Выгрузить ▾</summary><div class="adm-menu-list">
+          <button class="mini-btn" id="invPdfAllBtn">PDF всех действующих</button>
+          <button class="mini-btn" id="invXlsxBtn">Таблица Excel — это событие</button>
+          <button class="mini-btn" id="invXlsxAllBtn">Таблица Excel — все события</button>
           <button class="mini-btn" id="invCsvBtn">CSV</button>
-        </div>
+        </div></details>
       </div>
       <div class="inv-edit" id="inv-form">
         <div class="inv-row">
@@ -482,13 +522,17 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
         </div>
         <p class="editor-note">Мест столько же, сколько лиц. Вписанные места уходят из продажи на этот показ; снятые и места отозванного пригласительного возвращаются в продажу.</p>
         <div class="field"><label for="inv-note">Заметка (видна только в админке)</label><input class="ym-disable-keys" type="text" id="inv-note" autocomplete="off" maxlength="300"></div>
+        <div class="inv-row inv-mail-row">
+          <div class="field inv-w2"><label for="inv-email">Почта гостя — по желанию</label><input class="ym-disable-keys" type="email" id="inv-email" autocomplete="off" maxlength="254" placeholder="guest@mail.ru"></div>
+          <label class="inv-check"><input type="checkbox" id="inv-send"> <span id="inv-send-label">Отправить пригласительный на почту</span></label>
+        </div>
         <button class="btn-small" id="invSaveBtn">Выпустить</button>
         <button class="btn-small btn-ghost" id="invFormCancel">Отмена</button>
         <p class="editor-result" id="invFormResult"></p>
       </div>
       <div class="inv-edit" id="inv-import">
         <div class="field">
-          <label for="inv-lines">Гости — по одному в строке: «Имя Фамилия — 2» (без числа — на одно лицо)</label>
+          <label for="inv-lines">Гости — по одному в строке: «Имя Фамилия — 2» (без числа — на одно лицо). Почту можно дописать в строку: «Анна Иванова — 2 — anna@mail.ru» — отправить потом из карточки («Ещё ▾ → Отправить на почту»)</label>
           <textarea class="ym-disable-keys" id="inv-lines" rows="8" placeholder="Анна Иванова — 2&#10;Пётр Петров"></textarea>
         </div>
         <div class="field"><label for="inv-import-lang">Язык бланков</label><select id="inv-import-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
@@ -498,6 +542,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
       </div>
       <div class="field inv-mt6"><label for="inv-search">Поиск по имени или номеру («места» — кому ещё назначить, «входной»)</label><input class="ym-disable-keys" type="text" id="inv-search" autocomplete="off"></div>
       <div id="invList"><div class="empty-state">Загружаем…</div></div>
+      <p class="inv-recount" id="inv-recount" hidden></p>
       <details class="adm-more inv-mt14"><summary>Как работают пригласительные</summary><p>События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p></details>
     </div>
 
@@ -2018,7 +2063,9 @@ function renderOrders(orders) {
     var ticketsLines = (o.tickets || []).map(function (t) {
       var where = t.seatKey ? 'место ' + t.seatKey : '№ ' + t.ticketNumber;
       var mark = t.refundedAt ? ' · возвращён' : (t.redeemedAt ? ' · прошёл' : '');
-      return '<div class="ev-person"><span class="who">' + escapeHtml(where) + '<small>' + fmtMoney(t.price) + mark + '</small></span></div>';
+      // pack-v611: билет — кнопка, открывает PDF билета (тот же, что в письме).
+      return '<div class="ev-person"><button type="button" class="tk-open" data-ord-action="view" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-tk="' + escapeHtml(String(t.ticketNumber || '')) + '" title="Открыть билет (PDF)">' +
+        '<span class="who">' + escapeHtml(where) + (t.seatKey ? ' · № ' + escapeHtml(String(t.ticketNumber || '')) : '') + '<small>' + fmtMoney(t.price) + mark + '</small></span><span class="tk-open-go">Открыть билет ↗</span></button></div>';
     }).join('');
     return '<div class="ev-card">' +
       '<div class="ev-head">' +
@@ -2106,6 +2153,42 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
       msgEl.textContent = 'Нет связи с сервером.';
       resendBtn.disabled = false;
     }
+    return;
+  }
+
+  var viewBtn = e.target.closest('button[data-ord-action="view"]');
+  if (viewBtn) {
+    // pack-v611: билет человека — PDF в новой вкладке, письмо не уходит.
+    var go = viewBtn.querySelector('.tk-open-go');
+    var was = go.textContent;
+    var win = window.open('', '_blank'); // открыть сразу по щелчку — иначе блокировщик окон
+    go.textContent = 'Открываем…'; viewBtn.disabled = true;
+    try {
+      var r = await fetch(ADMIN_RESEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+        body: JSON.stringify({ order_id: viewBtn.dataset.ordId, mode: 'view', ticket_number: viewBtn.dataset.tk }),
+      });
+      if (r.status === 401) { if (win) win.close(); clearToken(); showGate(); return; }
+      var d = await r.json().catch(function () { return null; });
+      if (r.ok && d && d.pdf) {
+        var bin = atob(d.pdf); var bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        var url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+        if (win) win.location.href = url;
+        else { var a = document.createElement('a'); a.href = url; a.download = d.filename || 'ticket.pdf'; document.body.appendChild(a); a.click(); a.remove(); }
+        setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+        go.textContent = d.refunded ? 'Возвращён — QR не действует' : was;
+      } else {
+        if (win) win.close();
+        var c = d && d.error;
+        go.textContent = c === 'ticket_not_found' ? 'Билет не найден' : c === 'order_not_found' ? 'Заказ не найден' : r.status === 404 ? 'Функция ещё не обновлена' : 'Не открылся';
+      }
+    } catch (err) {
+      if (win) win.close();
+      go.textContent = 'Нет связи с сервером';
+    }
+    viewBtn.disabled = false;
     return;
   }
 
@@ -2953,7 +3036,7 @@ function invRenderRecount(evc) {
   if (!box) return;
   if (!evc || !evc.capacity) { box.hidden = true; return; }
   box.hidden = false;
-  box.innerHTML = 'Счётчик не сходится с продажами? <button class="mini-btn" id="invRecountBtn" type="button">Сверить с заказами</button>';
+  box.innerHTML = '<span>Свободных мест не сходится с продажами?</span><button class="mini-btn" id="invRecountBtn" type="button">Сверить с заказами</button>';
   document.getElementById('invRecountBtn').addEventListener('click', invRecount);
 }
 async function invRecount() {
@@ -2991,9 +3074,14 @@ function renderInvites() {
       ? '<button class="mini-btn" data-inv="restore" data-id="' + i.id + '">Восстановить</button>' +
         '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>'
       : '<button class="mini-btn" data-inv="pdf" data-id="' + i.id + '">PDF</button>' +
-        '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>' +
-        '<button class="mini-btn" data-inv="reissue" data-id="' + i.id + '">Новый QR</button>' +
-        '<button class="mini-btn mini-btn-danger" data-inv="revoke" data-id="' + i.id + '">Отозвать</button>';
+        '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>';
+    // pack-v611: редкие действия — в «Ещё ▾», «Отозвать» — красным внизу списка
+    var more = '<details class="adm-menu"><summary class="mini-btn">Ещё ▾</summary><div class="adm-menu-list">' +
+      (off ? '' : '<button class="mini-btn" data-inv="mail" data-id="' + i.id + '">' + (i.mailedAt ? 'Отправить на почту ещё раз' : 'Отправить на почту') + '</button>') +
+      (off ? '' : '<button class="mini-btn" data-inv="reissue" data-id="' + i.id + '">Новый QR</button>') +
+      '<button class="mini-btn" data-inv="hist" data-id="' + i.id + '">История</button>' +
+      (off ? '' : '<button class="mini-btn mini-btn-danger" data-inv="revoke" data-id="' + i.id + '">Отозвать</button>') +
+      '</div></details>';
     var hist = (i.history || []).slice().reverse().map(function (h) {
       return '<div class="ev-person"><span class="who">' + escapeHtml(h.what) + '</span><span class="when">' + fmtGcDate(h.at) + '</span></div>';
     }).join('');
@@ -3003,8 +3091,9 @@ function renderInvites() {
           (off ? '<span class="inv-tag off">отозван</span>' : (i.visits ? '<span class="inv-tag ok">прошёл(а), ' + fmtGcDate(i.firstVisitAt) + '</span>' : '')) + '</div>' +
         '<div class="ev-when">На ' + invPersonsWord(i.persons) + (seats ? ' · ' + escapeHtml(seats) : (i.entry ? ' · <b>входной</b> (свободные места после 3-го звонка)' : (i.seatsLater ? ' · <b>места — назначить на входе</b>' : ''))) + (i.lang === 'en' ? ' · бланк на английском' : '') +
           (i.rev ? ' · QR перевыпущен (' + i.rev + ')' : '') + (i.note ? ' · ' + escapeHtml(i.note) : '') + '</div>' +
+        (i.email ? '<div class="ev-when inv-mail">✉ ' + escapeHtml(i.email) + (i.mailedAt ? ' · <span class="ok">отправлен ' + fmtGcDate(i.mailedAt) + '</span>' : ' · ещё не отправлен') + '</div>' : '') +
       '</div><div class="ev-count">' + (i.visits ? i.visits + ' прох.' : '') + '</div></div>' +
-      '<div class="ev-actions">' + acts + ' <button class="mini-btn" data-inv="hist" data-id="' + i.id + '">История</button></div>' +
+      '<div class="ev-actions">' + acts + more + '</div>' +
       '<div class="ev-people" id="inv-hist-' + i.id + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
     '</div>';
   }).join('');
@@ -3019,6 +3108,9 @@ function invOpenForm(inv) {
   document.getElementById('inv-persons').value = inv ? inv.persons : 1;
   document.getElementById('inv-lang').value = inv ? inv.lang : 'ru';
   document.getElementById('inv-note').value = inv ? inv.note : '';
+  document.getElementById('inv-email').value = inv ? (inv.email || '') : '';
+  document.getElementById('inv-send').checked = false;
+  document.getElementById('inv-send-label').textContent = inv ? 'Отправить на почту после сохранения' : 'Отправить пригласительный на почту';
   var perfSel = document.getElementById('inv-seat-perf');
   perfSel.value = inv && inv.seats ? inv.seats.performanceId : '';
   // pack-v598: у нового пригласительного — первый показ списка (раньше значение
@@ -3089,7 +3181,12 @@ document.addEventListener('DOMContentLoaded', function () {
       seats: perf && keys ? { performance_id: perf, keys: keys } : null,
       seats_later: mode === 'later',
       entry: mode === 'entry',
+      email: document.getElementById('inv-email').value.trim(),
     };
+    // pack-v611: письмо — по галочке; при выпуске — тем же запросом, при правке — после сохранения.
+    var wantMail = document.getElementById('inv-send').checked;
+    if (wantMail && !body.email) { invShow(out, 'Чтобы отправить на почту, впишите почту гостя', false); return; }
+    if (wantMail && !INV_EDIT_ID) body.send_email = true;
     // pack-v595: при правке места отправляем, только если их правда меняли в
     // форме, и тогда — какими они были при открытии правки. Иначе исправление
     // имени из списка, загруженного до прохода гостя, снимало места,
@@ -3105,8 +3202,14 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.disabled = true;
     try {
       var data = await invCall(body);
-      invShow(out, (INV_EDIT_ID ? 'Сохранено' : 'Выпущен № ' + String(data.invite.number).padStart(3, '0')) + '. PDF — кнопкой у пригласительного.', true);
-      if (!INV_EDIT_ID) { document.getElementById('inv-name').value = ''; document.getElementById('inv-seat-keys').value = ''; document.getElementById('inv-note').value = ''; document.getElementById('inv-seat-mode').value = 'none'; invSeatModeUi(); }
+      var mailNote = '';
+      if (wantMail && INV_EDIT_ID) {
+        try { var md = await invCall({ action: 'send', event_id: ev.id, id: INV_EDIT_ID }); data.mail = md.mail; }
+        catch (me) { data.mail = { sent: false, message: me.message }; }
+      }
+      if (data.mail) mailNote = data.mail.sent ? ' Отправлен на ' + data.mail.to + '.' : ' ⚠️ Письмо не ушло: ' + (data.mail.message || (data.mail.error === 'mail_not_configured' ? 'почта для писем не настроена' : 'почта не приняла письмо')) + ' — отправьте из карточки («Ещё ▾»).';
+      invShow(out, (INV_EDIT_ID ? 'Сохранено' : 'Выпущен № ' + String(data.invite.number).padStart(3, '0')) + '.' + mailNote + (data.mail ? '' : ' PDF — кнопкой у пригласительного.'), !data.mail || data.mail.sent);
+      if (!INV_EDIT_ID) { document.getElementById('inv-name').value = ''; document.getElementById('inv-seat-keys').value = ''; document.getElementById('inv-note').value = ''; document.getElementById('inv-email').value = ''; document.getElementById('inv-send').checked = false; document.getElementById('inv-seat-mode').value = 'none'; invSeatModeUi(); }
       else document.getElementById('inv-form').classList.remove('open');
       var mapAfter = document.getElementById('inv-seat-map'); mapAfter.innerHTML = ''; mapAfter.removeAttribute('data-open'); INV_MAP_SEL = []; // pack-v598
       INV_EDIT_ID = null; document.getElementById('invSaveBtn').textContent = 'Выпустить';
@@ -3190,7 +3293,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (act === 'hist') { document.getElementById('inv-hist-' + id).classList.toggle('open'); return; }
     if (act === 'edit') { invOpenForm(inv); document.getElementById('inv-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (act === 'revoke' && !confirm('Отозвать пригласительный № ' + inv.number + ' (' + inv.name + ')? Он перестанет проходить на входе, места вернутся в продажу.')) return;
-    if (act === 'reissue' && !confirm('Выпустить новый QR для № ' + inv.number + '? Прежний перестанет проходить — гостю нужно отправить новый PDF.')) return;
+    if (act === 'mail') {
+      // pack-v611: на почту гостя. Нет адреса — спросить; есть — подтвердить (можно исправить).
+      var to = prompt((inv.mailedAt ? 'Пригласительный № ' + inv.number + ' уже отправляли. Отправить ещё раз?' : 'Отправить пригласительный № ' + inv.number + ' (' + inv.name + ') на почту?') + '\nПочта гостя:', inv.email || '');
+      if (to === null) return;
+      to = to.trim();
+      if (!to) { alert('Почта не указана'); return; }
+      b.disabled = true;
+      try {
+        var r = await invCall({ action: 'send', event_id: ev.id, id: id, email: to });
+        alert('Отправлен на ' + r.mail.to);
+        await loadInvites();
+      } catch (err) { alert(err.message); }
+      b.disabled = false;
+      return;
+    }
+    if (act === 'reissue' && !confirm('Выпустить новый QR для № ' + inv.number + '? Прежний перестанет проходить — гостю нужно отправить новый PDF' + (inv.email ? ' («Ещё ▾ → Отправить на почту»)' : '') + '.')) return;
     b.disabled = true;
     try {
       if (act === 'pdf') invDownload(await invCall({ action: 'pdf', event_id: ev.id, ids: [id] }));
@@ -3258,15 +3376,17 @@ function renderSubscriptions() {
   if (!subsData) return;
   var t = subsData.totals || {};
   var lr = subsData.lastRun;
-  var lines = Object.keys(t).map(function (k) {
+  // pack-v611: сводка плитками (по потоку), статус автосписания строкой, тестовые — мелко
+  var tiles = Object.keys(t).map(function (k) {
     var x = t[k];
-    return escapeHtml(x.title) + ': действуют ' + x.live + ', со списанием ' + x.active + ' · ожидается за 30 дней ' + fmtMoney(x.expected30) + ' (' + x.expected30Count + ' списаний)';
-  });
-  lines.push('Автосписание: ' + (subsData.enabled ? '<span style="color:var(--gold)">включено</span>' : 'выключено (SUBSCRIPTIONS_ENABLED=0)'));
-  lines.push('Функция списаний: ' + (lr && lr.at ? 'последний запуск ' + fmtGcDate(lr.at) + (lr.errors && lr.errors.length ? ' · ошибок: ' + lr.errors.length : '') : 'ещё не запускалась') +
-    (subsData.lastRunStale ? ' · <span style="color:#C98B6B">⚠️ больше 26 часов без запуска — проверить таймер</span>' : ''));
-  if (subsData.testCount) lines.push('Тестовых подписок: ' + subsData.testCount + (document.getElementById('subShowTest').checked ? '' : ' (скрыты)'));
-  sum.innerHTML = lines.join('<br>');
+    return '<div class="subs-tile"><div class="t">' + escapeHtml(x.title) + '</div><div class="n">' + x.live + '</div>' +
+      '<div class="d">действуют · со списанием ' + x.active + '<br>ожидается за 30 дней ' + fmtMoney(x.expected30) + ' (' + x.expected30Count + ' списаний)</div></div>';
+  }).join('');
+  var status = 'Автосписание: ' + (subsData.enabled ? '<span class="ok">включено ✓</span>' : 'выключено') +
+    ' · ' + (lr && lr.at ? 'последний запуск ' + fmtGcDate(lr.at) + (lr.errors && lr.errors.length ? ' · ошибок: ' + lr.errors.length : '') : 'списания ещё не запускались') +
+    (subsData.lastRunStale ? ' · <span class="warn">⚠️ больше 26 часов без запуска — проверить таймер</span>' : '');
+  sum.innerHTML = (tiles ? '<div class="subs-tiles">' + tiles + '</div>' : '') + '<p class="subs-status">' + status + '</p>' +
+    (subsData.testCount ? '<p class="subs-muted">Тестовых подписок: ' + subsData.testCount + (document.getElementById('subShowTest').checked ? '' : ' (скрыты)') + '</p>' : '');
   renderInvoices();
   var list = filteredSubs();
   document.getElementById('sub-count').textContent = list.length;
@@ -3308,7 +3428,7 @@ function renderInvoices() {
   var list = (subsData && subsData.invoices) || [];
   document.getElementById('inv-count').textContent = list.length;
   if (!list.length) {
-    el.innerHTML = '<div class="empty-state">' + (subsData && subsData.invoicesEnabled ? 'Счетов пока нет.' : 'Оплата от компании выключена (COMPANY_INVOICES_ENABLED=0) — счетов нет.') + '</div>';
+    el.innerHTML = '<div class="empty-state">' + (subsData && subsData.invoicesEnabled ? 'Счетов пока нет.' : 'Оплата от компании выключена — счетов нет.') + '</div>';
     return;
   }
   var today = subsData.today || '';
@@ -3796,6 +3916,7 @@ if (getToken()) { showData(); } else { showGate(); }
   function init() {
     var c = document.getElementById('content');
     if (!c || document.getElementById('admNav')) return;
+    secActions(c);
     var cur = 'overview';
     Array.prototype.slice.call(c.children).forEach(function (el) {
       if (el.matches && el.matches('p.sec-title')) {
@@ -3809,10 +3930,31 @@ if (getToken()) { showData(); } else { showGate(); }
     nav.innerHTML = GROUPS.map(function (g) {
       return '<button type="button" data-adm-tab-btn="' + g[0] + '">' + g[1] + (g[0] === 'inbox' ? '<span class="badge" id="admInboxBadge" hidden></span>' : '') + '</button>';
     }).join('');
-    c.insertBefore(nav, c.firstChild);
+    // pack-v611: стрелки прокрутки, как у фильтра городов на сайте
+    var box = document.createElement('div');
+    box.className = 'adm-navbox';
+    box.setAttribute('data-adm-tab', '*');
+    box.appendChild(nav);
+    ['prev', 'next'].forEach(function (dir) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'adm-hs ' + dir; b.textContent = dir === 'next' ? '›' : '‹';
+      b.setAttribute('aria-label', dir === 'next' ? 'Листать вправо' : 'Листать влево');
+      b.addEventListener('click', function () { nav.scrollBy({ left: (dir === 'next' ? 1 : -1) * nav.clientWidth * 0.66, behavior: 'smooth' }); });
+      box.appendChild(b);
+    });
+    function upd() {
+      var max = nav.scrollWidth - nav.clientWidth;
+      box.classList.toggle('can-prev', nav.scrollLeft > 4);
+      box.classList.toggle('can-next', max - nav.scrollLeft > 4);
+    }
+    nav.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    c.insertBefore(box, c.firstChild);
+    setTimeout(upd, 0);
+    new MutationObserver(upd).observe(c, { attributes: true, attributeFilter: ['style'] });
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('[data-adm-tab-btn]');
-      if (b) show(b.getAttribute('data-adm-tab-btn'), true);
+      if (b) { show(b.getAttribute('data-adm-tab-btn'), true); b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }
     });
     var start = (location.hash || '').replace('#', '');
     if (!GROUPS.some(function (g) { return g[0] === start; })) {
@@ -3826,6 +3968,49 @@ if (getToken()) { showData(); } else { showGate(); }
     });
     badge();
   }
+  // pack-v611: кнопки — не в строке заголовка, а строкой под ним; вторичные
+  // (CSV, сброс тестовых) — в «Ещё ▾». Одно правило для всех разделов.
+  var SECONDARY = /csv|сбросить тестов/i;
+  function secActions(c) {
+    Array.prototype.slice.call(c.querySelectorAll(':scope > p.sec-title')).forEach(function (t) {
+      var btns = Array.prototype.slice.call(t.querySelectorAll('button'));
+      if (!btns.length) return;
+      var row = document.createElement('div');
+      row.className = 'sec-actions';
+      var more = btns.filter(function (b) { return SECONDARY.test(b.textContent); });
+      btns.filter(function (b) { return !SECONDARY.test(b.textContent); }).forEach(function (b) { row.appendChild(b); });
+      if (more.length) {
+        var d = document.createElement('details');
+        d.className = 'adm-menu';
+        d.innerHTML = '<summary class="mini-btn">Ещё ▾</summary><div class="adm-menu-list"></div>';
+        more.forEach(function (b) { d.lastChild.appendChild(b); });
+        row.appendChild(d);
+      }
+      t.parentNode.insertBefore(row, t.nextSibling);
+    });
+  }
+  // Меню «Ещё ▾»: закрыть после выбора и по щелчку мимо.
+  document.addEventListener('click', function (e) {
+    var item = e.target.closest && e.target.closest('.adm-menu-list button');
+    Array.prototype.slice.call(document.querySelectorAll('details.adm-menu[open]')).forEach(function (d) {
+      if (item ? d.contains(item) : !d.contains(e.target)) d.open = false;
+    });
+  });
+  // Список меню не уходит за край экрана: открыли — проверили, куда помещается
+  // (влево от кнопки или вправо), и прижали к той стороне.
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (!d || !d.classList || !d.classList.contains('adm-menu') || !d.open) return;
+    var list = d.querySelector('.adm-menu-list');
+    if (!list) return;
+    d.classList.remove('flip-l', 'flip-r');
+    var vw = document.documentElement.clientWidth;
+    var r = list.getBoundingClientRect();
+    if (r.right > vw - 8) d.classList.add('flip-r');
+    else if (r.left < 8) d.classList.add('flip-l');
+    r = list.getBoundingClientRect();
+    if (r.left < 8 || r.right > vw - 8) d.classList.add('flip-fit');
+  }, true);
   function badge() {
     var n = ['ld-new', 'ap-new', 'rv-pending'].reduce(function (a, id) {
       var el = document.getElementById(id); return a + (el ? Number(el.textContent) || 0 : 0);
@@ -3837,7 +4022,7 @@ if (getToken()) { showData(); } else { showGate(); }
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
     var c = document.getElementById('content');
     Array.prototype.slice.call(c.children).forEach(function (el) {
-      if (el.id === 'admNav') return;
+      if (el.getAttribute('data-adm-tab') === '*') return;
       el.classList.toggle('adm-off', el.getAttribute('data-adm-tab') !== tab);
     });
     Array.prototype.slice.call(document.querySelectorAll('[data-adm-tab-btn]')).forEach(function (b) {
@@ -3846,8 +4031,8 @@ if (getToken()) { showData(); } else { showGate(); }
     try { localStorage.setItem('aelita_admin_tab', tab); } catch (e) {}
     if (user) {
       try { history.replaceState(null, '', '#' + tab); } catch (e) {}
-      var nav = document.getElementById('admNav');
-      if (nav && nav.getBoundingClientRect().top < 0) nav.scrollIntoView();
+      var nb = document.querySelector('.adm-navbox');
+      if (nb && nb.getBoundingClientRect().top < 0) nb.scrollIntoView();
     }
   }
   window.AELITA_adminTab = show;

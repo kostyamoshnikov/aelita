@@ -305,10 +305,13 @@ window.AELITA_formMessageClear = function (anchorEl) {
 // ещё можно прокрутить; по нажатию лента сдвигается на ~2/3 ширины.
 (function () {
   var en = document.documentElement.lang === 'en';
-  document.querySelectorAll('.filters').forEach(function (strip) {
+  // pack-v611: та же листалка — и у других лент, которые на телефоне
+  // уходят за край: дни программы (/tochkacuire), фильтр проектов, вкладки
+  // «Сотрудничества». У .filters — прежний отступ снизу (hscroll-filters).
+  document.querySelectorAll('.filters, .days-tabs, .filter-bar, .collab-tabs').forEach(function (strip) {
     if (strip.parentNode.classList.contains('hscroll')) return;
     var box = document.createElement('div');
-    box.className = 'hscroll';
+    box.className = 'hscroll' + (strip.classList.contains('filters') ? ' hscroll-filters' : '');
     strip.parentNode.insertBefore(box, strip);
     box.appendChild(strip);
     function mk(dir) {
@@ -332,7 +335,7 @@ window.AELITA_formMessageClear = function (anchorEl) {
     window.addEventListener('resize', upd);
     // выбранный город — целиком в видимой части
     strip.addEventListener('click', function (e) {
-      var btn = e.target.closest('.filter-btn');
+      var btn = e.target.closest('.filter-btn, .day-tab, button, a');
       if (btn && btn.scrollIntoView) btn.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     });
     upd();
