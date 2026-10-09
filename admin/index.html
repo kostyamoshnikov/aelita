@@ -1142,7 +1142,7 @@ async function exportCustomer(email) {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
 }
 
 // ── Удаление клиента ─────────────────────────────────────────────
@@ -1643,7 +1643,7 @@ function exportEventCsv(ev) {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
 }
 
 async function loadEvents() {
@@ -1762,7 +1762,7 @@ document.getElementById('refundsBlock').addEventListener('click', async function
       var a = document.createElement('a');
       a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
     } catch (e2) {
       alert('Не удалось скачать документ.');
     } finally {
@@ -2265,7 +2265,7 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
   var a = document.createElement('a');
   a.href = url; a.download = 'aelita-orders.csv';
   document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
 });
 
 // ── Продажи по показам (pack-v571, ТЗ С6) ─────────────────────────
@@ -2422,7 +2422,7 @@ async function salesAction(card, act) {
       var a = document.createElement('a');
       a.href = url; a.download = 'aelita-zriteli-' + id + '.pdf';
       document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
       box.textContent = '';
       return;
     }
@@ -2441,7 +2441,7 @@ async function salesAction(card, act) {
     var a2 = document.createElement('a');
     a2.href = url2; a2.download = 'aelita-zriteli-' + id + '.csv';
     document.body.appendChild(a2); a2.click(); a2.remove();
-    URL.revokeObjectURL(url2);
+    setTimeout(function () { URL.revokeObjectURL(url2); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
     box.textContent = 'Зрителей: ' + (d3.rows || []).length + '.';
   } catch (e) {
     box.textContent = 'Не получилось связаться с сервером.';
@@ -2626,7 +2626,7 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
   var a = document.createElement('a');
   a.href = url; a.download = 'aelita-unfinished-orders.csv';
   document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
 });
 
 // ── Пригласительные (pack-v587) ─────────────────────────────────
@@ -3581,7 +3581,7 @@ document.getElementById('subsCsvBtn').addEventListener('click', function () {
   var a = document.createElement('a');
   a.href = url; a.download = 'aelita-subscriptions.csv';
   document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
 });
 
 // ── Подарочные карты (TICKETS_TODO.md, п.6) ───────────────────────

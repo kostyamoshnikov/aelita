@@ -66,6 +66,7 @@ input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);co
 .status{font-size:0.9375rem;font-weight:500;padding:6px 0}
 .status.ok{color:var(--ok)}
 .status.warn{color:var(--warn)}
+.day-warn{color:var(--warn);font-weight:600;font-size:0.9375rem;margin:-6px 0 12px}
 button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:0.875rem;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
 #net-badge{display:none;background:#4A1010;border:1px solid var(--warn);color:#F2C6B0;font-size:0.75rem;padding:8px 10px;border-radius:3px;text-align:center;margin-bottom:12px}
@@ -130,19 +131,12 @@ button.action:disabled{opacity:.5}
      ответа. Номер — тот же контакт, что и на сайте (facts.json). -->
 <a class="help-fab" href="tel:+79605151690">🆘 Позвать помощь</a>
 
-<!-- pack-v201: jsQR — единственная внешняя JS-зависимость на сайте
-     (везде до этого только собственный код, см. README.md, «Внешние
-     зависимости»). Самостоятельно собрать декодер QR из кадров видео —
-     несоразмерная работа против готовой проверенной библиотеки; в
-     контейнере сборки пака нет сети, чтобы скачать и заложить файл
-     локально (см. qr_gen.py — та же причина, по которой генератор QR
-     в паке не использует pip-пакет), поэтому подключено с cdnjs. Если
-     захотите самостоятельно захостить — файл один, ~30 КБ, положить
-     в /assets/jsQR.js и поменять src ниже на локальный путь. Работает
-     только как ДОПОЛНЕНИЕ к сканеру-пистолету/ручному вводу, не
-     замена — сканер остаётся основным способом (надёжнее, не спрашивает
-     разрешение камеры на каждом устройстве контролёра). -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js"></script>
+<!-- pack-v201: камера-сканер QR — jsQR (Apache 2.0). Дополнение к сканеру-
+     пистолету и ручному вводу, не замена. -->
+<!-- pack-v619: jsQR — локальная копия (/assets/jsQR-1.4.0.js): cdnjs на площадке
+     может не открыться (Cloudflare в РФ замедляют). Где есть встроенный
+     BarcodeDetector (Chrome на Android) — сначала он, jsQR — запасной. -->
+<script src="/assets/jsQR-1.4.0.js"></script>
 <script src="/assets/analytics-events.js"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
@@ -219,6 +213,13 @@ function fmtTime(iso){
   const d = new Date(iso);
   return isNaN(d) ? '' : d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Moscow'});
 }
+// pack-v619: дата показа по Москве ≠ сегодня по Москве.
+function moscowDay(d){ return d.toLocaleDateString('ru-RU', {timeZone:'Europe/Moscow'}); }
+function isOtherDay(iso){
+  if(!iso) return false;
+  const d = new Date(iso);
+  return !isNaN(d) && moscowDay(d) !== moscowDay(new Date());
+}
 function fmtWhen(iso){
   if(!iso) return '';
   const d = new Date(iso);
@@ -231,6 +232,13 @@ function fmtWhen(iso){
 // что контролёр сам заметит несовпадающее название в карточке.
 // pack-v592: в плашке — и дата (ИОВ 23.10 и 25.10 иначе неразличимы).
 const expectedPerformanceId = new URLSearchParams(location.search).get('performance') || null;
+// pack-v619: без ?performance= сервер билет с другого показа НЕ отклоняет —
+// предупреждаем на виду, а в карточке билета на другой день — красная строка.
+if (!expectedPerformanceId) {
+  const el = document.getElementById('performance-badge');
+  el.textContent = '⚠️ Показ не выбран — сверяйте название и ДАТУ в карточке. Лучше открыть ссылку контроля своего показа (…/tickets-scan/?performance=…)';
+  el.style.display = 'block';
+}
 if (expectedPerformanceId) {
   fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(expectedPerformanceId)}`)
     .then((r) => r.ok ? r.json() : null)
@@ -471,8 +479,8 @@ const cameraCanvas = document.getElementById('camera-canvas');
 cameraToggleBtn.addEventListener('click', () => { cameraStream ? stopCamera() : startCamera(); });
 
 async function startCamera(){
-  if(typeof jsQR !== 'function'){
-    // cdnjs не отдал файл (нет сети на площадке в момент загрузки страницы
+  if(typeof jsQR !== 'function' && !('BarcodeDetector' in window)){
+    // файл jsQR не загрузился (нет сети на площадке в момент загрузки страницы
     // и т.п.) — сканер-пистолет и ручной ввод продолжают работать как
     // раньше, камера просто недоступна в этот раз.
     document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
@@ -480,7 +488,7 @@ async function startCamera(){
     return;
   }
   try{
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } } });
   }catch(e){
     // Отказ в разрешении / нет камеры на устройстве — не ошибка контроля,
     // сканер-пистолет остаётся основным способом.
@@ -488,6 +496,13 @@ async function startCamera(){
     cameraStream = null;
     refocus();
     return;
+  }
+  barcodeDetector = null;
+  if('BarcodeDetector' in window){
+    try{
+      const fmts = BarcodeDetector.getSupportedFormats ? await BarcodeDetector.getSupportedFormats() : ['qr_code'];
+      if(fmts.indexOf('qr_code') >= 0) barcodeDetector = new BarcodeDetector({formats: ['qr_code']});
+    }catch(e){ barcodeDetector = null; }
   }
   cameraVideo.srcObject = cameraStream;
   cameraVideo.style.display = 'block';
@@ -507,28 +522,56 @@ function stopCamera(){
   refocus();
 }
 
-function cameraTick(){
+// pack-v619: кадр уменьшается до 800 px по длинной стороне (на дешёвом
+// телефоне jsQR по кадру 1080p — сотни мс, камера «тормозит»); сначала
+// встроенный BarcodeDetector, если есть. Один и тот же QR, пока он в
+// кадре, повторно не проверяется (окно сдвигается с каждым кадром) —
+// иначе после «Пропустить» билет, ещё лежащий под камерой, через 2,5 с
+// превращался в жёлтое «Уже погашен» поверх «Пропущен».
+let barcodeDetector = null;
+let cameraBusy = false;
+let cameraFrame = 0;
+const CAMERA_MAX_SIDE = 800;
+function cameraSeen(text){
+  const now = Date.now();
+  const same = text === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS;
+  cameraLastCode = text;
+  cameraLastAt = now;
+  if(same) return;
+  lastScanFrom = 'camera';
+  handleScan(text);
+}
+async function cameraTick(){
   if(!cameraStream) return; // остановлена между кадрами
-  if(cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA){
-    cameraCanvas.width = cameraVideo.videoWidth;
-    cameraCanvas.height = cameraVideo.videoHeight;
-    const ctx = cameraCanvas.getContext('2d', { willReadFrequently: true });
-    ctx.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
-    const frame = ctx.getImageData(0, 0, cameraCanvas.width, cameraCanvas.height);
-    const code = jsQR(frame.data, frame.width, frame.height);
-    if(code && code.data){
-      const now = Date.now();
-      // тот же билет второй раз подряд в течение окна — контролёр ещё не
-      // убрал его из кадра, не шлём повторный handleScan на каждый кадр
-      if(!(code.data === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS)){
-        cameraLastCode = code.data;
-        cameraLastAt = now;
-        lastScanFrom = 'camera';
-        handleScan(code.data);
+  if(!cameraBusy && cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA){
+    cameraBusy = true;
+    try{
+      let text = null;
+      if(barcodeDetector){
+        try{
+          const codes = await barcodeDetector.detect(cameraVideo);
+          if(codes && codes.length && codes[0].rawValue) text = codes[0].rawValue;
+        }catch(e){ barcodeDetector = null; } // сломался — дальше jsQR
       }
-    }
+      // Встроенный детектор ничего не нашёл — каждый 4-й кадр ещё и jsQR
+      // (бывает, что BarcodeDetector есть, но QR с экрана телефона не видит).
+      cameraFrame++;
+      if(!text && (!barcodeDetector || cameraFrame % 4 === 0) && typeof jsQR === 'function'){
+        const vw = cameraVideo.videoWidth, vh = cameraVideo.videoHeight;
+        const k = Math.min(1, CAMERA_MAX_SIDE / Math.max(vw, vh));
+        const w = Math.max(1, Math.round(vw * k)), h = Math.max(1, Math.round(vh * k));
+        cameraCanvas.width = w;
+        cameraCanvas.height = h;
+        const ctx = cameraCanvas.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(cameraVideo, 0, 0, w, h);
+        const frame = ctx.getImageData(0, 0, w, h);
+        const code = jsQR(frame.data, w, h, { inversionAttempts: 'attemptBoth' });
+        if(code && code.data) text = code.data;
+      }
+      if(text && cameraStream) cameraSeen(text);
+    } finally { cameraBusy = false; }
   }
-  cameraLoopId = requestAnimationFrame(cameraTick);
+  if(cameraStream) cameraLoopId = requestAnimationFrame(cameraTick);
 }
 
 // ─── Карточки (pack-v592, ревью 07.10, мелочи: «currentToken — один на всё») ──
@@ -696,6 +739,7 @@ function renderTicket(data, ctx, state){
       <div class="name">${escapeHtml(data.name || '')}</div>
       <div class="detail">${where}</div>
       <div class="detail">${seat}${num ? ' · ' + num : ''}</div>
+      ${(!expectedPerformanceId && isOtherDay(data.datetime) && (state === 'valid' || state === 'undone')) ? '<div class="day-warn">⚠️ Билет НЕ на сегодня — проверьте дату показа выше. Не сегодняшний — не пропускать.</div>' : ''}
       <div class="status ${warn?'warn':'ok'}${state==='passed'?' big':''}">${escapeHtml(status)}</div>
       ${action}
     </div>`);
