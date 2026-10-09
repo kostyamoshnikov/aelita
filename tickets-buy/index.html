@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=84">
+<link rel="stylesheet" href="/assets/fonts.css?v=85">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -510,7 +510,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=84"></script>
+<script src="/assets/payments.js?v=85"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2433,7 +2433,7 @@ init();
      нигде, и статистика по нему не собиралась вовсе. Разметка и стили
      инлайн, повторяют вид общего баннера. -->
 <div id="cookie-banner">
-  <p>Мы используем cookies для аналитики и улучшения сайта. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="/cookies">политикой cookies</a> и <a href="/privacy">политикой конфиденциальности</a>.</p>
+  <p>Мы используем cookies для аналитики и улучшения сайта. Счётчики включаются, только если вы нажмёте «Принять». Подробнее — в <a href="/cookies">политике cookies</a> и <a href="/privacy">политике конфиденциальности</a>.</p>
   <div class="cookie-actions">
     <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/cookies'">Подробнее</button>
     <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Принять</button>
@@ -2457,6 +2457,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=84"></script>
+<script src="/assets/phone-prefix.js?v=85"></script>
 </body>
 </html>
