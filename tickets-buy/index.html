@@ -166,6 +166,22 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
    ≈68px: padding 14+14 + содержимое ≈40) с учётом безопасной зоны
    у телефонов с жестовой навигацией. */
 .help-tg{bottom:calc(68px + 12px + 44px + env(safe-area-inset-bottom,0px))!important}
+/* pack-v607: помощь — компактная «?» над панелью оплаты */
+.help-dock{position:fixed;left:12px;bottom:calc(68px + 12px + env(safe-area-inset-bottom,0px));z-index:5}
+.help-dock.kb,body.paid .help-dock{display:none}
+.help-fab{display:flex;align-items:center;gap:8px;height:36px;min-width:36px;justify-content:center;border-radius:18px;background:var(--coal);border:1px solid rgba(214,181,122,.35);color:var(--sand);padding:0 11px;font:inherit;font-size:.8125rem;cursor:pointer;opacity:.8}
+.help-fab-q{font-weight:500}
+.help-fab-txt{display:none}
+.help-dock.alert .help-fab,.help-dock.open .help-fab{opacity:1;border-color:var(--gold);color:var(--gold)}
+.help-dock.alert .help-fab-txt,.help-dock.open .help-fab-txt{display:inline}
+.help-menu{position:absolute;left:0;bottom:44px;display:flex;flex-direction:column;min-width:250px;max-width:calc(100vw - 24px);background:var(--coal);border:1px solid rgba(214,181,122,.4);border-radius:12px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.help-menu[hidden]{display:none}
+.help-item{display:block;padding:11px 12px;color:var(--sand);text-decoration:none;font-size:.875rem;border-radius:8px}
+.help-item:hover,.help-item:focus{background:rgba(214,181,122,.08);color:var(--gold)}
+/* pack-v607: вход по коду из письма на странице покупки */
+.acct-code{margin-top:10px}
+.msg a{color:var(--gold)}
+.acct-code input{letter-spacing:.3em;font-size:1.125rem}
 .wl-box{margin-top:16px}
 .wl-box .wl-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .wl-box select{background:var(--coal);color:var(--sand);border:1px solid var(--sand);border-radius:6px;padding:6px}
@@ -368,6 +384,15 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
       <label class="f-label" for="f-password">Пароль *</label>
       <input class="ym-disable-keys" id="f-password" type="password" autocomplete="new-password" placeholder="Не короче 8 символов">
       <div class="field-hint"><a href="#" id="acct-mode-link" onclick="toggleAcctMode();return false">Уже есть кабинет? Войти</a></div>
+      <div class="field-hint" id="acct-code-link-row" hidden><a href="#" id="acct-code-link" onclick="sendLoginCode();return false">Войти по коду из письма — без пароля</a></div>
+      <!-- pack-v607: вход по коду. Почта уже в кабинете — код уходит сам,
+           человек вводит 6 цифр, и оплата продолжается без пароля. -->
+      <div class="acct-code" id="acct-code" hidden>
+        <div class="field-hint" id="acct-code-hint"></div>
+        <label class="f-label" for="f-code">Код из письма *</label>
+        <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+        <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Прислать код ещё раз</a> · <a href="#" onclick="usePassword();return false">Войти паролем</a></div>
+      </div>
     </div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
   </div>
@@ -380,10 +405,21 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
      ещё раз». pack-v440: здесь была ссылка «позвонить». Заменена на почту —
      письмо остаётся у человека и у нас в переписке, с ним видно номер
      заказа и время, а звонок в нерабочее время упирается в тишину. -->
-<a class="help-link" href="mailto:aelita.production@yandex.ru">🆘 Нужна помощь? aelita.production@yandex.ru</a>
 <!-- ТЗ Н6: та же помощь в Telegram — ссылка несёт показ, шаг, ошибку и
      время (без личных данных), бот сразу пишет команде. -->
-<a class="help-link help-tg" id="help-tg" href="https://t.me/aelita_production_bot?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tickets-buy" target="_blank" rel="noopener">✈️ Помощь в Telegram</a>
+<!-- pack-v607 (заказчик 09.10: «кнопки помощи при покупке слишком мешаются»):
+     вместо двух пилюль поверх формы — маленькая «?» у края. Раскрывается
+     надписью «Нужна помощь?» только когда что-то пошло не так (ошибка
+     сервера, таймаут, экран ошибки) или человек больше двух минут стоит
+     на шаге контактов; пока набирают текст (клавиатура открыта) — скрыта.
+     Нажатие — меню: Telegram (ссылка несёт показ, шаг и ошибку) и почта. -->
+<div class="help-dock" id="help-dock">
+  <div class="help-menu" id="help-menu" hidden>
+    <a class="help-item help-tg" id="help-tg" href="https://t.me/aelita_production_bot?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tickets-buy" target="_blank" rel="noopener">✈️ Помощь в Telegram</a>
+    <a class="help-item" href="mailto:aelita.production@yandex.ru">✉️ aelita.production@yandex.ru</a>
+  </div>
+  <button type="button" class="help-fab" id="help-fab" aria-expanded="false" aria-controls="help-menu" aria-label="Помощь" onclick="toggleHelp()"><span class="help-fab-q" aria-hidden="true">?</span><span class="help-fab-txt">Нужна помощь?</span></button>
+</div>
 
 
 <!-- Промокод. Раскрывающееся поле, а не всегда видимое: у большинства
@@ -475,7 +511,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=80"></script>
+<script src="/assets/payments.js?v=81"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -550,6 +586,38 @@ function helpCode(){
   const err = String((lastProblem && lastProblem.code) || '').toLowerCase().replace(/[^a-z0-9_]/g,'_').slice(0, Math.max(0, Math.min(24, 64 - head.length)));
   return head + err;
 }
+// pack-v607: компактная помощь — когда показывать надпись и когда прятать.
+function helpDock(){ return document.getElementById('help-dock'); }
+function toggleHelp(force){
+  const dock = helpDock(); if(!dock) return;
+  const menu = document.getElementById('help-menu');
+  const open = typeof force === 'boolean' ? force : menu.hidden;
+  menu.hidden = !open;
+  dock.classList.toggle('open', open);
+  document.getElementById('help-fab').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+function helpAlert(){ const dock = helpDock(); if(dock) dock.classList.add('alert'); }
+document.addEventListener('click', e => {
+  const dock = helpDock();
+  if(dock && !dock.contains(e.target)) toggleHelp(false);
+});
+// Клавиатура открыта (фокус в поле) — помощь не лежит поверх формы.
+document.addEventListener('focusin', e => {
+  const t = e.target;
+  if(t && t.matches && t.matches('input,select,textarea') && helpDock()) helpDock().classList.add('kb');
+});
+document.addEventListener('focusout', () => {
+  setTimeout(() => {
+    const a = document.activeElement;
+    if(helpDock() && !(a && a.matches && a.matches('input,select,textarea'))) helpDock().classList.remove('kb');
+  }, 150);
+});
+// Две минуты на шаге контактов без оплаты — подсказать, что помощь рядом.
+let helpStepSec = 0;
+setInterval(() => {
+  helpStepSec = document.body.classList.contains('step-2') ? helpStepSec + 10 : 0;
+  if(helpStepSec >= 120) helpAlert();
+}, 10000);
 document.addEventListener('click', e => {
   const a = e.target && e.target.closest && e.target.closest('#help-tg');
   if(a) a.href = 'https://t.me/aelita_production_bot?start=' + helpCode();
@@ -568,11 +636,13 @@ async function apiFetch(url, opts){
     try{ cold = res.headers.get('X-Aelita-Cold') === '1' ? 1 : 0; }catch(e){}
     perfPush({s: step, o: res.ok ? 'ok' : 'error', ms: Date.now() - t0, c: res.ok ? '' : String(res.status), k: cold});
     if(!res.ok) lastProblem = {step, code: 'http_' + res.status};
+    if(!res.ok && res.status >= 500 && typeof helpAlert === 'function') helpAlert();
     return res;
   }catch(e){
     const timeout = !!(e && e.name === 'AbortError');
     perfPush({s: step, o: timeout ? 'timeout' : 'network', ms: Date.now() - t0, c: ''});
     lastProblem = {step, code: timeout ? 'timeout' : 'network'};
+    if(typeof helpAlert === 'function') helpAlert();
     if(timeout){ const err = new Error('timeout'); err.aelitaTimeout = true; throw err; }
     throw e;
   }finally{
@@ -724,10 +794,12 @@ function applyAcctMode(){
   pw.autocomplete = login ? 'current-password' : 'new-password';
   document.getElementById('acct-mode-link').textContent = login
     ? 'Нет кабинета? Завести новый' : 'Уже есть кабинет? Войти';
+  if(typeof syncCodeLink === 'function') syncCodeLink();
   syncBuyButtonLabel();
 }
 
 function toggleAcctMode(){
+  if(codeMode) showCodeBox(false);
   acctMode = acctMode === 'login' ? 'register' : 'login';
   applyAcctMode();
   document.getElementById('f-password').focus();
@@ -761,6 +833,130 @@ async function detectAccount(){
   document.getElementById('acct-in').style.display = 'none';
 }
 
+// ─── pack-v607: вход по коду из письма прямо в покупке ───────────────
+// Заказчик 09.10: «если есть личный кабинет — сразу заходить, без лишних
+// действий». Почта уже в кабинете → код уходит сам (тот же сервер, что у
+// входа по коду в кабинете: account/request-login-code и
+// login-with-code), человек вводит 6 цифр — и заказ продолжается: 6-я
+// цифра сама нажимает «Оплатить». Пароль остаётся запасным путём.
+// Вход кодом подтверждает почту кабинета (раздел «Мои билеты» сразу
+// открыт).
+let codeMode = false;
+let codeSentTo = '';
+let codeBusy = false;
+
+function showCodeBox(on){
+  codeMode = on;
+  document.getElementById('acct-code').hidden = !on;
+  const pw = document.getElementById('f-password');
+  const pwLabel = document.querySelector('label[for="f-password"]');
+  pw.style.display = on ? 'none' : '';
+  if(pwLabel) pwLabel.style.display = on ? 'none' : '';
+  document.getElementById('acct-hint').style.display = on ? 'none' : '';
+  syncCodeLink();
+}
+
+function syncCodeLink(){
+  const row = document.getElementById('acct-code-link-row');
+  if(row) row.hidden = codeMode || acctMode !== 'login';
+}
+
+function usePassword(){
+  showCodeBox(false);
+  const pw = document.getElementById('f-password');
+  if(pw) pw.focus();
+}
+
+async function sendLoginCode(resend){
+  const msgEl = document.getElementById('msg');
+  const emailEl = document.getElementById('f-email');
+  const email = emailEl.value.trim().toLowerCase();
+  if(!AELITA_isValidEmail(email)){
+    AELITA_showFieldError(emailEl, 'Укажите email');
+    msgEl.textContent = 'Укажите email выше — на него придёт код для входа.';
+    emailEl.focus();
+    return false;
+  }
+  acctMode = 'login';
+  applyAcctMode();
+  showCodeBox(true);
+  msgEl.textContent = 'Отправляем код на почту…';
+  let res, out = {};
+  try{
+    res = await apiFetch(`${ACCOUNT_API}/request-login-code`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, lang:'ru'}),
+    });
+    try{ out = await res.json(); }catch(e){}
+  }catch(e){ res = null; }
+  if(res && res.ok && out.ok){
+    codeSentTo = email;
+    document.getElementById('acct-code-hint').textContent = 'Код отправлен на ' + email + ' (проверьте и «Спам»). Введите 6 цифр — и сразу перейдём к оплате.';
+    msgEl.textContent = '';
+    const c = document.getElementById('f-code');
+    c.value = '';
+    c.focus();
+    return true;
+  }
+  if(res && res.status === 429){ msgEl.textContent = 'Слишком много писем с кодом подряд — подождите несколько минут или войдите паролем.'; return false; }
+  msgEl.textContent = 'Не получилось отправить код — войдите паролем или напишите нам: aelita.production@yandex.ru';
+  usePassword();
+  return false;
+}
+
+// Код — вместо пароля. Возвращает токен или null (сообщение уже в #msg).
+async function loginWithCode(name, email){
+  const msgEl = document.getElementById('msg');
+  const codeEl = document.getElementById('f-code');
+  const code = (codeEl.value || '').replace(/\D+/g, '');
+  if(email.toLowerCase() !== codeSentTo){ await sendLoginCode(); return null; }
+  if(!/^\d{6}$/.test(code)){
+    AELITA_showFieldError(codeEl, 'Проверьте код');
+    msgEl.textContent = 'Введите 6 цифр из письма.';
+    codeEl.focus();
+    return null;
+  }
+  AELITA_clearFieldError(codeEl);
+  msgEl.textContent = 'Входим в кабинет…';
+  let res, out = {};
+  try{
+    res = await apiFetch(`${ACCOUNT_API}/login-with-code`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      // имя и согласие — на случай, если кабинета всё же нет: он заведётся тем же кодом
+      body: JSON.stringify({email, code, name, pd_consent: true}),
+    });
+    try{ out = await res.json(); }catch(e){}
+  }catch(e){
+    msgEl.textContent = 'Не получилось связаться с сервером — проверьте интернет и нажмите ещё раз.';
+    return null;
+  }
+  if(res.ok && out.token){
+    setToken(out.token);
+    codeEl.value = '';
+    showCodeBox(false);
+    showSignedIn({email: out.email || email, name: out.name || name});
+    return out.token;
+  }
+  if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Проверьте код'); msgEl.textContent = 'Код не подошёл — проверьте цифры' + (out.attemptsLeft ? ' (осталось попыток: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
+  if(out.error === 'code_expired' || out.error === 'code_attempts_exceeded'){ msgEl.textContent = 'Код устарел или попытки кончились — пришлём новый: нажмите «Прислать код ещё раз».'; return null; }
+  if(out.error === 'account_moved'){ msgEl.textContent = 'Почту этого кабинета сменили — укажите новую почту выше.'; return null; }
+  msgEl.textContent = 'Не получилось войти — попробуйте ещё раз через минуту или войдите паролем.';
+  return null;
+}
+
+// 6-я цифра — сразу дальше, без поиска кнопки «Оплатить».
+document.addEventListener('input', e => {
+  if(!e.target || e.target.id !== 'f-code') return;
+  const v = e.target.value.replace(/\D+/g, '').slice(0, 6);
+  if(e.target.value !== v) e.target.value = v;
+  if(v.length === 6 && !codeBusy){
+    const btn = document.getElementById('buy-btn');
+    if(btn && btn.disabled) return;
+    codeBusy = true;
+    Promise.resolve(submitOrder()).finally(() => { codeBusy = false; });
+  }
+});
+
 // Зарегистрировать или впустить гостя одним нажатием «Оплатить».
 // Возвращает токен или null (сообщение уже показано в #msg).
 async function ensureAccount(name, email){
@@ -773,6 +969,7 @@ async function ensureAccount(name, email){
     window.__aelitaLoginGoal = true;
     try{ if(window.AELITA_track) window.AELITA_track('ticket_login_required', { performance: performanceId, mode: acctMode }); }catch(e){}
   }
+  if(codeMode) return loginWithCode(name, email);
   const msgEl = document.getElementById('msg');
   const pwEl = document.getElementById('f-password');
   const password = pwEl.value;
@@ -782,12 +979,8 @@ async function ensureAccount(name, email){
     pwEl.focus();
     return null;
   }
-  if(acctMode === 'login' && !password){
-    AELITA_showFieldError(pwEl, 'Введите пароль');
-    msgEl.textContent = 'Введите пароль от личного кабинета.';
-    pwEl.focus();
-    return null;
-  }
+  // pack-v607: пароля нет — входим кодом из письма, а не ругаемся
+  if(acctMode === 'login' && !password){ await sendLoginCode(); return null; }
   AELITA_clearFieldError(pwEl);
   msgEl.textContent = acctMode === 'login' ? 'Входим в кабинет…' : 'Заводим личный кабинет…';
   const url = `${ACCOUNT_API}/${acctMode === 'login' ? 'login' : 'register'}`;
@@ -810,16 +1003,14 @@ async function ensureAccount(name, email){
   // покупателя. Не ругаемся, а переключаем форму на вход: пароль от
   // этого кабинета и есть следующий шаг.
   if(out.error === 'email_taken'){
-    acctMode = 'login';
-    applyAcctMode();
+    // pack-v607: кабинет уже есть — сразу шлём код на эту почту
     pwEl.value = '';
-    msgEl.innerHTML = 'На эту почту кабинет уже есть — введите пароль от него. <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Забыли пароль?</a>';
-    pwEl.focus();
+    if(await sendLoginCode()) msgEl.textContent = 'На эту почту уже есть кабинет — отправили на неё код для входа. Введите 6 цифр из письма, и сразу перейдём к оплате.';
     return null;
   }
   if(out.error === 'invalid_credentials'){
     AELITA_showFieldError(pwEl, 'Пароль не подошёл');
-    msgEl.innerHTML = 'Пароль не подошёл. <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Забыли пароль?</a>';
+    msgEl.innerHTML = 'Пароль не подошёл. <a href="#" onclick="sendLoginCode();return false">Войти по коду из письма</a> · <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Забыли пароль?</a>';
     pwEl.focus();
     return null;
   }
@@ -955,7 +1146,7 @@ function showAuthExpired(){
   acctMode = 'login';
   showGuest();
   const msgEl = document.getElementById('msg');
-  if(msgEl) msgEl.textContent = 'Сеанс в личном кабинете истёк — введите пароль ещё раз, и продолжим.';
+  if(msgEl) msgEl.innerHTML = 'Сеанс в личном кабинете истёк — введите пароль ещё раз, и продолжим. <a href="#" onclick="sendLoginCode();return false">Войти по коду из письма</a>';
   const pw = document.getElementById('f-password');
   if(pw){ pw.scrollIntoView({behavior:'smooth', block:'center'}); pw.focus(); }
 }
@@ -964,6 +1155,7 @@ function showError(text){
   document.getElementById('title').textContent = 'Не получилось';
   document.getElementById('error-text').textContent = text;
   document.getElementById('error-block').style.display = 'block';
+  if(typeof helpAlert === 'function') helpAlert();
   document.getElementById('err-cabinet').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
@@ -2266,6 +2458,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=80"></script>
+<script src="/assets/phone-prefix.js?v=81"></script>
 </body>
 </html>
