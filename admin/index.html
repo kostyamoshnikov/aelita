@@ -227,6 +227,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 /* pack-v571 (ТЗ С6): продажи по показам */
 .sales-line{color:var(--sand);font-size:0.75rem;margin-top:6px;line-height:1.6}
 .sales-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.st-code{margin-top:0;padding:12px 0;border-bottom:1px solid rgba(214,181,122,.15)}.st-code .sales-actions{margin-top:8px}
+.st-revoked{opacity:.55;text-decoration:line-through}
 .sales-detail{margin-top:14px}
 .sales-chart{width:100%;max-width:640px;height:auto;display:block;margin-top:10px}
 .sales-chart .bar{fill:var(--gold)}
@@ -544,6 +546,24 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <div id="invList"><div class="empty-state">Загружаем…</div></div>
       <p class="inv-recount" id="inv-recount" hidden></p>
       <details class="adm-more inv-mt14"><summary>Как работают пригласительные</summary><p>События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p></details>
+    </div>
+
+    <!-- pack-v621 (заказчик 09.10): код контролёра на каждый показ, каждому свой
+         (Tickets/lib/staff-codes.js, Admin/invites.js action staff_*). -->
+    <p class="sec-title sec-gap">Контролёры на входе</p>
+    <div class="editor-box" id="stBlock">
+      <div class="field">
+        <label for="st-show">Показ</label>
+        <select id="st-show"><option value="">Загружаем…</option></select>
+      </div>
+      <p class="editor-note" id="st-summary"></p>
+      <div class="inv-row">
+        <div class="field inv-w2"><label for="st-name">Имя контролёра</label><input class="ym-disable-keys" type="text" id="st-name" autocomplete="off" maxlength="60" placeholder="Мария Иванова"></div>
+        <div class="field"><label>&nbsp;</label><button class="btn-small" id="stAddBtn">Выдать код</button></div>
+      </div>
+      <p class="editor-result" id="stResult"></p>
+      <div id="stList"><div class="empty-state">—</div></div>
+      <details class="adm-more inv-mt14"><summary>Как работают коды контролёров</summary><p>Каждому контролёру — свой 6-значный код на один показ. Контролёр открывает aelita-production.ru/tickets-scan/ и вводит код: страница сама переключается на его показ, билеты других показов не проходят. Код действует с момента выдачи до 04:00 следующего за показом дня (перенесли показ — срок сдвигается сам), на отменённый показ — не действует. «Отозвать» — код перестаёт работать сразу, у остальных всё работает. В заказе у погашенного билета записано, кто пропустил. Общий код персонала (STAFF_ACCESS_CODE) остаётся — он действует на любой показ, держите его у администратора.</p></details>
     </div>
 
     <!-- pack-v600 (заказчик 08.10): отзывы и заявки бота — у нас, а не в Google Таблицах -->
@@ -2642,6 +2662,87 @@ async function invCall(body) {
   if (!res.ok) throw new Error(data.message || errorMessage(data));
   return data;
 }
+// ── pack-v621: контролёры на входе — код на показ каждому ─────────────────
+var ST_SHOWS = [], ST_DATA = null;
+function stWhen(iso) { return iso ? new Date(iso).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }) : ''; }
+async function loadStaffShows() {
+  var sel = document.getElementById('st-show');
+  if (!sel || !ADMIN_INVITES_URL || !getToken()) return;
+  try {
+    ST_SHOWS = (await invCall({ action: 'staff_shows' })).shows || [];
+    var keep = sel.value;
+    sel.innerHTML = ST_SHOWS.length ? ST_SHOWS.map(function (x) { return '<option value="' + escapeHtml(x.id) + '">' + escapeHtml(x.title) + ' — ' + escapeHtml(stWhen(x.datetime)) + (x.canceled ? ' · ОТМЕНЁН' : '') + '</option>'; }).join('') : '<option value="">Показов нет</option>';
+    if (keep && ST_SHOWS.some(function (x) { return x.id === keep; })) sel.value = keep;
+    else {
+      var now = Date.now(), next = ST_SHOWS.find(function (x) { return Date.parse(x.datetime) + 6 * 3600e3 > now; });
+      if (next) sel.value = next.id;
+    }
+    loadStaffCodes();
+  } catch (e) {
+    sel.innerHTML = '<option value="">Не загрузилось</option>';
+    document.getElementById('stList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') + '</div>';
+  }
+}
+function stMessage(c) {
+  var p = ST_DATA && ST_DATA.performance;
+  return c.name + ', ваш код контролёра на «' + (p ? p.title : '') + '» ' + (p ? stWhen(p.datetime) : '') + ': ' + c.code +
+    '\nСтраница контроля: https://aelita-production.ru/tickets-scan/ — откройте и введите код.' +
+    (ST_DATA && ST_DATA.validTo ? '\nКод действует до ' + stWhen(ST_DATA.validTo) + '. Никому его не пересылайте.' : '');
+}
+function renderStaffCodes() {
+  var el = document.getElementById('stList'), sum = document.getElementById('st-summary');
+  var list = (ST_DATA && ST_DATA.codes) || [];
+  var active = list.filter(function (c) { return !c.revokedAt; });
+  sum.textContent = ST_DATA ? 'Действующих кодов: ' + active.length + (ST_DATA.validTo ? ' · действуют до ' + stWhen(ST_DATA.validTo) : '') + (ST_DATA.performance.canceled ? ' · показ отменён — коды не действуют' : '') : '';
+  if (!list.length) { el.innerHTML = '<div class="empty-state">Кодов на этот показ ещё нет.</div>'; return; }
+  // список, не таблица: на телефоне кнопки не уезжают за край; отозванные — в конце
+  el.innerHTML = active.concat(list.filter(function (c) { return c.revokedAt; })).map(function (c) {
+    return '<div class="sales-line st-code' + (c.revokedAt ? ' st-revoked' : '') + '"><b>' + escapeHtml(c.name) + '</b> · ' + (c.revokedAt ? 'код отозван' : 'код <b>' + escapeHtml(c.code) + '</b>') + ' · выдан ' + escapeHtml(stWhen(c.createdAt)) +
+      (c.revokedAt ? '' : '<div class="sales-actions"><button class="mini-btn" data-st-act="copy" data-st-id="' + escapeHtml(c.id) + '">Скопировать сообщение</button><button class="mini-btn" data-st-act="revoke" data-st-id="' + escapeHtml(c.id) + '">Отозвать</button></div>') + '</div>';
+  }).join('');
+}
+async function loadStaffCodes() {
+  var pid = document.getElementById('st-show').value;
+  if (!pid) { ST_DATA = null; renderStaffCodes(); return; }
+  try { ST_DATA = await invCall({ action: 'staff_codes_list', performance_id: pid }); renderStaffCodes(); }
+  catch (e) { document.getElementById('stList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') + '</div>'; }
+}
+async function stCopy(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) { window.prompt('Скопируйте сообщение:', text); return false; }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var sel = document.getElementById('st-show');
+  if (!sel) return;
+  sel.addEventListener('change', loadStaffCodes);
+  var res = document.getElementById('stResult');
+  document.getElementById('stAddBtn').addEventListener('click', async function () {
+    var name = document.getElementById('st-name').value.trim();
+    if (!name) { invShow(res, 'Впишите имя контролёра.', false); return; }
+    this.disabled = true;
+    try {
+      var r = await invCall({ action: 'staff_code_create', performance_id: sel.value, name: name });
+      document.getElementById('st-name').value = '';
+      await loadStaffCodes();
+      invShow(res, 'Код для «' + r.code.name + '»: ' + r.code.code + '. Сообщение для отправки — кнопкой «Скопировать сообщение».', true);
+    } catch (e) { invShow(res, e.message || 'Не получилось', false); }
+    finally { this.disabled = false; }
+  });
+  document.getElementById('st-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('stAddBtn').click(); });
+  document.getElementById('stList').addEventListener('click', async function (ev) {
+    var b = ev.target.closest('[data-st-act]');
+    if (!b) return;
+    var c = ((ST_DATA && ST_DATA.codes) || []).find(function (x) { return x.id === b.getAttribute('data-st-id'); });
+    if (!c) return;
+    if (b.getAttribute('data-st-act') === 'copy') {
+      if (await stCopy(stMessage(c))) invShow(res, 'Сообщение для «' + c.name + '» скопировано — отправьте ему лично.', true);
+      return;
+    }
+    if (!window.confirm('Отозвать код «' + c.name + '»? Он сразу перестанет работать на входе.')) return;
+    try { await invCall({ action: 'staff_code_revoke', performance_id: sel.value, id: c.id }); await loadStaffCodes(); invShow(res, 'Код «' + c.name + '» отозван.', true); }
+    catch (e) { invShow(res, e.message || 'Не получилось', false); }
+  });
+});
+
 // ── pack-v600: отзывы и заявки из бота (Admin/inbox.js) ─────────────────
 var RV_LIST = [], AP_LIST = [];
 var TG_PROFILE = 'https://t.me/'; // профиль автора заявки (внутренняя ссылка админки — без UTM)
@@ -3704,6 +3805,7 @@ async function loadData(opts) {
     loadRefunds();
     loadPerfActions(); // pack-v568
     loadInviteEvents(); // pack-v587
+    loadStaffShows(); // pack-v621
     loadReviewsAdmin(); loadAppsAdmin(); loadLeadsAdmin(); // pack-v600, v601
     loadSales(); // pack-v571
     loadOrders();
@@ -3899,6 +4001,7 @@ if (getToken()) { showData(); } else { showGate(); }
     ['orders', 'Заказы', ['Заказы билетов', 'Незавершённые заказы', 'Заявления на возврат']],
     ['shows', 'Показы', ['Показы:', 'Баннер о сбое']],
     ['invites', 'Пригласительные', ['Пригласительные']],
+    ['staff', 'Контролёры', ['Контролёры на входе']],
     ['inbox', 'Входящие', ['Отзывы', 'Заявки с сайта', 'Заявки из бота']],
     ['events', 'Регистрации', ['Регистрации на встречи']],
     ['clients', 'Клиенты', ['Клиенты']],

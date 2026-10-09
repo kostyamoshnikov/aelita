@@ -176,9 +176,9 @@ function submitGate(){
   // Сразу проверяем код лёгким запросом. pack-v592: 'ping' — без обращения
   // к заказам (раньше — 'undo' с выдуманным id). Неверный код → 401 →
   // api() вернёт на экран кода; прочие ответы здесь не важны.
-  api('ping', {}).then(()=>flushQueue()).catch(()=>{});
+  api('ping', {}).then((d)=>{ applyStaff(d && d.staff); flushQueue(); }).catch(()=>{});
 }
-if(!getStaffCode()){ showGate(); } else { showApp(); }
+// pack-v621: первый экран (код / сканер) — в САМОМ КОНЦЕ скрипта, см. там.
 
 // pack-v592 (ревью 07.10, В3): сканер-пистолет печатает в то поле, где
 // фокус. После нажатия кнопки фокус оставался на кнопке (или пропадал
@@ -231,24 +231,50 @@ function fmtWhen(iso){
 // явно (см. ticket-check.js, wrong_performance), а не полагается на то,
 // что контролёр сам заметит несовпадающее название в карточке.
 // pack-v592: в плашке — и дата (ИОВ 23.10 и 25.10 иначе неразличимы).
-const expectedPerformanceId = new URLSearchParams(location.search).get('performance') || null;
+const urlPerformanceId = new URLSearchParams(location.search).get('performance') || null;
+let expectedPerformanceId = urlPerformanceId;
+// pack-v621: код контролёра (выдан в админке на показ) сам задаёт показ —
+// сервер отвечает на 'ping' его именем и показом. Запоминаем, чтобы и после
+// перезагрузки без связи страница знала показ; сервер всё равно сверяет сам.
+const STAFF_INFO_KEY = 'aelita-tickets-staff-info';
+let staffInfo = null;
+try{ const si = JSON.parse(lsGet(STAFF_INFO_KEY) || 'null'); if(si && si.code === getStaffCode()) staffInfo = si; }catch(e){}
+if(staffInfo && staffInfo.performanceId) expectedPerformanceId = staffInfo.performanceId;
+function applyStaff(st){
+  if(!st) return;
+  if(st.role === 'controller' && st.performanceId){
+    staffInfo = { code: getStaffCode(), name: st.name || '', performanceId: st.performanceId, production: st.production || '', datetime: st.datetime || null };
+    lsSet(STAFF_INFO_KEY, JSON.stringify(staffInfo));
+    expectedPerformanceId = st.performanceId;
+  } else {
+    staffInfo = null; lsDel(STAFF_INFO_KEY);
+    expectedPerformanceId = urlPerformanceId;
+  }
+  renderBadge();
+}
 // pack-v619: без ?performance= сервер билет с другого показа НЕ отклоняет —
 // предупреждаем на виду, а в карточке билета на другой день — красная строка.
-if (!expectedPerformanceId) {
+function renderBadge(){
   const el = document.getElementById('performance-badge');
-  el.textContent = '⚠️ Показ не выбран — сверяйте название и ДАТУ в карточке. Лучше открыть ссылку контроля своего показа (…/tickets-scan/?performance=…)';
-  el.style.display = 'block';
-}
-if (expectedPerformanceId) {
-  fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(expectedPerformanceId)}`)
+  const who = staffInfo && staffInfo.name ? '👤 ' + staffInfo.name + ' · ' : '';
+  if (!expectedPerformanceId) {
+    el.textContent = '⚠️ Показ не выбран — сверяйте название и ДАТУ в карточке. Лучше открыть ссылку контроля своего показа (…/tickets-scan/?performance=…) или войти с кодом контролёра';
+    el.style.display = 'block';
+    return;
+  }
+  if (staffInfo && staffInfo.production) { el.textContent = who + '📍 ' + staffInfo.production + (staffInfo.datetime ? ' · ' + fmtWhen(staffInfo.datetime) : ''); el.style.display = 'block'; }
+  const pid = expectedPerformanceId;
+  fetch(`${API_BASE}/availability?performance_id=${encodeURIComponent(pid)}`)
     .then((r) => r.ok ? r.json() : null)
     .then((d) => {
-      const el = document.getElementById('performance-badge');
-      if (d && d.error === 'performance_canceled') { el.textContent = '📍 Показ ОТМЕНЁН — билеты на него не действуют'; el.style.display = 'block'; return; }
-      if (d && d.title) { el.textContent = '📍 ' + d.title + (d.datetime ? ' · ' + fmtWhen(d.datetime) : '') + (d.error === 'sales_closed' ? ' · продажа закрыта' : ''); el.style.display = 'block'; } // pack-v595: и при закрытой продаже
+      if (pid !== expectedPerformanceId) return;
+      if (d && d.error === 'performance_canceled') { el.textContent = who + '📍 Показ ОТМЕНЁН — билеты на него не действуют'; el.style.display = 'block'; return; }
+      if (d && d.title) { el.textContent = who + '📍 ' + d.title + (d.datetime ? ' · ' + fmtWhen(d.datetime) : '') + (d.error === 'sales_closed' ? ' · продажа закрыта' : ''); el.style.display = 'block'; } // pack-v595: и при закрытой продаже
     })
     .catch(() => {}); // не критично — бейдж чисто информационный, проверка на сервере сработает в любом случае
 }
+renderBadge();
+// pack-v621: код уже сохранён — узнаём у сервера, чей он (заодно «будим» функцию).
 
 const QUEUE_KEY = 'aelita-tickets-redeem-queue';
 const NOTES_KEY = 'aelita-tickets-queue-notes';
@@ -399,12 +425,19 @@ async function api(action, extra){
     // как обычную серверную ошибку: возвращаем на экран ввода кода,
     // чтобы контролёр не долбил сканер вслепую.
     // pack-v592 (В5): 429 — с этой сети слишком много неверных кодов.
-    let wait = 0;
-    if(res.status === 429){ try{ wait = Math.ceil(((await res.json()).retryAfterMs || 0) / 60000); }catch(e){} }
+    let wait = 0, reason = null;
+    try{ const j = await res.json(); wait = Math.ceil((j.retryAfterMs || 0) / 60000); reason = j.reason || null; }catch(e){}
     clearStaffCode();
+    lsDel(STAFF_INFO_KEY); staffInfo = null; expectedPerformanceId = urlPerformanceId;
+    // pack-v621: код контролёра — отозван / срок вышел / показ отменён.
+    const REASONS = {
+      staff_code_revoked: 'Ваш код отозван — спросите новый у администратора',
+      staff_code_expired: 'Срок вашего кода закончился (показ прошёл) — спросите новый у администратора',
+      staff_code_canceled: 'Показ отменён — код не действует. Спросите администратора',
+    };
     showGate(res.status === 429
       ? 'Слишком много неверных кодов с этой сети — вход закрыт' + (wait ? ' на ' + wait + ' мин.' : '.') + ' Позовите администратора.'
-      : 'Код неверен или устарел — введите снова');
+      : (REASONS[reason] || 'Код неверен или устарел — введите снова'));
     throw new UnauthorizedError('unauthorized');
   }
   if(!res.ok){
@@ -964,6 +997,14 @@ async function undoRedeem(ctx){
 updateBadge(getQueue().length);
 renderNotes();
 if(!navigator.onLine) setNet(false);
+// pack-v621: первый экран — только когда весь скрипт уже выполнен. Раньше
+// он стоял в начале: при сохранённом коде (перезагрузка, выгрузка вкладки
+// на телефоне) showApp() → refocus() обращался к `let lastScanFrom` до его
+// объявления — ReferenceError, и остаток скрипта не выполнялся: поле
+// сканера, камера, очередь без связи не работали, хотя экран был открыт.
+if(!getStaffCode()){ showGate(); } else { showApp(); }
+// pack-v621: код уже сохранён — узнаём у сервера, чей он (заодно «будим» функцию).
+if(getStaffCode()) api('ping', {}).then((d)=>applyStaff(d && d.staff)).catch(()=>{});
 if(getStaffCode()) flushQueue(); // до ввода кода очередь не трогаем — нечем себя авторизовать
 </script>
 </body>
