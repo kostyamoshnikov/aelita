@@ -850,6 +850,10 @@ async function detectAccount(){
 let codeMode = false;
 let codeSentTo = '';
 let codeBusy = false;
+// pack-v635: регистрация паролем идёт в два шага (с pack-v592): register
+// отвечает {need_email_code, pending_id} — кабинет появится после кода из
+// письма. Здесь — ожидающая заявка; код подтверждается тем же register.
+let regPending = null;
 
 function showCodeBox(on){
   codeMode = on;
@@ -868,6 +872,7 @@ function syncCodeLink(){
 }
 
 function usePassword(){
+  regPending = null;
   showCodeBox(false);
   const pw = document.getElementById('f-password');
   if(pw) pw.focus();
@@ -915,7 +920,8 @@ async function loginWithCode(name, email){
   const msgEl = document.getElementById('msg');
   const codeEl = document.getElementById('f-code');
   const code = (codeEl.value || '').replace(/\D+/g, '');
-  if(email.toLowerCase() !== codeSentTo){ await sendLoginCode(); return null; }
+  const reg = regPending && regPending.email === email.toLowerCase() ? regPending : null;
+  if(!reg && email.toLowerCase() !== codeSentTo){ await sendLoginCode(); return null; }
   if(!/^\d{6}$/.test(code)){
     AELITA_showFieldError(codeEl, 'Check the code');
     msgEl.textContent = 'Enter the 6 digits from the email.';
@@ -923,13 +929,15 @@ async function loginWithCode(name, email){
     return null;
   }
   AELITA_clearFieldError(codeEl);
-  msgEl.textContent = 'Signing you in…';
+  msgEl.textContent = reg ? 'Creating your account…' : 'Signing you in…';
   let res, out = {};
   try{
-    res = await apiFetch(`${ACCOUNT_API}/login-with-code`, {
+    // pack-v635: код регистрации — во второй шаг register (пароль сохранится);
+    // иначе — вход по коду.
+    res = await apiFetch(reg ? `${ACCOUNT_API}/register` : `${ACCOUNT_API}/login-with-code`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       // имя and согласие — на случай, если кабинета всё же нет: он заведётся тем же кодом
-      body: JSON.stringify({email, code, name, pd_consent: true}),
+      body: JSON.stringify(reg ? {email: reg.email, code, pending_id: reg.pendingId} : {email, code, name, pd_consent: true}),
     });
     try{ out = await res.json(); }catch(e){}
   }catch(e){
@@ -938,6 +946,7 @@ async function loginWithCode(name, email){
   }
   if(res.ok && out.token){
     setToken(out.token);
+    regPending = null;
     codeEl.value = '';
     showCodeBox(false);
     showSignedIn({email: out.email || email, name: out.name || name});
@@ -946,6 +955,9 @@ async function loginWithCode(name, email){
   if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Check the code'); msgEl.textContent = 'That code did not work — check the digits' + (out.attemptsLeft ? ' (attempts left: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
   if(out.error === 'code_expired' || out.error === 'code_attempts_exceeded'){ msgEl.textContent = 'The code has expired or the attempts are used up — tap “Send the code again”.'; return null; }
   if(out.error === 'account_moved'){ msgEl.textContent = 'The email of this account has been changed — enter the new email above.'; return null; }
+  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; usePassword(); msgEl.textContent = 'The code has expired — tap “Pay” again and we will send a new one.'; return null; }
+  if(reg && out.error === 'email_taken'){ regPending = null; await sendLoginCode(); return null; }
+  if(res.status === 429){ msgEl.textContent = 'Too many attempts in a row — wait a few minutes and try again.'; return null; }
   msgEl.textContent = 'Could not sign you in — try again in a minute or sign in with your password.';
   return null;
 }
@@ -1004,6 +1016,37 @@ async function ensureAccount(name, email){
     pwEl.value = '';
     showSignedIn({email: out.email || email, name: out.name || name});
     return out.token;
+  }
+  // pack-v635: регистрация с pack-v592 — в два шага. Кабинета ещё нет, код
+  // ушёл на почту: показываем поле для кода. Шестая цифра сама нажмёт
+  // «Pay», код уйдёт во второй шаг register (loginWithCode).
+  if(res.ok && out.need_email_code){
+    regPending = {email: String(out.email || email).toLowerCase(), pendingId: out.pending_id};
+    codeSentTo = regPending.email;
+    showCodeBox(true);
+    document.getElementById('acct-code-hint').textContent = 'The code has been sent to ' + regPending.email + ' (check Spam too). Enter the 6 digits — your account will be created and we will go straight to payment.';
+    msgEl.textContent = '';
+    const c = document.getElementById('f-code');
+    c.value = '';
+    c.focus();
+    return null;
+  }
+  if(res.status === 429 && out.error === 'code_too_many_requests'){
+    // Коды на эту почту уже уходили. Последний из них годен для входа по коду
+    // (слот кода на адрес общий) — login-with-code заведёт кабинет сам.
+    regPending = null;
+    codeSentTo = email.toLowerCase();
+    showCodeBox(true);
+    document.getElementById('acct-code-hint').textContent = 'A code has already been sent to ' + codeSentTo + ' — enter the 6 digits from the LATEST email (check Spam too).';
+    msgEl.textContent = 'Many code emails have been sent to this address — a new one can be sent in an hour at the earliest. The code from the latest email will work.';
+    const c = document.getElementById('f-code');
+    c.value = '';
+    c.focus();
+    return null;
+  }
+  if(res.status === 429){
+    msgEl.textContent = 'Too many sign-in attempts in a row — wait 15 minutes or sign in with a code from email.';
+    return null;
   }
   // Почта уже в кабинете — самый частый случай «регистрации» повторного
   // покупателя. Не ругаемся, а переключаем форму на вход: пароль от
