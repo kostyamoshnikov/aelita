@@ -1404,6 +1404,8 @@ async function init(){
   }
   data = freshData;
   if(data.error === 'performance_canceled'){ showError('This performance has been cancelled; ticket sales are closed.'); return; }
+  // pack-v640: показ уже прошёл (старые ссылки, QR на афишах) — не «закрыты», а «прошёл» and куда идти.
+  if(data.error === 'sales_closed' && data.datetime && Date.parse(data.datetime) < Date.now()){ showError('This show has already taken place — thank you to everyone who came! Upcoming events are on the listings page: aelita-production.ru/en/tickets'); return; }
   if(data.error === 'sales_closed'){ showError('Sales for this performance are closed.'); return; }
   if(data.error === 'not_on_sale'){ showError('Sales for this performance have not opened yet — please try later.'); return; }
   if(data.error){ showError('Performance not found — sales may not be open yet, or the link is out of date.'); return; }

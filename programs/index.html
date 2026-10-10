@@ -181,8 +181,7 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Шаг 1</span><h2>На какой спектакль программка?</h2></div>
     <div class="show-grid reveal" id="showGrid">
-      <button type="button" class="show-card wide" data-show="bred"><span class="mark">Выбрать</span><h3>«И весь этот бред тоже»</h3></button>
-      <button type="button" class="show-card" data-show="porfiriy"><span class="mark">Выбрать</span><h3>«Порфирий»</h3></button>
+      <button type="button" class="show-card wide" data-show="porfiriy"><span class="mark">Выбрать</span><h3>«Порфирий»</h3></button>
       <button type="button" class="show-card" data-show="iov"><span class="mark">Выбрать</span><h3>«ИОВ:материал»</h3></button>
       <button type="button" class="show-card" data-show="human"><span class="mark">Выбрать</span><h3>«Археология человеческого»</h3></button>
       <button type="button" class="show-card" data-show="listen"><span class="mark">Выбрать</span><h3>«Послушайте!»</h3></button>
@@ -385,7 +384,7 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
     selectShow(card);
     goToPay();
   });
-  // ?show=bred — спектакль выбран сразу (QR на стойке ведёт сюда с ним).
+  // ?show=porfiriy — спектакль выбран сразу (QR на стойке ведёт сюда с ним).
   (function () {
     var slug = new URLSearchParams(location.search).get('show');
     if (!slug || !/^[a-z0-9-]+$/.test(slug)) return;

@@ -168,6 +168,15 @@
   </div>
 </section>
 
+<section class="pad-80" id="audience-reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Отзывы зрителей</h2></div>
+    <noscript><p class="aud-reviews-empty">Чтобы увидеть и оставить отзывы, включите JavaScript в браузере.</p></noscript>
+    <div id="aud-reviews-list"></div>
+    <div id="aud-reviews-form-host"></div>
+  </div>
+</section>
+
 <section class="pad-70">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Этот разговор — и на «Точке Кюри»</h2></div>
@@ -298,6 +307,8 @@
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/main.js?v=90"></script>
 
+<script src="/assets/reviews.js"></script>
+<script>AelitaReviews.init('landshafty-realnosti');</script>
 
 <script>
   if ('serviceWorker' in navigator) {
