@@ -68,6 +68,20 @@ input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);co
 .status.warn{color:var(--warn)}
 .offline-flag{background:#2A2418;border:1px solid var(--gold);color:var(--gold);font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
 #offline-badge{display:none;color:var(--sand);font-size:0.75rem;margin:-8px 0 14px}
+#autopass-toggle{flex:1;margin:0}
+.tools-row{display:flex;gap:8px;margin:0 0 10px}
+.tools-row button{margin:0;padding:12px 10px}
+#sound-toggle,#torch-toggle{flex:0 0 auto;min-width:56px}
+#torch-toggle.on{border-color:var(--gold);color:var(--gold)}
+#counter{color:var(--ok);font-size:0.875rem;font-weight:500;margin:-6px 0 12px}
+#camera-video{max-height:34vh;object-fit:cover;margin-top:12px}
+#result .card{margin-top:4px}
+#flash{position:fixed;inset:0;pointer-events:none;border:0 solid transparent;z-index:40}
+#flash.ok{animation:flashOk .7s ease-out}
+#flash.no{animation:flashNo 1s ease-out}
+@keyframes flashOk{0%{border:14px solid var(--ok);background:rgba(183,201,168,.18)}100%{border:14px solid transparent;background:transparent}}
+@keyframes flashNo{0%,40%{border:14px solid var(--warn);background:rgba(201,139,107,.22)}100%{border:14px solid transparent;background:transparent}}
+#autopass-toggle.on{border-color:var(--ok);color:var(--ok)}
 .day-warn{color:var(--warn);font-weight:600;font-size:0.9375rem;margin:-6px 0 12px}
 button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:0.875rem;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
@@ -110,11 +124,18 @@ button.action:disabled{opacity:.5}
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
 <div id="offline-badge"></div>
+<div id="counter" hidden></div>
 <div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF») и пригласительных (админка → «Пригласительные» → «PDF всех действующих» или «Таблица (Excel)»).</div>
 <div id="queue-badge"></div>
 <div id="queue-notes"></div>
 <input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
+<!-- pack-v625: «пропускать сразу» — как у сканеров билетных сервисов: действующий билет гасится при скане, без кнопки. -->
+<div class="tools-row">
+  <button class="action secondary" id="autopass-toggle" type="button"></button>
+  <button class="action secondary" id="sound-toggle" type="button"></button>
+  <button class="action secondary" id="torch-toggle" type="button" hidden>🔦</button>
+</div>
 <!-- pack-v598: гость с пригласительным пришёл без QR — найти по фамилии или номеру
      (только с кодом персонала). Выбор из списка дальше идёт обычным путём
      проверки и «Пропустить», как скан. -->
@@ -123,9 +144,12 @@ button.action:disabled{opacity:.5}
   <input class="ym-disable-keys" id="find-input" placeholder="Фамилия или № пригласительного" autocomplete="off" enterkeyhint="search">
   <div id="find-results"></div>
 </div>
-<video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
-<canvas id="camera-canvas" style="display:none"></canvas>
+<!-- pack-v625: карточка результата — НАД видео камеры (раньше была под ним и на
+     телефоне уходила за край экрана: чтобы увидеть «Пропущен», надо было листать). -->
 <div id="result"></div>
+<video id="camera-video" playsinline muted style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
+<canvas id="camera-canvas" style="display:none"></canvas>
+<div id="flash"></div>
 </div>
 
 <!-- Всегда на виду — это буквально самый частый момент, когда контролёру
@@ -158,6 +182,8 @@ function setStaffCode(v){ lsSet(STAFF_CODE_KEY, v); }
 function clearStaffCode(){ lsDel(STAFF_CODE_KEY); }
 function appVisible(){ return document.getElementById('app').style.display === 'block'; }
 function showGate(errMsg){
+  // pack-v625: под экраном кода камера не должна сканировать (каждый QR → снова 401).
+  if(cameraStream) stopCamera();
   document.getElementById('app').style.display = 'none';
   document.getElementById('gate').style.display = 'flex';
   document.getElementById('gate-err').textContent = errMsg || '';
@@ -176,6 +202,7 @@ function submitGate(){
   setStaffCode(v);
   document.getElementById('gate-input').value = '';
   showApp();
+  resumeCamera(); // pack-v625: нажатие «Войти» — жест пользователя, браузер разрешит камеру
   // Сразу проверяем код лёгким запросом. pack-v592: 'ping' — без обращения
   // к заказам (раньше — 'undo' с выдуманным id). Неверный код → 401 →
   // api() вернёт на экран кода; прочие ответы здесь не важны.
@@ -502,20 +529,39 @@ async function runFind(){
   catch(e){
     if(seq !== findSeq) return;
     if(e instanceof UnauthorizedError){ findResults.innerHTML = ''; return; }
+    if(e instanceof NetworkError && door && door.performanceId === expectedPerformanceId){ findOffline(q); return; }
     findResults.innerHTML = '<div class="fr-msg">' + (e instanceof NetworkError ? 'Нет связи — ищите по распечатанной таблице гостей (админка → «Пригласительные» → «Таблица (Excel)»).' : 'Сервер ответил с ошибкой — попробуйте ещё раз.') + '</div>';
     return;
   }
   if(seq !== findSeq) return;
   if(!data.ok){ findResults.innerHTML = '<div class="fr-msg">' + escapeHtml(data.message || 'Поиск недоступен') + '</div>'; return; }
-  FOUND = data.results || [];
-  if(!FOUND.length){ findResults.innerHTML = '<div class="fr-msg">Не нашли среди пригласительных ' + (data.events ? 'на сегодня' : '— на сегодня событий с пригласительными нет') + '. Проверьте написание; если гость уверен — позовите администратора.</div>'; return; }
+  // pack-v626: и купленные билеты показа (гость без телефона / сел аккумулятор).
+  FOUND = (data.tickets || []).concat(data.results || []);
+  if(!FOUND.length){ findResults.innerHTML = '<div class="fr-msg">Не нашли ' + (expectedPerformanceId ? 'ни билета, ни пригласительного' : 'среди пригласительных') + ' ' + (data.events || expectedPerformanceId ? 'на этот показ' : '— на сегодня событий с пригласительными нет') + '. Проверьте написание; если гость уверен — позовите администратора.</div>'; return; }
   findResults.innerHTML = FOUND.map((r, i) => {
+    if(r.kind === 'ticket'){
+      const seat = r.seat ? seatsText('', [r.seat]) : 'свободная рассадка';
+      return '<button class="fr" data-i="' + i + '">Билет № ' + escapeHtml(String(r.num)) + ' · ' + escapeHtml(r.name) +
+        '<small>' + escapeHtml([r.production, seat, r.entered ? 'уже прошёл — не пропускать повторно' : ''].filter(Boolean).join(' · ')) + '</small></button>';
+    }
     const what = [r.production, r.dateLabel].filter(Boolean).join(' · ');
     const seat = r.seats && r.seats.length ? seatsText('', r.seats) : (r.entry ? 'входной' : (r.seatsLater ? 'места назначить' : ''));
     const state = r.status !== 'active' ? 'ОТОЗВАН — не пропускать' : (r.visits ? 'уже проходил: ' + r.visits : '');
     return '<button class="fr' + (r.ref ? '' : ' off') + '" data-i="' + i + '"' + (r.ref ? '' : ' disabled') + '>№ ' + escapeHtml(String(r.number).padStart(3, '0')) + ' · ' + escapeHtml(r.name) + ' · ' + escapeHtml(personsWord(r.persons)) +
       '<small>' + escapeHtml([what, seat, state].filter(Boolean).join(' · ')) + '</small></button>';
   }).join('') + (data.more ? '<div class="fr-msg">Показаны первые 20 — уточните фамилию.</div>' : '');
+}
+// Без связи — поиск по офлайн-базе: найти можно, а пропуск — отметкой в
+// распечатанном списке (отметить проход без QR может только сервер).
+function findOffline(q){
+  const nq = String(q).toLowerCase().replace(/ё/g, 'е');
+  const norm = (x) => String(x || '').toLowerCase().replace(/ё/g, 'е');
+  const hits = (door.tickets || []).filter((t) => norm(t.name).includes(nq) || String(t.num) === q.replace(/\D/g, '')).slice(0, 20)
+    .map((t) => 'Билет № ' + escapeHtml(t.num) + ' · ' + escapeHtml(t.name) + '<small>' + (t.r || (door.local || {})[t.h] ? 'уже прошёл — не пропускать повторно' : 'не проходил') + '</small>')
+    .concat((door.invites || []).filter((i) => norm(i.name).includes(nq)).slice(0, 20)
+      .map((i) => 'Пригласительный № ' + escapeHtml(String(i.num).padStart(3, '0')) + ' · ' + escapeHtml(i.name) + ' · ' + escapeHtml(personsWord(i.persons)) + '<small>' + (i.visits || (door.local || {})[i.h] ? 'уже прошёл' : 'не проходил') + '</small>'));
+  findResults.innerHTML = '<div class="fr-msg">Нет связи — найдено в офлайн-базе (от ' + escapeHtml(fmtTime(door.at)) + '). Пропустить по фамилии без связи нельзя: пускайте и отметьте ручкой в распечатанном списке.</div>' +
+    (hits.length ? hits.map((h) => '<div class="fr off">' + h + '</div>').join('') : '<div class="fr-msg">Не нашли — проверьте написание или позовите администратора.</div>');
 }
 findResults.addEventListener('click', (e) => {
   const b = e.target.closest('.fr[data-i]');
@@ -528,7 +574,7 @@ findResults.addEventListener('click', (e) => {
 });
 
 // ─── Камера-сканер (pack-v201, дополнение к USB-сканеру/ручному вводу) ──
-let cameraStream = null;
+var cameraStream = null; // var: showGate() может спросить раньше этой строки
 let cameraLoopId = null;
 let cameraLastCode = null;
 let cameraLastAt = 0;
@@ -537,14 +583,41 @@ const CAMERA_COOLDOWN_MS = 2500; // не долбить handleScan на кажд
 const cameraToggleBtn = document.getElementById('camera-toggle');
 const cameraVideo = document.getElementById('camera-video');
 const cameraCanvas = document.getElementById('camera-canvas');
-cameraToggleBtn.addEventListener('click', () => { cameraStream ? stopCamera() : startCamera(); });
+// pack-v625: камера включается один раз — дальше остаётся включённой между
+// билетами; после перезагрузки страницы, блокировки экрана или ухода в другое
+// приложение включается снова сама (если её не выключали кнопкой).
+const CAMERA_KEY = 'aelita-tickets-camera';
+// Не выбирали ни разу — на телефоне (сенсорный экран) включаем, на ноутбуке со сканером-пистолетом — нет.
+function cameraWanted(){
+  const v = lsGet(CAMERA_KEY);
+  if(v !== null) return v === '1';
+  try{ return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); }catch(e){ return false; }
+}
+cameraToggleBtn.addEventListener('click', () => {
+  if(cameraStream){ lsSet(CAMERA_KEY, '0'); stopCamera(); }
+  else { lsSet(CAMERA_KEY, '1'); startCamera(); }
+});
+function cameraAlive(){ return !!cameraStream && cameraStream.getTracks().some((t) => t.readyState === 'live'); }
+function resumeCamera(){
+  if(!cameraWanted() || !appVisible() || document.visibilityState === 'hidden') return;
+  if(cameraAlive()) return;
+  if(cameraStream) stopCamera();
+  startCamera(true);
+}
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') setTimeout(resumeCamera, 300); });
 
-async function startCamera(){
+let cameraStarting = false;
+async function startCamera(silent){
+  if(cameraStarting) return;
+  cameraStarting = true;
+  try{ await startCameraInner(silent); } finally { cameraStarting = false; }
+}
+async function startCameraInner(silent){
   if(typeof jsQR !== 'function' && !('BarcodeDetector' in window)){
     // файл jsQR не загрузился (нет сети на площадке в момент загрузки страницы
     // и т.п.) — сканер-пистолет и ручной ввод продолжают работать как
     // раньше, камера просто недоступна в этот раз.
-    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
+    if(!silent) document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
     refocus();
     return;
   }
@@ -553,7 +626,8 @@ async function startCamera(){
   }catch(e){
     // Отказ в разрешении / нет камеры на устройстве — не ошибка контроля,
     // сканер-пистолет остаётся основным способом.
-    document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
+    // Сама (после перезагрузки) — молча: кнопка «Включить камеру» на месте.
+    if(!silent) document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
     cameraStream = null;
     refocus();
     return;
@@ -567,7 +641,10 @@ async function startCamera(){
   }
   cameraVideo.srcObject = cameraStream;
   cameraVideo.style.display = 'block';
-  await cameraVideo.play();
+  try{ await cameraVideo.play(); }catch(e){ /* показ кадров браузер начнёт сам; распознавание идёт и так */ }
+  // Камеру отключила система (звонок, другое приложение) — включаем снова.
+  cameraStream.getTracks().forEach((t) => { t.onended = () => setTimeout(resumeCamera, 500); });
+  torchOn = false; renderTorch();
   cameraToggleBtn.textContent = '📷 Выключить камеру';
   const session = ++cameraSession;
   cameraBusy = false;
@@ -575,14 +652,33 @@ async function startCamera(){
   refocus();
 }
 
+// pack-v626: фонарик для тёмного фойе (если камера телефона умеет; Chrome на Android).
+let torchOn = false;
+function torchTrack(){ return cameraStream ? cameraStream.getVideoTracks()[0] : null; }
+function renderTorch(){
+  const b = document.getElementById('torch-toggle');
+  if(!b) return;
+  let can = false;
+  try{ const t = torchTrack(); can = !!(t && t.getCapabilities && t.getCapabilities().torch); }catch(e){}
+  b.hidden = !can;
+  b.classList.toggle('on', can && torchOn);
+}
+document.getElementById('torch-toggle').addEventListener('click', async () => {
+  const t = torchTrack();
+  if(!t) return;
+  try{ await t.applyConstraints({advanced: [{torch: !torchOn}]}); torchOn = !torchOn; }catch(e){}
+  renderTorch(); refocus();
+});
 function stopCamera(){
   cameraSession++;
+  torchOn = false;
   if(cameraLoopId) cancelAnimationFrame(cameraLoopId);
   cameraLoopId = null;
   if(cameraStream){ cameraStream.getTracks().forEach((t) => t.stop()); }
   cameraStream = null;
   cameraVideo.style.display = 'none';
   cameraToggleBtn.textContent = '📷 Включить камеру';
+  renderTorch();
   refocus();
 }
 
@@ -778,14 +874,80 @@ function btn(label, act, ctx, secondary){
   return '<button class="action' + (secondary ? ' secondary' : '') + '" data-act="' + act + '" onclick="cardAct(\'' + act + '\',' + ctx.id + ')">' + label + '</button>';
 }
 
+// ─── pack-v625: «Пропускать сразу» (заказчик 10.10: «может стоит убрать эту
+// кнопочку? Как в других сервисах… при большой очереди будет некогда нажимать») ──
+// Включено (по умолчанию): действующий билет гасится сразу при скане — на
+// экране крупно «Пропущен в ЧЧ:ММ» и «Отменить проход» на случай ошибки.
+// Только когда показ контроля известен (ссылка показа или код контролёра) —
+// тогда чужой показ отсекает сервер; без показа — с подтверждением, как раньше.
+// Пригласительный, которому нужно назначить места, — тоже с подтверждением.
+const AUTOPASS_KEY = 'aelita-tickets-autopass';
+function autoPassOn(){ return lsGet(AUTOPASS_KEY) !== '0'; }
+function autoPassActive(){ return autoPassOn() && !!expectedPerformanceId; }
+function renderAutoPass(){
+  const b = document.getElementById('autopass-toggle');
+  if(!b) return;
+  const on = autoPassOn();
+  b.textContent = on ? '⚡ Пропуск сразу при скане' : '☝️ Пропуск кнопкой';
+  b.classList.toggle('on', on);
+}
+document.getElementById('autopass-toggle').addEventListener('click', () => {
+  lsSet(AUTOPASS_KEY, autoPassOn() ? '0' : '1');
+  renderAutoPass();
+  refocus();
+});
+renderAutoPass();
+// Отклик без взгляда на экран: короткая вибрация — пропущен, двойная — нельзя.
+// pack-v626: звук, как у сканера «Яндекс Билетов»: высокий короткий — пропущен,
+// низкий двойной — нельзя. Браузер разрешает звук только после касания
+// (вход по коду, любая кнопка) — тогда и создаём AudioContext.
+const SOUND_KEY = 'aelita-tickets-sound';
+let audioCtx = null;
+function soundOn(){ return lsGet(SOUND_KEY) !== '0'; }
+function unlockAudio(){
+  try{ if(!audioCtx && (window.AudioContext || window.webkitAudioContext)) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }catch(e){}
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+function beep(ok){
+  if(!soundOn() || !audioCtx) return;
+  try{
+    const t0 = audioCtx.currentTime;
+    (ok ? [[0, 1320, 0.12]] : [[0, 220, 0.16], [0.22, 220, 0.16]]).forEach(([dt, f, len]) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = f; o.type = ok ? 'sine' : 'square';
+      g.gain.setValueAtTime(0.0001, t0 + dt); g.gain.exponentialRampToValueAtTime(0.25, t0 + dt + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + len);
+      o.connect(g); g.connect(audioCtx.destination); o.start(t0 + dt); o.stop(t0 + dt + len + 0.02);
+    });
+  }catch(e){}
+}
+function renderSound(){ const b = document.getElementById('sound-toggle'); if(b) b.textContent = soundOn() ? '🔊' : '🔇'; }
+document.getElementById('sound-toggle').addEventListener('click', () => { lsSet(SOUND_KEY, soundOn() ? '0' : '1'); renderSound(); if(soundOn()) beep(true); refocus(); });
+renderSound();
+function buzz(ok){
+  beep(ok);
+  try{ if(navigator.vibrate) navigator.vibrate(ok ? 60 : [220, 90, 220]); }catch(e){}
+  // И вспышка рамки по краю экрана — видно боковым зрением, не вчитываясь.
+  const f = document.getElementById('flash');
+  if(f){ f.className = ''; void f.offsetWidth; f.className = ok ? 'ok' : 'no'; }
+}
+
 function render(data, ctx){
-  if(!data.ok && data.error === 'already_redeemed') return renderTicket(data, ctx, 'already');
+  if(!data.ok && data.error === 'already_redeemed'){ buzz(false); return renderTicket(data, ctx, 'already'); }
   if(!data.ok){
+    buzz(false);
     show(`<div class="card warn"><div class="status warn">${escapeHtml(failMessage(data))}</div></div>`);
     return;
   }
-  if(data.kind === 'invite') return renderInvite(data, ctx, false);
-  renderTicket(data, ctx, data.alreadyRedeemed ? 'already' : 'valid');
+  if(data.kind === 'invite'){
+    renderInvite(data, ctx, false);
+    if(data.alreadyRedeemed){ buzz(false); return; }
+    if(autoPassActive() && !data.seatsLater) cardAct('redeem', ctx.id);
+    return;
+  }
+  if(data.alreadyRedeemed){ buzz(false); return renderTicket(data, ctx, 'already'); }
+  renderTicket(data, ctx, 'valid');
+  if(autoPassActive()) cardAct('redeem', ctx.id);
 }
 
 // Состояния карточки билета:
@@ -969,6 +1131,7 @@ async function confirmRedeem(ctx){
       const item = enqueue(ctx);
       if(item) ctx.queuedId = item.id;
       doorMark(ctx.token); // pack-v624: и в офлайн-базе — «пропущен без связи»
+      buzz(!!item);
       if(isActive(ctx)) renderTicket(ctx.data, ctx, item ? 'queued' : 'queuedDup');
       return;
     }
@@ -985,10 +1148,10 @@ async function confirmRedeem(ctx){
   }
   if(data.kind === 'invite'){
     // Одноразовый, которого только что пропустил другой контролёр, — alreadyRedeemed.
-    if(data.ok){ renderInvite(data, ctx, !data.alreadyRedeemed); doorMark(ctx.token); } else render(data, ctx);
+    if(data.ok){ renderInvite(data, ctx, !data.alreadyRedeemed); doorMark(ctx.token); buzz(!data.alreadyRedeemed); } else render(data, ctx);
     return;
   }
-  if(data.ok){ renderTicket(data, ctx, 'passed'); doorMark(ctx.token); }
+  if(data.ok){ renderTicket(data, ctx, 'passed'); doorMark(ctx.token, false, data); buzz(true); }
   else render(data, ctx); // already_redeemed — жёлтая карточка; прочее — отказ
 }
 
@@ -1007,7 +1170,7 @@ async function undoRedeem(ctx){
     if(isActive(ctx)) show(`<div class="card warn"><div class="status warn">${msg}</div>${btn('Отменить ещё раз', 'undo', ctx, true)}</div>`);
     return;
   }
-  if(data.ok) doorMark(ctx.token, true); // pack-v624: в офлайн-базе — снова действителен
+  if(data.ok) doorMark(ctx.token, true, d); // pack-v624: в офлайн-базе — снова действителен
   if(!isActive(ctx)){ aside(data.ok ? 'Отменён проход: «' + (d.name || '') + '»' : '⚠️ Не удалось отменить проход «' + (d.name || '') + '»', !data.ok); return; }
   if(!data.ok){ show('<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div>' + btn('Отменить ещё раз', 'undo', ctx, true) + '</div>'); return; }
   if(isInvite){ show('<div class="card ok"><div class="status ok">Проход отменён</div></div>'); return; }
@@ -1027,7 +1190,7 @@ if(!navigator.onLine) setNet(false);
 // Обновляется при входе и раз в 5 минут, пока есть связь. Имена зрителей —
 // только этого показа, стираются через сутки после показа и при выходе.
 const DOOR_KEY = 'aelita-tickets-door';
-const DOOR_REFRESH_MS = 5 * 60 * 1000;
+const DOOR_REFRESH_MS = 3 * 60 * 1000; // pack-v626: чаще — счётчик и проходы других контролёров
 var door = null, doorByH = null; // var, не let: setNet() и др. могут спросить до этой строки
 function doorIndex(){
   doorByH = new Map();
@@ -1051,6 +1214,22 @@ function renderDoorBadge(){
   if(!door || door.performanceId !== expectedPerformanceId){ el.textContent = '⏳ Офлайн-база ещё не загружена — без связи билеты не проверить'; el.style.display = 'block'; return; }
   el.textContent = '💾 Офлайн-база: ' + (door.tickets || []).length + ' бил.' + ((door.invites || []).length ? ', ' + door.invites.length + ' пригл.' : '') + ' · обновлена ' + fmtTime(door.at);
   el.style.display = 'block';
+  renderCounter();
+}
+// pack-v626: счётчик прошедших, как у Timepad Check-In и «Яндекс Билетов»:
+// по базе (проходы всех контролёров — на момент обновления) плюс проходы с
+// этого телефона после неё.
+function renderCounter(){
+  const el = document.getElementById('counter');
+  if(!el) return;
+  if(!door || door.performanceId !== expectedPerformanceId){ el.hidden = true; return; }
+  const loc = door.local || {};
+  const tk = door.tickets || [], iv = door.invites || [];
+  const inT = tk.filter((t) => t.r || loc[t.h]).length;
+  const inI = iv.filter((i) => i.visits > 0 || loc[i.h]).reduce((a, i) => a + (i.persons || 1), 0);
+  const allI = iv.reduce((a, i) => a + (i.persons || 1), 0);
+  el.textContent = '✅ Вошли: ' + inT + ' из ' + tk.length + ' по билетам' + (allI ? ' · ' + inI + ' из ' + allI + ' по пригласительным' : '');
+  el.hidden = false;
 }
 async function refreshDoorList(){
   if(!expectedPerformanceId || !getStaffCode()) { renderDoorBadge(); return; }
@@ -1072,14 +1251,20 @@ function payloadOf(token){
     return JSON.parse(decodeURIComponent(escape(atob(b64 + '==='.slice((b64.length + 3) % 4)))));
   }catch(e){ return null; }
 }
-async function doorMark(token, unmark){
+async function doorMark(token, unmark, data){
   if(!door || !(window.crypto && crypto.subtle)) return;
   try{
-    const h = await sha24(String(token).trim());
+    let h = await sha24(String(token).trim());
+    // Билет, найденный по фамилии (ссылка поиска, а не QR), — по заказу и номеру.
+    if(!doorByH.has(h) && data && data.orderId){
+      const t = (door.tickets || []).find((x) => x.orderId === data.orderId && String(x.id) === String(data.identifier || data.ticketNumber || ''));
+      if(t) h = t.h;
+    }
     if(!doorByH.has(h)) return;
     door.local = door.local || {};
     if(unmark) delete door.local[h]; else door.local[h] = new Date().toISOString();
     doorSave();
+    renderCounter();
   }catch(e){}
 }
 // → true, если карточка показана (иначе — обычная инструкция «нет связи»).
@@ -1128,6 +1313,7 @@ async function offlineCheck(token, seq){
       '<div class="detail"><b>На ' + escapeHtml(personsWord(e.persons)) + '</b></div>' +
       '<div class="status ' + (used ? 'warn' : 'ok') + '">' + (used ? 'Уже прошёл(а)' + (localAt ? ' в ' + escapeHtml(fmtTime(localAt)) + ' (без связи)' : '') + ' — повторно не пропускать' : 'Есть в офлайн-базе — пригласительный действителен') + '</div>' +
       (used ? '' : btn('Пропустить (без связи)', 'offlineRedeem', ctx)) + '</div>');
+    if(used) buzz(false); else if(autoPassActive()) offlineRedeem(ctx);
     return true;
   }
   const redeemedAt = e.r || localAt;
@@ -1143,12 +1329,14 @@ async function offlineCheck(token, seq){
     '<div class="detail">' + seat + (e.num ? ' · Серия ' + escapeHtml(e.series || '') + ' № ' + escapeHtml(e.num) : '') + '</div>' +
     '<div class="status ' + (warn ? 'warn' : 'ok') + '">' + status + '</div>' +
     (redeemedAt ? '' : btn('Пропустить (без связи)', 'offlineRedeem', ctx)) + '</div>');
+  if(redeemedAt) buzz(false); else if(autoPassActive()) offlineRedeem(ctx);
   return true;
 }
 function offlineRedeem(ctx){
   const item = enqueue(ctx);
+  buzz(!!item);
   if(item) ctx.queuedId = item.id;
-  if(door && ctx.doorH){ door.local = door.local || {}; door.local[ctx.doorH] = new Date().toISOString(); doorSave(); }
+  if(door && ctx.doorH){ door.local = door.local || {}; door.local[ctx.doorH] = new Date().toISOString(); doorSave(); renderCounter(); }
   if(!isActive(ctx)) return;
   if(ctx.data && ctx.data.kind === 'invite'){
     show('<div class="card ok"><div class="name">' + escapeHtml(ctx.data.name || '') + '</div><div class="status ok">' + (item ? 'Пропущен (нет связи — сохранено, отправим сами)' : 'Уже пропущен без связи — повторно не пропускать') + '</div>' +
@@ -1166,7 +1354,7 @@ setInterval(() => { if(getStaffCode() && navigator.onLine !== false) refreshDoor
 // на телефоне) showApp() → refocus() обращался к `let lastScanFrom` до его
 // объявления — ReferenceError, и остаток скрипта не выполнялся: поле
 // сканера, камера, очередь без связи не работали, хотя экран был открыт.
-if(!getStaffCode()){ showGate(); } else { showApp(); }
+if(!getStaffCode()){ showGate(); } else { showApp(); setTimeout(resumeCamera, 0); }
 // pack-v621: код уже сохранён — узнаём у сервера, чей он (заодно «будим» функцию).
 if(getStaffCode()) api('ping', {}).then((d)=>applyStaff(d && d.staff)).catch(()=>{});
 if(getStaffCode()) flushQueue(); // до ввода кода очередь не трогаем — нечем себя авторизовать
