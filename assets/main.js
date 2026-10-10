@@ -363,6 +363,32 @@ window.AELITA_formMessageClear = function (anchorEl) {
   }, { passive: true });
 })();
 
+// pack-v629: на телефоне плавающие «Написать нам» (с подсказкой) и «↑»
+// закрывали кнопку «Оплатить» и поля формы (заказчик 10.10, /programs).
+// Пока на экране поле формы или кнопка оплаты — они спрятаны (.form-hide).
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var mq = window.matchMedia('(max-width:760px)');
+  var seen = new Set();
+  function els() { return [document.getElementById('back-to-top'), document.getElementById('tg-widget')].filter(Boolean); }
+  function apply() {
+    var hide = mq.matches && seen.size > 0;
+    els().forEach(function (e) { e.classList.toggle('form-hide', hide); });
+    if (hide) { var b = document.getElementById('tg-bubble'); if (b) b.classList.remove('visible'); }
+  }
+  function start() {
+    var targets = document.querySelectorAll('.join-field, [id^="payBtn"], .pay-box, main form, .submit-btn');
+    if (!targets.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) seen.add(en.target); else seen.delete(en.target); });
+      apply();
+    });
+    targets.forEach(function (t) { io.observe(t); });
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
 // pack-v535: телефон в формах заявок обязателен (заказчик 29.09). Номер
 // считается введённым, если в нём не меньше 10 цифр (с «+7» — 11).
 window.AELITA_phoneOk = function (v) { return String(v || '').replace(/\D/g, '').length >= 10; };
