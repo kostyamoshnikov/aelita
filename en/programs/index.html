@@ -60,6 +60,7 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
 .show-card{background:var(--coal);border:1px solid transparent;border-left:2px solid transparent;padding:28px 26px;text-align:left;cursor:pointer;font-family:inherit;color:inherit;-webkit-appearance:none;appearance:none;transition:border-color .2s,background .2s;width:100%}
 @media(hover:hover){.show-card:hover{background:#202026}}
 .show-card.selected{border-left-color:var(--gold);background:#202026}
+.show-card.wide{grid-column:1/-1}
 .show-card .mark{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(214,181,122,.5);margin-bottom:10px;display:block}
 .show-card.selected .mark{color:var(--gold)}
 .show-card h3{font-size:1.1875rem;letter-spacing:.06em;font-weight:300;line-height:1.35}
@@ -180,6 +181,7 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Step 1</span><h2>Which show is the programme for?</h2></div>
     <div class="show-grid reveal" id="showGrid">
+      <button type="button" class="show-card wide" data-show="bred"><span class="mark">Choose</span><h3>“And All This Nonsense Too”</h3></button>
       <button type="button" class="show-card" data-show="porfiriy"><span class="mark">Choose</span><h3>“Porfiry”</h3></button>
       <button type="button" class="show-card" data-show="iov"><span class="mark">Choose</span><h3>“IOV: Material”</h3></button>
       <button type="button" class="show-card" data-show="human"><span class="mark">Choose</span><h3>“Archaeology of the Human”</h3></button>
@@ -195,6 +197,7 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
     <div class="pay-box reveal">
       <div class="price">200 ₽</div>
       <div class="chosen" id="chosenShow">Choose a show above first</div>
+      <span id="chosenPrefix" hidden>Programme</span>
       <p class="pay-pending-notice" id="payPendingNotice">Online payment on this page is still being connected. To get a programme right now — ask the staff at the stand, card payment is available on the spot.</p>
       <div style="font-size:0.75rem;color:var(--sand);margin-bottom:4px">Fields marked with an asterisk (*) are required — needed to send the receipt</div>
       <div class="join-field"><label>Full name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" placeholder="John Smith" required></div>
@@ -357,16 +360,29 @@ p a{color:var(--gold);text-decoration:none;transition:opacity .3s}
   window.AELITA_selectedShow = null;
   AELITA_wireContactValidation('j-email', 'email');
   AELITA_wireContactValidation('j-phone', 'phone');
-  var SHOW_LABELS = { porfiriy: '«Порфирий»', iov: '«ИОВ:материал»', human: '«Археология человеческого»', listen: '«Послушайте!»' };
-  document.getElementById('showGrid').addEventListener('click', function (e) {
-    var card = e.target.closest('.show-card');
-    if (!card) return;
+  // pack-v629: подпись берётся из самой карточки и скрытого #chosenPrefix —
+  // оба переводятся build_en.py, поэтому на /en/programs/ тоже по-английски
+  // (раньше здесь был словарь с русскими названиями — и на английской
+  // странице выбор показывался по-русски).
+  function selectShow(card) {
     document.querySelectorAll('.show-card').forEach(function (c) { c.classList.remove('selected'); });
     card.classList.add('selected');
     window.AELITA_selectedShow = card.dataset.show;
-    document.getElementById('chosenShow').textContent = 'Программка ' + SHOW_LABELS[card.dataset.show];
+    document.getElementById('chosenShow').textContent =
+      document.getElementById('chosenPrefix').textContent + ' ' + card.querySelector('h3').textContent;
     document.getElementById('payBtn_program').disabled = false;
+  }
+  document.getElementById('showGrid').addEventListener('click', function (e) {
+    var card = e.target.closest('.show-card');
+    if (card) selectShow(card);
   });
+  // ?show=bred — спектакль выбран сразу (QR на стойке ведёт сюда с ним).
+  (function () {
+    var slug = new URLSearchParams(location.search).get('show');
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) return;
+    var card = document.querySelector('.show-card[data-show="' + slug + '"]');
+    if (card) selectShow(card);
+  })();
 </script>
 
 <script>
