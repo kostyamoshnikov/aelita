@@ -72,6 +72,7 @@
       codeNeed: 'Введите 6 цифр из письма.',
       codeBad: 'Код не подошёл — проверьте цифры.',
       codeOld: 'Код устарел — нажмите кнопку ещё раз, пришлём новый.',
+      codeAlready: function (e) { return 'Код уже отправлен на ' + e + ' (проверьте и «Спам»). Введите 6 цифр из письма — новый присылать не нужно.'; },
       tooMany: 'Слишком много попыток подряд — подождите 15 минут.',
       wrongPassword: 'Пароль не подошёл.',
       forgot: 'Забыли пароль?',
@@ -187,6 +188,7 @@
       codeNeed: 'Enter the 6 digits from the email.',
       codeBad: 'That code did not work — check the digits.',
       codeOld: 'The code has expired — press the button again and we will send a new one.',
+      codeAlready: function (e) { return 'The code has already been sent to ' + e + ' (check Spam too). Enter the 6 digits from the email — no need to request a new one.'; },
       tooMany: 'Too many attempts in a row — wait 15 minutes.',
       wrongPassword: 'The password did not match.',
       forgot: 'Forgot your password?',
@@ -385,7 +387,7 @@
     }
     $('spAcctToggle').addEventListener('click', function () {
       acctMode = acctMode === 'login' ? 'register' : 'login'; applyAcctMode();
-      codeStep = null; if ($('spCodeWrap')) $('spCodeWrap').hidden = true;
+      codeStep = null; saveCodeDraft(); if ($('spCodeWrap')) $('spCodeWrap').hidden = true;
     });
 
     function showSignedIn(email) {
@@ -510,13 +512,40 @@
       });
       return el;
     }
+    // pack-v639: телефон выгружает вкладку, пока человек в почте за кодом, —
+    // при возврате страница грузилась с пустой формой, и код приходилось
+    // запрашивать заново (по кругу). Ожидание кода и поля формы (без
+    // пароля) — в localStorage на 10 минут, столько действует код.
+    var DRAFT_KEY = 'aelita_sub_draft:' + PLAN;
+    function saveCodeDraft() {
+      try {
+        if (!codeStep) { localStorage.removeItem(DRAFT_KEY); return; }
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: codeStep.at || Date.now(), step: codeStep,
+          name: $('j-name').value, email: $('j-email').value, phone: $('j-phone').value,
+          pd: !!($('pdConsent') && $('pdConsent').checked), autopay: !!($('autopayConsent') && $('autopayConsent').checked) }));
+      } catch (e) {}
+    }
+    function restoreCodeDraft() {
+      if (token()) return;
+      var d = null;
+      try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) {}
+      if (!d || !d.step || !d.step.email || Date.now() - (d.at || 0) > 10 * 60 * 1000) { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} return; }
+      [['j-name', d.name], ['j-email', d.email], ['j-phone', d.phone]].forEach(function (p) { var el = $(p[0]); if (el && !el.value && p[1]) el.value = p[1]; });
+      if (d.pd && $('pdConsent')) $('pdConsent').checked = true;
+      if (d.autopay && $('autopayConsent')) $('autopayConsent').checked = true;
+      if (!d.step.pendingId) acctMode = 'login', applyAcctMode();
+      showCode(d.step, T.codeAlready(d.step.email));
+      var f = $('j-name'); if (f && f.scrollIntoView) codeEl().scrollIntoView({ block: 'center' });
+    }
     function showCode(step, text) {
       codeStep = step;
+      if (codeStep && !codeStep.at) codeStep.at = Date.now();
       var el = codeEl();
       $('spCodeWrap').hidden = false;
       el.value = '';
       say(text);
       el.focus();
+      saveCodeDraft();
     }
     async function confirmCode(name, email) {
       var el = codeEl();
@@ -531,6 +560,7 @@
       } catch (e) { say(T.network); return null; }
       if (r.ok && r.data.token) {
         codeStep = null;
+        saveCodeDraft();
         $('spCodeWrap').hidden = true;
         setToken(r.data.token);
         $('j-password').value = '';
@@ -540,9 +570,9 @@
       var err = r.data.error;
       if (err === 'code_invalid') { fieldErr(el, T.codeBad); el.select(); return null; }
       if (err === 'registration_expired' || err === 'code_expired' || err === 'code_attempts_exceeded') {
-        codeStep = null; $('spCodeWrap').hidden = true; say(T.codeOld); return null;
+        codeStep = null; saveCodeDraft(); $('spCodeWrap').hidden = true; say(T.codeOld); return null;
       }
-      if (err === 'email_taken') { codeStep = null; $('spCodeWrap').hidden = true; acctMode = 'login'; applyAcctMode(); fieldErr($('j-password'), T.emailTaken); return null; }
+      if (err === 'email_taken') { codeStep = null; saveCodeDraft(); $('spCodeWrap').hidden = true; acctMode = 'login'; applyAcctMode(); fieldErr($('j-password'), T.emailTaken); return null; }
       if (r.status === 429) { say(T.tooMany); return null; }
       say(T.error);
       return null;
@@ -552,6 +582,7 @@
       if (token()) return token();
       if (codeStep && codeStep.email === email.toLowerCase()) return confirmCode(name, email);
       codeStep = null;
+      saveCodeDraft();
       if ($('spCodeWrap')) $('spCodeWrap').hidden = true;
       var pwEl = $('j-password');
       var password = pwEl.value;
@@ -661,6 +692,7 @@
     initInvoiceForm(main);
     applyAcctMode();
     loadAccount();
+    if (!returned) restoreCodeDraft();
   }
 
   // ── Оплата от компании по счёту (выпуск 4 ТЗ) ──────────────────────

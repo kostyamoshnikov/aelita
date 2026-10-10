@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="Sign in or create an account with AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=89">
-<link rel="stylesheet" href="/assets/style.css?v=89">
+<link rel="stylesheet" href="/assets/fonts.css?v=90">
+<link rel="stylesheet" href="/assets/style.css?v=90">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:900px;margin:0 auto;padding:0 24px}
@@ -231,8 +231,8 @@ body{max-width:100vw}
 </div>
 
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/account.js?v=89"></script>
-<script src="/assets/main.js?v=89"></script>
+<script src="/assets/account.js?v=90"></script>
+<script src="/assets/main.js?v=90"></script>
 <script>
   // ?next=/tickets — куда вернуться после входа (например, сюда привёл
   // клик «Оплатить» на странице без авторизации, см. assets/payments.js).
@@ -288,6 +288,23 @@ body{max-width:100vw}
     document.getElementById(id).style.display = 'none';
   }
 
+  // pack-v639: на телефоне браузер выгружает вкладку, пока человек в почте
+  // за кодом, — при возврате форма была пустой, и код приходилось слать
+  // заново, по кругу. Теперь «код отправлен на …» (без пароля и без самого
+  // кода) хранится 10 минут — столько действует код — и форма открывается
+  // сразу на поле для кода.
+  var CODE_DRAFT_KEY = 'aelita_account_code_draft';
+  function saveCodeDraft(d) { try { if (d) { d.at = d.at || Date.now(); localStorage.setItem(CODE_DRAFT_KEY, JSON.stringify(d)); } else localStorage.removeItem(CODE_DRAFT_KEY); } catch (e) {} }
+  function readCodeDraft() {
+    try {
+      var d = JSON.parse(localStorage.getItem(CODE_DRAFT_KEY) || 'null');
+      if (d && d.email && Date.now() - (d.at || 0) < 10 * 60 * 1000) return d;
+      localStorage.removeItem(CODE_DRAFT_KEY);
+    } catch (e) {}
+    return null;
+  }
+  var CODE_ALREADY = function (e) { return EN ? 'The code has already been sent to ' + e + ' (check Spam too). Enter it below — no need to request a new one.' : 'Код уже отправлен на ' + e + ' (проверьте и «Спам»). Введите его ниже — новый присылать не нужно.'; };
+
   function doLogin() {
     hideErr('loginErr');
     var email = document.getElementById('login-email').value.trim();
@@ -318,6 +335,7 @@ body{max-width:100vw}
       // pack-v592: кабинет ещё не создан — ждём код из письма.
       onNeedCode: function (data) {
         REG_PENDING = { email: data.email || email, pendingId: data.pending_id };
+        saveCodeDraft({ kind: 'register', email: REG_PENDING.email, pendingId: REG_PENDING.pendingId, name: name });
         document.getElementById('regCodeEmail').textContent = REG_PENDING.email;
         document.getElementById('reg-code-box').style.display = 'block';
         document.getElementById('reg-code').value = '';
@@ -338,9 +356,9 @@ body{max-width:100vw}
     if (!/^\d{6}$/.test(code)) { showErr('regErr', (EN ? "Enter the 6-digit code from the email." : 'Введите 6 цифр из письма.')); return; }
     window.AELITA_account.confirmRegistration(REG_PENDING.email, code, REG_PENDING.pendingId, {
       buttonEl: document.getElementById('regConfirmBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
+      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || '/en/account/dashboard'; },
       onError: function (msg, data) {
-        if (data && data.error === 'registration_expired') { REG_PENDING = null; document.getElementById('reg-code-box').style.display = 'none'; }
+        if (data && data.error === 'registration_expired') { REG_PENDING = null; saveCodeDraft(null); document.getElementById('reg-code-box').style.display = 'none'; }
         showErr('regErr', msg);
       },
     });
@@ -369,6 +387,7 @@ body{max-width:100vw}
       onSuccess: function () {
         document.getElementById('code-step2').style.display = 'block';
         document.getElementById('code-value').focus();
+        saveCodeDraft({ kind: 'login', email: email });
       },
       onError: function (msg) { showErr('codeErr', msg); },
     });
@@ -389,8 +408,9 @@ body{max-width:100vw}
     }
     window.AELITA_account.loginWithCode(fields, {
       buttonEl: document.getElementById('codeLoginBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
+      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || '/en/account/dashboard'; },
       onNeedRegistration: function () {
+        var cd = readCodeDraft(); if (cd && cd.kind === 'login') { cd.isNew = true; saveCodeDraft(cd); }
         document.getElementById('code-new').style.display = 'block';
         document.getElementById('codeLoginBtn').textContent = (EN ? 'Create account →' : 'Создать кабинет →');
         document.getElementById('code-name').focus();
@@ -437,6 +457,36 @@ body{max-width:100vw}
     });
   });
 
+  // pack-v639: вернулись из почты — открываем форму на поле для кода.
+  (function restoreCodeDraft() {
+    if (window.AELITA_account && window.AELITA_account.isLoggedIn()) return;
+    var d = readCodeDraft();
+    if (!d) return;
+    if (d.kind === 'register' && d.pendingId) {
+      REG_PENDING = { email: d.email, pendingId: d.pendingId };
+      if (d.name && !document.getElementById('reg-name').value) document.getElementById('reg-name').value = d.name;
+      document.getElementById('reg-email').value = d.email;
+      document.getElementById('regCodeEmail').textContent = d.email;
+      document.getElementById('reg-code-box').style.display = 'block';
+      document.getElementById('regCodeSent').textContent = CODE_ALREADY(d.email);
+      var rc = document.getElementById('reg-code');
+      rc.scrollIntoView({ block: 'center' }); rc.focus();
+      return;
+    }
+    if (d.kind === 'login') {
+      openCode();
+      document.getElementById('code-email').value = d.email;
+      document.getElementById('code-step2').style.display = 'block';
+      document.getElementById('codeSentOk').textContent = CODE_ALREADY(d.email);
+      if (d.isNew) {
+        document.getElementById('code-new').style.display = 'block';
+        document.getElementById('codeLoginBtn').textContent = (EN ? 'Create account →' : 'Создать кабинет →');
+      }
+      var cv = document.getElementById('code-value');
+      cv.scrollIntoView({ block: 'center' }); cv.focus();
+    }
+  })();
+
   // Обычная форма отправляется по Enter — здесь это просто input'ы в div,
   // без <form>, значит без этого Enter в поле пароля ничего бы не делал
   // (см. CHANGELOG про этот кабинет — нашли вручную, проверяя удобство).
@@ -448,6 +498,21 @@ body{max-width:100vw}
   });
   document.getElementById('reg-code').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') doRegisterConfirm();
+  });
+  // pack-v639: код из письма — Enter или 6-я цифра сразу отправляют
+  // (как на странице покупки); раньше в поле входа по коду Enter не работал.
+  document.getElementById('code-value').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') doCodeLogin();
+  });
+  ['code-value', 'reg-code'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      var el = this, v = el.value.replace(/\D+/g, '').slice(0, 6);
+      if (el.value !== v) el.value = v;
+      if (v.length !== 6) return;
+      if (id === 'reg-code') { if (!document.getElementById('regConfirmBtn').disabled) doRegisterConfirm(); return; }
+      if (document.getElementById('code-new').style.display === 'block') return; // нужны имя и согласие
+      if (!document.getElementById('codeLoginBtn').disabled) doCodeLogin();
+    });
   });
   document.getElementById('forgot-email').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') doForgot();

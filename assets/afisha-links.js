@@ -28,7 +28,9 @@
       list.forEach(function (p) {
         var els = document.querySelectorAll('[data-performance-id="' + p.id + '"]');
         els.forEach(function (el) {
-          el.href = p.buyUrl;
+          // pack-v639: на английском сайте — английская страница покупки
+          var en = document.documentElement.lang === 'en' && /^\/tickets-buy\//.test(p.buyUrl);
+          el.href = en ? '/en' + p.buyUrl : p.buyUrl;
           if (p.salesChannel !== 'in_house') {
             el.target = '_blank';
             el.rel = 'noopener';

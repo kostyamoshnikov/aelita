@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=89">
+<link rel="stylesheet" href="/assets/fonts.css?v=90">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -46,6 +46,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .zoom-btn:disabled{opacity:.3;cursor:not-allowed}
 .zoom-level{min-width:46px;text-align:center;color:var(--sand);font-size:0.75rem;font-variant-numeric:tabular-nums}
 .hall{overflow-x:auto;padding:8px 0}
+.qty-note{text-align:center;color:var(--sand);font-size:.875rem;margin:10px 0 0}
 .row{display:flex;gap:var(--seat-gap);margin:0 auto 2px;width:max-content;white-space:nowrap}
 .row-num{width:var(--rownum-w);font-size:var(--rownum-fs);color:var(--sand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .seat{width:var(--seat-size);height:var(--seat-size);border-radius:2px;flex:0 0 auto;cursor:pointer;font-size:0}
@@ -354,10 +355,11 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 
   <div id="general-block" style="display:none">
     <div class="qty">
-      <button onclick="changeQty(-1)">−</button>
-      <span id="qty-val">1</span>
-      <button onclick="changeQty(1)">+</button>
+      <button onclick="changeQty(-1)" aria-label="Fewer tickets">−</button>
+      <span id="qty-val" aria-live="polite">1</span>
+      <button onclick="changeQty(1)" aria-label="More tickets">+</button>
     </div>
+    <p class="qty-note" id="qty-note"></p>
   </div>
 
   <!-- pack-v534: на втором шаге — короткая сводка выбранного вместо схемы -->
@@ -517,7 +519,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=89"></script>
+<script src="/assets/payments.js?v=90"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -874,6 +876,7 @@ function syncCodeLink(){
 function usePassword(){
   regPending = null;
   showCodeBox(false);
+  saveDraft();
   const pw = document.getElementById('f-password');
   if(pw) pw.focus();
 }
@@ -902,11 +905,13 @@ async function sendLoginCode(resend){
   }catch(e){ res = null; }
   if(res && res.ok && out.ok){
     codeSentTo = email;
+    codeSentAt = Date.now();
     document.getElementById('acct-code-hint').textContent = 'The code has been sent to ' + email + ' (check Spam too). Enter the 6 digits and we will go straight to payment.';
     msgEl.textContent = '';
     const c = document.getElementById('f-code');
     c.value = '';
     c.focus();
+    saveDraft();
     return true;
   }
   if(res && res.status === 429){ msgEl.textContent = 'Too many code emails in a row — wait a few minutes or sign in with your password.'; return false; }
@@ -950,6 +955,7 @@ async function loginWithCode(name, email){
     codeEl.value = '';
     showCodeBox(false);
     showSignedIn({email: out.email || email, name: out.name || name});
+    saveDraft();
     return out.token;
   }
   if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Check the code'); msgEl.textContent = 'That code did not work — check the digits' + (out.attemptsLeft ? ' (attempts left: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
@@ -1023,12 +1029,14 @@ async function ensureAccount(name, email){
   if(res.ok && out.need_email_code){
     regPending = {email: String(out.email || email).toLowerCase(), pendingId: out.pending_id};
     codeSentTo = regPending.email;
+    codeSentAt = Date.now();
     showCodeBox(true);
     document.getElementById('acct-code-hint').textContent = 'The code has been sent to ' + regPending.email + ' (check Spam too). Enter the 6 digits — your account will be created and we will go straight to payment.';
     msgEl.textContent = '';
     const c = document.getElementById('f-code');
     c.value = '';
     c.focus();
+    saveDraft();
     return null;
   }
   if(res.status === 429 && out.error === 'code_too_many_requests'){
@@ -1036,7 +1044,9 @@ async function ensureAccount(name, email){
     // (слот кода на адрес общий) — login-with-code заведёт кабинет сам.
     regPending = null;
     codeSentTo = email.toLowerCase();
+    codeSentAt = Date.now();
     showCodeBox(true);
+    setTimeout(saveDraft, 0);
     document.getElementById('acct-code-hint').textContent = 'A code has already been sent to ' + codeSentTo + ' — enter the 6 digits from the LATEST email (check Spam too).';
     msgEl.textContent = 'Many code emails have been sent to this address — a new one can be sent in an hour at the earliest. The code from the latest email will work.';
     const c = document.getElementById('f-code');
@@ -1088,7 +1098,7 @@ async function sendResetFromCheckout(){
     emailEl.focus();
     return;
   }
-  rememberSelection();
+  saveDraft();
   msgEl.textContent = 'Sending the email…';
   try{
     const res = await apiFetch(`${ACCOUNT_API}/request-password-reset`, {
@@ -1130,58 +1140,101 @@ async function holdGuestSelection(){
   return false;
 }
 
-// Выбор до входа. Кладём в localStorage, чтобы после возврата из
-// кабинета человек не собирал места заново — and сразу удерживаем их на
-// сервере, теперь уже по-настоящему.
-const PENDING_KEY = 'aelita_pending_selection';
+// pack-v639: черновик покупки. На телефоне человек уходит в почту за
+// кодом, браузер выгружает вкладку, and при возврате страница грузится
+// заново: раньше пропадали количество/места, поля формы and — главное —
+// отправленный код (приходилось слать новый, and так по кругу). Теперь
+// всё, кроме пароля, лежит в localStorage до 30 минут (код — 10 минут,
+// столько он действует) and подставляется при загрузке. Пароль не
+// сохраняется никогда. Черновик стирается при уходе на оплату.
+// Прежние rememberSelection/restoreSelection (места после входа) —
+// частный случай этого же.
+const DRAFT_KEY = 'aelita_checkout_draft';
+const DRAFT_TTL = 30*60*1000, CODE_TTL = 10*60*1000;
+let draftReady = false; // до восстановления не пишем — иначе затрём черновик пустой формой
+let codeSentAt = 0;
 
-function rememberSelection(){
+function saveDraft(){
+  if(!draftReady || !performanceId) return;
   try{
-    localStorage.setItem(PENDING_KEY, JSON.stringify({
-      performance: performanceId,
-      seats: selectedSeats.map(s=>({row:s.row, seat:s.seat})),
-      quantity: quantity,
-      ts: Date.now(),
+    const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const c = document.getElementById('pdConsent');
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      performance: performanceId, ts: Date.now(), step: currentStep,
+      quantity: quantity, seats: selectedSeats.map(x => ({row: x.row, seat: x.seat})),
+      name: v('f-name'), email: v('f-email'), contact: v('f-contact'), consent: !!(c && c.checked),
+      acctMode: acctMode,
+      code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, regPending: regPending, at: codeSentAt || Date.now()} : null,
     }));
   }catch(e){}
 }
+function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); localStorage.removeItem('aelita_pending_selection'); }catch(e){} }
+function readDraft(){
+  try{
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if(!d || d.performance !== performanceId || !d.ts || Date.now() - d.ts > DRAFT_TTL) return null;
+    return d;
+  }catch(e){ return null; }
+}
+['input', 'change'].forEach(t => document.addEventListener(t, e => {
+  const id = e.target && e.target.id;
+  if(id === 'f-name' || id === 'f-email' || id === 'f-contact' || id === 'pdConsent') saveDraft();
+}));
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') saveDraft(); });
 
 async function restoreSelection(){
-  if(!accountToken()) return;
-  let saved = null;
-  try{
-    const raw = localStorage.getItem(PENDING_KEY);
-    if(!raw) return;
-    saved = JSON.parse(raw);
-    localStorage.removeItem(PENDING_KEY);
-  }catch(e){ return; }
-  if(!saved || saved.performance !== performanceId) return;
-  // Полчаса — потолок доверия к сохранённому выбору: дальше зал уже
-  // другой, and подставлять места как «ваши» было бы тем самым враньём,
-  // от которого уходили в pack-v272.
-  if(!saved.ts || Date.now() - saved.ts > 30*60*1000) return;
-  if(data.seating !== 'assigned'){
-    if(saved.quantity && saved.quantity > 1){ quantity = saved.quantity; updateTotal(); }
-    goStep(2);
-    return;
-  }
-  const want = (saved.seats || []).slice(0, 10);
-  if(!want.length) return;
-  const r = await holdRequest('hold', want).catch(()=>({ok:false}));
+  const d = readDraft();
+  draftReady = true;
+  if(!d) return;
   const msgEl = document.getElementById('msg');
-  if(!r.ok){
-    if(msgEl) msgEl.textContent = 'While you were signing in, those seats were taken. Please pick again — the free ones are highlighted.';
-    return;
+  const put = (id, val) => { const el = document.getElementById(id); if(el && !el.value.trim() && val) el.value = val; };
+  put('f-name', d.name); put('f-email', d.email); put('f-contact', d.contact);
+  if(d.consent){ const c = document.getElementById('pdConsent'); if(c) c.checked = true; }
+  if(data.seating !== 'assigned'){
+    if(d.quantity > 1){
+      const max = typeof data.left === 'number' ? Math.max(1, Math.min(10, data.left)) : 10;
+      quantity = Math.min(d.quantity, max);
+      document.getElementById('qty-val').textContent = quantity;
+      updateTotal();
+    }
+  } else {
+    const want = (d.seats || []).slice(0, 10);
+    if(want.length){
+      // Места снова держим на сервере (пока вкладка была выгружена, их
+      // могли отпустить — pagehide или истёк холд выбора).
+      const r = await holdRequest('hold', want).catch(() => ({ok:false}));
+      if(r.ok){
+        want.forEach(({row, seat}) => {
+          const el = document.querySelector(`.seat[data-row="${row}"][data-seat="${seat}"]`);
+          if(!el || el.classList.contains('taken') || selectedSeats.some(x => x.row === row && x.seat === seat)) return;
+          selectedSeats.push({row, seat, price: priceForRow(row)});
+          el.classList.add('selected');
+        });
+        invalidateDiscounts();
+        updateTotal();
+      } else if(msgEl){
+        msgEl.textContent = 'While you were away, the selected seats were taken. Please choose again — free seats are highlighted.';
+      }
+    }
   }
-  want.forEach(({row, seat}) => {
-    const el = document.querySelector(`.seat[data-row="${row}"][data-seat="${seat}"]`);
-    if(!el || el.classList.contains('taken')) return;
-    selectedSeats.push({row, seat, price: priceForRow(row)});
-    el.classList.add('selected');
-  });
-  invalidateDiscounts();
-  updateTotal();
-  if(msgEl && selectedSeats.length){ msgEl.textContent = 'The seats are yours again — you can pay now.'; goStep(2); }
+  const canStep2 = data.seating !== 'assigned' || selectedSeats.length > 0;
+  if(d.step === 2 && canStep2) goStep(2, {silent: true});
+  // Код уже отправлен — показываем поле для него, а не просим новый.
+  if(d.code && d.code.sentTo && Date.now() - (d.code.at || 0) < CODE_TTL && !accountToken()){
+    if(d.acctMode) acctMode = d.acctMode;
+    applyAcctMode();
+    codeSentTo = d.code.sentTo;
+    codeSentAt = d.code.at;
+    regPending = d.code.regPending || null;
+    showCodeBox(true);
+    document.getElementById('acct-code-hint').textContent = 'The code has already been sent to ' + codeSentTo + ' (check Spam too). Enter the 6 digits from the email — no need to request a new one.';
+    if(canStep2) goStep(2, {silent: true});
+    const c = document.getElementById('f-code');
+    if(c){ c.value = ''; try{ c.focus({preventScroll: false}); }catch(e){ c.focus(); } }
+  } else if(d.acctMode && !accountToken()){
+    acctMode = d.acctMode;
+    applyAcctMode();
+  }
 }
 
 // Сессия протухла посреди покупки — это не то же самое, что «не
@@ -1259,7 +1312,8 @@ function leavePaidMode(){
 }
 
 function showSuccess(text){
-  document.getElementById('title').textContent = data && data.title ? data.title : 'AELITA PRODUCTION';
+  clearDraft(); // pack-v639: заказ оплачен — черновик больше не нужен
+  document.getElementById('title').textContent = pickTitle(data) || 'AELITA PRODUCTION';
   if(text) document.getElementById('success-text').textContent = text;
   document.getElementById('success-block').style.display = 'block';
   document.getElementById('after-pay').style.display = 'none';
@@ -1367,10 +1421,11 @@ async function init(){
     return;
   }
 
-  document.getElementById('title').textContent = data.title;
+  document.getElementById('title').textContent = pickTitle(data);
   if(data.isTest){ document.getElementById('test-banner').style.display = 'block'; }
   const dt = data.datetime ? new Date(data.datetime).toLocaleString('en-GB',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Date to be confirmed';
-  document.getElementById('meta').textContent = `${dt} · ${data.venue.name}, ${data.venue.address} · ${data.ageRating}`;
+  const vn = pickVenue(data);
+  document.getElementById('meta').textContent = `${dt} · ${[vn.name, vn.address].filter(Boolean).join(', ')} · ${data.ageRating}`;
 
   goStep(1, {silent:true});
   if(data.seating === 'assigned'){
@@ -1382,6 +1437,8 @@ async function init(){
     initWaitlist();
   } else {
     document.getElementById('general-block').style.display = 'block';
+    // pack-v639: цена за билет and «свободная рассадка» — раньше под счётчиком не было ничего
+    document.getElementById('qty-note').textContent = 'General admission · ' + Number(data.price).toLocaleString('en-GB') + ' ₽ per ticket' + (typeof data.left === 'number' && data.left <= 10 ? ' · ' + data.left + ' left' : '');
     updateTotal();
     restoreSelection();
   }
@@ -1694,6 +1751,7 @@ async function toggleSeat(row, seat, el){
     updateTotal();
     holdRequest('release', [{row, seat}]).catch(()=>{});
     if(!selectedSeats.length) stopHoldCountdown();
+    saveDraft();
     return;
   }
 
@@ -1719,6 +1777,7 @@ async function toggleSeat(row, seat, el){
     msgEl.textContent = '';
     invalidateDiscounts();
     updateTotal();
+    saveDraft();
     return;
   }
 
@@ -1862,6 +1921,15 @@ window.addEventListener('pagehide', () => {
   }catch(e){}
 });
 
+// pack-v639: на английской странице — английские название and площадка
+// (titleEn and venue.en отдаёт availability; раньше показывались русские).
+function pickTitle(d){ return (document.documentElement.lang === 'en' && d && d.titleEn) || (d && d.title) || ''; }
+function pickVenue(d){
+  const v = (d && d.venue) || {};
+  const en = document.documentElement.lang === 'en' && v.en ? v.en : null;
+  return { name: (en && en.name) || v.name || '', address: (en && en.address) || v.address || '' };
+}
+
 function changeQty(delta){
   // pack-v592: не больше, чем осталось (вместимость свободной рассадки).
   const maxQty = (data && typeof data.left === 'number') ? Math.max(1, Math.min(10, data.left)) : 10;
@@ -1869,6 +1937,7 @@ function changeQty(delta){
   document.getElementById('qty-val').textContent = quantity;
   invalidateDiscounts();
   updateTotal();
+  saveDraft();
 }
 
 // ── Promo code and подарочная карта ─────────────────────────────────────
@@ -2140,6 +2209,7 @@ function goStep(n, opts){
     history.back();
   }
   if(!opts.silent) window.scrollTo(0, 0);
+  saveDraft();
 }
 window.addEventListener('popstate', function(e){
   const st = e.state && e.state.aelitaStep;
@@ -2304,6 +2374,11 @@ async function submitOrder(){
       // с этого момента действует холд ЗАКАЗА (10 минут), а не выбора.
       window.__aelitaGoingToPayment = true;
       stopHoldCountdown();
+      // pack-v639: на ЮKassa — поля формы оставляем (вернётся «Назад», не
+      // заплатив, — не заполнять заново), а места and код убираем: места уже
+      // держит заказ, код использован.
+      try{ const d = readDraft(); if(d){ d.seats = []; d.code = null; d.ts = Date.now(); localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } }catch(e){}
+      draftReady = false;
       // pack-v196: сохраняем order_id/payment_id, чтобы при возврате с
       // ЮKassa опросить РЕАЛЬНЫЙ статус (order-status.js), а не верить
       // одному query-параметру (см. init(), pollOrderStatus()).
@@ -2311,7 +2386,7 @@ async function submitOrder(){
       // обратно — это тот же таб браузера, не новая сессия.
       // pack-v540: + сумма, число билетов and название — для электронной
       // торговли Метрики после подтверждения оплаты (AELITA_ecomPurchase).
-      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: (data && data.title) || '', holdUntil: out.hold_expires_at || null})); }catch(e){}
+      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: pickTitle(data), holdUntil: out.hold_expires_at || null})); }catch(e){}
       if(out.hold_expires_at){
         // pack-v196: раньше человек нигде не видел, что на оплату есть
         // ограниченное время — только README упоминал 10 минут, нигде
@@ -2507,6 +2582,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=89"></script>
+<script src="/assets/phone-prefix.js?v=90"></script>
 </body>
 </html>
