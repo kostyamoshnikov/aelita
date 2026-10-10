@@ -66,6 +66,8 @@ input{width:100%;background:var(--coal);border:1px solid rgba(217,217,217,.2);co
 .status{font-size:0.9375rem;font-weight:500;padding:6px 0}
 .status.ok{color:var(--ok)}
 .status.warn{color:var(--warn)}
+.offline-flag{background:#2A2418;border:1px solid var(--gold);color:var(--gold);font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
+#offline-badge{display:none;color:var(--sand);font-size:0.75rem;margin:-8px 0 14px}
 .day-warn{color:var(--warn);font-weight:600;font-size:0.9375rem;margin:-6px 0 12px}
 button.action{background:var(--gold);color:var(--ink);border:none;padding:12px 20px;border-radius:4px;font-size:0.875rem;margin:4px;cursor:pointer}
 button.secondary{background:transparent;border:1px solid var(--sand);color:var(--bone)}
@@ -107,6 +109,7 @@ button.action:disabled{opacity:.5}
 <div id="app">
 <h1>Контроль билетов</h1>
 <div id="performance-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
+<div id="offline-badge"></div>
 <div id="net-badge">НЕТ СВЯЗИ с сервером — билеты не проверяются. Если надолго: список зрителей (админка → «Продажи по показам» → «Зрители — PDF») и пригласительных (админка → «Пригласительные» → «PDF всех действующих» или «Таблица (Excel)»).</div>
 <div id="queue-badge"></div>
 <div id="queue-notes"></div>
@@ -251,6 +254,7 @@ function applyStaff(st){
     expectedPerformanceId = urlPerformanceId;
   }
   renderBadge();
+  refreshDoorList(); // pack-v624
 }
 // pack-v619: без ?performance= сервер билет с другого показа НЕ отклоняет —
 // предупреждаем на виду, а в карточке билета на другой день — красная строка.
@@ -396,8 +400,14 @@ setInterval(()=>{ if(getStaffCode()) flushQueue(); }, 15000);
 
 // pack-v592 (В2): плашка «нет связи» — видно заранее, а не только по
 // отказу на очередном билете.
+const NET_BADGE_TEXT = document.getElementById('net-badge').textContent;
 function setNet(online){
   const el = document.getElementById('net-badge');
+  // pack-v624: с офлайн-базой показа билеты проверяются и без связи.
+  const base = door && door.performanceId === expectedPerformanceId;
+  el.textContent = base
+    ? 'НЕТ СВЯЗИ — проверка по офлайн-базе (от ' + fmtTime(door.at) + '). Проходы сохраняются в телефоне и уйдут сами, когда связь вернётся. Билеты, купленные позже, в базе нет — по распечатанному списку.'
+    : NET_BADGE_TEXT;
   el.style.display = online ? 'none' : 'block';
 }
 
@@ -429,6 +439,7 @@ async function api(action, extra){
     try{ const j = await res.json(); wait = Math.ceil((j.retryAfterMs || 0) / 60000); reason = j.reason || null; }catch(e){}
     clearStaffCode();
     lsDel(STAFF_INFO_KEY); staffInfo = null; expectedPerformanceId = urlPerformanceId;
+    doorClear(); // pack-v624: офлайн-база — только у того, кто вошёл
     // pack-v621: код контролёра — отозван / срок вышел / показ отменён.
     const REASONS = {
       staff_code_revoked: 'Ваш код отозван — спросите новый у администратора',
@@ -681,7 +692,12 @@ async function handleScan(token, fromSearch){
   }catch(e){
     if(seq !== scanSeq) return;
     if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
-    if(e instanceof NetworkError){ show(offlineHelp()); return; }
+    if(e instanceof NetworkError){
+      // pack-v624: без связи — проверка по офлайн-базе показа (если скачана).
+      if(await offlineCheck(token, seq)) return;
+      if(seq === scanSeq) show(offlineHelp());
+      return;
+    }
     show('<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — отсканируйте ещё раз; если не поможет — «Позвать помощь».</div></div>');
     return;
   }finally{
@@ -924,8 +940,10 @@ async function cardAct(act, id){
   try{
     if(act === 'redeem') await confirmRedeem(ctx);
     else if(act === 'undo') await undoRedeem(ctx);
+    else if(act === 'offlineRedeem') offlineRedeem(ctx);
     else if(act === 'unqueue'){
       unqueue(ctx.queuedId);
+      if(door && ctx.doorH && door.local){ delete door.local[ctx.doorH]; doorSave(); } // pack-v624
       if(isActive(ctx)) show('<div class="card ok"><div class="status ok">Убран из очереди — проход не засчитан</div></div>');
     }
   } finally {
@@ -950,6 +968,7 @@ async function confirmRedeem(ctx){
       // на сервере), показываем результат «пропущен, отправим».
       const item = enqueue(ctx);
       if(item) ctx.queuedId = item.id;
+      doorMark(ctx.token); // pack-v624: и в офлайн-базе — «пропущен без связи»
       if(isActive(ctx)) renderTicket(ctx.data, ctx, item ? 'queued' : 'queuedDup');
       return;
     }
@@ -966,10 +985,10 @@ async function confirmRedeem(ctx){
   }
   if(data.kind === 'invite'){
     // Одноразовый, которого только что пропустил другой контролёр, — alreadyRedeemed.
-    if(data.ok) renderInvite(data, ctx, !data.alreadyRedeemed); else render(data, ctx);
+    if(data.ok){ renderInvite(data, ctx, !data.alreadyRedeemed); doorMark(ctx.token); } else render(data, ctx);
     return;
   }
-  if(data.ok) renderTicket(data, ctx, 'passed');
+  if(data.ok){ renderTicket(data, ctx, 'passed'); doorMark(ctx.token); }
   else render(data, ctx); // already_redeemed — жёлтая карточка; прочее — отказ
 }
 
@@ -988,6 +1007,7 @@ async function undoRedeem(ctx){
     if(isActive(ctx)) show(`<div class="card warn"><div class="status warn">${msg}</div>${btn('Отменить ещё раз', 'undo', ctx, true)}</div>`);
     return;
   }
+  if(data.ok) doorMark(ctx.token, true); // pack-v624: в офлайн-базе — снова действителен
   if(!isActive(ctx)){ aside(data.ok ? 'Отменён проход: «' + (d.name || '') + '»' : '⚠️ Не удалось отменить проход «' + (d.name || '') + '»', !data.ok); return; }
   if(!data.ok){ show('<div class="card warn"><div class="status warn">Не удалось отменить — попробуйте ещё раз</div>' + btn('Отменить ещё раз', 'undo', ctx, true) + '</div>'); return; }
   if(isInvite){ show('<div class="card ok"><div class="status ok">Проход отменён</div></div>'); return; }
@@ -997,6 +1017,150 @@ async function undoRedeem(ctx){
 updateBadge(getQueue().length);
 renderNotes();
 if(!navigator.onLine) setNet(false);
+// ─── pack-v624: офлайн-база показа ───────────────────────────────────
+// Как у сканеров «Яндекс Билетов» и Ticketscloud: база действующих билетов
+// показа хранится в телефоне и проверяет QR без интернета. В базе не QR, а
+// их отпечатки (sha256) — подделать QR под отпечаток без секрета нельзя
+// (см. ticket-check.js, doorList). Проход без связи — в ту же очередь, что
+// «нет связи — сохранено»: сервер подтвердит его, когда связь вернётся, а
+// двойной проход (тот же билет на двух телефонах без связи) покажет в плашке.
+// Обновляется при входе и раз в 5 минут, пока есть связь. Имена зрителей —
+// только этого показа, стираются через сутки после показа и при выходе.
+const DOOR_KEY = 'aelita-tickets-door';
+const DOOR_REFRESH_MS = 5 * 60 * 1000;
+var door = null, doorByH = null; // var, не let: setNet() и др. могут спросить до этой строки
+function doorIndex(){
+  doorByH = new Map();
+  if(!door) return;
+  for(const t of door.tickets || []) doorByH.set(t.h, {kind: 'ticket', e: t});
+  for(const i of door.invites || []) doorByH.set(i.h, {kind: 'invite', e: i});
+}
+function doorSave(){ try{ lsSet(DOOR_KEY, JSON.stringify(door)); }catch(e){} }
+function doorClear(){ door = null; doorIndex(); lsDel(DOOR_KEY); renderDoorBadge(); }
+function doorLoad(){
+  try{ door = JSON.parse(lsGet(DOOR_KEY) || 'null'); }catch(e){ door = null; }
+  // Имена зрителей — не дольше суток после показа (без даты — двое суток от загрузки).
+  const until = door ? (door.datetime ? Date.parse(door.datetime) + 28 * 3600e3 : Date.parse(door.at || 0) + 48 * 3600e3) : 0;
+  if(door && !(Date.now() < until)){ door = null; lsDel(DOOR_KEY); }
+  doorIndex();
+}
+function renderDoorBadge(){
+  const el = document.getElementById('offline-badge');
+  if(!el) return;
+  if(!expectedPerformanceId){ el.style.display = 'none'; return; }
+  if(!door || door.performanceId !== expectedPerformanceId){ el.textContent = '⏳ Офлайн-база ещё не загружена — без связи билеты не проверить'; el.style.display = 'block'; return; }
+  el.textContent = '💾 Офлайн-база: ' + (door.tickets || []).length + ' бил.' + ((door.invites || []).length ? ', ' + door.invites.length + ' пригл.' : '') + ' · обновлена ' + fmtTime(door.at);
+  el.style.display = 'block';
+}
+async function refreshDoorList(){
+  if(!expectedPerformanceId || !getStaffCode()) { renderDoorBadge(); return; }
+  let d;
+  try{ d = await api('door_list', {expected_performance_id: expectedPerformanceId}); }catch(e){ renderDoorBadge(); return; }
+  if(!d || !d.ok || d.performanceId !== expectedPerformanceId){ renderDoorBadge(); return; }
+  // Отметки «пропущен без связи» с этого телефона — сохраняем, пока сервер их не узнал.
+  const local = (door && door.performanceId === d.performanceId && door.local) || {};
+  door = Object.assign({}, d, {local});
+  doorIndex(); doorSave(); renderDoorBadge();
+}
+async function sha24(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 24);
+}
+function payloadOf(token){
+  try{
+    const b64 = String(token).split('.')[0].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(escape(atob(b64 + '==='.slice((b64.length + 3) % 4)))));
+  }catch(e){ return null; }
+}
+async function doorMark(token, unmark){
+  if(!door || !(window.crypto && crypto.subtle)) return;
+  try{
+    const h = await sha24(String(token).trim());
+    if(!doorByH.has(h)) return;
+    door.local = door.local || {};
+    if(unmark) delete door.local[h]; else door.local[h] = new Date().toISOString();
+    doorSave();
+  }catch(e){}
+}
+// → true, если карточка показана (иначе — обычная инструкция «нет связи»).
+async function offlineCheck(token, seq){
+  if(!door || door.performanceId !== expectedPerformanceId || !(window.crypto && crypto.subtle)) return false;
+  token = String(token).trim();
+  let h, hit;
+  try{
+    h = await sha24(token);
+    hit = doorByH.get(h);
+    if(!hit){
+      // Только чтобы объяснить отказ: подпись без связи не проверить, поэтому
+      // содержимое QR влияет лишь на текст «другой показ», не на пропуск.
+      const pl = payloadOf(token);
+      if(pl && pl.p && pl.p !== door.performanceId){
+        if(seq !== scanSeq) return true;
+        show('<div class="card warn"><div class="offline-flag">Нет связи · офлайн-база</div><div class="status warn">Билет с ДРУГОГО показа — не пропускать</div></div>');
+        return true;
+      }
+    }
+  }catch(e){ return false; }
+  if(seq !== scanSeq) return true;
+  const base = 'база от ' + fmtTime(door.at);
+  if(door.canceled){ show('<div class="card warn"><div class="offline-flag">Нет связи · ' + escapeHtml(base) + '</div><div class="status warn">Показ ОТМЕНЁН — билеты не действуют</div></div>'); return true; }
+  if(!hit){
+    show('<div class="card warn"><div class="offline-flag">Нет связи · ' + escapeHtml(base) + '</div>' +
+      '<div class="status warn">НЕТ в офлайн-базе — не пропускать</div>' +
+      '<div class="detail detail-left">Билет купили после ' + escapeHtml(fmtTime(door.at)) + ', он возвращён, передан другому (старый QR) или это не наш QR. Проверьте фамилию и номер по распечатанному списку или позовите администратора.</div></div>');
+    return true;
+  }
+  const e = hit.e;
+  // Отметка «пропущен без связи» — с этого телефона или проход в очереди.
+  const localAt = (door.local && door.local[h]) || (getQueue().some((x) => x.token === token) ? new Date().toISOString() : null);
+  const ctx = newCard(token, null);
+  ctx.doorH = h;
+  if(hit.kind === 'invite'){
+    const nowMs = Date.now();
+    if((e.from && nowMs < Date.parse(e.from)) || (e.to && nowMs > Date.parse(e.to))){
+      show('<div class="card warn"><div class="offline-flag">Нет связи · ' + escapeHtml(base) + '</div><div class="name">' + escapeHtml(e.name) + '</div><div class="status warn">Пригласительный на ДРУГОЙ день — не пропускать</div></div>');
+      return true;
+    }
+    const used = !e.multi && (e.visits > 0 || localAt);
+    ctx.data = {kind: 'invite', name: e.name, persons: e.persons, orderId: e.orderId};
+    show('<div class="card ' + (used ? 'warn' : 'ok') + '"><div class="offline-flag">Нет связи · ' + escapeHtml(base) + '</div>' +
+      '<div class="name">' + escapeHtml(e.name) + '</div><div class="detail">Пригласительный № ' + escapeHtml(String(e.num).padStart(3, '0')) + ' · ' + escapeHtml(door.production || '') + '</div>' +
+      '<div class="detail"><b>На ' + escapeHtml(personsWord(e.persons)) + '</b></div>' +
+      '<div class="status ' + (used ? 'warn' : 'ok') + '">' + (used ? 'Уже прошёл(а)' + (localAt ? ' в ' + escapeHtml(fmtTime(localAt)) + ' (без связи)' : '') + ' — повторно не пропускать' : 'Есть в офлайн-базе — пригласительный действителен') + '</div>' +
+      (used ? '' : btn('Пропустить (без связи)', 'offlineRedeem', ctx)) + '</div>');
+    return true;
+  }
+  const redeemedAt = e.r || localAt;
+  ctx.data = {name: e.name, production: door.production, datetime: door.datetime, seatKey: e.seat, ticketSeries: e.series, ticketNumber: e.num, orderId: e.orderId, identifier: e.id, redeemedAt: redeemedAt || null};
+  const seat = e.seat ? escapeHtml(seatsText('', [e.seat])) : 'свободная рассадка';
+  const where = escapeHtml(door.production || '') + (door.datetime ? ' · ' + escapeHtml(fmtWhen(door.datetime)) : '');
+  const status = redeemedAt
+    ? 'Уже погашен (в ' + escapeHtml(fmtTime(redeemedAt)) + (e.r ? '' : ', без связи') + ') — повторно не пропускать'
+    : 'Есть в офлайн-базе — билет действителен';
+  const warn = !!redeemedAt;
+  show('<div class="card ' + (warn ? 'warn' : 'ok') + '"><div class="offline-flag">Нет связи · ' + escapeHtml(base) + '</div>' +
+    '<div class="name">' + escapeHtml(e.name) + '</div><div class="detail">' + where + '</div>' +
+    '<div class="detail">' + seat + (e.num ? ' · Серия ' + escapeHtml(e.series || '') + ' № ' + escapeHtml(e.num) : '') + '</div>' +
+    '<div class="status ' + (warn ? 'warn' : 'ok') + '">' + status + '</div>' +
+    (redeemedAt ? '' : btn('Пропустить (без связи)', 'offlineRedeem', ctx)) + '</div>');
+  return true;
+}
+function offlineRedeem(ctx){
+  const item = enqueue(ctx);
+  if(item) ctx.queuedId = item.id;
+  if(door && ctx.doorH){ door.local = door.local || {}; door.local[ctx.doorH] = new Date().toISOString(); doorSave(); }
+  if(!isActive(ctx)) return;
+  if(ctx.data && ctx.data.kind === 'invite'){
+    show('<div class="card ok"><div class="name">' + escapeHtml(ctx.data.name || '') + '</div><div class="status ok">' + (item ? 'Пропущен (нет связи — сохранено, отправим сами)' : 'Уже пропущен без связи — повторно не пропускать') + '</div>' +
+      (item ? btn('Отменить (убрать из очереди)', 'unqueue', ctx, true) : '') + '</div>');
+    return;
+  }
+  renderTicket(ctx.data, ctx, item ? 'queued' : 'queuedDup');
+}
+doorLoad();
+renderDoorBadge();
+setInterval(() => { if(getStaffCode() && navigator.onLine !== false) refreshDoorList(); }, DOOR_REFRESH_MS);
+
 // pack-v621: первый экран — только когда весь скрипт уже выполнен. Раньше
 // он стоял в начале: при сохранённом коде (перезагрузка, выгрузка вкладки
 // на телефоне) showApp() → refocus() обращался к `let lastScanFrom` до его
