@@ -295,7 +295,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 
   <div id="success-block" style="display:none" class="success-box">
     <h2>Thank you! Payment received</h2>
-    <p id="success-text">Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!</p>
+    <p id="success-text">Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!</p>
     <!-- pack-v581 (ТЗ Н7): что будет дальше and когда — and что сделать, если не пришло. -->
     <div id="after-pay" class="after-pay">
       <p class="after-note">The email with your tickets arrives within 5 minutes. Not there? Check the Spam folder or send the tickets again.</p>
@@ -2290,7 +2290,7 @@ async function submitOrder(){
         // для платного пути в том же случае.
         showSuccess('Thank you! No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
       } else {
-        showSuccess('Thank you! No payment was needed — the discount covered the full amount. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
+        showSuccess('Thank you! No payment was needed — the discount covered the full amount. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!');
         showAfterPay(out.order_id);
       }
       return;
@@ -2444,7 +2444,7 @@ async function pollOrderStatus(){
       // _tools/Payments она есть), поэтому хотя бы так.
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you at the show!');
+      showSuccess('Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!');
       showAfterPay(stored.orderId);
       return;
     }
