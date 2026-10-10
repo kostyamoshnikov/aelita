@@ -10,7 +10,7 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 87;
+const SITE_VERSION = 88;
 const CACHE_NAME = `aelita-v${SITE_VERSION}`;
 const STATIC_CACHE = `aelita-static-v${SITE_VERSION}`;
 

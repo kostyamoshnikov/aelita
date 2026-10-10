@@ -133,13 +133,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,13,.95)
    десктопе/планшете наезжают на «КАБИНЕТ» и переключатель языка —
    поэтому ниже 1200px сжимаем разрядку и промежутки, а не прячем
    пункты. Ниже 760px меню и так уходит в бургер. */
-@media(min-width:761px) and (max-width:1200px){
-  .nav-links{gap:18px}
-  .nav-links a{letter-spacing:.16em}
+/* pack-v631: на всех ширинах, кроме ~1180 px, пункты переносились на две
+   строки («ТОЧКА / КЮРИ», «О / КОМПАНИИ»), логотип прилипал к «АФИШЕ», на
+   1024 px «EN» уходил за край (заказчик 10.10: «глянь вёрстку»). Теперь:
+   пункты не переносятся, промежутки тянутся от ширины, логотип и правые
+   ссылки не сжимаются; 761–1100 px — бургер (в нём все пункты). */
+.nav-links a{white-space:nowrap}
+.nav-in>.logo,.nav-in>.nav-account,.nav-in>.lang-switch{flex-shrink:0}
+.nav-links{margin:0 clamp(16px,2vw,32px)}
+@media(min-width:1201px){
+  .nav-links{gap:clamp(16px,1.55vw,26px)}
+  .nav-links a{letter-spacing:.18em}
 }
-@media(min-width:761px) and (max-width:940px){
-  .nav-links{gap:11px}
-  .nav-links a{font-size:0.75rem;letter-spacing:.08em}
+@media(min-width:1101px) and (max-width:1200px){
+  .nav-links{gap:14px;margin:0 16px}
+  .nav-links a{letter-spacing:.1em}
+}
+@media(min-width:761px) and (max-width:1100px){
+  .nav-links{display:none}
+  .nav-in>.nav-account{margin-left:auto}
 }
 /* Ссылка «Кабинет» в шапке — только на широких экранах: на мобильном
    она бы теснила логотип, EN и бургер, а в самом бургер-меню
@@ -176,6 +188,11 @@ footer .foot-producers a{color:var(--gold)}
 .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--gold)}
 @media(max-width:760px){.burger{display:flex}}
+/* pack-v631: плашка возраста внутри подзаголовка (<p class="eyebrow">Жанр<span class="age">12+</span>)
+   при переносе уезжала на новую строку с отступом слева — теперь ровно, с промежутком. */
+.eyebrow:has(> .age){display:flex;flex-wrap:wrap;align-items:center;column-gap:14px;row-gap:10px}
+.eyebrow:has(> .age) > .age{margin-left:0}
+@media(min-width:761px) and (max-width:1100px){.burger{display:flex}} /* pack-v631: планшет — бургер */
 .m-menu{
   position:fixed;inset:0;z-index:150;
   background:var(--ink);
@@ -505,7 +522,10 @@ section{padding:80px 0}
   }
 .sec-head h2{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
 @media(max-width:760px){.wrap{padding:0 16px}}
-.hero-content{position:relative;z-index:2;animation:rise 1.2s ease both 1s}
+/* pack-v631: заголовок спектакля появлялся через 1–2 с после загрузки (задержка 1 с + 1,2 с
+   анимации) — на медленном телефоне первым экраном был пустой фон. */
+.hero-content{position:relative;z-index:2;animation:rise .8s ease both .15s}
+@media(prefers-reduced-motion:reduce){.hero-content{animation:none}}
 .hero-badge{display:inline-flex;gap:16px;align-items:center;margin-bottom:20px}
 .hero-badge span{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;text-transform:uppercase;color:var(--sand)}
 .age{border:1px solid rgba(214,181,122,.5);color:var(--gold);padding:4px 10px;font-size:0.75rem;letter-spacing:.3em}
@@ -513,6 +533,9 @@ section{padding:80px 0}
 .hero-dir{font-size:0.875rem;color:rgba(201,184,163,.7);margin-bottom:36px}
 .hero-dir strong{color:var(--bone);font-weight:400}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+/* pack-v631: в ряду кнопок отступ даёт gap; старые страницы задают .btn-outline{margin-left:14px} —
+   при переносе вторая кнопка уезжала вправо (/koroche). То же в блоке «Ближайших показов нет». */
+.hero-btns > .btn-outline,.no-shows .btn-outline{margin-left:0}
 .desc-grid{display:grid;grid-template-columns:1fr 320px;gap:70px;align-items:start}
 .desc-text p{color:var(--sand);margin-bottom:18px;font-size:1rem;line-height:1.85}
 .desc-text p strong{color:var(--bone);font-weight:400}
