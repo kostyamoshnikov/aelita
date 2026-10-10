@@ -333,7 +333,7 @@ function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0
 function enqueue(ctx){
   const arr = getQueue();
   if(arr.some((x)=>x.token === ctx.token)) return null; // этот билет уже пропущен без связи
-  const item = {id: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8), token: ctx.token, expectedPerformanceId, ts: Date.now(), name: ctx.data && ctx.data.name || ''};
+  const item = {id: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8), token: ctx.token, expectedPerformanceId, ts: Date.now(), name: ctx.data && ctx.data.name || '', maybeSent: !!ctx.maybeSent};
   arr.push(item);
   saveQueue(arr);
   return item;
@@ -412,7 +412,10 @@ async function doFlush(){
     }
     done.add(item.id);
     settleQueuedCard(item, data);
-    if(data && data.ok && !(data.kind === 'invite' && data.alreadyRedeemed)) sent++;
+    // pack-v626: проход ушёл в очередь по пределу ожидания (запрос мог дойти),
+    // а сервер говорит «уже погашен» в пределах 15 с — это наш же проход.
+    const ownLate = item.maybeSent && data && data.error === 'already_redeemed' && data.redeemedAt && Math.abs(Date.parse(data.redeemedAt) - item.ts) < 15000;
+    if(ownLate || (data && data.ok && !(data.kind === 'invite' && data.alreadyRedeemed))) sent++;
     else notes.push(queueNote(item, data));
   }
   // Перечитываем: за время отправки контролёр мог пропустить ещё кого-то.
@@ -445,16 +448,28 @@ function setNet(online){
 // настоящей ошибке сервера маскировало бы её под офлайн-очередь.
 class NetworkError extends Error {}
 class UnauthorizedError extends Error {}
+// pack-v626: предел ожидания ответа. При слабой связи в фойе «Проверяем…»
+// висело десятки секунд, а офлайн-база не включалась (fetch не падал).
+// Теперь через 8 с — как «нет связи» (офлайн-база / очередь); базу показа
+// ждём дольше — она больше и нужна не срочно.
+const API_TIMEOUT_MS = { door_list: 25000, invite_search: 12000 };
 async function api(action, extra){
-  let res;
+  let res, timer = null;
   try{
+    const ac = (typeof AbortController === 'function') ? new AbortController() : null;
+    if(ac) timer = setTimeout(() => ac.abort(), API_TIMEOUT_MS[action] || 8000);
     res = await fetch(`${API_BASE}/ticket-check`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action, staffCode: getStaffCode(), ...extra })
+      body: JSON.stringify({ action, staffCode: getStaffCode(), ...extra }),
+      signal: ac ? ac.signal : undefined,
     });
   }catch(e){
     setNet(false);
-    throw new NetworkError('Нет связи с сервером');
+    const ne = new NetworkError('Нет связи с сервером');
+    ne.timedOut = !!(e && e.name === 'AbortError'); // запрос мог дойти до сервера
+    throw ne;
+  }finally{
+    if(timer) clearTimeout(timer);
   }
   setNet(true);
   if(res.status === 401 || res.status === 429){
@@ -594,13 +609,14 @@ function cameraWanted(){
   try{ return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); }catch(e){ return false; }
 }
 cameraToggleBtn.addEventListener('click', () => {
-  if(cameraStream){ lsSet(CAMERA_KEY, '0'); stopCamera(); }
+  // Во время запроса разрешения нажатие — «не надо камеру» (проверится после ответа).
+  if(cameraStream || cameraStarting){ lsSet(CAMERA_KEY, '0'); stopCamera(); }
   else { lsSet(CAMERA_KEY, '1'); startCamera(); }
 });
 function cameraAlive(){ return !!cameraStream && cameraStream.getTracks().some((t) => t.readyState === 'live'); }
 function resumeCamera(){
-  if(!cameraWanted() || !appVisible() || document.visibilityState === 'hidden') return;
-  if(cameraAlive()) return;
+  if(!cameraWanted() || !appVisible() || !getStaffCode() || document.visibilityState === 'hidden') return;
+  if(cameraAlive()){ try{ const pr = cameraVideo.play(); if(pr && pr.catch) pr.catch(() => {}); }catch(e){} return; } // iOS: трек жив, видео на паузе
   if(cameraStream) stopCamera();
   startCamera(true);
 }
@@ -630,6 +646,14 @@ async function startCameraInner(silent){
     if(!silent) document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
     cameraStream = null;
     refocus();
+    return;
+  }
+  // pack-v626: пока ждали разрешения, могли выйти на экран кода (неверный код)
+  // или выключить камеру — тогда не сканируем: каждый QR под экраном кода
+  // уходил бы на сервер без кода и засчитывался как перебор (блок IP площадки).
+  if(!appVisible() || !getStaffCode() || !cameraWanted()){
+    cameraStream.getTracks().forEach((t) => t.stop());
+    cameraStream = null;
     return;
   }
   barcodeDetector = null;
@@ -696,6 +720,7 @@ let cameraLastCheckAt = 0;
 let scanInFlight = 0;    // проверок в пути
 const CAMERA_MAX_SIDE = 800;
 function cameraSeen(text){
+  if(!appVisible() || !getStaffCode()) return; // pack-v626: под экраном кода не сканируем
   const now = Date.now();
   const same = text === cameraLastCode && now - cameraLastAt < CAMERA_COOLDOWN_MS;
   cameraLastCode = text;
@@ -778,6 +803,15 @@ async function handleScan(token, fromSearch){
     show('<div class="card warn"><div class="status warn">Это не QR билета или пригласительного — не пропускать. Гостя без QR ищите кнопкой «Гость без QR».</div></div>');
     return;
   }
+  // pack-v626: этот QR уже пропущен без связи и ждёт отправки — второй раз
+  // не пускаем (пока очередь не ушла, сервер о проходе не знает).
+  if(getQueue().some((x) => String(x.token).trim() === String(token).trim())){
+    activeCard = 0;
+    buzz(false);
+    show('<div class="card warn"><div class="status warn">Этот билет уже пропущен без связи (ждёт отправки) — повторно не пропускать</div></div>');
+    flushQueue();
+    return;
+  }
   const seq = ++scanSeq;
   activeCard = 0;
   show('<div class="card">Проверяем…</div>');
@@ -800,7 +834,11 @@ async function handleScan(token, fromSearch){
     scanInFlight--;
   }
   if(seq !== scanSeq) return; // уже отсканировали следующий билет
-  render(data, newCard(token, data));
+  const ctx = newCard(token, data);
+  // pack-v626: гость, найденный по фамилии, — с подтверждением: промах пальцем
+  // по соседнему «Иванову» погасил бы чужой билет.
+  ctx.fromSearch = !!fromSearch;
+  render(data, ctx);
 }
 
 // pack-v592 (ревью 07.10, В2): совсем без сети проверить билет нельзя —
@@ -942,12 +980,12 @@ function render(data, ctx){
   if(data.kind === 'invite'){
     renderInvite(data, ctx, false);
     if(data.alreadyRedeemed){ buzz(false); return; }
-    if(autoPassActive() && !data.seatsLater) cardAct('redeem', ctx.id);
+    if(autoPassActive() && !data.seatsLater && !ctx.fromSearch) cardAct('redeem', ctx.id);
     return;
   }
   if(data.alreadyRedeemed){ buzz(false); return renderTicket(data, ctx, 'already'); }
   renderTicket(data, ctx, 'valid');
-  if(autoPassActive()) cardAct('redeem', ctx.id);
+  if(autoPassActive() && !ctx.fromSearch) cardAct('redeem', ctx.id);
 }
 
 // Состояния карточки билета:
@@ -1128,6 +1166,7 @@ async function confirmRedeem(ctx){
     if(e instanceof NetworkError){
       // офлайн — ставим в очередь (проверка этого билета только что прошла
       // на сервере), показываем результат «пропущен, отправим».
+      ctx.maybeSent = !!e.timedOut;
       const item = enqueue(ctx);
       if(item) ctx.queuedId = item.id;
       doorMark(ctx.token); // pack-v624: и в офлайн-базе — «пропущен без связи»
