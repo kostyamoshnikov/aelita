@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=88">
+<link rel="stylesheet" href="/assets/fonts.css?v=89">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -510,7 +510,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=88"></script>
+<script src="/assets/payments.js?v=89"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -948,7 +948,7 @@ async function loginWithCode(name, email){
   if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Проверьте код'); msgEl.textContent = 'Код не подошёл — проверьте цифры' + (out.attemptsLeft ? ' (осталось попыток: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
   if(out.error === 'code_expired' || out.error === 'code_attempts_exceeded'){ msgEl.textContent = 'Код устарел или попытки кончились — пришлём новый: нажмите «Прислать код ещё раз».'; return null; }
   if(out.error === 'account_moved'){ msgEl.textContent = 'Почту этого кабинета сменили — укажите новую почту выше.'; return null; }
-  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; usePassword(); msgEl.textContent = 'Код устарел — нажмите «Оплатить» ещё раз, пришлём новый.'; return null; }
+  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; acctMode = 'register'; applyAcctMode(); usePassword(); msgEl.textContent = 'Код устарел — нажмите «Оплатить» ещё раз, пришлём новый.'; return null; }
   if(reg && out.error === 'email_taken'){ regPending = null; await sendLoginCode(); return null; }
   if(res.status === 429){ msgEl.textContent = 'Слишком много попыток подряд — подождите несколько минут и попробуйте снова.'; return null; }
   msgEl.textContent = 'Не получилось войти — попробуйте ещё раз через минуту или войдите паролем.';
@@ -2500,6 +2500,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=88"></script>
+<script src="/assets/phone-prefix.js?v=89"></script>
 </body>
 </html>

@@ -65,6 +65,14 @@
       registering: 'Заводим личный кабинет…',
       signingIn: 'Входим в кабинет…',
       emailTaken: 'На эту почту кабинет уже есть — введите пароль от него.',
+      // pack-v635: регистрация в два шага (с pack-v592) — код из письма
+      codeLabel: 'Код из письма',
+      codeSent: function (e) { return 'Отправили код на ' + e + ' (проверьте и «Спам»). Введите 6 цифр — кабинет заведётся, и сразу перейдём к оплате.'; },
+      codeMany: 'Писем с кодом на эту почту было много — новое придёт не раньше чем через час. Введите 6 цифр из последнего письма.',
+      codeNeed: 'Введите 6 цифр из письма.',
+      codeBad: 'Код не подошёл — проверьте цифры.',
+      codeOld: 'Код устарел — нажмите кнопку ещё раз, пришлём новый.',
+      tooMany: 'Слишком много попыток подряд — подождите 15 минут.',
       wrongPassword: 'Пароль не подошёл.',
       forgot: 'Забыли пароль?',
       resetSent: 'Ссылка для нового пароля отправлена на почту. Задайте пароль, вернитесь на эту вкладку и нажмите кнопку ещё раз.',
@@ -173,6 +181,13 @@
       registering: 'Creating your account…',
       signingIn: 'Signing in…',
       emailTaken: 'There is already an account with this email — enter its password.',
+      codeLabel: 'Code from the email',
+      codeSent: function (e) { return 'We have sent a code to ' + e + ' (check Spam too). Enter the 6 digits — your account will be created and we will go straight to payment.'; },
+      codeMany: 'Many code emails have been sent to this address — a new one can be sent in an hour at the earliest. Enter the 6 digits from the latest email.',
+      codeNeed: 'Enter the 6 digits from the email.',
+      codeBad: 'That code did not work — check the digits.',
+      codeOld: 'The code has expired — press the button again and we will send a new one.',
+      tooMany: 'Too many attempts in a row — wait 15 minutes.',
       wrongPassword: 'The password did not match.',
       forgot: 'Forgot your password?',
       resetSent: 'A link to set a new password has been emailed to you. Set it, come back to this tab and press the button again.',
@@ -368,7 +383,10 @@
       $('j-password').setAttribute('autocomplete', acctMode === 'login' ? 'current-password' : 'new-password');
       $('spAcctToggle').textContent = acctMode === 'login' ? T.toRegister : T.toLogin;
     }
-    $('spAcctToggle').addEventListener('click', function () { acctMode = acctMode === 'login' ? 'register' : 'login'; applyAcctMode(); });
+    $('spAcctToggle').addEventListener('click', function () {
+      acctMode = acctMode === 'login' ? 'register' : 'login'; applyAcctMode();
+      codeStep = null; if ($('spCodeWrap')) $('spCodeWrap').hidden = true;
+    });
 
     function showSignedIn(email) {
       signedIn = true;
@@ -469,8 +487,72 @@
       history.replaceState(null, '', location.pathname + (rest ? '?' + rest : ''));
     }
 
+    // pack-v635: с pack-v592 register отвечает {need_email_code, pending_id} —
+    // кабинет появится после кода из письма. Поле кода добавляется сюда же;
+    // codeStep: {email, pendingId|null} — pendingId null: код из прошлых писем
+    // (лимит писем исчерпан) уходит во вход по коду, он сам заведёт кабинет.
+    var codeStep = null;
+    function codeEl() {
+      var el = $('j-code');
+      if (el) return el;
+      var wrap = document.createElement('div');
+      wrap.className = 'join-field';
+      wrap.id = 'spCodeWrap';
+      wrap.hidden = true;
+      wrap.innerHTML = '<label for="j-code">' + esc(T.codeLabel) + ' <span class="req-mark">*</span></label>'
+        + '<input class="ym-disable-keys" type="text" id="j-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">';
+      $('spAcctBlock').appendChild(wrap);
+      el = $('j-code');
+      el.addEventListener('input', function () {
+        var v = el.value.replace(/\D+/g, '').slice(0, 6);
+        if (el.value !== v) el.value = v;
+        if (v.length === 6 && !btn.disabled) btn.click();
+      });
+      return el;
+    }
+    function showCode(step, text) {
+      codeStep = step;
+      var el = codeEl();
+      $('spCodeWrap').hidden = false;
+      el.value = '';
+      say(text);
+      el.focus();
+    }
+    async function confirmCode(name, email) {
+      var el = codeEl();
+      var code = el.value.replace(/\D+/g, '');
+      if (!/^\d{6}$/.test(code)) { fieldErr(el, T.codeNeed); return null; }
+      say(T.registering);
+      var r;
+      try {
+        r = codeStep.pendingId
+          ? await api(ACCOUNT_API + '/register', { method: 'POST', auth: false, body: { email: codeStep.email, code: code, pending_id: codeStep.pendingId } })
+          : await api(ACCOUNT_API + '/login-with-code', { method: 'POST', auth: false, body: { email: codeStep.email, code: code, name: name, pd_consent: true } });
+      } catch (e) { say(T.network); return null; }
+      if (r.ok && r.data.token) {
+        codeStep = null;
+        $('spCodeWrap').hidden = true;
+        setToken(r.data.token);
+        $('j-password').value = '';
+        showSignedIn(r.data.email || email);
+        return r.data.token;
+      }
+      var err = r.data.error;
+      if (err === 'code_invalid') { fieldErr(el, T.codeBad); el.select(); return null; }
+      if (err === 'registration_expired' || err === 'code_expired' || err === 'code_attempts_exceeded') {
+        codeStep = null; $('spCodeWrap').hidden = true; say(T.codeOld); return null;
+      }
+      if (err === 'email_taken') { codeStep = null; $('spCodeWrap').hidden = true; acctMode = 'login'; applyAcctMode(); fieldErr($('j-password'), T.emailTaken); return null; }
+      if (r.status === 429) { say(T.tooMany); return null; }
+      say(T.error);
+      return null;
+    }
+
     async function ensureAccount(name, email) {
       if (token()) return token();
+      if (codeStep && codeStep.email === email.toLowerCase()) return confirmCode(name, email);
+      codeStep = null;
+      if ($('spCodeWrap')) $('spCodeWrap').hidden = true;
       var pwEl = $('j-password');
       var password = pwEl.value;
       if (acctMode === 'register' && password.length < 8) { fieldErr(pwEl, T.needPassword); return null; }
@@ -490,6 +572,16 @@
         showSignedIn(r.data.email || email);
         return r.data.token;
       }
+      if (r.ok && r.data.need_email_code) {
+        var em = String(r.data.email || email).toLowerCase();
+        showCode({ email: em, pendingId: r.data.pending_id }, T.codeSent(em));
+        return null;
+      }
+      if (r.status === 429 && r.data.error === 'code_too_many_requests') {
+        showCode({ email: email.toLowerCase(), pendingId: null }, T.codeMany);
+        return null;
+      }
+      if (r.status === 429) { say(T.tooMany); return null; }
       if (r.data.error === 'email_taken') {
         acctMode = 'login'; applyAcctMode(); pwEl.value = '';
         fieldErr(pwEl, T.emailTaken);

@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=88">
+<link rel="stylesheet" href="/assets/fonts.css?v=89">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -517,7 +517,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=88"></script>
+<script src="/assets/payments.js?v=89"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -955,7 +955,7 @@ async function loginWithCode(name, email){
   if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Check the code'); msgEl.textContent = 'That code did not work — check the digits' + (out.attemptsLeft ? ' (attempts left: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
   if(out.error === 'code_expired' || out.error === 'code_attempts_exceeded'){ msgEl.textContent = 'The code has expired or the attempts are used up — tap “Send the code again”.'; return null; }
   if(out.error === 'account_moved'){ msgEl.textContent = 'The email of this account has been changed — enter the new email above.'; return null; }
-  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; usePassword(); msgEl.textContent = 'The code has expired — tap “Pay” again and we will send a new one.'; return null; }
+  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; acctMode = 'register'; applyAcctMode(); usePassword(); msgEl.textContent = 'The code has expired — tap “Pay” again and we will send a new one.'; return null; }
   if(reg && out.error === 'email_taken'){ regPending = null; await sendLoginCode(); return null; }
   if(res.status === 429){ msgEl.textContent = 'Too many attempts in a row — wait a few minutes and try again.'; return null; }
   msgEl.textContent = 'Could not sign you in — try again in a minute or sign in with your password.';
@@ -2507,6 +2507,6 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=88"></script>
+<script src="/assets/phone-prefix.js?v=89"></script>
 </body>
 </html>
