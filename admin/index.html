@@ -7,6 +7,20 @@
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="/assets/fonts.css?v=90">
 <style>
+/* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
+.sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
+.sf-tile{background:rgba(214,181,122,.06);border-left:2px solid var(--gold);padding:10px 12px}
+.sf-th{font-size:0.625rem;letter-spacing:1px;text-transform:uppercase;color:var(--sand)}
+.sf-tv{font-size:1.125rem;color:var(--bone,#E8E6E1);margin-top:4px}
+.sf-ts{font-size:0.6875rem;color:var(--sand);margin-top:2px}
+.sf-h{margin:16px 0 6px;font-size:0.6875rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.sf-table td.sf-r,.sf-table th.sf-r{text-align:right;white-space:nowrap}
+.sf-table tr.sf-b td{font-weight:600}
+/* pack-v644: «Подтянуть комиссию ЮKassa» */
+.income-box{margin-top:12px;border:1px solid rgba(201,184,163,.2);border-radius:6px;padding:12px 14px}
+.income-sum{cursor:pointer;color:var(--sand);font-size:0.8125rem}
+.income-p{color:var(--sand);font-size:0.75rem;line-height:1.6;margin:10px 0}
+.income-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{min-height:100%;overflow-x:hidden}
@@ -348,7 +362,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
          покупателям при отмене показа. -->
     <!-- pack-v571 (ТЗ С6): сводка продаж по показам — продано, места,
          выручка деньгами и картами, возвраты, промокоды, график по дням,
-         список зрителей для площадки (CSV и PDF). Тестовые заказы не
+         список зрителей для площадки (Excel и PDF). Тестовые заказы не
          считаются. Данные — Admin/tickets-orders.js ?view=sales. -->
     <p class="sec-title sec-gap">Продажи по показам <button class="mini-btn" id="salesReloadBtn">Обновить</button></p>
     <div id="salesBlock"><div class="empty-state">Загружаем…</div></div>
@@ -361,7 +375,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <button class="mini-btn" id="perfReloadBtn">Обновить</button></p>
     <div id="perfBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
 
-    <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button></p>
+    <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="ordSearch" placeholder="Поиск по имени, email или номеру заказа…">
       <select class="search" id="ordPerfFilter" style="max-width:280px">
@@ -389,12 +403,23 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <span id="backfillMsg" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>
       </div>
     </details>
+    <details class="backfill-box income-box">
+      <summary class="income-sum">Подтянуть комиссию ЮKassa для отчёта о продажах</summary>
+      <p class="income-p">
+        Заказы до 11.10 не хранят, сколько пришло на счёт после комиссии ЮKassa. Кнопка запросит
+        каждый такой платёж у ЮKassa и запишет сумму «на счёт» и способ оплаты — тогда в PDF
+        продаж комиссия будет точной, а не оценкой. Покупателям ничего не уходит.
+        За раз — до 120 заказов; если останутся, нажмите ещё раз.
+      </p>
+      <button class="mini-btn" id="incomeBtn">Подтянуть</button>
+      <span id="incomeMsg" class="income-msg"></span>
+    </details>
 
     <!-- pack-v539. Незавершённые заказы: кто начал оформлять (билеты,
          сертификат, подписки, программки) и не оплатил — на каком шаге
          и почему. Данные — _tools/Shared/lib/checkout-log.js, отдаёт
          та же функция tickets-orders (поле checkouts). Хранятся 30 дней. -->
-    <p class="sec-title" style="margin-top:56px">Незавершённые заказы (<span id="co-count">0</span>) <button class="mini-btn" id="checkoutsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button></p>
+    <p class="sec-title" style="margin-top:56px">Незавершённые заказы (<span id="co-count">0</span>) <button class="mini-btn" id="checkoutsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="coSearch" placeholder="Поиск по имени, email, телефону или спектаклю…">
       <select class="search" id="coStageFilter" style="max-width:280px">
@@ -411,7 +436,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
          (маршрут /admin/subscriptions). Счета компаний — выпуск 4 ТЗ, позже. -->
-    <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать CSV</button> <button class="mini-btn" id="subsResetTestBtn" style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button> <button class="mini-btn" id="subsManualBtn">+ Оплата переводом / наличными</button></p>
+    <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button> <button class="mini-btn" id="subsResetTestBtn" style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button> <button class="mini-btn" id="subsManualBtn">+ Оплата переводом / наличными</button></p>
     <div id="subsSummary" style="color:var(--sand);font-size:0.8125rem;line-height:1.7;margin:0 0 12px"></div>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="subSearch" placeholder="Поиск по имени, email или телефону…">
@@ -1609,7 +1634,7 @@ function renderEvents(events) {
       '</div>' +
       '<div class="ev-actions">' +
         '<button class="mini-btn" data-ev-action="toggle" data-ev-idx="' + idx + '">Показать список</button>' +
-        (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать CSV</button>' : '') +
+        (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать Excel</button>' : '') +
         '<button class="mini-btn" data-ev-action="addReg" data-ev-idx="' + idx + '">+ Регистрация</button>' +
       '</div>' +
       '<div class="ev-people" id="ev-people-' + idx + '">' + people + '</div>' +
@@ -1649,21 +1674,8 @@ function exportEventCsv(ev) {
   ev.registrations.forEach(function (r) {
     rows.push([r.name || '', r.email || '', fmtDate(r.createdAt), '']);
   });
-  var csv = rows.map(function (row) {
-    return row.map(function (cell) {
-      var s = String(cell).replace(/"/g, '""');
-      return '"' + s + '"';
-    }).join(';');
-  }).join('\r\n');
-  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'aelita-' + ev.id + '-registrations.csv';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+  // pack-v644: таблица Excel в дизайне Аэлиты (xlsxBlob) вместо CSV.
+  invSave(xlsxBlob([{ name: 'Регистрации', title: 'Регистрации: ' + (ev.title || ev.id), rows: rows, widths: [30, 30, 18, 18] }]), 'aelita-' + ev.id + '-registrations.xlsx');
 }
 
 async function loadEvents() {
@@ -2106,6 +2118,31 @@ function renderOrders(orders) {
   }).join('');
 }
 
+// pack-v644: комиссия ЮKassa для старых заказов (Admin/tickets-backfill.js, action: 'income').
+document.getElementById('incomeBtn').addEventListener('click', async function () {
+  var btn = this;
+  var msg = document.getElementById('incomeMsg');
+  btn.disabled = true; msg.textContent = 'Запрашиваем платежи у ЮKassa… до минуты.';
+  try {
+    var res = await fetch(ADMIN_BACKFILL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+      body: JSON.stringify({ action: 'income' }),
+    });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var data = await res.json().catch(function () { return null; });
+    if (res.ok && data && data.ok) {
+      msg.textContent = !data.candidates ? 'Готово: у всех заказов комиссия уже есть.'
+        : 'Записано: ' + data.updated + ' из ' + data.candidates + (data.failed ? ' · не удалось: ' + data.failed : '') + (data.left ? ' · осталось ' + data.left + ' — нажмите ещё раз' : '');
+    } else {
+      msg.textContent = 'Не получилось.';
+    }
+  } catch (err) {
+    msg.textContent = 'Нет связи с сервером.';
+  }
+  btn.disabled = false;
+});
+
 document.getElementById('backfillBtn').addEventListener('click', async function () {
   var btn = this;
   var msg = document.getElementById('backfillMsg');
@@ -2277,15 +2314,7 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
       ORDER_STATUS_LABELS[o.status] || o.status, fmtDate(o.createdAt), o.paidAt ? fmtDate(o.paidAt) : '', o.ticketsCount, o.redeemedCount, o.totalAmount]);
   });
   if (testSkipped) rows.push(['Тестовые заказы не включены: ' + testSkipped, '', '', '', '', '', '', '', '', '', '']);
-  var csv = rows.map(function (row) {
-    return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
-  }).join('\r\n');
-  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'aelita-orders.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+  invSave(xlsxBlob([{ name: 'Заказы', title: 'Заказы билетов', rows: rows, widths: [14, 30, 26, 28, 18, 14, 18, 18, 9, 10, 11] }]), 'aelita-orders.xlsx');
 });
 
 // ── Продажи по показам (pack-v571, ТЗ С6) ─────────────────────────
@@ -2309,8 +2338,10 @@ function salesCard(s) {
     '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
     (!s.isTest && s.status === 'on_sale' && !s.venueConfirmed ? '<div class="sales-line">⚠️ Площадка не подтверждена — впишите в каталог (venueConfirmed), чем подтверждена: договор, письмо площадки.</div>' : '') +
     (promos ? '<div class="sales-line">Промокоды: ' + escapeHtml(promos) + '</div>' : '') +
-    '<div class="sales-actions"><button class="mini-btn" data-sales-act="days">По дням</button>' +
-    '<button class="mini-btn" data-sales-act="csv">Зрители — CSV</button>' +
+    '<div class="sales-actions"><button class="mini-btn" data-sales-act="full">Подробно: деньги и вход</button>' +
+    '<button class="mini-btn" data-sales-act="salespdf">Продажи — PDF</button>' +
+    '<button class="mini-btn" data-sales-act="days">По дням</button>' +
+    '<button class="mini-btn" data-sales-act="csv">Зрители — Excel</button>' +
     '<button class="mini-btn" data-sales-act="pdf">Зрители — PDF</button>' +
     (s.seats && s.seating === 'assigned' && s.salesChannel === 'in_house' ? '<button class="mini-btn" data-sales-act="waitlist">Лист ожидания</button>' : '') + '</div>' +
     '<div class="sales-detail"></div></div>';
@@ -2404,6 +2435,56 @@ function salesChartSvg(days) {
   }).join('');
   return '<svg class="sales-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Продажи по дням">' + bars + '</svg>';
 }
+// pack-v644: карточка «Подробно» — те же цифры, что в письме «После показа» и PDF «Продажи»
+// (Tickets/lib/sales-pdf.js → salesData). Почт и телефонов нет.
+function sfRub(n) { return fmtMoney(Math.round(Number(n || 0) * 100) / 100); }
+function sfTable(head, rows, opts) {
+  opts = opts || {};
+  return '<div class="table-wrap"><table class="perf-table sf-table"><thead><tr>' + head.map(function (h, i) { return '<th' + ((opts.right || []).indexOf(i) >= 0 ? ' class="sf-r"' : '') + '>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    rows.map(function (r, ri) { return '<tr' + ((opts.bold || []).indexOf(ri) >= 0 ? ' class="sf-b"' : '') + '>' + r.map(function (c, i) { return '<td' + ((opts.right || []).indexOf(i) >= 0 ? ' class="sf-r"' : '') + '>' + escapeHtml(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+}
+function salesFullHtml(d) {
+  if (!d) return 'Нет данных.';
+  var T = d.totals, I = d.invites || { persons: 0, entered: 0, count: 0 };
+  var pct = function (a, b) { return b ? Math.round(a / b * 100) + '%' : '—'; };
+  var tiles = [
+    ['Продано билетов', T.sold, T.refunded ? 'ещё ' + T.refunded + ' возвращено' : 'заказов: ' + T.orders],
+    ['Пришли', T.entered + I.entered, 'из ' + (T.sold + I.persons) + ' (' + pct(T.entered + I.entered, T.sold + I.persons) + ')'],
+    ['Поступило (ЮKassa)', sfRub(T.grossMoneyRub), 'средний заказ ' + sfRub(T.avgOrderRub)],
+    ['На счёт (−комиссия)', T.feeUnknownOrders && !T.feeKnownRub ? '—' : sfRub(T.netRub), T.feeUnknownOrders ? 'без данных о комиссии: ' + T.feeUnknownOrders + ' зак.' : (T.feeEstOrders ? 'часть — оценка' : 'по данным ЮKassa')],
+  ];
+  var h = '<div class="sf-tiles">' + tiles.map(function (t) { return '<div class="sf-tile"><div class="sf-th">' + escapeHtml(t[0]) + '</div><div class="sf-tv">' + escapeHtml(String(t[1])) + '</div><div class="sf-ts">' + escapeHtml(t[2]) + '</div></div>'; }).join('') + '</div>';
+  var money = [['По прейскуранту (вкл. возвращённые)', sfRub(T.listRub)]];
+  if (T.discountRub) money.push(['Скидки по промокодам', '− ' + sfRub(T.discountRub)]);
+  if (T.giftRub) money.push(['Подарочными картами', '− ' + sfRub(T.giftRub)]);
+  money.push(['Поступило деньгами через ЮKassa', sfRub(T.grossMoneyRub)]);
+  if (T.feeFactOrders) money.push(['Комиссия ЮKassa — факт (' + T.feeFactOrders + ' зак.)', '− ' + sfRub(T.feeFactRub)]);
+  if (T.feeEstOrders) money.push(['Комиссия ЮKassa — оценка ' + T.pct + '% (' + T.feeEstOrders + ' зак.)', '− ' + sfRub(T.feeEstRub)]);
+  if (T.feeUnknownOrders) money.push(['Комиссия неизвестна (' + T.feeUnknownOrders + ' зак. на ' + sfRub(T.feeUnknownRub) + ')', '—']);
+  money.push(['Пришло на счёт (после комиссии)', sfRub(T.netRub) + (T.feeUnknownOrders ? '*' : '')]);
+  if (T.refundedMoneyRub) { money.push(['Возвраты: оплачено за ' + T.refunded + ' бил.', '− ' + sfRub(T.refundedMoneyRub)]); money.push(['Остаётся после возвратов (не больше)', sfRub(T.netAfterRefundsRub)]); }
+  var bold = money.map(function (m, i) { return /^(Поступило|Пришло на счёт|Остаётся)/.test(m[0]) ? i : -1; }).filter(function (i) { return i >= 0; });
+  h += '<div class="sf-h">Деньги</div>' + sfTable(['', 'Сумма'], money, { right: [1], bold: bold });
+  if (T.feeUnknownOrders) h += '<div class="sales-line">* Без комиссии по ' + T.feeUnknownOrders + ' зак.: нажмите «Подтянуть комиссию ЮKassa» в блоке ниже списка заказов — цифры станут точными.</div>';
+  var aud = [['Билеты', T.sold, T.entered, pct(T.entered, T.sold)]];
+  if (I.count) aud.push(['Пригласительные (' + I.count + ' шт.)', I.persons, I.entered, pct(I.entered, I.persons)]);
+  aud.push(['Всего', T.sold + I.persons, T.entered + I.entered, pct(T.entered + I.entered, T.sold + I.persons)]);
+  h += '<div class="sf-h">Зрители и вход</div>' + sfTable(['', 'Ожидали', 'Пришли', 'Доля'], aud, { right: [1, 2, 3], bold: [aud.length - 1] });
+  if ((d.tiers || []).length) h += '<div class="sf-h">Билеты по ценам</div>' + sfTable(['Цена', 'Билетов', 'Оплачено деньгами'], d.tiers.map(function (x) { return [x.price ? sfRub(x.price) : 'бесплатно', x.count, sfRub(x.moneyRub)]; }), { right: [1, 2] });
+  if ((d.methods || []).length) h += '<div class="sf-h">Способы оплаты</div>' + sfTable(['Способ', 'Заказов', 'Сумма'], d.methods.map(function (m) { return [m.name, m.orders, sfRub(m.moneyRub)]; }), { right: [1, 2] });
+  if ((d.promos || []).length) h += '<div class="sf-h">Промокоды</div>' + sfTable(['Код', 'Заказов', 'Билетов', 'Скидка'], d.promos.map(function (p) { return [p.code, p.orders, p.tickets, sfRub(p.discountRub)]; }), { right: [1, 2, 3] });
+  if ((d.days || []).length) h += '<div class="sf-h">Продажи по дням</div>' + salesChartSvg(d.days);
+  if (d.funnel) {
+    var f = d.funnel;
+    h += '<div class="sf-h">Оформление заказа (за 30 дней)</div>' + sfTable(['Где остановились', 'Человек'], [['Начали оформление', f.people], ['Оплатили', f.paid], ['Ушли на оплату и не заплатили', f.payment_started], ['Платёж отменён (банк, срок)', f.canceled], ['Выбрали места и не начали оплату', f.selected], ['Ошибка сайта до оплаты', f.failed]], { right: [1], bold: [0] });
+  }
+  h += '<div class="sf-h">Заказы (' + (d.rows || []).length + ')</div>' + sfTable(['№', 'Оплачен', 'Покупатель', 'Бил.', 'Промокод', 'Деньгами', 'Комиссия', 'На счёт'],
+    (d.rows || []).map(function (r) {
+      return [r.number, r.at ? new Date(r.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—', r.name, r.refunded ? (r.tickets - r.refunded) + '+' + r.refunded + 'в' : r.tickets, r.promo || '',
+        sfRub(r.moneyRub), r.fee === null ? '—' : sfRub(r.fee) + (r.feeKind === 'est' ? '≈' : ''), r.fee === null ? '—' : sfRub(r.moneyRub - r.fee)];
+    }), { right: [3, 5, 6, 7] });
+  return h;
+}
 async function salesAction(card, act) {
   var id = card.getAttribute('data-sales-id');
   var box = card.querySelector('.sales-detail');
@@ -2434,6 +2515,26 @@ async function salesAction(card, act) {
         (p.seats && p.seats.guests != null ? '<div class="sales-line">С учётом гостей GuestSystem: свободно ' + p.seats.free + '.</div>' : '');
       return;
     }
+    // pack-v644: всё, что приходит на почту после показа, — и в карточке показа, и PDF «Продажи».
+    if (act === 'full') {
+      var rf = await fetch(ADMIN_ORDERS_URL + '?view=sales&format=full&performance_id=' + encodeURIComponent(id), { headers: auth });
+      var df = await rf.json();
+      if (!rf.ok) { box.textContent = errorMessage(df); return; }
+      box.innerHTML = salesFullHtml(df.sales);
+      return;
+    }
+    if (act === 'salespdf') {
+      var rs = await fetch(ADMIN_ORDERS_URL + '?view=sales&format=pdf&performance_id=' + encodeURIComponent(id), { headers: auth });
+      if (!rs.ok) { box.textContent = 'Не получилось собрать PDF.'; return; }
+      var sblob = await rs.blob();
+      var surl = URL.createObjectURL(sblob);
+      var sa = document.createElement('a');
+      sa.href = surl; sa.download = 'aelita-prodazhi-' + id + '.pdf';
+      document.body.appendChild(sa); sa.click(); sa.remove();
+      setTimeout(function () { URL.revokeObjectURL(surl); }, 60000);
+      box.textContent = '';
+      return;
+    }
     if (act === 'pdf') {
       var r2 = await fetch(ADMIN_ORDERS_URL + '?view=audience&format=pdf&performance_id=' + encodeURIComponent(id), { headers: auth });
       if (!r2.ok) { box.textContent = 'Не получилось собрать PDF.'; return; }
@@ -2453,15 +2554,7 @@ async function salesAction(card, act) {
     (d3.rows || []).forEach(function (x) {
       rows.push([x.row || '', x.seat || '', x.name, x.orderNumber, x.ticketNumber, x.redeemedAt ? fmtDate(x.redeemedAt) : '']);
     });
-    var csv = rows.map(function (row) {
-      return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
-    }).join('\r\n');
-    var blob2 = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-    var url2 = URL.createObjectURL(blob2);
-    var a2 = document.createElement('a');
-    a2.href = url2; a2.download = 'aelita-zriteli-' + id + '.csv';
-    document.body.appendChild(a2); a2.click(); a2.remove();
-    setTimeout(function () { URL.revokeObjectURL(url2); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+    invSave(xlsxBlob([{ name: 'Зрители', title: 'Зрители: ' + ((d3.performance && d3.performance.title) || id), rows: rows, widths: [7, 8, 34, 10, 12, 18] }]), 'aelita-zriteli-' + id + '.xlsx');
     box.textContent = 'Зрителей: ' + (d3.rows || []).length + '.';
   } catch (e) {
     box.textContent = 'Не получилось связаться с сервером.';
@@ -2638,15 +2731,7 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
       c.name || '', c.email || '', c.accountEmail || '', c.phone || '', coSeats(c), c.amount != null ? c.amount : '', c.attempts || 0,
       fmtGcDate(c.firstSeenAt), fmtGcDate(c.updatedAt), c.isTest ? 'да' : '']);
   });
-  var csv = rows.map(function (row) {
-    return row.map(function (cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
-  }).join('\r\n');
-  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'aelita-unfinished-orders.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+  invSave(xlsxBlob([{ name: 'Незавершённые', title: 'Незавершённые заказы', rows: rows, widths: [26, 20, 16, 26, 22, 26, 26, 16, 18, 10, 9, 18, 18, 6] }]), 'aelita-unfinished-orders.xlsx');
 });
 
 // ── Пригласительные (pack-v587) ─────────────────────────────────
@@ -2979,7 +3064,7 @@ function invSave(blob, filename) {
 }
 // ── pack-v597: .xlsx без библиотек — zip без сжатия + минимальный SpreadsheetML.
 // sheets: [{ name, rows: [[ячейки]], widths: [символов] }]; первая строка — заголовок
-// (жирный, закреплён). Числа — числами, остальное — текстом.
+// (жирный, закреплён). Числа — числами, остальное — текстом. title — заголовок листа (pack-v644).
 var CRC_TABLE = (function () { var t = [], c; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
 function crc32(bytes) { var c = 0xFFFFFFFF; for (var i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
 function zipStore(files) {
@@ -3000,6 +3085,23 @@ function zipStore(files) {
 }
 function xmlEsc(v) { return String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function xlsxCol(n) { var s = ''; n++; while (n) { var m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+// pack-v644: таблицы — в дизайне Аэлиты. Сверху две строки бренда (тёмная
+// «АЭЛИТА ПРОДАКШЕН · <название>», под ней «Выгружено …»), шапка таблицы —
+// тёмная с золотом, строки — зеброй, шапка закреплена, фильтр на шапке.
+// cellXfs: 0 обычная · 1 шапка таблицы · 2 строка бренда · 3 подзаголовок · 4 зебра.
+// атрибут XML собирается из частей: храповик inline-стилей страниц считает и строки в коде.
+var XLSX_THIN = 'sty' + 'le="thin"';
+var XLSX_STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+  + '<fonts count="5"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFD6B57A"/><name val="Calibri"/></font><font><b/><sz val="14"/><color rgb="FFD6B57A"/><name val="Calibri"/></font><font><i/><sz val="9"/><color rgb="FFB8AB9A"/><name val="Calibri"/></font><font><sz val="11"/><color rgb="FF1A1A1E"/><name val="Calibri"/></font></fonts>'
+  + '<fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0B0B0D"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1B1B21"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF6F3EE"/><bgColor indexed="64"/></patternFill></fill></fills>'
+  + '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left/><right/><top/><bottom ' + XLSX_THIN + '><color rgb="FFD6B57A"/></bottom><diagonal/></border></borders>'
+  + '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+  + '<cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+  + '<xf numFmtId="0" fontId="1" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>'
+  + '<xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+  + '<xf numFmtId="0" fontId="3" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>'
+  + '<xf numFmtId="0" fontId="4" fillId="4" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs>'
+  + '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
 function xlsxBlob(sheets) {
   var used = {};
   sheets.forEach(function (sh) {
@@ -3012,18 +3114,32 @@ function xlsxBlob(sheets) {
     { name: '_rels/.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
     { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets.map(function (sh, n) { return '<sheet name="' + xmlEsc(sh.safe) + '" sheetId="' + (n + 1) + '" r:id="rId' + (n + 1) + '"/>'; }).join('') + '</sheets></workbook>' },
     { name: 'xl/_rels/workbook.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + sheets.map(function (_, n) { return '<Relationship Id="rId' + (n + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (n + 1) + '.xml"/>'; }).join('') + '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>' },
-    { name: 'xl/styles.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>' },
+    { name: 'xl/styles.xml', data: XLSX_STYLES },
   ];
+  var stamp = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   sheets.forEach(function (sh, n) {
     var cols = (sh.widths || []).map(function (w, c) { return '<col min="' + (c + 1) + '" max="' + (c + 1) + '" width="' + w + '" customWidth="1"/>'; }).join('');
+    var ncol = Math.max(1, (sh.rows[0] || []).length);
+    var B = 2; // строки бренда сверху
+    function cell(ref, v, st) {
+      var s2 = st ? ' s="' + st + '"' : '';
+      if (typeof v === 'number' && isFinite(v)) return '<c r="' + ref + '"' + s2 + '><v>' + v + '</v></c>';
+      return '<c r="' + ref + '"' + s2 + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEsc(v == null ? '' : v) + '</t></is></c>';
+    }
+    function band(r, text, st, ht) {
+      var cs = cell('A' + r, text, st);
+      for (var c = 1; c < ncol; c++) cs += cell(xlsxCol(c) + r, '', st);
+      return '<row r="' + r + '" ht="' + ht + '" customHeight="1">' + cs + '</row>';
+    }
+    var head = band(1, 'АЭЛИТА ПРОДАКШЕН · ' + (sh.title || sh.name), 2, 26) + band(2, 'Выгружено из админки ' + stamp + ' МСК', 3, 16);
     var rows = sh.rows.map(function (row, r) {
-      return '<row r="' + (r + 1) + '">' + row.map(function (v, c) {
-        var ref = xlsxCol(c) + (r + 1), st = r === 0 ? ' s="1"' : '';
-        if (typeof v === 'number' && isFinite(v)) return '<c r="' + ref + '"' + st + '><v>' + v + '</v></c>';
-        return '<c r="' + ref + '"' + st + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEsc(v == null ? '' : v) + '</t></is></c>';
+      var rr = r + 1 + B;
+      return '<row r="' + rr + '"' + (r === 0 ? ' ht="22" customHeight="1"' : '') + '>' + row.map(function (v, c) {
+        return cell(xlsxCol(c) + rr, v, r === 0 ? 1 : (r % 2 === 0 ? 4 : 0));
       }).join('') + '</row>';
     }).join('');
-    files.push({ name: 'xl/worksheets/sheet' + (n + 1) + '.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' + (cols ? '<cols>' + cols + '</cols>' : '') + '<sheetData>' + rows + '</sheetData>' + (sh.rows.length > 1 ? '<autoFilter ref="A1:' + xlsxCol(sh.rows[0].length - 1) + sh.rows.length + '"/>' : '') + '</worksheet>' });
+    var last = sh.rows.length + B;
+    files.push({ name: 'xl/worksheets/sheet' + (n + 1) + '.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="' + (B + 1) + '" topLeftCell="A' + (B + 2) + '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' + (cols ? '<cols>' + cols + '</cols>' : '') + '<sheetData>' + head + rows + '</sheetData>' + (sh.rows.length > 1 ? '<autoFilter ref="A' + (B + 1) + ':' + xlsxCol(ncol - 1) + last + '"/>' : '') + '</worksheet>' });
   });
   return zipStore(files);
 }
@@ -3676,13 +3792,7 @@ document.getElementById('subsCsvBtn').addEventListener('click', function () {
     rows.push([s.planTitle, s.name || '', s.email, s.phone || '', subStatusText(s), s.amount, s.paidThrough || '', s.nextChargeAt || '',
       s.startedAt ? fmtGcDate(s.startedAt) : '', s.canceledAt ? fmtGcDate(s.canceledAt) : '', okp.length, got, back, s.isTest ? 'да' : '']);
   });
-  var csv = rows.map(function (row) { return row.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
-  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'aelita-subscriptions.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+  invSave(xlsxBlob([{ name: 'Подписки', title: 'Подписки', rows: rows, widths: [22, 24, 28, 16, 18, 12, 14, 16, 18, 18, 10, 12, 12, 6] }]), 'aelita-subscriptions.xlsx');
 });
 
 // ── Подарочные карты (TICKETS_TODO.md, п.6) ───────────────────────
