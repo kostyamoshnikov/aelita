@@ -653,7 +653,7 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
 
 /* Галерея фото спектакля — масонри через CSS-колонки, фото разных пропорций не обрезаются */
 .photo-gallery{column-count:3;column-gap:12px}
-.photo-gallery img{width:100%;display:block;margin-bottom:12px;border-radius:2px;filter:brightness(.9);transition:filter .3s ease}
+.photo-gallery img{width:100%;height:auto;display:block;margin-bottom:12px;border-radius:2px;filter:brightness(.9);transition:filter .3s ease}
 @media(hover:hover){.photo-gallery img:hover{filter:brightness(1)}}
 @media(max-width:900px){.photo-gallery{column-count:2}}
 @media(max-width:560px){.photo-gallery{column-count:1}}

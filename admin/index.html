@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=90">
+<link rel="stylesheet" href="/assets/fonts.css?v=91">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -524,7 +524,6 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
           <button class="mini-btn" id="invPdfAllBtn">PDF всех действующих</button>
           <button class="mini-btn" id="invXlsxBtn">Таблица Excel — это событие</button>
           <button class="mini-btn" id="invXlsxAllBtn">Таблица Excel — все события</button>
-          <button class="mini-btn" id="invCsvBtn">CSV</button>
         </div></details>
       </div>
       <div class="inv-edit" id="inv-form">
@@ -3468,11 +3467,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     } catch (e) { alert(e.message); }
     btn.disabled = false; btn.textContent = old;
-  });
-  document.getElementById('invCsvBtn').addEventListener('click', function () {
-    var rows = [INV_HEAD].concat(INV_LIST.map(function (i) { return invRow(i, invEvent()); }));
-    var csv = rows.map(function (row) { return row.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
-    invSave(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), 'aelita-invites-' + document.getElementById('inv-event').value + '.csv');
   });
   // pack-v597 (заказчик 08.10): гостевой список ведётся здесь, Google-таблица
   // GuestSystem больше не нужна — выгрузка «таблицей» (.xlsx, открывается в

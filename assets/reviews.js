@@ -362,12 +362,37 @@
     return wrap;
   }
 
+  // pack-v646: «Оставить отзыв» (кнопки на странице и ссылка из письма …#audience-reviews)
+  // приводили не к отзывам, а к фотографиям и «Другим проектам»: браузер прыгал к якорю
+  // сразу, а фото выше (loading="lazy", без размеров) догружались и сдвигали страницу
+  // вниз на их высоту. Теперь несколько секунд после перехода держим блок отзывов
+  // на месте, пока выше что-то догружается; любое касание или прокрутка — отпускаем.
+  function holdAnchor() {
+    if (location.hash !== '#audience-reviews') return;
+    var el = document.getElementById('audience-reviews');
+    if (!el) return;
+    el.style.scrollMarginTop = '80px';
+    var until = Date.now() + 5000;
+    var go = function () { if (Date.now() < until) el.scrollIntoView({ block: 'start' }); };
+    var stop = function () { until = 0; };
+    ['wheel', 'touchmove', 'keydown'].forEach(function (e) { window.addEventListener(e, stop, { once: true, passive: true }); });
+    go();
+    setTimeout(go, 50);
+    Array.prototype.forEach.call(document.images, function (im) {
+      if (!im.complete) { im.loading = 'eager'; im.addEventListener('load', go, { once: true }); im.addEventListener('error', go, { once: true }); }
+    });
+    window.addEventListener('load', go, { once: true });
+    [400, 1200, 2500].forEach(function (ms) { setTimeout(go, ms); });
+  }
+
   window.AelitaReviews = {
     init: function (slug) {
       var listEl = document.getElementById('aud-reviews-list');
       var formHost = document.getElementById('aud-reviews-form-host');
       if (listEl) loadReviews(slug, listEl);
       if (formHost) formHost.appendChild(buildForm(slug));
+      holdAnchor();
+      window.addEventListener('hashchange', holdAnchor);
     },
   };
 })();
