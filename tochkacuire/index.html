@@ -107,6 +107,11 @@ section{padding:90px 0}
   .prog-grid{display:flex;flex-direction:column;gap:2px}
 .prog-item{background:var(--coal);padding:32px 36px;display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:center;text-decoration:none;color:inherit;border:1px solid transparent;transition:border-color .3s}
 @media(hover:hover){.prog-item:hover{border-color:rgba(214,181,122,.35)}}
+.prog-item{position:relative}
+.prog-link{color:inherit;text-decoration:none}
+.prog-link::after{content:"";position:absolute;inset:0}
+.prog-buy{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;position:relative;z-index:1}
+.prog-buy .btn-gold{padding:12px 22px}
 .prog-left .badge{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px}
 .prog-left .hall{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin-top:6px}
 .prog-title h3{font-size:1.125rem;letter-spacing:.1em;font-weight:300;margin-bottom:6px;color:var(--bone)}
@@ -441,54 +446,62 @@ html{scroll-padding-top:230px}
     <p class="reveal lead-sm own-size">9 постановок и 13 показов за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада.</p>
 
     <div class="prog-grid reveal">
-      <a class="prog-item" href="/iov">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Открытие · Флагман</span><span class="hall">Синий зал · 23 и 25 октября</span></div>
-        <div class="prog-title"><h3>ИОВ:материал</h3><p class="genre">Современная мистерия</p><p class="desc">Флагманская мистерия AELITA: человек как материал, который искусство переплавляет в новую форму. Спектакль-открытие фестиваля.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/iov">ИОВ:материал</a></h3><p class="genre">Современная мистерия</p><p class="desc">Флагманская мистерия AELITA: человек как материал, который искусство переплавляет в новую форму. Спектакль-открытие фестиваля.</p></div>
         <div class="prog-right"><span class="age">12+</span><span class="dur">1:35</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет · 23.10, 20:00</a> <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/635d19c9-0e2e-4b08-a3ee-453f98de9288?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет · 25.10, 14:00</a></div>
+      </div>
 
-      <a class="prog-item" href="/prorochestva">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Красный зал · 23 октября</span></div>
-        <div class="prog-title"><h3>Пророчества перелётных птиц</h3><p class="genre">Сайт-специфик перформанс · компания «ОМУТ»</p><p class="desc">Восемь перформерок в анималистичных костюмах и хореографическая партитура о птицах, которые каждое лето возвращаются в парк Александрия. Зрителям вручают театральные бинокли.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/prorochestva">Пророчества перелётных птиц</a></h3><p class="genre">Сайт-специфик перформанс · компания «ОМУТ»</p><p class="desc">Восемь перформерок в анималистичных костюмах и хореографическая партитура о птицах, которые каждое лето возвращаются в парк Александрия. Зрителям вручают театральные бинокли.</p></div>
         <div class="prog-right"><span class="dur">~45 мин</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/c228bcf9-2f96-4a1e-95b2-62cbcca6d2e6?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
 
-      <a class="prog-item" href="/meydey">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Галерея · 25 октября</span></div>
-        <div class="prog-title"><h3>Мэйдэй</h3><p class="genre">Пластический перформанс · OMYT</p><p class="desc">Сигнал бедствия подан — а бедствие не случается. Перформанс-рефлексия о том, как потеряться внутри времени и не перестать слышать реального себя.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/meydey">Мэйдэй</a></h3><p class="genre">Пластический перформанс · OMYT</p><p class="desc">Сигнал бедствия подан — а бедствие не случается. Перформанс-рефлексия о том, как потеряться внутри времени и не перестать слышать реального себя.</p></div>
         <div class="prog-right"><span class="dur">~45 мин</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
 
 
-      <a class="prog-item" href="/rozovoe-maslo">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Гость · Санкт-Петербург</span><span class="hall">Синий зал · 25 октября</span></div>
-        <div class="prog-title"><h3>Запах розового масла</h3><p class="genre">Пластическая зарисовка · резиденты OMYT</p><p class="desc">Власть или покой — и цена, которую платят за выбор. Зарисовка-рефлексия на библейскую линию «Мастера и Маргариты».</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/rozovoe-maslo">Запах розового масла</a></h3><p class="genre">Пластическая зарисовка · резиденты OMYT</p><p class="desc">Власть или покой — и цена, которую платят за выбор. Зарисовка-рефлексия на библейскую линию «Мастера и Маргариты».</p></div>
         <div class="prog-right"><span class="dur">~45 мин</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
 
-      <a class="prog-item" href="/mozgi">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Интерактив · 16+</span><span class="hall">Красный зал · 24 октября</span></div>
-        <div class="prog-title"><h3>Есть ли у вас мозги?</h3><p class="genre">Интерактивный моноспектакль · реж. Дмитрий Турков</p><p class="desc">Зал становится то лабораторией, то судом присяжных: реальные исследования, учёные-бунтари и проверка, легко ли заставить человека поверить в невозможное.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/mozgi">Есть ли у вас мозги?</a></h3><p class="genre">Интерактивный моноспектакль · реж. Дмитрий Турков</p><p class="desc">Зал становится то лабораторией, то судом присяжных: реальные исследования, учёные-бунтари и проверка, легко ли заставить человека поверить в невозможное.</p></div>
         <div class="prog-right"><span class="dur">Моноспектакль</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
 
-      <a class="prog-item" href="/porfiriy">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Для молодёжи</span><span class="hall">Красный зал · 24 октября</span></div>
-        <div class="prog-title"><h3>Порфирий</h3><p class="genre">Медитативно-детективный моноспектакль</p><p class="desc">Моноспектакль с интерактивом — для тех, кто любит вглядываться и сопоставлять. Тихий детектив о внутреннем следствии.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/porfiriy">Порфирий</a></h3><p class="genre">Медитативно-детективный моноспектакль</p><p class="desc">Моноспектакль с интерактивом — для тех, кто любит вглядываться и сопоставлять. Тихий детектив о внутреннем следствии.</p></div>
         <div class="prog-right"><span class="age">16+</span><span class="dur">~1:00</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
 
-      <a class="prog-item" href="/puteshestvenniki">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Гость · Творческая лаборатория «БлизКо»</span><span class="hall">Город (променад) · 23–25 октября</span></div>
-        <div class="prog-title"><h3>Путешественники</h3><p class="genre">Иммерсивный спектакль-променад · реж. Евгения Масленникова</p><p class="desc">Сцена — улица, декорации — город: зритель не смотрит историю со стороны, а идёт по маршруту вместе с ней. 40 участников, никаких зрительских мест.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/puteshestvenniki">Путешественники</a></h3><p class="genre">Иммерсивный спектакль-променад · реж. Евгения Масленникова</p><p class="desc">Сцена — улица, декорации — город: зритель не смотрит историю со стороны, а идёт по маршруту вместе с ней. 40 участников, никаких зрительских мест.</p></div>
         <div class="prog-right"><span class="age">18+</span><span class="dur">1:30</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет · 23.10, 16:00</a> <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет · 24.10, 16:00</a> <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет · 25.10, 16:00</a></div>
+      </div>
 
-      <a class="prog-item" href="/godo">
+      <div class="prog-item">
         <div class="prog-left"><span class="badge">Гость</span><span class="hall">Красный зал · 25 октября</span></div>
-        <div class="prog-title"><h3>В ожидании Годо</h3><p class="genre">Абсурдистская пьеса · реж. Виктор Деринов</p><p class="desc">Пьеса Сэмюэла Беккета: двое ждут третьего, который обещает прийти и не приходит. Мы попытались заглянуть между строк.</p></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/godo">В ожидании Годо</a></h3><p class="genre">Абсурдистская пьеса · реж. Виктор Деринов</p><p class="desc">Пьеса Сэмюэла Беккета: двое ждут третьего, который обещает прийти и не приходит. Мы попытались заглянуть между строк.</p></div>
         <div class="prog-right"><span class="age">18+</span></div>
-      </a>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -569,7 +582,7 @@ html{scroll-padding-top:230px}
     <div class="sec-head reveal"><span class="eyebrow">Детская программа · 24–25 октября</span><h2>Детская программа</h2></div>
     <p class="desc reveal">Два дня для детей от 4 лет: арт-квест «Дети — не зрители» и семь занятий с партнёрами фестиваля — «ВместеАрт», «Академией Умников», Yulia Candle, «Речезаврией» и студией праздников «Мёд». Все занятия бесплатные, по регистрации.</p>
     <div class="venue-grid reveal">
-      <div class="venue-img"><img src="/images/art-kvest.jpg" alt="Детская программа фестиваля «Точка Кюри»" loading="lazy"></div>
+      <div class="venue-img"><img src="/images/detskaya-programma-art.jpg" alt="Детская программа фестиваля «Точка Кюри»" loading="lazy"></div>
       <div>
         <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:16px">Роспись гипсовых подставок, натуральная свеча из вощины, «Прокачай свой мозг», «Динозавры в городе», тыковка из воздушного пластилина и встреча с Единорожкой — у каждого занятия своя страница с регистрацией, мест на мастер-классах — от 15 до 20.</p>
         <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:16px">Арт-квест «Дети — не зрители» — 60 минут спасательной миссии: фестиваль захвачен «Серыми Экранами», и только отряд юных супергероев может вернуть искусству краски. Квест идёт одновременно с мастер-классами — выбирайте сеансы, которые не пересекаются.</p>
