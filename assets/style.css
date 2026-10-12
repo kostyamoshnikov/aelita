@@ -48,9 +48,11 @@
   #cookie-banner{padding:14px 16px}
 }
 /* ── Кнопка «наверх» ── */
-#back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px)}
+#back-to-top{position:fixed;bottom:28px;right:24px;width:44px;height:44px;background:rgba(214,181,122,.15);border:1px solid rgba(214,181,122,.3);color:var(--gold);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:40;backdrop-filter:blur(4px);pointer-events:none;visibility:hidden}
 @media(max-width:760px){#back-to-top{bottom:78px}}
-#back-to-top.visible{opacity:1;transform:translateY(0)}
+#back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;visibility:visible}
+/* pack-v654: скрытая «↑» раньше оставалась прозрачной, но нажимаемой —
+   ловила касания по ссылкам и кнопкам в правом нижнем углу. */
 @media(hover:hover){#back-to-top:hover{background:rgba(214,181,122,.25)}}
 /* ── Мобильный CTA-бар ── */
 .mob-cta{display:none}
@@ -900,11 +902,12 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
   body .event.has-photo .ev-overlay{min-height:0;z-index:2;padding-top:calc(100vw - 120px);padding-top:calc(100cqw - 80px)}
 }
 
-/* pack-v522: на телефоне «Написать нам» и «↑» прячутся, пока страницу
-   листают вниз (читают), и возвращаются, когда листают вверх или
-   остановились (main.js ставит .scroll-hide). */
+/* pack-v629: на телефоне «Написать нам» и «↑» прячутся, пока на экране
+   поле формы или кнопка оплаты (main.js ставит .form-hide). Прятанье при
+   листании вниз (.scroll-hide, pack-v522) заменено в pack-v654 правилами
+   показа в main.js. */
 @media(max-width:760px){
-  #back-to-top.scroll-hide,.tg-widget.scroll-hide,#back-to-top.form-hide,.tg-widget.form-hide{opacity:0!important;transform:translateY(16px)!important;pointer-events:none!important}
+  #back-to-top.form-hide,.tg-widget.form-hide{opacity:0!important;transform:translateY(16px)!important;pointer-events:none!important}
 }
 
 /* pack-v522: на телефоне секции с отступом 80/70 px сверху и снизу

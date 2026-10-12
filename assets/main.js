@@ -97,23 +97,121 @@ function acceptCookies(){
   updateCtaBar();
 }
 
-// Кнопка «наверх» + Telegram-виджет — единый scroll listener с защитой
-// от наложения на ещё не принятый cookie-баннер
+// pack-v654: «↑» и «Написать нам» — только там и тогда, где они нужны
+// (заказчик 12.10: «периодически просто появляются и перегораживают»).
+// Раньше обе кнопки всплывали на всех страницах уже после 400 px (меньше
+// полэкрана телефона), а на телефоне возвращались через 0,7 с после
+// каждой остановки — то есть висели поверх текста почти всё время.
+// Правила теперь такие:
+//  «↑» — только на длинных страницах (от 4 экранов) и только глубже
+//        2 экранов от начала. На телефоне — только когда человек сам
+//        листает вверх (≥ 80 px подряд): значит, хочет вернуться; через
+//        2,5 с без прокрутки или при листании вниз снова прячется.
+//        На компьютере стоит на поле справа, пока страница прокручена.
+//  «Написать нам» — не на страницах, где оно лишнее (TG_OFF: контакты,
+//        команда, пресса, партнёры, страницы людей). На телефоне — только
+//        в конце страницы, когда показался футер: дочитал и остался
+//        вопрос. На компьютере — после первого экрана. Подсказка-пузырь —
+//        один раз за визит и только на компьютере.
+//  Обе — не поверх ссылки, кнопки или поля: если кнопка закрыла бы
+//        заметную часть (≥15%) чего-то нажимаемого, она уходит, пока это
+//        не проедет. Уголок большой карточки-ссылки — не помеха.
+//  Обе — не поверх непринятого cookie-баннера (как раньше).
+var AELITA_TG_OFF = [
+  'contacts', 'team', 'festival-team', 'rezidents', 'press', 'mentions', 'partners',
+  'alena-bychkova', 'alexandra-gubanova', 'alexey-tsymlov', 'anton-vdovichenko',
+  'ekaterina-ilyina', 'galina-mosalova', 'ivan-sachkov', 'katya-abdulova',
+  'konstantin-moshnikov', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
+  'svetlana-nikiforova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
+];
+var fwSlug = location.pathname.replace(/^\/en(?=\/|$)/, '').replace(/^\/+|\/+$/g, '').split('/')[0];
+var fwTgOff = AELITA_TG_OFF.indexOf(fwSlug) !== -1;
+var fwPhone = window.matchMedia('(max-width:760px)');
+var fwLastY = window.scrollY, fwUpAcc = 0, fwWantUp = false, fwIdle = null, fwSettle = null, fwRaf = 0;
+
+// Есть ли под кнопкой (в её нынешнем месте) ссылка, кнопка или поле.
+// elementsFromPoint пропускает элементы с pointer-events:none, а саму
+// видимую кнопку мы отбрасываем вручную.
+function fwCovers(el, box){
+  if(!el || !box || !document.elementsFromPoint) return false;
+  var rr = el.getBoundingClientRect();
+  if(!rr.width || !rr.height) return false;
+  // Скрытая (или ещё всплывающая) кнопка сдвинута вниз translateY из
+  // style.css — проверяем место, где она будет стоять видимой.
+  var dy = 0;
+  try { dy = new DOMMatrixReadOnly(getComputedStyle(box).transform).m42 || 0; } catch(e) {}
+  var r = { left: rr.left, right: rr.right, top: rr.top - dy, bottom: rr.bottom - dy }, t = r.top;
+  var pts = [];
+  [r.left + 3, (r.left + r.right) / 2, r.right - 3].forEach(function(x){
+    [r.top + 3, (r.top + r.bottom) / 2, r.bottom - 3].forEach(function(y){ pts.push([x, y]); });
+  });
+  for(var i = 0; i < pts.length; i++){
+    var under = document.elementsFromPoint(pts[i][0], pts[i][1]);
+    for(var j = 0; j < under.length; j++){
+      var u = under[j];
+      if(box.contains(u)) continue;
+      if(u === document.body || u === document.documentElement) break;
+      var hit = u.closest('a,button,input,select,textarea,label,summary,[role="button"],[onclick]');
+      if(hit){
+        // Карточка-ссылка на всю ширину экрана не мешает: кнопка закрывает
+        // её уголок, нажать есть куда. Мешает, если закрыта заметная часть
+        // (≥15%) — кнопка «Купить», ссылка в футере, поле формы.
+        var h = hit.getBoundingClientRect();
+        var ix = Math.max(0, Math.min(r.right, h.right) - Math.max(r.left, h.left));
+        var iy = Math.max(0, Math.min(r.bottom, h.bottom) - Math.max(t, h.top));
+        var area = h.width * h.height;
+        if(!area || ix * iy / area >= 0.15) return true;
+      }
+      break; // верхний элемент под кнопкой — не нажимаемый
+    }
+  }
+  return false;
+}
+
 function updateFixedWidgets(){
-  const pastThreshold = window.scrollY > 400;
-  const bannerOpen = isCookieBannerOpen();
+  var y = window.scrollY, vh = window.innerHeight;
+  var H = document.documentElement.scrollHeight;
+  var phone = fwPhone.matches;
+  var bannerOpen = isCookieBannerOpen();
 
-  const btn = document.getElementById('back-to-top');
-  if(btn) btn.classList.toggle('visible', pastThreshold && !bannerOpen);
+  // Плашка «Купить билет» (.mob-cta) внизу телефона бывает в две строки —
+  // поднимаем кнопки над ней на её настоящую высоту, иначе ложатся на неё.
+  var bar = document.getElementById('mob-cta');
+  var lift = (phone && bar && !bar.classList.contains('hidden') && bar.offsetHeight) ? (bar.offsetHeight + 12) + 'px' : '';
+  ['back-to-top', 'tg-widget'].forEach(function(id){
+    var e = document.getElementById(id);
+    if(e && e.style.bottom !== lift) e.style.bottom = lift;
+  });
 
-  const widget = document.getElementById('tg-widget');
+  var btn = document.getElementById('back-to-top');
+  if(btn){
+    var show = H >= vh * 4 && y > vh * 2 && !bannerOpen && (!phone || fwWantUp);
+    if(show && fwCovers(btn, btn)) show = false;
+    btn.classList.toggle('visible', show);
+  }
+
+  var widget = document.getElementById('tg-widget');
   if(widget){
-    if(pastThreshold && !bannerOpen){
+    var showTg = false;
+    if(!fwTgOff && !bannerOpen){
+      if(phone){
+        var f = document.querySelector('footer');
+        showTg = f ? f.getBoundingClientRect().top < vh : (y + vh >= H - vh * 0.5);
+      } else {
+        showTg = y > vh;
+      }
+    }
+    var tgBtn = widget.querySelector('.tg-btn');
+    if(showTg && fwCovers(tgBtn, widget)) showTg = false;
+    if(showTg){
       if(!widget.classList.contains('visible')){
         widget.classList.add('visible');
-        const bubble = document.getElementById('tg-bubble');
-        if(bubble && !bubble.dataset.shown){
+        var bubble = document.getElementById('tg-bubble');
+        var seen = false;
+        try { seen = !!sessionStorage.getItem('aelita_tg_bubble'); } catch(e) {}
+        if(bubble && !phone && !seen && !bubble.dataset.shown){
           bubble.dataset.shown = '1';
+          try { sessionStorage.setItem('aelita_tg_bubble', '1'); } catch(e) {}
           setTimeout(function(){
             bubble.classList.add('visible');
             setTimeout(function(){ bubble.classList.remove('visible'); }, 4000);
@@ -122,11 +220,40 @@ function updateFixedWidgets(){
       }
     } else {
       widget.classList.remove('visible');
+      var b2 = document.getElementById('tg-bubble');
+      if(b2) b2.classList.remove('visible');
     }
   }
 }
-window.addEventListener('scroll', updateFixedWidgets);
-window.addEventListener('resize', updateFixedWidgets);
+function fwSchedule(){
+  if(fwRaf) return;
+  fwRaf = requestAnimationFrame(function(){ fwRaf = 0; updateFixedWidgets(); });
+}
+window.addEventListener('scroll', function(){
+  var y = window.scrollY, dy = y - fwLastY;
+  fwLastY = y;
+  // отскок iOS у нижнего края даёт ложное «вверх» — его не считаем;
+  // любое движение вниз (в том числе прыжок в самый конец) сбрасывает
+  var bounce = y + window.innerHeight >= document.documentElement.scrollHeight - 2;
+  if(dy > 6){ fwUpAcc = 0; fwWantUp = false; }
+  else if(dy < 0 && !bounce && y > 0){ fwUpAcc += -dy; if(fwUpAcc >= 80) fwWantUp = true; }
+  clearTimeout(fwIdle);
+  fwIdle = setTimeout(function(){ fwUpAcc = 0; fwWantUp = false; updateFixedWidgets(); }, 2500);
+  // плавная прокрутка докатывается уже после последнего кадра — ещё раз
+  // смотрим, что под кнопкой, когда страница встала
+  clearTimeout(fwSettle);
+  fwSettle = setTimeout(updateFixedWidgets, 150);
+  fwSchedule();
+}, { passive: true });
+window.addEventListener('resize', fwSchedule);
+window.addEventListener('load', fwSchedule);
+// догрузились картинки, раскрылся блок — то, что под кнопкой, могло сместиться
+if('ResizeObserver' in window && document.body) new ResizeObserver(fwSchedule).observe(document.body);
+// блоки .reveal «выплывают» до секунды после остановки — ссылка может
+// подъехать под кнопку уже без прокрутки
+document.addEventListener('transitionend', function(e){
+  if(e.target && e.target.classList && e.target.classList.contains('reveal')) fwSchedule();
+}, true);
 updateFixedWidgets();
 
 // Мобильный CTA-бар — прячем, пока cookies не приняты, пока рядом уже видна
@@ -138,6 +265,7 @@ function updateCtaBar(){
   if(!bar) return;
   const cookiesAccepted = !!localStorage.getItem('cookies_accepted');
   bar.classList.toggle('hidden', !cookiesAccepted || isCookieBannerOpen() || ctaNearOwn);
+  if(typeof updateFixedWidgets === 'function') updateFixedWidgets();
 }
 (function(){
   const bar = document.getElementById('mob-cta');
@@ -343,26 +471,6 @@ window.AELITA_formMessageClear = function (anchorEl) {
   });
 })();
 
-// pack-v522: на телефоне плавающие «Написать нам» и «↑» не мешают читать:
-// пока листают вниз — спрятаны, листают вверх или остановились (0,7 с) —
-// снова видны. Сама видимость (порог 400 px, cookie-баннер) — по-прежнему
-// в updateFixedWidgets; здесь только временное скрытие поверх неё.
-(function () {
-  var mq = window.matchMedia('(max-width:760px)');
-  var lastY = window.scrollY, idle = null;
-  function els() { return [document.getElementById('back-to-top'), document.getElementById('tg-widget')].filter(Boolean); }
-  function show() { els().forEach(function (e) { e.classList.remove('scroll-hide'); }); }
-  window.addEventListener('scroll', function () {
-    var y = window.scrollY, dy = y - lastY;
-    lastY = y;
-    if (!mq.matches) { show(); return; }
-    if (dy > 6) els().forEach(function (e) { e.classList.add('scroll-hide'); });
-    else if (dy < -6) show();
-    clearTimeout(idle);
-    idle = setTimeout(show, 700);
-  }, { passive: true });
-})();
-
 // pack-v629: на телефоне плавающие «Написать нам» (с подсказкой) и «↑»
 // закрывали кнопку «Оплатить» и поля формы (заказчик 10.10, /programs).
 // Пока на экране поле формы или кнопка оплаты — они спрятаны (.form-hide).
@@ -505,7 +613,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=92';
+    s.src = '/assets/outage.js?v=93';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }
