@@ -1117,6 +1117,13 @@ main section:not(.hero):not(.page-hero):not(.shop-list):not(.mentions-list):not(
 @media(max-width:600px){
   html body footer{padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))!important}
 }
+/* pack-v657: на компьютере «Написать нам» показывается в конце страницы и
+   только на пустом месте (main.js) — подвалу полоса снизу под кнопку, иначе
+   на ноутбуке она ложилась бы на реквизиты. Класс ставит main.js там, где
+   кнопка вообще бывает. */
+@media(min-width:761px){
+  html.fw-tg-slot body footer{padding-bottom:112px!important}
+}
 
 /* ── pack-v540: сверка с паками «Короче», Культурности и Балашова ──
    1) Закрытое мобильное меню было только сдвинуто за экран: Tab уводил

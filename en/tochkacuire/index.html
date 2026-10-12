@@ -148,6 +148,12 @@ section{padding:90px 0}
 @media(hover:hover){.tix-btn:hover{background:var(--gold);color:var(--ink)}}
 .tix-btn.reg{border-color:rgba(232,230,225,.4);color:var(--bone)}
 @media(hover:hover){.tix-btn.reg:hover{background:var(--bone);color:var(--ink);border-color:var(--bone)}}
+/* pack-v656: «Купить билеты» в расписании — золотая заливка, «Зарегистрироваться»
+   (.reg) — контур (заказчик 12.10). Общая система кнопок (style.css, pack-v530)
+   делает все .tix-btn вторичными через !important — здесь покупка становится основной, как и задумано там же
+   («основная — купить»), а регистрация остаётся контурной */
+html body .sched a.tix-btn:not(.reg){background:var(--gold)!important;color:var(--ink)!important;border-color:var(--gold)!important}
+@media(hover:hover){html body .sched a.tix-btn:not(.reg):hover{background:#e3c690!important;border-color:#e3c690!important;color:var(--ink)!important}}
 @media(max-width:760px){
   .days-tabs{display:flex;flex-direction:row;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch}
   .day-tab{flex:0 0 auto;min-width:84px;padding:14px 12px;text-align:center}
@@ -155,7 +161,7 @@ section{padding:90px 0}
   .day-content{padding:28px 20px}
 }
 /* FREE EVENTS */
-  .free-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+  .free-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .free-card{background:var(--coal);padding:36px 28px}
 .free-card .icon{font-size:1.5rem;margin-bottom:14px}
 .free-card h3{font-size:0.9375rem;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
@@ -172,10 +178,23 @@ section{padding:90px 0}
 .speaker-quote{margin-top:auto;padding-top:14px;border-top:1px solid rgba(232,230,225,.1);color:var(--bone);font-size:0.8125rem;font-style:italic;line-height:1.6}
 @media(max-width:760px){.speaker-grid{grid-template-columns:1fr}}
 .free-badge{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
-@media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.free-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.free-grid{grid-template-columns:1fr}}
 /* EXHIBITIONS */
   .exh-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.exh-program{background:var(--coal);padding:36px;margin-top:2px}
+.exh-program .dates{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.exh-program h3{margin-bottom:10px}
+.exh-program p{color:var(--sand);max-width:60ch}
+.exh-program .btn-gold{display:table;margin-top:22px}
+@media(max-width:600px){.exh-program{padding:24px 20px}}
+.cine-list{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:22px}
+.cine-item{display:flex;flex-direction:column;gap:8px;background:var(--ink);padding:26px 28px;text-decoration:none;color:inherit;border:1px solid transparent;transition:border-color .3s}
+@media(hover:hover){.cine-item:hover{border-color:rgba(214,181,122,.4)}}
+.cine-meta{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand)}
+.cine-title{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.375rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bone)}
+.cine-note{color:var(--sand);font-size:0.9375rem;max-width:60ch}
+@media(max-width:600px){.cine-list{grid-template-columns:1fr}.cine-item{padding:22px 20px}}
 .exh-item{position:relative;overflow:hidden;min-height:320px}
 .exh-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.4);transition:filter .5s}
 @media(hover:hover){.exh-item:hover img{filter:brightness(.55)}}
@@ -323,7 +342,7 @@ html{scroll-padding-top:230px}
 <nav class="quicknav" aria-label="Quick page links">
   <div class="quicknav-in">
     <a href="#schedule" class="gold">Tickets</a>
-    <a href="#program">Programme</a>
+    <a href="#program">Productions</a>
     <a href="#exhibitions">Exhibitions</a>
     <a href="#business">Business programme</a>
     <a href="#kids">For kids</a>
@@ -381,7 +400,7 @@ html{scroll-padding-top:230px}
       <div class="day-content" id="day-3" role="tabpanel" aria-labelledby="day-tab-3">
         <div class="time-item"><span class="time">12:00</span><div class="event">Kids' programme: <a href="/en/mk-dinozavry">workshop “Dinosaurs in the City”</a><small>“Rechezavriya” · ages 4–8 · free · registration required</small><a class="tix-btn reg" href="/en/mk-dinozavry#join">Register</a></div></div>
         <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>6+ · free · registration required</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Performance “Mayday-3” — dance company “OMUT”, Saint Petersburg<small>Gallery · 60 standing-room tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Performance <a href="/en/meydey">“Mayday-3”</a> — OMYT dance company, St. Petersburg<small>Gallery · 60 standing-room tickets — 1,500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: <a href="/en/mk-tykovka">workshop “A Pumpkin from Air-Dry Modelling Clay”</a><small>“VmesteArt” · 7+ · free · registration required</small><a class="tix-btn reg" href="/en/mk-tykovka#join">Register</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>6+ · free · registration required</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Kids' programme: <a href="/en/mk-prokachay-mozg">workshop “Boost Your Brain”</a><small>“Academy of Clever Kids” · 11+ · free · registration required</small><a class="tix-btn reg" href="/en/mk-prokachay-mozg#join">Register</a></div></div>
@@ -389,7 +408,7 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">14:00</span><div class="event">Absurdist play <a href="/en/godo">“Waiting for Godot”</a>, dir. Viktor Derinov, 18+<small>Red Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">15:00</span><div class="event">Kids' programme: <a href="/en/edinorozhka">“A Magical Meeting with the Unicorn”</a><small>“Myod” party studio · ages 4–6, with a parent · free · registration required</small><a class="tix-btn reg" href="/en/edinorozhka#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Physical theatre piece “The Scent of Rose Oil” — dance company “OMUT”, Saint Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/rozovoe-maslo">“The Scent of Rose Oil”</a> — OMYT dance company, St. Petersburg<small>Blue Hall</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">Solo stand-up concert <a href="/en/dyba-show">“Dyba Show”</a> — <a href="/en/vanya-dyba">Vanya Dyba</a>, closing the festival<small>Red Hall · 18+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c22b9f5d-138f-435a-a750-822e7cba9533?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
     </div>
@@ -442,7 +461,7 @@ html{scroll-padding-top:230px}
 <!-- ПРОГРАММА -->
 <section class="bg-coal" id="program">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Programme</span><h2>The full spectrum of contemporary art on one stage</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Productions</span><h2>The full spectrum of contemporary art on one stage</h2></div>
     <p class="reveal lead-sm own-size">9 productions and 13 performances over 4 days: from the flagship mystery to physical theatre, performances and a promenade show.</p>
 
     <div class="prog-grid reveal">
@@ -502,6 +521,13 @@ html{scroll-padding-top:230px}
         <div class="prog-right"><span class="age">18+</span></div>
         <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy ticket</a></div>
       </div>
+
+      <div class="prog-item">
+        <div class="prog-left"><span class="badge">Closing</span><span class="hall">Red Hall · Oct 25</span></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/en/dyba-show">Dyba Show</a></h3><p class="genre">Solo stand-up concert · Vanya Dyba</p><p class="desc">Part of the comedy is born right on stage, in dialogue with the audience; part is tried-and-tested original material. Intellectual and philosophical themes in plain language. The concert closes the festival on its last night.</p></div>
+        <div class="prog-right"><span class="age">18+</span><span class="dur">1:30</span></div>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/c22b9f5d-138f-435a-a750-822e7cba9533?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy ticket</a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -538,15 +564,15 @@ html{scroll-padding-top:230px}
       <img src="https://cuire-fest.ru/assets/photo/p04.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
       <img src="https://cuire-fest.ru/assets/photo/p08.jpg" alt="TOCHKA CUIRE festival photo" loading="lazy">
     </div>
-  </div>
-</section>
-
-<!-- ВЫСТАВОЧНАЯ ПРОГРАММА · ПЕРЕХОД -->
-<section class="bg-coal" id="exhibition-program">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Exhibition programme · Season I</span><h2>Transition</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.9375rem;max-width:60ch">28 artists — one route from entrance to exit, not a list of separate works. October 14–25, TsSI “Byl’.” Curator — Ekaterina Shelgunova. Free entry.</p>
-    <a class="btn-gold" href="/en/exhibition-program" style="display:inline-block">See the full line-up of artists →</a>
+    <!-- pack-v656: «Выставочная программа · Переход» была отдельным разделом
+         сразу после «Выставок» — теперь здесь же (якорь #exhibition-program сохранён). -->
+    <div class="exh-program reveal" id="exhibition-program">
+      <p class="dates">October 14–25 · Exhibition programme · Season I</p>
+      <h3><a class="tl c-inherit" href="/en/exhibition-program">Transition</a></h3>
+      <p>28 artists — one route from the point of entry to the point of exit, not a list of separate works. Curator: Ekaterina Shelgunova.</p>
+      <span class="exh-free">Free admission</span>
+      <a class="btn-gold" href="/en/exhibition-program">See the full line-up of artists →</a>
+    </div>
   </div>
 </section>
 
@@ -560,19 +586,16 @@ html{scroll-padding-top:230px}
   </div>
 </section>
 
-<!-- КИНО -->
+<!-- КИНО (pack-v656: вместо «подробности уточняются» и большой карточки
+     куратора — два объявленных фильма; даты показов пока не назначены) -->
 <section class="bg-coal" id="cinema">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Cinema</span><h2>“Cinema” section</h2></div>
-    <p class="reveal lead-sm own-size">The festival's film programme — curated by screenwriter and showrunner <a href="/en/galina-mosalova">Galina Mosalova</a>. Programme details to be announced.</p>
-    <div class="speaker-grid reveal" style="grid-template-columns:1fr;max-width:520px">
-      <a class="speaker-card" href="/en/galina-mosalova" style="text-decoration:none;color:inherit;cursor:pointer">
-        <div class="speaker-meta">Curator of the “Cinema” section</div>
-        <div class="speaker-kicker">Screenwriter · Showrunner</div>
-        <h3>Galina Mosalova</h3>
-        <p class="bio">Screenwriter and showrunner, author of scripts for 10+ productions (2017–2024) — the series “A Land of Great Opportunities”, “Tango on Shards”, “Kultur-Multur” and others. In 2019 graduated from the first cohort of the Moscow Film School's “Showrunner” programme.</p>
-      </a>
+    <div class="cine-list reveal">
+      <a class="cine-item" href="/en/fifth-element"><span class="cine-meta">A film by Luc Besson · 1997 · 18+</span><span class="cine-title">The Fifth Element</span></a>
+      <a class="cine-item" href="/en/kotlovan"><span class="cine-meta">Documentary by Nikolay Bem · 2025 · 80 min</span><span class="cine-title">Kotlovan</span></a>
     </div>
+    <p class="reveal cine-note">Screening dates and times to be announced. Section curator: <a class="tl c-gold" href="/en/galina-mosalova">Galina Mosalova</a>, screenwriter and showrunner.</p>
   </div>
 </section>
 
@@ -608,12 +631,6 @@ html{scroll-padding-top:230px}
         <h3><a class="tl c-inherit" href="/en/business-program">Lecture series</a></h3>
         <p>Business programme lectures and workshop on 23–24 October — <a class="tl c-gold" href="/en/lecture-bez-suflera">Alena Bychkova</a>, <a class="tl c-gold" href="/en/lecture-tanets-v-realnom-mire">Mikhail Kazmiruk</a>, <a class="tl c-gold" href="/en/lecture-landshafty-realnosti">Katya Abdulova</a>, <a class="tl c-gold" href="/en/lecture-art-goroda">Alexandra Gubanova</a>. Lectures on the opening day, 22 October, are by invitation.</p>
         <span class="free-badge">Free · registration required</span>
-      </div>
-      <div class="free-card">
-        <div class="icon">◈</div>
-        <h3>Workshops</h3>
-        <p>Contemporary dance and physical movement, jazz vocals and stage movement, acting and choreographic composition.</p>
-        <span class="free-badge">Free admission</span>
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
@@ -937,9 +954,8 @@ html{scroll-padding-top:230px}
 
 <!-- Мобильный CTA-бар -->
 <div class="mob-cta" id="mob-cta">
-  <span class="mob-cta-title">“Tochka Cuire”</span>
-  
-  <a class="mob-cta-btn gold" href="#schedule">22–25 October · Stary Oskol</a>
+  <span class="mob-cta-title">“Tochka Cuire” · Oct 22–25</span>
+  <a class="mob-cta-btn gold" href="#schedule">Buy ticket</a>
 </div>
 
 <!-- Модальное окно Спасибо -->

@@ -104,18 +104,22 @@ function acceptCookies(){
 // каждой остановки — то есть висели поверх текста почти всё время.
 // Правила теперь такие:
 //  «↑» — только на длинных страницах (от 4 экранов) и только глубже
-//        2 экранов от начала. На телефоне — только когда человек сам
-//        листает вверх (≥ 80 px подряд): значит, хочет вернуться; через
-//        2,5 с без прокрутки или при листании вниз снова прячется.
-//        На компьютере стоит на поле справа, пока страница прокручена.
+//        2 экранов от начала. Постоянно — только если справа от текста
+//        есть пустое поле шире кнопки (широкий монитор). Иначе (телефон,
+//        ноутбук) — когда человек сам листает вверх (≥ 80 px подряд):
+//        значит, хочет вернуться; через 2,5 с без прокрутки или при
+//        листании вниз снова прячется.
 //  «Написать нам» — не на страницах, где оно лишнее (TG_OFF: контакты,
-//        команда, пресса, партнёры, страницы людей). На телефоне — только
-//        в конце страницы, когда показался футер: дочитал и остался
-//        вопрос. На компьютере — после первого экрана. Подсказка-пузырь —
-//        один раз за визит и только на компьютере.
+//        команда, пресса, партнёры, страницы людей). После первого
+//        экрана — только если слева от текста есть пустое поле шире
+//        кнопки (широкий монитор). Иначе (телефон, ноутбук) — только в
+//        конце страницы, когда показался футер: дочитал и остался вопрос.
+//        Подсказка-пузырь — один раз за визит и только не на телефоне.
 //  Обе — не поверх ссылки, кнопки или поля: если кнопка закрыла бы
 //        заметную часть (≥15%) чего-то нажимаемого, она уходит, пока это
 //        не проедет. Уголок большой карточки-ссылки — не помеха.
+//        «Написать нам» (стоит подолгу) — ещё и не поверх текста и
+//        картинок: только на пустом месте (pack-v657).
 //  Обе — не поверх непринятого cookie-баннера (как раньше).
 var AELITA_TG_OFF = [
   'contacts', 'team', 'festival-team', 'rezidents', 'press', 'mentions', 'partners',
@@ -126,13 +130,16 @@ var AELITA_TG_OFF = [
 ];
 var fwSlug = location.pathname.replace(/^\/en(?=\/|$)/, '').replace(/^\/+|\/+$/g, '').split('/')[0];
 var fwTgOff = AELITA_TG_OFF.indexOf(fwSlug) !== -1;
+// pack-v657: «Написать нам» встаёт только на пустое место — под подвалом на
+// компьютере для неё оставлена полоса (style.css, .fw-tg-slot), как на телефоне
+if(!fwTgOff && document.getElementById('tg-widget')) document.documentElement.classList.add('fw-tg-slot');
 var fwPhone = window.matchMedia('(max-width:760px)');
 var fwLastY = window.scrollY, fwUpAcc = 0, fwWantUp = false, fwIdle = null, fwSettle = null, fwRaf = 0;
 
 // Есть ли под кнопкой (в её нынешнем месте) ссылка, кнопка или поле.
 // elementsFromPoint пропускает элементы с pointer-events:none, а саму
 // видимую кнопку мы отбрасываем вручную.
-function fwCovers(el, box){
+function fwCovers(el, box, strict){
   if(!el || !box || !document.elementsFromPoint) return false;
   var rr = el.getBoundingClientRect();
   if(!rr.width || !rr.height) return false;
@@ -162,10 +169,32 @@ function fwCovers(el, box){
         var area = h.width * h.height;
         if(!area || ix * iy / area >= 0.15) return true;
       }
+      // strict («Написать нам» стоит подолгу): мешает и текст, и картинка —
+      // кнопка встаёт только на пустое место
+      if(strict && (u.tagName === 'IMG' || [].some.call(u.childNodes, function(n){ return n.nodeType === 3 && n.textContent.trim().length > 1; }))) return true;
       break; // верхний элемент под кнопкой — не нажимаемый
     }
   }
   return false;
+}
+
+// pack-v657: ширина пустого поля слева и справа от колонки текста. На
+// ноутбуках (до ~1800 px) колонка .wrap идёт почти от края до края, и
+// кнопка «на поле» на деле стоит поверх текста.
+function fwMargins(){
+  // берём самую широкую колонку: первая попавшаяся .wrap бывает узкой
+  // (шапка, врезка), и поле по ней выходит обманчиво широким
+  var W = document.documentElement.clientWidth, L = Infinity, R = Infinity;
+  var ws = document.querySelectorAll('.wrap');
+  for(var i = 0; i < ws.length; i++){
+    var r = ws[i].getBoundingClientRect();
+    if(!r.width || !r.height) continue;
+    var cs = getComputedStyle(ws[i]);
+    L = Math.min(L, r.left + (parseFloat(cs.paddingLeft) || 0));
+    R = Math.min(R, W - r.right + (parseFloat(cs.paddingRight) || 0));
+  }
+  if(L === Infinity){ var side = (W - Math.min(W, 1320)) / 2 + 24; return { left: side, right: side }; }
+  return { left: L, right: R };
 }
 
 function updateFixedWidgets(){
@@ -185,7 +214,9 @@ function updateFixedWidgets(){
 
   var btn = document.getElementById('back-to-top');
   if(btn){
-    var show = H >= vh * 4 && y > vh * 2 && !bannerOpen && (!phone || fwWantUp);
+    var m = fwMargins();
+    var roomR = !phone && m.right >= 24 + btn.offsetWidth + 12;   // «↑» целиком на пустом поле
+    var show = H >= vh * 4 && y > vh * 2 && !bannerOpen && (roomR || fwWantUp);
     if(show && fwCovers(btn, btn)) show = false;
     btn.classList.toggle('visible', show);
   }
@@ -194,22 +225,23 @@ function updateFixedWidgets(){
   if(widget){
     var showTg = false;
     if(!fwTgOff && !bannerOpen){
-      if(phone){
-        var f = document.querySelector('footer');
-        showTg = f ? f.getBoundingClientRect().top < vh : (y + vh >= H - vh * 0.5);
-      } else {
-        showTg = y > vh;
-      }
+      var tb = widget.querySelector('.tg-btn');
+      var roomL = !phone && tb && fwMargins().left >= 24 + tb.offsetWidth + 12;  // целиком на пустом поле
+      var f = document.querySelector('footer');
+      var atEnd = f ? f.getBoundingClientRect().top < vh : (y + vh >= H - vh * 0.5);
+      // есть пустое поле — после первого экрана (и у подвала короткой
+      // страницы); нет (телефон, ноутбук) — только в конце страницы
+      showTg = roomL ? (y > vh || atEnd) : atEnd;
     }
     var tgBtn = widget.querySelector('.tg-btn');
-    if(showTg && fwCovers(tgBtn, widget)) showTg = false;
+    if(showTg && fwCovers(tgBtn, widget, true)) showTg = false;
     if(showTg){
       if(!widget.classList.contains('visible')){
         widget.classList.add('visible');
         var bubble = document.getElementById('tg-bubble');
         var seen = false;
         try { seen = !!sessionStorage.getItem('aelita_tg_bubble'); } catch(e) {}
-        if(bubble && !phone && !seen && !bubble.dataset.shown){
+        if(bubble && roomL && !seen && !bubble.dataset.shown){  // пузырь — только на пустом поле, не поверх футера
           bubble.dataset.shown = '1';
           try { sessionStorage.setItem('aelita_tg_bubble', '1'); } catch(e) {}
           setTimeout(function(){

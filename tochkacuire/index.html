@@ -148,6 +148,12 @@ section{padding:90px 0}
 @media(hover:hover){.tix-btn:hover{background:var(--gold);color:var(--ink)}}
 .tix-btn.reg{border-color:rgba(232,230,225,.4);color:var(--bone)}
 @media(hover:hover){.tix-btn.reg:hover{background:var(--bone);color:var(--ink);border-color:var(--bone)}}
+/* pack-v656: «Купить билеты» в расписании — золотая заливка, «Зарегистрироваться»
+   (.reg) — контур (заказчик 12.10). Общая система кнопок (style.css, pack-v530)
+   делает все .tix-btn вторичными через !important — здесь покупка становится основной, как и задумано там же
+   («основная — купить»), а регистрация остаётся контурной */
+html body .sched a.tix-btn:not(.reg){background:var(--gold)!important;color:var(--ink)!important;border-color:var(--gold)!important}
+@media(hover:hover){html body .sched a.tix-btn:not(.reg):hover{background:#e3c690!important;border-color:#e3c690!important;color:var(--ink)!important}}
 @media(max-width:760px){
   .days-tabs{display:flex;flex-direction:row;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch}
   .day-tab{flex:0 0 auto;min-width:84px;padding:14px 12px;text-align:center}
@@ -155,7 +161,7 @@ section{padding:90px 0}
   .day-content{padding:28px 20px}
 }
 /* FREE EVENTS */
-  .free-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+  .free-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .free-card{background:var(--coal);padding:36px 28px}
 .free-card .icon{font-size:1.5rem;margin-bottom:14px}
 .free-card h3{font-size:0.9375rem;letter-spacing:.14em;font-weight:300;margin-bottom:10px}
@@ -172,10 +178,23 @@ section{padding:90px 0}
 .speaker-quote{margin-top:auto;padding-top:14px;border-top:1px solid rgba(232,230,225,.1);color:var(--bone);font-size:0.8125rem;font-style:italic;line-height:1.6}
 @media(max-width:760px){.speaker-grid{grid-template-columns:1fr}}
 .free-badge{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.35);display:inline-block;padding:6px 12px}
-@media(max-width:900px){.free-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.free-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.free-grid{grid-template-columns:1fr}}
 /* EXHIBITIONS */
   .exh-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.exh-program{background:var(--coal);padding:36px;margin-top:2px}
+.exh-program .dates{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.exh-program h3{margin-bottom:10px}
+.exh-program p{color:var(--sand);max-width:60ch}
+.exh-program .btn-gold{display:table;margin-top:22px}
+@media(max-width:600px){.exh-program{padding:24px 20px}}
+.cine-list{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:22px}
+.cine-item{display:flex;flex-direction:column;gap:8px;background:var(--ink);padding:26px 28px;text-decoration:none;color:inherit;border:1px solid transparent;transition:border-color .3s}
+@media(hover:hover){.cine-item:hover{border-color:rgba(214,181,122,.4)}}
+.cine-meta{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand)}
+.cine-title{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.375rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bone)}
+.cine-note{color:var(--sand);font-size:0.9375rem;max-width:60ch}
+@media(max-width:600px){.cine-list{grid-template-columns:1fr}.cine-item{padding:22px 20px}}
 .exh-item{position:relative;overflow:hidden;min-height:320px}
 .exh-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.4);transition:filter .5s}
 @media(hover:hover){.exh-item:hover img{filter:brightness(.55)}}
@@ -323,7 +342,7 @@ html{scroll-padding-top:230px}
 <nav class="quicknav" aria-label="Быстрые ссылки по странице">
   <div class="quicknav-in">
     <a href="#schedule" class="gold">Билеты</a>
-    <a href="#program">Программа</a>
+    <a href="#program">Спектакли</a>
     <a href="#exhibitions">Выставки</a>
     <a href="#business">Деловая программа</a>
     <a href="#kids">Детям</a>
@@ -381,7 +400,7 @@ html{scroll-padding-top:230px}
       <div class="day-content" id="day-3" role="tabpanel" aria-labelledby="day-tab-3">
         <div class="time-item"><span class="time">12:00</span><div class="event">Детская программа: <a href="/mk-dinozavry">мастер-класс «Динозавры в городе»</a><small>«Речезаврия» · 4–8 лет · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/mk-dinozavry#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">12:30</span><div class="event">Детская программа: <a href="/art-kvest">арт-квест «Дети — не зрители»</a><small>6+ · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/art-kvest#join">Зарегистрироваться</a></div></div>
-        <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс «Мэйдэй-3» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея · 60 входных билетов без мест — 1 500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
+        <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс <a href="/meydey">«Мэйдэй-3»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея · 60 входных билетов без мест — 1 500 ₽</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/8c2bf7e0-4214-4c9d-9402-ab46f708c211?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Детская программа: <a href="/mk-tykovka">мастер-класс «Тыковка из воздушного пластилина»</a><small>«ВместеАрт» · 7+ · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/mk-tykovka#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Детская программа: <a href="/art-kvest">арт-квест «Дети — не зрители»</a><small>6+ · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/art-kvest#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Детская программа: <a href="/mk-prokachay-mozg">мастер-класс «Прокачай свой мозг»</a><small>«Академия Умников» · 11+ · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/mk-prokachay-mozg#join">Зарегистрироваться</a></div></div>
@@ -389,7 +408,7 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">14:00</span><div class="event">Абсурдистская пьеса <a href="/godo">«В ожидании Годо»</a>, реж. Виктор Деринов, 18+<small>Красный зал</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">15:00</span><div class="event">Детская программа: <a href="/edinorozhka">«Волшебная встреча с Единорожкой»</a><small>студия праздников «Мёд» · 4–6 лет, с родителем · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/edinorozhka#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль»</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/af08b13e-d6e2-4dec-8776-0e4877430d84?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль «Запах розового масла» — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
+        <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль <a href="/rozovoe-maslo">«Запах розового масла»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Синий зал</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event">Сольный стендап-концерт <a href="/dyba-show">«Дыба шоу»</a> — <a href="/vanya-dyba">Ваня Дыба</a>, закрытие фестиваля<small>Красный зал · 18+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c22b9f5d-138f-435a-a750-822e7cba9533?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
       </div>
     </div>
@@ -442,7 +461,7 @@ html{scroll-padding-top:230px}
 <!-- ПРОГРАММА -->
 <section class="bg-coal" id="program">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Программа</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow">Спектакли</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
     <p class="reveal lead-sm own-size">9 постановок и 13 показов за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада.</p>
 
     <div class="prog-grid reveal">
@@ -502,6 +521,13 @@ html{scroll-padding-top:230px}
         <div class="prog-right"><span class="age">18+</span></div>
         <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/97763a2d-aa6d-42ef-b370-3cbfcd12887c?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
       </div>
+
+      <div class="prog-item">
+        <div class="prog-left"><span class="badge">Закрытие</span><span class="hall">Красный зал · 25 октября</span></div>
+        <div class="prog-title"><h3><a class="prog-link" href="/dyba-show">Дыба шоу</a></h3><p class="genre">Сольный стендап-концерт · Ваня Дыба</p><p class="desc">Часть комедии рождается прямо на сцене, в диалоге с залом, часть — проверенные авторские блоки. Интеллектуально-философские темы простым русским языком. Концерт закрывает фестиваль в последний вечер.</p></div>
+        <div class="prog-right"><span class="age">18+</span><span class="dur">1:30</span></div>
+        <div class="prog-buy"><a class="btn-gold" href="https://cuire-fest.ru/tickets/show/c22b9f5d-138f-435a-a750-822e7cba9533?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билет</a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -538,15 +564,15 @@ html{scroll-padding-top:230px}
       <img src="https://cuire-fest.ru/assets/photo/p04.jpg" alt="Фото фестиваля ТОЧКА КЮРИ" loading="lazy">
       <img src="https://cuire-fest.ru/assets/photo/p08.jpg" alt="Фото фестиваля ТОЧКА КЮРИ" loading="lazy">
     </div>
-  </div>
-</section>
-
-<!-- ВЫСТАВОЧНАЯ ПРОГРАММА · ПЕРЕХОД -->
-<section class="bg-coal" id="exhibition-program">
-  <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Выставочная программа · Сезон I</span><h2>Переход</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.9375rem;max-width:60ch">28 художников — один маршрут от точки входа до точки выхода, а не список отдельных работ. 14–25 октября, ЦСИ «Быль». Куратор — Екатерина Шелгунова. Вход свободный.</p>
-    <a class="btn-gold" href="/exhibition-program" style="display:inline-block">Смотреть состав художников →</a>
+    <!-- pack-v656: «Выставочная программа · Переход» была отдельным разделом
+         сразу после «Выставок» — теперь здесь же (якорь #exhibition-program сохранён). -->
+    <div class="exh-program reveal" id="exhibition-program">
+      <p class="dates">14–25 октября · Выставочная программа · Сезон I</p>
+      <h3><a class="tl c-inherit" href="/exhibition-program">Переход</a></h3>
+      <p>28 художников — один маршрут от точки входа до точки выхода, а не список отдельных работ. Куратор — Екатерина Шелгунова.</p>
+      <span class="exh-free">Вход свободный</span>
+      <a class="btn-gold" href="/exhibition-program">Смотреть состав художников →</a>
+    </div>
   </div>
 </section>
 
@@ -560,19 +586,16 @@ html{scroll-padding-top:230px}
   </div>
 </section>
 
-<!-- КИНО -->
+<!-- КИНО (pack-v656: вместо «подробности уточняются» и большой карточки
+     куратора — два объявленных фильма; даты показов пока не назначены) -->
 <section class="bg-coal" id="cinema">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Кино</span><h2>Секция «Кино»</h2></div>
-    <p class="reveal lead-sm own-size">Кинопрограмма фестиваля — под кураторством сценариста и шоураннера <a href="/galina-mosalova">Галины Мосаловой</a>. Подробности программы уточняются.</p>
-    <div class="speaker-grid reveal" style="grid-template-columns:1fr;max-width:520px">
-      <a class="speaker-card" href="/galina-mosalova" style="text-decoration:none;color:inherit;cursor:pointer">
-        <div class="speaker-meta">Куратор секции «Кино»</div>
-        <div class="speaker-kicker">Сценарист · Шоураннер</div>
-        <h3>Галина Мосалова</h3>
-        <p class="bio">Сценарист и шоураннер, автор сценариев более 10 картин (2017–2024) — сериалов «Земля больших возможностей», «Танго на осколках», «Культур-мультур» и других. В 2019 году окончила первый набор программы «Шоураннер» Московской школы кино.</p>
-      </a>
+    <div class="cine-list reveal">
+      <a class="cine-item" href="/fifth-element"><span class="cine-meta">Фильм Люка Бессона · 1997 · 18+</span><span class="cine-title">Пятый элемент</span></a>
+      <a class="cine-item" href="/kotlovan"><span class="cine-meta">Документальный фильм Николая Бема · 2025 · 80 мин</span><span class="cine-title">Котлован</span></a>
     </div>
+    <p class="reveal cine-note">Даты и время показов уточняются. Куратор секции — <a class="tl c-gold" href="/galina-mosalova">Галина Мосалова</a>, сценарист и шоураннер.</p>
   </div>
 </section>
 
@@ -608,12 +631,6 @@ html{scroll-padding-top:230px}
         <h3><a class="tl c-inherit" href="/business-program">Лекторий</a></h3>
         <p>Лекции и мастер-класс деловой программы 23–24 октября — <a class="tl c-gold" href="/lecture-bez-suflera">Алёна Бычкова</a>, <a class="tl c-gold" href="/lecture-tanets-v-realnom-mire">Михаил Казмирук</a>, <a class="tl c-gold" href="/lecture-landshafty-realnosti">Катя Абдулова</a>, <a class="tl c-gold" href="/lecture-art-goroda">Александра Губанова</a>. Лекции дня открытия, 22 октября, — по пригласительным.</p>
         <span class="free-badge">Бесплатно · по регистрации</span>
-      </div>
-      <div class="free-card">
-        <div class="icon">◈</div>
-        <h3>Мастер-классы</h3>
-        <p>Современный танец и пластика, джаз-вокал и сценическое движение, актёрское мастерство, свет и видеоарт в спектакле.</p>
-        <span class="free-badge">Вход свободный</span>
       </div>
       <div class="free-card">
         <div class="icon">◈</div>
@@ -937,9 +954,8 @@ html{scroll-padding-top:230px}
 
 <!-- Мобильный CTA-бар -->
 <div class="mob-cta" id="mob-cta">
-  <span class="mob-cta-title">«Точка Кюри»</span>
-  
-  <a class="mob-cta-btn gold" href="#schedule">22–25 октября · Старый Оскол</a>
+  <span class="mob-cta-title">«Точка Кюри» · 22–25.10</span>
+  <a class="mob-cta-btn gold" href="#schedule">Купить билет</a>
 </div>
 
 <!-- Модальное окно Спасибо -->
