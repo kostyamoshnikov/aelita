@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=93">
+<link rel="stylesheet" href="/assets/fonts.css?v=96">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -402,7 +402,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
         <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Send the code again</a> · <a href="#" onclick="usePassword();return false">Sign in with password</a></div>
       </div>
     </div>
-    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/consent" style="color:var(--gold)">processing of personal data</a></span></label>
+    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/en/consent/" style="color:var(--gold)">processing of personal data</a></span></label>
   </div>
   <div class="msg" id="msg"></div>
 </div>
@@ -519,7 +519,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=93"></script>
+<script src="/assets/payments.js?v=96"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2467,6 +2467,12 @@ async function submitOrder(){
       msgEl.innerHTML = 'Online payment is not configured right now — that is our fault, not yours. Email us and we will sell you the ticket directly: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
     } else if(out.error === 'unknown_or_closed_performance'){
       msgEl.innerHTML = 'Sales for this performance closed while the page was open. <a href="/en/tickets" style="color:var(--gold)">View the listings</a>';
+    } else if(out.error === 'order_in_progress'){
+      // pack-v662: повторное нажатие, пока первый (бесплатный) заказ ещё оформляется.
+      msgEl.textContent = 'Your order is already being processed — check your email in a minute, the tickets will arrive there. No need to press again.';
+    } else if(out.error === 'seat_limit'){
+      // pack-v662: на этот показ за вами уже удержаны места в другом неоплаченном заказе.
+      msgEl.innerHTML = 'You already have seats held for this performance in another order — one buyer cannot hold more than 10 seats in total. Pay for that order or wait 10 minutes for the hold to expire. Need more seats? Email us: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>';
     } else if(out.error === 'seat_out_of_range' || out.error === 'bad_seat_count' || out.error === 'bad_quantity'){
       msgEl.innerHTML = 'Your seat selection does not match the hall — the page has probably been open for a while. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Refresh the plan</a> and select again.';
     } else {
@@ -2584,7 +2590,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=93"></script>
-<script src="/assets/outage.js?v=93" defer></script>
+<script src="/assets/phone-prefix.js?v=96"></script>
+<script src="/assets/outage.js?v=96" defer></script>
 </body>
 </html>

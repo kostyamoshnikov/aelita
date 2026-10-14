@@ -1198,3 +1198,10 @@ a.is-canceled{opacity:.55;pointer-events:none;cursor:default}
 .aud-more>summary::after{content:'▾';font-size:0.75rem;transition:transform .15s}
 .aud-more[open]>summary::after{transform:rotate(180deg)}
 .aud-more[open]>.aud-scope{margin-top:14px}
+/* pack-v664: «Sold out» на месте кнопки покупки (ОМУТ, заказчик 14.10:
+   «закрыть продажу, написав sold out… чтобы остались в программе»).
+   Не ссылка и не кнопка: приглушённая рамка, курсор обычный. */
+html body .sold-out{display:inline-block;font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;padding:15px 30px;border:1px solid rgba(232,230,225,.22);background:transparent;color:var(--sand);cursor:default;white-space:nowrap;line-height:1.2;text-decoration:none}
+html body .sold-out.sm{margin-top:10px;padding:10px 22px;letter-spacing:.16em}
+html body .sold-out.cta{padding:11px 18px;flex-shrink:0}
+@media(max-width:600px){html body .sold-out.cta{padding:10px 14px;letter-spacing:.18em}}

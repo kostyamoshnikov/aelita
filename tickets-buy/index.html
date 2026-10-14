@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=93">
+<link rel="stylesheet" href="/assets/fonts.css?v=96">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -512,7 +512,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=93"></script>
+<script src="/assets/payments.js?v=96"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2460,6 +2460,12 @@ async function submitOrder(){
       msgEl.innerHTML = 'Онлайн-оплата сейчас не настроена — это наша ошибка, не ваша. Напишите нам, продадим билет напрямую: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
     } else if(out.error === 'unknown_or_closed_performance'){
       msgEl.innerHTML = 'Продажи на этот показ закрылись, пока страница была открыта. <a href="/tickets" style="color:var(--gold)">Посмотреть афишу</a>';
+    } else if(out.error === 'order_in_progress'){
+      // pack-v662: повторное нажатие, пока первый (бесплатный) заказ ещё оформляется.
+      msgEl.textContent = 'Заказ уже оформляется — проверьте почту через минуту, письмо с билетами придёт туда. Повторно нажимать не нужно.';
+    } else if(out.error === 'seat_limit'){
+      // pack-v662: на этот показ за вами уже удержаны места в другом неоплаченном заказе.
+      msgEl.innerHTML = 'На этот показ за вами уже удержаны места в другом заказе — вместе больше 10 мест на одного покупателя оформить нельзя. Оплатите тот заказ или подождите 10 минут, пока бронь снимется. Нужно больше мест — напишите нам: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>';
     } else if(out.error === 'seat_out_of_range' || out.error === 'bad_seat_count' || out.error === 'bad_quantity'){
       msgEl.innerHTML = 'Выбор мест не сходится с залом — похоже, страница открыта давно. <a href="#" onclick="location.reload();return false" style="color:var(--gold)">Обновить схему</a> и выбрать заново.';
     } else {
@@ -2577,7 +2583,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=93"></script>
-<script src="/assets/outage.js?v=93" defer></script>
+<script src="/assets/phone-prefix.js?v=96"></script>
+<script src="/assets/outage.js?v=96" defer></script>
 </body>
 </html>

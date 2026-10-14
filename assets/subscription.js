@@ -83,6 +83,7 @@
       pwLabelLogin: 'Пароль от личного кабинета',
       processing: 'Переходим к оплате…',
       failed: 'Оплата не началась. Попробуйте ещё раз — или напишите нам: aelita.production@yandex.ru',
+      checkFailed: 'Не смогли проверить, нет ли у вас уже действующей подписки, — оплату не начинали, чтобы не списать дважды. Попробуйте через несколько минут или напишите нам: aelita.production@yandex.ru',
       network: 'Не получилось связаться с сервером оплаты. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам: aelita.production@yandex.ru',
       gift: {
         not_found: 'Такой код подарочной карты не найден — он в PDF сертификата, вида AELITA-XXXX-XXXX-XXXX.',
@@ -199,6 +200,7 @@
       pwLabelLogin: 'Account password',
       processing: 'Redirecting to payment…',
       failed: "The payment didn't start. Try again — or email us: aelita.production@yandex.ru",
+      checkFailed: "We couldn't check whether you already have an active subscription, so the payment was not started — to avoid charging you twice. Try again in a few minutes or email us: aelita.production@yandex.ru",
       network: "We couldn't reach the payment server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru",
       gift: {
         not_found: 'Gift card code not found — it is in the certificate PDF and looks like AELITA-XXXX-XXXX-XXXX.',
@@ -679,6 +681,7 @@
         return;
       }
       if (data.error === 'autopay_consent_required') return say(T.needAutopay);
+      if (data.error === 'subscription_check_failed') return say(T.checkFailed);
       if (data.error === 'gift_code_invalid' || data.error === 'gift_card_changed' || data.error === 'gift_not_applicable') {
         var g = data.error === 'gift_card_changed' ? T.gift.changed : data.error === 'gift_not_applicable' ? T.gift.not_applicable : (T.gift[data.reason] || T.gift.not_found);
         return fieldErr(giftEl, g);

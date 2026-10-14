@@ -24,19 +24,36 @@
 <meta property="og:site_name" content="AELITA PRODUCTION">
 <meta property="og:title" content="The Scent of Rose Oil — AELITA PRODUCTION">
 <meta property="og:description" content="A physical theatre reflection on the biblical thread of Bulgakov's “The Master and Margarita” — on a choice that one day turns out to have been predetermined, and the price paid for it.">
-<meta property="og:image" content="https://aelita-production.ru/images/og-default.jpg">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Scent of Rose Oil — AELITA PRODUCTION">
 <meta name="twitter:description" content="A physical theatre reflection on the biblical thread of Bulgakov's “The Master and Margarita” — on a choice that one day turns out to have been predetermined, and the price paid for it.">
-<meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=93">
-<link rel="stylesheet" href="/assets/style.css?v=93">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
+<link rel="stylesheet" href="/assets/fonts.css?v=96">
+<link rel="stylesheet" href="/assets/style.css?v=96">
 <style>body{max-width:100vw}
 .page-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:0;border-bottom:none;animation:none}
 .page-hero h1{font-size:clamp(30px,6vw,70px);letter-spacing:.1em;line-height:1.1;margin-bottom:16px}
 .page-hero .sub{color:var(--sand);font-size:1rem;max-width:52ch;margin-bottom:10px}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+/* pack-v662: фотосетка-мозаика (как /porfiriy/) — без неё фото шли столбиком на 6–8 тыс. px, и на компьютере блок фото не появлялся вовсе */
+.photos-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:8px}
+.ph-1{grid-column:1/7;grid-row:1;height:320px}
+.ph-2{grid-column:7/10;grid-row:1;height:320px}
+.ph-3{grid-column:10/13;grid-row:1;height:320px}
+.ph-4{grid-column:1/5;grid-row:2;height:240px}
+.ph-5{grid-column:5/9;grid-row:2;height:240px}
+.ph-6{grid-column:9/13;grid-row:2;height:240px}
+.ph-7{grid-column:1/13;grid-row:3;height:280px}
+@media(max-width:760px){
+  .photos-grid{grid-template-columns:1fr 1fr !important;gap:4px}
+  .ph-1,.ph-2,.ph-3,.ph-4,.ph-5,.ph-6,.ph-7,.ph-8,.ph-9,.ph-10{grid-column:auto !important;grid-row:auto !important;height:180px}
+}
+@media(max-width:480px){
+  .photos-grid{grid-template-columns:1fr !important}
+  .ph-1,.ph-2,.ph-3,.ph-4,.ph-5,.ph-6,.ph-7,.ph-8,.ph-9,.ph-10{height:220px}
+}
 </style>
 <script type="application/ld+json">
 {
@@ -90,7 +107,7 @@
     <p class="note-xs mb-10 own-size">Featuring <a class="tl c-gold" href="/en/omyt">OMYT Dance Space</a> · Guest of the “Tochka Cuire” festival · Producer <a class="tl c-gold" href="/en/mikhail-kazmiruk">Misha Kazmiruk</a></p>
     <p class="hero-when"><strong>Oct 25, 19:00</strong> · CSI “Byl”, Blue Hall</p>
     <div class="hero-btns btn-row-14">
-      <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_rozovoe-maslo" target="_blank" rel="noopener">Buy ticket</a>
+      <span class="sold-out" title="Tickets sold out">Sold out</span>
       <a class="btn-outline" href="/en/press#rozovoe-maslo">For press</a>
     </div>
   </div>
@@ -121,7 +138,7 @@
         <p class="show-slot-venue"><a href="/en/byl">CSI “Byl”</a>, Blue Hall</p>
         <p class="show-slot-addr">Stary Oskol, Zhukova district, 38</p>
         <div class="show-slot-btns">
-          <a class="btn-gold" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_rozovoe-maslo" target="_blank" rel="noopener">Buy ticket →</a>
+          <span class="sold-out" title="Tickets sold out">Sold out</span>
           <a class="btn-outline" href="/en/tochkacuire#program">All festival productions →</a>
         </div>
       </div>
@@ -281,7 +298,7 @@
 <!-- Мобильный CTA-бар -->
 <div class="mob-cta" id="mob-cta">
   <span class="mob-cta-title">“The Scent of Rose Oil” · 25.10</span>
-  <a class="mob-cta-btn gold" href="https://cuire-fest.ru/tickets/show/0f5457c7-3c8a-4f97-9614-1a7c49644b45?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_rozovoe-maslo" target="_blank" rel="noopener">Buy ticket</a>
+  <span class="sold-out cta" title="Tickets sold out">Sold out</span>
 </div>
 
 <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -297,7 +314,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=93"></script>
+<script src="/assets/main.js?v=96"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

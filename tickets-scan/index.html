@@ -365,6 +365,7 @@ function queueNote(item, data){
   if(data && data.kind === 'invite' && data.alreadyRedeemed){
     return {warn: true, text: '⚠️ Пригласительный «' + who + '» уже проходил на другом устройстве — возможен повторный проход.'};
   }
+  if(item.unverified) return {warn: true, text: '⚠️ Пропущен БЕЗ ПРОВЕРКИ в ' + fmtTime(new Date(item.ts).toISOString()) + ' — сервер отказал: ' + failMessage(data || {}) + '. Сообщите администратору.'};
   return {warn: true, text: '⚠️ «' + who + '» (пропущен без связи) — сервер отказал: ' + failMessage(data || {})};
 }
 
@@ -825,7 +826,7 @@ async function handleScan(token, fromSearch){
     if(e instanceof NetworkError){
       // pack-v624: без связи — проверка по офлайн-базе показа (если скачана).
       if(await offlineCheck(token, seq)) return;
-      if(seq === scanSeq) show(offlineHelp());
+      if(seq === scanSeq) show(offlineHelp(newCard(token, {kind: 'unverified', name: ''})));
       return;
     }
     show('<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — отсканируйте ещё раз; если не поможет — «Позвать помощь».</div></div>');
@@ -844,12 +845,31 @@ async function handleScan(token, fromSearch){
 // pack-v592 (ревью 07.10, В2): совсем без сети проверить билет нельзя —
 // подпись QR проверяет только сервер (секрет на телефон контролёра не
 // кладём). Поэтому — ясная инструкция, что делать.
-function offlineHelp(){
+// pack-v662 (проверка 07.10, мелочи): если и списка под рукой нет —
+// «Пропустить без проверки»: QR сохраняется в той же очереди, что и проходы
+// без связи, и при связи уходит на сервер. Сервер гасит билет, если он
+// действителен; если нет (чужой показ, возвращён, уже прошёл) — в плашке
+// над сканером появится предупреждение для администратора.
+function offlineHelp(ctx){
   return '<div class="card warn"><div class="status warn">НЕТ СВЯЗИ — билет не проверить</div>' +
     '<div class="detail detail-left">' +
     '1. Проверьте интернет (Wi-Fi или мобильные данные) и отсканируйте ещё раз.<br>' +
     '2. Связи нет дольше пары минут — пускайте по распечатанному списку зрителей: админка → «Продажи по показам» → «Зрители — PDF»; гостей по пригласительным — по списку «Пригласительные» → «Таблица (Excel)» (распечатать заранее). Найдите фамилию и номер билета (пригласительного), отметьте ручкой.<br>' +
-    '3. Сомневаетесь — «Позвать помощь».</div></div>';
+    '3. Списка нет — «Пропустить без проверки»: проход запомнится и будет сверен, когда вернётся связь. Только если человек точно идёт на этот показ.<br>' +
+    '4. Сомневаетесь — «Позвать помощь».</div>' +
+    (ctx ? btn('Пропустить без проверки', 'unverifiedPass', ctx, true) : '') + '</div>';
+}
+
+function unverifiedPass(ctx){
+  if(!confirm('Пропустить без проверки? Билет проверится, когда вернётся связь; если он недействителен — администратор увидит предупреждение.')) return;
+  const item = enqueue(Object.assign({}, ctx, {data: {name: 'билет без проверки'}}));
+  if(item){
+    const arr = getQueue().map((x)=>x.id === item.id ? Object.assign({}, x, {unverified: true}) : x);
+    saveQueue(arr);
+  }
+  buzz(!!item);
+  if(isActive(ctx)) show('<div class="card ' + (item ? 'ok' : 'warn') + '"><div class="offline-flag">Нет связи · без проверки</div><div class="status ' + (item ? 'ok' : 'warn') + '">' +
+    (item ? 'Пропущен без проверки в ' + escapeHtml(fmtTime(new Date().toISOString())) + ' — сверим, когда появится связь' : 'Этот билет уже пропущен без связи — повторно не пропускать') + '</div></div>');
 }
 
 // pack-v267: экранирование. Имя покупателя приходит из заказа и
@@ -1141,6 +1161,7 @@ async function cardAct(act, id){
     if(act === 'redeem') await confirmRedeem(ctx);
     else if(act === 'undo') await undoRedeem(ctx);
     else if(act === 'offlineRedeem') offlineRedeem(ctx);
+    else if(act === 'unverifiedPass') unverifiedPass(ctx);
     else if(act === 'unqueue'){
       unqueue(ctx.queuedId);
       if(door && ctx.doorH && door.local){ delete door.local[ctx.doorH]; doorSave(); } // pack-v624
