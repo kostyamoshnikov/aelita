@@ -1205,3 +1205,6 @@ html body .sold-out{display:inline-block;font-family:'Montserrat',sans-serif;fon
 html body .sold-out.sm{margin-top:10px;padding:10px 22px;letter-spacing:.16em}
 html body .sold-out.cta{padding:11px 18px;flex-shrink:0}
 @media(max-width:600px){html body .sold-out.cta{padding:10px 14px;letter-spacing:.18em}}
+/* pack-v666: строка о поддержке фестиваля «Точка Кюри» — внизу каждой фестивальной страницы (заказчик 15.10) */
+.fest-support{padding:34px 0;border-top:1px solid rgba(214,181,122,.18)}
+.fest-support p{color:var(--sand);font-size:0.8125rem;line-height:1.7;max-width:72ch;margin:0}

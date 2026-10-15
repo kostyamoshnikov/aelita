@@ -123,7 +123,7 @@ function acceptCookies(){
 //  Обе — не поверх непринятого cookie-баннера (как раньше).
 var AELITA_TG_OFF = [
   'contacts', 'team', 'festival-team', 'rezidents', 'press', 'mentions', 'partners',
-  'alena-bychkova', 'alexandra-gubanova', 'alexey-tsymlov', 'anton-vdovichenko',
+  'alexandra-chubenko', 'alexandra-gubanova', 'alexey-tsymlov', 'anton-vdovichenko',
   'ekaterina-ilyina', 'galina-mosalova', 'ivan-sachkov', 'katya-abdulova',
   'konstantin-moshnikov', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
   'svetlana-nikiforova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
@@ -645,7 +645,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=96';
+    s.src = '/assets/outage.js?v=98';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

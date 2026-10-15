@@ -32,8 +32,8 @@
 <meta property="og:title" content="ТОЧКА КЮРИ — фестиваль AELITA PRODUCTION">
 <meta property="og:description" content="Точка, где всё меняется. Старый Оскол · ЦСИ «Быль» · 22–25 октября 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=96">
-<link rel="stylesheet" href="/assets/style.css?v=96">
+<link rel="stylesheet" href="/assets/fonts.css?v=98">
+<link rel="stylesheet" href="/assets/style.css?v=98">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -50,7 +50,10 @@ section{padding:90px 0}
   
 
   /* HERO */
-  .hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px}
+  .hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;padding-top:150px}
+  /* pack-v666: без padding-top на невысоком экране (ноутбук 1366×657, телефон 390×640) первый экран
+     прижимался к низу и уезжал под фиксированную шапку — «ТОЧКА» обрезалась (скрин заказчика 15.10) */
+  @media(max-width:760px){.hero{padding-top:134px}}
 .hero-bg{position:absolute;inset:0;background-image:url('https://cuire-fest.ru/assets/photo/p06.jpg');background-size:cover;background-position:center;filter:brightness(.28);will-change:transform}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,11,13,.2) 0%,rgba(11,11,13,.0) 30%,rgba(11,11,13,.88) 78%,var(--ink) 100%)}
 .hero-beam::before{content:"";position:absolute;top:0;left:58%;width:1.5px;height:70%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.9) 35%,var(--gold) 65%,transparent);transform:rotate(12deg);transform-origin:top center;box-shadow:0 0 20px 4px rgba(214,181,122,.5),0 0 80px 20px rgba(214,181,122,.15);animation:beam-in 2s ease both}
@@ -378,7 +381,7 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">20:00</span><div class="event">Спектакль-мистерия Кати Абдуловой <a href="/iov">«ИОВ:материал»</a><small>Синий зал · 12+ · по пригласительным</small></div></div>
       </div>
       <div class="day-content active" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
-        <div class="time-item"><span class="time">14:00</span><div class="event">Деловая программа: мастер-класс <a href="/lecture-bez-suflera">«Без суфлёра»</a> — <a href="/alena-bychkova">Алёна Бычкова</a><small>Регистрация обязательна</small><a class="tix-btn reg" href="/lecture-bez-suflera#join">Зарегистрироваться</a></div></div>
+        <div class="time-item"><span class="time">14:00</span><div class="event">Деловая программа: мастер-класс <a href="/lecture-bez-suflera">«Без суфлёра»</a> — <a href="/alexandra-chubenko">Александра Чубенко</a><small>Регистрация обязательна</small><a class="tix-btn reg" href="/lecture-bez-suflera#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль»</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Деловая программа: лекция <a href="/lecture-tanets-v-realnom-mire">«Как рождается и живёт танец в реальном мире»</a> — <a href="/mikhail-kazmiruk">Михаил Казмирук</a><small>Красный зал · регистрация обязательна</small><a class="tix-btn reg" href="/lecture-tanets-v-realnom-mire#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Пластический спектакль <a href="/prorochestva">«Пророчества перелётных птиц»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Красный зал</small><span class="sold-out sm" title="Билеты проданы">Sold out</span></div></div>
@@ -394,6 +397,7 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">14:00</span><div class="event">Интерактивный моноспектакль <a href="/mozgi">«Есть ли у вас мозги?»</a><small>Красный зал · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Деловая программа: лекция <a href="/lecture-landshafty-realnosti">«Ландшафты реальности»</a> — Катя Абдулова<small>Регистрация обязательна</small><a class="tix-btn reg" href="/lecture-landshafty-realnosti#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Спектакль-променад <a href="/puteshestvenniki">«Путешественники»</a> — творческая лаборатория «БлизКо», 18+<small>Старт у ЦСИ «Быль»</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
+        <div class="time-item"><span class="time">16:30</span><div class="event">Детская программа: <a href="/mk-volshebnye-kraski">художественный мастер-класс «Волшебные краски»</a><small>Центр «ИРиС» · 7–14 лет · бесплатно · регистрация скоро</small><a class="tix-btn reg" href="/mk-volshebnye-kraski#join">Подробнее</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Деловая программа: лекция <a href="/lecture-art-goroda">«Арт-города»</a> — Александра Губанова, закрытие деловой программы<small>Регистрация обязательна</small><a class="tix-btn reg" href="/lecture-art-goroda#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Медитативно-детективный мэшап <a href="/porfiriy">«Порфирий»</a>, реж. Александр Панов<small>Красный зал · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/2c06d654-f6be-4db6-83ce-7de3b9437779?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Купить билеты</a></div></div>
       </div>
@@ -569,7 +573,7 @@ html{scroll-padding-top:230px}
     <div class="exh-program reveal" id="exhibition-program">
       <p class="dates">14–25 октября · Выставочная программа · Сезон I</p>
       <h3><a class="tl c-inherit" href="/exhibition-program">Переход</a></h3>
-      <p>28 художников — один маршрут от точки входа до точки выхода, а не список отдельных работ. Куратор — Екатерина Шелгунова.</p>
+      <p>22 художника — один маршрут от точки входа до точки выхода, а не список отдельных работ. Куратор — Екатерина Шелгунова.</p>
       <span class="exh-free">Вход свободный</span>
       <a class="btn-gold" href="/exhibition-program">Смотреть состав художников →</a>
     </div>
@@ -580,7 +584,7 @@ html{scroll-padding-top:230px}
 <section id="business">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Деловая программа</span><h2>Разговоры о том, как всё устроено</h2></div>
-    <p class="reveal" style="color:var(--sand);margin-bottom:12px;font-size:0.9375rem;max-width:60ch">Лекции и открытые встречи для тех, кто делает культуру и продукты: как живёт современный танец в реальной экономике и что меняет искусственный интеллект в профессии. 23–24 октября — бесплатно, по регистрации; 22 октября — по пригласительным. Катя Абдулова, Мария Павлова, Алёна Бычкова, Михаил Казмирук, Алексей Цымлов, Александра Губанова.</p>
+    <p class="reveal" style="color:var(--sand);margin-bottom:12px;font-size:0.9375rem;max-width:60ch">Лекции и открытые встречи для тех, кто делает культуру и продукты: как живёт современный танец в реальной экономике и что меняет искусственный интеллект в профессии. 23–24 октября — бесплатно, по регистрации; 22 октября — по пригласительным. Катя Абдулова, Мария Павлова, Александра Чубенко, Михаил Казмирук, Алексей Цымлов, Александра Губанова.</p>
     <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.875rem">Куратор деловой программы — <a class="tl c-gold" href="/alexandra-gubanova">Александра Губанова</a>, основатель агентства «ПараПланов».</p>
     <a class="btn-gold" href="/business-program" style="display:inline-block">Смотреть деловую программу →</a>
   </div>
@@ -603,11 +607,11 @@ html{scroll-padding-top:230px}
 <section id="kids">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">Детская программа · 24–25 октября</span><h2>Детская программа</h2></div>
-    <p class="desc reveal">Два дня для детей от 4 лет: арт-квест «Дети — не зрители» и семь занятий с партнёрами фестиваля — «ВместеАрт», «Академией Умников», Yulia Candle, «Речезаврией» и студией праздников «Мёд». Все занятия бесплатные, по регистрации.</p>
+    <p class="desc reveal">Два дня для детей от 4 лет: арт-квест «Дети — не зрители» и восемь занятий с партнёрами фестиваля — «ВместеАрт», «Академией Умников», Yulia Candle, «Речезаврией», центром «ИРиС» и студией праздников «Мёд». Все занятия бесплатные, по регистрации.</p>
     <div class="venue-grid reveal">
       <div class="venue-img"><img src="/images/detskaya-programma-art.jpg" alt="Детская программа фестиваля «Точка Кюри»" loading="lazy"></div>
       <div>
-        <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:16px">Роспись гипсовых подставок, натуральная свеча из вощины, «Прокачай свой мозг», «Динозавры в городе», тыковка из воздушного пластилина и встреча с Единорожкой — у каждого занятия своя страница с регистрацией, мест на мастер-классах — от 15 до 20.</p>
+        <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:16px">Роспись гипсовых подставок, натуральная свеча из вощины, «Прокачай свой мозг», «Волшебные краски», «Динозавры в городе», тыковка из воздушного пластилина и встреча с Единорожкой — у каждого занятия своя страница с регистрацией, мест на мастер-классах — от 15 до 20.</p>
         <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:16px">Арт-квест «Дети — не зрители» — 60 минут спасательной миссии: фестиваль захвачен «Серыми Экранами», и только отряд юных супергероев может вернуть искусству краски. Квест идёт одновременно с мастер-классами — выбирайте сеансы, которые не пересекаются.</p>
         <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:24px">Сделайте передышку для себя и праздник для ребёнка — мы займём детей искусством, пока вы впитываете культуру.</p>
         <div class="venue-stats" style="grid-template-columns:1fr 1fr 1fr">
@@ -629,7 +633,7 @@ html{scroll-padding-top:230px}
       <div class="free-card">
         <div class="icon">◈</div>
         <h3><a class="tl c-inherit" href="/business-program">Лекторий</a></h3>
-        <p>Лекции и мастер-класс деловой программы 23–24 октября — <a class="tl c-gold" href="/lecture-bez-suflera">Алёна Бычкова</a>, <a class="tl c-gold" href="/lecture-tanets-v-realnom-mire">Михаил Казмирук</a>, <a class="tl c-gold" href="/lecture-landshafty-realnosti">Катя Абдулова</a>, <a class="tl c-gold" href="/lecture-art-goroda">Александра Губанова</a>. Лекции дня открытия, 22 октября, — по пригласительным.</p>
+        <p>Лекции и мастер-класс деловой программы 23–24 октября — <a class="tl c-gold" href="/lecture-bez-suflera">Александра Чубенко</a>, <a class="tl c-gold" href="/lecture-tanets-v-realnom-mire">Михаил Казмирук</a>, <a class="tl c-gold" href="/lecture-landshafty-realnosti">Катя Абдулова</a>, <a class="tl c-gold" href="/lecture-art-goroda">Александра Губанова</a>. Лекции дня открытия, 22 октября, — по пригласительным.</p>
         <span class="free-badge">Бесплатно · по регистрации</span>
       </div>
       <div class="free-card">
@@ -704,6 +708,9 @@ html{scroll-padding-top:230px}
   </div>
 </section>
 
+<section class="fest-support own-pad" aria-label="Поддержка фестиваля">
+  <div class="wrap"><p>Фестиваль «Точка Кюри» проводится при поддержке управления культуры администрации Старооскольского городского округа и компании «Металлоинвест».</p></div>
+</section>
 </main>
 
 <footer>
@@ -1019,7 +1026,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=96"></script>
+<script src="/assets/main.js?v=98"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1030,6 +1037,6 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=96"></script>
+<script src="/assets/phone-prefix.js?v=98"></script>
 </body>
 </html>
