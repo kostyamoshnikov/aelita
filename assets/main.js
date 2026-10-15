@@ -126,7 +126,7 @@ var AELITA_TG_OFF = [
   'alexandra-chubenko', 'alexandra-gubanova', 'alexey-tsymlov', 'anton-vdovichenko',
   'ekaterina-ilyina', 'galina-mosalova', 'ivan-sachkov', 'katya-abdulova',
   'konstantin-moshnikov', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
-  'svetlana-nikiforova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
+  'svetlana-nikiforova', 'valentina-bykova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
 ];
 var fwSlug = location.pathname.replace(/^\/en(?=\/|$)/, '').replace(/^\/+|\/+$/g, '').split('/')[0];
 var fwTgOff = AELITA_TG_OFF.indexOf(fwSlug) !== -1;
@@ -645,7 +645,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=99';
+    s.src = '/assets/outage.js?v=100';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }
