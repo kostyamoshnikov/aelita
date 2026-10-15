@@ -114,11 +114,14 @@
   <div class="wrap reveal">
     <span class="eyebrow">How to attend</span>
     <h2 class="mt-14">Free, registration required</h2>
-    <!-- pack-v666: событие Timepad ещё не заведено (заказчик 15.10: «ссылку на таймпад чуть позже пришлю»).
-         Когда придёт id — заменить абзац ниже на кнопку-виджет, как на /mk-svecha-iz-voshchiny/#join
-         (id кнопки ровно "timepad_twf_register_<id>" + скрипт loader.js + запасная ссылка),
-         и поправить «Как попасть» на /detskaya-programma. -->
-    <p class="sub">Registration opens in the coming days — the link will appear here. Participation is free, places are limited. The art quest and other activities run at other times — you can make it to several.</p>
+    <!-- pack-v670: регистрация на Timepad (событие 4256243, заказчик 16.10). Кнопка — триггер
+         всплывающего виджета: id ДОЛЖЕН быть ровно "timepad_twf_register_4256243" (на него
+         завязан triggerSelector). Прямая ссылка ниже — запасной путь, если скрипт
+         timepad.ru не загрузился. Образец — /art-kvest/#join. -->
+    <p class="sub">Participation is free; registration is required — places are limited. The art quest and other activities run at other times — you can make it to several.</p>
+    <button class="submit-btn btn-narrow" id="timepad_twf_register_4256243">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4256243 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4256243"}}})();</script>
+    <p class="note-xs mt-16 own-size">If the button does not open the registration window — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4256243/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_mk-volshebnye-kraski" target="_blank" rel="noopener">open the registration page</a></p>
     <p class="note-xs mt-16 own-size">Getting there — <a class="tl c-gold" href="/en/byl">CSI “Byl”</a>, Stary Oskol, Zhukova microdistrict 38. Questions — <a class="tl c-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a> or +7 960 515-16-90.</p>
   </div>
 </div>

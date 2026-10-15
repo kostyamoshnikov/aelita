@@ -114,11 +114,14 @@
   <div class="wrap reveal">
     <span class="eyebrow">Как попасть</span>
     <h2 class="mt-14">Бесплатно, по регистрации</h2>
-    <!-- pack-v666: событие Timepad ещё не заведено (заказчик 15.10: «ссылку на таймпад чуть позже пришлю»).
-         Когда придёт id — заменить абзац ниже на кнопку-виджет, как на /mk-svecha-iz-voshchiny/#join
-         (id кнопки ровно "timepad_twf_register_<id>" + скрипт loader.js + запасная ссылка),
-         и поправить «Как попасть» на /detskaya-programma. -->
-    <p class="sub">Регистрация откроется в ближайшие дни — ссылка появится здесь. Участие бесплатное, места ограничены. Арт-квест и другие занятия идут в другое время — можно успеть на несколько.</p>
+    <!-- pack-v670: регистрация на Timepad (событие 4256243, заказчик 16.10). Кнопка — триггер
+         всплывающего виджета: id ДОЛЖЕН быть ровно "timepad_twf_register_4256243" (на него
+         завязан triggerSelector). Прямая ссылка ниже — запасной путь, если скрипт
+         timepad.ru не загрузился. Образец — /art-kvest/#join. -->
+    <p class="sub">Участие бесплатное, регистрация обязательна — места ограничены. Арт-квест и другие занятия идут в другое время — можно успеть на несколько.</p>
+    <button class="submit-btn btn-narrow" id="timepad_twf_register_4256243">Записаться →</button>
+    <script async="async" defer="defer" charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4256243 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4256243"}}})();</script>
+    <p class="note-xs mt-16 own-size">Если кнопка не открывает окно регистрации — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4256243/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=mk-volshebnye-kraski" target="_blank" rel="noopener">откройте страницу регистрации</a></p>
     <p class="note-xs mt-16 own-size">Как добраться — <a class="tl c-gold" href="/byl">ЦСИ «Быль»</a>, Старый Оскол, мкр. Жукова, 38. Вопросы — <a class="tl c-gold" href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a> или +7 960 515-16-90.</p>
   </div>
 </div>
