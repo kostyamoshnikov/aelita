@@ -543,10 +543,10 @@ section{padding:80px 0}
 .desc-text p strong{color:var(--bone);font-weight:400}
 .desc-quote{border-left:1px solid var(--gold);padding-left:22px;margin:32px 0;font-size:1.0625rem;color:var(--bone);line-height:1.7}
 .meta-box{background:var(--coal);padding:34px}
-.meta-row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+.meta-row{display:flex;flex-wrap:wrap;column-gap:16px;row-gap:6px;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(232,230,225,.07)}
 .meta-row:last-child{border-bottom:none}
 .meta-row .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.32em;text-transform:uppercase;color:var(--sand)}
-.meta-row .val{font-size:0.875rem;color:var(--bone);text-align:right;max-width:58%}
+.meta-row .val{font-size:0.875rem;color:var(--bone);text-align:right;max-width:100%;margin-left:auto}
 @media(max-width:900px){.desc-grid{grid-template-columns:1fr}}
 .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .member{background:var(--coal);padding:30px 28px}
@@ -1208,3 +1208,16 @@ html body .sold-out.cta{padding:11px 18px;flex-shrink:0}
 /* pack-v666: строка о поддержке фестиваля «Точка Кюри» — внизу каждой фестивальной страницы (заказчик 15.10) */
 .fest-support{padding:34px 0;border-top:1px solid rgba(214,181,122,.18)}
 .fest-support p{color:var(--sand);font-size:0.8125rem;line-height:1.7;max-width:72ch;margin:0}
+/* pack-v667: шапка — всегда во всю ширину сайта. На страницах документов (--maxw:900px) и возврата
+   билета (760px) колонка шапки сужалась вместе с текстом, и на ноутбуке 1366 px «КАБИНЕТ» и «EN»
+   уезжали за правый край экрана */
+nav .nav-in{max-width:1320px}
+/* pack-v667: два абзаца описания подряд слипались без отступа (лекции, мастер-классы, «Годо»,
+   «Путешественники», выставки — 13 страниц). Поля соседних блоков схлопываются, так что там,
+   где отступ уже был, ничего не меняется */
+p.desc + p.desc{margin-top:16px}
+/* pack-v667: факты «Формат / Сейчас / Программа чтения» на /book-space (поток для предпринимателей)
+   шли столбиком без оформления — правила .om-facts были только на страницах встреч. Те же правила — общие */
+.om-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin:36px 0}
+.om-fact .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.om-fact .val{font-size:1rem;color:var(--bone);line-height:1.5}

@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Резиденты — AELITA PRODUCTION">
 <meta name="twitter:description" content="Резиденты продюсерской компании AELITA PRODUCTION: режиссёры, хореографы, художники.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=98">
-<link rel="stylesheet" href="/assets/style.css?v=98">
+<link rel="stylesheet" href="/assets/fonts.css?v=99">
+<link rel="stylesheet" href="/assets/style.css?v=99">
 <style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
@@ -79,6 +79,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
     filter:brightness(.92);
     transition:filter .4s ease;
   }
+  /* pack-v667: заглушка без фото — знак по центру, не обрезанный OG-баннер */
+  .person-card img.ph{object-fit:contain;padding:22% 30%;background:radial-gradient(ellipse at 50% 40%,rgba(214,181,122,.10),transparent 65%),var(--coal);border:1px solid rgba(214,181,122,.12);box-sizing:border-box}
   @media(hover:hover){.person-card:hover img{filter:brightness(1)}}
   .person-overlay{padding:16px 2px 0}
   .person-role{
@@ -427,7 +429,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
       </a>
 
       <a href="/porfiriy" class="person-card">
-        <img src="/images/og-default.jpg" alt="Александр Панов" loading="lazy">
+        <img class="ph" src="/images/aelita-znak.svg" alt="Александр Панов" loading="lazy">
         <div class="person-overlay">
           <span class="person-role">Режиссёр и актёр</span>
           <div class="person-name">Александр<br>Панов</div>
@@ -563,7 +565,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=98"></script>
+<script src="/assets/main.js?v=99"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
