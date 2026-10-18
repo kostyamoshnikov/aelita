@@ -645,8 +645,64 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=100';
+    s.src = '/assets/outage.js?v=101';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }
+})();
+
+// pack-v673: подсказка «Установите приложение» для iPhone/iPad в Safari
+// (заказчик 18.10). Apple не даёт сайту самому предложить установку —
+// показываем, как это сделать: «Поделиться» → «На экран Домой».
+// Только Safari (во встроенных окнах Instagram/VK/Telegram установка
+// невозможна), не в установленном приложении, не на /app (там инструкция),
+// не на страницах покупки, кабинета и оплаты, не поверх cookie-баннера и
+// плашки «Купить билет». Закрыли — не показываем 60 дней.
+(function () {
+  try {
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (!isIOS) return;
+    if (!/Safari\//.test(ua) || /CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser|Instagram|FBAN|FBAV|VKClient|Telegram|Line\/|MicroMessenger|YaApp|AelitaApp/.test(ua)) return;
+    if (navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches)) return;
+    var path = location.pathname.replace(/^\/en(?=\/|$)/, '');
+    if (/^\/(app|tickets-buy|ticket|tickets-scan|events-scan|account|admin|ticket-refund|gift-card|book-space\/[^/]+\/pay|programs)(\/|$)/.test(path)) return;
+    var KEY = 'aelita_ios_hint_closed';
+    var closed = 0;
+    try { closed = +localStorage.getItem(KEY) || 0; } catch (e) { return; }
+    if (closed && Date.now() - closed < 60 * 24 * 3600 * 1000) return;
+    var en = window.AELITA_isEn && window.AELITA_isEn();
+    var SHARE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" style="vertical-align:-2px"><path d="M12 3v12M8 7l4-4 4 4M6 11H5a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1v-8a1 1 0 00-1-1h-1"/></svg>';
+    function show() {
+      if (document.getElementById('ios-hint')) return;
+      if (typeof isCookieBannerOpen === 'function' && isCookieBannerOpen()) return;
+      if (document.getElementById('mob-cta')) return; // своя плашка «Купить билет» внизу — не перекрываем
+      var st = document.createElement('style');
+      st.textContent = '#ios-hint{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9000;background:#16161a;border:1px solid rgba(214,181,122,.45);color:#E8E6E1;padding:14px 44px 14px 16px;font-size:0.875rem;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.5)}'
+        + '#ios-hint b{color:#D6B57A;font-weight:500}#ios-hint a{color:#D6B57A}'
+        + '#ios-hint button{position:absolute;top:6px;right:6px;width:36px;height:36px;background:none;border:0;color:#C9B8A3;font-size:1.25rem;line-height:1;cursor:pointer}'
+        + 'html.ios-hint-on #tg-widget,html.ios-hint-on #back-to-top{visibility:hidden}';
+      document.head.appendChild(st);
+      var el = document.createElement('div');
+      el.id = 'ios-hint';
+      el.setAttribute('role', 'dialog');
+      el.setAttribute('aria-label', en ? 'Install the app' : 'Установить приложение');
+      el.innerHTML = en
+        ? '<b>AELITA app</b> — tap “Share” ' + SHARE + ' and choose “Add to Home Screen”. <a href="/en/app">How</a>'
+        : '<b>Приложение АЭЛИТА</b> — нажмите «Поделиться» ' + SHARE + ' и выберите «На экран Домой». <a href="/app">Как</a>';
+      var x = document.createElement('button');
+      x.type = 'button';
+      x.setAttribute('aria-label', en ? 'Close' : 'Закрыть');
+      x.textContent = '×';
+      x.onclick = function () {
+        try { localStorage.setItem(KEY, String(Date.now())); } catch (e) { /* приватный режим */ }
+        el.remove();
+        document.documentElement.classList.remove('ios-hint-on');
+      };
+      el.appendChild(x);
+      document.body.appendChild(el);
+      document.documentElement.classList.add('ios-hint-on');
+    }
+    setTimeout(show, 12000);
+  } catch (e) { /* подсказка — не главное */ }
 })();

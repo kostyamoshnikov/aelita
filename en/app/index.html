@@ -31,7 +31,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="theme-color" content="#0B0B0D">
-<link rel="stylesheet" href="/assets/fonts.css?v=100">
+<link rel="stylesheet" href="/assets/fonts.css?v=101">
 <style>
 /* pack-v667: страница не подключает assets/style.css — ссылка «Перейти к содержанию» была видна в углу. Те же правила, что в style.css */
 .skip-link{position:absolute;left:-999px;top:0;background:var(--ink,#0B0B0D);color:var(--bone,#E8E6E1);padding:12px 18px;z-index:1000}
@@ -95,6 +95,12 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(24px,6vw,
 .step-text{font-size:0.875rem;color:var(--sand);padding-top:6px;line-height:1.6}
 .step-text strong{color:var(--bone)}
 
+/* pack-v673: подсказки под конкретный телефон и браузер (заказчик 18.10: «сделай правильно для всех») */
+.inst-note{display:none;max-width:44ch;margin:22px auto 0;padding:16px 18px;background:var(--coal);border-left:2px solid var(--gold);text-align:left;font-size:0.875rem;line-height:1.6;color:var(--sand)}
+.inst-note.show{display:block}
+.inst-note strong{color:var(--bone)}
+.ios-share{vertical-align:-3px;color:var(--gold)}
+.apk-box.flash{box-shadow:0 0 0 1px var(--gold)}
 /* pack-v672: APK-файл (заказчик 18.10) */
 .apk-box{margin-top:28px;padding:22px 24px;background:var(--coal);border-left:2px solid var(--gold)}
 .apk-box h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
@@ -155,6 +161,10 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
     </button>
     <p class="install-hint" id="install-hint">Free · No app store required</p>
     <p class="already-installed" id="already-installed">✓ App already installed</p>
+    <p class="inst-note" id="note-android">This browser can’t install apps from a website — or the app is already installed (then look for the <strong>AELITA</strong> icon on your home screen). Download the app file or open this page in <strong>Google Chrome</strong>.<br><a class="apk-btn" style="margin-top:14px" href="/app/aelita.apk" download="AELITA.apk">Download APK · 90 KB</a></p>
+    <p class="inst-note" id="note-ios-inapp">You opened the site inside another app — iPhone doesn’t allow installing from there. Open this page in <strong>Safari</strong> (menu <strong>“•••”</strong> → <strong>“Open in browser”</strong>) and follow the steps below.</p>
+    <p class="inst-note" id="note-ios-other">On iPhone the app is installed via the <strong>“Share”</strong> button — see the steps below. It works best in <strong>Safari</strong>.</p>
+    <p class="inst-note" id="note-desktop">The app is for your phone: open <strong>aelita-production.ru/app</strong> on your phone and tap “Install”.</p>
   </div>
 </section>
 
@@ -184,8 +194,8 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
     <h2>How to install</h2>
 
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('android', this)">Android</button>
-      <button class="tab" onclick="switchTab('ios', this)">iPhone / iPad</button>
+      <button class="tab active" id="tabbtn-android" onclick="switchTab('android', this)">Android</button>
+      <button class="tab" id="tabbtn-ios" onclick="switchTab('ios', this)">iPhone / iPad</button>
     </div>
 
     <div class="tab-content active" id="tab-android">
@@ -196,7 +206,7 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-text">Tap the button <strong>“Install”</strong> above — or find in Chrome menu <strong>“Add to home screen”</strong></div>
+          <div class="step-text">Tap the button <strong>“Install”</strong> above — or in the Chrome menu <strong>“⋮”</strong> choose <strong>“Install app”</strong> (<strong>“Add to home screen”</strong>)</div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
@@ -223,15 +233,15 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-text">Tap the button <strong>“Share”</strong> <span style="font-size:1rem">⎙</span> at the bottom of the screen</div>
+          <div class="step-text">Tap the button <strong>“Share”</strong> <svg class="ios-share" width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M6 11H5a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1v-8a1 1 0 00-1-1h-1"></path></svg> — at the bottom or top of the screen; if you don’t see it, tap <strong>“•••”</strong></div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <div class="step-text">Select <strong>“Add to Home Screen”</strong> from the action list</div>
+          <div class="step-text">Select <strong>“Add to Home Screen”</strong> — if you don’t see it, scroll the list of actions down</div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
-          <div class="step-text">Tap <strong>“Add”</strong> in the top right corner</div>
+          <div class="step-text">Tap <strong>“Add”</strong> — the <strong>AELITA</strong> icon will appear on your Home Screen</div>
         </div>
       </div>
     </div>
@@ -251,51 +261,64 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
 </footer>
 
 <script>
-  // Перехватываем событие установки PWA
-  let deferredPrompt;
-
-  window.addEventListener('beforeinstallprompt', e => {
+  // pack-v673: установка — под конкретный телефон и браузер.
+  // Android + Chrome/Samsung/Edge: родное окно установки (beforeinstallprompt).
+  // Android без него (Firefox, часть Яндекс Браузера, встроенные окна, или уже
+  // установлено): вкладка Android, подсказка и APK. iPhone/iPad: Apple не даёт
+  // сайту предложить установку — вкладка iPhone, инструкция и подсказка для
+  // встроенных окон (Instagram, VK, Telegram…). Компьютер — «откройте на телефоне».
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  var inOurApp = /AelitaApp\//.test(ua);
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var iosInApp = isIOS && (!/Safari\//.test(ua) || /Instagram|FBAN|FBAV|VKClient|Telegram|Line\/|MicroMessenger|YaApp/.test(ua));
+  var iosOtherBrowser = isIOS && !iosInApp && /CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(ua);
+  var deferredPrompt = null;
+  function $(id){ return document.getElementById(id); }
+  function showNote(id){ ['note-android','note-ios-inapp','note-ios-other','note-desktop'].forEach(function(n){ var e=$(n); if(e) e.classList.toggle('show', n===id); }); }
+  function openTab(tab){
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+    $('tabbtn-' + tab).classList.add('active');
+    $('tab-' + tab).classList.add('active');
+  }
+  function switchTab(tab, btn){ openTab(tab); }
+  function markInstalled(){
+    $('install-btn').classList.add('hidden');
+    $('install-hint').style.display = 'none';
+    $('already-installed').classList.add('show');
+    showNote(null);
+  }
+  if (isIOS) openTab('ios');
+  if (inOurApp) { var ab = $('apk-box'); if (ab) ab.style.display = 'none'; }
+  if (standalone || inOurApp) markInstalled();
+  window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     deferredPrompt = e;
-    document.getElementById('install-btn').classList.remove('hidden');
-    document.getElementById('install-hint').style.display = 'block';
+    showNote(null);
   });
-
-  document.getElementById('install-btn').addEventListener('click', async () => {
-    if (!deferredPrompt) {
-      // iOS или уже установлено — показываем инструкцию
-      document.getElementById('tab-ios').classList.add('active');
-      document.getElementById('tab-android').classList.remove('active');
-      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===1));
-      document.querySelector('.instructions').scrollIntoView({behavior:'smooth'});
+  window.addEventListener('appinstalled', markInstalled);
+  $('install-btn').addEventListener('click', function(){
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(r){ if (r && r.outcome === 'accepted') markInstalled(); });
+      deferredPrompt = null;
       return;
     }
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      document.getElementById('install-btn').classList.add('hidden');
-      document.getElementById('install-hint').style.display = 'none';
-      document.getElementById('already-installed').classList.add('show');
+    if (isIOS) {
+      openTab('ios');
+      showNote(iosInApp ? 'note-ios-inapp' : (iosOtherBrowser ? 'note-ios-other' : null));
+      document.querySelector('.instructions').scrollIntoView({behavior:'smooth'});
+    } else if (isAndroid) {
+      openTab('android');
+      showNote('note-android');
+      var box = $('apk-box');
+      if (box) box.classList.add('flash');
+    } else {
+      showNote('note-desktop');
     }
-    deferredPrompt = null;
   });
-
-  // Если уже установлено
-  if (window.matchMedia('(display-mode: standalone)').matches) {
-    document.getElementById('install-btn').classList.add('hidden');
-    document.getElementById('install-hint').style.display = 'none';
-    document.getElementById('already-installed').classList.add('show');
-  }
-
-  // Переключение вкладок инструкции
-  if (/AelitaApp\//.test(navigator.userAgent)) { var ab = document.getElementById('apk-box'); if (ab) ab.style.display = 'none'; }
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + tab).classList.add('active');
-  }
-
   // Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js');
@@ -306,6 +329,6 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
      уходила в никуда. Баннера cookies на странице нет: счётчик встаёт,
      только если согласие уже дано на другой странице сайта. -->
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=100"></script>
+<script src="/assets/main.js?v=101"></script>
 </body>
 </html>
