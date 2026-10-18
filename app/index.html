@@ -95,6 +95,13 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(24px,6vw,
 .step-text{font-size:0.875rem;color:var(--sand);padding-top:6px;line-height:1.6}
 .step-text strong{color:var(--bone)}
 
+/* pack-v672: APK-файл (заказчик 18.10) */
+.apk-box{margin-top:28px;padding:22px 24px;background:var(--coal);border-left:2px solid var(--gold)}
+.apk-box h3{font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.apk-box p{font-size:0.875rem;color:var(--sand);line-height:1.6;margin-bottom:16px}
+.apk-btn{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--gold);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;padding:13px 22px;text-decoration:none}
+@media(hover:hover){.apk-btn:hover{background:var(--gold);color:var(--ink)}}
+.apk-box .apk-note{font-size:0.75rem;color:rgba(201,184,163,.6);margin:12px 0 0}
 /* Footer */
 footer{padding:32px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
 footer p{font-size:0.75rem;color:rgba(201,184,163,.4)}
@@ -200,6 +207,12 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
           <div class="step-text">Иконка <strong>АЭЛИТА</strong> появится на рабочем столе</div>
         </div>
       </div>
+      <div class="apk-box" id="apk-box">
+        <h3>Или скачайте файлом</h3>
+        <p>Приложение для Android 7 и новее — если кнопка «Установить» не появляется или удобнее поставить файлом.</p>
+        <a class="apk-btn" href="/app/aelita.apk" download="AELITA.apk">Скачать APK · 90 КБ</a>
+        <p class="apk-note">Приложение не из магазина, поэтому телефон попросит разрешить установку из этого источника — это нормально. Версия 1.0.</p>
+      </div>
     </div>
 
     <div class="tab-content" id="tab-ios">
@@ -275,6 +288,7 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
   }
 
   // Переключение вкладок инструкции
+  if (/AelitaApp\//.test(navigator.userAgent)) { var ab = document.getElementById('apk-box'); if (ab) ab.style.display = 'none'; }
   function switchTab(tab, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
