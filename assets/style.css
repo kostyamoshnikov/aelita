@@ -1221,3 +1221,30 @@ p.desc + p.desc{margin-top:16px}
 .om-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin:36px 0}
 .om-fact .lbl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .om-fact .val{font-size:1rem;color:var(--bone);line-height:1.5}
+
+/* pack-v674: панель фактов спектакля (заказчик 18.10, макет): название, даты,
+   золотая черта, факты списком без подложки, «Пушкинская карта» и «Купить
+   билет» на всю ширину. Узкая колонка — подпись слева, значение справа
+   (длинное — под подписью); широкая (≥440px) — две ровные колонки. */
+.desc-grid.fp-grid{grid-template-columns:1fr 460px;gap:70px}
+@media(max-width:1100px){.desc-grid.fp-grid{grid-template-columns:1fr 380px;gap:48px}}
+@media(max-width:900px){.desc-grid.fp-grid{grid-template-columns:1fr;gap:40px}.desc-grid.fp-grid .fact-panel{order:-1}}
+.fact-panel .fp-title{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(1.625rem,3vw,2.25rem);letter-spacing:.14em;line-height:1.15;text-transform:uppercase;color:var(--bone);margin:0}
+.fact-panel .fp-when{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin:14px 0 0;line-height:1.7}
+.fact-panel .fp-rule{width:54px;height:2px;background:var(--gold);margin:24px 0 28px}
+.fact-list{container-type:inline-size;border-top:1px solid rgba(232,230,225,.1)}
+.fact-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:16px;row-gap:6px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.1)}
+.fact-row .fl{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+.fact-row .fv{font-size:0.9375rem;line-height:1.5;color:var(--bone);text-align:right;margin-left:auto}
+.fact-row .fv a{color:var(--gold)}
+@container (min-width:440px){.fact-row{display:grid;grid-template-columns:240px 1fr;column-gap:18px}.fact-row .fl{letter-spacing:.22em}.fact-row .fv{text-align:left;margin-left:0}}
+.fact-panel .fp-badge{display:block;margin-top:28px;border:1px solid rgba(214,181,122,.55);padding:16px 20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;line-height:1.6;text-transform:uppercase;color:var(--gold)}
+.fact-panel .fp-buy{display:block;width:100%;margin:14px 0 0;text-align:center;box-sizing:border-box}
+
+/* pack-v674: факты показа фильма (/kotlovan, /fifth-element) на телефоне — строки «подпись · значение», как панель фактов спектакля */
+@media(max-width:760px){
+section .film-facts{grid-template-columns:1fr;gap:0;border-top:1px solid rgba(232,230,225,.1)}
+section .film-facts>div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:16px;row-gap:6px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.1)}
+section .film-facts .lbl{display:inline;margin:0;letter-spacing:.26em}
+section .film-facts .val{text-align:right;margin-left:auto}
+}

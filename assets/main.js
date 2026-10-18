@@ -307,7 +307,7 @@ function updateCtaBar(){
   // /dyba-show): пока они на экране, бар с той же кнопкой не нужен.
   // Видимые цели храним в Set: колбэк получает только изменившиеся
   // элементы, и es.some() по ним одним «забывал» остальные видимые.
-  const targets = document.querySelectorAll('.hero, .hero-btns, #afisha, #subscribe, #contacts, .contact-sec');
+  const targets = document.querySelectorAll('.hero, .hero-btns, #afisha, #subscribe, #contacts, .contact-sec, .fact-panel');
   if(!targets.length) return;
   const visible = new Set();
   const obs = new IntersectionObserver(es=>{
@@ -645,7 +645,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=101';
+    s.src = '/assets/outage.js?v=102';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }
