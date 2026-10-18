@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Проекты — AELITA PRODUCTION">
 <meta name="twitter:description" content="Проекты AELITA PRODUCTION: мистерия «ИОВ:материал» и другие постановки компании. Описания, составы и ближайшие показы.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=104">
-<link rel="stylesheet" href="/assets/style.css?v=104">
+<link rel="stylesheet" href="/assets/fonts.css?v=105">
+<link rel="stylesheet" href="/assets/style.css?v=105">
 <style>body{max-width:100vw}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:15px 30px;text-decoration:none;display:inline-block;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
 a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
@@ -91,6 +91,37 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 /* Возвращённые адресные media-правила (переопределяют собственную локальную базовую версию этой страницы) */
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 @media(max-width:760px){.grid{grid-template-columns:1fr !important}}
+
+/* pack-v682: избранное крупно и карточки с кадрами (план редизайна) */
+.pj-featured{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;margin:60px 0 70px}
+.pj-feat{position:relative;min-height:500px;overflow:hidden;display:flex;align-items:flex-end;box-shadow:inset 0 0 0 1px rgba(214,181,122,.22)}
+.pj-feat-img{position:absolute;inset:0;display:block}
+.pj-feat-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s ease}
+@media(hover:hover){.pj-feat:hover .pj-feat-img img{transform:scale(1.03)}}
+.pj-feat::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(11,11,13,.96) 0%,rgba(11,11,13,.75) 38%,rgba(11,11,13,.05) 75%)}
+.pj-feat-body{position:relative;z-index:2;padding:34px;max-width:520px}
+.pj-feat .badge{display:inline-block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.pj-feat h2{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(1.75rem,3.2vw,2.75rem)!important;letter-spacing:.06em!important;line-height:1.15!important;text-transform:uppercase;margin:0 0 14px}
+.pj-feat h2 a{color:var(--bone);text-decoration:none}
+.pj-feat p{color:var(--sand);font-size:0.9375rem;line-height:1.7;margin:0 0 10px}
+.pj-feat .meta{font-size:0.8125rem;color:rgba(201,184,163,.75);margin-bottom:22px}
+.pj-feat .btn-gold{margin-top:10px}
+.pj-feat .btn-outline{margin-top:10px;background:none}
+#main .grid{gap:40px 28px}
+#main .grid .card{padding:0 0 6px!important;box-shadow:none!important;opacity:1!important}
+.card-img{display:block;aspect-ratio:16/10;overflow:hidden;background:#101113;margin-bottom:18px}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .9s ease}
+@media(hover:hover){.card:hover .card-img img{transform:scale(1.04)}}
+.card-img--mark{display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,rgba(214,181,122,.12),transparent 65%),#101113}
+.card-img--mark img{width:auto;height:52%;object-fit:contain;opacity:.85}
+@media(max-width:900px){.pj-featured{grid-template-columns:1fr}.pj-feat{min-height:420px}}
+@media(max-width:600px){.pj-feat{min-height:380px}.pj-feat-body{padding:24px}}
+.card-img img.op1,.pj-feat-img img.op1{object-position:50% 22%}
+.card-img img.op2,.pj-feat-img img.op2{object-position:50% 25%}
+.card-img img.op3,.pj-feat-img img.op3{object-position:50% 30%}
+.card-img img.op4,.pj-feat-img img.op4{object-position:50% 50%}
+.card-img img.op5,.pj-feat-img img.op5{object-position:50% 60%}
+.card-img img.op6,.pj-feat-img img.op6{object-position:62% 30%}
 </style>
 </head>
 <body>
@@ -129,18 +160,28 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 </div>
 
 <div class="wrap">
-  <!-- ФЛАГМАН -->
-  <div class="flagship reveal">
-    <div class="flagship-img"></div>
-    <div class="flagship-body">
-      <span class="badge">Флагманский проект · В прокате</span>
-      <h2>ИОВ:материал</h2>
-      <p>Современная мистерия <a href="/katya-abdulova">Кати Абдуловой</a>. Мэшап из библейских текстов, Кьеркегора, Кафки, Достоевского.</p>
-      <p class="meta">12+ · 1 ч 35 мин · Пушкинская карта</p>
-      <a class="btn-gold" href="/iov">Подробнее о спектакле</a>
+  <!-- ИЗБРАННОЕ (pack-v682, план редизайна: 1–2 работы крупно) -->
+  <div class="pj-featured reveal">
+    <div class="pj-feat">
+      <a class="pj-feat-img" href="/iov" tabindex="-1" aria-hidden="true"><img src="/images/iov-card-1.jpg" alt="" class="op6"></a>
+      <div class="pj-feat-body">
+        <span class="badge">Флагманский проект · В прокате</span>
+        <h2><a href="/iov">ИОВ:материал</a></h2>
+        <p>Современная мистерия <a href="/katya-abdulova">Кати Абдуловой</a>. Мэшап из библейских текстов, Кьеркегора, Кафки, Достоевского.</p>
+        <p class="meta">12+ · 1 ч 35 мин · Пушкинская карта</p>
+        <a class="btn-gold" href="/iov">Подробнее о спектакле</a>
+      </div>
+    </div>
+    <div class="pj-feat">
+      <a class="pj-feat-img" href="/tochkacuire" tabindex="-1" aria-hidden="true"><img src="/images/home/tochkacuire-key.jpg" alt=""></a>
+      <div class="pj-feat-body">
+        <span class="badge">Фестиваль · 22–25 октября 2026</span>
+        <h2><a href="/tochkacuire">«Точка Кюри»</a></h2>
+        <p>Фестиваль современного искусства в ЦСИ «Быль», Старый Оскол. Организатор — AELITA PRODUCTION.</p>
+        <a class="btn-outline" href="/tochkacuire">О фестивале</a>
+      </div>
     </div>
   </div>
-
   <!-- ФЕСТИВАЛЬ -->
   <div class="filter-bar">
     <button class="filter-btn active" onclick="filterProjects('all', this)">Все проекты</button>
@@ -152,12 +193,14 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
   <div class="cat-section" data-cat="festivals"><div class="cat-label reveal">Фестивали</div>
   <div class="grid reveal">
     <a class="card link-plain" href="/tochkacuire">
+      <span class="card-img"><img src="/images/home/tochkacuire.jpg" alt="" loading="lazy"></span>
       <span class="tag">Октябрь 2026 · Старый Оскол</span>
       <h3>«Точка Кюри»</h3>
       <p>Фестиваль в ЦСИ «Быль». 22–25 октября 2026.</p>
       <p class="card-meta">Организатор: AELITA PRODUCTION</p>
     </a>
     <a class="card link-plain" href="/budu">
+      <span class="card-img card-img--mark" aria-hidden="true"><img src="/images/aelita-znak.svg" alt=""></span>
       <span class="tag">Архив · Калуга</span>
       <h3>«БудуТанцы»</h3>
       <p>Главное танцевальное событие лета в Калуге. Участники: Забава, ДисТанцы-Я, Огни.</p>
@@ -170,41 +213,49 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
   <div class="grid reveal">
 
     <a class="card link-plain" href="/porfiriy">
+      <span class="card-img"><img src="/images/porfiriy-card.jpg" alt="" loading="lazy" class="op1"></span>
       <span class="tag">Медитативный детектив</span>
       <h3>Порфирий</h3>
       <p>Спектакль Александра Панова. Мэшап по «Преступлению и наказанию» Достоевского и новеллам Акутагавы.</p>
     </a>
     <a class="card link-plain" href="/human">
+      <span class="card-img"><img src="/images/human/human-3.jpg" alt="" loading="lazy" class="op4"></span>
       <span class="tag">Малые формы</span>
       <h3>Археология человеческого</h3>
       <p>Три самостоятельных высказывания танцовщиков о человеческой природе.</p>
     </a>
     <a class="card link-plain" href="/listen">
+      <span class="card-img"><img src="/images/listen/listen-1.jpg" alt="" loading="lazy"></span>
       <span class="tag">Танцевальный спектакль</span>
       <h3>Послушайте!</h3>
       <p>Спектакль Юлии Бычковой. Интерактивное путешествие по просторам личных чувств и эмоций.</p>
     </a>
     <a class="card link-plain" href="/bred">
+      <span class="card-img"><img src="/images/bred/bred-2.jpg" alt="" loading="lazy" class="op2"></span>
       <span class="tag">Танц-перформанс · Гастроли</span>
       <h3>{И весь этот бред тоже}</h3>
       <p>Антон Вдовиченко, студия СДВИГ (Санкт-Петербург). Показ прошёл 10 октября в Калуге. 18+.</p>
     </a>
     <a class="card link-plain" href="/jazz-dance">
+      <span class="card-img"><img src="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390964/JAZZ_39_n_39_DANCE_-_%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80_%D1%88%D0%BE%D1%83_1_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_lapkla.jpg" alt="" loading="lazy"></span>
       <span class="tag">Шоу</span>
       <h3>Jazz 'n' Dance</h3>
       <p>Шоу Ксении Шамариной: цирк, джаз и танцы в одном концерте.</p>
     </a>
     <a class="card link-plain" href="/stories">
+      <span class="card-img"><img src="/images/stories/stories-5.jpg" alt="" loading="lazy"></span>
       <span class="tag">Пластический спектакль</span>
       <h3>Сюжеты. О земном и небесном</h3>
       <p>Спектакль Юлии Бычковой и танцевальной компании «Короче».</p>
     </a>
     <a class="card link-plain" href="/instruction">
+      <span class="card-img"><img src="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784388247/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%A2%D0%A0%D0%95%D0%99%D0%9B%D0%95%D0%A0_2025_AELITA_PRODUCTION_tsymbu.jpg" alt="" loading="lazy"></span>
       <span class="tag">Танцевальный спектакль</span>
       <h3>Инструкция для начинающих странников</h3>
       <p>Спектакль Юлии Бычковой и Елены Иноземцевой. Проект танцевальной компании «Забава».</p>
     </a>
     <a class="card link-plain" href="/corner">
+      <span class="card-img card-img--mark" aria-hidden="true"><img src="/images/aelita-znak.svg" alt=""></span>
       <span class="tag">Stand-up</span>
       <h3>Stand-up «Живой уголок»</h3>
       <p>Исторический вечер легенд калужского юмора. После 15 лет — возвращение на сцену.</p>
@@ -215,6 +266,7 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
   <div class="cat-section" data-cat="archive"><div class="cat-label reveal">Архив</div>
   <div class="grid reveal" style="margin-bottom:60px">
     <a class="card reveal" href="/gogol" style="color:inherit;text-decoration:none;opacity:.7">
+      <span class="card-img"><img src="https://res.cloudinary.com/kostyamoshnikov/video/upload/so_2/v1784390496/%D0%93%D0%9E%D0%93%D0%9E%D0%9B%D0%AC.%D0%A1%D0%AE%D0%98%D0%A2%D0%90_-_%D0%A1%D0%B0%D1%83%D0%BD%D0%B4-%D0%B4%D1%80%D0%B0%D0%BC%D0%B0_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%B2%D0%B5%D1%81%D1%82%D0%B8_%D0%9D.%D0%92._%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F_AELITA_PRODUCTION_%D0%90%D0%AD%D0%9B%D0%98%D0%A2%D0%90_%D0%9F%D0%A0%D0%9E%D0%94%D0%90%D0%9A%D0%A8%D0%95%D0%9D_o72ywg.jpg" alt="" loading="lazy"></span>
       <span class="tag">Архив · Саунд-драма</span>
       <h3>Гоголь.Сюита</h3>
       <p>Спектакль Дмитрия Туркова по повести Н.В. Гоголя. Показы завершены.</p>
@@ -226,21 +278,25 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
   <div class="cat-section" data-cat="sreda"><div class="cat-label reveal">Среда</div>
   <div class="grid reveal" style="margin-bottom:60px">
     <a class="card link-plain" href="/community">
+      <span class="card-img"><img src="/images/community/community-1.jpg" alt="" loading="lazy" class="op5"></span>
       <span class="tag">Книжный клуб</span>
       <h3>AELITA COMMUNITY</h3>
       <p>Пространство, наполненное смыслом. Книжные встречи Кати Абдуловой — для тех, кто хочет думать самостоятельно.</p>
     </a>
     <a class="card link-plain" href="/team">
+      <span class="card-img"><img src="/images/katya-abdulova.jpg" alt="" loading="lazy" class="op3"></span>
       <span class="tag">Основатели</span>
       <h3>Команда</h3>
       <p>Катя Абдулова и Константин Мошников — основатели AELITA PRODUCTION.</p>
     </a>
     <a class="card link-plain" href="/rezidents">
+      <span class="card-img"><img src="/images/yulia-bychkova.jpg" alt="" loading="lazy" class="op3"></span>
       <span class="tag">Резиденты</span>
       <h3>Резиденты</h3>
       <p>Режиссёры, хореографы, художники и артисты — люди, которые создают искусство AELITA PRODUCTION.</p>
     </a>
     <a class="card link-plain" href="/partners">
+      <span class="card-img card-img--mark" aria-hidden="true"><img src="/images/aelita-znak.svg" alt=""></span>
       <span class="tag">Партнёры</span>
       <h3>Экосистема</h3>
       <p>Площадки, компании и организации, с которыми мы создаём современное искусство.</p>
@@ -387,7 +443,7 @@ a:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
   }
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=104"></script>
+<script src="/assets/main.js?v=105"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

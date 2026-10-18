@@ -1167,7 +1167,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 #main .c-gold{color:var(--gold)}
 #main .c-bone{color:var(--bone)}
 #main .link-gold{color:var(--gold);text-decoration:none}
-#main .bg-coal{background:var(--coal)}
+#main .bg-coal{background:#101113} /* pack-v682: графит вместо серого (план редизайна: «серые сплошные плашки не возвращать») */
 #main .pad-70{padding:70px 0}
 #main .pad-80{padding:80px 0}
 #main .pad-20-100{padding:20px 0 100px}
@@ -1280,3 +1280,201 @@ body .other-card:nth-child(3n+2){background:radial-gradient(ellipse at 80% 15%,r
 body .other-card:nth-child(3n){background:radial-gradient(ellipse at 80% 15%,rgba(44,43,50,.6),transparent 65%)!important}
 body .other-card::after{content:"↗";position:absolute;right:24px;bottom:20px;color:var(--gold);font-size:1.375rem;line-height:1}
 body .other-card h3{font-family:'Montserrat',sans-serif;font-weight:300!important;font-size:1.375rem!important;letter-spacing:.03em!important;line-height:1.3!important;text-transform:none!important}
+
+/* ═══ pack-v682: компоненты страницы спектакля (образец — /iov, макет заказчика 19.10). Классы iv-*: шапка раздела «01 / …», кнопки, карточки дат, команда и роли, другие проекты, «Создадим что-то вместе», видео-карточки ═══ */
+.iv-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:48px}
+.iv-title{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(1.5rem,3vw,2.5rem)!important;letter-spacing:.2em!important;line-height:1.25!important;text-transform:uppercase;margin:0;color:var(--bone)}
+.iv-num{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);white-space:nowrap}
+.iv-num b{color:var(--gold);font-weight:400}
+/* первый экран */
+.hero.iv-hero{position:relative;min-height:min(100svh,880px);display:flex;align-items:flex-end;padding:150px 0 90px;overflow:hidden;border:none}
+.iv-hero .hero-overlay{z-index:1;background:linear-gradient(90deg,rgba(11,11,13,.92) 0%,rgba(11,11,13,.72) 26%,rgba(11,11,13,.18) 62%,rgba(11,11,13,.1) 84%),linear-gradient(0deg,var(--ink) 0%,rgba(11,11,13,0) 36%),linear-gradient(180deg,rgba(11,11,13,.55) 0%,rgba(11,11,13,0) 22%)}
+.iv-hero .wrap{position:relative;z-index:2;width:100%;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:end;gap:32px}
+.iv-hero-content{animation:rise 1.2s ease both .4s}
+.iv-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);margin:0 0 28px}
+.iv-kicker i{width:1px;height:18px;background:rgba(214,181,122,.6)}
+.hero.iv-hero h1.iv-h1{font-family:'Montserrat',sans-serif;font-weight:200!important;font-size:clamp(3.4rem,8.4vw,7.6rem)!important;letter-spacing:-.03em!important;line-height:.95!important;text-transform:uppercase;margin:0 0 26px;color:var(--bone)}
+.iv-hero h1 span{display:block;color:var(--gold)}
+.iv-sub{font-family:'Montserrat',sans-serif;font-size:0.8125rem;letter-spacing:.3em;text-transform:uppercase;color:var(--bone);margin:0 0 18px}
+.iv-meta{color:var(--sand);font-size:0.875rem;line-height:1.9;margin:0}
+.iv-meta a{color:var(--bone);text-decoration:none;border-bottom:1px solid rgba(214,181,122,.5)}
+.iv-hero .hero-btns{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:40px}
+.iv-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:52px;box-sizing:border-box;padding:0 32px;font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(214,181,122,.6);color:var(--bone);transition:background .3s,color .3s,border-color .3s,opacity .3s}
+.iv-btn.gold{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+@media(hover:hover){
+  .iv-btn:hover{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+}
+@media(hover:hover){
+  .iv-btn.gold:hover{opacity:.88}
+}
+.iv-textlink{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);text-decoration:none;border-bottom:1px solid rgba(201,184,163,.35);padding-bottom:4px}
+.iv-aside{justify-self:end;text-align:right;font-family:'Montserrat',sans-serif;animation:rise 1.2s ease both .7s}
+.iv-aside span{display:block;font-size:0.8125rem;letter-spacing:.2em;color:var(--bone);line-height:1.9}
+.iv-aside .t{font-weight:200;font-size:2.4rem;letter-spacing:.04em;color:var(--gold);line-height:1.2}
+.iv-aside small{display:block;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-top:6px}
+.iv-aside small a{color:inherit;text-decoration:none}
+/* 01 · о спектакле */
+.iv-story{background:linear-gradient(135deg,var(--ink) 0%,#111314 72%,#101113 100%)}
+.iv-story-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:9%;align-items:start}
+.iv-quote{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(2.4rem,4.6vw,4.25rem)!important;letter-spacing:-.02em!important;line-height:1.15!important;text-transform:none!important;margin:0 0 40px;color:var(--bone)}
+.iv-quote em{font-style:normal;color:var(--gold)}
+.iv-copy p{color:var(--sand);font-size:1rem;line-height:1.95;max-width:52ch;margin:0 0 18px}
+.iv-copy p strong{color:var(--bone);font-weight:400}
+.iv-story .fact-panel .fp-title{font-size:clamp(1.25rem,2vw,1.625rem)}
+/* полоса-фото */
+.iv-strip{position:relative;height:clamp(220px,30vw,420px);margin:0;overflow:hidden}
+.iv-strip img{width:100%;height:100%;object-fit:cover;object-position:100% 45%;display:block}
+.iv-strip::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--ink),rgba(11,11,13,0) 25%,rgba(11,11,13,0) 70%,var(--ink))}
+.iv-strip figcaption{position:absolute;z-index:1;right:5%;bottom:26px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--bone)}
+/* 02 · показы */
+.iv-dates-sec{background:#0f1012}
+.iv-dates{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.iv-date{position:relative;min-height:320px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(214,181,122,.28)}
+.iv-date-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:100% 35%;display:block}
+.iv-date::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(15,16,18,.97) 0%,rgba(15,16,18,.82) 34%,rgba(15,16,18,.2) 100%)}
+.iv-date--green::before{background:linear-gradient(90deg,rgba(13,24,19,.97) 0%,rgba(13,26,20,.75) 44%,rgba(13,26,20,.18) 100%)}
+.iv-date-in{position:relative;z-index:2;min-height:320px;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;align-items:flex-start}
+.iv-date-k{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin:0}
+.iv-date-k a{color:inherit;text-decoration:none}
+.iv-date-d{font-family:'Montserrat',sans-serif;font-weight:200;font-size:3.4rem;line-height:1;color:var(--bone);margin:28px 0 0}
+.iv-date-t{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.25rem;color:var(--gold);margin:10px 0 0}
+.iv-date-p{margin:auto 0 0;padding-top:24px;color:var(--bone);font-size:0.9375rem}
+.iv-date-p a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(232,230,225,.3)}
+.iv-date-c{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin:6px 0 0}
+.iv-date-buy{display:inline-flex;align-items:center;margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--gold);font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.iv-next{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;margin-top:24px;padding-top:30px;border-top:1px solid rgba(232,230,225,.14);font-size:0.875rem}
+.iv-next .k{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand)}
+.iv-next b{font-weight:300;color:var(--bone);letter-spacing:.06em}
+.iv-next a{display:inline-flex;align-items:center;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+/* 03 · фото (лайтбокс — .photos-grid img) */
+.iv-cap{display:flex;justify-content:space-between;gap:16px;margin-top:20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand)}
+/* 04 · видео */
+.iv-video-sec{background:linear-gradient(120deg,#111214,#0c0d0f)}
+.iv-vcard{box-shadow:inset 0 0 0 1px rgba(214,181,122,.28);padding:14px;background:linear-gradient(90deg,#101214,#141618)}
+.iv-vcard .video-wrap{margin:0}
+.iv-vname{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.125rem;letter-spacing:.04em;color:var(--bone);margin:18px 6px 0}
+.iv-vsub{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:8px 6px 4px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand)}
+.iv-vsub a{color:var(--gold);text-decoration:none}
+/* 05 · команда и роли */
+.iv-team{display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px}
+.iv-member{padding:26px 0;border-bottom:1px solid rgba(232,230,225,.13)}
+.iv-role{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0}
+.iv-name{font-family:'Montserrat',sans-serif;font-weight:300!important;font-size:1.375rem!important;letter-spacing:.02em!important;line-height:1.35!important;text-transform:none!important;margin:12px 0 0;color:var(--bone)}
+.iv-name a{color:var(--bone)!important;text-decoration:none;border-bottom:1px solid rgba(214,181,122,.35)}
+@media(hover:hover){
+  .iv-name a:hover{color:var(--gold)}
+}
+.iv-cast{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:24px 56px;margin-top:52px;padding-top:36px;border-top:1px solid rgba(214,181,122,.3);align-items:start}
+.iv-cast-h{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.5rem!important;letter-spacing:.04em!important;margin:0;color:var(--bone)}
+.iv-cast .iv-name{font-size:1.125rem!important;margin-top:8px}
+.iv-company{display:block;margin-top:6px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand)}
+.iv-company a{color:inherit}
+.iv-perf{margin:10px 0 0;padding:0;list-style:none;color:var(--sand);font-size:0.9375rem;line-height:1.8}
+/* 06 · другие проекты */
+.iv-projects{background:#0f1012}
+.iv-proj-list{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.iv-proj{position:relative;min-height:220px;padding:26px;display:flex;flex-direction:column;text-decoration:none;color:var(--bone);box-shadow:inset 0 0 0 1px rgba(214,181,122,.28);background:radial-gradient(ellipse at 100% 0%,rgba(48,37,33,.6),transparent 65%);transition:box-shadow .3s}
+.iv-proj:nth-child(2){background:radial-gradient(ellipse at 80% 15%,rgba(24,60,52,.6),transparent 65%)}
+.iv-proj:nth-child(3){background:radial-gradient(ellipse at 80% 15%,rgba(44,43,50,.6),transparent 65%)}
+@media(hover:hover){
+  .iv-proj:hover{box-shadow:inset 0 0 0 1px rgba(214,181,122,.7)}
+}
+.iv-proj-t{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.iv-proj-n{font-family:'Montserrat',sans-serif;font-weight:300;font-size:1.5rem;letter-spacing:.03em;line-height:1.3;margin-top:18px}
+.iv-proj-d{color:var(--sand);font-size:0.875rem;line-height:1.7;margin-top:10px}
+.iv-proj-a{margin-top:auto;padding-top:18px;align-self:flex-end;font-size:1.5rem;line-height:1;color:var(--gold)}
+/* отзывы */
+.iv-reviews .venue-reviews h3{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.06em}
+/* 08 · связаться */
+.contact-sec.iv-contact{padding:110px 0;background:radial-gradient(ellipse at 80% 100%,rgba(214,181,122,.08),transparent 60%),linear-gradient(120deg,#131414,var(--ink));text-align:left}
+.iv-contact .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
+.iv-eyebrow{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:0}
+.iv-contact h2{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(2.2rem,4.4vw,3.75rem)!important;letter-spacing:.02em!important;line-height:1.12!important;text-transform:uppercase;margin:18px 0 18px;color:var(--bone)}
+.iv-contact h2 span{display:block;color:var(--gold)}
+.iv-contact p{color:var(--sand);font-size:0.9375rem;margin:0}
+.iv-contact-r{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.iv-email{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(1.125rem,1.8vw,1.5rem);color:var(--bone);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:10px}
+.iv-phone{color:var(--sand);text-decoration:none;font-size:0.9375rem}
+@media(hover:hover){
+  .contact-socials a:hover,.iv-phone:hover{color:var(--gold)}
+}
+/* адаптив */
+@media(max-width:1000px){
+  .iv-hero .wrap{grid-template-columns:1fr}
+  .iv-aside{justify-self:start;text-align:left}
+  .iv-story-grid{grid-template-columns:1fr;gap:48px}
+  .iv-cast{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .iv-cast-h{grid-column:1/-1}
+}
+@media(max-width:800px){
+  .iv-head{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:30px}
+  .iv-head .iv-num{order:-1}
+  .hero.iv-hero{min-height:560px;padding:134px 0 48px}
+  .iv-hero .hero-overlay{background:linear-gradient(0deg,var(--ink) 0%,rgba(11,11,13,.82) 38%,rgba(11,11,13,.25) 70%,rgba(11,11,13,.45) 100%)}
+  .iv-kicker{font-size:0.75rem;letter-spacing:.16em;gap:8px 12px;margin-bottom:16px}
+  .hero.iv-hero h1.iv-h1{font-size:clamp(2.6rem,14vw,4rem)!important;margin-bottom:16px}
+  .iv-sub{font-size:0.75rem;letter-spacing:.22em}
+  .iv-meta{font-size:0.8125rem;line-height:1.75}
+  .iv-hero .hero-btns{margin-top:26px;gap:10px}
+  .iv-hero .hero-btns .iv-btn{flex:1 1 140px;padding:0 16px}
+  .iv-aside{display:none}
+  .iv-copy p{font-size:0.9375rem}
+  .iv-dates{grid-template-columns:1fr;gap:14px}
+  .iv-date,.iv-date-in{min-height:280px}
+  .iv-date-in{padding:24px}
+  .iv-next{display:block;line-height:1.9}
+  .iv-next>*{display:block}
+  .iv-cap{flex-direction:column;gap:6px}
+  .iv-team{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px}
+  .iv-name{font-size:1.0625rem!important}
+  .iv-proj-list{grid-template-columns:1fr;gap:12px}
+  .iv-proj{min-height:140px}
+  .contact-sec.iv-contact{padding:72px 0}
+  .iv-contact .wrap{display:block}
+  .iv-contact-r{margin-top:32px}
+}
+@media(max-width:430px){
+  .iv-team{grid-template-columns:1fr}
+  .iv-cast{grid-template-columns:1fr}
+  .iv-hero .hero-btns .iv-btn{flex:1 1 100%}
+}
+
+/* ═══ pack-v682: семейство страниц спектаклей (body.sp) — вертикаль как у /iov:
+   шапки разделов «01 / …», первый экран с левым затемнением и крупным тонким названием, графитовые разделы с линиями,
+   показы и видео в рамках, фото с мягким увеличением. Разметка страниц не менялась, кроме шапок разделов. ═══ */
+body.sp main>section{border-top:1px solid rgba(232,230,225,.07)}
+body.sp .iv-head{margin-bottom:44px}
+body.sp .hero .hero-overlay{background:linear-gradient(90deg,rgba(11,11,13,.9) 0%,rgba(11,11,13,.6) 30%,rgba(11,11,13,.1) 66%),linear-gradient(0deg,var(--ink) 0%,rgba(11,11,13,0) 40%),linear-gradient(180deg,rgba(11,11,13,.5) 0%,rgba(11,11,13,0) 22%)}
+body.sp .hero h1{font-family:'Montserrat',sans-serif;font-weight:200!important;font-size:clamp(2.8rem,7.4vw,7rem)!important;letter-spacing:-.02em!important;line-height:.98!important;text-transform:uppercase}
+body.sp .hero h1 span{color:var(--gold)}
+body.sp .hero .hero-badge{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:26px}
+body.sp .hero .hero-badge>*{font-family:'Montserrat',sans-serif;font-size:0.75rem!important;letter-spacing:.26em!important;text-transform:uppercase;color:var(--sand)!important;border:0!important;padding:0!important}
+body.sp .hero .hero-badge>*+*::before{content:"";display:inline-block;width:1px;height:16px;background:rgba(214,181,122,.6);margin-right:16px;vertical-align:-3px}
+body.sp .hero .hero-sub{font-family:'Montserrat',sans-serif;font-size:0.8125rem!important;letter-spacing:.3em!important;text-transform:uppercase;color:var(--bone)!important;margin:18px 0 14px}
+body.sp .hero :is(.hero-dir,.hero-when){color:var(--sand)!important;font-size:0.875rem!important;letter-spacing:.02em!important;line-height:1.8}
+body.sp .hero :is(.hero-dir,.hero-when) strong{color:var(--bone);font-weight:400}
+body.sp .hero .hero-btns{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:32px}
+body.sp .hero .hero-btns :is(.btn-gold,.btn-outline){display:inline-flex;align-items:center;justify-content:center;min-height:52px;box-sizing:border-box;padding:0 30px!important;margin:0!important;font-size:0.75rem!important;letter-spacing:.22em!important}
+body.sp .hero .hero-btns .btn-gold::after{content:"→";margin-left:14px;letter-spacing:0}
+body.sp :is(.show-slot,.event,.no-shows,.video-wrap){box-shadow:inset 0 0 0 1px rgba(214,181,122,.25)}
+body.sp .video-wrap{padding:10px;background:linear-gradient(90deg,#101214,#141618)}
+body.sp .show-slot-d{font-weight:200!important}
+body.sp .ph{overflow:hidden}
+body.sp .ph img{transition:transform .9s ease}
+@media(hover:hover){body.sp .ph:hover img{transform:scale(1.03)}}
+@media(max-width:800px){
+  body.sp .iv-head{margin-bottom:28px}
+  body.sp .hero .hero-overlay{background:linear-gradient(0deg,var(--ink) 0%,rgba(11,11,13,.8) 40%,rgba(11,11,13,.25) 72%,rgba(11,11,13,.45) 100%)}
+  body.sp .hero h1{font-size:clamp(2.4rem,13vw,4rem)!important}
+  body.sp .hero .hero-badge>*{letter-spacing:.16em!important}
+  body.sp .hero .hero-btns{gap:10px;margin-top:16px}
+  body.sp .hero .hero-btns :is(.btn-gold,.btn-outline){min-height:46px}
+  body.sp .hero .hero-badge{margin-bottom:14px}
+  body.sp .hero .hero-sub{margin:10px 0 8px}
+  body.sp .hero :is(.hero-dir,.hero-when){line-height:1.6}
+  body.sp .hero .hero-btns :is(.btn-gold,.btn-outline){flex:1 1 140px;padding:0 14px!important;white-space:nowrap;letter-spacing:.14em!important}
+  body.sp .hero .hero-btns .btn-gold::after{margin-left:10px}
+}
+/* pack-v682: стрелка-иконка в кнопках и ссылках (iv-*, /iov) */
+.ar{width:18px;height:10px;fill:none;stroke:currentColor;stroke-width:1.2;flex:none;margin-left:14px;transition:transform .3s}
+@media(hover:hover){a:hover>.ar{transform:translateX(4px)}}
