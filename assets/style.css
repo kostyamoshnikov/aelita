@@ -1248,3 +1248,20 @@ section .film-facts>div{display:flex;flex-wrap:wrap;justify-content:space-betwee
 section .film-facts .lbl{display:inline;margin:0;letter-spacing:.26em}
 section .film-facts .val{text-align:right;margin-left:auto}
 }
+
+/* ═══ pack-v677: единый стиль страниц по новой главной (заказчик 19.10: «адаптируй правки по главной на все страницы… в едином стиле») ═══
+   1) Плашки-карточки — без серой заливки, тонкая рамка-линия, как цифры и партнёры на главной.
+      Рамка — inset box-shadow, а не border: у выделенных карточек (.hl, .current, --top) своя золотая рамка остаётся.
+      background-color, не background — фоновые фото карточек не трогаем.
+   2) Заголовки разделов — крупнее и тоньше, как «Избранные проекты» на главной.
+   3) Контурные кнопки при наведении заливаются золотом, как «О компании» на главной. */
+body :is(.other-card,.career-item,.work-card,.member,.member-card,.prog-item,.vstat,.pillar,.format-item,.cd-item,.review,.free-card,
+  .show-card,.kp-partner,.no-shows,.tu-level,.katya-card,.insight-box,.ft-card,.book-card,.card,.speaker-card,.proj-card,.stat-item,
+  .feature,.social-item,.stat,.step-item,.team-link,.cta-card,.cast-item,.partner-card,.contact-block,.about-block,.press-contact,
+  .labs-wrap,.exh-program,.physics,.venue-address,.collab-panel,.pk-person,.pk-toc-item,.dl-box,.meta-box,.v-stat,.stat-box,.ev-card){
+  background-color:transparent!important;box-shadow:inset 0 0 0 1px rgba(232,230,225,.1)}
+@media(hover:hover){body a:is(.other-card,.work-card,.show-card,.card,.proj-card,.social-item,.team-link,.cta-card,.partner-card,
+  .pk-person,.pk-toc-item,.member-card,.speaker-card,.prog-item):hover{box-shadow:inset 0 0 0 1px rgba(214,181,122,.5)}}
+body .sec-head h2{font-size:clamp(1.5rem,2.6vw,2.125rem)!important;letter-spacing:.16em!important;line-height:1.3!important}
+@media(max-width:600px){body .sec-head h2{font-size:1.375rem!important;letter-spacing:.12em!important}}
+@media(hover:hover){body .btn-outline:hover{background:var(--gold);color:var(--ink)!important;border-color:var(--gold)}}
