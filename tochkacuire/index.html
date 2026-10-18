@@ -32,8 +32,8 @@
 <meta property="og:title" content="ТОЧКА КЮРИ — фестиваль AELITA PRODUCTION">
 <meta property="og:description" content="Точка, где всё меняется. Старый Оскол · ЦСИ «Быль» · 22–25 октября 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=105">
-<link rel="stylesheet" href="/assets/style.css?v=105">
+<link rel="stylesheet" href="/assets/fonts.css?v=106">
+<link rel="stylesheet" href="/assets/style.css?v=106">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -248,6 +248,16 @@ html body .sched a.tix-btn:not(.reg){background:var(--gold)!important;color:var(
 html{scroll-padding-top:230px}
 /* pack-v519: без серой полосы прокрутки под быстрой навигацией и вкладками дней (заказчик, 26.09) — что есть продолжение, показывает затухание справа */
 .quicknav,.days-tabs{scrollbar-width:none}.quicknav::-webkit-scrollbar,.days-tabs::-webkit-scrollbar{display:none}
+
+/* pack-v683: вид по новой главной (план редизайна). Только оформление — расписание, кнопки покупки и регистрации, вкладки дней, таймер, ссылки не менялись */
+.sched,.tickets-sec{background:#101113}
+.sec-head .eyebrow b{color:var(--gold);font-weight:400}
+.day-tab{background:transparent;box-shadow:inset 0 -1px 0 rgba(232,230,225,.14)}
+.day-tab.active{background:rgba(214,181,122,.06);color:var(--gold);box-shadow:inset 0 -2px 0 var(--gold)}
+@media(hover:hover){.day-tab:not(.active):hover{background:rgba(214,181,122,.05)}}
+.day-content{background:transparent;box-shadow:inset 0 0 0 1px rgba(214,181,122,.22)}
+.hero-btns .btn-outline{background:none}
+@media(max-width:480px){.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.cd-item{min-width:0;max-width:none;padding:12px 4px}.cd-lbl{letter-spacing:.12em}}
 </style>
 <script type="application/ld+json">
 {
@@ -284,7 +294,7 @@ html{scroll-padding-top:230px}
 }
 </script>
 </head>
-<body>
+<body class="tc">
 <a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
@@ -326,6 +336,7 @@ html{scroll-padding-top:230px}
     <p class="hero-meta"><strong>22–25 октября 2026</strong> &nbsp;·&nbsp;Старый Оскол &nbsp;·&nbsp;ЦСИ «Быль»</p>
     <div class="hero-btns">
       <a class="btn-gold" href="#schedule">Купить билет</a>
+      <a class="btn-outline" href="#program">Программа</a>
       
     </div>
     <div class="countdown" id="countdown" role="timer" aria-label="До открытия фестиваля">
@@ -362,7 +373,7 @@ html{scroll-padding-top:230px}
      страницы спектаклей. -->
 <section id="schedule" class="sched">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Расписание</span><h2>Четыре дня фестиваля</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>01</b> / Расписание</span><h2>Четыре дня фестиваля</h2></div>
     <div class="reveal">
       <div class="days-tabs" role="tablist" aria-label="Дни фестиваля">
         <button class="day-tab" onclick="showDay(0,this)" role="tab" id="day-tab-0" aria-controls="day-0" aria-selected="false" tabindex="-1"><span class="day-num">22</span>Чт · Открытие</button>
@@ -426,7 +437,7 @@ html{scroll-padding-top:230px}
 <!-- О ФЕСТИВАЛЕ -->
 <section id="about">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">О фестивале</span><h2>Ежегодный фестиваль в сердце индустриального города</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>02</b> / О фестивале</span><h2>Ежегодный фестиваль в сердце индустриального города</h2></div>
     <div class="about-grid reveal">
       <div class="about-text">
         <p>AELITA PRODUCTION — продюсерская компания, «где рождается театр будущего». Мы привозим в Старый Оскол весь свой репертуар — современный танец, пластический театр, саунд-драму и постмодернистские прочтения классики — и разворачиваем на одной площадке четырёхдневный фестиваль.</p>
@@ -465,7 +476,7 @@ html{scroll-padding-top:230px}
 <!-- ПРОГРАММА -->
 <section class="bg-coal" id="program">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Спектакли</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>03</b> / Спектакли</span><h2>Весь спектр современного искусства на одной площадке</h2></div>
     <p class="reveal lead-sm own-size">9 постановок и 13 показов за 4 дня: от флагманской мистерии до пластического театра, перформансов и спектакля-променада.</p>
 
     <div class="prog-grid reveal">
@@ -539,7 +550,7 @@ html{scroll-padding-top:230px}
 <!-- ВЫСТАВКИ -->
 <section id="exhibitions">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Выставки</span><h2>Тело и металл</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>04</b> / Выставки</span><h2>Тело и металл</h2></div>
     <div class="exh-grid reveal">
       <div class="exh-item">
         <img src="https://cuire-fest.ru/assets/photo/p09.jpg" alt="Выставка ТОЧКА КЮРИ. Пролог" loading="lazy">
@@ -583,7 +594,7 @@ html{scroll-padding-top:230px}
 <!-- ДЕЛОВАЯ ПРОГРАММА -->
 <section id="business">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Деловая программа</span><h2>Разговоры о том, как всё устроено</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>05</b> / Деловая программа</span><h2>Разговоры о том, как всё устроено</h2></div>
     <p class="reveal" style="color:var(--sand);margin-bottom:12px;font-size:0.9375rem;max-width:60ch">Лекции и открытые встречи для тех, кто делает культуру и продукты: как живёт современный танец в реальной экономике и что меняет искусственный интеллект в профессии. 23–24 октября — бесплатно, по регистрации; 22 октября — по пригласительным. Катя Абдулова, Мария Павлова, Александра Чубенко, Михаил Казмирук, Алексей Цымлов, Александра Губанова.</p>
     <p class="reveal" style="color:var(--sand);margin-bottom:28px;font-size:0.875rem">Куратор деловой программы — <a class="tl c-gold" href="/alexandra-gubanova">Александра Губанова</a>, основатель агентства «ПараПланов».</p>
     <a class="btn-gold" href="/business-program" style="display:inline-block">Смотреть деловую программу →</a>
@@ -594,7 +605,7 @@ html{scroll-padding-top:230px}
      куратора — два объявленных фильма; даты показов пока не назначены) -->
 <section class="bg-coal" id="cinema">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Кино</span><h2>Секция «Кино»</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>06</b> / Кино</span><h2>Секция «Кино»</h2></div>
     <div class="cine-list reveal">
       <a class="cine-item" href="/fifth-element"><span class="cine-meta">Фильм Люка Бессона · 1997 · 18+</span><span class="cine-title">Пятый элемент</span></a>
       <a class="cine-item" href="/kotlovan"><span class="cine-meta">Документальный фильм Николая Бема · 2025 · 80 мин</span><span class="cine-title">Котлован</span></a>
@@ -606,7 +617,7 @@ html{scroll-padding-top:230px}
 <!-- ДЕТСКАЯ ПРОГРАММА (pack-v607: вся программа, а не только арт-квест — заказчик 09.10) -->
 <section id="kids">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Детская программа · 24–25 октября</span><h2>Детская программа</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>07</b> / Детская программа · 24–25 октября</span><h2>Детская программа</h2></div>
     <p class="desc reveal">Два дня для детей от 4 лет: арт-квест «Дети — не зрители» и восемь занятий с партнёрами фестиваля — «ВместеАрт», «Академией Умников», Yulia Candle, «Речезаврией», центром «ИРиС» и студией праздников «Мёд». Все занятия бесплатные, по регистрации.</p>
     <div class="venue-grid reveal">
       <div class="venue-img"><img src="/images/detskaya-programma-art.jpg" alt="Детская программа фестиваля «Точка Кюри»" loading="lazy"></div>
@@ -628,7 +639,7 @@ html{scroll-padding-top:230px}
 <!-- БЕСПЛАТНЫЕ СОБЫТИЯ -->
 <section id="free">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Бесплатно для всех</span><h2>Не только спектакли</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>08</b> / Бесплатно для всех</span><h2>Не только спектакли</h2></div>
     <div class="free-grid reveal">
       <div class="free-card">
         <div class="icon">◈</div>
@@ -655,7 +666,7 @@ html{scroll-padding-top:230px}
 <!-- ПЛОЩАДКА -->
 <section class="bg-coal" id="venue">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Площадка 2026</span><h2>ЦСИ «Быль», Старый Оскол</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>09</b> / Площадка 2026</span><h2>ЦСИ «Быль», Старый Оскол</h2></div>
     <div class="venue-grid reveal">
       <div>
         <p style="color:var(--sand);font-size:0.9375rem;margin-bottom:24px">Первый центр современного искусства в Белгородской области, открыт в 2023 году в отреставрированном здании бывшего кинотеатра «Быль» (1982). Два зрительных зала позволяют вести параллельные показы.</p>
@@ -683,7 +694,7 @@ html{scroll-padding-top:230px}
 <!-- НОВОСТИ И ПОЛНАЯ ПРОГРАММА -->
 <section id="updates" class="tickets-sec">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="eyebrow">Быть на связи</span><h2>Новости фестиваля и полная программа</h2></div>
+    <div class="sec-head reveal"><span class="eyebrow"><b>10</b> / Быть на связи</span><h2>Новости фестиваля и полная программа</h2></div>
     <div class="reveal" style="margin-top:2px">
       <div class="form-box w-720">
         <h3>Быть в курсе программы фестиваля</h3>
@@ -1026,7 +1037,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=105"></script>
+<script src="/assets/main.js?v=106"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1037,6 +1048,6 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=105"></script>
+<script src="/assets/phone-prefix.js?v=106"></script>
 </body>
 </html>

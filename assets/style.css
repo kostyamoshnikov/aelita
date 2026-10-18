@@ -1478,3 +1478,13 @@ body.sp .ph img{transition:transform .9s ease}
 /* pack-v682: стрелка-иконка в кнопках и ссылках (iv-*, /iov) */
 .ar{width:18px;height:10px;fill:none;stroke:currentColor;stroke-width:1.2;flex:none;margin-left:14px;transition:transform .3s}
 @media(hover:hover){a:hover>.ar{transform:translateX(4px)}}
+
+/* ═══ pack-v683: номер раздела на всех страницах — как «02 / Афиша» на главной и /iov.
+   Номер — CSS-счётчиком после золотой линии шапки раздела (.sec-head), без правки разметки.
+   /tochkacuire (body.tc) — номер стоит в подписи раздела в разметке; страницы спектаклей (body.sp) — шапки iv-head. ═══ */
+#main{counter-reset:secnum}
+#main .sec-head{counter-increment:secnum}
+#main .sec-head::before{content:counter(secnum,decimal-leading-zero);order:3;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;color:var(--gold);align-self:center}
+#main .sec-head>*{order:1}
+#main .sec-head::after{order:2}
+body.tc #main .sec-head::before{content:none}
