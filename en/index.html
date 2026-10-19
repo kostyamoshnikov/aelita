@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="AELITA PRODUCTION — art that changes states of mind">
 <meta name="twitter:description" content="AELITA PRODUCTION is a theatre production company. Productions, festivals, touring: schedule, tickets, news and behind the scenes.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=109">
-<link rel="stylesheet" href="/assets/style.css?v=109">
+<link rel="stylesheet" href="/assets/fonts.css?v=110">
+<link rel="stylesheet" href="/assets/style.css?v=110">
 <style>body{max-width:100vw}
 .ev-info .badge{display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(214,181,122,.4);color:var(--gold)}
 section{padding:110px 0}
@@ -218,7 +218,7 @@ section.hm-cta{position:relative;overflow:hidden;padding:120px 0;background:radi
 }
 @media(max-width:860px){
   header.hm-hero{min-height:0}
-  header.hm-hero{--imgh:clamp(200px,calc(100svh - 330px - var(--navh,110px)),560px)}
+  header.hm-hero{--imgh:clamp(70px,calc(100svh - 300px - var(--navh,110px) - var(--cbh,0px)),560px)}
   .hm-hero-img{position:relative;width:100%;margin-top:var(--navh,110px);height:var(--imgh)}
   .hm-hero-img img{object-position:62% 40%}
   .hm-hero-img::after{background:linear-gradient(to top,var(--ink) 2%,rgba(11,11,13,0) 40%),linear-gradient(to bottom,rgba(11,11,13,.35),rgba(11,11,13,0) 14%)}
@@ -270,6 +270,14 @@ section.hm-cta{position:relative;overflow:hidden;padding:120px 0;background:radi
   .hm-btns .hm-btn-line,.hm-feature-txt .hm-btn-line,.hm-about-txt .hm-btn-line,.hm-cta .hm-btn-line,.hm-hero .hero-cta{display:flex;width:100%}.hm-hero .hero-cta a{width:100%;box-sizing:border-box}
 }
 h2.hm-num{font-weight:400;font-size:0.75rem;line-height:1.5}
+/* pack-v687: невысокий экран телефона и открыт баннер cookies — первый экран плотнее, чтобы «Афиша» была видна над баннером */
+@media(max-width:860px) and (max-height:780px){
+  body:has(#cookie-banner:not(.hidden):not([style*="none"])) .hm-hero .hero-mark{width:56px}
+  body:has(#cookie-banner:not(.hidden):not([style*="none"])) .hm-hero h1{margin-top:8px}
+  body:has(#cookie-banner:not(.hidden):not([style*="none"])) .hm-hero .hero-rule{height:12px;margin:8px auto}
+  body:has(#cookie-banner:not(.hidden):not([style*="none"])) .hm-hero .sub{margin-bottom:12px}
+  body:has(#cookie-banner:not(.hidden):not([style*="none"])) .hm-hero .hero-cta a{padding:12px 24px}
+}
 /* день рождения Кати (pack-v678) */
 section.hm-bday{position:relative;overflow:hidden;padding:110px 0;background:radial-gradient(ellipse at 28% 45%,rgba(214,181,122,.14),transparent 55%),var(--ink);border-top:1px solid rgba(214,181,122,.25);border-bottom:1px solid rgba(214,181,122,.25)}
 section.hm-bday[hidden]{display:none}
@@ -452,6 +460,9 @@ footer p{color:var(--sand);font-size:0.875rem}
 <script>
 // pack-v680: на телефоне фото первого экрана начинается под закреплённым меню — высота меню в --navh
 (function(){var n=document.querySelector('nav');if(!n)return;function f(){document.documentElement.style.setProperty('--navh',n.offsetHeight+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();
+// pack-v687: пока открыт баннер cookies, фото первого экрана на телефоне ниже на его высоту — слоган и «Афиша» не уходят под баннер
+(function(){var r=document.documentElement;function f(){var b=document.getElementById('cookie-banner');var open=b&&b.style.display!=='none'&&!b.classList.contains('hidden')&&!localStorage.getItem('cookies_accepted');r.style.setProperty('--cbh',open?(b.offsetHeight+48)+'px':'0px')}
+addEventListener('DOMContentLoaded',function(){f();var b=document.getElementById('cookie-banner');if(b&&window.MutationObserver)new MutationObserver(f).observe(b,{attributes:true,attributeFilter:['class','style']})});addEventListener('resize',f)})();
 </script>
 
 <main id="main">
@@ -545,7 +556,7 @@ footer p{color:var(--sand);font-size:0.875rem}
       <a class="up-buy" href="https://cuire-fest.ru/tickets/show/635d19c9-0e2e-4b08-a3ee-453f98de9288?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_home" target="_blank" rel="noopener" data-performance-id="iov-2026-10-25">Buy ticket <svg class="ar" viewBox="0 0 18 10" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a>
     </article>
     <article class="up-card reveal" data-city="osk">
-      <a class="up-img" href="/en/dyba-show" tabindex="-1" aria-hidden="true"><img src="/images/dyba-show/hero-2.jpg" alt="" loading="lazy" style="object-position:50% 18%"></a>
+      <a class="up-img" href="/en/dyba-show" tabindex="-1" aria-hidden="true"><img src="/images/dyba-show/hero-2.jpg" alt="" loading="lazy" style="object-position:50% 58%"></a>
       <p class="up-when"><span class="up-date">October 25</span><span class="up-city">Stary Oskol</span></p>
       <h3><a href="/en/dyba-show">“Dyba Show”</a></h3>
       <p class="up-venue"><svg class="pin" viewBox="0 0 10 14" aria-hidden="true"><path d="M5 13.2S1 8.6 1 5.2a4 4 0 0 1 8 0c0 3.4-4 8-4 8z"/><circle cx="5" cy="5.2" r="1.4"/></svg><a href="/en/byl">CSI “Byl”</a></p>
@@ -902,7 +913,7 @@ if(sent){bdaySparks(b);m.value='';ok.hidden=false;}else if(window.AELITA_formMes
 return false;}
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=109"></script>
+<script src="/assets/main.js?v=110"></script>
 <script src="/assets/afisha-links.js"></script>
 
 <script>
@@ -914,6 +925,6 @@ return false;}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=109"></script>
+<script src="/assets/phone-prefix.js?v=110"></script>
 </body>
 </html>

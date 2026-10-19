@@ -1520,3 +1520,10 @@ body #main :is(.shop-note,.dash-note,.panel-coal,.extra-block){background-color:
 .team-link{min-width:0;max-width:100%;box-sizing:border-box}
 .team-link>div{min-width:0}
 .team-link-name{overflow-wrap:anywhere}
+/* pack-v687: баннер cookies на телефоне компактнее — меньше закрывает первый экран (заказчик: «перекрывает слоган и кнопку») */
+@media(max-width:600px){
+  #cookie-banner{gap:10px!important;padding:10px 14px calc(10px + env(safe-area-inset-bottom))!important}
+  #cookie-banner p{font-size:0.75rem;line-height:1.45}
+  .cookie-actions{flex-direction:row!important;gap:8px}
+  .cookie-btn{padding:9px 8px;letter-spacing:.14em;width:auto!important}
+}
