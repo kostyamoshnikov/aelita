@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Команда фестиваля «Точка Кюри» — AELITA PRODUCTION">
 <meta name="twitter:description" content="Кураторы и команда фестиваля «Точка Кюри».">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=107">
-<link rel="stylesheet" href="/assets/style.css?v=107">
+<link rel="stylesheet" href="/assets/fonts.css?v=109">
+<link rel="stylesheet" href="/assets/style.css?v=109">
 <style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
@@ -320,9 +320,9 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   
 /* pack-v518: /festival-team */
 .page-header .sub{color:var(--sand);font-size:1rem;max-width:60ch;margin-top:14px;line-height:1.7}
-.ft-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
-@media(max-width:900px){.ft-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.ft-grid{grid-template-columns:1fr 1fr}}
+.ft-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+@media(max-width:900px){.ft-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.ft-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body .ft-info h3.ft-name{font-size:0.8125rem!important;letter-spacing:.04em!important}body .ft-info .ft-role{letter-spacing:.1em!important}}
 .ft-card{background:var(--coal);display:block;color:inherit;text-decoration:none;transition:opacity .3s}
 @media(hover:hover){a.ft-card:hover{opacity:.88}}
 .ft-photo{aspect-ratio:3/4;overflow:hidden;background:var(--coal)}
@@ -522,7 +522,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=107"></script>
+<script src="/assets/main.js?v=109"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
