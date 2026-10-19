@@ -1488,3 +1488,18 @@ body.sp .ph img{transition:transform .9s ease}
 #main .sec-head>*{order:1}
 #main .sec-head::after{order:2}
 body.tc #main .sec-head::before{content:none}
+
+/* ═══ pack-v684: первый экран лекций, мастер-классов, выставок и детской программы (.lecture-hero, 20 страниц) —
+   дата, время, длительность, возраст и места отдельными «чипами» в тонкой золотой рамке (план редизайна: «дата/время/возраст/место в первом экране»).
+   Текст тот же, разбит по « · » на отдельные span. ═══ */
+.lecture-hero .lh-meta{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px;letter-spacing:.14em;color:var(--bone)}
+.lecture-hero .lh-meta span{display:inline-flex;align-items:center;padding:7px 12px;border:1px solid rgba(214,181,122,.38);line-height:1.4}
+.lecture-hero .lh-meta span:first-child{color:var(--gold);border-color:rgba(214,181,122,.7)}
+.lecture-hero h1{font-weight:200!important}
+.lecture-hero{border-bottom:1px solid rgba(232,230,225,.07)}
+@media(max-width:600px){.lecture-hero .lh-meta{gap:6px}.lecture-hero .lh-meta span{padding:6px 10px;letter-spacing:.1em}}
+
+/* pack-v684: оставшиеся серые разделы публичных страниц → графит (формы заявок, «Присоединиться», подписки);
+   серые плашки-заметки → линия. Служебные страницы (оплата, кабинет, билеты, юр. документы) не трогаем. */
+body #main :is(.form-sec,.join-sec,.mars,.follow,.become,.notify,.sec-coal,.reviews-sec,.streams-sec,.press-section,.values-section){background-color:#101113!important}
+body #main :is(.shop-note,.dash-note,.panel-coal,.extra-block){background-color:transparent!important;box-shadow:inset 0 0 0 1px rgba(214,181,122,.25)}
