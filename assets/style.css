@@ -1527,3 +1527,93 @@ body #main :is(.shop-note,.dash-note,.panel-coal,.extra-block){background-color:
   .cookie-actions{flex-direction:row!important;gap:8px}
   .cookie-btn{padding:9px 8px;letter-spacing:.14em;width:auto!important}
 }
+
+/* ── pack-v690: версия для слабовидящих ───────────────────────────
+   Включается из шапки (глаз), мобильного меню и подвала — assets/main.js
+   ставит на <html> классы a11y, a11y-s1..3 (шрифт 125/150/175 % — почти все
+   размеры на сайте в rem), a11y-c1..3 (чёрным по белому / белым по чёрному /
+   синим по голубому, ГОСТ Р 52872-2019), a11y-noimg. Цвета задаются всем
+   элементам сразу: инлайн-стили страниц тоже перекрываются. */
+html.a11y{--a11y-bg:#fff;--a11y-fg:#000;color-scheme:light;scroll-padding-top:140px}
+html.a11y.a11y-c2{--a11y-bg:#000;--a11y-fg:#fff;color-scheme:dark}
+html.a11y.a11y-c3{--a11y-bg:#9dd1ff;--a11y-fg:#063462}
+/* 125 / 150 / 175 % от размера браузера: 20 / 24 / 28 px при обычных 16 */
+html.a11y.a11y-s1:not(#a11y-none){font-size:125%!important}
+html.a11y.a11y-s2:not(#a11y-none){font-size:150%!important}
+html.a11y.a11y-s3:not(#a11y-none){font-size:175%!important}
+html.a11y body:not(#a11y-none),
+html.a11y body *:not(svg):not(svg *):not(img):not(video):not(iframe):not(#a11y-none){
+  background-color:var(--a11y-bg)!important;background-image:none!important;
+  color:var(--a11y-fg)!important;-webkit-text-fill-color:currentColor!important;
+  border-color:var(--a11y-fg)!important;text-shadow:none!important;box-shadow:none!important;
+  font-family:Arial,'Helvetica Neue',Helvetica,sans-serif!important;letter-spacing:normal!important;
+  filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;mix-blend-mode:normal!important;
+  animation:none!important;transition:none!important;line-height:1.5
+}
+/* крупный шрифт: длинные слова, почта и кнопки переносятся, колонки сжимаются */
+html.a11y body *:not(pre):not(code):not(svg):not(svg *):not(#a11y-none){overflow-wrap:anywhere;white-space:normal!important;min-width:0}
+html.a11y .mob-cta:not(#a11y-none){flex-wrap:wrap;height:auto!important;row-gap:8px}
+html.a11y .mob-cta>*:not(#a11y-none){flex-shrink:1!important}
+/* пустые декоративные слои (затемнения поверх фото) — прозрачные, иначе закрывают фото */
+html.a11y body *:empty:not(input):not(textarea):not(select):not(button):not(hr):not(.burger span):not(#a11y-none){background-color:transparent!important}
+html.a11y *:not(#a11y-none)::before,html.a11y *:not(#a11y-none)::after{background-image:none!important;color:var(--a11y-fg)!important;border-color:var(--a11y-fg)!important;text-shadow:none!important;box-shadow:none!important;letter-spacing:normal!important;animation:none!important}
+html.a11y svg [fill]:not([fill="none"]){fill:currentColor}
+html.a11y svg [stroke]:not([stroke="none"]){stroke:currentColor}
+html.a11y svg{color:var(--a11y-fg)!important}
+html.a11y .reveal:not(#a11y-none),html.a11y [class*="reveal"]:not(#a11y-none){opacity:1!important;transform:none!important}
+html.a11y a:not(#a11y-none){text-decoration:underline!important;text-underline-offset:.18em}
+html.a11y :is(button,input,select,textarea,.btn,.btn-gold,.btn-outline,.iv-btn,.cookie-btn):not(#a11y-none){border:2px solid var(--a11y-fg)!important}
+html.a11y :focus-visible:not(#a11y-none){outline:3px solid var(--a11y-fg)!important;outline-offset:3px!important}
+html.a11y ::placeholder{color:var(--a11y-fg)!important;opacity:.75}
+/* первый экран — по содержимому, без пустых 100vh (фон/видео остаются позади текста) */
+html.a11y body :is(header,section,div)[class*="hero"]:not(#a11y-none){min-height:0!important}
+/* отступ сверху «под fixed-шапку» больше не нужен — шапка sticky и стоит в потоке */
+html.a11y body>main:not(#a11y-none),html.a11y body>:is(header,section)[class*="hero"]:not(#a11y-none),html.a11y body>main>:is(header,section)[class*="hero"]:first-child:not(#a11y-none){padding-top:32px!important;margin-top:0!important}
+/* шапка: меню всегда в бургере — восемь пунктов крупным шрифтом в строку не помещаются */
+/* шапка в a11y — sticky, а не fixed: она выше обычной (крупный шрифт), и fixed
+   закрывала бы начало страниц; clip вместо hidden — иначе sticky не работает */
+html.a11y,html.a11y body{overflow-x:clip!important}
+html.a11y body>nav:not(#a11y-none){position:sticky!important;top:0!important;border-bottom:2px solid var(--a11y-fg)!important}
+html.a11y .nav-links{display:none!important}
+html.a11y .burger{display:flex!important}
+html.a11y .burger span:not(#a11y-none){background-color:var(--a11y-fg)!important;height:2px}
+html.a11y .nav-in>.nav-account{margin-left:auto}
+/* изображения выкл: фото и видео прячем, подпись alt — текстом (main.js) */
+html.a11y.a11y-noimg :is(img,picture,video,.video-wrap,iframe[src*="youtube"],iframe[src*="rutube"],iframe[src*="vk.com/video"],iframe[src*="vkvideo"]){display:none!important}
+html.a11y .a11y-alt{display:block;border:1px dashed var(--a11y-fg)!important;padding:8px 10px;font-size:.8rem;margin:6px 0}
+/* кнопка-глаз в шапке и ссылки в меню/подвале */
+nav .a11y-btn{background:none;border:0;color:var(--sand);cursor:pointer;padding:6px;margin:0 12px 0 0;display:inline-flex;align-items:center;flex-shrink:0;line-height:0}
+@media(hover:hover){nav .a11y-btn:hover{color:var(--gold)}}
+@media(max-width:760px){nav .a11y-btn{margin-left:auto;margin-right:14px}}
+@media(max-width:375px){nav .a11y-btn{margin-right:8px;padding:4px}}
+.m-menu-links a.a11y-menu-link{display:inline-flex;align-items:center;gap:10px}
+.m-menu-links a.a11y-menu-link svg{flex-shrink:0}
+/* панель настроек — над шапкой, в потоке страницы, уезжает при прокрутке */
+#a11y-bar{position:relative;z-index:60;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 28px;padding:10px 16px;border-bottom:2px solid var(--a11y-fg)!important;font-size:clamp(15px,4.62vw,18px)!important;line-height:1.3}
+#a11y-bar .a11y-grp{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#a11y-bar .a11y-lab,#a11y-bar .a11y-lab span{font-size:clamp(15px,4.62vw,18px)!important}
+#a11y-bar .a11y-lab{margin-right:2px}
+#a11y-bar .a11y-short{display:none}
+#a11y-bar button{min-width:44px;min-height:44px;padding:4px 12px;cursor:pointer;font-size:clamp(15px,4.62vw,18px)!important;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+#a11y-bar button span{font-size:clamp(15px,4.62vw,18px)!important}
+#a11y-bar button[aria-pressed="true"]{outline:3px solid var(--a11y-fg)!important;outline-offset:2px}
+html.a11y #a11y-bar .a11y-s[data-s="1"]{font-size:clamp(14px,4.1vw,16px)!important}
+html.a11y #a11y-bar .a11y-s[data-s="2"]{font-size:clamp(18px,5.38vw,21px)!important}
+html.a11y #a11y-bar .a11y-s[data-s="3"]{font-size:clamp(22px,6.67vw,26px)!important}
+html.a11y #a11y-bar .a11y-c1{background-color:#fff!important;color:#000!important;border-color:#000!important}
+html.a11y #a11y-bar .a11y-c2{background-color:#000!important;color:#fff!important;border-color:#fff!important;outline-color:var(--a11y-fg)}
+html.a11y #a11y-bar .a11y-c3{background-color:#9dd1ff!important;color:#063462!important;border-color:#063462!important}
+html.a11y.a11y-c2 #a11y-bar .a11y-c2{border-color:#fff!important}
+@media(max-width:600px){
+  #a11y-bar{gap:8px 14px;padding:8px 10px;justify-content:flex-start}
+  #a11y-bar .a11y-grp{gap:6px}
+  #a11y-bar .a11y-full{display:none}
+  #a11y-bar .a11y-short{display:inline}
+  #a11y-bar .a11y-lab,#a11y-bar .a11y-lab span,#a11y-bar button,#a11y-bar button span{font-size:clamp(14px,4.1vw,16px)!important}
+  #a11y-bar button{min-width:40px;min-height:40px;padding:4px 9px}
+  html.a11y #a11y-bar .a11y-s[data-s="1"]{font-size:clamp(12px,3.59vw,14px)!important}
+  html.a11y #a11y-bar .a11y-s[data-s="2"]{font-size:clamp(15px,4.62vw,18px)!important}
+  html.a11y #a11y-bar .a11y-s[data-s="3"]{font-size:clamp(20px,5.9vw,23px)!important}
+}
+@media(max-width:380px){#a11y-bar{gap:8px 10px;padding:8px 8px}#a11y-bar button{min-width:38px;padding:4px 7px}}
+footer .requisites a.a11y-foot-link{color:var(--gold)}
