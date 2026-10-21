@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=112">
+<link rel="stylesheet" href="/assets/fonts.css?v=114">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -262,6 +262,10 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .rf-status-approved{color:#7ec48c}
 .rf-status-paid{color:#7ec48c}
 .rf-status-rejected{color:#c97b7b}
+.ev-empty.rf-late{color:#c97b7b}
+.ev-empty.rf-warn{color:#E0B87B}
+.ev-empty.rf-next{color:var(--bone)}
+.ev-card.rf-stuck{border:1px solid #c97b7b;color:#e8b0a6;padding:14px 16px;margin-bottom:12px;font-size:0.875rem}
 
 .empty-state,#loadingState{padding:60px 20px;text-align:center;color:var(--sand);background:var(--coal)}
 #errorState{padding:40px 20px;text-align:center;color:#e08a6e;background:var(--coal);display:none}
@@ -1008,6 +1012,7 @@ var ERRORS = {
   bad_action: 'Неизвестное действие — обновите страницу.',
   rejection_reason_required: 'Укажите причину отказа.',
   not_approved_yet: 'Сначала одобрите заявление — отметить «выплачено» можно только после одобрения.',
+  api_disabled: 'Возврат через ЮKassa выключен (нет REFUND_API=1 у функции) — верните в кабинете ЮKassa и нажмите «Отметить выплаченным».',
   seat_conflict: 'Место(-а) по этому заказу уже в другом статусе — расхождение данных, нужен ручной разбор (напишите в поддержку с номером заявления).',
   order_not_found: 'Заказ по этому заявлению не найден — расхождение данных, нужен ручной разбор.',
   no_tickets: 'В заявлении нет билетов — расхождение данных.',
@@ -1718,13 +1723,29 @@ function fmtRefundDate(iso) {
   catch (e) { return iso; }
 }
 
+// pack-v692: срок 10 дней со дня обращения — по календарю Москвы, как
+// в сводке сроков (Tickets/lib/refund-deadlines.js).
+var REFUNDS_API_ENABLED = false;
+function refundMskDay(ms) { return Math.floor((ms + 3 * 3600000) / 86400000); }
+function refundDaysLeft(iso) { return refundMskDay(Date.parse(iso)) + 10 - refundMskDay(Date.now()); }
+function fmtRefundDue(iso) {
+  var d = new Date((refundMskDay(Date.parse(iso)) + 10) * 86400000);
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', timeZone: 'UTC' });
+}
+
+var REFUNDS_ALERTS_STUCK = null;
 function renderRefunds(refunds) {
   var el = document.getElementById('refundsBlock');
+  // pack-v693: сигналы о заявлениях не доходят — сказать сразу, крупно.
+  var stuck = REFUNDS_ALERTS_STUCK && REFUNDS_ALERTS_STUCK.count
+    ? '<div class="ev-card rf-stuck">⚠️ Сигналы по заявлениям (' + REFUNDS_ALERTS_STUCK.count + ') не доставлены в Telegram и на почту (с ' + fmtRefundDate(REFUNDS_ALERTS_STUCK.oldest) +
+      '). Заявления ниже — смотрите их здесь. Проверить: таймер aelita-tickets-sweep-expired-holds (каждые 5 минут) и переменные MAIL_TO, TELEGRAM_* у него и у aelita-tickets-remind.</div>'
+    : '';
   if (!refunds.length) {
-    el.innerHTML = '<div class="empty-state">Заявлений на возврат пока нет.</div>';
+    el.innerHTML = stuck + '<div class="empty-state">Заявлений на возврат пока нет.</div>';
     return;
   }
-  el.innerHTML = refunds.map(function (r, idx) {
+  el.innerHTML = stuck + refunds.map(function (r, idx) {
     var ticketsLines = (r.estimate && r.estimate.perTicket ? r.estimate.perTicket : []).map(function (t) {
       return '<div class="ev-person"><span class="who">Билет № ' + escapeHtml(String(t.ticket_number)) +
         '<small>' + fmtMoney(t.price) + ' → ' + fmtMoney(t.amount) + ' (' + t.percent + '%)</small></span></div>';
@@ -1732,10 +1753,37 @@ function renderRefunds(refunds) {
     var actions = '';
     if (r.status === 'new') {
       actions =
-        '<button class="mini-btn" data-rf-action="approve" data-rf-idx="' + idx + '">Одобрить</button>' +
+        '<button class="mini-btn" data-rf-action="approve" data-rf-idx="' + idx + '">' + (REFUNDS_API_ENABLED ? 'Одобрить и вернуть через ЮKassa' : 'Одобрить') + '</button>' +
         '<button class="mini-btn mini-btn-danger" data-rf-action="reject" data-rf-idx="' + idx + '">Отклонить</button>';
     } else if (r.status === 'approved') {
-      actions = '<button class="mini-btn" data-rf-action="mark_paid" data-rf-idx="' + idx + '">Отметить выплаченным</button>';
+      // pack-v692: при REFUND_API=1 — повтор возврата через ЮKassa; ручной путь остаётся.
+      actions = (REFUNDS_API_ENABLED && r.estimate && Number(r.estimate.amountRub) > 0
+        ? '<button class="mini-btn" data-rf-action="pay_api" data-rf-idx="' + idx + '">Вернуть через ЮKassa</button>' : '') +
+        '<button class="mini-btn" data-rf-action="mark_paid" data-rf-idx="' + idx + '">Отметить выплаченным</button>';
+    }
+    // pack-v692: срок ответа и возврата — датой (10 дней, п. 6.1 оферты).
+    var dueHtml = '';
+    if ((r.status === 'new' || r.status === 'approved') && r.requestedAt) {
+      var left = refundDaysLeft(r.requestedAt);
+      dueHtml = '<div class="ev-empty' + (left <= 2 ? ' rf-late' : '') + '">Срок — до ' + fmtRefundDue(r.requestedAt) +
+        (left > 0 ? ' (осталось ' + left + ' дн.)' : left === 0 ? ' — сегодня последний день' : ' — срок прошёл') + '</div>';
+    }
+    // pack-v693: что делать дальше — словами, у каждой записи.
+    var nextHtml = '';
+    if (r.status === 'new') {
+      nextHtml = '<div class="ev-empty rf-next">Дальше: ' + ((r.reason === 'illness' || r.reason === 'death') && !(r.documents && r.documents.length)
+        ? 'дождаться документа (зритель может приложить его на странице возврата — придёт сигнал) или отклонить с причиной.'
+        : 'одобрить или отклонить с причиной — зрителю уйдёт письмо.') + '</div>';
+    } else if (r.status === 'approved' && !(REFUNDS_API_ENABLED && r.estimate && Number(r.estimate.amountRub) > 0)) {
+      nextHtml = '<div class="ev-empty rf-next">Дальше: кабинет ЮKassa → Платежи → ' + (r.paymentId ? 'платёж <b>' + escapeHtml(r.paymentId) + '</b>' : 'платёж заказа № ' + escapeHtml(String(r.orderNumber || '—'))) +
+        ' → «Вернуть» ' + fmtMoney(r.estimate ? r.estimate.amountRub : null) + '; затем «Отметить выплаченным» — зрителю уйдёт письмо.</div>';
+    }
+    var originHtml = r.origin === 'cancel' ? '<div class="ev-when">Отмена показа — возврат без заявления</div>' : '';
+    var apiHtml = '';
+    if (r.api && r.api.lastError && r.status === 'approved') {
+      apiHtml = '<div class="ev-empty rf-warn">ЮKassa: ' + escapeHtml(r.api.lastError.kind || '') + (r.api.lastError.detail ? ' — ' + escapeHtml(r.api.lastError.detail) : '') + '. Можно нажать «Вернуть через ЮKassa» ещё раз или вернуть в кабинете вручную.</div>';
+    } else if (r.api && r.api.ykRefundId) {
+      apiHtml = '<div class="ev-empty">Возврат ЮKassa: ' + escapeHtml(r.api.ykRefundId) + '</div>';
     }
     var decided = r.status === 'rejected'
       ? '<div class="ev-empty">Причина отказа: ' + escapeHtml(r.rejectionReason || '—') + '</div>'
@@ -1760,11 +1808,11 @@ function renderRefunds(refunds) {
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + escapeHtml(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(r.buyerName || '—') + ' · ' + escapeHtml(r.contactEmail || '') + '</div>' +
-        '<div class="ev-when">Обращение ' + fmtRefundDate(r.requestedAt) + ' · ' + escapeHtml(REFUND_REASON_LABELS[r.reason] || r.reason) + '</div></div>' +
+        '<div class="ev-when">Обращение ' + fmtRefundDate(r.requestedAt) + ' · ' + escapeHtml(REFUND_REASON_LABELS[r.reason] || r.reason) + '</div>' + originHtml + '</div>' +
         '<div class="ev-count"><span class="rf-status rf-status-' + escapeHtml(r.status) + '">' + escapeHtml(REFUND_STATUS_LABELS[r.status] || r.status) + '</span><br>' +
         fmtMoney(r.estimate ? r.estimate.amountRub : null) + '</div>' +
       '</div>' +
-      '<div class="ev-people open">' + (ticketsLines || '<div class="ev-empty">Билеты не указаны — расхождение данных.</div>') + decided + docsHtml + '</div>' +
+      '<div class="ev-people open">' + (ticketsLines || '<div class="ev-empty">Билеты не указаны — расхождение данных.</div>') + dueHtml + decided + apiHtml + docsHtml + nextHtml + '</div>' +
       (actions ? '<div class="ev-actions">' + actions + '</div>' : '') +
     '</div>';
   }).join('');
@@ -1801,13 +1849,23 @@ document.getElementById('refundsBlock').addEventListener('click', async function
     }
     return;
   }
+  // pack-v692: этой строки не было — `btn` не объявлялся, и «Одобрить»,
+  // «Отклонить», «Отметить выплаченным» падали с ReferenceError, ничего не
+  // делая (проверено в браузере на v691). Тест — refund-admin-ui.test.py.
+  var btn = e.target.closest('button[data-rf-action]');
+  if (!btn) return;
   var idx = Number(btn.dataset.rfIdx);
   var refund = allRefunds[idx];
   if (!refund) return;
   var action = btn.dataset.rfAction;
   if (action === 'approve') {
-    if (!confirm('Одобрить возврат по заявлению ' + refund.refundNumber + '? Билеты будут аннулированы, места — освобождены для продажи.')) return;
+    var money = refund.estimate ? Number(refund.estimate.amountRub) || 0 : 0;
+    if (!confirm('Одобрить возврат по заявлению ' + refund.refundNumber + '? Билеты будут аннулированы, места — освобождены для продажи.' +
+      (REFUNDS_API_ENABLED && money > 0 ? '\n\nДеньги (' + fmtMoney(money) + ') сразу уйдут покупателю через ЮKassa.' : ''))) return;
     submitRefundAction(refund.refundId, 'approve', null, btn);
+  } else if (action === 'pay_api') {
+    if (!confirm('Вернуть ' + fmtMoney(refund.estimate ? refund.estimate.amountRub : 0) + ' по заявлению ' + refund.refundNumber + ' через ЮKassa? Второго возврата не будет, даже если нажать дважды.')) return;
+    submitRefundAction(refund.refundId, 'pay_api', null, btn);
   } else if (action === 'mark_paid') {
     if (!confirm('Отметить заявление ' + refund.refundNumber + ' как выплаченное?')) return;
     submitRefundAction(refund.refundId, 'mark_paid', null, btn);
@@ -1839,6 +1897,9 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
     if (!res.ok) { alert(errorMessage(data)); return; }
+    // pack-v692: итог возврата через ЮKassa — сразу словами.
+    if (data.api && data.api.ok) alert('Готово: деньги отправлены через ЮKassa, покупателю ушло письмо.');
+    else if (data.api && !data.api.ok) alert('Заявление одобрено, но деньги через ЮKassa не ушли: ' + (data.api.message || data.api.kind) + '.');
     loadRefunds();
   } catch (e) {
     alert('Не получилось связаться с сервером.');
@@ -2071,6 +2132,8 @@ async function loadRefunds() {
     var data = await res.json();
     if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
     allRefunds = data.refunds || [];
+    REFUNDS_API_ENABLED = data.api_enabled === true;
+    REFUNDS_ALERTS_STUCK = data.alerts_stuck || null;
     renderRefunds(allRefunds);
   } catch (e) {
     el.innerHTML = '<div class="empty-state">Не получилось загрузить заявления. Попробуйте «Обновить».</div>';

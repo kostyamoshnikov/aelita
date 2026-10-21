@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/en/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AELITA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket refund — AELITA PRODUCTION</title>
+<meta name="description" content="AELITA PRODUCTION ticket refund: find your order, choose tickets, see a provisional refund amount.">
+<link rel="canonical" href="https://aelita-production.ru/en/ticket-refund/">
+<link rel="alternate" hreflang="ru" href="https://aelita-production.ru/ticket-refund/">
+<link rel="alternate" hreflang="en" href="https://aelita-production.ru/en/ticket-refund/">
+<link rel="alternate" hreflang="x-default" href="https://aelita-production.ru/ticket-refund/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aelita-production.ru/en/ticket-refund/">
+<meta property="og:site_name" content="AELITA PRODUCTION">
+<meta property="og:title" content="Ticket refund — AELITA PRODUCTION">
+<meta property="og:description" content="AELITA PRODUCTION ticket refund: find your order, choose tickets, see a provisional refund amount.">
+<meta property="og:image" content="https://aelita-production.ru/images/og-default-en.jpg">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ticket refund — AELITA PRODUCTION">
+<meta name="twitter:description" content="AELITA PRODUCTION ticket refund: find your order, choose tickets, see a provisional refund amount.">
+<meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/assets/fonts.css?v=114">
+<link rel="stylesheet" href="/assets/style.css?v=114">
+<style>
+body{max-width:100vw;line-height:1.75}
+a{color:var(--gold);text-decoration:none}
+:root{--maxw:760px}
+footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:center}
+.rf{padding-top:60px;padding-bottom:80px} /* pack-v692: было padding:60px 0 80px — обнуляло поля .wrap, текст у края экрана */
+.rf h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:1.875rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.rf .lead{color:var(--sand);font-size:0.9375rem;max-width:60ch;margin-bottom:34px}
+.rf label{display:block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.rf input[type=text]{width:100%;padding:12px 14px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:0.875rem;margin-bottom:6px}
+.rf .hint{color:var(--grey);font-size:0.75rem;margin-bottom:20px}
+.rf button{padding:13px 26px;background:var(--gold);color:var(--ink);border:none;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.rf button.ghost{background:none;border:1px solid var(--gold);color:var(--gold)}
+.rf button:disabled{opacity:.5;cursor:default}
+.rf .msg{margin-top:14px;font-size:0.875rem}
+.rf .msg.err{color:#E08A7B}
+.rf .msg.ok{color:#7BC47F}
+.tk{display:flex;gap:12px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.08)}
+.tk input[type=checkbox]{margin-top:4px;width:18px;height:18px;accent-color:var(--gold)}
+.tk .who{flex:1}
+.tk .who b{font-weight:500}
+.tk .note{color:var(--grey);font-size:0.8125rem;display:block;margin-top:3px}
+.tk.off{opacity:.55}
+.calc{margin-top:22px;padding:18px;border:1px solid var(--line);background:var(--coal)}
+.calc .sum{font-size:1.375rem;margin:6px 0}
+.calc .basis{color:var(--sand);font-size:0.8125rem}
+.calc .warn{color:#E0B87B;font-size:0.8125rem;margin-top:10px}
+.rf select{width:100%;padding:12px 14px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:0.875rem;margin-bottom:20px}
+.rf .links{margin-top:40px;padding-top:24px;border-top:1px solid rgba(232,230,225,.08);font-size:0.875rem;color:var(--sand)}
+.done{padding:28px;border:1px solid var(--gold);background:var(--coal)}
+.done .num{font-family:'Montserrat',sans-serif;font-size:1.5rem;letter-spacing:.1em;color:var(--gold);margin:10px 0}
+/* pack-v692: статус заявлений, согласие, «что дальше» */
+.rf .lead-sm{font-size:0.875rem;margin-top:-22px}
+.rf .mt{margin-top:26px}
+.rf .mt-s{margin-top:20px}
+.rf .help-list{margin-top:28px;max-width:62ch}
+.rf .help-list .hint{margin-bottom:12px}
+.rf .help-list b{color:var(--bone);font-weight:500}
+.req-doc{margin-top:10px}
+.req-doc .hint{margin-bottom:8px}
+.rf label.chk{display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-family:inherit;font-size:0.8125rem;color:var(--bone);line-height:1.55;cursor:pointer}
+.rf label.chk input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--gold)}
+.reqs{margin:0 0 26px;padding:16px 18px;border:1px solid var(--line);background:var(--coal)}
+.reqs-h{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.req{padding:12px 0;border-top:1px solid rgba(232,230,225,.08);font-size:0.875rem}
+.reqs-h+.req{border-top:none}
+.req-st{margin-top:4px}
+.req.st-ok .req-st{color:#8FBF8F}
+.req.st-no .req-st{color:#E0B87B}
+.req-meta{color:var(--grey);font-size:0.8125rem;margin-top:3px}
+.rf .small{color:var(--sand);font-size:0.8125rem}
+.rf .ok-t{color:#8FBF8F}
+.rf .warn-t{color:#E0B87B}
+.next{margin:26px 0 10px;padding-left:22px;font-size:0.9375rem;color:var(--bone)}
+.next li{margin-bottom:10px}
+.next b{color:var(--gold);font-weight:500}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
+    <div class="nav-links">
+      <a href="/en/tickets">Schedule</a>
+      <a href="/en/projects">Productions</a>
+      <a href="/en/tochkacuire">Tochka Cuire</a>
+      <a href="/en/shop">Shop</a>
+      <a href="/en/about">About</a>
+      <a href="/en/collaboration">Collaborate</a>
+      <a href="/en/community">Community</a>
+      <a href="/en/contacts">Contact</a>
+    </div>
+    <a class="nav-account" href="/en/account">ACCOUNT</a>
+    <a class="lang-switch" href="https://aelita-production.ru/ticket-refund/" title="Русская версия">RU</a>
+    <button class="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap rf">
+
+  <!-- Шаг 1: доступ к заказу. ⚠️ Оба поля обязательны — это
+       единственная защита от перебора чужих заказов (DOCS_TZ 39.2).
+       pack-v692: та же форма показывает статус уже поданных заявлений. -->
+  <section id="step-lookup">
+    <h1>Ticket refund</h1>
+    <p class="lead">Find your order — we will show which tickets can be refunded and how much money you will get back. The date of application is recorded when you submit it, and under the <a href="/en/oferta">public offer</a> the amount is calculated from that date.</p>
+    <p class="lead lead-sm">Already applied? Enter the same details — the status of your application will be shown here.</p>
+
+    <label for="order">Order code or number</label>
+    <input class="ym-disable-keys" type="text" id="order" autocomplete="off" spellcheck="false" placeholder="e.g. 11111111-2222-3333-4444-555555555555 or No. 42">
+    <p class="hint" id="orderHint">The long code from the ticket email (the line under “order code”) or the short number like No. 42.</p>
+
+    <label for="contact">Email or phone</label>
+    <input class="ym-disable-keys" type="text" id="contact" autocomplete="off" placeholder="the ones you used at purchase">
+    <p class="hint">Both fields are needed: this is how we make sure the order is yours.</p>
+
+    <button id="btn-lookup" class="btn-gold" onclick="lookup()">Find order</button>
+    <div class="msg" id="lookup-msg"></div>
+    <!-- pack-v693: где человек застревает до формы — нет кода, билет передали, купили не у нас. -->
+    <div class="help-list">
+      <p class="hint"><b>No email with the code?</b> Sign in to your <a href="/en/account">account</a> with the email used at purchase — all your orders are there, with a “Return tickets” button. The order number is also on the PDF ticket. Our emails may end up in Spam.</p>
+      <p class="hint"><b>Was the ticket passed on to you?</b> Only the buyer can return it — the money goes back to their card. Contact the person who passed the ticket to you.</p>
+      <p class="hint" id="partner-note"><b>Bought on cuire-fest.ru, at the venue box office or on another website?</b> The seller handles the refund under its own rules (clause 6.5 of the public offer) — see the seller’s contacts in the ticket email. If it doesn’t work out, write to us and we will help.</p>
+    </div>
+  </section>
+
+  <!-- Шаг 2: билеты, причина, расчёт -->
+  <section id="step-order" hidden>
+    <h1>Your order</h1>
+    <p class="lead" id="order-head"></p>
+
+    <div id="requests" class="reqs" hidden></div>
+
+    <div id="tickets"></div>
+
+    <div id="new-request">
+      <label for="reason" class="mt">Reason for refund</label>
+      <select id="reason" onchange="recalc()"></select>
+
+      <div class="calc" id="calc" hidden>
+        <div class="basis" id="calc-basis"></div>
+        <div class="sum" id="calc-sum"></div>
+        <div class="basis" id="calc-why"></div>
+        <div class="warn">This is a provisional calculation. The final decision is made after the application is reviewed; for illness or death of a close relative — based on the documents.</div>
+        <div class="warn" id="calc-docs" hidden></div>
+      </div>
+
+      <!-- pack-v292: загрузка подтверждающего документа — только для
+           причин, где он предусмотрен (болезнь, смерть родственника).
+           Необязательно: не приложили сейчас — заявление всё равно
+           примется, документ можно прислать позже почтой, как раньше.
+           pack-v692: справка — специальная категория ПДн (ст. 10 152-ФЗ),
+           без отдельной отметки согласия файл не отправляется. -->
+      <div id="doc-upload" class="mt-s" hidden>
+        <label for="doc-file">Supporting document (optional now — you can send it later by email)</label>
+        <input type="file" id="doc-file" accept="application/pdf,image/jpeg,image/png" onchange="onDocFileChosen()">
+        <div class="hint" id="doc-hint">Photo or scan, PDF/JPG/PNG, up to 1.5 MB — large photos are compressed automatically.</div>
+        <label class="chk"><input type="checkbox" id="consent-special"> <span>I consent to the processing of health information or information about a relative’s death contained in the attached document — only to review this application.</span></label>
+        <div class="msg" id="doc-msg"></div>
+      </div>
+
+      <label class="chk mt"><input type="checkbox" id="consent-pd" onchange="recalc()"> <span>I consent to the processing of my personal data from the order to review the application and refund the money (<a href="/en/privacy">Privacy Policy</a>).</span></label>
+
+      <div class="mt">
+        <button id="btn-send" onclick="sendRequest()">Submit application</button>
+        <button class="ghost" onclick="location.reload()">Cancel</button>
+      </div>
+      <div class="msg" id="send-msg"></div>
+    </div>
+  </section>
+
+  <!-- Шаг 3: подтверждение -->
+  <section id="step-done" hidden>
+    <h1>Application received</h1>
+    <div class="done">
+      <div>Application number</div>
+      <div class="num" id="done-num"></div>
+      <div id="done-body"></div>
+    </div>
+    <ol class="next">
+      <li><b>Now.</b> The application has been received, the date of application is recorded, and a confirmation is in your inbox.</li>
+      <li><b id="next-due">Within 10 days.</b> We will review the application and email you the decision. If approved, we will send the money to the card used to pay for the order and email you again.</li>
+      <li><b>Crediting.</b> Your bank credits the refund within a few hours to a few days — this depends on your bank.</li>
+    </ol>
+    <p class="hint">You can check the status on this page: the same order code and email or phone.</p>
+  </section>
+
+  <div class="links">
+    Refund rules and deadlines — section 6 of the <a href="/en/oferta">public offer</a>. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>.
+  </div>
+</div>
+
+</main>
+
+<script src="/assets/analytics-events.js"></script>
+<script>
+const API = 'https://api.aelita-production.ru/tickets/refund';
+let ORDER = null, REASONS = [], TIERS = [], REQUESTS = [], CLOCK_SKEW = 0;
+let DOC_FILE = null; // {filename, mime_type, base64} — установит onDocFileChosen()
+
+const $ = (id) => document.getElementById(id);
+function msg(el, text, cls){ const e=$(el); e.textContent=text||''; e.className='msg'+(cls?' '+cls:''); }
+
+// pack-v467 (ТЗ клиентских текстов, З-1): язык выбирается в рантайме —
+// строки внутри <script> сборщик EN не переводит. pack-v692: у страницы
+// есть английская версия (/en/ticket-refund/, build_en.py), поэтому
+// КАЖДАЯ строка скрипта — парой L(рус, англ).
+const EN = document.documentElement.lang === 'en';
+const L = (ru, en) => (EN ? en : ru);
+const LOCALE = EN ? 'en-GB' : 'ru-RU';
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rub = (n) => Number(n || 0).toLocaleString(LOCALE, { maximumFractionDigits: 2 }) + ' ₽';
+const MAIL = 'aelita.production@yandex.ru';
+
+// pack-v334. ⚠️ Раньше здесь не было обработки сетевого сбоя вовсе:
+// fetch бросал исключение, и страница НАВСЕГДА зависала на «Ищем заказ…».
+// status 0 = ответа не было; сервер, ответивший ошибкой, разбирается по коду.
+const NET_FAIL_MSG = L(
+  'Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам, разберёмся: ' + MAIL,
+  "We couldn't reach the server. If you're using a VPN, try without it. If that doesn't help, write to us: " + MAIL);
+
+// pack-v692 (З-12): короткий номер заказа («№ 42») принимается — индекс
+// номеров пишут заказы, оплаченные после выкладки 09.10 (finalize-order.js).
+// Для заказов, оплаченных раньше, нужен длинный код — об этом текст ниже.
+const NOT_FOUND_MSG = L(
+  'Заказ не найден. Проверьте код или номер заказа из письма и почту или телефон — они должны совпадать с указанными при покупке. Для заказов, оплаченных до 10 октября 2026 года, нужен длинный код.',
+  'Order not found. Check the order code or number from the email and the email or phone — they must match the ones used at purchase. For orders paid before 10 October 2026 you need the long code.');
+const PARTNER_MSG = L(
+  'Если билет куплен на cuire-fest.ru, в кассе площадки или на другом сайте, его нет в нашей системе: возврат оформляет продавец по своим правилам (п. 6.5 оферты), контакты — в письме с билетом.',
+  'If the ticket was bought on cuire-fest.ru, at the venue box office or on another website, it is not in our system: the seller handles the refund under its own rules (clause 6.5 of the public offer), see the contacts in the ticket email.');
+
+// pack-v568 (ТЗ С1): ссылка из письма — /ticket-refund/?order=<код>&reason=organizer.
+// Код подставляется в поле; почту или телефон человек вводит сам.
+const LINK_PARAMS = new URLSearchParams(location.search);
+const PREFER_REASON = LINK_PARAMS.get('reason') || '';
+document.addEventListener('DOMContentLoaded', () => {
+  const code = LINK_PARAMS.get('order');
+  if (code && $('order') && !$('order').value) $('order').value = code;
+  if (code && $('contact')) $('contact').focus();
+});
+
+async function api(payload){
+  let res;
+  try {
+    res = await fetch(API, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    return { status: 0, body: null };
+  }
+  let out = null;
+  try { out = await res.json(); } catch(e) {}
+  return { status: res.status, body: out };
+}
+
+function tooMany(body){
+  const wait = body && body.retry_after_seconds ? Math.ceil(body.retry_after_seconds/60) : 10;
+  return L('Слишком много попыток по этому заказу. Попробуйте снова через ' + wait + ' мин или напишите нам на ' + MAIL + '.',
+    'Too many attempts for this order. Try again in ' + wait + ' min or write to us at ' + MAIL + '.');
+}
+
+async function lookup(){
+  const order = $('order').value.trim();
+  const contact = $('contact').value.trim();
+  if(!order || !contact){ msg('lookup-msg', L('Заполните оба поля.', 'Please fill in both fields.'),'err'); return; }
+  $('btn-lookup').disabled = true; msg('lookup-msg', L('Ищем заказ…', 'Looking for the order…'));
+  const { status, body } = await api({ action:'lookup', order_number:order, contact });
+  $('btn-lookup').disabled = false;
+  if(status === 0){ msg('lookup-msg', NET_FAIL_MSG, 'err'); return; }
+  if(status === 404){
+    // ⚠️ Одинаковый текст на «нет заказа» и «контакт не совпал» —
+    // разные сообщения превратили бы форму в способ проверять,
+    // существует ли чужой заказ (DOCS_TZ 39.2).
+    msg('lookup-msg', NOT_FOUND_MSG + ' ' + PARTNER_MSG, 'err');
+    return;
+  }
+  if(status === 429){ msg('lookup-msg', tooMany(body), 'err'); return; }
+  if(status === 400 && body && body.error === 'order_not_paid'){
+    msg('lookup-msg', L('По этому заказу оплата не прошла — возвращать нечего. Если деньги списались, напишите нам: ' + MAIL,
+      'Payment for this order did not go through — there is nothing to refund. If you were charged, write to us: ' + MAIL),'err'); return;
+  }
+  if(status !== 200 || !body){ msg('lookup-msg', L('Не удалось получить данные заказа. Попробуйте позже или напишите нам: ' + MAIL, 'Could not load the order. Try again later or write to us: ' + MAIL),'err'); return; }
+
+  ORDER = body.order; REASONS = body.reasons || []; TIERS = body.tiers || []; REQUESTS = body.requests || [];
+  if (body.server_now) { const s = Date.parse(body.server_now); if (!isNaN(s)) CLOCK_SKEW = s - Date.now(); }
+  msg('lookup-msg','');
+  renderOrder();
+}
+
+function fmtDate(iso){
+  if(!iso) return '';
+  try { return new Date(iso).toLocaleString(LOCALE,{dateStyle:'long',timeStyle:'short',timeZone:'Europe/Moscow'}); }
+  catch(e){ return iso; }
+}
+function fmtDay(day){
+  // ГГГГ-ММ-ДД → «31 октября» / «31 October»
+  if(!day) return '';
+  const d = new Date(day + 'T12:00:00Z');
+  return isNaN(d) ? day : d.toLocaleDateString(LOCALE, { day:'numeric', month:'long', timeZone:'UTC' });
+}
+
+// pack-v692: заявления по заказу — что с ними сейчас и до какого числа ответим.
+// pack-v693: срок прошёл — честно «простите за задержку, напишите нам» (команде
+// при этом ушёл сигнал); отмена показа — «без заявления»; документ к заявлению
+// можно приложить здесь же.
+function requestLine(r, i){
+  const head = '<b>' + esc(r.refund_number) + '</b> · ' + (r.origin === 'cancel' ? L('показ отменён ', 'performance cancelled ') : L('подано ', 'submitted ')) + esc(fmtDate(r.requested_at));
+  const money = r.amount_rub != null ? L('К возврату: ', 'Refund: ') + rub(r.amount_rub) + (r.gift_rub ? L(' и ' + rub(r.gift_rub) + ' на подарочную карту', ' and ' + rub(r.gift_rub) + ' to the gift card') : '') : '';
+  const late = L('Срок (' + fmtDay(r.due_date) + ') прошёл — простите за задержку, мы уже получили сигнал. Если нужно быстрее, напишите нам: ' + MAIL + ' или +7\u00a0960\u00a0515\u201116\u201190.',
+    'The deadline (' + fmtDay(r.due_date) + ') has passed — we are sorry for the delay, our team has been alerted. If you need it sooner, write to us: ' + MAIL + ' or +7\u00a0960\u00a0515\u201116\u201190.');
+  let st = '', cls = '';
+  if (r.status === 'new') {
+    st = r.overdue ? late : L('Рассматривается — ответим до ' + fmtDay(r.due_date) + ' включительно.', 'Under review — we will reply by ' + fmtDay(r.due_date) + ' inclusive.');
+    cls = r.overdue ? 'st-no' : 'st-new';
+  } else if (r.status === 'approved') {
+    st = r.overdue ? late : (r.origin === 'cancel'
+      ? L('Показ отменён — вернём 100 % без заявления до ' + fmtDay(r.due_date) + ' включительно, придёт письмо.', 'The performance was cancelled — we will refund 100% without an application by ' + fmtDay(r.due_date) + ' inclusive and email you.')
+      : L('Одобрено — деньги отправим до ' + fmtDay(r.due_date) + ' включительно, придёт письмо.', 'Approved — we will send the money by ' + fmtDay(r.due_date) + ' inclusive and email you.'));
+    cls = r.overdue ? 'st-no' : 'st-ok';
+  }
+  else if (r.status === 'paid') { st = L('Деньги отправлены ' + fmtDate(r.decided_at) + '. Банк зачисляет от нескольких часов до нескольких дней; если за 10 дней не пришли — напишите нам.', 'Money sent on ' + fmtDate(r.decided_at) + '. Your bank credits it within a few hours to a few days; if it has not arrived within 10 days, write to us.'); cls = 'st-ok'; }
+  else if (r.status === 'rejected') { st = L('Отказ', 'Declined') + (r.rejection_reason ? ': ' + esc(r.rejection_reason) : '') + L('. Билеты действительны; можно подать новое заявление — например, с документами.', '. The tickets remain valid; you can submit a new application, for example with documents.'); cls = 'st-no'; }
+  const tickets = (r.tickets || []).length ? L('Билеты № ', 'Tickets No. ') + r.tickets.map(esc).join(', ') : '';
+  let doc = '';
+  if (r.status === 'new' && r.needs_documents) {
+    doc = r.documents_count
+      ? '<div class="req-doc hint">' + L('Документ получен.', 'Document received.') + '</div>'
+      : '<div class="req-doc" data-req="' + i + '"><p class="hint">' + L('Документ ещё не получен — приложите его здесь (PDF, JPG или PNG) или пришлите в ответ на письмо.', 'We have not received the document yet — attach it here (PDF, JPG or PNG) or send it in reply to our email.') + '</p>' +
+        '<input type="file" accept="application/pdf,image/jpeg,image/png" id="req-file-' + i + '">' +
+        '<label class="chk"><input type="checkbox" id="req-consent-' + i + '"> <span>' + L('Согласен(на) на обработку сведений о здоровье или о смерти родственника из документа — только для рассмотрения заявления.', 'I consent to the processing of health information or information about a relative’s death in the document — only to review the application.') + '</span></label>' +
+        '<button class="ghost" onclick="attachDoc(' + i + ')">' + L('Отправить документ', 'Send document') + '</button><div class="msg" id="req-msg-' + i + '"></div></div>';
+  }
+  return '<div class="req ' + cls + '"><div>' + head + '</div><div class="req-st">' + st + '</div>' +
+    '<div class="req-meta">' + [tickets, money].filter(Boolean).join(' · ') + '</div>' + doc + '</div>';
+}
+
+// pack-v693: документ к уже поданному заявлению — тем же сжатием, что при подаче.
+async function attachDoc(i){
+  const r = REQUESTS[i]; if (!r) return;
+  const input = $('req-file-' + i);
+  const file = input && input.files && input.files[0];
+  if (!file) { msg('req-msg-' + i, L('Выберите файл.', 'Choose a file.'), 'err'); return; }
+  if (!$('req-consent-' + i).checked) { msg('req-msg-' + i, L('Отметьте согласие на обработку сведений из документа.', 'Please tick the consent for the document.'), 'err'); return; }
+  msg('req-msg-' + i, L('Готовим файл…', 'Preparing the file…'));
+  const prepared = await prepareDoc(file);
+  if (prepared.error) { msg('req-msg-' + i, prepared.error, 'err'); return; }
+  msg('req-msg-' + i, L('Отправляем…', 'Sending…'));
+  const { status, body } = await api({ action:'attach_document', order_number: $('order').value.trim(), contact: $('contact').value.trim(), refund_number: r.refund_number, consent_special: true, document: prepared.doc });
+  if (status === 200 && body && body.ok) {
+    r.documents_count = 1;
+    $('requests').innerHTML = '<div class="reqs-h">' + L('Заявления по этому заказу', 'Applications for this order') + '</div>' + REQUESTS.map(requestLine).join('');
+    return;
+  }
+  if (status === 0) { msg('req-msg-' + i, NET_FAIL_MSG, 'err'); return; }
+  if (status === 429) { msg('req-msg-' + i, tooMany(body), 'err'); return; }
+  const why = body && body.error;
+  msg('req-msg-' + i, why === 'already_decided' ? L('По заявлению уже принято решение — документ не нужен. Если есть вопрос, напишите нам: ' + MAIL, 'A decision has already been made — no document is needed. Questions: ' + MAIL)
+    : why === 'file_too_large' ? L('Файл больше 1.5 МБ. ', 'The file is larger than 1.5 MB. ') + LATER_BY_MAIL
+    : why === 'bad_file_type' ? L('Формат не подходит — нужен PDF, JPG или PNG.', 'Unsupported format — PDF, JPG or PNG is needed.')
+    : L('Не получилось отправить документ. ', 'Could not send the document. ') + LATER_BY_MAIL, 'err');
+}
+
+function renderOrder(){
+  $('step-lookup').hidden = true;
+  $('step-order').hidden = false;
+  $('order-head').textContent = ORDER.production_title + (ORDER.performance_datetime ? ' · ' + fmtDate(ORDER.performance_datetime) : '');
+
+  if (REQUESTS.length) {
+    $('requests').hidden = false;
+    $('requests').innerHTML = '<div class="reqs-h">' + L('Заявления по этому заказу', 'Applications for this order') + '</div>' + REQUESTS.map(requestLine).join('');
+  }
+
+  $('tickets').innerHTML = ORDER.tickets.map((t, i) => {
+    const place = t.seat_key ? L('ряд ' + t.seat_key.split('-')[0] + ', место ' + t.seat_key.split('-')[1], 'row ' + t.seat_key.split('-')[0] + ', seat ' + t.seat_key.split('-')[1]) : L('свободная рассадка', 'general admission');
+    const note = EN ? (t.note_en || t.note) : t.note;
+    const paid = (t.paid_money != null && Number(t.paid_money) !== Number(t.price)) ? L(' (оплачено деньгами ', ' (paid in money ') + rub(t.paid_money) + ')' : '';
+    return '<div class="tk' + (t.selectable ? '' : ' off') + '">' +
+      '<input type="checkbox" ' + (t.selectable ? '' : 'disabled ') + 'data-i="' + i + '" onchange="recalc()" aria-label="' + esc(L('Билет № ', 'Ticket No. ') + t.ticket_number) + '">' +
+      '<div class="who"><b>' + L('Билет № ', 'Ticket No. ') + esc(t.ticket_number) + '</b> — ' + place + ', ' + rub(t.price) + paid +
+      (note ? '<span class="note">' + esc(note) + '</span>' : '') + '</div></div>';
+  }).join('');
+
+  const any = ORDER.tickets.some((t) => t.selectable);
+  $('new-request').hidden = !any;
+  if (!any) {
+    $('tickets').insertAdjacentHTML('beforeend', '<p class="hint mt">' + L('Новое заявление по этому заказу подать нельзя: все билеты уже возвращены, в рассмотрении или мероприятие прошло.', 'No new application can be submitted for this order: all tickets are refunded, under review, or the event has passed.') + '</p>');
+  }
+
+  $('reason').innerHTML = REASONS.map(r => '<option value="' + esc(r.id) + '">' + esc(EN ? (r.title_en || r.title) : r.title) + '</option>').join('');
+  if (PREFER_REASON && REASONS.some(r => r.id === PREFER_REASON)) $('reason').value = PREFER_REASON;
+  recalc();
+}
+
+function selectedTickets(){
+  return Array.from(document.querySelectorAll('#tickets input[type=checkbox]:checked'))
+    .map(cb => ORDER.tickets[Number(cb.dataset.i)]);
+}
+
+// pack-v692: предварительная сумма ДО отправки — тем же правилом, что у
+// сервера (config/refund-rules.js): дни календарные по Москве, пороги —
+// из ответа сервера. Итог всё равно считает сервер при приёме заявления.
+function mskDay(ms){ return Math.floor((ms + 3*3600000) / 86400000); }
+function daysBefore(startIso){
+  const s = Date.parse(startIso), now = Date.now() + CLOCK_SKEW;
+  if (isNaN(s)) return null;
+  if (now >= s && mskDay(now) === mskDay(s)) return -1;
+  return mskDay(s) - mskDay(now);
+}
+function percentFor(reason){
+  if (reason && reason.full_refund) return 100;
+  const d = daysBefore(ORDER.performance_datetime);
+  if (d == null) return null;
+  const tier = TIERS.find((t) => d >= t.min_days_before);
+  return tier ? tier.percent : 0;
+}
+
+function recalc(){
+  const picked = selectedTickets();
+  const reasonId = $('reason').value;
+  const reason = REASONS.find(r => r.id === reasonId);
+  $('btn-send').disabled = picked.length === 0 || !$('consent-pd').checked;
+  $('calc-docs').hidden = !(reason && reason.requires_documents);
+  $('doc-upload').hidden = !(reason && reason.requires_documents);
+  if(reason && reason.requires_documents){
+    $('calc-docs').innerHTML = L('Понадобятся подтверждающие документы и заявление по форме Минкультуры', 'Supporting documents and an application on the Ministry of Culture form will be needed') +
+      (reason.form_url ? ' — <a href="' + esc(reason.form_url) + '">' + L('скачать форму', 'download the form') + '</a>' : '') +
+      L('. Приложите документ ниже сейчас или отправьте в ответ на письмо, которое придёт после отправки заявления.', '. Attach the document below now or send it in reply to the email you will receive after submitting.');
+  } else {
+    DOC_FILE = null; $('doc-file').value = ''; msg('doc-msg','');
+  }
+  if(picked.length === 0){ $('calc').hidden = true; return; }
+  $('calc').hidden = false;
+  const total = picked.reduce((s,t) => s + Number(t.price), 0);
+  $('calc-basis').textContent = L('Выбрано билетов: ' + picked.length + ' на сумму ' + rub(total) + '.', 'Tickets selected: ' + picked.length + ', total ' + rub(total) + '.');
+  const pct = percentFor(reason);
+  if (pct == null) { $('calc-sum').textContent = L('Точную сумму покажем сразу после отправки заявления.', 'We will show the exact amount right after you submit.'); $('calc-why').textContent = ''; return; }
+  const money = picked.reduce((s,t) => s + Math.floor(Number(t.paid_money != null ? t.paid_money : t.price) * pct) / 100, 0);
+  const gift = picked.reduce((s,t) => s + Math.floor(Number(t.paid_gift || 0) * pct) / 100, 0);
+  $('calc-sum').textContent = L('Предварительно к возврату: ', 'Provisional refund: ') + rub(money) + (gift ? L(' и ' + rub(gift) + ' на подарочную карту', ' and ' + rub(gift) + ' to the gift card') : '') + ' (' + pct + ' %)';
+  const d = daysBefore(ORDER.performance_datetime);
+  let why;
+  if (reason && reason.full_refund) why = reason.id === 'organizer'
+    ? L('Отмена, замена или перенос по инициативе организатора — 100 % независимо от срока (п. 6.3.3 оферты).', 'Cancellation, change or postponement by the organiser — 100% regardless of timing (clause 6.3.3 of the public offer).')
+    : L('Болезнь или смерть близкого — 100 % при подтверждающих документах (п. 6.3.2 оферты).', 'Illness or death of a close relative — 100% with supporting documents (clause 6.3.2 of the public offer).');
+  else if (pct === 0) why = L('До мероприятия меньше 3 дней — по отказу от посещения деньги не возвращаются (ст. 52.1 Основ законодательства о культуре, п. 6.3.1 оферты). Если вы заболели или умер близкий человек — выберите эту причину: тогда 100 % по документам.',
+    'Less than 3 days before the event — money is not refunded for a simple refusal (art. 52.1 of the Fundamentals of Cultural Legislation, clause 6.3.1 of the public offer). If you are ill or a close relative has died, choose that reason: then 100% with documents.');
+  else why = L('До мероприятия ' + d + ' дн. (дни календарные, по Москве) — по п. 6.3.1 оферты возвращается ' + pct + ' %.', d + ' days before the event (calendar days, Moscow time) — under clause 6.3.1 of the public offer ' + pct + '% is refunded.');
+  $('calc-why').textContent = why;
+}
+
+// pack-v292: приём файла для подтверждающего документа. Изображения
+// сжимаем в браузере через canvas — лимит на бэкенде 1.5 МБ (см.
+// Tickets/lib/refund-store.js: MAX_DOCUMENT_BYTES), а фото с телефона
+// обычно 3–8 МБ. PDF не сжимаем — проверяем размер и объясняем, что делать.
+const DOC_MAX_BYTES = 1.5 * 1024 * 1024;
+
+function fileToBase64(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function compressImage(file, quality){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const maxSide = 1800;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('canvas_failed')), 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image_load_failed')); };
+    img.src = url;
+  });
+}
+
+const LATER_BY_MAIL = L('Отправьте документ позже почтой в ответ на письмо.', 'Send the document later by email in reply to our letter.');
+// pack-v693: подготовка файла — общая для подачи и для «приложить позже».
+// Возвращает { doc } или { error } (текст для человека).
+async function prepareDoc(file){
+  try {
+    if(file.type === 'application/pdf'){
+      if(file.size > DOC_MAX_BYTES) return { error: L('Файл слишком большой (максимум 1.5 МБ для PDF — сжать его мы не можем). ', 'The file is too large (max 1.5 MB for PDF — we cannot compress it). ') + LATER_BY_MAIL };
+      return { doc: { filename: file.name, mime_type: 'application/pdf', base64: await fileToBase64(file) }, note: L('Готово: ', 'Ready: ') + file.name };
+    }
+    if(file.type !== 'image/jpeg' && file.type !== 'image/png') return { error: L('Формат не подходит — нужен PDF, JPG или PNG.', 'Unsupported format — PDF, JPG or PNG is needed.') };
+    // Сжимаем, пока не впишемся в лимит или пока не упрёмся в качество.
+    let blob = file;
+    if(file.size > DOC_MAX_BYTES){
+      for(const q of [0.82, 0.65, 0.5, 0.35]){
+        blob = await compressImage(file, q);
+        if(blob.size <= DOC_MAX_BYTES) break;
+      }
+    }
+    if(blob.size > DOC_MAX_BYTES) return { error: L('Даже после сжатия файл больше 1.5 МБ. ', 'Even after compression the file is larger than 1.5 MB. ') + LATER_BY_MAIL };
+    return {
+      doc: { filename: file.name.replace(/\.[^.]*$/, '.jpg'), mime_type: 'image/jpeg', base64: await fileToBase64(blob) },
+      note: blob === file ? L('Готово: ', 'Ready: ') + file.name : L('Готово, сжато до ', 'Ready, compressed to ') + Math.round(blob.size/1024) + L(' КБ.', ' KB.'),
+    };
+  } catch(e){
+    return { error: L('Не получилось обработать файл. Можно отправить документ позже почтой.', 'Could not process the file. You can send the document later by email.') };
+  }
+}
+
+async function onDocFileChosen(){
+  const input = $('doc-file');
+  const file = input.files && input.files[0];
+  DOC_FILE = null;
+  if(!file){ msg('doc-msg',''); return; }
+  msg('doc-msg', L('Готовим файл…', 'Preparing the file…'));
+  const r = await prepareDoc(file);
+  if (r.error) { msg('doc-msg', r.error, 'err'); input.value = ''; return; }
+  DOC_FILE = r.doc;
+  msg('doc-msg', r.note);
+}
+
+async function sendRequest(){
+  const picked = selectedTickets();
+  if(picked.length === 0) return;
+  if(!$('consent-pd').checked){ msg('send-msg', L('Отметьте согласие на обработку персональных данных — без него заявление не рассмотреть.', 'Please tick the consent to personal data processing — we cannot review the application without it.'),'err'); return; }
+  const docNeeded = !$('doc-upload').hidden;
+  if(docNeeded && DOC_FILE && !$('consent-special').checked){
+    msg('send-msg', L('Отметьте согласие на обработку сведений из документа — или уберите файл и пришлите документ почтой.', 'Please tick the consent for the document — or remove the file and send the document by email.'),'err'); return;
+  }
+  $('btn-send').disabled = true; msg('send-msg', L('Отправляем…', 'Sending…'));
+  const { status, body } = await api({
+    action:'request',
+    order_number: $('order').value.trim(),
+    contact: $('contact').value.trim(),
+    ticket_numbers: picked.map(t => t.ticket_number),
+    reason: $('reason').value,
+    consent_pd: true,
+    consent_special: docNeeded && $('consent-special').checked,
+    document: (docNeeded && DOC_FILE) || undefined,
+  });
+  if(status === 0){
+    msg('send-msg', NET_FAIL_MSG, 'err');
+    $('btn-send').disabled = false; return;
+  }
+  // pack-v592 (оферта п. 6.3.2): после начала показа, до конца его дня —
+  // только по болезни или смерти близкого.
+  if(status === 409 && body && body.error === 'reason_not_allowed_after_start'){
+    msg('send-msg', L('Мероприятие уже началось. До конца дня показа возврат возможен только по болезни или смерти близкого (п. 6.3.2 оферты) — выберите одну из этих причин.',
+      'The performance has already started. Until the end of the performance day a refund is possible only for documented illness or death of a close relative (clause 6.3.2 of the public offer). Choose one of these reasons.'),'err');
+    $('btn-send').disabled = false; return;
+  }
+  if(status === 409){
+    msg('send-msg', L('По части выбранных билетов заявление уже подано или они недоступны для возврата. Обновите страницу.', 'An application has already been submitted for some of the selected tickets, or they cannot be refunded. Please reload the page.'),'err');
+    $('btn-send').disabled = false; return;
+  }
+  if(status === 429){ msg('send-msg', tooMany(body), 'err'); $('btn-send').disabled = false; return; }
+  if(status !== 200 || !body){
+    msg('send-msg', L('Не удалось отправить заявление. Попробуйте ещё раз или напишите нам на ' + MAIL + '.', 'Could not submit the application. Try again or write to us at ' + MAIL + '.'),'err');
+    $('btn-send').disabled = false; return;
+  }
+  $('step-order').hidden = true;
+  $('step-done').hidden = false;
+  $('done-num').textContent = body.refund_number;
+  const est = body.estimate || {};
+  const gift = (est.perTicket || []).reduce((s, p) => s + (Number(p.refund_gift) || 0), 0);
+  let html = '<p>' + L('Дата обращения: ', 'Date of application: ') + '<b>' + esc(fmtDate(body.requested_at)) + '</b>' +
+    L(' — от неё считается размер возврата, даже если рассмотрение займёт время.', ' — the refund amount is calculated from it, even if the review takes time.') + '</p>';
+  html += '<p>' + L('Предварительно к возврату: ', 'Provisional refund: ') + '<b>' + (est.amountRub != null ? rub(est.amountRub) : '—') + '</b>' +
+    (gift ? L(' и ' + rub(gift) + ' на подарочную карту', ' and ' + rub(gift) + ' to the gift card') : '');
+  if(est.basis && !EN) html += '<br><span class="small">' + esc(est.basis) + '</span>';
+  html += '</p>';
+  if(body.due_date){
+    html += '<p>' + L('Ответим и вернём деньги до ', 'We will reply and refund by ') + '<b>' + esc(fmtDay(body.due_date)) + '</b>' + L(' включительно (10 дней, п. 6.1 оферты).', ' inclusive (10 days, clause 6.1 of the public offer).') + '</p>';
+    $('next-due').textContent = L('До ' + fmtDay(body.due_date) + '.', 'By ' + fmtDay(body.due_date) + '.');
+  } else {
+    html += '<p class="small">' + L('Возврат производится в течение 10 дней с момента получения заявления (п. 6.1 оферты).', 'Refunds are made within 10 days of receiving the application (clause 6.1 of the public offer).') + '</p>';
+  }
+  if(body.needs_documents && body.document_uploaded){
+    html += '<p class="ok-t">' + L('✅ Документ получен и приложен к заявлению.', '✅ The document has been received and attached to the application.') + '</p>';
+  } else if(body.needs_documents){
+    html += '<p class="warn-t">' + L('Отправьте подтверждающие документы', 'Send the supporting documents') +
+      (body.form_url ? L(' и <a href="' + esc(body.form_url) + '">заполненную форму</a>', ' and the <a href="' + esc(body.form_url) + '">completed form</a>') : '') +
+      L(' в ответ на письмо — без них возврат по этому основанию оформить нельзя.', ' in reply to the email — without them a refund on this ground is not possible.') + '</p>';
+  }
+  html += body.mail_sent
+    ? '<p>' + L('Подтверждение отправлено на вашу почту. Не пришло за несколько минут — проверьте «Спам»; статус в любом случае виден на этой странице.', 'A confirmation has been sent to your email. If it has not arrived within a few minutes, check Spam; the status is always shown on this page.') + '</p>'
+    : '<p class="warn-t">' + L('Заявление принято, но письмо-подтверждение отправить не удалось. Сохраните номер обращения.', 'The application has been received, but we could not send the confirmation email. Please save the application number.') + '</p>';
+  $('done-body').innerHTML = html;
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+</script>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>AELITA PRODUCTION</h4>
+        <a href="tel:+79605151690">+7 960 515-16-90</a>
+        <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a>
+        <a class="foot-gap" href="https://vk.com/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_ticket-refund" target="_blank" rel="noopener">VKontakte</a>
+        <a href="https://t.me/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_ticket-refund" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/@aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_ticket-refund" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://dzen.ru/aelita_production?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_ticket-refund" target="_blank" rel="noopener">Dzen</a>
+      </div>
+      <div>
+        <h4>About</h4>
+        <a href="/en/rezidents">Company residents</a>
+        <a href="/en/team">Team</a>
+        <a href="/en/partners">Partners</a>
+        <a href="/en/press">Press</a>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <a href="/en/">Home</a>
+        <a href="/en/tickets">Schedule</a>
+        <a href="/en/projects">Productions</a>
+        <a href="/en/shop">Shop</a>
+        <a href="/en/account">Account</a>
+      </div>
+      <div>
+        <h4>Products</h4>
+        <a href="/en/community">AELITA COMMUNITY</a>
+        <a href="/en/gift-card">Gift Card</a>
+        <a href="/en/business">Art for business</a>
+        <a href="/en/collaboration">Collaborate</a>
+        <a href="/en/faq">FAQ</a>
+      </div>
+    </div>
+    <div class="requisites">
+      LLC “AELITA PRODUCTION”<br>
+      Legal address: 248016, Kaluga region, Kaluga, Lenin St., 51<br>
+      OGRN 1254000006644 · TIN 4000027320<br>
+      © 2026 AELITA PRODUCTION<br><a href="/en/documents">Legal documents</a> · <a href="/en/oferta">Public Offer</a> · <a href="/en/privacy">Privacy</a> · <a href="/en/cookies">Cookies</a> · <a href="/en/app">App</a>
+    </div>
+  </div>
+</footer>
+<script>
+  function switchFormTab_c(tab, btn){
+    document.querySelectorAll('#notifyTabs_c .notify-tab').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('formSite_c').style.display = (tab === 'site') ? 'block' : 'none';
+    document.getElementById('formBot_c').style.display = (tab === 'bot') ? 'block' : 'none';
+  }
+
+
+
+
+</script>
+
+<script>
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const lineIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('line-on')}})
+  },{threshold:.5});
+  document.querySelectorAll('.sec-head').forEach(el=>lineIO.observe(el));
+
+
+  setTimeout(function(){
+    if(!('IntersectionObserver' in window)){
+      document.querySelectorAll('.reveal:not(.on)').forEach(function(el){ el.classList.add('on'); });
+      document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){ el.classList.add('line-on'); });
+      return;
+    }
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    document.querySelectorAll('.reveal:not(.on)').forEach(function(el){
+      if(el.getBoundingClientRect().top < vh) el.classList.add('on');
+    });
+    document.querySelectorAll('.sec-head:not(.line-on)').forEach(function(el){
+      if(el.getBoundingClientRect().top < vh) el.classList.add('line-on');
+    });
+  }, 700);
+</script>
+
+<div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
+  <nav class="m-menu-links">
+    <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/projects" onclick="toggleMenu()">Productions</a>
+    <a href="/en/tochkacuire" onclick="toggleMenu()">Tochka Cuire</a>
+    <a href="/en/shop" onclick="toggleMenu()">Shop</a>
+    <a href="/en/about" onclick="toggleMenu()">About</a>
+    <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
+    <a href="/en/community" onclick="toggleMenu()">Community</a>
+    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
+    <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
+    <a href="/en/account" onclick="toggleMenu()">Account</a>
+  </nav>
+  <div class="m-menu-contacts">aelita.production@yandex.ru</div>
+  <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+  <p>We use cookies for analytics and to improve the site. Analytics turns on only if you click “Accept”. Details are in our <a href="/en/cookies">cookie policy</a> and <a href="/en/privacy">privacy policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn-more" onclick="window.location.href='/en/cookies'">Learn more</button>
+    <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+<!-- /Cookie Banner -->
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Telegram widget -->
+<div class="tg-widget" id="tg-widget">
+  <div class="tg-bubble" id="tg-bubble">Write to us — our bot responds instantly</div>
+  <a class="tg-btn" href="https://t.me/aelita_production_bot?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_ticket-refund" target="_blank" rel="noopener" aria-label="Message us on Telegram">
+    <svg viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.093 13.68l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.836.88h.219z"></path></svg>
+    Write to us
+  </a>
+</div>
+
+<button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
+<script src="/assets/analytics-events.js"></script>
+<script src="/assets/main.js?v=114"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW error:', err));
+    });
+  }
+</script>
+</body>
+</html>
