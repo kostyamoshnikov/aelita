@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=114">
+<link rel="stylesheet" href="/assets/fonts.css?v=118">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -272,6 +272,40 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #errorState .btn-small{margin-top:16px;border-color:rgba(224,138,110,.4);color:#e08a6e}
 @media(hover:hover){#errorState .btn-small:hover{background:rgba(224,138,110,.08)}}
 .table-wrap{overflow-x:auto}.perf-table{width:100%;border-collapse:collapse;font-size:.8125rem}.perf-table th,.perf-table td{padding:6px 8px;border-bottom:1px solid rgba(214,181,122,.15);text-align:left;white-space:nowrap}.perf-warn td{color:#e07a6a}
+/* pack-v694: «Требует внимания», поиск, форма отказа, действия заказа */
+.attn{background:var(--coal);border:1px solid rgba(214,181,122,.35);padding:18px 22px;margin:0 0 28px}
+.attn h2{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 10px;font-weight:400}
+.attn ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.attn li{font-size:0.875rem;color:var(--bone);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.attn li.hot{color:#E0B79F}
+.attn li button{background:none;border:0;padding:0;color:var(--gold);font:inherit;font-size:0.8125rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.attn .calm{color:var(--sand);font-size:0.8125rem;margin:0}
+.adm-search{position:relative;margin:10px 0 0}
+.adm-search input{width:100%;max-width:none}
+.adm-search-res{position:absolute;left:0;right:0;top:100%;z-index:30;background:var(--coal);border:1px solid rgba(214,181,122,.3);max-height:60vh;overflow:auto}
+.adm-search-res button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(201,184,163,.12);padding:10px 14px;color:var(--bone);font:inherit;font-size:0.8125rem;cursor:pointer}
+.adm-search-res button:hover,.adm-search-res button:focus{background:rgba(214,181,122,.08);outline:none}
+.adm-search-res small{display:block;color:var(--sand);font-size:0.75rem;margin-top:2px}
+.adm-search-res .none{padding:10px 14px;color:var(--sand);font-size:0.8125rem}
+.adm-hit{outline:2px solid var(--gold);outline-offset:2px;transition:outline-color 1.5s}
+.rf-reject-form,.ord-fix-form{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-width:560px}
+.rf-reject-form select,.rf-reject-form textarea,.ord-fix-form input{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.25);color:var(--bone);padding:10px 12px;font-family:'Inter',sans-serif;font-size:0.8125rem}
+.rf-reject-form textarea{min-height:72px;resize:vertical}
+.rf-reject-form .row,.ord-fix-form .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rf-reject-form .msg,.ord-fix-form .msg{font-size:0.75rem;color:var(--sand)}
+.ord-refunds{font-size:0.75rem;color:var(--bone);margin-top:8px;border-left:2px solid var(--gold);padding-left:10px}
+/* pack-v696: возврат за покупателя */
+.rf-prop-h{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:6px 0 10px}
+.rf-prop{border-left:2px solid var(--gold)}
+.rf-prop-late{border-left-color:#C98B6B}
+.rf-tel{color:var(--gold)}
+.rf-gift{font-size:0.6875rem;color:var(--sand)}
+.ord-prop-form .prop-tk{display:flex;flex-direction:column;gap:6px}
+.ord-prop-form select,.ord-prop-form input[type=datetime-local]{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.25);color:var(--bone);padding:8px 10px;font-family:'Inter',sans-serif;font-size:0.8125rem}
+.ord-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
+.adm-who{font-size:0.6875rem;color:rgba(201,184,163,.75);white-space:nowrap}
+.adm-who-btn{background:none;border:0;padding:0 2px;color:var(--gold);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.adm-who-in{background:rgba(232,230,225,.05);border:1px solid rgba(214,181,122,.4);color:var(--bone);padding:6px 8px;font-family:'Inter',sans-serif;font-size:0.75rem;width:210px}
 </style>
 </head>
 <body>
@@ -297,6 +331,11 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <button type="button" class="pw-toggle" id="pwToggle">Показать</button>
       </div>
     </div>
+    <!-- pack-v694: пароль общий — имя нужно, чтобы в заявлениях было видно, кто решил -->
+    <div class="field">
+      <label for="admin-name">Ваше имя (для журнала решений)</label>
+      <input class="ym-disable-keys" type="text" id="admin-name" maxlength="40" autocomplete="name" placeholder="например, Алина">
+    </div>
     <button class="btn" id="loginBtn">Войти →</button>
     <p class="err" id="loginErr"></p>
   </div>
@@ -309,6 +348,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <h1>Админка</h1>
     </div>
     <div class="data-actions">
+      <span class="adm-who" id="adminWho"></span>
       <span class="loaded-at" id="loadedAt"></span>
       <button class="btn-small" id="refreshBtn">Обновить</button>
       <button class="btn-small btn-ghost" id="logoutBtn">Выйти</button>
@@ -322,6 +362,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
   </div>
 
   <div id="content" style="display:none">
+    <!-- pack-v694: что ждёт решения — одним списком над цифрами (собирается из уже загруженного) -->
+    <div class="attn" id="attnBlock" hidden></div>
     <div class="stats-grid">
       <div class="stat-box"><div class="label">Клиентов всего</div><div class="value" id="s-total-customers">—</div></div>
       <div class="stat-box"><div class="label">Выручка всего</div><div class="value" id="s-total-revenue">—</div></div>
@@ -685,7 +727,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <p class="editor-result" id="paResult"></p>
     </div>
 
-    <p class="sec-title" style="margin-top:56px">Заявления на возврат</p>
+    <p class="sec-title" style="margin-top:56px">Заявления на возврат (<span id="rf-open">0</span> ждут решения или выплаты)</p>
     <div id="refundsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <p class="sec-title" style="margin-top:56px">Правки сайта</p>
@@ -1734,6 +1776,123 @@ function fmtRefundDue(iso) {
 }
 
 var REFUNDS_ALERTS_STUCK = null;
+var REFUNDS_LOADED = false; // pack-v694: пока заявления не пришли, «срочного нет» не пишем
+var PROPOSALS = []; // pack-v696: возвраты за покупателя, ждут подтверждения
+var STAFF_CONFIRM = true;
+// pack-v694: имя сотрудника — для «кто решил» в заявлениях и правках заказа.
+// Пароль у админки общий; имя хранится в этом браузере.
+function adminName() { try { return (localStorage.getItem('aelita_admin_name') || '').slice(0, 40); } catch (e) { return ''; } }
+function setAdminName(v) {
+  v = String(v || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  try { if (v) localStorage.setItem('aelita_admin_name', v); } catch (e) {}
+  showAdminWho();
+}
+function showAdminWho() {
+  var el = document.getElementById('adminWho');
+  // pack-v695: кто вошёл до v694 (поля «Ваше имя» ещё не было) или не указал
+  // имя — может указать или сменить его здесь, без выхода.
+  if (el) el.innerHTML = adminName()
+    ? 'Вы: ' + escapeHtml(adminName()) + ' <button type="button" class="adm-who-btn" data-who-edit title="Сменить имя">✎</button>'
+    : '<button type="button" class="adm-who-btn" data-who-edit>Указать своё имя</button>';
+  var inp = document.getElementById('admin-name');
+  if (inp && !inp.value) inp.value = adminName();
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('[data-who-edit]');
+  if (!b) return;
+  var el = document.getElementById('adminWho');
+  el.innerHTML = '<input class="ym-disable-keys adm-who-in" type="text" maxlength="40" placeholder="Ваше имя — для журнала решений" aria-label="Ваше имя">';
+  var inp = el.querySelector('input');
+  inp.value = adminName();
+  inp.focus();
+  var finished = false;
+  var done = function (save) { if (finished) return; finished = true; if (save && inp.value.trim()) setAdminName(inp.value); else showAdminWho(); };
+  inp.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') done(true); if (ev.key === 'Escape') done(false); });
+  inp.addEventListener('blur', function () { done(true); });
+});
+function decidedByName(r) { var m = /^admin: (.+)$/.exec(String(r.decidedBy || '')); return m ? m[1] : r.decidedBy === 'api' ? 'ЮKassa (автоматически)' : r.decidedBy === 'cancel' ? 'отмена показа' : ''; }
+var REJECT_TEMPLATES = [
+  'Билет уже использован — вход на показ отмечен.',
+  'Срок для возврата по выбранной причине прошёл — условия в разделе 6 оферты.',
+  'Не хватает подтверждающего документа. Подайте, пожалуйста, заявление заново и приложите документ на странице возврата.',
+  'По этим билетам решение уже принято — возврат оформлен по другому заявлению.',
+];
+// pack-v694: «Требует внимания» — сводка из уже загруженных разделов.
+function renderAttention() {
+  var el = document.getElementById('attnBlock');
+  if (!el || !REFUNDS_LOADED) return;
+  var items = [];
+  if (REFUNDS_LOADED === 'error') items.push({ hot: true, t: 'Заявления на возврат не загрузились — нажмите «Обновить»', tab: 'refunds' });
+  var num = function (id) { var x = document.getElementById(id); return x ? Number(x.textContent) || 0 : 0; };
+  var fresh = allRefunds.filter(function (r) { return r.status === 'new'; });
+  var unpaid = allRefunds.filter(function (r) { return r.status === 'approved'; });
+  var late = allRefunds.filter(function (r) { return (r.status === 'new' || r.status === 'approved') && r.requestedAt && refundDaysLeft(r.requestedAt) <= 2 && !/^test-/.test(String(r.performanceId || '')); });
+  if (REFUNDS_ALERTS_STUCK && REFUNDS_ALERTS_STUCK.count) items.push({ hot: true, t: 'Сигналы о заявлениях не доходят в Telegram и на почту (' + REFUNDS_ALERTS_STUCK.count + ')', tab: 'refunds' });
+  if (late.length) items.push({ hot: true, t: 'Заявления со сроком ≤ 2 дней или просроченные: ' + late.map(function (r) { return r.refundNumber; }).join(', '), tab: 'refunds' });
+  if (fresh.length) items.push({ t: 'Новых заявлений на возврат: ' + fresh.length + ' — одобрить или отклонить', tab: 'refunds' });
+  if (unpaid.length) items.push({ t: 'Одобрено, деньги ещё не отправлены: ' + unpaid.length, tab: 'refunds' });
+  // pack-v696: возвраты за покупателя
+  var propLate = PROPOSALS.filter(function (p) { return p.status === 'expired'; });
+  var propWait = PROPOSALS.filter(function (p) { return p.status === 'pending'; });
+  if (propLate.length) items.push({ hot: true, t: 'Покупатель не подтвердил возврат — позвонить: ' + propLate.map(function (p) { return p.number; }).join(', '), tab: 'refunds' });
+  if (propWait.length) items.push({ t: 'Ждут подтверждения покупателя: ' + propWait.length, tab: 'refunds' });
+  if (num('rv-pending')) items.push({ t: 'Отзывы на модерации: ' + num('rv-pending'), tab: 'inbox' });
+  if (num('ld-new')) items.push({ t: 'Новые заявки с сайта: ' + num('ld-new'), tab: 'inbox' });
+  if (num('ap-new')) items.push({ t: 'Новые заявки из бота: ' + num('ap-new'), tab: 'inbox' });
+  var open = fresh.length + unpaid.length + propLate.length;
+  var rfOpen = document.getElementById('rf-open');
+  if (rfOpen) rfOpen.textContent = open;
+  var badge = document.getElementById('admRefundsBadge');
+  if (badge) { badge.textContent = open; badge.hidden = !open; }
+  el.hidden = false;
+  el.innerHTML = '<h2>Требует внимания</h2>' + (items.length
+    ? '<ul>' + items.map(function (x) { return '<li' + (x.hot ? ' class="hot"' : '') + '><span>' + escapeHtml(x.t) + '</span><button type="button" data-attn-tab="' + x.tab + '">Открыть →</button></li>'; }).join('') + '</ul>'
+    : '<p class="calm">Срочного нет: заявления, отзывы и заявки разобраны.</p>');
+}
+// pack-v696: «Ждут подтверждения покупателя» — возвраты, оформленные командой.
+function proposalsHtml() {
+  var open = PROPOSALS.filter(function (p) { return p.status === 'pending' || p.status === 'expired'; });
+  if (!open.length) return '';
+  return '<p class="rf-prop-h">Ждут подтверждения покупателя (' + open.length + ')</p>' + open.map(function (p) {
+    var late = p.status === 'expired';
+    var tickets = (p.ticketNumbers || []).map(function (n) { return '№ ' + escapeHtml(n); }).join(', ');
+    return '<div class="ev-card rf-prop' + (late ? ' rf-prop-late' : '') + '" data-prop="' + escapeHtml(p.id) + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">' + escapeHtml(p.number) + ' · заказ № ' + escapeHtml(p.orderNumber != null ? p.orderNumber : '—') + ' · ' + escapeHtml(p.productionTitle || '') + '</div>' +
+        // pack-v697: телефон — ссылкой, чтобы позвонить с телефона одним нажатием
+        '<div class="ev-when">' + escapeHtml(p.buyerName || '—') + ' · ' + escapeHtml(p.buyerEmail || '') + (p.buyerContact ? ' · <a class="rf-tel" href="tel:' + escapeHtml(String(p.buyerContact).replace(/[^\d+]/g, '')) + '">' + escapeHtml(p.buyerContact) + '</a>' : '') + '</div>' +
+        '<div class="ev-when">Билеты: ' + tickets + ' · ' + escapeHtml(REFUND_REASON_LABELS[p.reason] || p.reason) + ' · обращение ' + fmtRefundDate(p.requestedAt) + ' · оформил(а) ' + escapeHtml(p.createdBy || 'admin') + '</div>' +
+      '</div><div class="ev-count">' + fmtMoney(p.estimate ? p.estimate.amountRub : null) +
+        (function () { var g = p.estimate && p.estimate.perTicket ? p.estimate.perTicket.reduce(function (a, x) { return a + (Number(x.refund_gift) || 0); }, 0) : 0; return g ? '<br><span class="rf-gift">+ ' + fmtMoney(g) + ' на карту</span>' : ''; })() + '</div></div>' +
+      '<div class="ev-empty' + (late ? ' rf-late' : '') + '">' + (late
+        ? 'Не подтвердил(а) за 3 дня — заявление не подано. Позвоните покупателю: возврат нужен — «Отправить ещё раз», не нужен — «Отменить» (строка уйдёт из «Требует внимания»).'
+        : 'Письмо со ссылкой отправлено' + (p.remindedAt ? ', напоминание — ' + fmtRefundDate(p.remindedAt) : '') + '; ссылка действует до ' + fmtRefundDate(p.expiresAt) + '.') + '</div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-prop-act="proposal_resend">Отправить ещё раз</button><button class="mini-btn mini-btn-danger" data-prop-act="proposal_cancel">Отменить</button><span class="ord-msg"></span></div>' +
+    '</div>';
+  }).join('');
+}
+document.addEventListener('click', async function (e) {
+  var b = e.target.closest && e.target.closest('[data-prop-act]');
+  if (!b) return;
+  var card = b.closest('[data-prop]');
+  var act = b.getAttribute('data-prop-act');
+  var m = card.querySelector('.ord-msg');
+  if (act === 'proposal_cancel' && !confirm('Отменить возврат ' + card.querySelector('.ev-title').textContent.split(' · ')[0] + '? Ссылка в письме покупателю перестанет работать.')) return;
+  b.disabled = true; m.textContent = 'Сохраняем…';
+  try {
+    var res = await fetch(ADMIN_REFUNDS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+      body: JSON.stringify({ action: act, proposal_id: card.getAttribute('data-prop'), admin_name: adminName() || undefined }) });
+    if (res.status === 401) { clearToken(); showGate(); return; }
+    var d = await res.json().catch(function () { return null; });
+    if (res.ok && d && d.ok) { m.textContent = act === 'proposal_cancel' ? 'Отменено.' : 'Отправлено на ' + (d.email || 'почту из заказа') + '.'; setTimeout(loadRefunds, 1200); }
+    else { m.textContent = d && d.error === 'mail_failed' ? 'Письмо не ушло — проверьте почту функций.' : d && d.error === 'proposal_not_pending' ? 'Уже подтверждено или отменено — обновите.' : 'Не получилось.'; b.disabled = false; }
+  } catch (err) { m.textContent = 'Нет связи с сервером.'; b.disabled = false; }
+});
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('[data-attn-tab]');
+  if (b && window.AELITA_adminTab) { window.AELITA_adminTab(b.getAttribute('data-attn-tab'), true); window.scrollTo(0, 0); }
+});
+showAdminWho();
 function renderRefunds(refunds) {
   var el = document.getElementById('refundsBlock');
   // pack-v693: сигналы о заявлениях не доходят — сказать сразу, крупно.
@@ -1741,6 +1900,9 @@ function renderRefunds(refunds) {
     ? '<div class="ev-card rf-stuck">⚠️ Сигналы по заявлениям (' + REFUNDS_ALERTS_STUCK.count + ') не доставлены в Telegram и на почту (с ' + fmtRefundDate(REFUNDS_ALERTS_STUCK.oldest) +
       '). Заявления ниже — смотрите их здесь. Проверить: таймер aelita-tickets-sweep-expired-holds (каждые 5 минут) и переменные MAIL_TO, TELEGRAM_* у него и у aelita-tickets-remind.</div>'
     : '';
+  renderAttention();
+  decorateOrderRefunds();
+  stuck += proposalsHtml();
   if (!refunds.length) {
     el.innerHTML = stuck + '<div class="empty-state">Заявлений на возврат пока нет.</div>';
     return;
@@ -1778,7 +1940,10 @@ function renderRefunds(refunds) {
       nextHtml = '<div class="ev-empty rf-next">Дальше: кабинет ЮKassa → Платежи → ' + (r.paymentId ? 'платёж <b>' + escapeHtml(r.paymentId) + '</b>' : 'платёж заказа № ' + escapeHtml(String(r.orderNumber || '—'))) +
         ' → «Вернуть» ' + fmtMoney(r.estimate ? r.estimate.amountRub : null) + '; затем «Отметить выплаченным» — зрителю уйдёт письмо.</div>';
     }
-    var originHtml = r.origin === 'cancel' ? '<div class="ev-when">Отмена показа — возврат без заявления</div>' : '';
+    var originHtml = r.origin === 'cancel' ? '<div class="ev-when">Отмена показа — возврат без заявления</div>'
+      // pack-v696: оформлено командой за покупателя
+      : r.origin === 'staff' ? '<div class="ev-when">Оформлено командой' + (r.staff && r.staff.by && r.staff.by !== 'admin' ? ' (' + escapeHtml(r.staff.by) + ')' : '') + ' по обращению покупателя' +
+        (r.staff && r.staff.mode === 'direct' ? ', без подтверждения по ссылке' : r.staff && r.staff.confirmedAt ? ', подтверждено покупателем ' + fmtRefundDate(r.staff.confirmedAt) : '') + '</div>' : '';
     var apiHtml = '';
     if (r.api && r.api.lastError && r.status === 'approved') {
       apiHtml = '<div class="ev-empty rf-warn">ЮKassa: ' + escapeHtml(r.api.lastError.kind || '') + (r.api.lastError.detail ? ' — ' + escapeHtml(r.api.lastError.detail) : '') + '. Можно нажать «Вернуть через ЮKassa» ещё раз или вернуть в кабинете вручную.</div>';
@@ -1788,7 +1953,7 @@ function renderRefunds(refunds) {
     var decided = r.status === 'rejected'
       ? '<div class="ev-empty">Причина отказа: ' + escapeHtml(r.rejectionReason || '—') + '</div>'
       : (r.status === 'approved' || r.status === 'paid')
-        ? '<div class="ev-empty">Решение принято ' + fmtRefundDate(r.decidedAt) + '</div>'
+        ? '<div class="ev-empty">Решение принято ' + fmtRefundDate(r.decidedAt) + (decidedByName(r) ? ' · ' + escapeHtml(decidedByName(r)) : '') + '</div>'
         : '';
     // pack-v292 — документы, приложенные к заявлению (болезнь, смерть
     // родственника). Кнопка вызывает Admin/refund-document.js —
@@ -1804,7 +1969,7 @@ function renderRefunds(refunds) {
     } else if (r.reason === 'illness' || r.reason === 'death') {
       docsHtml = '<div class="ev-empty">Документ не приложен — ожидается почтой.</div>';
     }
-    return '<div class="ev-card">' +
+    return '<div class="ev-card" data-rf-card="' + escapeHtml(r.refundId || '') + '">' +
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + escapeHtml(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(r.buyerName || '—') + ' · ' + escapeHtml(r.contactEmail || '') + '</div>' +
@@ -1872,14 +2037,26 @@ document.getElementById('refundsBlock').addEventListener('click', async function
   } else if (action === 'reject') {
     // Причина обязательна (см. Admin/events-ticket-refunds.js: «отказ
     // без причины оспаривается почти автоматически», DOCS_TZ 39.7).
-    // Отдельной модалки под одно текстовое поле не заводим — prompt()
-    // здесь пропорционален задаче, тот же принцип экономии, что уже
-    // применяется к остальным простым подтверждениям в этом файле.
-    var reason = prompt('Причина отказа (обязательно, попадёт в письмо покупателю):');
-    if (reason === null) return;
-    reason = reason.trim();
-    if (!reason) { alert(ERRORS.rejection_reason_required); return; }
-    submitRefundAction(refund.refundId, 'reject', reason, btn);
+    // pack-v694: вместо prompt() — форма в карточке: готовые формулировки
+    // (правятся перед отправкой) и видно, что текст уйдёт покупателю.
+    var card = btn.closest('.ev-card');
+    if (!card || card.querySelector('.rf-reject-form')) return;
+    var f = document.createElement('form');
+    f.className = 'rf-reject-form';
+    f.innerHTML = '<select aria-label="Готовая причина"><option value="">Готовая причина…</option>' + REJECT_TEMPLATES.map(function (x, i) { return '<option value="' + i + '">' + escapeHtml(x) + '</option>'; }).join('') + '</select>' +
+      '<textarea class="ym-disable-keys" maxlength="600" placeholder="Причина отказа — попадёт в письмо покупателю" required></textarea>' +
+      '<div class="row"><button type="submit" class="mini-btn mini-btn-danger">Отклонить и отправить письмо</button><button type="button" class="mini-btn" data-rf-cancel>Отмена</button><span class="msg"></span></div>';
+    card.appendChild(f);
+    var ta = f.querySelector('textarea');
+    f.querySelector('select').addEventListener('change', function () { if (this.value !== '') { ta.value = REJECT_TEMPLATES[Number(this.value)]; ta.focus(); } });
+    f.querySelector('[data-rf-cancel]').addEventListener('click', function () { f.remove(); });
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var reason = ta.value.trim();
+      if (!reason) { f.querySelector('.msg').textContent = ERRORS.rejection_reason_required; return; }
+      submitRefundAction(refund.refundId, 'reject', reason, f.querySelector('button[type=submit]'));
+    });
+    ta.focus();
   }
 });
 
@@ -1892,7 +2069,7 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
     var res = await fetch(ADMIN_REFUNDS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-      body: JSON.stringify({ refund_id: refundId, action: action, rejection_reason: rejectionReason }),
+      body: JSON.stringify({ refund_id: refundId, action: action, rejection_reason: rejectionReason, admin_name: adminName() || undefined }),
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
@@ -2130,13 +2307,17 @@ async function loadRefunds() {
     var res = await fetch(ADMIN_REFUNDS_URL, { headers: { Authorization: 'Bearer ' + token } });
     if (res.status === 401) { el.innerHTML = ''; return; }
     var data = await res.json();
-    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; return; }
+    if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; REFUNDS_LOADED = 'error'; renderAttention(); return; }
     allRefunds = data.refunds || [];
+    PROPOSALS = Array.isArray(data.proposals) ? data.proposals : [];
+    STAFF_CONFIRM = data.staff_confirm !== false;
+    REFUNDS_LOADED = true;
     REFUNDS_API_ENABLED = data.api_enabled === true;
     REFUNDS_ALERTS_STUCK = data.alerts_stuck || null;
     renderRefunds(allRefunds);
   } catch (e) {
     el.innerHTML = '<div class="empty-state">Не получилось загрузить заявления. Попробуйте «Обновить».</div>';
+    REFUNDS_LOADED = 'error'; renderAttention();
   }
 }
 
@@ -2146,7 +2327,9 @@ var ORDER_STATUS_LABELS = {
   paid: 'оплачен', pending_payment: 'ожидает оплаты', cancelled: 'отменён', expired: 'истёк',
 };
 
+var ORDERS_SHOWN = []; // pack-v696: заказы на экране — для формы «Возврат за покупателя»
 function renderOrders(orders) {
+  ORDERS_SHOWN = orders;
   var el = document.getElementById('ordersBlock');
   document.getElementById('ord-count').textContent = orders.length;
   if (!orders.length) {
@@ -2161,23 +2344,47 @@ function renderOrders(orders) {
       return '<div class="ev-person"><button type="button" class="tk-open" data-ord-action="view" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-tk="' + escapeHtml(String(t.ticketNumber || '')) + '" title="Открыть билет (PDF)">' +
         '<span class="who">' + escapeHtml(where) + (t.seatKey ? ' · № ' + escapeHtml(String(t.ticketNumber || '')) : '') + '<small>' + fmtMoney(t.price) + mark + '</small></span><span class="tk-open-go">Открыть билет ↗</span></button></div>';
     }).join('');
-    return '<div class="ev-card">' +
+    return '<div class="ev-card" data-ord-card="' + escapeHtml(o.orderId || '') + '">' +
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + (o.isTest ? '[ТЕСТ] ' : '') + '№ ' + escapeHtml(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(o.buyerName || '—') + ' · ' + escapeHtml(o.buyerEmail || '') + ' · ' + escapeHtml(o.buyerContact || '') + '</div>' +
-        '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · ' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</div></div>' +
+        '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · ' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</div>' +
+        // pack-v695: кто и когда исправлял почту заказа
+        (o.emailFixes || []).map(function (x) { return '<div class="ev-when">Почта исправлена ' + fmtDate(x.at) + ': ' + escapeHtml(x.from || '—') + ' → ' + escapeHtml(x.to) + (x.by && x.by !== 'admin' ? ' · ' + escapeHtml(x.by) : '') + '</div>'; }).join('') + '</div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:0.6875rem;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' +
         (o.status === 'paid'
           // pack-v592 (В7): шлём orderId — номер у тестовых и настоящих заказов может совпадать.
-          ? '<button class="mini-btn" data-ord-action="resend" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '" data-ord-test="' + (o.isTest ? '1' : '') + '">Выслать билеты повторно</button>'
+          ? '<button class="mini-btn" data-ord-action="resend" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '" data-ord-test="' + (o.isTest ? '1' : '') + '">Выслать билеты повторно</button>' +
+            // pack-v694: опечатка в почте — исправить и выслать; ссылка на возврат для покупателя.
+            '<button class="mini-btn" data-ord-action="fix_email" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '">Исправить почту</button>' +
+            '<button class="mini-btn" data-ord-action="refund_link" data-ord-id="' + escapeHtml(o.orderId || '') + '">Ссылка на возврат</button>' +
+            // pack-v696: покупатель позвонил или написал — оформить возврат за него
+            ((o.tickets || []).some(function (t) { return !t.refundedAt && !t.redeemedAt; }) ? '<button class="mini-btn" data-ord-action="propose" data-ord-idx="' + idx + '">Возврат за покупателя</button>' : '')
           : '') +
         '<span class="ord-resend-msg" id="ord-resend-' + idx + '" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>' +
       '</div>' +
       '<div class="ev-people" id="ord-tickets-' + idx + '">' + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
     '</div>';
   }).join('');
+  decorateOrderRefunds();
+}
+// pack-v694: у заказа — его заявления на возврат (номер и статус), чтобы не
+// искать их вторым окном. Заказы и заявления грузятся независимо — зовётся
+// после каждого из них.
+function decorateOrderRefunds() {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ord-card]'), function (card) {
+    var old = card.querySelector('.ord-refunds');
+    if (old) old.remove();
+    var mine = allRefunds.filter(function (r) { return r.orderId && r.orderId === card.getAttribute('data-ord-card'); });
+    if (!mine.length) return;
+    var div = document.createElement('div');
+    div.className = 'ord-refunds';
+    div.textContent = 'Заявления: ' + mine.map(function (r) { return r.refundNumber + ' — ' + (REFUND_STATUS_LABELS[r.status] || r.status); }).join('; ');
+    var head = card.querySelector('.ev-head');
+    if (head) head.parentNode.insertBefore(div, head.nextSibling);
+  });
 }
 
 // pack-v644: комиссия ЮKassa для старых заказов (Admin/tickets-backfill.js, action: 'income').
@@ -2272,6 +2479,120 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
       msgEl.textContent = 'Нет связи с сервером.';
       resendBtn.disabled = false;
     }
+    return;
+  }
+
+  var linkBtn = e.target.closest('button[data-ord-action="refund_link"]');
+  if (linkBtn) {
+    var url = 'https://aelita-production.ru/ticket-refund/?order=' + encodeURIComponent(linkBtn.dataset.ordId);
+    var m = linkBtn.parentNode.querySelector('.ord-resend-msg');
+    var ok = false;
+    try { await navigator.clipboard.writeText(url); ok = true; } catch (err) { ok = false; }
+    m.textContent = ok ? 'Ссылка скопирована — отправьте покупателю: код заказа подставится, останется почта и билеты.' : 'Ссылка: ' + url;
+    return;
+  }
+
+  var propBtn = e.target.closest('button[data-ord-action="propose"]');
+  if (propBtn) {
+    var pcard = propBtn.closest('.ev-card');
+    if (pcard.querySelector('.ord-prop-form')) return;
+    var o = ORDERS_SHOWN[Number(propBtn.dataset.ordIdx)];
+    if (!o) return;
+    var free = (o.tickets || []).filter(function (t) { return !t.refundedAt && !t.redeemedAt; });
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var d0 = new Date();
+    var nowLocal = d0.getFullYear() + '-' + pad(d0.getMonth() + 1) + '-' + pad(d0.getDate()) + 'T' + pad(d0.getHours()) + ':' + pad(d0.getMinutes());
+    var pf = document.createElement('form');
+    pf.className = 'ord-fix-form ord-prop-form';
+    pf.innerHTML = '<p class="msg">' + (STAFF_CONFIRM
+        ? 'Покупателю уйдёт письмо: проверить заявление и подтвердить (согласие на обработку данных даёт он сам). Без подтверждения заявление не подаётся; ссылка — 72 часа, через сутки — напоминание.'
+        : 'Обычный возврат будет подан сразу, покупателю — письмо «заявление принято». По болезни и смерти близкого — всё равно с подтверждением по ссылке.') + '</p>' +
+      '<div class="prop-tk">' + free.map(function (t) {
+        var sk = String(t.seatKey || '').split('-');
+        var seat = sk.length === 2 ? ' · ряд ' + escapeHtml(sk[0]) + ', место ' + escapeHtml(sk[1]) : (t.seatKey ? ' · ' + escapeHtml(t.seatKey) : '');
+        return '<label class="cb-item"><input type="checkbox" value="' + escapeHtml(String(t.ticketNumber)) + '" checked> № ' + escapeHtml(String(t.ticketNumber)) + seat + ' · ' + fmtMoney(t.price) + '</label>';
+      }).join('') + '</div>' +
+      '<select aria-label="Причина">' + Object.keys(REFUND_REASON_LABELS).map(function (k) { return '<option value="' + k + '">' + escapeHtml(REFUND_REASON_LABELS[k]) + '</option>'; }).join('') + '</select>' +
+      '<label class="msg">Когда покупатель обратился (от этого дня — процент и срок 10 дней)<br><input class="ym-disable-keys" type="datetime-local" value="' + nowLocal + '" max="' + nowLocal + '"></label>' +
+      '<div class="row"><button type="submit" class="mini-btn">Оформить и отправить покупателю</button><button type="button" class="mini-btn" data-cancel>Отмена</button><span class="msg prop-msg"></span></div>';
+    propBtn.parentNode.parentNode.insertBefore(pf, propBtn.parentNode.nextSibling);
+    pf.querySelector('[data-cancel]').addEventListener('click', function () { pf.remove(); });
+    pf.addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      var pm = pf.querySelector('.prop-msg');
+      var nums = Array.prototype.map.call(pf.querySelectorAll('.prop-tk input:checked'), function (x) { return x.value; });
+      if (!nums.length) { pm.textContent = 'Отметьте хотя бы один билет.'; return; }
+      var when = pf.querySelector('input[type=datetime-local]').value;
+      var sb = pf.querySelector('button[type=submit]');
+      sb.disabled = true; pm.textContent = 'Оформляем…';
+      try {
+        var res = await fetch(ADMIN_REFUNDS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+          body: JSON.stringify({ action: 'propose', order_id: o.orderId, ticket_numbers: nums, reason: pf.querySelector('select').value,
+            contacted_at: when ? new Date(when).toISOString() : undefined, admin_name: adminName() || undefined }) });
+        if (res.status === 401) { clearToken(); showGate(); return; }
+        var d = await res.json().catch(function () { return null; });
+        if (res.ok && d && d.ok) {
+          pm.textContent = d.mode === 'direct'
+            ? 'Заявление ' + d.refund_number + ' подано, покупателю ушло письмо (' + (d.email || '') + ').'
+            : 'Готово: ' + d.number + '. Письмо со ссылкой — на ' + (d.email || 'почту из заказа') + (d.mail_sent === false ? ' НЕ ушло — «Возвраты» → «Отправить ещё раз»' : '') + '; ждём подтверждения до ' + fmtRefundDate(d.expires_at) + '.';
+          setTimeout(loadRefunds, 800);
+        } else {
+          var c = d && d.error;
+          pm.textContent = c === 'proposal_pending' ? 'По этим билетам уже ждёт подтверждения ' + d.number + ' — «Возвраты».' :
+            c === 'tickets_not_selectable' || c === 'already_requested' ? 'Часть билетов уже с заявлением или не подлежит возврату — см. «Возвраты».' :
+            c === 'order_not_paid' ? 'Заказ не оплачен.' : c === 'no_buyer_email' ? 'В заказе нет почты — сначала «Исправить почту».' :
+            c === 'reason_not_allowed_after_start' ? 'Показ уже начался — только болезнь или смерть близкого.' :
+            c === 'contacted_too_old' ? 'Обращение старше 7 дней — оформлять так нельзя, пусть подаст сам(а).' :
+            c === 'bad_contacted_at' ? 'Проверьте дату обращения (не в будущем и не раньше оплаты).' :
+            res.status === 404 && !c ? 'Функция возвратов ещё не обновлена.' : 'Не получилось.';
+          sb.disabled = false;
+        }
+      } catch (err) { pm.textContent = 'Нет связи с сервером.'; sb.disabled = false; }
+    });
+    return;
+  }
+
+  var fixBtn = e.target.closest('button[data-ord-action="fix_email"]');
+  if (fixBtn) {
+    var card = fixBtn.closest('.ev-card');
+    if (card.querySelector('.ord-fix-form')) return;
+    var f = document.createElement('form');
+    f.className = 'ord-fix-form';
+    f.innerHTML = '<input class="ym-disable-keys" type="email" required maxlength="120" placeholder="Правильная почта покупателя">' +
+      '<div class="row"><button type="submit" class="mini-btn">Исправить и выслать билеты</button><button type="button" class="mini-btn" data-cancel>Отмена</button><span class="msg">Старый адрес останется в истории заказа, на него уйдёт короткое уведомление (без билетов); заказ появится в кабинете нового адреса.</span></div>';
+    fixBtn.parentNode.parentNode.insertBefore(f, fixBtn.parentNode.nextSibling);
+    var inp = f.querySelector('input');
+    inp.focus();
+    f.querySelector('[data-cancel]').addEventListener('click', function () { f.remove(); });
+    f.addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      var to = inp.value.trim();
+      var msg = f.querySelector('.msg');
+      if (!to) return;
+      if (!confirm('Исправить почту заказа № ' + fixBtn.dataset.ordNum + ' на ' + to + ' и выслать туда билеты?')) return;
+      var sb = f.querySelector('button[type=submit]');
+      sb.disabled = true; msg.textContent = 'Исправляем…';
+      try {
+        var res = await fetch(ADMIN_RESEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+          body: JSON.stringify({ order_id: fixBtn.dataset.ordId, mode: 'fix_email', new_email: to, admin_name: adminName() || undefined }),
+        });
+        if (res.status === 401) { clearToken(); showGate(); return; }
+        var d = await res.json().catch(function () { return null; });
+        if (res.ok && d && d.ok) {
+          msg.textContent = 'Готово: почта исправлена, билеты отправлены на ' + (d.email || to) + '.';
+          setTimeout(loadOrders, 1500);
+        } else {
+          var c = d && d.error;
+          msg.textContent = c === 'bad_email' ? 'Похоже, в адресе ошибка.' : c === 'same_email' ? 'Это тот же адрес, что в заказе.' :
+            c === 'mail_failed' ? 'Почта исправлена, но письмо не ушло — нажмите «Выслать билеты повторно».' :
+            c === 'nothing_to_send' ? 'Почта исправлена; все билеты возвращены — отправлять нечего.' :
+            res.status === 404 && !c ? 'Функция tickets-resend ещё не обновлена.' : 'Не получилось.';
+          sb.disabled = false;
+        }
+      } catch (err) { msg.textContent = 'Нет связи с сервером.'; sb.disabled = false; }
+    });
     return;
   }
 
@@ -3938,6 +4259,32 @@ function hideError() {
   document.getElementById('errorState').style.display = 'none';
 }
 
+// pack-v695: раздел — какие загрузчики ему нужны. Загружается один раз
+// после входа или «Обновить»; поиск по админке догружает все разделы.
+var ADM_TAB_LOADERS = {
+  overview: [function () { loadSales(); }], // pack-v571
+  orders: [function () { loadOrders(); }],
+  shows: [function () { loadPerfActions(); }], // pack-v568
+  invites: [function () { loadInviteEvents(); }], // pack-v587
+  staff: [function () { loadStaffShows(); }], // pack-v621
+  events: [function () { loadEvents(); }],
+  money: [function () { loadGiftCards(); }, function () { loadSubscriptions(); }],
+};
+var ADM_LOADED = {};
+function admCurrentTab() {
+  var b = document.querySelector('[data-adm-tab-btn].on');
+  return b ? b.getAttribute('data-adm-tab-btn') : 'overview';
+}
+function admEnsureTab(tab) {
+  var c = document.getElementById('content');
+  if (!getToken() || !c || c.style.display === 'none' || ADM_LOADED[tab] || !ADM_TAB_LOADERS[tab]) return;
+  ADM_LOADED[tab] = true;
+  ADM_TAB_LOADERS[tab].forEach(function (f) { try { f(); } catch (e) { console.error(e); } });
+}
+function admEnsureAll() { Object.keys(ADM_TAB_LOADERS).forEach(admEnsureTab); }
+window.AELITA_adminEnsureTab = admEnsureTab;
+window.AELITA_adminEnsureAll = admEnsureAll;
+
 async function loadData(opts) {
   opts = opts || {};
   var isRefresh = !!opts.refresh;
@@ -3968,16 +4315,14 @@ async function loadData(opts) {
     // Регистрации грузим отдельно и не ждём их — список клиентов уже
     // можно показывать, а раздел встреч дорисуется, когда придёт ответ
     // (см. loadEvents: свои ошибки показывает у себя, не роняя эту).
-    loadEvents();
+    // pack-v695: сразу — только то, из чего собираются «Требует внимания» и
+    // счётчик «Входящих» (заявления, отзывы, заявки); остальные разделы —
+    // когда их открывают (admEnsureTab). Раньше при входе уходило 12
+    // запросов разом, включая тяжёлые списки заказов и продаж.
+    ADM_LOADED = {};
     loadRefunds();
-    loadPerfActions(); // pack-v568
-    loadInviteEvents(); // pack-v587
-    loadStaffShows(); // pack-v621
     loadReviewsAdmin(); loadAppsAdmin(); loadLeadsAdmin(); // pack-v600, v601
-    loadSales(); // pack-v571
-    loadOrders();
-    loadGiftCards();
-    loadSubscriptions();
+    admEnsureTab(admCurrentTab());
   } catch (e) {
     showError('Не получилось связаться с сервером. Попробуйте ещё раз.');
   } finally {
@@ -4018,6 +4363,7 @@ async function doLogin() {
     var data = await res.json();
     if (res.ok && data.token) {
       setToken(data.token);
+      setAdminName(document.getElementById('admin-name').value);
       showData();
       return;
     }
@@ -4165,7 +4511,9 @@ if (getToken()) { showData(); } else { showGate(); }
 (function () {
   var GROUPS = [
     ['overview', 'Обзор', []],
-    ['orders', 'Заказы', ['Заказы билетов', 'Незавершённые заказы', 'Заявления на возврат']],
+    ['orders', 'Заказы', ['Заказы билетов', 'Незавершённые заказы']],
+    // pack-v694: возвраты — своим разделом со счётчиком «ждут решения или выплаты».
+    ['refunds', 'Возвраты', ['Заявления на возврат']],
     ['shows', 'Показы', ['Показы:', 'Баннер о сбое']],
     ['invites', 'Пригласительные', ['Пригласительные']],
     ['staff', 'Контролёры', ['Контролёры на входе']],
@@ -4198,7 +4546,7 @@ if (getToken()) { showData(); } else { showGate(); }
     var nav = document.createElement('nav');
     nav.className = 'adm-nav'; nav.id = 'admNav'; nav.setAttribute('aria-label', 'Разделы админки');
     nav.innerHTML = GROUPS.map(function (g) {
-      return '<button type="button" data-adm-tab-btn="' + g[0] + '">' + g[1] + (g[0] === 'inbox' ? '<span class="badge" id="admInboxBadge" hidden></span>' : '') + '</button>';
+      return '<button type="button" data-adm-tab-btn="' + g[0] + '">' + g[1] + (g[0] === 'inbox' ? '<span class="badge" id="admInboxBadge" hidden></span>' : g[0] === 'refunds' ? '<span class="badge" id="admRefundsBadge" hidden></span>' : '') + '</button>';
     }).join('');
     // pack-v611: стрелки прокрутки, как у фильтра городов на сайте
     var box = document.createElement('div');
@@ -4220,6 +4568,7 @@ if (getToken()) { showData(); } else { showGate(); }
     nav.addEventListener('scroll', upd, { passive: true });
     window.addEventListener('resize', upd);
     c.insertBefore(box, c.firstChild);
+    search(box, c);
     setTimeout(upd, 0);
     new MutationObserver(upd).observe(c, { attributes: true, attributeFilter: ['style'] });
     nav.addEventListener('click', function (e) {
@@ -4287,6 +4636,77 @@ if (getToken()) { showData(); } else { showGate(); }
     }, 0);
     var b = document.getElementById('admInboxBadge');
     if (b) { b.textContent = n; b.hidden = !n; }
+    if (typeof renderAttention === 'function') renderAttention();
+  }
+  // pack-v694: один поиск по всей админке — по уже загруженным карточкам
+  // (клиенты, заказы, заявления, регистрации, отзывы, заявки, карты).
+  // Щелчок — переход в раздел и подсветка карточки.
+  function search(box, c) {
+    var wrap = document.createElement('div');
+    wrap.className = 'adm-search';
+    wrap.innerHTML = '<input type="search" class="search ym-disable-keys" id="admSearch" autocomplete="off" aria-label="Поиск по админке" placeholder="Поиск по всей админке: имя, почта, № заказа или заявления…"><div class="adm-search-res" hidden></div>';
+    box.appendChild(wrap);
+    var inp = wrap.querySelector('input'), res = wrap.querySelector('.adm-search-res'), hits = [];
+    var label = {};
+    GROUPS.forEach(function (g) { label[g[0]] = g[1]; });
+    function esc(x) { return String(x).replace(/[&<>"']/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]; }); }
+    function run() {
+      var q = inp.value.trim().toLowerCase();
+      hits = [];
+      if (q.length < 2) { res.hidden = true; res.innerHTML = ''; return; }
+      Array.prototype.forEach.call(c.querySelectorAll('.ev-card, .cust-item'), function (el) {
+        if (hits.length >= 40) return;
+        var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        var i = txt.toLowerCase().indexOf(q);
+        if (i < 0) return;
+        var top = el;
+        while (top.parentNode && top.parentNode !== c) top = top.parentNode;
+        var tab = top.getAttribute && top.getAttribute('data-adm-tab');
+        if (!tab || tab === '*') return;
+        var head = el.querySelector('.ev-title, .cust-name, .cust-email');
+        hits.push({ el: el, tab: tab, head: (head ? head.textContent : txt).replace(/\s+/g, ' ').trim().slice(0, 90), ctx: (i > 30 ? '…' : '') + txt.slice(Math.max(0, i - 30), i + q.length + 50) + '…' });
+      });
+      res.hidden = false;
+      res.innerHTML = hits.length
+        ? hits.map(function (h, k) { return '<button type="button" data-hit="' + k + '">' + esc(label[h.tab] || h.tab) + ' · ' + esc(h.head) + '<small>' + esc(h.ctx) + '</small></button>'; }).join('')
+        : '<div class="none">Ничего не нашлось в загруженных разделах.</div>';
+    }
+    var timer;
+    inp.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(run, 150); });
+    inp.addEventListener('focus', function () {
+      // pack-v695: разделы грузятся по открытию — для поиска догружаем все
+      if (window.AELITA_adminEnsureAll) window.AELITA_adminEnsureAll();
+      if (inp.value.trim().length >= 2) run();
+    });
+    // карточки дорисовались (догрузился раздел) — обновить открытый список результатов
+    var rerun;
+    new MutationObserver(function (list) {
+      if (res.hidden || inp.value.trim().length < 2) return;
+      if (list.every(function (m) { return wrap.contains(m.target); })) return; // свои же результаты — не повод
+
+      clearTimeout(rerun); rerun = setTimeout(run, 300);
+    }).observe(c, { childList: true, subtree: true });
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { res.hidden = true; inp.blur(); }
+      if (e.key === 'Enter' && hits[0]) { e.preventDefault(); go(hits[0]); }
+    });
+    res.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-hit]');
+      if (b) go(hits[Number(b.getAttribute('data-hit'))]);
+    });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) res.hidden = true; });
+    function go(h) {
+      if (!h) return;
+      // список успел перерисоваться (Обновить, правка заказа) — ищем ту же карточку заново
+      if (!c.contains(h.el)) { var head = h.head; run(); h = hits.filter(function (x) { return x.head === head; })[0] || hits[0]; if (!h) return; }
+      res.hidden = true;
+      show(h.tab, true);
+      var det = h.el.closest('details');
+      if (det) det.open = true;
+      h.el.scrollIntoView({ block: 'center' });
+      h.el.classList.add('adm-hit');
+      setTimeout(function () { h.el.classList.remove('adm-hit'); }, 2500);
+    }
   }
   function show(tab, user) {
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
@@ -4299,6 +4719,7 @@ if (getToken()) { showData(); } else { showGate(); }
       b.classList.toggle('on', b.getAttribute('data-adm-tab-btn') === tab);
     });
     try { localStorage.setItem('aelita_admin_tab', tab); } catch (e) {}
+    if (window.AELITA_adminEnsureTab) window.AELITA_adminEnsureTab(tab); // pack-v695: раздел грузится при открытии
     if (user) {
       try { history.replaceState(null, '', '#' + tab); } catch (e) {}
       var nb = document.querySelector('.adm-navbox');

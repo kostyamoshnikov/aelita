@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="AELITA PRODUCTION ticket refund: find your order, choose tickets, see a provisional refund amount.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=114">
-<link rel="stylesheet" href="/assets/style.css?v=114">
+<link rel="stylesheet" href="/assets/fonts.css?v=118">
+<link rel="stylesheet" href="/assets/style.css?v=118">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -79,6 +79,8 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
 .reqs-h{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
 .req{padding:12px 0;border-top:1px solid rgba(232,230,225,.08);font-size:0.875rem}
 .reqs-h+.req{border-top:none}
+.req-wait{border-top:none;border-left:2px solid var(--gold);padding-left:12px;margin-bottom:6px} /* pack-v697 */
+.req-wait a{color:var(--gold)}
 .req-st{margin-top:4px}
 .req.st-ok .req-st{color:#8FBF8F}
 .req.st-no .req-st{color:#E0B87B}
@@ -187,6 +189,29 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
     </div>
   </section>
 
+  <!-- pack-v696: возврат, оформленный командой по просьбе покупателя, —
+       ссылка из письма ?confirm=<id>.<токен>: данные уже заполнены,
+       покупатель проверяет, отмечает согласие и подтверждает. -->
+  <section id="step-confirm" hidden>
+    <h1>Confirm your refund application</h1>
+    <p class="lead" id="cf-lead">Loading…</p>
+    <div id="cf-body"></div>
+    <div id="cf-form" hidden>
+      <div id="cf-doc" class="mt-s" hidden>
+        <label for="cf-doc-file">Supporting document (optional now — you can send it later by email)</label>
+        <input type="file" id="cf-doc-file" accept="application/pdf,image/jpeg,image/png" onchange="onCfDocChosen()">
+        <div class="hint">Photo or scan, PDF/JPG/PNG, up to 1.5 MB — large photos are compressed automatically.</div>
+        <label class="chk"><input type="checkbox" id="cf-consent-special"> <span>I consent to the processing of health information or information about a relative’s death contained in the attached document — only to review this application.</span></label>
+        <div class="msg" id="cf-doc-msg"></div>
+      </div>
+      <label class="chk mt"><input type="checkbox" id="cf-consent-pd"> <span>I consent to the processing of my personal data from the order to review the application and refund the money (<a href="/en/privacy">Privacy Policy</a>).</span></label>
+      <div class="mt">
+        <button id="btn-confirm" onclick="confirmProposal()">Confirm the application</button>
+      </div>
+      <div class="msg" id="cf-msg"></div>
+    </div>
+  </section>
+
   <!-- Шаг 3: подтверждение -->
   <section id="step-done" hidden>
     <h1>Application received</h1>
@@ -214,6 +239,7 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
 <script>
 const API = 'https://api.aelita-production.ru/tickets/refund';
 let ORDER = null, REASONS = [], TIERS = [], REQUESTS = [], CLOCK_SKEW = 0;
+let PENDING_PROPOSAL = null; // pack-v697: команда оформила возврат и ждёт подтверждения
 let DOC_FILE = null; // {filename, mime_type, base64} — установит onDocFileChosen()
 
 const $ = (id) => document.getElementById(id);
@@ -300,6 +326,7 @@ async function lookup(){
   if(status !== 200 || !body){ msg('lookup-msg', L('Не удалось получить данные заказа. Попробуйте позже или напишите нам: ' + MAIL, 'Could not load the order. Try again later or write to us: ' + MAIL),'err'); return; }
 
   ORDER = body.order; REASONS = body.reasons || []; TIERS = body.tiers || []; REQUESTS = body.requests || [];
+  PENDING_PROPOSAL = body.pending_proposal || null; // pack-v697
   if (body.server_now) { const s = Date.parse(body.server_now); if (!isNaN(s)) CLOCK_SKEW = s - Date.now(); }
   msg('lookup-msg','');
   renderOrder();
@@ -386,6 +413,17 @@ function renderOrder(){
   if (REQUESTS.length) {
     $('requests').hidden = false;
     $('requests').innerHTML = '<div class="reqs-h">' + L('Заявления по этому заказу', 'Applications for this order') + '</div>' + REQUESTS.map(requestLine).join('');
+  }
+  // pack-v697: по просьбе покупателя команда уже оформила заявление — его осталось
+  // подтвердить по ссылке из письма (или в личном кабинете), а не подавать заново.
+  if (PENDING_PROPOSAL) {
+    const pp = PENDING_PROPOSAL;
+    $('requests').hidden = false;
+    $('requests').insertAdjacentHTML('afterbegin', '<div class="req req-wait"><b>' + L('Ждёт вашего подтверждения', 'Waiting for your confirmation') + '</b> · ' +
+      L('по вашей просьбе команда оформила заявление на возврат (билеты ', 'at your request our team has prepared a refund application (tickets ') +
+      pp.tickets.map((n) => '№ ' + esc(n)).join(', ') + L('). Подтвердите его по ссылке из письма «Подтвердите заявление на возврат» или в ', '). Confirm it via the link in our email “Please confirm your refund application” or in your ') +
+      '<a href="' + (EN ? '/en' : '') + '/account">' + L('личном кабинете', 'account') + '</a>' + L(' — до ', ' — by ') + esc(fmtDate(pp.expires_at)) + '. ' +
+      L('Письма нет — проверьте «Спам» или напишите нам: ', 'No email? Check Spam or write to us: ') + MAIL + '.</div>');
   }
 
   $('tickets').innerHTML = ORDER.tickets.map((t, i) => {
@@ -579,7 +617,14 @@ async function sendRequest(){
     msg('send-msg', L('Не удалось отправить заявление. Попробуйте ещё раз или напишите нам на ' + MAIL + '.', 'Could not submit the application. Try again or write to us at ' + MAIL + '.'),'err');
     $('btn-send').disabled = false; return;
   }
+  showDone(body);
+}
+
+// pack-v696: экран «Заявление принято» — общий для формы и подтверждения по ссылке.
+function showDone(body){
   $('step-order').hidden = true;
+  $('step-confirm').hidden = true;
+  $('step-lookup').hidden = true;
   $('step-done').hidden = false;
   $('done-num').textContent = body.refund_number;
   const est = body.estimate || {};
@@ -609,6 +654,92 @@ async function sendRequest(){
   $('done-body').innerHTML = html;
   try { window.scrollTo(0, 0); } catch (e) {}
 }
+
+// ── pack-v696: подтверждение возврата, оформленного командой ──────────
+const CONFIRM_REF = LINK_PARAMS.get('confirm') || '';
+let CF = null, CF_DOC = null;
+function cfStop(text, withForm, orderId){
+  $('cf-lead').innerHTML = text;
+  $('cf-form').hidden = true;
+  // pack-v697: код заказа подставим сам — останется почта
+  const href = location.pathname + (orderId ? '?order=' + encodeURIComponent(orderId) : '');
+  $('cf-body').innerHTML = withForm ? '<p class="mt"><a class="btn-outline" href="' + esc(href) + '">' + L('Найти заказ по коду и почте', 'Find the order by code and email') + '</a></p>' : '';
+}
+async function loadProposal(){
+  $('step-lookup').hidden = true;
+  $('step-confirm').hidden = false;
+  const { status, body } = await api({ action: 'proposal_get', proposal: CONFIRM_REF });
+  if (status === 0) return cfStop(esc(NET_FAIL_MSG));
+  if (status === 429) return cfStop(esc(tooMany(body)));
+  if (status === 410 && body && body.error === 'proposal_superseded') {
+    // pack-v697: по этим билетам заявление уже подано (например, вы подали его сами)
+    return cfStop(L('По этим билетам заявление уже подано — подтверждать ничего не нужно. Статус — на странице возврата по коду заказа и почте.',
+      'An application has already been submitted for these tickets — nothing to confirm. You can check its status on the refund page with the order code and email.'), true, body.order_id);
+  }
+  if (status === 410) {
+    return cfStop(body && body.error === 'proposal_canceled'
+      ? L('Это заявление отменено командой. Если возврат всё ещё нужен — напишите нам: ' + MAIL + '.', 'This application has been cancelled by our team. If you still need a refund, write to us: ' + MAIL + '.')
+      : L('Срок ссылки истёк — заявление не подано. Напишите нам на ' + MAIL + ' или позвоните — пришлём новую ссылку, или подайте заявление сами.', 'The link has expired — the application was not submitted. Write to us at ' + MAIL + ' or call us and we will send a new link, or submit the application yourself.'), true, body && body.order_id);
+  }
+  if (status !== 200 || !body) {
+    return cfStop(L('Ссылка не действует — возможно, мы прислали новую: откройте последнее письмо от нас. Если не получается — напишите на ' + MAIL + '.', 'This link does not work — we may have sent a new one: open our latest email. If that does not help, write to ' + MAIL + '.'), true);
+  }
+  if (body.status === 'confirmed') {
+    return cfStop(L('Заявление уже подтверждено и принято: <b>' + esc(body.refund_number) + '</b>. Статус — на странице возврата по коду заказа и почте.', 'The application has already been confirmed and received: <b>' + esc(body.refund_number) + '</b>. Check its status on the refund page with the order code and email.'), true, body.order_id);
+  }
+  CF = body;
+  const reason = EN ? body.reason.title_en : body.reason.title;
+  const est = body.estimate || {};
+  $('cf-lead').textContent = L('По вашей просьбе мы оформили заявление на возврат. Проверьте данные и подтвердите — без вашего подтверждения оно не будет подано.',
+    'At your request we have prepared a refund application. Check the details and confirm — it will not be submitted without your confirmation.');
+  let html = '<div class="done">';
+  html += '<p>' + L('Заказ № ', 'Order No. ') + '<b>' + esc(body.order_number) + '</b>' + (body.production_title ? ' · ' + esc(body.production_title) : '') +
+    (body.performance_datetime ? ' · ' + esc(fmtDate(body.performance_datetime)) : '') + '</p>';
+  html += '<p>' + L('Билеты: ', 'Tickets: ') + body.tickets.map((t) => '№ ' + esc(t.ticket_number) + (t.seat_key ? ' (' + esc(String(t.seat_key).replace('-', L(' ряд, место ', ' row, seat '))) + ')' : '')).join(', ') + '</p>';
+  html += '<p>' + L('Причина: ', 'Reason: ') + '<b>' + esc(reason) + '</b></p>';
+  html += '<p>' + L('Дата обращения: ', 'Date of your request: ') + '<b>' + esc(fmtDate(body.requested_at)) + '</b>' +
+    L(' — от неё считается размер возврата и срок ответа.', ' — the refund amount and the reply deadline are calculated from it.') + '</p>';
+  const cfGift = (est.perTicket || []).reduce((a, x) => a + (Number(x.refund_gift) || 0), 0); // pack-v697: часть, оплаченная картой, — на карту
+  if (est.amountRub != null) html += '<p>' + L('Предварительно к возврату: ', 'Provisional refund: ') + '<b>' + rub(est.amountRub) + '</b>' +
+    (cfGift ? L(' и ' + rub(cfGift) + ' на подарочную карту', ' and ' + rub(cfGift) + ' to the gift card') : '') + '</p>';
+  html += '<p class="small">' + L('Ссылка действует до ', 'The link is valid until ') + esc(fmtDate(body.expires_at)) + '.</p></div>';
+  $('cf-body').innerHTML = html;
+  $('cf-doc').hidden = !body.reason.requires_documents;
+  $('cf-form').hidden = false;
+}
+async function onCfDocChosen(){
+  const input = $('cf-doc-file');
+  const file = input.files && input.files[0];
+  CF_DOC = null;
+  if (!file) { msg('cf-doc-msg', ''); return; }
+  msg('cf-doc-msg', L('Готовим файл…', 'Preparing the file…'));
+  const r = await prepareDoc(file);
+  if (r.error) { msg('cf-doc-msg', r.error, 'err'); input.value = ''; return; }
+  CF_DOC = r.doc;
+  msg('cf-doc-msg', r.note);
+}
+async function confirmProposal(){
+  if (!$('cf-consent-pd').checked) { msg('cf-msg', L('Отметьте согласие на обработку персональных данных — без него заявление не рассмотреть.', 'Please tick the consent to personal data processing — we cannot review the application without it.'), 'err'); return; }
+  const docNeeded = !$('cf-doc').hidden;
+  if (docNeeded && CF_DOC && !$('cf-consent-special').checked) {
+    msg('cf-msg', L('Отметьте согласие на обработку сведений из документа — или уберите файл и пришлите документ почтой.', 'Please tick the consent for the document — or remove the file and send the document by email.'), 'err'); return;
+  }
+  $('btn-confirm').disabled = true; msg('cf-msg', L('Отправляем…', 'Sending…'));
+  const { status, body } = await api({
+    action: 'proposal_confirm', proposal: CONFIRM_REF, consent_pd: true,
+    consent_special: docNeeded && $('cf-consent-special').checked,
+    document: (docNeeded && CF_DOC) || undefined,
+  });
+  if (status === 200 && body && body.status === 'confirmed') { loadProposal(); return; }
+  if (status === 200 && body) { showDone(body); return; }
+  $('btn-confirm').disabled = false;
+  if (status === 0) return msg('cf-msg', NET_FAIL_MSG, 'err');
+  if (status === 429) return msg('cf-msg', tooMany(body), 'err');
+  if (status === 410) return loadProposal();
+  if (status === 409) return msg('cf-msg', L('По этим билетам заявление уже подано или они больше недоступны для возврата. Напишите нам: ' + MAIL + '.', 'An application has already been submitted for these tickets, or they can no longer be refunded. Write to us: ' + MAIL + '.'), 'err');
+  msg('cf-msg', L('Не удалось подтвердить заявление. Попробуйте ещё раз или напишите нам на ' + MAIL + '.', 'Could not confirm the application. Try again or write to us at ' + MAIL + '.'), 'err');
+}
+if (CONFIRM_REF) loadProposal(); // разметка уже выше — без мигания формы поиска
 </script>
 
 <footer>
@@ -734,7 +865,7 @@ async function sendRequest(){
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=114"></script>
+<script src="/assets/main.js?v=118"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

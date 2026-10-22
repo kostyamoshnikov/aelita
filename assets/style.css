@@ -1617,3 +1617,26 @@ html.a11y.a11y-c2 #a11y-bar .a11y-c2{border-color:#fff!important}
 }
 @media(max-width:380px){#a11y-bar{gap:8px 10px;padding:8px 8px}#a11y-bar button{min-width:38px;padding:4px 7px}}
 footer .requisites a.a11y-foot-link{color:var(--gold)}
+
+/* pack-v694: фестиваль «по часам» (assets/festival.js) — прошедшее, «идёт сейчас», отзывы */
+.fest-gone{display:none!important}
+.fest-past:not(.time-item){opacity:.55}
+.time-item.fest-past .time,.time-item.fest-past .event,.time-item.fest-past .event small{color:var(--grey)}
+.time-item.fest-past .event a:not(.fest-review-link){color:var(--sand)}
+.time-item.fest-live{box-shadow:inset 2px 0 0 var(--gold)}
+.fest-now{display:inline-block;margin:0 10px 4px 0;padding:2px 8px;border:1px solid var(--gold);color:var(--gold);font-size:0.6875rem;letter-spacing:.12em;text-transform:uppercase}
+.fest-review-link{display:inline-block;margin-top:8px;color:var(--gold)!important;font-size:0.8125rem;text-decoration:none;border-bottom:1px solid rgba(214,181,122,.4)}
+.day-tab.fest-day-past{opacity:.6}
+.day-tab .fest-tag{display:block;margin-top:4px;font-size:0.625rem;letter-spacing:.14em;color:var(--grey)}
+.fest-prompt{position:relative;max-width:var(--maxw,1100px);margin:28px auto;padding:22px 56px 22px 24px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);box-sizing:border-box}
+.fest-prompt p{margin:0 0 14px;color:var(--bone);font-size:0.9375rem;line-height:1.6}
+.fest-prompt-x{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--sand);font-size:1.5rem;line-height:1;cursor:pointer;padding:6px}
+@media(max-width:760px){.fest-prompt{margin:20px 16px}}
+.fest-over{margin:0 0 28px;padding:22px 24px;border:1px solid var(--gold);background:rgba(214,181,122,.06)}
+.fest-over-t{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.fest-over p{margin:0 0 14px;color:var(--bone)}
+.fest-reviews{padding:60px 0}
+.fest-reviews-h{font-family:'Montserrat',sans-serif;font-weight:200;font-size:1.75rem;letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px}
+.fest-reviews-lead{color:var(--sand);max-width:60ch;margin:0 0 28px}
+.fest-closed-note{border-left:2px solid var(--gold);padding:12px 16px;color:var(--bone);background:rgba(214,181,122,.06)}
+.fest-closed [id^="timepad_twf_register"],.fest-closed a[href*="timepad.ru"]{display:none!important}

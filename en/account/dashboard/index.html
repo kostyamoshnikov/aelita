@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My purchases — AELITA PRODUCTION</title>
+<title>Account — AELITA PRODUCTION</title>
 <meta name="description" content="Purchase history in your AELITA PRODUCTION account.">
 <link rel="canonical" href="https://aelita-production.ru/en/account/dashboard/">
 <link rel="alternate" hreflang="ru" href="https://aelita-production.ru/account/dashboard/">
@@ -22,17 +22,17 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aelita-production.ru/en/account/dashboard/">
 <meta property="og:site_name" content="AELITA PRODUCTION">
-<meta property="og:title" content="My purchases — AELITA PRODUCTION">
+<meta property="og:title" content="Account — AELITA PRODUCTION">
 <meta property="og:description" content="Purchase history in your AELITA PRODUCTION account.">
 <meta property="og:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="My purchases — AELITA PRODUCTION">
+<meta name="twitter:title" content="Account — AELITA PRODUCTION">
 <meta name="twitter:description" content="Purchase history in your AELITA PRODUCTION account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=114">
-<link rel="stylesheet" href="/assets/style.css?v=114">
+<link rel="stylesheet" href="/assets/fonts.css?v=118">
+<link rel="stylesheet" href="/assets/style.css?v=118">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
@@ -116,6 +116,51 @@ body{max-width:100vw}
 @media(max-width:600px){.purchase-item{grid-template-columns:1fr;gap:10px}.purchase-item .amount{justify-self:start}.purchase-item .contract-btn{justify-self:start}}
   .code-send-btn{margin:-4px 0 6px;padding:10px 16px;font-size:.6875rem}
   .mp-box{margin-top:22px;padding-top:18px;border-top:1px solid rgba(214,181,122,.15)}
+/* pack-v694: разделы, «Ближайшее», билеты карточкой, прошедшее свёрнуто, форма передачи, подарочные карты */
+.acc-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:-12px 0 32px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.14em;text-transform:uppercase}
+.acc-nav a{color:var(--sand);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+@media(hover:hover){.acc-nav a:hover{color:var(--gold);border-color:var(--gold)}}
+.acc-nav a[hidden]{display:none}
+.acc-section[id],#settings{scroll-margin-top:96px}
+.acc-next{background:var(--coal);border:1px solid rgba(214,181,122,.35);padding:24px 26px;margin-bottom:8px}
+.acc-next h3{font-family:'Montserrat',sans-serif;font-weight:400;text-transform:none;font-size:1.125rem;letter-spacing:.02em;color:var(--bone);margin:6px 0 6px}
+.acc-next-k{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0}
+.acc-next-when{color:var(--bone);font-size:0.9375rem;margin:0 0 6px}
+.acc-next .reg-actions{flex-direction:row;flex-wrap:wrap;align-items:center;margin-top:16px;gap:10px}
+.acc-next .btn-gold{padding:12px 22px}
+.acc-next .tk-links{margin-top:14px}
+.reg-item.tk-order{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+.tk-order .reg-head{display:flex;flex-direction:column;gap:2px}
+.reg-meta{color:var(--sand);font-size:0.8125rem;line-height:1.55}
+.tk-order .reg-actions{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;margin-top:6px}
+.tk-order .tk-main{color:var(--gold);border-color:rgba(214,181,122,.5)}
+.tk-links{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:0.8125rem}
+.tk-link{color:var(--gold);background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(214,181,122,.45)}
+@media(hover:hover){.tk-link:hover{text-decoration-color:var(--gold)}}
+.tk-link:disabled{opacity:.5;cursor:default}
+.tk-refund{color:var(--bone);border-left:2px solid var(--gold);padding-left:10px}
+.tk-refund-rejected{border-left-color:#C98B6B}
+.tk-refund-late{border-left-color:#C98B6B;color:#E0B79F}
+.tk-refund a{color:var(--gold)}
+.tk-past .name{color:var(--sand)}
+.acc-past{margin-top:14px}
+.acc-past>summary{cursor:pointer;color:var(--gold);font-size:0.8125rem;padding:10px 0}
+.acc-past[open]>summary{margin-bottom:6px}
+.reg-item.tk-past{grid-template-columns:1fr}
+.tk-transfer-form{display:flex;flex-direction:column;gap:10px;max-width:380px;margin-top:10px}
+.tk-transfer-form input{background:var(--coal);border:1px solid rgba(201,184,163,.25);color:var(--bone);padding:12px 14px;font-family:'Inter',sans-serif;font-size:0.875rem}
+.tk-transfer-form input:focus{outline:none;border-color:var(--gold)}
+.tk-transfer-form .reg-actions{flex-direction:row;justify-content:flex-start;margin-top:0}
+.tk-transfer-msg{color:var(--gold);min-height:1em}
+.acc-sub{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);margin:0 0 10px}
+#giftCards{margin-bottom:26px}
+.gift-item{grid-template-columns:1fr}
+.gift-code{font-family:'Montserrat',sans-serif;color:var(--gold);letter-spacing:.08em;user-select:all}
+.gift-copy{margin-left:8px;padding:4px 10px!important}
+.acc-foot{margin-top:14px}
+.acc-foot a{color:var(--gold)}
+.acc-actions-top{margin-top:0}
+.btn-quiet{border-color:rgba(201,184,163,.3)}
 </style>
 </head>
 <body>
@@ -162,8 +207,8 @@ body{max-width:100vw}
 
 <div class="page-header">
   <div class="wrap">
-    <p class="eyebrow">Account</p>
-    <h1>My purchases</h1>
+    <p class="eyebrow">AELITA PRODUCTION</p>
+    <h1>Account</h1>
   </div>
 </div>
 
@@ -172,30 +217,42 @@ body{max-width:100vw}
     <div id="loadingState">Loading…</div>
     <div id="content" style="display:none">
       <p class="acc-meta">Signed in as <strong id="acc-email"></strong> · with us since <span id="acc-since"></span></p>
-      <!-- pack-v542: подписки AELITA COMMUNITY — над покупками; заполняет assets/subscription.js -->
+      <!-- pack-v694: разделы кабинета — ссылками сверху; ссылка на скрытый раздел прячется сама -->
+      <div class="acc-nav" role="navigation" aria-label="Account sections">
+        <a href="#tickets">Tickets</a>
+        <a href="#regs">Registrations</a>
+        <a href="#subscriptions">Subscriptions</a>
+        <a href="#buys">Purchases</a>
+        <a href="#settings">Settings</a>
+      </div>
+      <!-- pack-v694: ближайшее событие — карточкой сверху (билет или регистрация) -->
+      <div class="acc-next" id="nextEvent" hidden></div>
+
+      <div class="acc-section" id="tickets">
+        <h2>My tickets</h2>
+        <div id="ticketOrders"><p class="acc-hint">Loading…</p></div>
+        <p class="acc-hint acc-foot">To return a ticket, use the button on the order or <a href="/en/ticket-refund">the refund page</a>. All performances are <a href="/en/tickets">on the playbill</a>.</p>
+      </div>
+
+      <div class="acc-section" id="regs">
+        <h2>My event registrations</h2>
+        <div id="eventRegistrations"><p class="acc-hint">Loading…</p></div>
+      </div>
+
+      <!-- pack-v542: подписки AELITA COMMUNITY; заполняет assets/subscription.js -->
       <div class="acc-section" id="subscriptions" hidden>
         <h2>Subscriptions</h2>
         <div id="subsList"></div>
         <p class="acc-hint" id="subsMsg" role="status" aria-live="polite"></p>
       </div>
-      <div id="purchases"></div>
-      <div class="acc-actions">
-        <a class="btn-outline" href="/en/tickets">To the schedule</a>
-        <a class="btn-outline" href="/en/ticket-refund">Return a ticket</a>
-        <button class="btn-outline" onclick="onExportData()" style="border-color:rgba(201,184,163,.3)">Download my data</button>
-        <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(201,184,163,.3)">Sign out</button>
+
+      <div class="acc-section" id="buys">
+        <h2>Purchases and gift cards</h2>
+        <div id="giftCards" hidden></div>
+        <div id="purchases"></div>
       </div>
 
-      <div class="acc-section">
-        <h2>My tickets</h2>
-        <div id="ticketOrders"><p style="color:var(--sand)">Loading…</p></div>
-      </div>
-
-      <div class="acc-section">
-        <h2>My event registrations</h2>
-        <div id="eventRegistrations"><p style="color:var(--sand)">Loading…</p></div>
-      </div>
-
+      <div id="settings">
       <div class="acc-section">
         <h2>Profile</h2>
         <form class="pw-form" id="profile-form" onsubmit="onSaveProfile(event)">
@@ -223,6 +280,14 @@ body{max-width:100vw}
         </form>
       </div>
 
+      <div class="acc-section">
+        <h2>Your data and sign-out</h2>
+        <div class="acc-actions acc-actions-top">
+          <button class="btn-outline btn-quiet" onclick="onExportData()">Download my data</button>
+          <button class="btn-outline btn-quiet" onclick="doLogout()">Sign out</button>
+        </div>
+      </div>
+
       <div class="acc-section acc-danger">
         <h2>Delete account</h2>
         <p class="acc-hint">We'll delete your name, email, password and account history — this can't be undone. Tickets and registrations already issued stay valid.</p>
@@ -235,6 +300,7 @@ body{max-width:100vw}
           <button type="submit" class="btn-outline btn-danger" id="del-submit">Delete account permanently</button>
           <div id="del-message"></div>
         </form>
+      </div>
       </div>
     </div>
   </div>
@@ -286,8 +352,8 @@ body{max-width:100vw}
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=114"></script>
-<script src="/assets/main.js?v=114"></script>
+<script src="/assets/account.js?v=118"></script>
+<script src="/assets/main.js?v=118"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -445,6 +511,101 @@ body{max-width:100vw}
     },
   };
   var t = T[LANG];
+  // pack-v694: кабинет «по делу» — ближайшее событие сверху, время и места у
+  // билетов, прошедшее отдельно, передача формой, статус возврата, подарочные карты.
+  var T694 = {
+    ru: {
+      nextTitle: 'Ближайшее',
+      pastToggle: function (n) { return 'Прошедшие (' + n + ')'; },
+      seat: function (k) { var p = String(k).split('-'); return p.length === 2 ? 'ряд ' + p[0] + ', место ' + p[1] : String(k); },
+      howToGet: 'Как добраться',
+      toCalendar: 'В календарь',
+      showQr: 'QR для входа',
+      refundLine: function (r) {
+        var d = r.due_date ? fmtDayIso(r.due_date) : '';
+        if (r.status === 'new') return r.overdue ? 'Заявление ' + r.refund_number + ': срок ответа прошёл — простите за задержку, напишите нам, ускорим.' : 'Заявление ' + r.refund_number + ' на возврат рассматривается — ответим до ' + d + '.';
+        if (r.status === 'approved') return r.overdue ? 'Возврат ' + r.refund_number + ' одобрен, но срок прошёл — простите за задержку, напишите нам, ускорим.' : (r.origin === 'cancel' ? 'Показ отменён — вернём деньги до ' : 'Возврат одобрен — деньги отправим до ') + d + (r.amount_rub ? ' (' + fmtAmount(r.amount_rub, 'RUB') + ')' : '') + '.';
+        if (r.status === 'paid') return 'Возврат ' + r.refund_number + ': деньги отправлены' + (r.decided_at ? ' ' + fmtDate(r.decided_at) : '') + '.';
+        if (r.status === 'rejected') return 'Заявление ' + r.refund_number + ' отклонено' + (r.rejection_reason ? ': ' + r.rejection_reason : '') + '.';
+        return '';
+      },
+      transferEmail: 'Почта получателя',
+      transferName: 'Имя и фамилия получателя',
+      transferGo: 'Передать',
+      cancel: 'Отмена',
+      giftTitle: 'Подарочные карты',
+      giftCode: 'Код карты',
+      giftLeft: function (a, i) { return 'Остаток: ' + a + ' из ' + i; },
+      giftHow: 'Код вводится при покупке билета на сайте.',
+      giftIssued: 'Выдана',
+      emptyBuys: 'Здесь появятся покупки из магазина и подарочные карты.',
+      giftUsed: 'Списано',
+      giftBack: 'Вернулось на карту',
+      giftCheck: 'Проверить на странице карты',
+      copy: 'Скопировать',
+      copied: 'Скопировано',
+      canceledLine: 'Показ отменён. Стоимость билетов вернём полностью — статус возврата ниже, письмо придёт на почту.',
+      pendingRefundLine: function (tk, until) { return 'По вашей просьбе мы оформили заявление на возврат (билеты ' + tk + '). Оно будет подано, когда вы его подтвердите, — до ' + until + '.'; },
+      pendingRefundBtn: 'Проверить и подтвердить',
+      postponedLine: function (was) { return 'Показ перенесён (был ' + was + '). Билеты действуют на новую дату; если она не подходит — билеты можно вернуть.'; },
+      attachDoc: 'Приложить документ',
+      needDoc: 'Для этого возврата нужен документ — приложите его на странице возврата.',
+    },
+    en: {
+      nextTitle: 'Coming up',
+      pastToggle: function (n) { return 'Past (' + n + ')'; },
+      seat: function (k) { var p = String(k).split('-'); return p.length === 2 ? 'row ' + p[0] + ', seat ' + p[1] : String(k); },
+      howToGet: 'Directions',
+      toCalendar: 'Add to calendar',
+      showQr: 'Entry QR',
+      refundLine: function (r) {
+        var d = r.due_date ? fmtDayIso(r.due_date) : '';
+        if (r.status === 'new') return r.overdue ? 'Application ' + r.refund_number + ': the reply deadline has passed — we are sorry, write to us and we will speed it up.' : 'Refund application ' + r.refund_number + ' is under review — we will reply by ' + d + '.';
+        if (r.status === 'approved') return r.overdue ? 'Refund ' + r.refund_number + ' is approved, but the deadline has passed — we are sorry, write to us and we will speed it up.' : (r.origin === 'cancel' ? 'The performance was cancelled — we will refund by ' : 'Refund approved — we will send the money by ') + d + (r.amount_rub ? ' (' + fmtAmount(r.amount_rub, 'RUB') + ')' : '') + '.';
+        if (r.status === 'paid') return 'Refund ' + r.refund_number + ': money sent' + (r.decided_at ? ' on ' + fmtDate(r.decided_at) : '') + '.';
+        if (r.status === 'rejected') return 'Application ' + r.refund_number + ' declined' + (r.rejection_reason ? ': ' + r.rejection_reason : '') + '.';
+        return '';
+      },
+      transferEmail: 'Recipient email',
+      transferName: 'Recipient full name',
+      transferGo: 'Pass on',
+      cancel: 'Cancel',
+      giftTitle: 'Gift cards',
+      giftCode: 'Card code',
+      giftLeft: function (a, i) { return 'Balance: ' + a + ' of ' + i; },
+      giftHow: 'Enter the code when buying a ticket on the site.',
+      giftIssued: 'Issued',
+      emptyBuys: 'Shop purchases and gift cards will appear here.',
+      giftUsed: 'Spent',
+      giftBack: 'Returned to the card',
+      giftCheck: 'Check on the gift card page',
+      copy: 'Copy',
+      copied: 'Copied',
+      canceledLine: 'The performance has been cancelled. We will refund the tickets in full — the refund status is below, and you will get an email.',
+      pendingRefundLine: function (tk, until) { return 'At your request we have prepared a refund application (tickets ' + tk + '). It will be submitted once you confirm it — by ' + until + '.'; },
+      pendingRefundBtn: 'Check and confirm',
+      postponedLine: function (was) { return 'The performance has been moved (it was ' + was + '). Your tickets are valid for the new date; if it does not suit you, you can return them.'; },
+      attachDoc: 'Attach a document',
+      needDoc: 'This refund needs a supporting document — attach it on the refund page.',
+    },
+  }[LANG];
+  Object.keys(T694).forEach(function (k) { t[k] = T694[k]; });
+  var MSK_MS = 3 * 3600000, DAY_MS = 86400000;
+  function mskDay(ms) { return Math.floor((ms + MSK_MS) / DAY_MS); }
+  // Событие «впереди» до конца своего дня по Москве.
+  function isUpcoming(iso) { return !iso || mskDay(Date.parse(iso)) >= mskDay(Date.now()); }
+  function fmtDayIso(day) { try { return new Date(day + 'T12:00:00Z').toLocaleDateString(t.locale, { day: 'numeric', month: 'long', timeZone: 'UTC' }); } catch (e) { return day; } }
+  function fmtDateTime(iso) {
+    try { return new Date(iso).toLocaleString(t.locale, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }); }
+    catch (e) { return iso || '—'; }
+  }
+  function mapUrl(addr) { return 'https://yandex.ru/maps/?text=' + encodeURIComponent(addr); }
+  function calUrl(title, iso, place, minutes) {
+    var st = new Date(iso), en = new Date(st.getTime() + (minutes || 120) * 60000);
+    var f = function (d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); };
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + f(st) + '/' + f(en) + (place ? '&location=' + encodeURIComponent(place) : '');
+  }
+  var NEXT = { orders: null, regs: null };
 
   var PRODUCT_NAMES = t.products;
 
@@ -475,7 +636,8 @@ body{max-width:100vw}
   function renderPurchases(purchases) {
     var el = document.getElementById('purchases');
     if (!purchases || !purchases.length) {
-      el.innerHTML = '<div class="empty-state">' + t.emptyPurchases + '</div>';
+      // pack-v694: билеты теперь выше отдельным разделом — здесь короткая строка, не большой пустой блок.
+      el.innerHTML = '<p class="acc-hint" data-empty="1">' + escapeHtml(t.emptyBuys) + '</p>';
       return;
     }
     var sorted = purchases.slice().sort(function (a, b) { return new Date(b.paidAt) - new Date(a.paidAt); });
@@ -507,11 +669,19 @@ body{max-width:100vw}
   // qrToken на регистрацию; плюс ссылка «Добавить в календарь».
   function renderEventRegistrations(registrations) {
     var el = document.getElementById('eventRegistrations');
+    NEXT.regs = registrations || [];
+    renderNext();
     if (!registrations || !registrations.length) {
       el.innerHTML = '<div class="empty-state">' + t.emptyRegistrations + '</div>';
       return;
     }
-    var sorted = registrations.slice().sort(function (a, b) { return new Date(a.datetime) - new Date(b.datetime); });
+    // pack-v694: прошедшие встречи — свёрнуты и без «Отменить регистрацию».
+    var upcoming = registrations.filter(function (r) { return isUpcoming(r.datetime); }).sort(function (a, b) { return new Date(a.datetime) - new Date(b.datetime); });
+    var pastRegs = registrations.filter(function (r) { return !isUpcoming(r.datetime); }).sort(function (a, b) { return new Date(b.datetime) - new Date(a.datetime); });
+    el.innerHTML = (upcoming.length ? regList(upcoming, false) : '<div class="empty-state">' + t.emptyRegistrations + '</div>') +
+      (pastRegs.length ? '<details class="acc-past"><summary>' + escapeHtml(t.pastToggle(pastRegs.length)) + '</summary>' + regList(pastRegs, true) + '</details>' : '');
+  }
+  function regList(sorted, past) {
     var html = '<div class="reg-list">' + sorted.map(function (r) {
       var title = escapeHtml(r.title || r.eventId || t.productEvent);
       var venue = escapeHtml((r.venueName || '') + (r.venueAddress ? ', ' + r.venueAddress : ''));
@@ -523,7 +693,7 @@ body{max-width:100vw}
       // детерминированно, см. _tools/Events/my-registrations.js) — не
       // второй параллельный документ. Рисуем локально, ничего не
       // запрашивая: токены уже пришли вместе со списком.
-      var qrBlocks = tickets.map(function (tk, i) {
+      var qrBlocks = past ? '' : tickets.map(function (tk, i) {
         var qrHtml = '';
         if (tk.qrToken && typeof qrcode === 'function') {
           try {
@@ -548,9 +718,14 @@ body{max-width:100vw}
       var calLink = r.googleCalendarUrl
         ? '<a class="cal-link" href="' + escapeHtml(r.googleCalendarUrl) + '" target="_blank" rel="noopener">' + t.addToCalendar + '</a>'
         : '';
+      if (past) {
+        var wasIn = tickets.some(function (tk) { return tk.checkedInAt; });
+        return '<div class="reg-item tk-past"><span><span class="name">' + title + '</span><br><span class="date">' + fmtDateTime(r.datetime) + (venue ? ' · ' + venue : '') + '</span>' +
+          (wasIn ? '<span class="reg-hint">' + t.ticketCheckedIn + '</span>' : '') + '</span></div>';
+      }
       return '<div class="reg-item">' +
         '<div class="reg-qr-group">' + qrBlocks + '</div>' +
-        '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDate(r.datetime) + (venue ? ' · ' + venue : '') + '</span>' +
+        '<span><span class="name">' + title + '</span><br><span class="date">' + fmtDateTime(r.datetime) + (venue ? ' · ' + venue : '') + '</span>' +
           '<span class="reg-hint">' + t.showQrAtEntrance + '</span>' + (calLink ? '<br>' + calLink : '') + '</span>' +
         '<span class="reg-actions">' +
           '<button class="resend-btn" data-event-id="' + eid + '" onclick="onResendTicket(this)">' + t.resendTicket + '</button>' +
@@ -558,7 +733,7 @@ body{max-width:100vw}
         '</span>' +
       '</div>';
     }).join('') + '</div>';
-    el.innerHTML = html;
+    return html;
   }
 
   // pack-v246: повторная отправка билета на почту. Сообщение
@@ -601,68 +776,179 @@ body{max-width:100vw}
     return Math.floor((Date.now() + MSK) / DAY) <= Math.floor((Date.parse(o.datetime) + MSK) / DAY);
   }
 
+  function orderCard(o, past) {
+    var status = o.canceled ? '<div class="reg-meta tk-refund tk-refund-rejected">' + escapeHtml(t.canceledLine) + '</div>'
+      : o.postponedFrom && !past ? '<div class="reg-meta tk-refund">' + escapeHtml(t.postponedLine(fmtDateTime(o.postponedFrom))) + '</div>' : '';
+    if (o.canceled) past = true; // отменённый — без билетов, передачи и «в календарь»
+    var when = o.datetime ? fmtDateTime(o.datetime) : t.dateTBA;
+    var seats = o.seats && o.seats.length ? t.seatsLabel + ' ' + o.seats.map(function (k) { return t.seat(k); }).join('; ') : t.freeSeating;
+    var place = [o.venue, o.venueAddress].filter(Boolean).join(', ');
+    var refundHref = (document.documentElement.lang === 'en' ? '/en' : '') + '/ticket-refund/?order=' + encodeURIComponent(o.orderId);
+    var refunds = (o.refunds || []).map(function (r) {
+      var x = t.refundLine(r);
+      if (!x) return '';
+      // pack-v694: по болезни/утрате без документа заявление стоит — говорим, что сделать.
+      var doc = r.status === 'new' && r.needs_documents && !r.documents_count ? '<br>' + escapeHtml(t.needDoc) + ' <a href="' + refundHref + '">' + escapeHtml(t.attachDoc) + '</a>' : '';
+      return '<div class="reg-meta tk-refund tk-refund-' + escapeHtml(r.status) + (r.overdue ? ' tk-refund-late' : '') + '">' + escapeHtml(x) + doc + '</div>';
+    }).join('');
+    var pages = (o.ticketPages || []).map(function (u, i) { return /^https:\/\/aelita-production\.ru\/ticket\/\?t=/.test(u) ? '<a class="contract-btn tk-main" href="' + escapeHtml(u) + '">' + t.ticketPageBtn(o.ticketPages.length, i) + '</a>' : ''; }).join('');
+    var actions = past
+      ? (o.paymentId ? '<button class="contract-btn" data-payment-id="' + escapeHtml(o.paymentId) + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' : '')
+      : pages +
+        (o.role === 'holder' ? '' : '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>') +
+        // pack-v692: возврат — сразу с этим заказом (код подставится, останется
+        // ввести почту). Только у покупателя, пока есть невозвращённые билеты и
+        // не кончился день показа (по болезни можно до конца дня, п. 6.3.2).
+        (canRefund(o) ? '<a class="contract-btn" href="' + (document.documentElement.lang === 'en' ? '/en' : '') + '/ticket-refund/?order=' + encodeURIComponent(o.orderId) + '">' + t.refundBtn + '</a>' : '');
+    // pack-v694: второстепенное — строкой ссылок, чтобы кнопок у заказа было меньше.
+    var links = [
+      !past && o.datetime ? '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, 120)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' : '',
+      !past && o.venueAddress ? '<a class="tk-link" href="' + escapeHtml(mapUrl(o.venueAddress)) + '" target="_blank" rel="noopener">' + t.howToGet + '</a>' : '',
+      !past && o.paymentId ? '<button type="button" class="tk-link" data-payment-id="' + escapeHtml(o.paymentId) + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' : '',
+    ].filter(Boolean).join('');
+    var transfer = past ? '' : (o.transfer || []).map(function (x) {
+      var seat = x.seat ? t.seat(x.seat) : '';
+      if (x.transferredTo) return '<div class="reg-meta">' + escapeHtml(t.transferredTo(seat, x.transferredTo)) + ' <button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" data-ticket="' + escapeHtml(x.ticketNumber) + '" onclick="onTransferResend(this)">' + t.transferResend + '</button></div>';
+      return x.canTransfer ? '<div class="tk-transfer"><button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" data-ticket="' + escapeHtml(x.ticketNumber) + '" data-seat="' + escapeHtml(seat) + '" onclick="onTransfer(this)">' + escapeHtml(t.transferBtn(seat)) + '</button></div>' : '';
+    }).join('');
+    return '<div class="reg-item tk-order' + (past ? ' tk-past' : '') + '">' +
+      '<div class="reg-head"><span class="name">' + escapeHtml(o.title) + '</span>' +
+        '<span class="date">' + escapeHtml(when) + '</span></div>' +
+      (place ? '<div class="reg-meta">' + escapeHtml(place) + '</div>' : '') +
+      // pack-v694: места — словами («ряд 3, место 4»); раньше считались, но не выводились.
+      '<div class="reg-meta">' + escapeHtml(seats) + ' · ' +
+        // pack-v592: получателю переданного билета номер заказа покупателя не приходит (null).
+        (o.orderNumber != null ? t.orderNo + ' ' + escapeHtml(String(o.orderNumber)) + ' · ' : '') +
+        o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) +
+        (o.refundedCount ? ' · ' + o.refundedCount + ' ' + t.refundedWord : '') + '</div>' +
+      status + refunds +
+      // pack-v697: возврат, оформленный командой, ждёт подтверждения
+      (o.pendingRefund && !past ? '<div class="reg-meta tk-refund">' + escapeHtml(t.pendingRefundLine(o.pendingRefund.tickets.map(function (n) { return '№ ' + n; }).join(', '), fmtDateTime(o.pendingRefund.expiresAt))) +
+        ' <a href="' + (LANG === 'en' ? '/en' : '') + '/ticket-refund/?confirm=' + encodeURIComponent(o.pendingRefund.ref) + '">' + escapeHtml(t.pendingRefundBtn) + '</a></div>' : '') +
+      (o.role === 'holder' ? '<div class="reg-meta">' + t.heldTicket + '</div>' : '') +
+      (actions ? '<div class="reg-actions">' + actions + '</div>' : '') +
+      (links ? '<div class="tk-links">' + links + '</div>' : '') +
+      transfer +
+      (o.paymentId ? '<div class="receipt-box" hidden></div>' : '') +
+    '</div>';
+  }
+
   function renderTicketOrders(orders) {
     var el = document.getElementById('ticketOrders');
+    NEXT.orders = orders || [];
+    renderNext();
     if (!orders || !orders.length) {
       el.innerHTML = '<div class="empty-state">' + t.emptyTickets + '</div>';
       return;
     }
-    el.innerHTML = '<div class="reg-list">' + orders.map(function (o) {
-      var when = o.datetime ? fmtDate(o.datetime) : t.dateTBA;
-      var seats = o.seats && o.seats.length
-        ? t.seatsLabel + ' ' + o.seats.map(function (s) { return s.replace('-', ' ряд, место '); }).join('; ')
-        : t.freeSeating;
-      return '<div class="reg-item">' +
-        '<div class="reg-head"><span class="name">' + escapeHtml(o.title) + '</span>' +
-          '<span class="date">' + escapeHtml(when) + '</span></div>' +
-        // pack-v592: получателю переданного билета номер заказа покупателя не приходит (null).
-        '<div class="reg-meta">' + (o.orderNumber != null ? t.orderNo + ' ' + escapeHtml(String(o.orderNumber)) + ' · ' : '') +
-          o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) +
-          (o.refundedCount ? ' · ' + o.refundedCount + ' ' + t.refundedWord : '') +
-          (o.venue ? ' · ' + escapeHtml(o.venue) : '') + '</div>' +
-        '<div class="reg-actions">' +
-          (o.role === 'holder' ? '' : '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>') +
-          (o.paymentId ? '<button class="contract-btn" data-payment-id="' + escapeHtml(o.paymentId) + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' : '') +
-          // pack-v692: возврат — сразу с этим заказом (код подставится, останется
-          // ввести почту). Только у покупателя, пока есть невозвращённые билеты и
-          // не кончился день показа (по болезни можно до конца дня, п. 6.3.2).
-          (canRefund(o) ? '<a class="contract-btn" href="' + (document.documentElement.lang === 'en' ? '/en' : '') + '/ticket-refund/?order=' + encodeURIComponent(o.orderId) + '">' + t.refundBtn + '</a>' : '') +
-          // ТЗ С5: страница билета с QR (появится, когда сервер начнёт отдавать ссылки).
-          (o.ticketPages || []).map(function (u, i) { return /^https:\/\/aelita-production\.ru\/ticket\/\?t=/.test(u) ? '<a class="contract-btn" href="' + escapeHtml(u) + '">' + t.ticketPageBtn(o.ticketPages.length, i) + '</a>' : ''; }).join('') +
-        '</div>' +
-        // ТЗ С2: передача билетов (кнопки — только у покупателя; сервер отдаёт transfer при TICKET_TRANSFER=1).
-        (o.role === 'holder' ? '<div class="reg-meta">' + t.heldTicket + '</div>' : '') +
-        (o.transfer || []).map(function (x) {
-          var seat = x.seat ? x.seat.replace('-', '/') : '';
-          if (x.transferredTo) return '<div class="reg-meta">' + escapeHtml(t.transferredTo(seat, x.transferredTo)) + ' <button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" data-ticket="' + escapeHtml(x.ticketNumber) + '" onclick="onTransferResend(this)">' + t.transferResend + '</button></div>';
-          return x.canTransfer ? '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" data-ticket="' + escapeHtml(x.ticketNumber) + '" onclick="onTransfer(this)">' + escapeHtml(t.transferBtn(seat)) + '</button>' : '';
-        }).join('') +
-        (o.paymentId ? '<div class="receipt-box" hidden></div>' : '') +
-      '</div>';
-    }).join('') + '</div>';
+    // pack-v694: впереди — по дате показа, ближайшие первыми; прошедшие — свёрнуты.
+    // отменённые — в конце списка «впереди»: сначала то, куда идти
+    var up = orders.filter(function (o) { return isUpcoming(o.datetime); }).sort(function (a, b) { return (a.canceled ? 1 : 0) - (b.canceled ? 1 : 0) || new Date(a.datetime || 8e15) - new Date(b.datetime || 8e15); });
+    var past = orders.filter(function (o) { return !isUpcoming(o.datetime); }).sort(function (a, b) { return new Date(b.datetime) - new Date(a.datetime); });
+    el.innerHTML = (up.length ? '<div class="reg-list">' + up.map(function (o) { return orderCard(o, false); }).join('') + '</div>' : '<div class="empty-state">' + t.emptyTickets + '</div>') +
+      (past.length ? '<details class="acc-past"><summary>' + escapeHtml(t.pastToggle(past.length)) + '</summary><div class="reg-list">' + past.map(function (o) { return orderCard(o, true); }).join('') + '</div></details>' : '');
   }
 
-  // ТЗ С2: передать билет — почта и имя получателя, подтверждение.
+  // ТЗ С2: передать билет — почта и имя получателя.
   async function transferCall(btn, payload) {
     btn.disabled = true;
     var r = await window.AELITA_account.transferTicket(payload);
     btn.disabled = false;
-    if (!r.ok) { alert((t.transferErr && t.transferErr[r.data.error]) || (document.documentElement.lang === 'en' ? 'Something went wrong. Please try again.' : 'Не получилось. Попробуйте ещё раз.')); return null; }
+    if (!r.ok) return { error: (t.transferErr && t.transferErr[r.data.error]) || (document.documentElement.lang === 'en' ? 'Something went wrong. Please try again.' : 'Не получилось. Попробуйте ещё раз.') };
     return r.data;
   }
-  async function onTransfer(btn) {
-    var email = (prompt(t.transferAskEmail) || '').trim();
-    if (!email) return;
-    var name = (prompt(t.transferAskName) || '').trim();
-    if (!name) return;
-    if (!confirm(t.transferConfirm(name + ' (' + email + ')'))) return;
-    var data = await transferCall(btn, { action: 'transfer', order_id: btn.getAttribute('data-order-id'), ticket_number: btn.getAttribute('data-ticket'), to_email: email, to_name: name, to_lang: document.documentElement.lang === 'en' ? 'en' : 'ru' });
-    if (data) { alert(t.transferDone(name)); location.reload(); }
+  // pack-v694: форма под кнопкой вместо двух окон prompt() и confirm().
+  function onTransfer(btn) {
+    var box = btn.parentNode;
+    if (box.querySelector('.tk-transfer-form')) return;
+    var f = document.createElement('form');
+    f.className = 'tk-transfer-form';
+    f.innerHTML = '<input class="ym-disable-keys" type="email" required autocomplete="off" placeholder="' + escapeHtml(t.transferEmail) + '">' +
+      '<input class="ym-disable-keys" type="text" required autocomplete="off" maxlength="120" placeholder="' + escapeHtml(t.transferName) + '">' +
+      '<p class="acc-hint">' + escapeHtml(t.transferConfirm('…').replace(/^[^?]*\?\s*/, '')) + '</p>' +
+      '<div class="reg-actions"><button type="submit" class="contract-btn">' + escapeHtml(t.transferGo) + '</button><button type="button" class="contract-btn tk-cancel">' + escapeHtml(t.cancel) + '</button></div>' +
+      '<p class="acc-hint tk-transfer-msg" role="status" aria-live="polite"></p>';
+    box.appendChild(f);
+    btn.hidden = true;
+    f.querySelector('input').focus();
+    f.querySelector('.tk-cancel').addEventListener('click', function () { f.remove(); btn.hidden = false; });
+    f.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var inputs = f.querySelectorAll('input');
+      var email = inputs[0].value.trim(), name = inputs[1].value.trim();
+      var msg = f.querySelector('.tk-transfer-msg');
+      if (!email || !name) return;
+      var data = await transferCall(f.querySelector('button[type=submit]'), { action: 'transfer', order_id: btn.getAttribute('data-order-id'), ticket_number: btn.getAttribute('data-ticket'), to_email: email, to_name: name, to_lang: document.documentElement.lang === 'en' ? 'en' : 'ru' });
+      if (data && data.error) { msg.textContent = data.error; return; }
+      if (data) { msg.textContent = t.transferDone(name); setTimeout(function () { loadTicketOrders(); }, 1500); }
+    });
   }
   async function onTransferResend(btn) {
     var data = await transferCall(btn, { action: 'transfer_resend', order_id: btn.getAttribute('data-order-id'), ticket_number: btn.getAttribute('data-ticket') });
+    if (data && data.error) { alert(data.error); return; }
     if (data) alert(t.transferDone(data.holder || ''));
   }
+
+  // pack-v694: ближайшее событие — карточкой сверху: билет или регистрация,
+  // что раньше. Нужное у входа — без прокрутки.
+  function renderNext() {
+    var el = document.getElementById('nextEvent');
+    if (!el || NEXT.orders === null || NEXT.regs === null) return;
+    var items = [];
+    // pack-v695: «ближайшее» — ещё не закончившееся (начало + 3 часа), а не весь день:
+    // вечером после дневного показа карточка показывает следующий.
+    var soon = function (iso) { return iso && Date.parse(iso) + 3 * 3600000 > Date.now(); };
+    NEXT.orders.forEach(function (o) { if (soon(o.datetime) && o.ticketsCount > 0 && !o.canceled) items.push({ at: o.datetime, o: o }); });
+    NEXT.regs.forEach(function (r) { if (soon(r.datetime)) items.push({ at: r.datetime, r: r }); });
+    items.sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
+    var n = items[0];
+    if (!n) { el.hidden = true; el.innerHTML = ''; return; }
+    var html = '<p class="acc-next-k">' + escapeHtml(t.nextTitle) + '</p>';
+    if (n.o) {
+      var o = n.o, place = [o.venue, o.venueAddress].filter(Boolean).join(', ');
+      html += '<h3>' + escapeHtml(o.title) + '</h3><p class="acc-next-when">' + escapeHtml(fmtDateTime(o.datetime)) + (place ? ' · ' + escapeHtml(place) : '') + '</p>' +
+        '<p class="acc-hint">' + escapeHtml(o.seats && o.seats.length ? o.seats.map(function (k) { return t.seat(k); }).join('; ') : t.freeSeating) + ' · ' + o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) + '</p>' +
+        '<div class="reg-actions">' + (o.ticketPages || []).map(function (u, i) { return /^https:\/\/aelita-production\.ru\/ticket\/\?t=/.test(u) ? '<a class="btn-gold" href="' + escapeHtml(u) + '">' + t.ticketPageBtn(o.ticketPages.length, i) + '</a>' : ''; }).join('') +
+        (o.role === 'holder' ? '' : '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>') + '</div>' +
+        '<div class="tk-links">' + (o.venueAddress ? '<a class="tk-link" href="' + escapeHtml(mapUrl(o.venueAddress)) + '" target="_blank" rel="noopener">' + t.howToGet + '</a>' : '') +
+        '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, 120)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a></div>';
+    } else {
+      var r = n.r, venue = [r.venueName, r.venueAddress].filter(Boolean).join(', ');
+      html += '<h3>' + escapeHtml(r.title || t.productEvent) + '</h3><p class="acc-next-when">' + escapeHtml(fmtDateTime(r.datetime)) + (venue ? ' · ' + escapeHtml(venue) : '') + '</p>' +
+        '<div class="reg-actions"><a class="btn-gold" href="#regs">' + t.showQr + '</a></div>' +
+        '<div class="tk-links">' + (r.venueAddress ? '<a class="tk-link" href="' + escapeHtml(mapUrl(r.venueAddress)) + '" target="_blank" rel="noopener">' + t.howToGet + '</a>' : '') +
+        (r.googleCalendarUrl ? '<a class="tk-link" href="' + escapeHtml(r.googleCalendarUrl) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' : '') + '</div>';
+    }
+    el.innerHTML = html;
+    el.hidden = false;
+  }
+
+  // pack-v694: подарочные карты на почту кабинета — код, остаток, история.
+  function renderGiftCards(cards) {
+    var el = document.getElementById('giftCards');
+    if (!el) return;
+    var empty = document.querySelector('#purchases [data-empty]');
+    if (!cards || !cards.length) { el.hidden = true; el.innerHTML = ''; if (empty) empty.hidden = false; return; }
+    el.hidden = false;
+    if (empty) empty.hidden = true;
+    el.innerHTML = '<h3 class="acc-sub">' + escapeHtml(t.giftTitle) + '</h3>' + cards.map(function (c) {
+      var hist = (c.used || []).map(function (x) { return escapeHtml(t.giftUsed + ' ' + fmtAmount(x.rub, 'RUB') + (x.at ? ' · ' + fmtDate(x.at) : '')); })
+        .concat((c.returned || []).map(function (x) { return escapeHtml(t.giftBack + ' ' + fmtAmount(x.rub, 'RUB') + (x.at ? ' · ' + fmtDate(x.at) : '')); }));
+      return '<div class="purchase-item gift-item">' +
+        '<span class="name">' + escapeHtml(t.giftCode) + ': <code class="gift-code">' + escapeHtml(c.code) + '</code> <button type="button" class="contract-btn gift-copy" data-code="' + escapeHtml(c.code) + '">' + escapeHtml(t.copy) + '</button>' + (c.isTest ? ' <span class="acc-hint">(' + (LANG === 'en' ? 'test' : 'тест') + ')</span>' : '') + '</span>' +
+        '<span class="amount">' + escapeHtml(t.giftLeft(fmtAmount(c.availableRub, 'RUB'), fmtAmount(c.initialRub, 'RUB'))) + '</span>' +
+        '<span class="acc-hint">' + escapeHtml(t.giftHow) + '</span>' +
+        '<span class="acc-hint">' + (c.issuedAt ? escapeHtml(t.giftIssued + ' ' + fmtDate(c.issuedAt)) + (hist.length ? '<br>' : '') : '') + hist.join('<br>') + '</span>' +
+      '</div>';
+    }).join('');
+    Array.prototype.forEach.call(el.querySelectorAll('.gift-copy'), function (b) {
+      b.addEventListener('click', function () {
+        var code = b.getAttribute('data-code');
+        try { navigator.clipboard.writeText(code).then(function () { b.textContent = t.copied; }); } catch (e) { /* без буфера — код виден */ }
+      });
+    });
+  }
+
   window.onTransfer = onTransfer;
   window.onTransferResend = onTransferResend;
 
@@ -704,11 +990,13 @@ body{max-width:100vw}
         document.getElementById('ticketOrders').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
       },
     }).then(function (data) {
-      if (!data) return;
+      // pack-v695: билеты не пришли — «Ближайшее» всё равно соберётся из регистраций
+      if (!data) { NEXT.orders = []; renderNext(); return; }
       // pack-v592 (ревизия 07.10, Б4): почта кабинета не подтверждена —
       // сервер билетов не отдаёт, предлагаем подтвердить кодом.
-      if (data.emailUnverified && (!data.orders || !data.orders.length)) { renderVerifyEmail(); return; }
+      if (data.emailUnverified && (!data.orders || !data.orders.length)) { NEXT.orders = []; renderNext(); renderVerifyEmail(); return; }
       renderTicketOrders(data.orders);
+      renderGiftCards(data.giftCards);
     });
   }
 
@@ -756,10 +1044,12 @@ body{max-width:100vw}
       },
     }).then(function (data) {
       if (data && data.emailUnverified && (!data.registrations || !data.registrations.length)) { // pack-v595
+        NEXT.regs = []; renderNext();
         document.getElementById('eventRegistrations').innerHTML = '<div class="empty-state">' + escapeHtml(t.verifyRegsHint) + '</div>';
         return;
       }
       if (data) renderEventRegistrations(data.registrations);
+      else { NEXT.regs = []; renderNext(); } // pack-v695: см. loadTicketOrders
     });
   }
 
@@ -1098,9 +1388,19 @@ body{max-width:100vw}
     loadEventRegistrations();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
+    syncNav();
+    // подписки показывает subscription.js позже — ссылка в навигации появится вместе с разделом
+    try { new MutationObserver(syncNav).observe(document.getElementById('subscriptions'), { attributes: true, attributeFilter: ['hidden'] }); } catch (e) { /* старый браузер — ссылка просто видна */ }
   })();
+  // pack-v694: ссылка на скрытый раздел (нет подписок) не ведёт в пустоту.
+  function syncNav() {
+    Array.prototype.forEach.call(document.querySelectorAll('.acc-nav a'), function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      a.hidden = !el || el.hidden;
+    });
+  }
 </script>
-<script src="/assets/subscription.js?v=114"></script>
-<script src="/assets/phone-prefix.js?v=114"></script>
+<script src="/assets/subscription.js?v=118"></script>
+<script src="/assets/phone-prefix.js?v=118"></script>
 </body>
 </html>

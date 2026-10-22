@@ -32,8 +32,8 @@
 <meta property="og:title" content="TOCHKA CUIRE — an AELITA PRODUCTION festival">
 <meta property="og:description" content="The point where everything changes. Stary Oskol · CSI “Byl” · 22–25 October 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=114">
-<link rel="stylesheet" href="/assets/style.css?v=114">
+<link rel="stylesheet" href="/assets/fonts.css?v=118">
+<link rel="stylesheet" href="/assets/style.css?v=118">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -403,7 +403,7 @@ html{scroll-padding-top:230px}
       <div class="day-content active" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
         <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — <a href="/en/alexandra-chubenko">Alexandra Chubenko</a><small>Registration required</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — <a href="/en/mikhail-kazmiruk">Mikhail Kazmiruk</a><small>Online · registration required</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — <a href="/en/mikhail-kazmiruk">Mikhail Kazmiruk</a><small>In the hall of CSI “Byl”, speaker by video link · registration required</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><span class="sold-out sm" title="Tickets sold out">Sold out</span></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
@@ -786,7 +786,8 @@ html{scroll-padding-top:230px}
     // (новое расписание 22 октября). Счётчик привязан к началу
     // фестиваля — без этой правки он показывал бы на два часа больше,
     // чем осталось, и обнулился бы уже после открытия.
-    const target = new Date('2026-10-22T15:00:00+03:00');
+    // pack-v694: финальное расписание 22.10 (v691) начинается в 16:30 — вернисаж.
+    const target = new Date('2026-10-22T16:30:00+03:00');
     const now = new Date();
     const diff = target - now;
     if(diff <= 0){
@@ -1046,7 +1047,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=114"></script>
+<script src="/assets/main.js?v=118"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1057,6 +1058,7 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=114"></script>
+<script src="/assets/phone-prefix.js?v=118"></script>
+<script src="/assets/festival.js?v=118" defer></script>
 </body>
 </html>
