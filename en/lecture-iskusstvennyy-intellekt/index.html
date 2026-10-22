@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Artificial intelligence: what it can already do, and where it gets it wrong — Alexey Tsymlov — AELITA PRODUCTION">
 <meta name="twitter:description" content="Talk. Alexey Tsymlov — CEO and founder of the IT company Syntropic. Machines have learned to write, draw and talk — their own Curie point has already happened here too.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/promo-alexey-tsymlov.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=118">
-<link rel="stylesheet" href="/assets/style.css?v=118">
+<link rel="stylesheet" href="/assets/fonts.css?v=119">
+<link rel="stylesheet" href="/assets/style.css?v=119">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -73,7 +73,7 @@
 <div class="lecture-hero">
   <div class="wrap">
     <p class="eyebrow">Business Programme · “Tochka Cuire”</p>
-    <div class="meta lh-meta"><span>October 22</span><span>Will not take place</span></div>
+    <div class="meta lh-meta"><span>October 23</span><span>19:00</span><span>CSI “Byl”, hall to be confirmed</span></div>
     <h1>Artificial intelligence: what it can already do, and where it gets it wrong</h1>
     <div class="speaker-line reveal">
       <img src="/images/alexey-tsymlov.jpg" alt="Alexey Tsymlov">
@@ -82,6 +82,7 @@
         <div class="role">CEO and founder of the IT company <a class="tl c-gold" href="https://syntropic.ru/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_lecture-iskusstvennyy-intellekt" target="_blank" rel="noopener">Syntropic</a></div>
       </div>
     </div>
+    <a class="btn-gold mr-14" href="#join">Register →</a>
     <a class="btn-outline" href="/en/press#alexey-tsymlov">For press</a>
   </div>
 </div>
@@ -98,24 +99,19 @@
 
 <div class="join-sec pad-80" id="join">
   <div class="wrap reveal">
-    <span class="eyebrow">Programme change</span>
-    <h2 class="mt-14">The talk will not take place</h2>
-    <!-- ⚠️ pack-v394: лекция перенесена с 23 октября (16:00, галерея) на
-         22 октября, 17:00 — в день открытия фестиваля. Вместе с переносом
-         СНЯТА РЕГИСТРАЦИЯ на Timepad (решение заказчика): событие
-         22 октября идёт по пригласительным, как открытие Кати Абдуловой
-         и лекция Марии Павловой в тот же день. Виджет Timepad
-         (id 4203474) и запасная ссылка на страницу события удалены
-         целиком, а не спрятаны стилями: оставленный в разметке скрипт
-         продолжал бы грузиться с внешнего домена и мог бы открыть форму
-         регистрации на событие, на которое записаться уже нельзя.
-         ⚠️ Само событие на Timepad при этом остаётся опубликованным —
-         снять или скрыть его может только человек с доступом к аккаунту
-         (см. OPEN_QUESTIONS.md, пункт 21). Пока оно живо, прямая ссылка
-         aelita-production.timepad.ru/event/4203474 продолжает работать в
-         обход сайта. -->
-    <p class="sub">The programme of the festival’s opening day, 22 October, has changed — this talk is no longer part of it. The “Tochka Cuire” business programme on 23–24 October is free, with registration.</p>
-    <p class="mt-16"><a class="btn-gold" href="/en/business-program">Business programme →</a></p>
+    <span class="eyebrow">Register</span>
+    <h2 class="mt-14">Registration for the event</h2>
+    <!-- pack-v698: лекция возвращается в программу (заказчик 22.10): 23 октября, 19:00,
+         ЦСИ «Быль», зал уточняется. Регистрация — прежнее событие Timepad (id 4203474, «Цымлов — да,
+         старый»). ⚠️ В pack-v427 это событие снимали с площадки — если ссылка ниже не открывает
+         регистрацию, событие надо снова опубликовать на Timepad (или прислать id нового и
+         заменить 4203474 в трёх местах: id кнопки, конфиг скрипта, запасная ссылка).
+         Кнопка — триггер виджета Timepad: id кнопки ДОЛЖЕН быть ровно
+         "timepad_twf_register_4203474" (на него завязан triggerSelector). -->
+    <p class="sub">The lecture takes place at CSI “Byl”; the hall is to be confirmed. Participation is free, registration is required.</p>
+    <button class="submit-btn" id="timepad_twf_register_4203474">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4203474 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4203474"}}})();</script>
+    <p class="note-xs mt-16 own-size">If the button does not open the registration window — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4203474/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_lecture-iskusstvennyy-intellekt" target="_blank" rel="noopener">open the registration page</a></p>
   </div>
 </div>
 
@@ -124,7 +120,8 @@
     <div class="sec-head reveal"><h2>Other business programme events</h2></div>
     <div class="other-grid reveal">
       <a class="other-card link-plain" href="/en/lecture-tanets-v-realnom-mire"><span class="tag">Talk</span><h3>How dance is born and lives in the real world</h3><p>Mikhail Kazmiruk</p></a>
-      <a class="other-card link-plain" href="/en/lecture-bez-suflera"><span class="tag">Workshop</span><h3>Without a Teleprompter</h3><p>Alexandra Chubenko</p></a>
+      <a class="other-card link-plain" href="/en/lecture-uforce"><span class="tag">Talk</span><h3>uForce marketing agency</h3><p>Denis Smetnev</p></a>
+      <a class="other-card link-plain" href="/en/lecture-bez-suflera"><span class="tag">Workshop</span><h3>Without a Teleprompter</h3><p>Speaker to be announced</p></a>
       <a class="other-card link-plain" href="/en/lecture-landshafty-realnosti"><span class="tag">Talk</span><h3>Landscapes of Reality</h3><p>Katya Abdulova</p></a>
       <a class="other-card link-plain" href="/en/lecture-art-goroda"><span class="tag">Talk · closing</span><h3>Cities of Art</h3><p>Alexandra Gubanova</p></a>
       <a class="other-card link-plain" href="/en/business-program"><span class="tag">Business programme</span><h3>All talks and workshops</h3><p>The full business programme of the “Tochka Cuire” festival.</p></a>
@@ -247,7 +244,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=118"></script>
+<script src="/assets/main.js?v=119"></script>
 
 
 <script>
@@ -259,5 +256,6 @@
     });
   }
 </script>
+<script src="/assets/festival.js?v=119" defer></script>
 </body>
 </html>
