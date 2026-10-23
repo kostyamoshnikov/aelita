@@ -32,8 +32,8 @@
 <meta property="og:title" content="TOCHKA CUIRE — an AELITA PRODUCTION festival">
 <meta property="og:description" content="The point where everything changes. Stary Oskol · CSI “Byl” · 22–25 October 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=119">
-<link rel="stylesheet" href="/assets/style.css?v=119">
+<link rel="stylesheet" href="/assets/fonts.css?v=120">
+<link rel="stylesheet" href="/assets/style.css?v=120">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -207,6 +207,7 @@ html body .sched a.tix-btn:not(.reg){background:var(--gold)!important;color:var(
 .exh-body p{color:var(--sand);font-size:0.875rem;line-height:1.6}
 .exh-free{display:inline-block;margin-top:14px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(214,181,122,.4);padding:6px 12px}
 @media(max-width:760px){.exh-grid{grid-template-columns:1fr}}
+.exh-grid.one{grid-template-columns:1fr}
 /* PHOTO GALLERY */
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
 .gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:brightness(.7);transition:filter .4s}
@@ -403,11 +404,8 @@ html{scroll-padding-top:230px}
       <div class="day-content active" id="day-1" role="tabpanel" aria-labelledby="day-tab-1">
         <!-- pack-v698: 12:30 Сметнев, 19:00 Цымлов (вернулся), «Без суфлёра» — спикер будет объявлен (заказчик 22.10) -->
         <div class="time-item"><span class="time">12:30–13:30</span><div class="event">Business programme: talk <a href="/en/lecture-uforce">“The uForce marketing agency”</a> — <a href="/en/denis-smetnev">Denis Smetnev</a><small>Red Hall, speaker by video link · free · registration opens soon</small></div></div>
-        <div class="time-item"><span class="time">14:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — speaker to be announced<small>Registration required</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/198f6ee2-d76f-4551-80ca-0d3547c63963?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
-        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — <a href="/en/mikhail-kazmiruk">Mikhail Kazmiruk</a><small>In the hall of CSI “Byl”, speaker by video link · registration required</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Physical Theatre <a href="/en/prorochestva">“Prophecies of Migratory Birds”</a> — OMYT dance company, St. Petersburg<small>Red Hall</small><span class="sold-out sm" title="Tickets sold out">Sold out</span></div></div>
-        <div class="time-item"><span class="time">19:00</span><div class="event">Business programme: talk <a href="/en/lecture-iskusstvennyy-intellekt">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — <a href="/en/alexey-tsymlov">Alexey Tsymlov</a><small>CSI “Byl”, hall to be confirmed · registration required</small><a class="tix-btn reg" href="/en/lecture-iskusstvennyy-intellekt#join">Register</a></div></div>
         <div class="time-item"><span class="time">20:00</span><div class="event"><a href="/en/iov">“IOV: Material”</a><small>Blue Hall · 12+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/faac4a31-0e35-47d1-82a1-2f0ca7441fdf?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
       <div class="day-content" id="day-2" role="tabpanel" aria-labelledby="day-tab-2">
@@ -415,14 +413,18 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">12:00</span><div class="event">Kids' programme: <a href="/en/mk-rospis-gipsa">workshop “Painting Plaster Coasters”</a><small>Yulia Candle · 8+ · free · registration required</small><a class="tix-btn reg" href="/en/mk-rospis-gipsa#join">Register</a></div></div>
         <div class="time-item"><span class="time">12:30</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>6+ · free · registration required</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Kids' programme: <a href="/en/mk-svecha-iz-voshchiny">workshop “A Natural Beeswax Candle”</a><small>“VmesteArt” · 8+ · free · registration required</small><a class="tix-btn reg" href="/en/mk-svecha-iz-voshchiny#join">Register</a></div></div>
+        <!-- pack-v699: Цымлов перенесён на 24.10 13:30, Казмирук — на 24.10 18:00 (заказчик 23.10, Timepad уже перенесён) -->
+        <div class="time-item"><span class="time">13:30</span><div class="event">Business programme: talk <a href="/en/lecture-iskusstvennyy-intellekt">“Artificial intelligence: what it can already do, and where it gets it wrong”</a> — <a href="/en/alexey-tsymlov">Alexey Tsymlov</a><small>CSI “Byl”, hall to be confirmed · registration required</small><a class="tix-btn reg" href="/en/lecture-iskusstvennyy-intellekt#join">Register</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Kids' programme: <a href="/en/art-kvest">art quest “Kids Aren’t Spectators”</a><small>6+ · free · registration required</small><a class="tix-btn reg" href="/en/art-kvest#join">Register</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Kids' programme: <a href="/en/mk-prokachay-mozg">workshop “Boost Your Brain”</a><small>“Academy of Clever Kids” · ages 6–10 · free · registration required</small><a class="tix-btn reg" href="/en/mk-prokachay-mozg#join">Register</a></div></div>
         <div class="time-item"><span class="time">14:00</span><div class="event">Interactive mono-performance <a href="/en/mozgi">“Do You Have a Brain?”</a><small>Red Hall · 16+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/da1c3ca2-a092-4db3-b402-d2a6c667e5a3?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
+        <!-- pack-v699: «Без суфлёра» 23.10 не состоялся — 24.10, 14:30–16:00, Красный зал, Чубенко; отдельной лекции Чубенко нет -->
+        <div class="time-item"><span class="time">14:30–16:00</span><div class="event">Business programme: workshop <a href="/en/lecture-bez-suflera">“Without a Teleprompter”</a> — <a href="/en/alexandra-chubenko">Alexandra Chubenko</a><small>Red Hall · registration required</small><a class="tix-btn reg" href="/en/lecture-bez-suflera#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Business programme: talk <a href="/en/lecture-landshafty-realnosti">“Landscapes of Reality”</a> — Katya Abdulova<small>Registration required</small><a class="tix-btn reg" href="/en/lecture-landshafty-realnosti#join">Register</a></div></div>
         <div class="time-item"><span class="time">16:00</span><div class="event">Promenade performance <a href="/en/puteshestvenniki">“The Travellers”</a> — BlizKo creative lab, 18+<small>Starts at CSI “Byl”</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/ab3c8e07-dbad-4b45-b06b-0570a59edcba?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
         <!-- pack-v698: 16:30 лекция Чубенко, 19:00 кинопоказ Blue Ocean Strategy (заказчик 22.10) -->
-        <div class="time-item"><span class="time">16:30–18:00</span><div class="event">Business programme: talk <a href="/en/lecture-chubenko">by Alexandra Chubenko</a> — topic to be announced<small>Red Hall · free · registration opens soon</small></div></div>
         <div class="time-item"><span class="time">16:30</span><div class="event">Kids' programme: <a href="/en/mk-volshebnye-kraski">art workshop “Magic Paints”</a><small>IRiS Centre · ages 7–14 · free · registration required</small><a class="tix-btn reg" href="/en/mk-volshebnye-kraski#join">Register</a></div></div>
+        <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-tanets-v-realnom-mire">“How dance is born and lives in the real world”</a> — <a href="/en/mikhail-kazmiruk">Mikhail Kazmiruk</a><small>In the hall of CSI “Byl”, speaker by video link · registration required</small><a class="tix-btn reg" href="/en/lecture-tanets-v-realnom-mire#join">Register</a></div></div>
         <div class="time-item"><span class="time">18:00</span><div class="event">Business programme: talk <a href="/en/lecture-art-goroda">“Cities of Art”</a> — Alexandra Gubanova, closing of the business programme<small>Registration required</small><a class="tix-btn reg" href="/en/lecture-art-goroda#join">Register</a></div></div>
         <div class="time-item"><span class="time">19:00–20:00</span><div class="event">Screening and discussion of the film <a href="/en/blue-ocean-strategy">“Blue Ocean Strategy”</a> — <a href="/en/anastasia-silantyeva">Anastasia Silantyeva</a><small>Venue to be confirmed · free · registration opens soon</small></div></div>
         <div class="time-item"><span class="time">19:00</span><div class="event">Meditative detective mashup <a href="/en/porfiriy">“Porfiry”</a>, dir. Alexander Panov<small>Cancelled due to the actor’s illness</small><span class="sold-out sm">Cancelled</span></div></div>
@@ -442,10 +444,7 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">20:00</span><div class="event">Solo stand-up concert <a href="/en/dyba-show">“Dyba Show”</a> — <a href="/en/vanya-dyba">Vanya Dyba</a>, closing the festival<small>Red Hall · 18+</small><a class="tix-btn" href="https://cuire-fest.ru/tickets/show/c22b9f5d-138f-435a-a750-822e7cba9533?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_tochkacuire" target="_blank" rel="noopener">Buy tickets</a></div></div>
       </div>
     </div>
-    <div class="reveal" style="margin-top:28px;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:20px 24px;font-size:0.875rem;color:var(--sand)">
-      <strong style="color:var(--bone);display:block;margin-bottom:6px">8 October — prologue</strong>
-      Exhibition <a class="tl c-gold" href="/en/vystavka-prolog">“TOCHKA CUIRE. Prologue”</a> opens two weeks early and runs until 4 November. Free admission.
-    </div>
+    <!-- pack-v699: выставок на фестивале две — «Переход» и «Археология человеческого» (заказчик 23.10); «Пролог» и фото-лаборатория сняты -->
   </div>
 </section>
 
@@ -566,16 +565,7 @@ html{scroll-padding-top:230px}
 <section id="exhibitions">
   <div class="wrap">
     <div class="sec-head reveal"><span class="eyebrow"><b>04</b> / Exhibitions</span><h2>Body and Metal</h2></div>
-    <div class="exh-grid reveal">
-      <div class="exh-item">
-        <img src="https://cuire-fest.ru/assets/photo/p09.jpg" alt="TOCHKA CUIRE. Prologue exhibition" loading="lazy">
-        <div class="exh-body">
-          <p class="dates">8 October – 4 November · Prologue</p>
-          <h3><a class="tl c-inherit" href="/en/vystavka-prolog">TOCHKA CUIRE. Prologue</a></h3>
-          <p>A dialogue between the human body and the material of the future. The body in motion meets metal, fire and the industrial texture of Stary Oskol.</p>
-          <span class="exh-free">Free admission</span>
-        </div>
-      </div>
+    <div class="exh-grid one reveal">
       <div class="exh-item">
         <img src="https://cuire-fest.ru/assets/photo/p19.jpg" alt="Photo exhibition “Archaeology of the Human”" loading="lazy">
         <div class="exh-body">
@@ -660,7 +650,7 @@ html{scroll-padding-top:230px}
       <div class="free-card">
         <div class="icon">◈</div>
         <h3><a class="tl c-inherit" href="/en/business-program">Lecture series</a></h3>
-        <p>Lectures, talks and a workshop of the business programme, 23–24 October — <a class="tl c-gold" href="/en/lecture-uforce">Denis Smetnev</a>, <a class="tl c-gold" href="/en/lecture-bez-suflera">“Without a Teleprompter”</a>, <a class="tl c-gold" href="/en/lecture-tanets-v-realnom-mire">Mikhail Kazmiruk</a>, <a class="tl c-gold" href="/en/lecture-iskusstvennyy-intellekt">Alexey Tsymlov</a>, <a class="tl c-gold" href="/en/lecture-landshafty-realnosti">Katya Abdulova</a>, <a class="tl c-gold" href="/en/lecture-chubenko">Alexandra Chubenko</a>, <a class="tl c-gold" href="/en/lecture-art-goroda">Alexandra Gubanova</a>.</p>
+        <p>Lectures, talks and a workshop of the business programme, 23–24 October — <a class="tl c-gold" href="/en/lecture-uforce">Denis Smetnev</a>, <a class="tl c-gold" href="/en/lecture-iskusstvennyy-intellekt">Alexey Tsymlov</a>, <a class="tl c-gold" href="/en/lecture-bez-suflera">Alexandra Chubenko</a>, <a class="tl c-gold" href="/en/lecture-landshafty-realnosti">Katya Abdulova</a>, <a class="tl c-gold" href="/en/lecture-tanets-v-realnom-mire">Mikhail Kazmiruk</a>, <a class="tl c-gold" href="/en/lecture-art-goroda">Alexandra Gubanova</a>.</p>
         <span class="free-badge">Free · registration required</span>
       </div>
       <div class="free-card">
@@ -668,12 +658,6 @@ html{scroll-padding-top:230px}
         <h3><a class="tl c-inherit" href="/en/detskaya-programma">Kids' programme</a></h3>
         <p>The art quest “Kids Aren't Spectators” and seven sessions for children aged 4 and up — 24 and 25 October, with the festival’s partners. <a class="tl c-gold" href="/en/detskaya-programma">Schedule and registration</a>.</p>
         <span class="free-badge">Free · registration required</span>
-      </div>
-      <div class="free-card">
-        <div class="icon">◈</div>
-        <h3>Photo lab</h3>
-        <p>“Point of Origin: an Archaeology of the Self” — shame, duty, guilt and fear, brought into the light. Opening 22 October, through 4 November.</p>
-        <span class="free-badge">Free admission</span>
       </div>
     </div>
   </div>
@@ -1054,7 +1038,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=119"></script>
+<script src="/assets/main.js?v=120"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1065,7 +1049,7 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=119"></script>
-<script src="/assets/festival.js?v=119" defer></script>
+<script src="/assets/phone-prefix.js?v=120"></script>
+<script src="/assets/festival.js?v=120" defer></script>
 </body>
 </html>
