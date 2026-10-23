@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Blue Ocean Strategy — screening and discussion of Anastasia Silantyeva’s film — AELITA PRODUCTION">
 <meta name="twitter:description" content="Tochka Cuire festival, 24 October, 19:00–20:00. Screening and discussion of Blue Ocean Strategy, a travel film by Anastasia Silantyeva (Dyakova): Marsa Alam, the sea, the desert — and a story of how nature brings a person back to themselves. Free, registration required.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/blue-ocean-strategy-og.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=120">
-<link rel="stylesheet" href="/assets/style.css?v=120">
+<link rel="stylesheet" href="/assets/fonts.css?v=121">
+<link rel="stylesheet" href="/assets/style.css?v=121">
 <style>body{max-width:100vw}
 .lecture-hero{padding:140px 0 60px}
 .lecture-hero .meta{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
@@ -103,12 +103,13 @@
 <div class="join-sec pad-80" id="join">
   <div class="wrap reveal">
     <span class="eyebrow">Register</span>
-    <h2 class="mt-14">Registration opens soon</h2>
-    <!-- pack-v698: кинопоказ, 24.10 19:00. Событие на Timepad ещё не заведено — когда заказчик пришлёт id,
-         поставить сюда кнопку-виджет и запасную ссылку, как на /lecture-tanets-v-realnom-mire
-         (id кнопки строго timepad_twf_register_<id>), а заголовок — «Регистрация на событие». -->
-    <p class="sub">Admission is free with registration on Timepad — the registration button will appear on this page. The venue will be announced later.</p>
-    <p class="mt-16"><a class="btn-outline" href="/en/tochkacuire#schedule">Festival schedule →</a></p>
+    <h2 class="mt-14">Register for the screening</h2>
+    <!-- pack-v700: событие Timepad 4269899 (заказчик 23.10). Кнопка — триггер виджета Timepad:
+         id кнопки ДОЛЖЕН быть ровно "timepad_twf_register_4269899" (на него завязан triggerSelector). -->
+    <p class="sub">Admission is free, places are limited — registration is required. The venue will be announced later.</p>
+    <button class="submit-btn" id="timepad_twf_register_4269899">Register →</button>
+    <script async="async" defer charset="UTF-8" data-timepad-customized="345664" data-timepad-widget-v2="event_register" src="https://timepad.ru/js/tpwf/loader/min/loader.js">(function(){return {"event" : {"id" : 4269899 }, "hidePreloading" : true, "display" : "popup", "popup" : {"triggerSelector" : "#timepad_twf_register_4269899"}}})();</script>
+    <p class="note-xs mt-16 own-size">If the button does not open the registration window — <a class="tl c-gold" href="https://aelita-production.timepad.ru/event/4269899/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=en_blue-ocean-strategy" target="_blank" rel="noopener">open the registration page</a></p>
   </div>
 </div>
 
@@ -238,7 +239,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=120"></script>
+<script src="/assets/main.js?v=121"></script>
 
 
 <script>
@@ -250,6 +251,6 @@
     });
   }
 </script>
-<script src="/assets/festival.js?v=120" defer></script>
+<script src="/assets/festival.js?v=121" defer></script>
 </body>
 </html>
