@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Резиденты — AELITA PRODUCTION">
 <meta name="twitter:description" content="Резиденты продюсерской компании AELITA PRODUCTION: режиссёры, хореографы, художники.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=126">
-<link rel="stylesheet" href="/assets/style.css?v=126">
+<link rel="stylesheet" href="/assets/fonts.css?v=128">
+<link rel="stylesheet" href="/assets/style.css?v=128">
 <style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
@@ -72,31 +72,31 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .sec-head h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.3em}
   .sec-head::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(214,181,122,.4),transparent)}
   /* Портретная сетка резидентов */
-  .persons-grid{display:grid;grid-template-columns:repeat(5,1fr);column-gap:3px;row-gap:36px}
+  .persons-grid{display:grid;grid-template-columns:repeat(3,1fr);column-gap:24px;row-gap:56px}
   .person-card{text-decoration:none;display:block;color:inherit}
   .person-card img{
-    width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
-    filter:brightness(.92);
-    transition:filter .4s ease;
+    width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 20%;display:block;
+    filter:grayscale(1) brightness(.92);
+    transition:filter .5s ease;
   }
   /* pack-v667: заглушка без фото — знак по центру, не обрезанный OG-баннер */
   .person-card img.ph{object-fit:contain;padding:22% 30%;background:radial-gradient(ellipse at 50% 40%,rgba(214,181,122,.10),transparent 65%),var(--coal);border:1px solid rgba(214,181,122,.12);box-sizing:border-box}
-  @media(hover:hover){.person-card:hover img{filter:brightness(1)}}
+  @media(hover:hover){.person-card:hover img{filter:grayscale(0) brightness(1)}}
   .person-overlay{padding:16px 2px 0}
   .person-role{
     font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.36em;
     text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;
   }
   .person-name{
-    font-family:'Montserrat',sans-serif;font-size:clamp(14px,1.4vw,18px);
+    font-family:'Montserrat',sans-serif;font-size:clamp(16px,1.8vw,22px);
     letter-spacing:.1em;font-weight:300;color:var(--bone);line-height:1.2;
     margin-bottom:6px;
   }
   .person-desc{
-    font-size:0.75rem;color:var(--sand);line-height:1.5;
+    font-size:0.8125rem;color:var(--sand);line-height:1.55;
   }
-  @media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr)}}
-  @media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:900px){.persons-grid{grid-template-columns:repeat(3,1fr);column-gap:16px}}
+  @media(max-width:560px){.persons-grid{grid-template-columns:repeat(2,1fr);column-gap:12px;row-gap:36px}.person-card img{aspect-ratio:3/4}}
 
   .career-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
   .career-item{background:var(--coal);padding:30px 28px}
@@ -565,7 +565,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=126"></script>
+<script src="/assets/main.js?v=128"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

@@ -58,6 +58,11 @@
         order_not_found: 'Не нашли этот заказ в вашем кабинете — обновите страницу.',
         order_not_paid: 'Заказ ещё не оплачен — билеты придут после оплаты.',
         nothing_to_send: 'В заказе не осталось действующих билетов — все возвращены.',
+        // pack-v706: коды функций, на которые раньше был общий текст
+        not_found: 'Не нашли — обновите страницу и попробуйте ещё раз.',
+        ticket_not_found: 'Не нашли этот билет в заказе — обновите страницу.',
+        payment_id_required: 'Не нашли эту покупку в кабинете — обновите страницу и попробуйте ещё раз.',
+        export_failed: 'Не получилось собрать данные. Попробуйте ещё раз или напишите нам: aelita.production@yandex.ru.',
         bad_order_id: 'Не поняли, о каком заказе речь — обновите страницу.',
         // pack-v592 — подтверждение почты кодом (ревизия 07.10, Б4)
         registration_expired: 'Регистрация не завершена вовремя или начата заново в другом окне — заполните форму ещё раз, придёт новый код.',
@@ -125,6 +130,10 @@
         order_not_found: "We couldn't find this order in your account — refresh the page.",
         order_not_paid: 'This order is not paid yet — tickets will arrive after payment.',
         nothing_to_send: 'There are no valid tickets left in this order — all were refunded.',
+        not_found: 'Not found — refresh the page and try again.',
+        ticket_not_found: 'We could not find this ticket in the order — refresh the page.',
+        payment_id_required: 'We could not find this purchase in your account — refresh the page and try again.',
+        export_failed: 'Could not collect your data. Please try again or write to us: aelita.production@yandex.ru.',
         bad_order_id: "We couldn't tell which order this is — refresh the page.",
         // pack-v592 — email confirmation by code (review 07.10, B4)
         registration_expired: 'The registration was not finished in time or was restarted in another window — fill in the form again and a new code will arrive.',

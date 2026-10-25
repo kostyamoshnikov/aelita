@@ -1636,3 +1636,23 @@ footer .requisites a.a11y-foot-link{color:var(--gold)}
 .fest-reviews-lead{color:var(--sand);max-width:60ch;margin:0 0 28px}
 .fest-closed-note{border-left:2px solid var(--gold);padding:12px 16px;color:var(--bone);background:rgba(214,181,122,.06)}
 .fest-closed [id^="timepad_twf_register"],.fest-closed a[href*="timepad.ru"]{display:none!important}
+
+/* ═══ pack-v707: единый шаблон страниц людей (план редизайна, ОСТАЛОСЬ 00.14) ═══
+   У страниц людей одна разметка (.bio-grid → .bio-photo + .bio-info), но стиль первого
+   экрана жил в каждой странице своей копией — три варианта (фото 360/380 px, заголовок
+   54/58 px, золотая линия у фото только у двух страниц). Здесь — один вариант для всех:
+   фото 380 px ч/б, в цвет при наведении (как основатели на /about), тонкая золотая линия
+   справа от фото, заглушка-знак AELITA у страниц без фото. #main — чтобы перекрыть копии
+   в <style> страниц, не трогая их. */
+@media(min-width:901px){
+  #main .bio-grid{grid-template-columns:380px 1fr;gap:70px}
+  #main .bio-info{padding-top:20px}
+  #main .bio-info h1{font-size:clamp(32px,5vw,58px);margin-bottom:12px}
+  #main .bio-photo{position:relative}
+  #main .bio-photo::before{content:"";position:absolute;top:0;right:-1px;bottom:0;width:1px;z-index:1;background:linear-gradient(to bottom,transparent,var(--gold) 40%,transparent)}
+}
+#main .bio-photo.revealed img{filter:blur(0) grayscale(1) brightness(.9);transition:filter .8s ease}
+@media(hover:hover){#main .bio-photo.revealed:hover img{filter:blur(0) grayscale(0) brightness(.95)}}
+#main .ph-logo{aspect-ratio:3/4;background:radial-gradient(ellipse at 50% 40%,rgba(214,181,122,.10),transparent 65%),var(--coal);display:flex;align-items:center;justify-content:center;border:1px solid rgba(214,181,122,.12)}
+#main .ph-logo img,#main .ph-logo.revealed img{width:auto!important;height:62%!important;aspect-ratio:auto!important;opacity:.9;filter:none!important;object-fit:contain!important}
+@media(max-width:600px){#main .ph-logo{aspect-ratio:16/6;max-width:none!important;height:auto!important}#main .ph-logo img{height:80%!important}}

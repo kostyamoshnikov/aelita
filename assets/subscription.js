@@ -83,6 +83,16 @@
       pwLabelLogin: 'Пароль от личного кабинета',
       processing: 'Переходим к оплате…',
       failed: 'Оплата не началась. Попробуйте ещё раз — или напишите нам: aelita.production@yandex.ru',
+      // pack-v706: понятные тексты на известные ответы сервера оплаты
+      payErr: {
+        yookassa_unreachable: 'Платёжный сервис не ответил — попробуйте через минуту.',
+        gift_store_unreachable: 'Не получилось проверить подарочную карту — попробуйте через минуту.',
+        storage_unreachable: 'Не достучались до сервера — попробуйте через минуту.',
+        yookassa_rejected: 'Платёжный сервис не принял оплату. Попробуйте ещё раз или другую карту — или напишите нам: aelita.production@yandex.ru',
+        finalize_failed: 'Подарочная карта списана не до конца — не повторяйте оплату, напишите нам: aelita.production@yandex.ru, разберёмся.',
+        server_misconfigured: 'Оплата временно недоступна — напишите нам: aelita.production@yandex.ru',
+        card_subscription_active: 'У вас уже есть подписка с оплатой картой — обновите страницу.',
+      },
       checkFailed: 'Не смогли проверить, нет ли у вас уже действующей подписки, — оплату не начинали, чтобы не списать дважды. Попробуйте через несколько минут или напишите нам: aelita.production@yandex.ru',
       network: 'Не получилось связаться с сервером оплаты. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам: aelita.production@yandex.ru',
       gift: {
@@ -143,6 +153,11 @@
         not_refundable: 'По этой подписке вернуть деньги уже нельзя — обновите страницу.',
         refund_rejected: 'Платёжный сервис не принял возврат. Напишите нам: aelita.production@yandex.ru — вернём вручную.',
         yookassa_unreachable: 'Платёжный сервис не ответил — попробуйте через минуту.',
+        // pack-v706: коды функции, на которые раньше был общий текст «Не получилось»
+        not_cancelable: 'Подписка уже отменена или закончилась — обновите страницу.',
+        not_resumable: 'Возобновить уже нельзя: оплаченный период закончился. Оформите подписку заново.',
+        storage_unreachable: 'Не достучались до сервера — попробуйте через минуту.',
+        server_misconfigured: 'Раздел подписки временно недоступен — напишите нам: aelita.production@yandex.ru',
       },
       cardReturn: 'Если оплата прошла, новая карта сохранится в течение минуты — обновите страницу.',
       // ссылка из письма
@@ -156,6 +171,8 @@
         badPhone: 'Проверьте телефон участника', badName: 'Укажите имя и фамилию участника', needPd: 'Отметьте согласие на обработку персональных данных.',
         sending: 'Выставляем счёт…', already: 'У этого участника уже есть действующая подписка на поток — второй счёт не нужен.',
         limited: 'Слишком много запросов — попробуйте через 10 минут или напишите нам: aelita.production@yandex.ru',
+        disabled: 'Счёт для компании сейчас выставить нельзя — напишите нам: aelita.production@yandex.ru, пришлём вручную.',
+        busy: 'Не достучались до сервера — попробуйте через минуту.',
         done: function (r) { return 'Счёт № ' + r.number + ' на ' + rub(r.amount) + ' отправлен на почту бухгалтерии, копия — участнику. Оплатить до ' + d(r.due_on) + '.'; },
       },
       manualStatus: function (s) { return 'Оплачено ' + (s.manual && s.manual.method === 'cash' ? 'наличными' : 'переводом') + ' до ' + d(s.paidThrough) + ' · за 3 дня до конца напомним письмом, как продлить'; },
@@ -200,6 +217,15 @@
       pwLabelLogin: 'Account password',
       processing: 'Redirecting to payment…',
       failed: "The payment didn't start. Try again — or email us: aelita.production@yandex.ru",
+      payErr: {
+        yookassa_unreachable: 'The payment service did not respond — try again in a minute.',
+        gift_store_unreachable: 'We could not check the gift card — try again in a minute.',
+        storage_unreachable: 'We could not reach the server — try again in a minute.',
+        yookassa_rejected: 'The payment service did not accept the payment. Try again or use another card — or email us: aelita.production@yandex.ru',
+        finalize_failed: 'The gift card was not fully applied — please do not pay again; email us at aelita.production@yandex.ru and we will sort it out.',
+        server_misconfigured: 'Payment is temporarily unavailable — email us: aelita.production@yandex.ru',
+        card_subscription_active: 'You already have a subscription paid by card — refresh the page.',
+      },
       checkFailed: "We couldn't check whether you already have an active subscription, so the payment was not started — to avoid charging you twice. Try again in a few minutes or email us: aelita.production@yandex.ru",
       network: "We couldn't reach the payment server. If you're using a VPN, try without it. If that doesn't help, write to us: aelita.production@yandex.ru",
       gift: {
@@ -255,6 +281,10 @@
         not_refundable: 'A refund is no longer possible for this subscription — refresh the page.',
         refund_rejected: 'The payment service did not accept the refund. Email us at aelita.production@yandex.ru — we will refund it manually.',
         yookassa_unreachable: 'The payment service did not respond — try again in a minute.',
+        not_cancelable: 'The subscription has already been cancelled or has ended — refresh the page.',
+        not_resumable: 'It can no longer be resumed: the paid period has ended. Please subscribe again.',
+        storage_unreachable: 'We could not reach the server — try again in a minute.',
+        server_misconfigured: 'Subscriptions are temporarily unavailable — email us: aelita.production@yandex.ru',
       },
       cardReturn: 'If the payment went through, the new card will be saved within a minute — refresh the page.',
       linkBad: 'This link did not work — perhaps it was not copied in full. You can also cancel the subscription in your account.',
@@ -267,6 +297,8 @@
         badPhone: 'Check the participant\'s phone', badName: 'Enter the participant\'s first and last name', needPd: 'Please tick the personal data consent box.',
         sending: 'Issuing the invoice…', already: 'This participant already has an active subscription to the stream — no second invoice is needed.',
         limited: 'Too many requests — try again in 10 minutes or email us: aelita.production@yandex.ru',
+        disabled: 'A company invoice cannot be issued right now — email us at aelita.production@yandex.ru and we will send it manually.',
+        busy: 'We could not reach the server — try again in a minute.',
         done: function (r) { return 'Invoice No. ' + r.number + ' for ' + rub(r.amount) + ' has been sent to the accounts email, with a copy to the participant. Payment due by ' + d(r.due_on) + '.'; },
       },
       manualStatus: function (s) { return 'Paid ' + (s.manual && s.manual.method === 'cash' ? 'in cash' : 'by bank transfer') + ' until ' + d(s.paidThrough) + ' · we will email you 3 days before the end how to continue'; },
@@ -689,7 +721,7 @@
       if (data.error === 'bad_email') return fieldErr(emailEl, T.badEmail);
       if (data.error === 'bad_phone') return fieldErr(phoneEl, T.badPhone);
       if (data.error === 'bad_name') return fieldErr(nameEl, T.badName);
-      say(T.failed);
+      say((T.payErr && T.payErr[data.error]) || T.failed);
     });
 
     initInvoiceForm(main);
@@ -739,7 +771,9 @@
       var map = { bad_company_name: ['inv-company', T.inv.badCompany], bad_inn: ['inv-inn', T.inv.badInn], bad_kpp: ['inv-kpp', T.inv.badKpp], bad_address: ['inv-address', T.inv.badAddress],
         bad_accounting_email: ['inv-acc-email', T.inv.badAccEmail], bad_email: ['inv-p-email', T.inv.badEmail], bad_phone: ['inv-p-phone', T.inv.badPhone], bad_name: ['inv-p-name', T.inv.badName] };
       if (map[data.error]) return err(map[data.error][0], map[data.error][1]);
-      msg.textContent = data.error === 'already_subscribed' ? T.inv.already : data.error === 'rate_limited' ? T.inv.limited : T.error;
+      if (data.error === 'pd_consent_required') { msg.textContent = T.inv.needPd; return; }
+      msg.textContent = data.error === 'already_subscribed' ? T.inv.already : data.error === 'rate_limited' ? T.inv.limited
+        : data.error === 'invoices_disabled' ? T.inv.disabled : data.error === 'storage_unreachable' ? T.inv.busy : T.error;
     });
   }
 
@@ -898,7 +932,9 @@
         try { p = await api(SUBS_API + '/cancel-link', { method: 'POST', auth: false, body: { t: t, action: action } }); } catch (e) { out.textContent = T.error; btn.disabled = false; return; }
         if (p.data && p.data.confirmation_url) { location.href = p.data.confirmation_url; return; }
         if (p.ok) { btn.hidden = true; out.textContent = T.linkCanceled; text.textContent = (T.status[p.data.subscription.status] || T.status.ended)(p.data.subscription); return; }
-        out.textContent = T.error; btn.disabled = false;
+        // pack-v706: уже отменена / ссылка не та — понятный текст вместо «Не получилось»
+        out.textContent = p.data && p.data.error === 'not_cancelable' ? T.linkNothing : p.data && p.data.error === 'bad_token' ? T.linkBad : T.error;
+        btn.disabled = false;
       };
     })();
   }

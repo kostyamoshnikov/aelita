@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="Purchase history in your AELITA PRODUCTION account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=126">
-<link rel="stylesheet" href="/assets/style.css?v=126">
+<link rel="stylesheet" href="/assets/fonts.css?v=128">
+<link rel="stylesheet" href="/assets/style.css?v=128">
 <style>
 body{max-width:100vw}
 .acc-wrap{max-width:760px;margin:0 auto;padding:0 24px}
@@ -352,8 +352,8 @@ body{max-width:100vw}
 
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=126"></script>
-<script src="/assets/main.js?v=126"></script>
+<script src="/assets/account.js?v=128"></script>
+<script src="/assets/main.js?v=128"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -401,7 +401,7 @@ body{max-width:100vw}
       verifyNeedCode: 'Введите 6 цифр из письма.',
       newEmailCodeAsk: function (to) { return 'Мы отправили код из 6 цифр на ' + to + '. Введите его, чтобы перевести кабинет на этот адрес (код действует 10 минут):'; },
       newEmailCodeCancelled: 'Адрес не изменён: код не введён. Нажмите «Сохранить» ещё раз, чтобы получить новый код.',
-      transferErr: { refund_requested: 'По этому билету подано заявление на возврат — передать его нельзя.', too_many_requests: 'Письмо получателю уже отправляли несколько раз — попробуйте через час.', too_late: 'Передать уже нельзя: до начала меньше 3 часов.', transfer_limit: 'Этот билет уже передавали — повторная передача недоступна.', same_person: 'Это тот же человек.', bad_email: 'Проверьте почту получателя.', bad_name: 'Укажите имя получателя.', ticket_redeemed: 'По этому билету уже вошли.', ticket_refunded: 'Билет возвращён.', performance_canceled: 'Показ отменён.', transfer_disabled: 'Передача билетов пока недоступна.' },
+      transferErr: { refund_requested: 'По этому билету подано заявление на возврат — передать его нельзя.', too_many_requests: 'Письмо получателю уже отправляли несколько раз — попробуйте через час.', too_late: 'Передать уже нельзя: до начала меньше 3 часов.', transfer_limit: 'Этот билет уже передавали — повторная передача недоступна.', same_person: 'Это тот же человек.', bad_email: 'Проверьте почту получателя.', bad_name: 'Укажите имя получателя.', ticket_redeemed: 'По этому билету уже вошли.', ticket_refunded: 'Билет возвращён.', performance_canceled: 'Показ отменён.', transfer_disabled: 'Передача билетов пока недоступна.', ticket_not_found: 'Не нашли этот билет в заказе — обновите страницу.', storage_unreachable: 'Не достучались до сервера — попробуйте через минуту.', mail_failed: 'Письмо получателю не ушло — попробуйте через минуту.' },
       ticketPageBtn: function (n, i) { return n > 1 ? 'Билет ' + (i + 1) + ' на телефоне' : 'Билет на телефоне'; },
       receiptLoading: 'Ищем чек…',
       receiptEmail: 'Чек отправлен на почту, указанную при оплате, в день оплаты. Если его нет — проверьте «Спам» или напишите нам.',
@@ -472,7 +472,7 @@ body{max-width:100vw}
       verifyNeedCode: 'Enter the 6 digits from the email.',
       newEmailCodeAsk: function (to) { return 'We have sent a 6-digit code to ' + to + '. Enter it to switch your account to this address (the code works for 10 minutes):'; },
       newEmailCodeCancelled: 'The address was not changed: no code entered. Press “Save” again to get a new code.',
-      transferErr: { refund_requested: 'A refund has been requested for this ticket — it cannot be passed on.', too_many_requests: 'The email to the recipient has already been sent several times — please try again in an hour.', too_late: 'It is too late: less than 3 hours before the start.', transfer_limit: 'This ticket has already been passed on once.', same_person: 'That is the same person.', bad_email: 'Please check the recipient email.', bad_name: 'Please enter the recipient name.', ticket_redeemed: 'This ticket has already been used.', ticket_refunded: 'This ticket has been returned.', performance_canceled: 'The performance has been cancelled.', transfer_disabled: 'Passing tickets on is not available yet.' },
+      transferErr: { refund_requested: 'A refund has been requested for this ticket — it cannot be passed on.', too_many_requests: 'The email to the recipient has already been sent several times — please try again in an hour.', too_late: 'It is too late: less than 3 hours before the start.', transfer_limit: 'This ticket has already been passed on once.', same_person: 'That is the same person.', bad_email: 'Please check the recipient email.', bad_name: 'Please enter the recipient name.', ticket_redeemed: 'This ticket has already been used.', ticket_refunded: 'This ticket has been returned.', performance_canceled: 'The performance has been cancelled.', transfer_disabled: 'Passing tickets on is not available yet.', ticket_not_found: 'This ticket was not found in the order — refresh the page.', storage_unreachable: 'We could not reach the server — try again in a minute.', mail_failed: 'The email to the recipient was not sent — try again in a minute.' },
       ticketPageBtn: function (n, i) { return n > 1 ? 'Ticket ' + (i + 1) + ' on your phone' : 'Ticket on your phone'; },
       receiptLoading: 'Looking for the receipt…',
       receiptEmail: 'The receipt was emailed to the address used at payment on the day of payment. If you cannot find it, check your spam folder or write to us.',
@@ -1400,7 +1400,7 @@ body{max-width:100vw}
     });
   }
 </script>
-<script src="/assets/subscription.js?v=126"></script>
-<script src="/assets/phone-prefix.js?v=126"></script>
+<script src="/assets/subscription.js?v=128"></script>
+<script src="/assets/phone-prefix.js?v=128"></script>
 </body>
 </html>
