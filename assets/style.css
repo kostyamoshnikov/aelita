@@ -1241,13 +1241,7 @@ p.desc + p.desc{margin-top:16px}
 .fact-panel .fp-badge{display:block;margin-top:28px;border:1px solid rgba(214,181,122,.55);padding:16px 20px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.28em;line-height:1.6;text-transform:uppercase;color:var(--gold)}
 .fact-panel .fp-buy{display:block;width:100%;margin:14px 0 0;text-align:center;box-sizing:border-box}
 
-/* pack-v674: факты показа фильма (/kotlovan, /fifth-element) на телефоне — строки «подпись · значение», как панель фактов спектакля */
-@media(max-width:760px){
-section .film-facts{grid-template-columns:1fr;gap:0;border-top:1px solid rgba(232,230,225,.1)}
-section .film-facts>div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:16px;row-gap:6px;padding:16px 0;border-bottom:1px solid rgba(232,230,225,.1)}
-section .film-facts .lbl{display:inline;margin:0;letter-spacing:.26em}
-section .film-facts .val{text-align:right;margin-left:auto}
-}
+/* pack-v704: правила .film-facts (страницы /kotlovan, /fifth-element, pack-v674) сняты вместе со страницами — в _archive/site-kino-mosalova/ */
 
 /* ═══ pack-v677: единый стиль страниц по новой главной (заказчик 19.10: «адаптируй правки по главной на все страницы… в едином стиле») ═══
    1) Плашки-карточки — без серой заливки, тонкая рамка-линия, как цифры и партнёры на главной.
@@ -1623,7 +1617,9 @@ footer .requisites a.a11y-foot-link{color:var(--gold)}
 .fest-past:not(.time-item){opacity:.55}
 .time-item.fest-past .time,.time-item.fest-past .event,.time-item.fest-past .event small{color:var(--grey)}
 .time-item.fest-past .event a:not(.fest-review-link){color:var(--sand)}
-.time-item.fest-live{box-shadow:inset 2px 0 0 var(--gold)}
+/* pack-v704: полоса «идёт сейчас» — левее строки, а не поверх времени (было inset-тенью у самого края: «|2:00», скрин заказчика 25.10) */
+.time-item.fest-live{position:relative}
+.time-item.fest-live::before{content:"";position:absolute;left:-12px;top:14px;bottom:14px;width:2px;background:var(--gold)}
 .fest-now{display:inline-block;margin:0 10px 4px 0;padding:2px 8px;border:1px solid var(--gold);color:var(--gold);font-size:0.6875rem;letter-spacing:.12em;text-transform:uppercase}
 .fest-review-link{display:inline-block;margin-top:8px;color:var(--gold)!important;font-size:0.8125rem;text-decoration:none;border-bottom:1px solid rgba(214,181,122,.4)}
 .day-tab.fest-day-past{opacity:.6}
