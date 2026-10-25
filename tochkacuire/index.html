@@ -32,8 +32,8 @@
 <meta property="og:title" content="ТОЧКА КЮРИ — фестиваль AELITA PRODUCTION">
 <meta property="og:description" content="Точка, где всё меняется. Старый Оскол · ЦСИ «Быль» · 22–25 октября 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=123">
-<link rel="stylesheet" href="/assets/style.css?v=123">
+<link rel="stylesheet" href="/assets/fonts.css?v=124">
+<link rel="stylesheet" href="/assets/style.css?v=124">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -270,6 +270,28 @@ html{scroll-padding-top:230px}
   .quicknav-in{display:flex;flex-wrap:wrap;gap:4px 2px;padding:8px 12px}
   .quicknav a{padding:6px 9px;letter-spacing:.04em}
 }
+/* pack-v703: партнёры фестиваля — логотипы на светлых плашках (у многих свой фон) */
+.fp-group{margin-top:44px}
+.fp-top{display:flex;flex-wrap:wrap;gap:0 28px}
+.fp-top .fp-group{margin-top:0}
+.fp-top .fp-grid{grid-template-columns:repeat(var(--n,1),210px)}
+.fp-group h3{font-family:'Montserrat',sans-serif;font-size:0.6875rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 16px}
+.fp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.fp-grid.n2{--n:2}
+.fp-card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit}
+.fp-logo{aspect-ratio:3/2;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;padding:12% 12%;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.fp-logo img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+.fp-logo.sq{padding:8%}
+.fp-logo.photo{padding:7%}
+.fp-logo.photo img{height:100%;aspect-ratio:1;border-radius:50%;object-fit:cover}
+.fp-logo.mono{background:#F3EFE7}
+.fp-logo.mono span{font-family:'Montserrat',sans-serif;font-weight:400;font-size:0.75rem;line-height:1.5;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:#1B1B1F}
+.fp-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;line-height:1.45;color:var(--sand)}
+a.fp-card .fp-name{color:var(--bone)}
+@media(hover:hover){a.fp-card:hover .fp-logo{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.45)}}
+@media(hover:hover){a.fp-card:hover .fp-name{color:var(--gold)}}
+@media(max-width:520px){.fp-top{display:block}.fp-top .fp-group+.fp-group{margin-top:44px}}
+@media(max-width:480px){.fp-grid,.fp-top .fp-grid{grid-template-columns:repeat(2,1fr);gap:12px}.fp-logo.mono span{font-size:0.6875rem;letter-spacing:.1em}}
 </style>
 <script type="application/ld+json">
 {
@@ -374,6 +396,7 @@ html{scroll-padding-top:230px}
     <a href="#kids">Детям</a>
     <a href="#free">Бесплатно</a>
     <a href="#venue">Площадка</a>
+    <a href="#partners">Партнёры</a>
     <a href="/festival-team">Команда</a>
   </div>
 </nav>
@@ -430,6 +453,8 @@ html{scroll-padding-top:230px}
         <div class="time-item"><span class="time">19:00</span><div class="event">Медитативно-детективный мэшап <a href="/porfiriy">«Порфирий»</a>, реж. Александр Панов<small>Показ отменён в связи с болезнью артиста</small><span class="sold-out sm">Показ отменён</span></div></div>
       </div>
       <div class="day-content" id="day-3" role="tabpanel" aria-labelledby="day-tab-3">
+        <!-- pack-v703: маркет работает и 25.10 (заказчик 25.10) -->
+        <div class="time-item"><span class="time">11:00–19:00</span><div class="event">Работа зоны маркетов</div></div>
         <div class="time-item"><span class="time">12:00</span><div class="event">Детская программа: <a href="/mk-dinozavry">мастер-класс «Динозавры в городе»</a><small>«Речезаврия» · 4–8 лет · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/mk-dinozavry#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">12:30</span><div class="event">Детская программа: <a href="/art-kvest">арт-квест «Дети — не зрители»</a><small>6+ · бесплатно · регистрация обязательна</small><a class="tix-btn reg" href="/art-kvest#join">Зарегистрироваться</a></div></div>
         <div class="time-item"><span class="time">13:00</span><div class="event">Перформанс <a href="/meydey">«Мэйдэй-3»</a> — танцевальная группа «ОМУТ», Санкт-Петербург<small>Галерея · 60 входных билетов без мест — 1 500 ₽</small><span class="sold-out sm" title="Билеты проданы">Sold out</span></div></div>
@@ -715,6 +740,103 @@ html{scroll-padding-top:230px}
         <p><strong>Официальный сайт фестиваля</strong>Подробная программа, описания всех спектаклей и новости фестиваля — на отдельном сайте.</p>
       </div>
       <a class="btn-outline" href="https://cuire-fest.ru/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener">Открыть сайт фестиваля ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ПАРТНЁРЫ ФЕСТИВАЛЯ (pack-v703, заказчик 25.10: «Добавить нужно будет на сайт»).
+     Логотипы — Site/images/partners/*.webp; у кого логотипа пока нет — название на светлой плашке.
+     Порядок и группы — как в списке партнёров заказчика. -->
+<section class="bg-coal" id="partners">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow"><b>11</b> / Партнёры</span><h2>Партнёры фестиваля</h2></div>
+    <div class="reveal">
+    <div class="fp-top">
+    <div class="fp-group">
+      <h3>Поддержка</h3>
+      <div class="fp-grid lg n2">
+          <a class="fp-card" href="https://vk.ru/oskolregion?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/upravlenie-kultury.webp" alt="Логотип: Управление культуры администрации Старооскольского городского округа" loading="lazy" decoding="async"></span><span class="fp-name">Управление культуры администрации Старооскольского городского округа</span></a>
+          <a class="fp-card" href="https://vk.ru/metalloinvest?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/metalloinvest.webp" alt="Логотип: Компания «Металлоинвест»" loading="lazy" decoding="async"></span><span class="fp-name">Компания «Металлоинвест»</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Площадка</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="/byl"><span class="fp-logo"><img src="/images/partners/csi-byl.webp" alt="Логотип: ЦСИ «Быль»" loading="lazy" decoding="async"></span><span class="fp-name">ЦСИ «Быль»</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Технологический партнёр</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="https://syntropic.ru/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/sintropik.webp" alt="Логотип: ИТ-компания «Синтропик»" loading="lazy" decoding="async"></span><span class="fp-name">ИТ-компания «Синтропик»</span></a>
+      </div>
+    </div>
+    </div>
+    <div class="fp-group">
+      <h3>Показ-дефиле</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="/molodo-zeleno"><span class="fp-logo"><img src="/images/partners/molodo-zeleno.webp" alt="Логотип: «Молодо-зелено»" loading="lazy" decoding="async"></span><span class="fp-name">«Молодо-зелено»</span></a>
+          <div class="fp-card"><span class="fp-logo"><img src="/images/partners/zoy.webp" alt="Логотип: ZOY" loading="lazy" decoding="async"></span><span class="fp-name">ZOY</span></div>
+          <a class="fp-card" href="https://vk.com/mamahochuplatie?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/mama-hochu-plate.webp" alt="Логотип: «Мама, хочу платье»" loading="lazy" decoding="async"></span><span class="fp-name">«Мама, хочу платье»</span></a>
+          <a class="fp-card" href="https://vk.ru/vesna_oskol?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/vesna.webp" alt="Логотип: Студия красоты «Весна»" loading="lazy" decoding="async"></span><span class="fp-name">Студия красоты «Весна»</span></a>
+          <div class="fp-card"><span class="fp-logo mono"><span>Визажист Дарья Анпилова</span></span></div>
+          <div class="fp-card"><span class="fp-logo mono"><span>Школа эстетики и моделинга «Каста»</span></span></div>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Кураторы-партнёры</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="https://vk.ru/para_pp?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/paraplanov.webp" alt="Логотип: Агентство «ПараПланов»" loading="lazy" decoding="async"></span><span class="fp-name">Агентство «ПараПланов»</span></a>
+          <a class="fp-card" href="/koroche"><span class="fp-logo"><img src="/images/partners/koroche.webp" alt="Логотип: Танцевальная компания «Короче»" loading="lazy" decoding="async"></span><span class="fp-name">Танцевальная компания «Короче»</span></a>
+          <a class="fp-card" href="https://vk.ru/hsh_kaluga?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/shchuka.webp" alt="Логотип: Художественная школа «Щука»" loading="lazy" decoding="async"></span><span class="fp-name">Художественная школа «Щука»</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Студии детской программы</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="https://vk.ru/juliacandle1997?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/yulia-candle.webp" alt="Логотип: Yulia Candle" loading="lazy" decoding="async"></span><span class="fp-name">Yulia Candle</span></a>
+          <a class="fp-card" href="https://vk.ru/vmesteart31?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/vmeste-art.webp" alt="Логотип: «ВместеАрт»" loading="lazy" decoding="async"></span><span class="fp-name">«ВместеАрт»</span></a>
+          <a class="fp-card" href="https://vk.ru/akademiyaumnikov?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/akademiya-umnikov.webp" alt="Логотип: «Академия Умников»" loading="lazy" decoding="async"></span><span class="fp-name">«Академия Умников»</span></a>
+          <a class="fp-card" href="https://vk.ru/center_iris.oskol?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo"><img src="/images/partners/iris.webp" alt="Логотип: Центр «ИРиС»" loading="lazy" decoding="async"></span><span class="fp-name">Центр «ИРиС»</span></a>
+          <a class="fp-card" href="https://vk.ru/rechezavriya?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/rechezavriya.webp" alt="Логотип: «Речезаврия»" loading="lazy" decoding="async"></span><span class="fp-name">«Речезаврия»</span></a>
+          <a class="fp-card" href="https://vk.ru/stydia_med?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/med.webp" alt="Логотип: Студия праздников «Мёд»" loading="lazy" decoding="async"></span><span class="fp-name">Студия праздников «Мёд»</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Маркет</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="https://vk.ru/sofya.chuikova?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Софья Чуйкова</span></span></a>
+          <a class="fp-card" href="https://vk.ru/maria_macrame?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Мария Васютина</span></span></a>
+          <a class="fp-card" href="https://vk.ru/n.shulikova?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Наталия Шуликова</span></span></a>
+          <a class="fp-card" href="https://vk.com/club85085101?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Кристина Лепихова</span></span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Приглашённые коллективы и артисты</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="/puteshestvenniki"><span class="fp-logo mono"><span>Творческая лаборатория «БлизКо»</span></span></a>
+          <a class="fp-card" href="https://vk.ru/dimtur1?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Дмитрий Турков</span></span></a>
+          <a class="fp-card" href="https://vk.ru/victorderinov?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo mono"><span>Виктор Деринов</span></span></a>
+          <a class="fp-card" href="/vanya-dyba"><span class="fp-logo photo"><img src="/images/vanya-dyba.jpg" alt="Ваня Дыба" loading="lazy" decoding="async"></span><span class="fp-name">Ваня Дыба</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Спикеры</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="/alexandra-chubenko"><span class="fp-logo photo"><img src="/images/alexandra-chubenko.jpg" alt="Александра Чубенко" loading="lazy" decoding="async"></span><span class="fp-name">Александра Чубенко</span></a>
+          <a class="fp-card" href="/mikhail-kazmiruk"><span class="fp-logo photo"><img src="/images/mikhail-kazmiruk.jpg" alt="Михаил Казмирук" loading="lazy" decoding="async"></span><span class="fp-name">Михаил Казмирук</span></a>
+          <a class="fp-card" href="/anastasia-silantyeva"><span class="fp-logo photo"><img src="/images/anastasia-silantyeva.jpg" alt="Анастасия Силантьева" loading="lazy" decoding="async"></span><span class="fp-name">Анастасия Силантьева</span></a>
+      </div>
+    </div>
+    <div class="fp-group">
+      <h3>Информационные партнёры</h3>
+      <div class="fp-grid">
+          <a class="fp-card" href="https://vk.ru/oskol.city?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/oskol-city.webp" alt="Логотип: «Оскол сити»" loading="lazy" decoding="async"></span><span class="fp-name">«Оскол сити»</span></a>
+          <a class="fp-card" href="https://vk.ru/afishaoskol?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/afisha-oskol.webp" alt="Логотип: «Афиша Старый Оскол»" loading="lazy" decoding="async"></span><span class="fp-name">«Афиша Старый Оскол»</span></a>
+          <a class="fp-card" href="https://vk.ru/fonartv?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/fonar-tv.webp" alt="Логотип: FONAR.TV" loading="lazy" decoding="async"></span><span class="fp-name">FONAR.TV</span></a>
+          <a class="fp-card" href="https://vk.ru/mirbelogorya?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=tochkacuire" target="_blank" rel="noopener"><span class="fp-logo sq"><img src="/images/partners/mir-belogorya.webp" alt="Логотип: «Мир Белогорья»" loading="lazy" decoding="async"></span><span class="fp-name">«Мир Белогорья»</span></a>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -1038,7 +1160,7 @@ html{scroll-padding-top:230px}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=123"></script>
+<script src="/assets/main.js?v=124"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1049,7 +1171,7 @@ html{scroll-padding-top:230px}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=123"></script>
-<script src="/assets/festival.js?v=123" defer></script>
+<script src="/assets/phone-prefix.js?v=124"></script>
+<script src="/assets/festival.js?v=124" defer></script>
 </body>
 </html>
