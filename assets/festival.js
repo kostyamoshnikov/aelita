@@ -137,6 +137,9 @@
       var join = document.getElementById('join');
       if (join && !join.querySelector('.fest-closed-note')) {
         join.classList.add('fest-closed');
+        // pack-v705: «Записаться / Регистрация на событие / …регистрация обязательна» под
+        // плашкой «Событие прошло» противоречили ей — заголовок и подводка уходят.
+        Array.prototype.forEach.call(join.querySelectorAll('.eyebrow, h2, .sub'), function (x) { x.classList.add('fest-gone'); });
         var note = el('p', 'fest-closed-note', L('Событие прошло — регистрация закрыта. Спасибо всем, кто был с нами!', 'The event has taken place — registration is closed. Thank you to everyone who came!'));
         var w = join.querySelector('.wrap') || join;
         w.insertBefore(note, w.firstChild);
@@ -212,10 +215,30 @@
     }
   }
 
+  // ── 1б. Запись на событие со сводных страниц (pack-v705) ──
+  // Деловая и детская программа ссылаются на страницы событий: «/slug#join».
+  // Событие (все его даты) прошло — кнопка исчезает, а текстовая ссылка ведёт
+  // просто на страницу события (там «Событие прошло» и отзывы).
+  function joinLinks(t) {
+    var links = document.querySelectorAll('a[href*="#join"]');
+    Array.prototype.forEach.call(links, function (a) {
+      var href = a.getAttribute('href') || '';
+      var m = /^(?:\/en)?\/([\w-]+)\/?#join$/.exec(href);
+      if (!m || m[1] === slug) return;
+      var evs = DATA.events[m[1]];
+      if (!evs || !evs.length) return;
+      var end = Math.max.apply(null, evs.map(function (e) { return ms(e.end); }));
+      if (t < end) return;
+      if (/(^|\s)(btn-gold|btn-outline|bp-btn|tix-btn|submit-btn|mob-cta-btn)(\s|$)/.test(a.className)) a.classList.add('fest-gone');
+      else a.setAttribute('href', href.replace(/#join$/, ''));
+    });
+  }
+
   function apply() {
     var t = nowMs();
     try { tickets(t); } catch (e) { /* не мешаем странице */ }
     try { afisha(t); } catch (e) { /* — */ }
+    try { joinLinks(t); } catch (e) { /* — */ }
     try { if (slug === DATA.slug) festivalPage(t); } catch (e) { /* — */ }
     try { if (DATA.events[slug]) eventPage(t, DATA.events[slug]); } catch (e) { /* — */ }
   }
