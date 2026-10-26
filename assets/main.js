@@ -759,7 +759,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=131';
+    s.src = '/assets/outage.js?v=133';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

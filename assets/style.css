@@ -956,9 +956,12 @@ body .career-item.hl .period::before,body .career-item.highlight .period::before
    Было ~25 вариантов кнопок действия (разные кегль, разрядка, отступы,
    серые и золотые рамки, скругления в кассе). Теперь два дизайна и два
    размера:
-     ОСНОВНАЯ  — золотая заливка: купить, оплатить, отправить, записаться.
-     ВТОРИЧНАЯ — тонкая золотая рамка, светлый текст: подробнее, скачать,
-                 перейти (на первом экране — со стрелкой →).
+     ОСНОВНАЯ  — золотая рамка и золотой текст, заливка золотом при наведении
+                 и нажатии (pack-v712; до того — сплошная золотая заливка):
+                 купить, оплатить, отправить, записаться, подписаться
+                 (на первом экране — со стрелкой →).
+     ВТОРИЧНАЯ — тонкая полупрозрачная золотая рамка, светлый текст:
+                 подробнее, скачать, перейти.
      Размер обычный (12px, 15×30; телефон 11px, 13×20) и компактный
      (11px, 10×18) — расписание, афиша спектакля, документы, кабинет.
    Все — капсом, без скругления, одна разрядка. Вкладки и фильтры,
@@ -972,17 +975,20 @@ body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn,.buy-
   font-size:0.75rem!important;letter-spacing:.22em!important;line-height:1.35!important;
   padding:15px 30px!important;border-radius:0!important;text-decoration:none!important;
   transition:background .25s,color .25s,border-color .25s,opacity .25s!important}
-/* основная */
-body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn:not(.btn-outline),.buy-btn,.mob-cta-btn.gold){
-  background:var(--gold)!important;color:var(--ink)!important;border:1px solid var(--gold)!important}
-body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn:not(.btn-outline),.buy-btn,.mob-cta-btn.gold):hover{
-  background:#e3c690!important;border-color:#e3c690!important}
+/* основная — pack-v712: золотая рамка вместо сплошной золотой заливки (заказчик 26.10, «вариант 1 по всему
+   сайту»): прозрачная, золотой текст и рамка; заливка золотом — при наведении и в момент нажатия.
+   От вторичной отличается цветом: у основной золотой текст и рамка, у вторичной светлый текст и
+   полупрозрачная рамка. Служебные страницы (контроль билетов, админка) — со своими стилями, не трогаем. */
+body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn:not(.btn-outline),.buy-btn,.mob-cta-btn.gold,.iv-btn.gold,.cookie-btn-accept){
+  background:transparent!important;color:var(--gold)!important;border:1px solid var(--gold)!important}
+@media(hover:hover){body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn:not(.btn-outline),.buy-btn,.mob-cta-btn.gold,.iv-btn.gold,.cookie-btn-accept):hover{background:var(--gold)!important;color:var(--ink)!important;border-color:var(--gold)!important}}
+body :is(.btn-gold,.submit-btn,.thanks-close,.btn-drive,.install-btn,a.btn:not(.btn-outline),.buy-btn,.mob-cta-btn.gold,.iv-btn.gold,.cookie-btn-accept):active{background:var(--gold)!important;color:var(--ink)!important;border-color:var(--gold)!important}
 /* вторичная */
-body :is(.btn-outline,.back-link,.shop-link,.btn-tg,.retry-btn,.tix-btn,.ev-cta,.doc-link-pdf,.promo-apply,.contract-btn,.resend-btn,.cancel-btn),
-html body .hero-cta .btn-gold{
+/* pack-v712: кнопка первого экрана (.hero-cta .btn-gold) — больше не исключение, она такая же, как
+   основная (золотая рамка, золотой текст), со стрелкой → (pack-v528). */
+body :is(.btn-outline,.back-link,.shop-link,.btn-tg,.retry-btn,.tix-btn,.ev-cta,.doc-link-pdf,.promo-apply,.contract-btn,.resend-btn,.cancel-btn){
   background:transparent!important;color:var(--bone)!important;border:1px solid rgba(214,181,122,.5)!important}
-body :is(.btn-outline,.back-link,.shop-link,.btn-tg,.retry-btn,.tix-btn,.ev-cta,.doc-link-pdf,.promo-apply,.contract-btn,.resend-btn,.cancel-btn):hover,
-html body .hero-cta .btn-gold:hover{border-color:var(--gold)!important;color:var(--gold)!important;background:transparent!important}
+body :is(.btn-outline,.back-link,.shop-link,.btn-tg,.retry-btn,.tix-btn,.ev-cta,.doc-link-pdf,.promo-apply,.contract-btn,.resend-btn,.cancel-btn):hover{border-color:var(--gold)!important;color:var(--gold)!important;background:transparent!important}
 /* опасное действие (отмена, удаление) — та же вторичная, красноватая */
 body :is(.btn-danger,.cancel-btn.btn-danger){border-color:rgba(201,139,107,.55)!important;color:#C98B6B!important}
 /* компактный размер */
@@ -1720,3 +1726,6 @@ footer .requisites a.a11y-foot-link{color:var(--gold)}
 .fest-slot-done{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin:0 0 8px}
 #main .fest-hero-review{margin:0 14px 10px 0}
 #main :is(.hero-btns,.hero-cta) .fest-hero-review{margin:0}
+
+/* ═══ pack-v711: ссылка на соцсеть человека под подписью на странице людей ═══ */
+#main .bio-info .bio-social{margin:-6px 0 12px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase}

@@ -33,7 +33,8 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-u
 .eyebrow{font-size:0.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
 h1{font-size:1.1875rem;font-weight:500;margin:0 0 10px}
 p{font-size:0.875rem;color:var(--sand);line-height:1.5;margin:0 0 20px}
-button{background:var(--gold);color:var(--ink);border:none;padding:14px 24px;border-radius:4px;font-size:0.875rem;font-weight:500;cursor:pointer;width:100%}
+/* pack-v712: основная — золотая рамка, как по всему сайту */
+button{background:transparent;color:var(--gold);border:1px solid var(--gold);padding:14px 24px;border-radius:4px;font-size:0.875rem;font-weight:500;cursor:pointer;width:100%}
 button:disabled{opacity:.6;cursor:default}
 button.secondary{background:transparent;border:1px solid rgba(217,217,217,.3);color:var(--bone);margin-top:10px}
 .status{font-size:0.9375rem;font-weight:500;margin:14px 0 4px}
@@ -163,6 +164,6 @@ function escapeHtml(s){
   return div.innerHTML;
 }
 </script>
-<script src="/assets/outage.js?v=131" defer></script>
+<script src="/assets/outage.js?v=133" defer></script>
 </body>
 </html>

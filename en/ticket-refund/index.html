@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="AELITA PRODUCTION ticket refund: find your order, choose tickets, see a provisional refund amount.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=131">
-<link rel="stylesheet" href="/assets/style.css?v=131">
+<link rel="stylesheet" href="/assets/fonts.css?v=133">
+<link rel="stylesheet" href="/assets/style.css?v=133">
 <style>
 body{max-width:100vw;line-height:1.75}
 a{color:var(--gold);text-decoration:none}
@@ -44,8 +44,9 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
 .rf label{display:block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .rf input[type=text]{width:100%;padding:12px 14px;background:var(--coal);border:1px solid var(--line);color:var(--bone);font-family:'Montserrat',sans-serif;font-size:0.875rem;margin-bottom:6px}
 .rf .hint{color:var(--grey);font-size:0.75rem;margin-bottom:20px}
-.rf button{padding:13px 26px;background:var(--gold);color:var(--ink);border:none;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
-.rf button.ghost{background:none;border:1px solid var(--gold);color:var(--gold)}
+/* pack-v712: основная — золотая рамка (как по всему сайту), вторичная (.ghost) — светлый текст */
+.rf button{padding:13px 26px;background:transparent;color:var(--gold);border:1px solid var(--gold);font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.rf button.ghost{background:none;border:1px solid rgba(214,181,122,.5);color:var(--bone)}
 .rf button:disabled{opacity:.5;cursor:default}
 .rf .msg{margin-top:14px;font-size:0.875rem}
 .rf .msg.err{color:#E08A7B}
@@ -865,7 +866,7 @@ if (CONFIRM_REF) loadProposal(); // разметка уже выше — без 
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=131"></script>
+<script src="/assets/main.js?v=133"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
