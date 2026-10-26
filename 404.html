@@ -5,7 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Страница не найдена — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=137">
+<!-- pack-v719: старые адреса сайта на Тильде (до лета 2026) — по выгрузке Метрики
+     «Страницы входа» за 2024–2026: /eva, /fog, /human_photo и др. собрали больше
+     4 000 входов, на новом сайте их нет. Хостинг (GitHub Pages) на любой
+     несуществующий адрес отдаёт эту страницу — здесь же и переводим со старого
+     адреса на действующий, с сохранением ?utm и #якоря. Что не нашлось в списке —
+     обычная «Страница не найдена». Новые переезды страниц делаем
+     страницей-редиректом в папке (как /lecture-tsymlov/), а не здесь. -->
+<script>(function(){try{
+  var M={
+    'eva':'/projects','eva_test':'/projects','eva_test2':'/projects','eva_test3':'/projects',
+    'fog':'/projects','fog_test':'/projects','fog_press':'/press',
+    'human_photo':'/human','human_photo_test':'/human','humantest':'/human','humantest2':'/human','human_press':'/press#human',
+    'turkov':'/mozgi','producer':'/about','contact':'/contacts','footer':'/','main_test':'/','test':'/','event_test':'/tickets',
+    'iov_test':'/iov','iov_test2':'/iov','iov_press_test':'/press#iov',
+    'gogol_press':'/press','listen_press':'/press#listen','instruction_press':'/press','stories_press':'/press','press_stories':'/press',
+    'porfiriy_test1':'/porfiriy','ilyina_test1':'/ekaterina-ilyina','abdulova_test':'/katya-abdulova',
+    'business_test':'/business','business_test1':'/business','bychkovatest':'/yulia-bychkova','rezidents_test1':'/rezidents',
+    'korochetest3':'/koroche','corner_test':'/corner','jazz_dancetest':'/jazz-dance','jazz_dancetest3':'/jazz-dance',
+    'budu_test':'/budu','budu_test1':'/budu','club_test':'/community','dybalive_test':'/dyba-show',
+    'oferta_test':'/oferta','oferta_test2':'/oferta','listentest2':'/listen'
+  };
+  var p=location.pathname.replace(/\/index\.html$/,'').replace(/\/+$/,'').replace(/^\//,'').toLowerCase();
+  var to=M[p]||(/^tilda\//.test(p)?'/':null);
+  if(to){
+    /* вход по старой ссылке — в счётчик посещений (без cookie, см. main.js): после перевода
+       источник перехода теряется, поэтому домен и utm уходят отсюда */
+    try{var ref='',e=1;if(document.referrer){var r=new URL(document.referrer);if(r.hostname===location.hostname)e=0;else ref=r.hostname.replace(/^www\./,'');}
+      var q=new URLSearchParams(location.search);
+      if(!navigator.webdriver&&navigator.sendBeacon)navigator.sendBeacon('https://api.aelita-production.ru/tickets/availability?hit=1',new Blob([JSON.stringify({p:to.split('#')[0],r:ref,e:e,s:q.get('utm_source')||'',m:q.get('utm_medium')||'',c:q.get('utm_campaign')||'',d:(window.matchMedia&&matchMedia('(max-width: 760px)').matches)?'m':'d',l:'ru',x:p})],{type:'text/plain'}));}catch(e2){}
+    var h=location.hash||'';if(to.indexOf('#')>=0&&!h){h=to.slice(to.indexOf('#'));to=to.slice(0,to.indexOf('#'));}else if(to.indexOf('#')>=0){to=to.slice(0,to.indexOf('#'));}
+    location.replace(to+location.search+h);}
+}catch(e){}})();</script>
+<link rel="stylesheet" href="/assets/fonts.css?v=139">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -91,8 +123,9 @@ footer p{color:rgba(201,184,163,.7);font-size:0.75rem}
      видно битые ссылки, опечатки в напечатанных QR и старые адреса.
      Метрика грузится только после cookie-согласия (main.js); цель
      page_not_found несёт адрес, по которому не попали. -->
+<script>window.AELITA_NOT_FOUND = true; /* pack-v719: счётчик посещений отметит адрес как «не найдено» */</script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=137"></script>
+<script src="/assets/main.js?v=139"></script>
 <script>
   if (window.AELITA_track) window.AELITA_track('page_not_found', { path: location.pathname + location.search, ref: document.referrer || '' });
 </script>

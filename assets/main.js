@@ -122,6 +122,43 @@
  } catch(e) { /* режим для слабовидящих не должен ломать остальной main.js */ }
 })();
 
+/* ── pack-v719: счётчик посещений без cookie ─────────────────────
+   Метрика грузится только после «Принять» (баннер ниже) и видит
+   меньшинство. Этот счётчик отправляет на наш сервер один анонимный
+   просмотр: адрес страницы без строки запроса, домен источника (не
+   полный адрес), utm-метки, телефон/компьютер, язык, признак «вход с
+   другого сайта». Ни cookie, ни хранилища браузера, ни идентификаторов —
+   на сервере только суммы за день (_tools/Tickets/lib/site-hits.js),
+   в админке — «Посещаемость сайта». Не считаем: служебные страницы,
+   роботов (navigator.webdriver), предпросмотр/пререндер. */
+(function () {
+  try {
+    if (navigator.webdriver) return;
+    if (document.visibilityState === 'prerender') return;
+    var path = location.pathname;
+    if (/^\/(en\/)?(admin|tickets-scan|events-scan|ticket|events-cancel)(\/|$)/.test(path)) return;
+    var ref = '', entry = 1;
+    try {
+      if (document.referrer) {
+        var r = new URL(document.referrer);
+        if (r.hostname === location.hostname) entry = 0; else ref = r.hostname.replace(/^www\./, '');
+      }
+    } catch (e) { /* реферер не адрес — считаем прямым заходом */ }
+    var q = new URLSearchParams(location.search);
+    var hit = {
+      p: path, r: ref, e: entry,
+      s: q.get('utm_source') || '', m: q.get('utm_medium') || '', c: q.get('utm_campaign') || '',
+      d: window.matchMedia && window.matchMedia('(max-width: 760px)').matches ? 'm' : 'd',
+      l: /^\/en(\/|$)/.test(path) ? 'en' : 'ru',
+      n: window.AELITA_NOT_FOUND ? 1 : 0
+    };
+    var url = 'https://api.aelita-production.ru/tickets/availability?hit=1';
+    var body = JSON.stringify(hit);
+    if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }))) return;
+    fetch(url, { method: 'POST', body: body, mode: 'no-cors', credentials: 'omit', keepalive: true }).catch(function () {});
+  } catch (e) { /* счётчик никогда не должен ломать сайт */ }
+})();
+
 // Cookie-баннер
 var YM_ID = 104681911;
 var ymLoaded = false;
@@ -241,7 +278,6 @@ function acceptCookies(){
 var AELITA_TG_OFF = [
   'contacts', 'team', 'festival-team', 'rezidents', 'press', 'mentions', 'partners',
   'alexandra-chubenko', 'alexandra-gubanova', 'alexey-tsymlov', 'anastasia-silantyeva', 'anton-vdovichenko',
-  'denis-smetnev',
   'ekaterina-ilyina', 'ivan-sachkov', 'katya-abdulova',
   'konstantin-moshnikov', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
   'svetlana-nikiforova', 'valentina-bykova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
@@ -770,7 +806,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=137';
+    s.src = '/assets/outage.js?v=139';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }
