@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Event production — AELITA PRODUCTION">
 <meta name="twitter:description" content="We deliver the project you have always dreamed of. Full cycle from concept to promotion.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
-<link rel="stylesheet" href="/assets/style.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
+<link rel="stylesheet" href="/assets/style.css?v=136">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -46,7 +46,7 @@
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
       <a href="/en/projects">Productions</a>
-      <a href="/en/tochkacuire">Tochka Cuire</a>
+      <a href="/en/tochkacuire">“Tochka Cuire”</a>
       <a href="/en/shop">Shop</a>
       <a href="/en/about">About</a>
       <a href="/en/collaboration">Collaborate</a>
@@ -109,16 +109,16 @@
 
     <div id="formSite_e">
     <div class="form-grid" id="form_e">
-      <div class="field"><label>Full name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="name_e" placeholder="John Smith" required></div>
-      <div class="field"><label>Email address <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="email_e" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="field"><label>Phone <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="phone_e" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="field"><label>Telegram <span class="opt-mark">— optional</span></label><input class="input-clear ym-disable-keys" type="text" id="tg_e" autocomplete="off" placeholder="@username"></div>
-      <div class="field"><label>Company or project name</label><input class="ym-disable-keys" type="text" placeholder="If any"></div>
-      <div class="field"><label>Event format</label><select><option value="">Select...</option><option>Festival</option><option>Corporate event</option><option>Open screening</option><option>Tour or touring</option><option>Other</option></select></div>
-      <div class="field"><label>Number of guests</label><input class="ym-disable-keys" type="text" placeholder="Approximately"></div>
-      <div class="field"><label>Event budget</label><input class="ym-disable-keys" type="text" placeholder="Approximate budget"></div>
-      <div class="field"><label>Proposed dates</label><input class="ym-disable-keys" type="text" placeholder="Planned timing"></div>
-      <div class="field full"><label>Brief event description</label><textarea class="ym-disable-keys" placeholder="Tell us about the idea — format, audience, goals..."></textarea></div>
+      <div class="field"><label for="name_e">Full name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="name_e" placeholder="John Smith" required></div>
+      <div class="field"><label for="email_e">Email address <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="email_e" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label for="phone_e">Phone <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="phone_e" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="field"><label for="tg_e">Telegram <span class="opt-mark">— optional</span></label><input class="input-clear ym-disable-keys" type="text" id="tg_e" autocomplete="off" placeholder="@username"></div>
+      <div class="field"><label for="fld-1">Company or project name</label><input id="fld-1" class="ym-disable-keys" type="text" placeholder="If any"></div>
+      <div class="field"><label for="fld-2">Event format</label><select id="fld-2"><option value="">Select...</option><option>Festival</option><option>Corporate event</option><option>Open screening</option><option>Tour or touring</option><option>Other</option></select></div>
+      <div class="field"><label for="fld-3">Number of guests</label><input id="fld-3" class="ym-disable-keys" type="text" placeholder="Approximately"></div>
+      <div class="field"><label for="fld-4">Event budget</label><input id="fld-4" class="ym-disable-keys" type="text" placeholder="Approximate budget"></div>
+      <div class="field"><label for="fld-5">Proposed dates</label><input id="fld-5" class="ym-disable-keys" type="text" placeholder="Planned timing"></div>
+      <div class="field full"><label for="fld-6">Brief event description</label><textarea id="fld-6" class="ym-disable-keys" placeholder="Tell us about the idea — format, audience, goals..."></textarea></div>
       <div class="field full">
         <label>Which services do you need?</label>
         <div class="cb-group">
@@ -129,7 +129,7 @@
           <label class="cb-item"><input type="checkbox"><span>Other</span></label>
         </div>
       </div>
-      <div class="field full"><label>Wishes and comments</label><textarea class="ym-disable-keys" placeholder="Anything else we should know..."></textarea></div>
+      <div class="field full"><label for="fld-7">Wishes and comments</label><textarea id="fld-7" class="ym-disable-keys" placeholder="Anything else we should know..."></textarea></div>
       <div class="field full">
         <label class="cb-item mb-14"><input type="checkbox" id="consent_e"><span>I agree to the <a class="tl c-gold" href="/en/consent">processing of my personal data</a></span></label>
         <button class="btn-gold" onclick="handleForm('e')" style="width:fit-content">Submit application</button>
@@ -286,7 +286,7 @@
   <nav class="m-menu-links">
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
-    <a href="/en/tochkacuire" onclick="toggleMenu()">Tochka Cuire</a>
+    <a href="/en/tochkacuire" onclick="toggleMenu()">“Tochka Cuire”</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
     <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
@@ -333,7 +333,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=134"></script>
+<script src="/assets/main.js?v=136"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -344,6 +344,6 @@
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=134"></script>
+<script src="/assets/phone-prefix.js?v=136"></script>
 </body>
 </html>

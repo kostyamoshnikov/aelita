@@ -86,6 +86,9 @@
   transition:opacity .4s,transform .4s;
 }
 .tg-widget.visible{opacity:1;transform:translateY(0);pointer-events:all}
+/* pack-v715: скрытый виджет не ловит Tab и не читается диктором */
+.tg-widget{visibility:hidden;transition:opacity .4s,transform .4s,visibility 0s linear .4s}
+.tg-widget.visible{visibility:visible;transition:opacity .4s,transform .4s,visibility 0s}
 .tg-bubble{
   background:var(--coal);border:1px solid rgba(214,181,122,.2);
   padding:12px 16px;max-width:220px;
@@ -238,12 +241,12 @@ footer .foot-producers a{color:var(--gold)}
   position:absolute;bottom:40px;left:40px;
   font-family:'Montserrat',sans-serif;font-size:0.75rem;
   letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(201,184,163,.3);
+  color:rgba(201,184,163,.7);
 }
 .m-menu-contacts{
   margin-top:32px;
   font-family:'Montserrat',sans-serif;font-size:0.75rem;
-  letter-spacing:.24em;color:rgba(201,184,163,.45);
+  letter-spacing:.24em;color:rgba(201,184,163,.7);
   text-transform:uppercase;
 }
 .m-menu-close{
@@ -318,6 +321,10 @@ nav a, footer a{color:var(--sand)}
 /* ── Модальное окно Спасибо ── */
   .thanks-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
 .thanks-modal.open{opacity:1;pointer-events:all}
+/* pack-v715: закрытое окно «Спасибо» — ещё и visibility:hidden: иначе его «Закрыть» ловит Tab
+   и читается диктором поверх страницы (как было с мобильным меню, см. .m-menu) */
+.thanks-modal{visibility:hidden;transition:opacity .4s,visibility 0s linear .4s}
+.thanks-modal.open{visibility:visible;transition:opacity .4s,visibility 0s}
 .thanks-box{background:var(--coal);border:1px solid rgba(214,181,122,.2);padding:52px 44px;max-width:440px;width:90%;text-align:center;transform:translateY(20px);transition:transform .4s}
 .thanks-modal.open .thanks-box{transform:translateY(0)}
 .thanks-icon{font-size:2rem;margin-bottom:20px}
@@ -370,7 +377,7 @@ h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppe
 .notify-bot-note{color:var(--sand);font-size:0.8125rem;margin-top:16px}
 .btn-tg{display:inline-block;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:15px 26px;text-decoration:none;transition:all .3s}
 @media(hover:hover){.btn-tg:hover{background:var(--gold);color:var(--ink)}}
-.requisites a{display:inline;color:rgba(201,184,163,.5);font-size:0.75rem;margin-bottom:0}
+.requisites a{display:inline;color:rgba(201,184,163,.7);font-size:0.75rem;margin-bottom:0}
 .career-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .work-card{background:var(--coal);padding:32px 28px;text-decoration:none;display:block;border:1px solid transparent;transition:border-color .35s}
@@ -381,7 +388,7 @@ h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppe
 .tour-list{display:flex;flex-wrap:wrap;gap:8px}
 .tour-tag{font-size:0.8125rem;color:var(--sand);border:1px solid rgba(201,184,163,.15);padding:8px 14px}
 .page-hero .eyebrow{margin-bottom:16px}
-.page-hero .dir{font-size:0.875rem;color:rgba(201,184,163,.65);margin-bottom:36px}
+.page-hero .dir{font-size:0.875rem;color:rgba(201,184,163,.7);margin-bottom:36px}
 .page-hero .dir strong{color:var(--bone);font-weight:400}
 .desc{color:var(--sand);font-size:1rem;line-height:1.85;max-width:68ch}
 .no-shows{background:var(--coal);padding:40px 44px;text-align:center}
@@ -490,7 +497,7 @@ body{max-width:100vw}
 footer{padding:60px 0 40px;border-top:1px solid rgba(232,230,225,.07)}
 .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:36px;margin-bottom:50px}
 footer h4{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.requisites{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
+.requisites{color:rgba(201,184,163,.7);font-size:0.75rem;line-height:1.9;border-top:1px solid rgba(232,230,225,.06);padding-top:28px}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 section{padding:80px 0}
@@ -607,12 +614,15 @@ section{padding:80px 0}
    правка на все страницы, использующие этот style.css (business/
    event/creativity/collaboration/partners/venues). */
 .req-mark{color:var(--gold);font-weight:700}
-.opt-mark{color:rgba(201,184,163,.5);text-transform:none;letter-spacing:0;font-size:0.75rem}
+.opt-mark{color:rgba(201,184,163,.7);text-transform:none;letter-spacing:0;font-size:0.75rem}
 .input-clear:invalid:not(:placeholder-shown):not(:focus){border-color:rgba(214,90,90,.6)}
 .cb-group{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .cb-item{display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:0.875rem;color:var(--sand)}
 .cb-item input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
-.form-note{font-size:0.75rem;color:rgba(201,184,163,.4);margin-top:10px}
+/* pack-v716: вторая галочка формы подписки — согласие на рассылку */
+.cb-item.cb-news{justify-content:center;margin-top:8px}
+.cb-item.cb-news-left{margin:0 0 10px}
+.form-note{font-size:0.75rem;color:rgba(201,184,163,.7);margin-top:10px}
 .form-ok{color:var(--gold);font-size:0.875rem;margin-top:16px;display:none}
 @media(max-width:760px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:1}}
 /* 5. Счётчик */
@@ -626,7 +636,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .doc-body li{margin-bottom:8px}
 .doc-body .req{background:var(--coal);padding:28px;margin-top:30px;font-size:0.875rem;color:var(--sand);line-height:2}
 .doc-body .req strong{color:var(--bone);font-weight:400}
-footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
+footer p{color:rgba(201,184,163,.7);font-size:0.75rem;line-height:1.9}
 @media(max-width:760px) {
   .wrap { padding: 0 16px; }
   table { width: 100%; display: block; overflow-x: auto; }
@@ -671,7 +681,7 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
 .aud-review-card{background:var(--coal);padding:28px 26px;border:1px solid rgba(232,230,225,.06)}
 .aud-review-text{color:var(--bone);font-size:0.90625rem;line-height:1.7;margin:12px 0 16px}
 .aud-review-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.08em;color:var(--sand);display:flex;justify-content:space-between;align-items:baseline}
-.aud-review-date{color:rgba(201,184,163,.5);font-size:0.75rem}
+.aud-review-date{color:rgba(201,184,163,.7);font-size:0.75rem}
 /* Запрет, установленный автором отзыва (ст. 10.1 152-ФЗ), — тише
    текста отзыва, но читаемо: это юридически значимая надпись, а не
    служебная пометка. */
@@ -680,7 +690,7 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
    который решает, идти ли ему, а не рекламный баннер. */
 .show-warning{border-left:2px solid var(--gold);padding:10px 0 10px 14px;margin:18px 0 0;color:rgba(201,184,163,.85);font-size:0.875rem;line-height:1.6;max-width:640px}
 .show-warning a{color:var(--gold);border-bottom:1px solid rgba(201,184,163,.3)}
-.aud-review-limit{color:rgba(201,184,163,.55);font-size:0.75rem;margin:8px 0 0;font-style:italic}
+.aud-review-limit{color:rgba(201,184,163,.7);font-size:0.75rem;margin:8px 0 0;font-style:italic}
 /* Условия публикации отзыва — дополнительный параметр, а не третье
    согласие: рамку и заголовок-легенду убрали (pack-v365), они делали
    блок таким же весомым, как сами согласия. Осталась одна строка со
@@ -691,13 +701,14 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
 .aud-select:focus{outline:1px solid var(--gold);outline-offset:2px}
 .aud-scope-check{margin-bottom:0}
 .aud-stars{letter-spacing:2px}
-.aud-star{color:rgba(232,230,225,.2);font-size:0.9375rem}
+.aud-star{color:rgba(232,230,225,.45);font-size:0.9375rem}
 .aud-star.on{color:var(--gold)}
 
 .aud-review-form{max-width:520px}
 .aud-review-form h3{font-size:1.0625rem;font-weight:400;letter-spacing:.02em;color:var(--bone);margin-bottom:18px}
 .aud-stars-input{margin-bottom:16px}
-.aud-star-btn{font-size:2.125rem;color:rgba(232,230,225,.2);cursor:pointer;transition:color .15s;margin-right:8px;display:inline-block}
+.aud-star-btn{font-size:2.125rem;color:rgba(232,230,225,.45);cursor:pointer;transition:color .15s;margin-right:8px;display:inline-block;background:none;border:0;padding:0;font-family:inherit;line-height:1.2}
+.aud-star-btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .aud-star-btn.on{color:var(--gold)}
 .aud-input,.aud-textarea{width:100%;background:var(--coal);border:1px solid rgba(232,230,225,.12);color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;padding:13px 16px;margin-bottom:14px;resize:vertical}
 .aud-input:focus,.aud-textarea:focus{outline:1px solid var(--gold);border-color:var(--gold)}
@@ -1542,7 +1553,7 @@ html.a11y.a11y-s1:not(#a11y-none){font-size:125%!important}
 html.a11y.a11y-s2:not(#a11y-none){font-size:150%!important}
 html.a11y.a11y-s3:not(#a11y-none){font-size:175%!important}
 html.a11y body:not(#a11y-none),
-html.a11y body *:not(svg):not(svg *):not(img):not(video):not(iframe):not(#a11y-none){
+html.a11y body *:not(svg):not(svg *):not(img):not(video):not(iframe):not(.a11y-keep):not(.a11y-keep *):not(#a11y-none){
   background-color:var(--a11y-bg)!important;background-image:none!important;
   color:var(--a11y-fg)!important;-webkit-text-fill-color:currentColor!important;
   border-color:var(--a11y-fg)!important;text-shadow:none!important;box-shadow:none!important;
@@ -1551,11 +1562,11 @@ html.a11y body *:not(svg):not(svg *):not(img):not(video):not(iframe):not(#a11y-n
   animation:none!important;transition:none!important;line-height:1.5
 }
 /* крупный шрифт: длинные слова, почта и кнопки переносятся, колонки сжимаются */
-html.a11y body *:not(pre):not(code):not(svg):not(svg *):not(#a11y-none){overflow-wrap:anywhere;white-space:normal!important;min-width:0}
+html.a11y body *:not(pre):not(code):not(svg):not(svg *):not(.a11y-keep):not(.a11y-keep *):not(#a11y-none){overflow-wrap:anywhere;white-space:normal!important;min-width:0}
 html.a11y .mob-cta:not(#a11y-none){flex-wrap:wrap;height:auto!important;row-gap:8px}
 html.a11y .mob-cta>*:not(#a11y-none){flex-shrink:1!important}
 /* пустые декоративные слои (затемнения поверх фото) — прозрачные, иначе закрывают фото */
-html.a11y body *:empty:not(input):not(textarea):not(select):not(button):not(hr):not(.burger span):not(#a11y-none){background-color:transparent!important}
+html.a11y body *:empty:not(input):not(textarea):not(select):not(button):not(hr):not(.burger span):not(.a11y-keep):not(.a11y-keep *):not(#a11y-none){background-color:transparent!important}
 html.a11y *:not(#a11y-none)::before,html.a11y *:not(#a11y-none)::after{background-image:none!important;color:var(--a11y-fg)!important;border-color:var(--a11y-fg)!important;text-shadow:none!important;box-shadow:none!important;letter-spacing:normal!important;animation:none!important}
 html.a11y svg [fill]:not([fill="none"]){fill:currentColor}
 html.a11y svg [stroke]:not([stroke="none"]){stroke:currentColor}
@@ -1617,6 +1628,11 @@ html.a11y.a11y-c2 #a11y-bar .a11y-c2{border-color:#fff!important}
 }
 @media(max-width:380px){#a11y-bar{gap:8px 10px;padding:8px 8px}#a11y-bar button{min-width:38px;padding:4px 7px}}
 footer .requisites a.a11y-foot-link{color:var(--gold)}
+/* pack-v715: автономные страницы без шапки и подвала — ссылка первой строкой (main.js / a11y.js);
+   .a11y-keep — блок, который режим не перекрашивает (схема зала: цвет места = ценовой пояс) */
+.a11y-solo{margin:0;padding:10px 16px 0;text-align:right;font-size:0.875rem}
+.a11y-solo a{color:var(--sand,#C9B8A3)}
+html.a11y .a11y-keep:not(#a11y-none){outline:2px solid var(--a11y-fg);outline-offset:4px}
 
 /* pack-v694: фестиваль «по часам» (assets/festival.js) — прошедшее, «идёт сейчас», отзывы */
 .fest-gone{display:none!important}

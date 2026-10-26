@@ -55,8 +55,8 @@
 
 /* ── Вместо style="…" в разметке ─────────────────────────────── */
 #main .w-74ch{max-width:74ch}
-#main .c-muted{color:rgba(201,184,163,.5)}
-#main .c-muted-light{color:rgba(201,184,163,.5);font-weight:300}
+#main .c-muted{color:rgba(201,184,163,.7)}
+#main .c-muted-light{color:rgba(201,184,163,.7);font-weight:300}
 #main .btn-row{display:flex;gap:12px;flex-wrap:wrap}
 #main .btn-row .btn-outline{margin-left:0}
 #main .ml-0{margin-left:0}
@@ -80,7 +80,7 @@
 #main .panel-coal{margin-top:2px;background:var(--coal);padding:32px 36px}
 #main .foot-mini-link{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.15em;color:var(--sand);text-decoration:none;margin-right:16px}
 #main .block{display:block;margin-bottom:18px}
-#main .fine-print{font-size:0.75rem;color:rgba(201,184,163,.5);margin-top:-12px}
+#main .fine-print{font-size:0.75rem;color:rgba(201,184,163,.7);margin-top:-12px}
 #main .join-sub{padding:48px 0 0}
 #main .sec-pt-100{padding-top:100px}
 #main .w-74ch-mt{max-width:74ch;margin-top:32px}

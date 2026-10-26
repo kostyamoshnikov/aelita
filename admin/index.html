@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -100,7 +100,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .subs-status{font-size:0.8125rem;color:var(--sand);line-height:1.6;margin:0 0 4px}
 .subs-status .ok{color:var(--gold)}
 .subs-status .warn{color:#C98B6B}
-.subs-muted{font-size:0.6875rem;color:rgba(201,184,163,.55);margin:0 0 12px}
+.subs-muted{font-size:0.6875rem;color:rgba(201,184,163,.7);margin:0 0 12px}
 /* pack-v610: меню разделов админки (заказчик 09.10: «админка очень разрослась, нужно что-то типо меню») */
 .adm-nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--ink);padding:10px 0 12px;border-bottom:1px solid rgba(214,181,122,.18)}
 .adm-nav::-webkit-scrollbar{display:none}
@@ -109,7 +109,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .adm-nav .badge{display:inline-block;min-width:16px;margin-left:6px;padding:1px 5px;border-radius:9px;background:var(--gold);color:var(--ink);font-size:0.5625rem;letter-spacing:0;text-align:center}
 .adm-off{display:none!important}
 /* Пояснения — коротко, подробности под «Подробнее» */
-.adm-more{margin:-4px 0 16px;font-size:0.75rem;color:rgba(201,184,163,.6);line-height:1.6}
+.adm-more{margin:-4px 0 16px;font-size:0.75rem;color:rgba(201,184,163,.7);line-height:1.6}
 .adm-more summary{cursor:pointer;color:var(--sand);letter-spacing:.06em;list-style:none}
 .adm-more summary::-webkit-details-marker{display:none}
 .adm-more summary::before{content:'＋ ';color:var(--gold)}
@@ -123,7 +123,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .editor-box .btn-small{display:inline-block;margin:4px 0 12px;line-height:1.5}
 .btn-small + .editor-note,.btn-small + .adm-more{margin-top:4px}
 
-.loaded-at{font-size:0.6875rem;color:rgba(201,184,163,.6);white-space:nowrap}
+.loaded-at{font-size:0.6875rem;color:rgba(201,184,163,.7);white-space:nowrap}
 .btn-small{font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;border:1px solid rgba(214,181,122,.35);color:var(--gold);background:none;cursor:pointer}
 @media(hover:hover){.btn-small:hover{background:rgba(214,181,122,.08)}}
 .btn-small:disabled{opacity:.5;cursor:default}
@@ -202,7 +202,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .editor-box label{font-family:'Montserrat',sans-serif;font-size:0.625rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
 .editor-box input,.editor-box textarea{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:12px 14px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;width:100%;resize:vertical}
 .editor-box input:focus,.editor-box textarea:focus{outline:none;border-color:var(--gold)}
-.editor-note{font-size:0.75rem;color:rgba(201,184,163,.6);margin-top:-8px;margin-bottom:16px;line-height:1.6}
+.editor-note{font-size:0.75rem;color:rgba(201,184,163,.7);margin-top:-8px;margin-bottom:16px;line-height:1.6}
 .editor-preview{background:rgba(232,230,225,.04);border-left:2px solid var(--gold);padding:16px;font-size:0.8125rem;color:var(--sand);margin:16px 0;display:none;white-space:pre-wrap;word-break:break-word}
 .editor-preview mark{background:rgba(214,181,122,.25);color:var(--gold)}
 .editor-result{font-size:0.8125rem;margin-top:14px;display:none}
@@ -3385,7 +3385,7 @@ function renderLeadsAdmin() {
     return '<div class="ev-card' + (a.done ? ' inv-off' : '') + '">' +
       '<div class="ev-head"><div>' +
         '<div class="ev-title">' + escapeHtml(a.form) + (a.done ? ' <span class="inv-tag ok">обработана</span>' : ' <span class="inv-tag off">новая</span>') + '</div>' +
-        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + '</div>' +
+        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + (a.consent && a.consent.newsletter ? ' · согласие на рассылку' : '') + '</div>' +
       '</div></div>' +
       '<div class="ap-fields">' + (a.fields || []).map(function (x) { return '<div><span class="ap-label">' + escapeHtml(x.label) + ':</span> ' + escapeHtml(x.value || '—') + '</div>'; }).join('') + '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-ld="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ld="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
@@ -3409,13 +3409,13 @@ function renderLeadsAdmin() {
     } catch (err) { alert(err.message); b.disabled = false; }
   });
   document.getElementById('ldXlsxBtn').addEventListener('click', function () {
-    var all = [['Получена', 'Форма', 'Страница', 'Статус', 'Поля']];
+    var all = [['Получена', 'Форма', 'Страница', 'Статус', 'Рассылка', 'Поля']];
     var byForm = {};
     LD_LIST.forEach(function (a) {
-      all.push([fmtGcDate(a.receivedAt), a.form, a.page || '', a.done ? 'обработана' : 'новая', (a.fields || []).map(function (x) { return x.label + ': ' + x.value; }).join('\n')]);
+      all.push([fmtGcDate(a.receivedAt), a.form, a.page || '', a.done ? 'обработана' : 'новая', a.consent && a.consent.newsletter ? 'согласие ' + String(a.consent.at || '').slice(0, 10) : '', (a.fields || []).map(function (x) { return x.label + ': ' + x.value; }).join('\n')]);
       (byForm[a.form] = byForm[a.form] || []).push(a);
     });
-    var sheets = [{ name: 'Все заявки', rows: all, widths: [22, 30, 20, 12, 80] }];
+    var sheets = [{ name: 'Все заявки', rows: all, widths: [22, 30, 20, 12, 20, 80] }];
     Object.keys(byForm).sort().forEach(function (form) {
       var labels = [];
       byForm[form].forEach(function (a) { (a.fields || []).forEach(function (x) { if (labels.indexOf(x.label) < 0) labels.push(x.label); }); });

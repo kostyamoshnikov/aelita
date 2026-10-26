@@ -30,8 +30,8 @@
 <meta name="twitter:description" content="Партнёры AELITA PRODUCTION: площадки, компании и организации, с которыми мы создаём современное искусство. Хочешь быть частью — присоединяйся!">
   <meta name="twitter:image" content="https://static.tildacdn.com/tild6335-6666-4039-b764-313065666534/5113C1D5-EA64-4780-B.jpeg">
 <meta property="og:image" content="https://static.tildacdn.com/tild6335-6666-4039-b764-313065666534/5113C1D5-EA64-4780-B.jpeg">
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
-<link rel="stylesheet" href="/assets/style.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
+<link rel="stylesheet" href="/assets/style.css?v=136">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 34px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 34px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -59,7 +59,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 /* FORM */
   .form-sec{padding:90px 0}
 .field textarea{resize:vertical;min-height:130px}
-.form-note{margin-top:12px;font-size:0.75rem;color:rgba(201,184,163,.45)}
+.form-note{margin-top:12px;font-size:0.75rem;color:rgba(201,184,163,.7)}
 .form-ok{margin-top:20px;color:var(--gold);font-size:0.875rem;display:none}
 /* STATS */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:70px 0}
@@ -168,11 +168,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <div id="formSite_p">
       <div class="form-grid">
         <div class="field">
-          <label>Имя и фамилия <span class="req-mark">*</span></label>
+          <label for="fname">Имя и фамилия <span class="req-mark">*</span></label>
           <input class="ym-disable-keys" type="text" id="fname" placeholder="Иван Иванов" required>
         </div>
         <div class="field">
-          <label>Кто вы</label>
+          <label for="ftype">Кто вы</label>
           <select id="ftype">
             <option value="">Выберите…</option>
             <option>Площадка или театр</option>
@@ -184,19 +184,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
           </select>
         </div>
         <div class="field">
-          <label>Электронная почта <span class="req-mark">*</span></label>
+          <label for="femail">Электронная почта <span class="req-mark">*</span></label>
           <input class="input-clear ym-disable-keys" type="email" id="femail" inputmode="email" autocomplete="email" placeholder="email@example.com" required>
         </div>
         <div class="field">
-          <label>Телефон <span class="req-mark">*</span></label>
+          <label for="fphone">Телефон <span class="req-mark">*</span></label>
           <input class="input-clear ym-disable-keys" type="tel" id="fphone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
         </div>
         <div class="field">
-          <label>Telegram <span class="opt-mark">— необязательно</span></label>
+          <label for="ftg">Telegram <span class="opt-mark">— необязательно</span></label>
           <input class="input-clear ym-disable-keys" type="text" id="ftg" autocomplete="off" placeholder="@username">
         </div>
         <div class="field full">
-          <label>Краткое описание вашего проекта или предложения</label>
+          <label for="fmsg">Краткое описание вашего проекта или предложения</label>
           <textarea class="ym-disable-keys" id="fmsg" placeholder="Расскажите о себе и о том, как видите наше сотрудничество…"></textarea>
         </div>
         <div class="field full">
@@ -411,7 +411,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=134"></script>
+<script src="/assets/main.js?v=136"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -422,6 +422,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=134"></script>
+<script src="/assets/phone-prefix.js?v=136"></script>
 </body>
 </html>

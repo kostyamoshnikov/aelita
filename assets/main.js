@@ -96,8 +96,9 @@
     if(st.on) window.scrollTo(0,0);
   }
   function init(){
-    // без общего style.css (страница /app) режиму нечем рисоваться — не включаем
-    if(!document.querySelector('link[href*="/assets/style.css"]')){ st.on=0; cls(); return; }
+    // без общего style.css (страница /app) режиму нечем рисоваться — не включаем;
+    // pack-v715: у автономных страниц (покупка, билет, отмена записи) — assets/a11y.css
+    if(!document.querySelector('link[href*="/assets/style.css"],link[href*="/assets/a11y.css"]')){ st.on=0; cls(); return; }
     var nav=document.querySelector('body > nav');
     if(nav){
       var inner=nav.querySelector('.nav-in')||nav;
@@ -111,6 +112,9 @@
     if(ml){ var a=document.createElement('a'); a.href='#'; a.className='a11y-menu-link'; a.innerHTML=EYE+'<span>'+T.link+'</span>'; a.addEventListener('click',toggle); ml.appendChild(a); }
     var rq=document.querySelector('footer .requisites');
     if(rq){ var f=document.createElement('a'); f.href='#'; f.className='a11y-foot-link'; f.textContent=T.link; f.addEventListener('click',toggle); rq.appendChild(document.createTextNode(' · ')); rq.appendChild(f); }
+    // pack-v715: страница без шапки, меню и подвала (покупка, билет, отмена записи) — ссылка
+    // «Версия для слабовидящих» первой строкой страницы, иначе режим там не включить
+    if(!nav&&!ml&&!rq&&document.body){ var sp=document.createElement('p'); sp.className='a11y-solo'; var sa=document.createElement('a'); sa.href='#'; sa.className='a11y-foot-link'; sa.textContent=T.link; sa.addEventListener('click',toggle); sp.appendChild(sa); document.body.insertBefore(sp,document.body.firstChild); }
     apply('',1);
     window.addEventListener('load',function(){ if(st.on) fixPx(); });
   }
@@ -514,10 +518,17 @@ function aelitaLeadId() {
   try { crypto.getRandomValues(a); } catch (e) { for (var i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
   return 'l' + Date.now().toString(36) + '-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
 }
-window.AELITA_sendLead = async function (formName, fields) {
+// pack-v716: каждая форма с заявкой проверяет галочку согласия на
+// обработку данных ДО вызова — поэтому pd_consent: true уходит всегда.
+// Формы подписки передают opts.newsletter = true (отдельная галочка
+// «получать новости и анонсы»): сервер записывает согласие с редакциями
+// документов (Inbox/leads.js → Shared/lib/consent.js).
+window.AELITA_sendLead = async function (formName, fields, opts) {
   var clean = {};
   Object.keys(fields || {}).forEach(function (k) { var v = String(fields[k] || '').trim(); if (v) clean[k] = v; });
-  var body = JSON.stringify({ form: formName, fields: clean, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', page: location.pathname, client_id: aelitaLeadId() });
+  var payload = { form: formName, fields: clean, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', page: location.pathname, client_id: aelitaLeadId(), pd_consent: true };
+  if (opts && opts.newsletter === true) payload.newsletter_consent = true;
+  var body = JSON.stringify(payload);
   // Одна повторная попытка при обрыве сети — с тем же client_id (сервер не задвоит).
   for (var attempt = 0; attempt < 2; attempt++) {
     try {
@@ -759,7 +770,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=134';
+    s.src = '/assets/outage.js?v=136';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

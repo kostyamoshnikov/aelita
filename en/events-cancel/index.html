@@ -56,6 +56,9 @@ body .promo-apply{font-size:0.75rem!important;letter-spacing:.16em!important;pad
 body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:not-allowed!important}
 @media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:0.75rem!important;letter-spacing:.16em!important;padding:13px 20px!important}}
 </style>
+<!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
+<link rel="stylesheet" href="/assets/a11y.css?v=136">
+<script src="/assets/a11y.js?v=136"></script>
 </head>
 <body>
 <div class="card" id="card">
@@ -64,8 +67,8 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
   <p id="text">Checking your link…</p>
   <div id="actions"></div>
 </div>
-<p style="margin-top:20px;font-size:0.75rem;color:rgba(201,184,163,.5);text-align:center">
-  <a href="/en/privacy" style="color:rgba(201,184,163,.5)">Personal Data Processing Policy</a>
+<p style="margin-top:20px;font-size:0.75rem;color:rgba(201,184,163,.7);text-align:center">
+  <a href="/en/privacy" style="color:rgba(201,184,163,.7)">Personal Data Processing Policy</a>
 </p>
 <script src="/assets/analytics-events.js"></script>
 <script>
@@ -164,6 +167,6 @@ function escapeHtml(s){
   return div.innerHTML;
 }
 </script>
-<script src="/assets/outage.js?v=134" defer></script>
+<script src="/assets/outage.js?v=136" defer></script>
 </body>
 </html>

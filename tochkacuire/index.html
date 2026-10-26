@@ -32,8 +32,8 @@
 <meta property="og:title" content="ТОЧКА КЮРИ — фестиваль AELITA PRODUCTION">
 <meta property="og:description" content="Точка, где всё меняется. Старый Оскол · ЦСИ «Быль» · 22–25 октября 2026.">
 <meta property="og:image" content="https://cuire-fest.ru/assets/photo/p06.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
-<link rel="stylesheet" href="/assets/style.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
+<link rel="stylesheet" href="/assets/style.css?v=136">
 <style>body{max-width:100vw}
 section{padding:90px 0}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:15px 30px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -228,7 +228,7 @@ html body .sched a.tix-btn:not(.reg){background:var(--gold)!important;color:var(
 .field label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sand);display:block;margin-bottom:6px}
 .field input{width:100%;background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:14px 16px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;transition:border-color .3s}
 .field input:focus{outline:none;border-color:var(--gold)}
-.form-note{font-size:0.75rem;color:rgba(201,184,163,.4);margin-top:8px}
+.form-note{font-size:0.75rem;color:rgba(201,184,163,.7);margin-top:8px}
 .form-ok{color:var(--gold);font-size:0.875rem;display:none;padding:20px;background:rgba(214,181,122,.08);border-left:2px solid var(--gold)}
 @media(max-width:760px){.form-box{padding:36px 28px}}
 /* EXTERNAL LINK BANNER */
@@ -699,10 +699,11 @@ a.fp-card .fp-name{color:var(--bone)}
         <h3>Узнать о следующей «Точке Кюри»</h3>
         <p>«Точка Кюри» задумана как ежегодный фестиваль. Оставьте контакты — напишем о новых показах AELITA PRODUCTION и о следующем фестивале.</p>
         <div class="form-col" id="subscribeForm">
-          <div class="field"><label>Имя *</label><input class="ym-disable-keys" type="text" id="sub-name" placeholder="Ваше имя" required></div>
-          <div class="field"><label>Email *</label><input class="ym-disable-keys" type="email" id="sub-email" placeholder="email@example.com"></div>
-          <div class="field"><label>Телефон *</label><input class="ym-disable-keys" type="tel" id="sub-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-          <label class="cb-item" style="margin:4px 0 10px"><input type="checkbox" id="sub-consent"><span>Согласен(на) на <a class="tl c-gold" href="/consent">обработку персональных данных</a></span></label>
+          <div class="field"><label for="sub-name">Имя *</label><input class="ym-disable-keys" type="text" id="sub-name" placeholder="Ваше имя" required></div>
+          <div class="field"><label for="sub-email">Email *</label><input class="ym-disable-keys" type="email" id="sub-email" placeholder="email@example.com"></div>
+          <div class="field"><label for="sub-phone">Телефон *</label><input class="ym-disable-keys" type="tel" id="sub-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+          <label class="cb-item" style="margin:4px 0 6px"><input type="checkbox" id="sub-consent"><span>Согласен(на) на <a class="tl c-gold" href="/consent">обработку персональных данных</a></span></label>
+          <label class="cb-item cb-news-left"><input type="checkbox" id="sub-news"><span>Согласен(на) получать <a class="tl c-gold" href="/consent#rassylka">новости и анонсы AELITA PRODUCTION</a></span></label>
           <button class="btn-gold" onclick="subscribe()">Подписаться на новости →</button>
         </div>
         <div class="form-ok" id="subOk">✓ Готово! Спасибо — напишем о новых показах AELITA PRODUCTION и о следующей «Точке Кюри».</div>
@@ -979,12 +980,13 @@ a.fp-card .fp-name{color:var(--bone)}
     if(!AELITA_phoneOk(phone)){AELITA_formMessage(document.getElementById('subOk'), 'Укажите телефон', 'Please enter your phone number');return;}
     if(!email || !email.includes('@')){AELITA_formMessage(document.getElementById('subOk'), 'Укажите email', 'Please enter your email');return;}
     if(!document.getElementById('sub-consent').checked){AELITA_formMessage(document.getElementById('subOk'), 'Отметьте согласие на обработку персональных данных', 'Please tick the personal data consent box');return;}
+    if(!document.getElementById('sub-news').checked){AELITA_formMessage(document.getElementById('subOk'), 'Отметьте согласие на получение новостей и анонсов — без него мы не можем вам писать.', 'Please tick the box to receive news and announcements — we can’t write to you without it.');return;}
     await addNewsletterContact(name, email);
     if (!(await AELITA_sendLead('Точка Кюри — уведомить о продажах', {
       'Имя': name,
       'Телефон': phone,
       'Email': email,
-    }))) { AELITA_formMessage(document.getElementById('subOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
+    }, { newsletter: true }))) { AELITA_formMessage(document.getElementById('subOk'), AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en); return; }
     AELITA_formMessageClear(document.getElementById('subOk'));
     document.getElementById('subscribeForm').style.display='none';
     document.getElementById('subOk').style.display='block';
@@ -1149,7 +1151,7 @@ a.fp-card .fp-name{color:var(--bone)}
   })();
 </script>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=134"></script>
+<script src="/assets/main.js?v=136"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -1160,7 +1162,7 @@ a.fp-card .fp-name{color:var(--bone)}
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=134"></script>
-<script src="/assets/festival.js?v=134" defer></script>
+<script src="/assets/phone-prefix.js?v=136"></script>
+<script src="/assets/festival.js?v=136" defer></script>
 </body>
 </html>

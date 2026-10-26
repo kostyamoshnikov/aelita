@@ -86,6 +86,8 @@
       formTitle: 'Оставить отзыв',
       namePh: 'Ваше имя',
       textPh: 'Что вам запомнилось?',
+      // pack-v715: доступность — подписи для экранного диктора
+      rate: 'Оценка', of5: 'из 5',
       // pack-v585 (заказчик 07.10): одно поле вместо двух — согласие на
       // обработку и на публикацию (распространение) одной галочкой. Сами
       // согласия остаются отдельными документами (/consent и
@@ -125,6 +127,7 @@
       formTitle: 'Leave a review',
       namePh: 'Your name',
       textPh: 'What stayed with you?',
+      rate: 'Rating', of5: 'out of 5',
       consent: 'I agree to the <a href="/en/consent/">processing of my personal data</a> and the <a href="/en/consent/#rasprostranenie">publication of my review on the site</a> (dissemination of personal data)',
       moreTitle: 'Additional conditions',
       scopeTitle: 'Publish the review',
@@ -158,7 +161,7 @@
 
   function starsHtml(rating) {
     var out = '';
-    for (var i = 1; i <= 5; i++) out += '<span class="aud-star' + (i <= rating ? ' on' : '') + '">★</span>';
+    for (var i = 1; i <= 5; i++) out += '<span class="aud-star' + (i <= rating ? ' on' : '') + '" aria-hidden="true">★</span>';
     return out;
   }
 
@@ -209,7 +212,8 @@
     var html = '<div class="aud-reviews-grid">';
     reviews.forEach(function (r) {
       html += '<div class="aud-review-card">' +
-        '<div class="aud-stars">' + starsHtml(r.rating) + '</div>' +
+        // pack-v715: звёзды — картинкой с подписью «Оценка 4 из 5», иначе диктор читает «звезда, звезда…»
+        '<div class="aud-stars" role="img" aria-label="' + t.rate + ' ' + (Number(r.rating) || 0) + ' ' + t.of5 + '">' + starsHtml(r.rating) + '</div>' +
         '<p class="aud-review-text">' + esc(r.text) + '</p>' +
         '<p class="aud-review-name">' + esc(r.name) + '<span class="aud-review-date">' + esc(r.date) + '</span></p>' +
         // ⚠️ Запрет, установленный автором, публикуется РЯДОМ с отзывом
@@ -245,11 +249,13 @@
     wrap.innerHTML =
       '<h3>' + t.formTitle + '</h3>' +
       '<div class="aud-review-form-fields">' +
-        '<div class="aud-stars-input" id="aud-stars-input">' +
-          [1, 2, 3, 4, 5].map(function (i) { return '<span class="aud-star-btn" data-val="' + i + '">★</span>'; }).join('') +
+        // pack-v715: звёзды — кнопки (Tab, Enter/пробел), с подписью «Оценка 3 из 5» и aria-pressed;
+        // поля — с aria-label (одной подсказки-плейсхолдера диктору мало, при вводе она исчезает)
+        '<div class="aud-stars-input" id="aud-stars-input" role="group" aria-label="' + t.rate + '">' +
+          [1, 2, 3, 4, 5].map(function (i) { return '<button type="button" class="aud-star-btn" data-val="' + i + '" aria-pressed="false" aria-label="' + t.rate + ' ' + i + ' ' + t.of5 + '">★</button>'; }).join('') +
         '</div>' +
-        '<input type="text" class="aud-input ym-disable-keys" id="aud-name" placeholder="' + t.namePh + '" maxlength="80">' +
-        '<textarea class="aud-textarea ym-disable-keys" id="aud-text" placeholder="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
+        '<input type="text" class="aud-input ym-disable-keys" id="aud-name" placeholder="' + t.namePh + '" aria-label="' + t.namePh + '" maxlength="80" autocomplete="name">' +
+        '<textarea class="aud-textarea ym-disable-keys" id="aud-text" placeholder="' + t.textPh + '" aria-label="' + t.textPh + '" maxlength="2000" rows="4"></textarea>' +
         // ⚠️ ТЕКСТ СОГЛАСИЯ ОБЯЗАТЕЛЬНО В <span> (pack-v365).
         // `.aud-consent` — это flex-контейнер, а голые текстовые узлы
         // внутри flex становятся ОТДЕЛЬНЫМИ анонимными flex-элементами.
@@ -285,21 +291,25 @@
           '<label class="aud-consent aud-scope-check"><input type="checkbox" id="aud-no-quote"><span>' + t.noQuote + '</span></label>' +
         '</div>' +
         '</details>' +
-        '<p class="aud-error" id="aud-error" style="display:none"></p>' +
+        '<p class="aud-error" id="aud-error" role="alert" style="display:none"></p>' +
         '<button class="btn-gold" id="aud-submit" type="button">' + t.submit + '</button>' +
         // Honeypot: скрыто от людей (position off-screen), боты часто
         // заполняют все поля формы вслепую — портировано из ReviewsBot
         // Николая Балашова (pack-v70).
         '<input class="ym-disable-keys" type="text" id="aud-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">' +
       '</div>' +
-      '<p class="aud-thanks" id="aud-thanks" style="display:none"><strong>' + t.thanksTitle + '</strong><br>' + t.thanksBody + '</p>';
+      '<p class="aud-thanks" id="aud-thanks" role="status" style="display:none"><strong>' + t.thanksTitle + '</strong><br>' + t.thanksBody + '</p>';
 
     var rating = 0;
     var starBtns = wrap.querySelectorAll('.aud-star-btn');
     starBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
         rating = Number(btn.getAttribute('data-val'));
-        starBtns.forEach(function (b) { b.classList.toggle('on', Number(b.getAttribute('data-val')) <= rating); });
+        starBtns.forEach(function (b) {
+          var v = Number(b.getAttribute('data-val'));
+          b.classList.toggle('on', v <= rating);
+          b.setAttribute('aria-pressed', v === rating ? 'true' : 'false');
+        });
       });
     });
 

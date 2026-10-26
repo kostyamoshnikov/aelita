@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -78,6 +78,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 }
 .seat.sold,.seat.guest{cursor:not-allowed;opacity:.35;background:#3A3A40!important}
 .seat.selected{background:var(--gold)!important;box-shadow:0 0 0 1px var(--bone)}
+.seat:focus-visible{outline:2px solid var(--bone);outline-offset:1px;position:relative;z-index:1}
 .aisle-gap{width:var(--aisle-w);flex:0 0 auto}
 /* pack-v272: полоса «Держим места» — живой отсчёт холда, который
    реально стоит на сервере с момента выбора места (hold-seat.js).
@@ -263,6 +264,9 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet p{font-size:1rem;line-height:1.6;color:var(--sand);margin:14px 0 20px}
 .sheet .sheet-ok{width:100%}
 </style>
+<!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
+<link rel="stylesheet" href="/assets/a11y.css?v=136">
+<script src="/assets/a11y.js?v=136"></script>
 </head>
 <body>
 <div class="wrap">
@@ -338,8 +342,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
       <button type="button" class="zoom-btn" id="zoom-in" aria-label="Увеличить схему зала">+</button>
     </div>
     <div class="stage">Сцена</div>
-    <div class="hall" id="hall"></div>
-    <div class="zones" id="zones"></div>
+    <div class="hall a11y-keep" id="hall"></div>
+    <div class="zones a11y-keep" id="zones"></div>
     <div class="picked" id="picked"></div>
     <!-- ТЗ С4: лист ожидания — появляется, когда свободных мест нет
          (и сервер сказал, что очередь включена). -->
@@ -429,7 +433,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 <div class="promo-wrap" id="promo-wrap">
   <button type="button" class="promo-toggle" id="promo-toggle" onclick="togglePromo()" aria-expanded="false" aria-controls="promo-row">Промокод</button>
   <div class="promo-row" id="promo-row" hidden>
-    <input class="ym-disable-keys" type="text" id="promo-input" placeholder="Промокод" autocomplete="off" spellcheck="false" maxlength="32">
+    <input class="ym-disable-keys" type="text" id="promo-input" placeholder="Промокод" aria-label="Промокод" autocomplete="off" spellcheck="false" maxlength="32">
     <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Применить</button>
   </div>
   <div class="promo-msg" id="promo-msg"></div>
@@ -440,7 +444,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 <div class="promo-wrap" id="gift-wrap">
   <button type="button" class="promo-toggle" id="gift-toggle" onclick="toggleGift()" aria-expanded="false" aria-controls="gift-row">Подарочная карта</button>
   <div class="promo-row" id="gift-row" hidden>
-    <input class="ym-disable-keys" type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="21">
+    <input class="ym-disable-keys" type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" aria-label="Подарочная карта" autocomplete="off" spellcheck="false" maxlength="21">
     <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Применить</button>
   </div>
   <div class="promo-msg" id="gift-msg"></div>
@@ -512,7 +516,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=134"></script>
+<script src="/assets/payments.js?v=136"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1547,6 +1551,35 @@ async function loadNotice(){
 }
 loadNotice();
 
+// pack-v715: доступность схемы зала. Место — «кнопка»: Tab / Shift+Tab — по местам, Enter или
+// пробел — выбрать или снять; диктор читает «Ряд 3, место 5, 1 500 ₽» (или «занято») и «нажата»
+// у выбранного. Классы места (selected / sold / guest / taken) меняют разные ветки кода ниже —
+// поэтому подписи следят за классами сами (MutationObserver), а не правятся в каждой ветке.
+const SEAT_T = { row: 'Ряд', seat: 'место', busy: 'занято', loc: 'ru-RU' };
+function seatA11y(container){
+  const busy = el => el.classList.contains('sold') || el.classList.contains('guest') || el.classList.contains('taken');
+  const sync = el => {
+    const r = Number(el.dataset.row), s = Number(el.dataset.seat);
+    el.setAttribute('role', 'button');
+    if(busy(el)){
+      el.setAttribute('aria-label', `${SEAT_T.row} ${r}, ${SEAT_T.seat} ${s} — ${SEAT_T.busy}`);
+      el.setAttribute('aria-disabled', 'true'); el.removeAttribute('aria-pressed'); el.tabIndex = -1;
+    } else {
+      el.setAttribute('aria-label', `${SEAT_T.row} ${r}, ${SEAT_T.seat} ${s}, ${Number(priceForRow(r)).toLocaleString(SEAT_T.loc)} ₽`);
+      el.removeAttribute('aria-disabled'); el.setAttribute('aria-pressed', el.classList.contains('selected') ? 'true' : 'false'); el.tabIndex = 0;
+    }
+  };
+  container.querySelectorAll('.seat').forEach(sync);
+  if(container._a11yObs) container._a11yObs.disconnect();
+  container._a11yObs = new MutationObserver(ms => ms.forEach(m => { if(m.target.classList && m.target.classList.contains('seat')) sync(m.target); }));
+  container._a11yObs.observe(container, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  container.onkeydown = e => {
+    if(e.key !== 'Enter' && e.key !== ' ') return;
+    const t = e.target && e.target.closest && e.target.closest('.seat');
+    if(!t || typeof t.onclick !== 'function') return;
+    e.preventDefault(); t.onclick();
+  };
+}
 function priceForRow(row){
   const z = data.zones.find(z => row >= z.rows[0] && row <= z.rows[1]);
   return z ? z.price : 0;
@@ -1594,6 +1627,8 @@ function renderHall(){
     rowEl.appendChild(numRight);
     container.appendChild(rowEl);
   }
+  // pack-v715: схема зала для клавиатуры и экранного диктора — см. seatA11y().
+  seatA11y(container);
   // Кнопки масштаба существуют независимо от зала, но их состояние
   // (проценты, гашение на пределах) должно быть верным с первого
   // показа схемы, а не только после первого нажатия.
@@ -2583,7 +2618,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=134"></script>
-<script src="/assets/outage.js?v=134" defer></script>
+<script src="/assets/phone-prefix.js?v=136"></script>
+<script src="/assets/outage.js?v=136" defer></script>
 </body>
 </html>

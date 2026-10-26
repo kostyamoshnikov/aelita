@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Современное искусство для бизнеса — AELITA PRODUCTION">
 <meta name="twitter:description" content="Создадим неординарный ивент для вашей компании. Показы спектаклей, тимбилдинг, обсуждения с создателями.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=134">
-<link rel="stylesheet" href="/assets/style.css?v=134">
+<link rel="stylesheet" href="/assets/fonts.css?v=136">
+<link rel="stylesheet" href="/assets/style.css?v=136">
 <style>body{max-width:100vw}
 .btn-outline{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(214,181,122,.5);color:var(--bone);padding:16px 32px;text-decoration:none;display:inline-block;transition:all .3s;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
 .btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:16px 32px;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:opacity .3s;-webkit-appearance:none;appearance:none;cursor:pointer}
@@ -140,13 +140,13 @@
 
     <div id="formSite_b">
     <div class="form-grid" id="form_b">
-      <div class="field"><label>Имя и фамилия <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="name_b" placeholder="Иван Иванов" required></div>
-      <div class="field"><label>Электронная почта <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="email_b" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
-      <div class="field"><label>Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="phone_b" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
-      <div class="field"><label>Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear ym-disable-keys" type="text" id="tg_b" autocomplete="off" placeholder="@username"></div>
-      <div class="field"><label>Название компании</label><input class="ym-disable-keys" type="text" placeholder="ООО …"></div>
-      <div class="field"><label>Формат события</label><select><option value="">Выберите…</option><option>Корпоративный показ</option><option>Тимбилдинг</option><option>Партнёрское мероприятие</option><option>Подарок клиентам</option><option>Другое</option></select></div>
-      <div class="field"><label>Количество гостей</label><input class="ym-disable-keys" type="text" placeholder="Примерно"></div>
+      <div class="field"><label for="name_b">Имя и фамилия <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="name_b" placeholder="Иван Иванов" required></div>
+      <div class="field"><label for="email_b">Электронная почта <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="email_b" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
+      <div class="field"><label for="phone_b">Телефон <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="phone_b" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
+      <div class="field"><label for="tg_b">Telegram <span class="opt-mark">— необязательно</span></label><input class="input-clear ym-disable-keys" type="text" id="tg_b" autocomplete="off" placeholder="@username"></div>
+      <div class="field"><label for="fld-1">Название компании</label><input id="fld-1" class="ym-disable-keys" type="text" placeholder="ООО …"></div>
+      <div class="field"><label for="fld-2">Формат события</label><select id="fld-2"><option value="">Выберите…</option><option>Корпоративный показ</option><option>Тимбилдинг</option><option>Партнёрское мероприятие</option><option>Подарок клиентам</option><option>Другое</option></select></div>
+      <div class="field"><label for="fld-3">Количество гостей</label><input id="fld-3" class="ym-disable-keys" type="text" placeholder="Примерно"></div>
       <div class="field full">
         <label>Какой проект интересует?</label>
         <div class="cb-group">
@@ -169,7 +169,7 @@
           <label class="cb-item"><input type="checkbox"><span>Без дополнительных форматов</span></label>
         </div>
       </div>
-      <div class="field full"><label>Пожелания и комментарии</label><textarea class="ym-disable-keys" placeholder="Всё, что важно нам знать…"></textarea></div>
+      <div class="field full"><label for="fld-4">Пожелания и комментарии</label><textarea id="fld-4" class="ym-disable-keys" placeholder="Всё, что важно нам знать…"></textarea></div>
       <div class="field full">
         <label class="cb-item mb-14"><input type="checkbox" id="consent_b"><span>Согласен(на) на <a class="tl c-gold" href="/consent">обработку персональных данных</a></span></label>
         <button class="btn-gold" onclick="handleForm('b')" style="width:fit-content">Отправить заявку</button>
@@ -350,7 +350,7 @@
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
-<script src="/assets/main.js?v=134"></script>
+<script src="/assets/main.js?v=136"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -361,6 +361,6 @@
     });
   }
 </script>
-<script src="/assets/phone-prefix.js?v=134"></script>
+<script src="/assets/phone-prefix.js?v=136"></script>
 </body>
 </html>
