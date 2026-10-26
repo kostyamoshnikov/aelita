@@ -775,7 +775,7 @@ footer p{color:rgba(201,184,163,.5);font-size:0.75rem;line-height:1.9}
   .bio-hero{padding-top:122px!important}
   .bio-grid{gap:22px!important}
   .bio-photo{max-width:none!important;height:auto!important}
-  .bio-photo img{aspect-ratio:16/9!important;height:auto!important;object-position:center 22%}
+  .bio-photo img{aspect-ratio:3/2!important;height:auto!important;object-position:center 22%}
 }
 @media(max-width:600px){
   .page-hero .wrap{padding-top:120px}
@@ -1656,3 +1656,67 @@ footer .requisites a.a11y-foot-link{color:var(--gold)}
 #main .ph-logo{aspect-ratio:3/4;background:radial-gradient(ellipse at 50% 40%,rgba(214,181,122,.10),transparent 65%),var(--coal);display:flex;align-items:center;justify-content:center;border:1px solid rgba(214,181,122,.12)}
 #main .ph-logo img,#main .ph-logo.revealed img{width:auto!important;height:62%!important;aspect-ratio:auto!important;opacity:.9;filter:none!important;object-fit:contain!important}
 @media(max-width:600px){#main .ph-logo{aspect-ratio:16/6;max-width:none!important;height:auto!important}#main .ph-logo img{height:80%!important}}
+
+/* ═══ pack-v708: кадр фото на страницах людей на телефоне ═══
+   На телефоне фото во всю ширину, кадр был 16:9 с одной точкой для всех (22 % сверху) —
+   у портретов крупным планом срезало макушку и подбородок (Дыба, Игнатов, Казмирук,
+   Мошников, Сачков…). Кадр стал 3:2 (+30 px высоты, кнопка первого экрана остаётся
+   на экране 360×640), а точка подобрана под каждое фото: лицо целиком, сверху немного
+   воздуха. Новое фото — добавить строку; без строки работает общая точка 22 %.
+   Заглушки с инициалами — целиком (contain) на фоне в цвет картинки. */
+/* pack-v709: на компьютере и планшете кадр 3:4 режет квадратное фото Казмирука по бокам, а лицо
+   у него в левой половине кадра — щеку срезало; кадр прижат к левому краю. */
+@media(min-width:601px){#main .bio-photo img[src$="/mikhail-kazmiruk.jpg"]{object-position:0% 50%}}
+@media(max-width:600px){
+  #main .bio-photo img[src$="/alexandra-chubenko.jpg"]{object-position:50% 42%}
+  #main .bio-photo img[src$="/alexandra-gubanova.jpg"]{object-position:50% 51%}
+  #main .bio-photo img[src$="/alexey-tsymlov-portrait.jpg"]{object-position:50% 30%}
+  #main .bio-photo img[src$="/vdovichenko.jpg"]{object-position:50% 13%}
+  #main .bio-photo img[src$="/ilyina.jpg"]{object-position:50% 10%}
+  #main .bio-photo img[src$="/sachkov.jpg"]{object-position:50% 6%}
+  #main .bio-photo img[src$="/katya-abdulova.jpg"]{object-position:50% 12%}
+  #main .bio-photo img[src$="/moshnikov.jpg"]{object-position:50% 24%}
+  #main .bio-photo img[src$="/pavlova.jpg"]{object-position:50% 22%}
+  #main .bio-photo img[src$="/mikhail-kazmiruk.jpg"]{object-position:50% 39%}
+  #main .bio-photo img[src$="/vanya-dyba.jpg"]{aspect-ratio:4/3!important;object-position:50% 20%}
+  #main .bio-photo img[src$="/viktor-ignatov.jpg"]{object-position:50% 16%}
+  #main .bio-photo img[src$="/yulia-bychkova.jpg"]{object-position:50% 24%}
+  #main .bio-photo img[src$="/anastasia-silantyeva.jpg"],#main .bio-photo img[src$="/denis-smetnev.jpg"]{object-fit:contain;background:#0b0b0d}
+}
+
+/* ═══ pack-v708: афиша, когда в ней один показ ═══
+   После фестиваля в афише осталась одна карточка (ИОВ, Петербург) — на компьютере она
+   занимала треть ширины, справа две трети пустоты. Одна карточка — во всю ширину:
+   фото слева, текст справа (pack-v709: и на планшете). На телефоне карточки и так в один
+   столбец — без изменений. */
+@media(min-width:601px){
+  .up-rail:has(>.up-card:only-of-type){grid-auto-columns:100%;overflow:visible}
+  .up-rail>.up-card:only-of-type{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:clamp(28px,4vw,56px);align-content:start}
+  .up-rail>.up-card:only-of-type>*{grid-column:2;justify-self:start}
+  .up-rail>.up-card:only-of-type>.up-img{grid-column:1;grid-row:1 / span 7;margin:0;align-self:start;justify-self:stretch}
+  .up-rail>.up-card:only-of-type>.up-when{margin-top:12px}
+  .up-rail>.up-card:only-of-type>.up-buy{margin-top:8px}
+}
+/* pack-v709: на планшете (601–900) одна карточка тоже занимала полширины — теперь во всю */
+@media(min-width:641px){
+  .tk-grid>.tk-card:only-of-type{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:clamp(28px,4vw,56px);align-items:start}
+  .tk-grid>.tk-card:only-of-type>.tk-img{margin:0}
+  .tk-grid>.tk-card:only-of-type>.tk-body{padding-top:12px}
+}
+
+/* ═══ pack-v708: /iov после фестиваля ═══
+   Сначала следующий показ (Петербург, дата не объявлена), ниже — прошедшие показы на
+   «Точке Кюри»: приглушены, без ссылок на билеты. Кнопка в панели фактов — .fp-cta, а не
+   .fp-buy: .fp-buy festival.js прячет после последнего показа фестиваля. */
+.iv-next.iv-next--first{margin:0 0 56px;padding:0 0 30px;border-top:0;border-bottom:1px solid rgba(232,230,225,.14)}
+.iv-past-k{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin:0 0 18px}
+.iv-past-k a{color:inherit}
+.iv-dates--past .iv-date{opacity:.6}
+.fact-panel .fp-cta{display:block;width:100%;margin:14px 0 0;text-align:center;box-sizing:border-box}
+
+/* ═══ pack-v709: страницы событий после фестиваля (festival.js) ═══
+   «Показ состоялся» над прошедшей датой в блоке «Показы»; «Оставить отзыв» в шапке —
+   обычная золотая кнопка (.btn-gold), отдельного стиля не нужно. */
+.fest-slot-done{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin:0 0 8px}
+#main .fest-hero-review{margin:0 14px 10px 0}
+#main :is(.hero-btns,.hero-cta) .fest-hero-review{margin:0}
