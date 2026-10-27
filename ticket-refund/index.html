@@ -141,7 +141,7 @@ footer{padding:40px 0;border-top:1px solid rgba(232,230,225,.07);text-align:cent
     <div class="help-list">
       <p class="hint"><b>Нет письма с кодом?</b> Войдите в <a href="/account">личный кабинет</a> по почте, указанной при покупке, — там все заказы и кнопка «Вернуть билеты». Номер заказа есть и на PDF-билете. Письма от нас могут попасть в «Спам».</p>
       <p class="hint"><b>Билет вам передали?</b> Вернуть его может только покупатель — деньги вернутся на его карту. Напишите тому, кто передал билет.</p>
-      <p class="hint" id="partner-note"><b>Купили на cuire-fest.ru, в кассе площадки или на другом сайте?</b> Возврат оформляет продавец по своим правилам (п. 6.5 оферты) — его контакты есть в письме с билетом. Если не получается, напишите нам — подскажем.</p>
+      <p class="hint" id="partner-note"><b>Купили на cuire-fest.ru?</b> Такого заказа нет в этой форме — напишите на <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a> номер заказа, почту из заказа и причину. Рассмотрим по тем же правилам, деньги вернутся на карту, которой платили (п. 6.5 оферты). <b>Купили в кассе площадки или на другом сайте?</b> Возврат оформляет продавец по своим правилам — его контакты в письме с билетом.</p>
     </div>
   </section>
 
@@ -272,8 +272,8 @@ const NOT_FOUND_MSG = L(
   'Заказ не найден. Проверьте код или номер заказа из письма и почту или телефон — они должны совпадать с указанными при покупке. Для заказов, оплаченных до 10 октября 2026 года, нужен длинный код.',
   'Order not found. Check the order code or number from the email and the email or phone — they must match the ones used at purchase. For orders paid before 10 October 2026 you need the long code.');
 const PARTNER_MSG = L(
-  'Если билет куплен на cuire-fest.ru, в кассе площадки или на другом сайте, его нет в нашей системе: возврат оформляет продавец по своим правилам (п. 6.5 оферты), контакты — в письме с билетом.',
-  'If the ticket was bought on cuire-fest.ru, at the venue box office or on another website, it is not in our system: the seller handles the refund under its own rules (clause 6.5 of the public offer), see the contacts in the ticket email.');
+  'Если билет куплен на cuire-fest.ru, его нет в этой форме: напишите на aelita.production@yandex.ru номер заказа, почту и причину — рассмотрим по тем же правилам (п. 6.5 оферты). Если в кассе площадки или на другом сайте — возврат оформляет продавец, контакты в письме с билетом.',
+  'If the ticket was bought on cuire-fest.ru, it is not in this form: email aelita.production@yandex.ru with the order number, your email and the reason — we will consider it under the same rules (clause 6.5 of the public offer). If it was bought at the venue box office or on another website, the seller handles the refund; see the contacts in the ticket email.');
 
 // pack-v568 (ТЗ С1): ссылка из письма — /ticket-refund/?order=<код>&reason=organizer.
 // Код подставляется в поле; почту или телефон человек вводит сам.
