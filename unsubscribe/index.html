@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Отписка от новостей — AELITA PRODUCTION</title>
+<!--
+  AELITA PRODUCTION · Рассылка новостей — страница ссылки «Отписаться» из
+  письма рассылки (pack-v726: _tools/Inbox/lib/newsletter-mail.js пишет
+  ссылку ?s=<id подписчика>&t=<токен>, отписывает Inbox/leads.js —
+  POST { action: 'nl_unsubscribe', s, t }).
+
+  ⚠️ ОТПИСКА — ТОЛЬКО ПО КНОПКЕ, не при открытии страницы: почтовые
+  сканеры открывают ссылки из писем сами, раньше человека (см.
+  Site/events-cancel/). Кнопка «Отписаться» самого почтового клиента
+  (заголовок List-Unsubscribe-Post) идёт мимо этой страницы — сразу на
+  /leads?nl_unsub=1, её нажимает только человек.
+
+  Повторная отписка (двойной клик, старое письмо) — не ошибка: сервер
+  отвечает ok + already, страница говорит «вы уже отписаны».
+  ?test=1 — ссылка из тестового письма админки: отписывать некого.
+-->
+<style>
+:root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;--ok:#B7C9A8;--warn:#C98B6B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:Inter,system-ui,sans-serif;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.card{background:var(--coal);border-radius:8px;padding:32px 28px;max-width:420px;width:100%;text-align:center}
+.eyebrow{font-size:0.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+h1{font-size:1.1875rem;font-weight:500;margin:0 0 10px}
+p{font-size:0.875rem;color:var(--sand);line-height:1.5;margin:0 0 20px}
+/* pack-v712: основная — золотая рамка, как по всему сайту */
+button{background:transparent;color:var(--gold);border:1px solid var(--gold);padding:14px 24px;border-radius:4px;font-size:0.875rem;font-weight:500;cursor:pointer;width:100%}
+button:disabled{opacity:.6;cursor:default}
+button.secondary{background:transparent;border:1px solid rgba(217,217,217,.3);color:var(--bone);margin-top:10px}
+.status{font-size:0.9375rem;font-weight:500;margin:14px 0 4px}
+.status.ok{color:var(--ok)}
+.status.warn{color:var(--warn)}
+a{color:var(--gold)}
+.foot{margin-top:20px;font-size:0.75rem;color:rgba(201,184,163,.7);text-align:center}
+.foot a{color:rgba(201,184,163,.7)}
+
+/* pack-v520: длинное название документа не влезало в 320 px */
+p,a{overflow-wrap:anywhere}
+
+/* pack-v530: единые кнопки — копия правил assets/style.css (у страницы
+   свой шаблон без общих стилей). Основная — золотая заливка; вторичная —
+   тонкая рамка; компактная — 11px, 10×18. */
+body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn,.promo-apply){font-family:'Montserrat',sans-serif!important;font-weight:400!important;text-transform:uppercase!important;font-size:0.75rem!important;letter-spacing:.22em!important;line-height:1.35!important;padding:15px 30px!important;border-radius:0!important;text-decoration:none!important}
+body :is(.btn-gold,.buy-btn,.install-btn){background:var(--gold)!important;color:var(--ink)!important;border:1px solid var(--gold)!important}
+body :is(.retry-btn,.promo-apply){background:transparent!important;color:var(--bone)!important;border:1px solid rgba(214,181,122,.5)!important}
+body :is(.retry-btn,.promo-apply):hover{border-color:var(--gold)!important;color:var(--gold)!important}
+body .promo-apply{font-size:0.75rem!important;letter-spacing:.16em!important;padding:10px 18px!important}
+body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:not-allowed!important}
+@media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:0.75rem!important;letter-spacing:.16em!important;padding:13px 20px!important}}
+</style>
+<!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
+<link rel="stylesheet" href="/assets/a11y.css?v=139">
+<script src="/assets/a11y.js?v=139"></script>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="eyebrow">AELITA PRODUCTION</div>
+  <h1 id="title">Отписка от новостей</h1>
+  <p id="text">Проверяем ссылку…</p>
+  <div id="actions"></div>
+</div>
+<p class="foot">
+  <a href="/privacy">Политика обработки персональных данных</a>
+</p>
+<script src="/assets/analytics-events.js"></script>
+<script>
+// Сборщик EN содержимое <script> не переводит (i18n/README, п. 7) —
+// тексты парами RU/EN прямо здесь. ⚠️ В EN-строках — ’, не прямой апостроф.
+const EN = document.documentElement.lang === 'en';
+const tr = (ru, en) => (EN ? en : ru);
+// Ссылки — целыми литералами: проверка ссылок аудита читает href и в скриптах.
+const HOME_BTN = EN
+  ? '<a href="/en/"><button class="secondary">To the website</button></a>'
+  : '<a href="/"><button class="secondary">На сайт</button></a>';
+const MAIL = 'aelita.production@yandex.ru';
+const params = new URLSearchParams(location.search);
+const sid = params.get('s') || '';
+const tok = params.get('t') || '';
+const API = 'https://api.aelita-production.ru/leads';
+
+function render(titleText, bodyText, statusClass, statusText, actionsHtml) {
+  document.getElementById('title').textContent = titleText;
+  document.getElementById('text').textContent = bodyText;
+  document.getElementById('actions').innerHTML = (statusText ? `<div class="status ${statusClass}">${statusText}</div>` : '') + (actionsHtml || '');
+}
+function badLink() {
+  render(tr('Ссылка недействительна', 'Invalid link'),
+    tr(`Похоже, ссылка скопировалась не полностью. Откройте письмо ещё раз и нажмите «Отписаться» — или просто напишите нам на ${MAIL}, отпишем вручную.`,
+       `The link seems to be incomplete. Open the email again and tap “Unsubscribe” — or just write to us at ${MAIL} and we’ll unsubscribe you manually.`),
+    'warn', null, HOME_BTN);
+}
+function failed(text) {
+  render(tr('Не получилось отписаться', 'We couldn’t unsubscribe you'), text, 'warn', null,
+    `<button id="retryBtn">${tr('Повторить', 'Try again')}</button>` + HOME_BTN);
+  document.getElementById('retryBtn').addEventListener('click', doUnsubscribe);
+}
+
+if (params.get('test') === '1') {
+  render(tr('Это тестовое письмо', 'This is a test email'),
+    tr('Ссылка из тестового письма рассылки. В настоящих письмах она ведёт сюда же, и подписчик отписывается одной кнопкой.',
+       'This link comes from a test newsletter email. In real emails it leads here, and the subscriber unsubscribes with one button.'),
+    'ok', null, HOME_BTN);
+} else if (!/^[0-9a-f]{64}$/.test(sid) || !/^[0-9a-f]{32}$/.test(tok)) {
+  badLink();
+} else {
+  render(tr('Отписаться от новостей?', 'Unsubscribe from our news?'),
+    tr('Письма о премьерах, фестивалях и старте продаж AELITA PRODUCTION больше не будут приходить. Письма с купленными билетами это не затрагивает.',
+       'You will stop receiving AELITA PRODUCTION emails about premieres, festivals and ticket sales. Emails with tickets you buy are not affected.'),
+    null, null,
+    `<button id="confirmBtn">${tr('Да, отписаться', 'Yes, unsubscribe')}</button>` + HOME_BTN);
+  document.getElementById('confirmBtn').addEventListener('click', doUnsubscribe);
+}
+
+async function doUnsubscribe() {
+  const btn = document.getElementById('confirmBtn') || document.getElementById('retryBtn');
+  if (btn) { btn.disabled = true; btn.textContent = tr('Отписываем…', 'Unsubscribing…'); }
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ action: 'nl_unsubscribe', s: sid, t: tok }),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data && data.ok) {
+      render(data.already ? tr('Вы уже отписаны', 'You’re already unsubscribed') : tr('Вы отписались', 'You’re unsubscribed'),
+        tr('Новостей на эту почту больше не будет. Передумаете — подписаться снова можно на сайте. Через 30 дней почта и имя удаляются из списка рассылки.',
+           'No more news will come to this address. If you change your mind, you can subscribe again on the website. Your email and name are deleted from the mailing list after 30 days.'),
+        'ok', tr('Готово', 'Done'), HOME_BTN);
+    } else if (data && data.error === 'bad_link') {
+      badLink();
+    } else {
+      failed(tr(`Сервер не смог обработать запрос — попробуйте через минуту или напишите нам: ${MAIL}`,
+                `The server could not process the request — try again in a minute or write to us: ${MAIL}`));
+    }
+  } catch (e) {
+    // Ответа не пришло вовсе — частая причина VPN (страница открылась, до
+    // API в Яндекс Облаке запрос не дошёл).
+    failed(tr(`Не получилось связаться с сервером. Если у вас включён VPN, попробуйте без него. Если не поможет — напишите нам: ${MAIL}`,
+              `We couldn’t reach the server. If you’re using a VPN, try without it. If that doesn’t help, write to us: ${MAIL}`));
+  }
+}
+</script>
+<script src="/assets/outage.js?v=139" defer></script>
+</body>
+</html>

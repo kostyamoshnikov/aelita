@@ -306,6 +306,24 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .adm-who{font-size:0.6875rem;color:rgba(201,184,163,.75);white-space:nowrap}
 .adm-who-btn{background:none;border:0;padding:0 2px;color:var(--gold);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .adm-who-in{background:rgba(232,230,225,.05);border:1px solid rgba(214,181,122,.4);color:var(--bone);padding:6px 8px;font-family:'Inter',sans-serif;font-size:0.75rem;width:210px}
+/* pack-v726: рассылка новостей */
+#nlBlock .nl-h{font-size:0.6875rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:22px 0 12px}
+#nlBlock .nl-stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+#nlBlock .nl-stat{flex:1 1 150px;background:rgba(214,181,122,.06);border-left:2px solid var(--gold);padding:12px 14px}
+#nlBlock .nl-stat b{display:block;font-size:1.375rem;font-weight:500;color:var(--bone)}
+#nlBlock .nl-stat span{font-size:0.75rem;color:var(--sand)}
+#nlBlock label.nl-check{display:inline-flex;align-items:center;gap:8px;margin:0 18px 12px 0;font-size:.875rem;color:var(--bone);cursor:pointer;text-transform:none;letter-spacing:normal}
+#nlBlock label.nl-check input{width:18px;height:18px;margin:0;accent-color:var(--gold)}
+#nlBlock textarea{min-height:180px}
+#nlBlock .nl-bar{height:6px;background:rgba(214,181,122,.15);margin:6px 0 4px}
+#nlBlock .nl-bar i{display:block;height:100%;background:var(--gold);width:0}
+#nlBlock .nl-line{font-size:0.8125rem;color:var(--sand);margin:2px 0 10px}
+#nlBlock .nl-line.nl-err{color:#e08a6e}
+#nlBlock .nl-form{border:1px solid rgba(214,181,122,.25);padding:16px;margin:0 0 18px}
+#nlBlock .nl-sub{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(214,181,122,.1);font-size:0.875rem}
+#nlBlock .nl-sub .nl-mail{color:var(--bone);word-break:break-all}
+#nlBlock .nl-sub .nl-meta{color:var(--sand);font-size:0.75rem}
+#nlBlock .nl-sub .ev-actions{margin:0 0 0 auto}
 </style>
 </head>
 <body>
@@ -695,6 +713,64 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <div id="apList"><div class="empty-state">Загружаем…</div></div>
       <p class="editor-note inv-mt14">Анкеты из Telegram-бота: отметить обработанной, выгрузить таблицей.</p>
       <details class="adm-more"><summary>Подробнее</summary><p>Анкеты «Бизнесу», «Площадкам», «Билеты» и др. Сообщение в чат команды бот по-прежнему шлёт сразу.</p></details>
+    </div>
+
+    <p class="sec-title sec-gap">Рассылка новостей (почта: <span id="nl-active">0</span><span id="nl-tg-count"></span>)</p>
+    <div class="editor-box" id="nlBlock">
+      <div class="nl-stats" id="nlStats"><div class="empty-state">Загружаем…</div></div>
+      <p class="nl-line" id="nlMailInfo"></p>
+
+      <p class="nl-h">Новая рассылка</p>
+      <div class="inv-row">
+        <div class="field inv-w2"><label for="nl-subject">Тема письма (в Telegram — первая строка)</label><input class="ym-disable-keys" type="text" id="nl-subject" maxlength="200" autocomplete="off"></div>
+        <div class="field"><label for="nl-lang">Кому</label><select id="nl-lang"><option value="all">Всем подписчикам</option><option value="ru">Русскоязычным</option><option value="en">Англоязычным</option></select></div>
+      </div>
+      <div class="field"><label for="nl-text">Текст — абзацы через пустую строку, ссылки целиком (https://…)</label><textarea class="ym-disable-keys" id="nl-text" rows="10" maxlength="20000"></textarea></div>
+      <div><label class="nl-check"><input type="checkbox" id="nl-ch-email" checked> На почту</label><label class="nl-check"><input type="checkbox" id="nl-ch-tg" checked> В Telegram-бот</label></div>
+      <div class="inv-row">
+        <div class="field inv-w2"><label for="nl-test-to">Тест — на почту (пусто — на ящик команды)</label><input class="ym-disable-keys" type="email" id="nl-test-to" maxlength="254" autocomplete="off"></div>
+      </div>
+      <div class="inv-tools"><button class="mini-btn" id="nlTestBtn">Отправить себе тест</button><button class="mini-btn" id="nlSendBtn">Разослать</button></div>
+      <p class="editor-result" id="nlFormResult"></p>
+      <div id="nlProgress"></div>
+      <p class="editor-note">Подпись и ссылка «Отписаться» добавляются к каждому письму сами, в Telegram — кнопка «Отписаться» под сообщением. Перед рассылкой отправьте себе тест.</p>
+
+      <p class="nl-h">Рассылки</p>
+      <div id="nlCampaigns"><div class="empty-state">Рассылок пока не было.</div></div>
+
+      <p class="nl-h">Подписчики почты</p>
+      <div class="inv-row">
+        <div class="field"><label for="nl-filter">Показать</label><select id="nl-filter">
+          <option value="active">Подписаны</option>
+          <option value="off">Отписались</option>
+          <option value="">Все</option>
+        </select></div>
+        <div class="field inv-w2"><label for="nl-search">Поиск (почта, имя, форма)</label><input class="ym-disable-keys" type="text" id="nl-search" autocomplete="off"></div>
+      </div>
+      <div class="inv-tools"><button class="mini-btn" id="nlReloadBtn">Обновить</button><button class="mini-btn" id="nlSyncBtn">Перенести из заявок сайта</button><button class="mini-btn" id="nlAddBtn">Добавить</button><button class="mini-btn" id="nlImportBtn">Импорт списка</button><button class="mini-btn" id="nlXlsxBtn">Таблица (Excel)</button></div>
+      <div class="nl-form" id="nlAddForm" hidden>
+        <div class="inv-row">
+          <div class="field inv-w2"><label for="nl-add-email">Почта</label><input class="ym-disable-keys" type="email" id="nl-add-email" maxlength="254" autocomplete="off"></div>
+          <div class="field"><label for="nl-add-name">Имя</label><input class="ym-disable-keys" type="text" id="nl-add-name" maxlength="120" autocomplete="off"></div>
+          <div class="field"><label for="nl-add-lang">Язык</label><select id="nl-add-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+        </div>
+        <div class="field"><label for="nl-add-basis">Как человек согласился на рассылку (обязательно)</label><input class="ym-disable-keys" type="text" id="nl-add-basis" maxlength="300" autocomplete="off" placeholder="попросил по почте 27.10; подписал бланк на фестивале"></div>
+        <label class="nl-check"><input type="checkbox" id="nl-add-confirm"> У человека есть согласие на рассылку — без него писать нельзя (38-ФЗ, ст. 18)</label>
+        <div><button class="btn-small" id="nlAddSave">Добавить</button> <button class="btn-small btn-ghost" id="nlAddCancel">Отмена</button></div>
+        <p class="editor-result" id="nlAddResult"></p>
+      </div>
+      <div class="nl-form" id="nlImportForm" hidden>
+        <div class="field"><label for="nl-imp-text">По одному в строке: «почта» или «почта, имя»</label><textarea class="ym-disable-keys" id="nl-imp-text" rows="6" placeholder="anna@mail.ru, Анна&#10;petr@yandex.ru"></textarea></div>
+        <div class="inv-row">
+          <div class="field"><label for="nl-imp-lang">Язык</label><select id="nl-imp-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+          <div class="field inv-w2"><label for="nl-imp-basis">Откуда список и как люди согласились (обязательно)</label><input class="ym-disable-keys" type="text" id="nl-imp-basis" maxlength="300" autocomplete="off" placeholder="подписчики сайта из таблицы «Контакты», тег сайт-подписка"></div>
+        </div>
+        <label class="nl-check"><input type="checkbox" id="nl-imp-confirm"> У всех в списке есть согласие на рассылку</label>
+        <div><button class="btn-small" id="nlImportSave">Импортировать</button> <button class="btn-small btn-ghost" id="nlImportCancel">Отмена</button></div>
+        <p class="editor-result" id="nlImportResult"></p>
+      </div>
+      <div id="nlList"><div class="empty-state">Загружаем…</div></div>
+      <details class="adm-more"><summary>Подробнее</summary><p>Подписчики почты приходят с форм сайта (главная, афиша, «Точка Кюри»), где отмечена галочка «получать новости». Подписчики Telegram — в боте (кнопка «🔔 Подписаться»): здесь их число, отправляет им сам бот. Письма уходят с ящика команды, не больше <span id="nl-limit">300</span> в сутки: Яндекс пропускает с одного ящика 500 получателей, и в них же письма с билетами. Остальное — на следующий день той же кнопкой «Продолжить». Отписавшегося вернуть нельзя — только если он сам подпишется снова. Через 30 дней после отписки почта и имя стираются сами. Письмо с темой «unsubscribe» в ящике команды — это отписка кнопкой почтовой программы, которая не умеет отписывать сама: найдите адрес в списке и нажмите «Отписать».</p></details>
     </div>
 
     <p class="sec-title sec-gap">Показы: продажа, перенос, отмена</p>
@@ -3480,6 +3556,320 @@ function renderLeadsAdmin() {
     invSave(xlsxBlob(sheets), 'aelita-site-leads-' + new Date().toISOString().slice(0, 10) + '.xlsx');
   });
 })();
+// ── pack-v726: рассылка новостей (Admin/inbox.js → Admin/lib/newsletter-admin.js) ──
+// Почта — пачками по 5 писем, пока не кончатся адреса или суточный лимит;
+// Telegram — страница отдаёт боту задание, подписанное админкой, пачками по
+// 15 и записывает ход обратно (nl_tg_progress). Уже отправленным второй раз
+// не уходит: курсоры хранятся в рассылке, «Продолжить» идёт с места остановки.
+var NL = { ov: null, subs: [], tg: null, tgErr: '', running: null, stop: null };
+var NL_STATUS = { active: 'подписан', unsubscribed: 'отписался', bounced: 'адреса нет' };
+var NL_VIA = { link: 'по ссылке из письма', one_click: 'кнопкой в почте', admin: 'в админке', bounce: 'адрес не существует' };
+var NL_SRC = { site: 'сайт', admin: 'вручную', import: 'импорт', leads: 'из заявок' };
+var NL_LANG = { all: 'всем', ru: 'русскоязычным', en: 'англоязычным' };
+var NL_CSTATUS = { sending: 'идёт', done: 'отправлена', stopped: 'остановлена' };
+function nlById(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+async function loadNewsletter() {
+  if (!document.getElementById('nlBlock') || !ADMIN_INBOX_URL || !getToken()) return;
+  try {
+    var r = await Promise.all([inboxCall({ action: 'nl_overview' }), inboxCall({ action: 'nl_list' })]);
+    NL.ov = r[0]; NL.subs = r[1].subscribers || [];
+  } catch (e) {
+    document.getElementById('nlStats').innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + ' — если раздел только появился, выложите функции v726 (aelita-admin-inbox).</div>';
+    document.getElementById('nlList').innerHTML = '';
+    return;
+  }
+  renderNlStats(); renderNlCampaigns(); renderNlList();
+  nlLoadTgCount();
+}
+async function nlRefreshOverview() {
+  try { NL.ov = await inboxCall({ action: 'nl_overview' }); renderNlStats(); if (!NL.running) renderNlCampaigns(); } catch (e) { /* счётчики обновятся при «Обновить» */ }
+}
+// Запрос к боту (Cloudflare) — задание подписано админкой, секрета на странице нет.
+async function nlBot(job, extra) {
+  var body = { op: job.op, job: job.job, lang: job.lang, exp: job.exp, text: job.text, sig: job.sig };
+  Object.keys(extra || {}).forEach(function (k) { body[k] = extra[k]; });
+  var res, data = {};
+  try { res = await fetch(job.url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
+  catch (e) { throw new Error('Бот не ответил: либо его ещё не выложили с версией v726 (ответ «бот» — y), либо нет связи с workers.dev (попробуйте с VPN или без).'); }
+  try { data = await res.json(); } catch (e) { data = {}; }
+  if (!res.ok) throw new Error('Бот ответил ошибкой ' + res.status + (data.error ? ' (' + data.error + ')' : '') + (res.status === 403 && data.error === 'forbidden' ? ' — BOT_APPLICATIONS_SECRET у функции и у бота разный.' : '.'));
+  return data;
+}
+async function nlLoadTgCount() {
+  if (!NL.ov || !NL.ov.telegram || !NL.ov.telegram.configured) { NL.tg = 'off'; renderNlStats(); return; }
+  try {
+    var r = await nlBot(await inboxCall({ action: 'nl_tg_sign', op: 'stats' }), {});
+    NL.tg = typeof r.subscribers === 'number' ? r.subscribers : 'old';
+  } catch (e) { NL.tg = 'err'; NL.tgErr = e.message; }
+  renderNlStats();
+}
+function renderNlStats() {
+  var ov = NL.ov; if (!ov) return;
+  var c = ov.counts || {}, m = ov.mail || {};
+  document.getElementById('nl-active').textContent = c.active || 0;
+  document.getElementById('nl-tg-count').textContent = typeof NL.tg === 'number' ? ', Telegram: ' + NL.tg : '';
+  document.getElementById('nl-limit').textContent = ov.dailyLimit;
+  var tg = typeof NL.tg === 'number' ? '<b>' + NL.tg + '</b><span>подписаны в Telegram-боте</span>'
+    : NL.tg === 'off' ? '<b>—</b><span>Telegram: у функции нет BOT_APPLICATIONS_SECRET</span>'
+    : NL.tg === 'old' ? '<b>—</b><span>Telegram: бот ещё не обновлён — выложите бота v726</span>'
+    : NL.tg === 'err' ? '<b>?</b><span>' + escapeHtml(NL.tgErr || 'Бот не ответил') + '</span>'
+    : '<b>…</b><span>подписаны в Telegram-боте</span>';
+  document.getElementById('nlStats').innerHTML =
+    '<div class="nl-stat"><b>' + (c.active || 0) + '</b><span>подписаны на почту' + (c.en ? ' · из них EN ' + c.en : '') + '</span></div>' +
+    '<div class="nl-stat">' + tg + '</div>' +
+    '<div class="nl-stat"><b>' + (ov.sentToday || 0) + ' / ' + ov.dailyLimit + '</b><span>писем рассылки сегодня</span></div>' +
+    '<div class="nl-stat"><b>' + ((c.unsubscribed || 0) + (c.bounced || 0)) + '</b><span>отписались' + (c.bounced ? ' · адреса нет: ' + c.bounced : '') + '</span></div>';
+  document.getElementById('nlMailInfo').textContent = m.configured
+    ? 'Письма уходят с ' + m.from + (m.separate ? ' (отдельный ящик новостей).' : ' — того же ящика, что письма с билетами.') + ' Тест по умолчанию — на ' + (m.testTo || m.from) + '.'
+    : '⚠️ У функции aelita-admin-inbox не заданы MAIL_USER/MAIL_PASS — письма не уйдут.';
+  document.getElementById('nl-test-to').placeholder = m.testTo || '';
+}
+function nlCampaignText(c) {
+  var out = [];
+  if (c.email) {
+    var e = c.email;
+    out.push('почта: ' + e.sent + ' из ' + e.total + (e.failed ? ', не ушло ' + e.failed : '') + (e.skipped ? ', пропущено ' + e.skipped : '') + (e.waiting ? ', ждут ' + e.waiting : '') + (e.done ? ' ✓' : ''));
+  }
+  if (c.telegram) {
+    var t = c.telegram;
+    out.push('Telegram: ' + t.sent + (t.total != null ? ' из ' + t.total : '') + (t.skipped ? ', пропущено ' + t.skipped : '') + (t.failed ? ', не ушло ' + t.failed : '') + (t.removed ? ' (заблокировали бота: ' + t.removed + ')' : '') + (t.done ? ' ✓' : ''));
+  }
+  return out.join(' · ');
+}
+function nlPutCampaign(c) {
+  if (!c || !NL.ov) return;
+  var l = NL.ov.campaigns || [], found = false;
+  l = l.map(function (x) { if (x.id === c.id) { found = true; return c; } return x; });
+  if (!found) l.unshift(c);
+  NL.ov.campaigns = l;
+}
+function renderNlCampaigns() {
+  var el = document.getElementById('nlCampaigns');
+  var list = (NL.ov && NL.ov.campaigns) || [];
+  if (!list.length) { el.innerHTML = '<div class="empty-state">Рассылок пока не было.</div>'; return; }
+  el.innerHTML = list.map(function (c) {
+    var errs = (c.email && c.email.errors) || [];
+    var errHtml = errs.length ? '<details class="adm-more"><summary>Не ушло — ' + errs.length + '</summary><p>' + errs.map(function (x) {
+      var s = nlById(NL.subs, x.id);
+      return escapeHtml((s && s.email) || String(x.id).slice(0, 10) + '…') + ' — ' + escapeHtml(x.reason || '');
+    }).join('<br>') + '</p></details>' : '';
+    var ch = [c.channels && c.channels.email ? 'почта' : '', c.channels && c.channels.telegram ? 'Telegram' : ''].filter(Boolean).join(' + ');
+    return '<div class="ev-card' + (c.status === 'stopped' ? ' inv-off' : '') + '">' +
+      '<div class="ev-head"><div>' +
+        '<div class="ev-title">' + escapeHtml(c.subject) + ' <span class="inv-tag ' + (c.status === 'done' ? 'ok' : 'off') + '">' + escapeHtml(NL.running === c.id ? 'отправляется' : (NL_CSTATUS[c.status] || c.status)) + '</span></div>' +
+        '<div class="ev-when">' + fmtGcDate(c.createdAt) + ' · ' + escapeHtml(NL_LANG[c.lang] || c.lang) + ' · ' + ch + '</div>' +
+      '</div></div>' +
+      '<p class="nl-line">' + escapeHtml(nlCampaignText(c)) + '</p>' + errHtml +
+      '<div class="ev-actions">' +
+        (c.status === 'sending' && NL.running !== c.id ? '<button class="mini-btn" data-nl-go="' + escapeHtml(c.id) + '"' + (NL.running ? ' disabled' : '') + '>Продолжить</button> ' : '') +
+        (c.status === 'sending' ? '<button class="mini-btn mini-btn-danger" data-nl-stop="' + escapeHtml(c.id) + '">Остановить</button> ' : '') +
+        '<button class="mini-btn" data-nl-copy="' + escapeHtml(c.id) + '">Текст в форму</button>' +
+      '</div></div>';
+  }).join('');
+}
+function nlProgress(c, note, ok) {
+  var el = document.getElementById('nlProgress');
+  if (!c) { el.innerHTML = ''; return; }
+  var e = c.email, t = c.telegram;
+  var done = (e ? e.sent + e.failed + e.skipped : 0) + (t ? t.sent + t.failed + t.skipped : 0);
+  var total = (e ? e.total : 0) + (t && t.total != null ? t.total : 0);
+  var pct = c.status === 'done' ? 100 : (total ? Math.min(100, Math.round(done / total * 100)) : 0);
+  el.innerHTML = '<p class="nl-line">«' + escapeHtml(c.subject) + '» — ' + escapeHtml(nlCampaignText(c)) + '</p><div class="nl-bar"><i></i></div>' +
+    (note ? '<p class="nl-line' + (ok === false ? ' nl-err' : '') + '">' + escapeHtml(note) + '</p>' : '');
+  el.querySelector('.nl-bar i').style.width = pct + '%';
+}
+async function nlRun(c) {
+  if (NL.running || !c || c.status !== 'sending') return;
+  NL.running = c.id; NL.stop = null;
+  renderNlCampaigns();
+  var note = '', bad = false;
+  try {
+    if (c.email && !c.email.done) {
+      for (;;) {
+        nlProgress(c, 'Отправляем письма — не закрывайте страницу.');
+        var r = await inboxCall({ action: 'nl_send_batch', id: c.id });
+        c = r.campaign; nlPutCampaign(c);
+        if (NL.ov && typeof r.sentToday === 'number') NL.ov.sentToday = r.sentToday;
+        if (r.paused === 'daily_limit') { note = 'Почта: на сегодня лимит — ' + r.dailyLimit + ' писем. Завтра нажмите «Продолжить» у этой рассылки.'; break; }
+        if (r.paused === 'stopped' || c.status !== 'sending' || NL.stop === c.id) break;
+        if (r.done || c.email.done) break;
+      }
+    }
+    if (c.telegram && !c.telegram.done && c.status === 'sending' && NL.stop !== c.id) {
+      nlProgress(c, 'Отправляем в Telegram — не закрывайте страницу.');
+      var job = await inboxCall({ action: 'nl_tg_sign', op: 'send', id: c.id });
+      var after = job.after || '';
+      for (;;) {
+        var b = await nlBot(job, { after: after, limit: 15 });
+        if (typeof b.total !== 'number' || !('next' in b)) throw new Error('Бот не понял задание — выложите бота v726.');
+        var p = await inboxCall({ action: 'nl_tg_progress', id: c.id, after: b.after, next: b.next, total: b.total, sent: b.sent, skipped: b.skipped, failed: b.failed, removed: b.removed });
+        c = p.campaign; nlPutCampaign(c);
+        nlProgress(c, b.retryAfter ? 'Telegram попросил паузу ' + b.retryAfter + ' с — продолжим сами.' : 'Отправляем в Telegram — не закрывайте страницу.');
+        if (b.next === null || c.telegram.done || c.status !== 'sending' || NL.stop === c.id) break;
+        after = b.next;
+        if (b.retryAfter) await new Promise(function (res) { setTimeout(res, b.retryAfter * 1000); });
+      }
+    }
+    if (!note) note = c.status === 'done' ? 'Готово.' : (c.status === 'stopped' ? 'Рассылка остановлена.' : '');
+  } catch (e) {
+    bad = true;
+    note = e.message + ' Продолжить — кнопкой «Продолжить» у рассылки: отправленным второй раз не уйдёт.';
+  }
+  NL.running = null; NL.stop = null;
+  nlProgress(c, note, !bad);
+  renderNlCampaigns(); renderNlStats();
+  nlRefreshOverview();
+}
+function nlFiltered() {
+  var f = document.getElementById('nl-filter').value, q = document.getElementById('nl-search').value.trim().toLowerCase();
+  return NL.subs.filter(function (s) {
+    if (f === 'active' && s.status !== 'active') return false;
+    if (f === 'off' && s.status === 'active') return false;
+    if (!q) return true;
+    return [s.email, s.name].concat((s.sources || []).map(function (x) { return (x.form || '') + ' ' + (x.page || ''); })).join(' ').toLowerCase().indexOf(q) >= 0;
+  });
+}
+function nlSrcText(s) { return (s.sources || []).map(function (x) { return (NL_SRC[x.via] || x.via) + (x.form ? ': ' + x.form : ''); }); }
+function renderNlList() {
+  var el = document.getElementById('nlList');
+  var list = nlFiltered();
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">' + (NL.subs.length ? 'Здесь пусто.' : 'Подписчиков почты пока нет. Они появятся, когда кто-то подпишется на сайте с галочкой «получать новости»; старые подписки из «Заявок с сайта» — кнопкой «Перенести из заявок сайта».') + '</div>';
+    return;
+  }
+  var shown = list.slice(0, 300);
+  el.innerHTML = shown.map(function (s) {
+    var src = nlSrcText(s), meta = ['с ' + fmtGcDate(s.subscribedAt)];
+    if (s.lang === 'en') meta.push('EN');
+    if (src.length) meta.push(src[src.length - 1]);
+    if (s.status !== 'active') meta.push((NL_STATUS[s.status] || s.status) + (s.unsubscribedAt ? ' ' + fmtGcDate(s.unsubscribedAt) : '') + (NL_VIA[s.unsubscribedVia] ? ' (' + NL_VIA[s.unsubscribedVia] + ')' : ''));
+    if (s.purged) meta.push('почта и имя стёрты через 30 дней');
+    return '<div class="nl-sub' + (s.status !== 'active' ? ' inv-off' : '') + '">' +
+      '<span class="nl-mail">' + escapeHtml(s.email || '— стёрто —') + '</span>' + (s.name ? '<span>' + escapeHtml(s.name) + '</span>' : '') +
+      '<span class="nl-meta">' + escapeHtml(meta.join(' · ')) + '</span>' +
+      '<span class="ev-actions">' + (s.status === 'active' ? '<button class="mini-btn" data-nl-unsub="' + escapeHtml(s.id) + '">Отписать</button> ' : '') +
+        '<button class="mini-btn mini-btn-danger" data-nl-del="' + escapeHtml(s.id) + '">Удалить</button></span>' +
+    '</div>';
+  }).join('') + (list.length > shown.length ? '<p class="editor-note">Показаны первые ' + shown.length + ' из ' + list.length + ' — уточните поиск или выгрузите таблицу.</p>' : '');
+}
+(function initNewsletterUi() {
+  if (!document.getElementById('nlBlock')) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var formRes = $('nlFormResult');
+  $('nl-filter').addEventListener('change', renderNlList);
+  $('nl-search').addEventListener('input', renderNlList);
+  $('nlReloadBtn').addEventListener('click', function () { if (!NL.running) loadNewsletter(); });
+  $('nlAddBtn').addEventListener('click', function () { $('nlAddForm').hidden = !$('nlAddForm').hidden; $('nlImportForm').hidden = true; });
+  $('nlImportBtn').addEventListener('click', function () { $('nlImportForm').hidden = !$('nlImportForm').hidden; $('nlAddForm').hidden = true; });
+  $('nlAddCancel').addEventListener('click', function () { $('nlAddForm').hidden = true; });
+  $('nlImportCancel').addEventListener('click', function () { $('nlImportForm').hidden = true; });
+  $('nlAddSave').addEventListener('click', async function () {
+    var btn = this, res = $('nlAddResult');
+    btn.disabled = true;
+    try {
+      var r = await inboxCall({ action: 'nl_add', email: $('nl-add-email').value, name: $('nl-add-name').value, lang: $('nl-add-lang').value, basis: $('nl-add-basis').value, confirm: $('nl-add-confirm').checked });
+      invShow(res, r.created ? 'Добавлен: ' + r.subscriber.email : 'Уже в списке: ' + r.subscriber.email, true);
+      $('nl-add-email').value = ''; $('nl-add-name').value = '';
+      loadNewsletter();
+    } catch (e) { invShow(res, e.message, false); }
+    btn.disabled = false;
+  });
+  $('nlImportSave').addEventListener('click', async function () {
+    var btn = this, res = $('nlImportResult');
+    var lines = $('nl-imp-text').value.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+    if (!lines.length) { invShow(res, 'Список пуст.', false); return; }
+    btn.disabled = true;
+    var sum = { added: 0, existed: 0, refused: 0, invalid: [] };
+    try {
+      for (var i = 0; i < lines.length; i += 200) { // частями — функции дано 30 секунд
+        invShow(res, 'Импорт… ' + Math.min(i + 200, lines.length) + ' из ' + lines.length, true);
+        var r = await inboxCall({ action: 'nl_import', text: lines.slice(i, i + 200).join('\n'), lang: $('nl-imp-lang').value, basis: $('nl-imp-basis').value, confirm: $('nl-imp-confirm').checked });
+        sum.added += r.added; sum.existed += r.existed; sum.refused += r.refused; sum.invalid = sum.invalid.concat(r.invalid || []);
+      }
+      invShow(res, 'Добавлено: ' + sum.added + ' · уже были: ' + sum.existed + (sum.refused ? ' · отписались раньше (не возвращаем): ' + sum.refused : '') + (sum.invalid.length ? ' · не похоже на почту: ' + sum.invalid.slice(0, 20).join('; ') : ''), true);
+      if (!sum.invalid.length) $('nl-imp-text').value = '';
+      loadNewsletter();
+    } catch (e) { invShow(res, e.message + (sum.added ? ' (до ошибки добавлено ' + sum.added + ')' : ''), false); }
+    btn.disabled = false;
+  });
+  $('nlSyncBtn').addEventListener('click', async function () {
+    var btn = this; btn.disabled = true;
+    try {
+      var r = await inboxCall({ action: 'nl_sync_leads' });
+      alert('Из «Заявок с сайта»: добавлено ' + r.added + ', уже были ' + r.existed + (r.refused ? ', отписались раньше (не возвращаем) ' + r.refused : '') + (r.noEmail ? ', без почты ' + r.noEmail : '') + '.');
+      loadNewsletter();
+    } catch (e) { alert(e.message); }
+    btn.disabled = false;
+  });
+  $('nlXlsxBtn').addEventListener('click', function () {
+    var rows = [['Почта', 'Имя', 'Язык', 'Статус', 'Подписан', 'Откуда', 'Отписался', 'Как отписался']];
+    NL.subs.forEach(function (s) {
+      rows.push([s.email || '— стёрто —', s.name || '', s.lang || 'ru', NL_STATUS[s.status] || s.status, s.subscribedAt ? fmtGcDate(s.subscribedAt) : '', nlSrcText(s).join('; '), s.unsubscribedAt ? fmtGcDate(s.unsubscribedAt) : '', NL_VIA[s.unsubscribedVia] || s.unsubscribedVia || '']);
+    });
+    invSave(xlsxBlob([{ name: 'Подписчики', title: 'Подписчики рассылки', rows: rows, widths: [32, 22, 6, 14, 22, 36, 22, 22] }]), 'aelita-newsletter-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+  });
+  $('nlList').addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-nl-unsub],[data-nl-del]'); if (!b) return;
+    var del = b.hasAttribute('data-nl-del'), id = b.getAttribute(del ? 'data-nl-del' : 'data-nl-unsub'), s = nlById(NL.subs, id);
+    var who = (s && s.email) || 'запись';
+    if (!confirm(del ? 'Удалить ' + who + ' совсем? Если человек просил больше не писать — лучше «Отписать»: удалённого можно случайно вернуть импортом.' : 'Отписать ' + who + '? Вернуть сможет только сам человек, подписавшись на сайте.')) return;
+    b.disabled = true;
+    try {
+      if (del) { await inboxCall({ action: 'nl_delete', id: id }); NL.subs = NL.subs.filter(function (x) { return x.id !== id; }); }
+      else { var r = await inboxCall({ action: 'nl_unsubscribe', id: id }); NL.subs = NL.subs.map(function (x) { return x.id === id ? r.subscriber : x; }); }
+      renderNlList(); nlRefreshOverview();
+    } catch (err) { alert(err.message); b.disabled = false; }
+  });
+  $('nlTestBtn').addEventListener('click', async function () {
+    var btn = this, subject = $('nl-subject').value.trim(), text = $('nl-text').value.trim();
+    if (!subject || !text) { invShow(formRes, 'Нужны тема и текст.', false); return; }
+    btn.disabled = true;
+    try {
+      var r = await inboxCall({ action: 'nl_test', subject: subject, text: text, lang: $('nl-lang').value === 'en' ? 'en' : 'ru', to: $('nl-test-to').value.trim() });
+      invShow(formRes, 'Тест ушёл на ' + r.to + ' — загляните и во «Входящие», и в «Спам».', true);
+    } catch (e) { invShow(formRes, e.message, false); }
+    btn.disabled = false;
+  });
+  $('nlSendBtn').addEventListener('click', async function () {
+    var btn = this;
+    if (NL.running) { invShow(formRes, 'Сначала дождитесь текущей рассылки.', false); return; }
+    var subject = $('nl-subject').value.trim(), text = $('nl-text').value.trim(), lang = $('nl-lang').value;
+    var email = $('nl-ch-email').checked, tgc = $('nl-ch-tg').checked;
+    if (!subject || !text) { invShow(formRes, 'Нужны тема и текст.', false); return; }
+    if (!email && !tgc) { invShow(formRes, 'Отметьте почту, Telegram или оба.', false); return; }
+    var c = (NL.ov && NL.ov.counts) || {};
+    var nMail = lang === 'all' ? (c.active || 0) : (c[lang] || 0);
+    var who = [email ? 'на почту — ' + nMail : '', tgc ? 'в Telegram — ' + (typeof NL.tg === 'number' ? (lang === 'all' ? NL.tg : 'до ' + NL.tg) : 'подписчикам бота') : ''].filter(Boolean).join(', ');
+    if (!confirm('Разослать «' + subject + '» ' + NL_LANG[lang] + ' (' + who + ')?\n\nОтправленное не вернуть. Тест себе смотрели?')) return;
+    btn.disabled = true; invShow(formRes, '', true);
+    try {
+      var r = await inboxCall({ action: 'nl_create', subject: subject, text: text, lang: lang, email: email, telegram: tgc, confirm: true });
+      nlPutCampaign(r.campaign);
+      $('nl-subject').value = ''; $('nl-text').value = '';
+      await nlRun(r.campaign);
+    } catch (e) { invShow(formRes, e.message, false); }
+    btn.disabled = false;
+  });
+  $('nlCampaigns').addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-nl-go],[data-nl-stop],[data-nl-copy]'); if (!b) return;
+    var id = b.getAttribute('data-nl-go') || b.getAttribute('data-nl-stop') || b.getAttribute('data-nl-copy');
+    var c = nlById((NL.ov && NL.ov.campaigns) || [], id); if (!c) return;
+    if (b.hasAttribute('data-nl-copy')) {
+      $('nl-subject').value = c.subject || ''; $('nl-text').value = c.text || ''; $('nl-lang').value = c.lang || 'all';
+      $('nl-subject').scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+    if (b.hasAttribute('data-nl-stop')) {
+      if (!confirm('Остановить рассылку «' + c.subject + '»? Продолжить её потом будет нельзя.')) return;
+      NL.stop = id; b.disabled = true;
+      try { nlPutCampaign((await inboxCall({ action: 'nl_stop', id: id })).campaign); } catch (err) { alert(err.message); }
+      if (!NL.running) renderNlCampaigns();
+      return;
+    }
+    nlRun(c);
+  });
+  window.addEventListener('beforeunload', function (e) { if (NL.running) { e.preventDefault(); e.returnValue = ''; } });
+})();
 var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
 var INV_WIDTHS = [6, 32, 6, 34, 6, 11, 10, 24, 30];
 function invRow(i, ev) {
@@ -4320,6 +4710,7 @@ var ADM_TAB_LOADERS = {
   staff: [function () { loadStaffShows(); }], // pack-v621
   events: [function () { loadEvents(); }],
   money: [function () { loadGiftCards(); }, function () { loadSubscriptions(); }],
+  news: [function () { loadNewsletter(); }], // pack-v726
 };
 var ADM_LOADED = {};
 function admCurrentTab() {
@@ -4569,6 +4960,7 @@ if (getToken()) { showData(); } else { showGate(); }
     ['invites', 'Пригласительные', ['Пригласительные']],
     ['staff', 'Контролёры', ['Контролёры на входе']],
     ['inbox', 'Входящие', ['Отзывы', 'Заявки с сайта', 'Заявки из бота']],
+    ['news', 'Рассылка', ['Рассылка новостей']], // pack-v726
     ['events', 'Регистрации', ['Регистрации на встречи']],
     ['clients', 'Клиенты', ['Клиенты']],
     ['money', 'Подписки и карты', ['Подписки', 'Счета компаний', 'Подарочные карты']],
