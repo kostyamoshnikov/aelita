@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=142">
+<link rel="stylesheet" href="/assets/fonts.css?v=143">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -422,6 +422,14 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #nlBlock details.nl-v1>summary{cursor:pointer;color:var(--gold);font-size:.875rem;padding:10px 0;min-height:44px}
 @media(max-width:600px){#nlBlock .nl2{padding:0;border:0}#nlBlock .nl2-tabs button,#nlBlock .nl2-steps button,#nlBlock .nl2-jump{flex:1 1 auto;padding:10px 8px;letter-spacing:.04em}#nlBlock .nl2-row .mini-btn,#nlBlock .nl2-row .btn-small{flex:1 1 auto}#nlBlock .nl2-card{padding:12px}#nlBlock .nl2-block{padding:10px}}
 
+
+/* pack-v737: «Текущий образ сайта» — выгрузка того, что изменилось вне чата (assets/admin-snapshot.js). */
+.snapshot-lead{color:var(--bone);line-height:1.6;margin:0 0 14px}
+.snapshot-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:18px 0 12px}
+.snapshot-actions button,.snapshot-actions a{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.snapshot-box progress{width:100%;height:10px;accent-color:var(--gold);margin:10px 0}
+#siteSnapshotStatus{overflow-wrap:anywhere;margin-bottom:0}
+.snapshot-box [hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -986,6 +994,19 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 
     <p class="sec-title" style="margin-top:56px">Заявления на возврат (<span id="rf-open">0</span> ждут решения или выплаты)</p>
     <div id="refundsBlock"><div class="empty-state">Загружаем…</div></div>
+
+    <p class="sec-title sec-gap">Текущий образ сайта</p>
+    <div class="editor-box snapshot-box" id="siteSnapshotBox">
+      <p class="snapshot-lead">Сохраните состояние сайта перед следующей доработкой и пришлите ZIP вместе с актуальным паком.</p>
+      <details class="adm-more"><summary>Что попадёт в образ</summary><p>Страницы, изображения и файлы сайта; каталоги событий, короткие ссылки, переносы и отмены, управление продажей, баннер и опубликованные отзывы. База клиентов, заказы и секреты сервера не включаются. Исходники берутся из текущей ветки репозитория; публикация всех файлов на сайте отдельно не подтверждается.</p></details>
+      <div class="snapshot-actions">
+        <button type="button" class="btn-small" id="siteSnapshotBtn">Скачать текущий образ</button>
+        <button type="button" class="mini-btn" id="siteSnapshotCancel" hidden>Отменить</button>
+        <a class="mini-btn" id="siteSnapshotDownload" hidden>Скачать ZIP ещё раз</a>
+      </div>
+      <progress id="siteSnapshotProgress" max="100" value="0" aria-label="Выгрузка образа сайта" hidden></progress>
+      <p class="editor-note" id="siteSnapshotStatus" role="status" aria-live="polite">Выгрузка только читает данные и не меняет сайт. Полную резервную копию платежей и клиентской базы делайте штатной командой резервного копирования.</p>
+    </div>
 
     <p class="sec-title" style="margin-top:56px">Правки сайта</p>
     <div class="editor-box">
@@ -6432,7 +6453,7 @@ if (getToken()) { showData(); } else { showGate(); }
     ['events', 'Регистрации', ['Регистрации на встречи']],
     ['clients', 'Клиенты', ['Клиенты']],
     ['money', 'Подписки и карты', ['Подписки', 'Счета компаний', 'Подарочные карты']],
-    ['site', 'Сайт', ['Правки сайта']]
+    ['site', 'Сайт', ['Текущий образ сайта', 'Правки сайта']]
   ];
   var OVERVIEW_TITLES = ['Продажи по показам', 'Скорость покупки'];
   function groupOf(title) {
@@ -6641,5 +6662,6 @@ if (getToken()) { showData(); } else { showGate(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
+<script src="/assets/admin-snapshot.js?v=143"></script>
 </body>
 </html>
