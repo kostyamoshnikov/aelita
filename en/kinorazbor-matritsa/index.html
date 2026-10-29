@@ -213,11 +213,21 @@
   </div>
 </section>
 
+<!-- pack-v732: отзывы — сюда ведёт письмо зрителям после события (Tickets/lib/show-feedback.js, PAGES.matritsa). -->
+<section class="pad-80" id="audience-reviews">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Audience reviews</h2></div>
+    <noscript><p class="aud-reviews-empty">To see and leave reviews, please enable JavaScript in your browser.</p></noscript>
+    <div id="aud-reviews-list"></div>
+    <div id="aud-reviews-form-host"></div>
+  </div>
+</section>
+
 <section class="pad-70">
   <div class="wrap">
     <div class="sec-head reveal"><h2>More with Katya Abdulova</h2></div>
     <div class="other-grid reveal">
-      <a class="other-card link-plain" href="/en/landshafty-realnosti"><span class="tag">Film talk · Kaluga</span><h3>Landscapes of Reality</h3><p>A film talk on Luc Besson’s “Lucy”. New date to be announced.</p></a>
+      <a class="other-card link-plain" href="/en/community"><span class="tag">Book club · Ongoing</span><h3>AELITA COMMUNITY</h3><p>Book meetings — spaces filled with meaning.</p></a>
       <a class="other-card link-plain" href="/en/iov"><span class="tag">Play · director</span><h3>IOV: Material</h3><p>A contemporary mystery play — Katya Abdulova’s directorial debut.</p></a>
       <a class="other-card link-plain" href="/en/tickets"><span class="tag">Schedule</span><h3>All events</h3><p>Performances, talks and the AELITA PRODUCTION festival.</p></a>
     </div>
@@ -339,6 +349,9 @@
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/afisha-links.js"></script>
 <script src="/assets/main.js?v=140"></script>
+
+<script src="/assets/reviews.js"></script>
+<script>AelitaReviews.init('kinorazbor-matritsa');</script>
 
 
 <script>
