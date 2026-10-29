@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=139">
+<link rel="stylesheet" href="/assets/fonts.css?v=140">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -272,8 +272,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js and style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=139">
-<script src="/assets/a11y.js?v=139"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=140">
+<script src="/assets/a11y.js?v=140"></script>
 </head>
 <body>
 <div class="wrap">
@@ -523,7 +523,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=139"></script>
+<script src="/assets/payments.js?v=140"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1431,7 +1431,7 @@ async function init(){
   if(data.isTest){ document.getElementById('test-banner').style.display = 'block'; }
   const dt = data.datetime ? new Date(data.datetime).toLocaleString('en-GB',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Date to be confirmed';
   const vn = pickVenue(data);
-  document.getElementById('meta').textContent = `${dt} · ${[vn.name, vn.address].filter(Boolean).join(', ')} · ${data.ageRating}`;
+  document.getElementById('meta').textContent = [dt, [vn.name, vn.address].filter(Boolean).join(', '), data.ageRating].filter(Boolean).join(' · ');
 
   goStep(1, {silent:true});
   if(data.seating === 'assigned'){
@@ -2625,7 +2625,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=139"></script>
-<script src="/assets/outage.js?v=139" defer></script>
+<script src="/assets/phone-prefix.js?v=140"></script>
+<script src="/assets/outage.js?v=140" defer></script>
 </body>
 </html>

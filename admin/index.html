@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=139">
+<link rel="stylesheet" href="/assets/fonts.css?v=140">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -358,6 +358,56 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #nlBlock .nl-image-options[hidden],#nlBlock #nlImageThumb[hidden]{display:none}
 #nlBlock #nlImageThumb{display:block;max-width:100%;width:auto;max-height:180px;margin:0 0 16px;border:1px solid var(--line,#2a2a30);object-fit:contain}
 #nlBlock #nlImageStatus.nl-err{color:#e08a6e}
+/* pack-v731: рассылка v2 — вкладки, шаги, блоки письма, проверка, отчёт */
+#nlBlock .nl2{border:1px solid rgba(214,181,122,.25);padding:16px;margin:4px 0 24px}
+#nlBlock .nl2-nav{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 16px}
+#nlBlock .nl2-tabs,#nlBlock .nl2-steps{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+#nlBlock .nl2-nav .nl2-tabs{margin:0}
+#nlBlock .nl2-tabs button,#nlBlock .nl2-steps button,#nlBlock .nl2-jump{min-height:44px;font-family:'Montserrat',sans-serif;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border:1px solid rgba(214,181,122,.25);color:var(--sand);background:none;cursor:pointer;text-align:center}
+#nlBlock .nl2-tabs button[aria-selected=true],#nlBlock .nl2-steps button[aria-current=step]{border-color:var(--gold);color:var(--gold);background:rgba(214,181,122,.08)}
+#nlBlock .nl2 button:focus-visible,#nlBlock .nl2 input:focus-visible,#nlBlock .nl2 select:focus-visible,#nlBlock .nl2 textarea:focus-visible,#nlBlock .nl2 a:focus-visible,#nlBlock .nl-h:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#nlBlock .nl2 .mini-btn,#nlBlock .nl2 .btn-small{min-height:44px;white-space:normal;text-align:center}
+#nlBlock .nl2 .btn-small{margin:0}
+#nlBlock .nl2-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+#nlBlock .nl2-row select{width:auto;max-width:100%}
+#nlBlock .nl2-card{background:rgba(232,230,225,.03);border:1px solid rgba(214,181,122,.14);padding:14px 16px;margin:0 0 10px;min-width:0}
+#nlBlock .nl2-card h4{font-family:'Montserrat',sans-serif;font-weight:400;font-size:.875rem;letter-spacing:.02em;margin:0 0 4px;overflow-wrap:anywhere}
+#nlBlock fieldset.nl2-card legend{padding:0 6px}
+#nlBlock .nl2-meta{font-size:.75rem;color:var(--sand);overflow-wrap:anywhere;margin:0 0 10px}
+#nlBlock .nl2-badge{display:inline-block;font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid currentColor;margin:0 4px 4px 0;white-space:normal;vertical-align:middle}
+#nlBlock .nl2-badge.ok{color:#7ec48c}#nlBlock .nl2-badge.warn{color:#e0b46e}#nlBlock .nl2-badge.err{color:#e08a6e}#nlBlock .nl2-badge.muted{color:var(--sand)}
+#nlBlock .nl2-status{font-size:.8125rem;color:var(--sand);margin:0 0 12px;min-height:1.6em;overflow-wrap:anywhere}
+#nlBlock .nl2-status.err{color:#e08a6e}#nlBlock .nl2-status.ok{color:var(--gold)}
+#nlBlock .nl2-block{border:1px solid rgba(201,184,163,.18);padding:12px;margin:0 0 10px}
+#nlBlock .nl2-block-head{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between;margin:0 0 8px}
+#nlBlock .nl2-block-head b{font-family:'Montserrat',sans-serif;font-weight:400;font-size:.6875rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+#nlBlock .nl2-block-head .mini-btn{min-width:44px;font-size:1rem;letter-spacing:0;line-height:1;font-family:inherit}
+#nlBlock .nl2-errors{margin:0 0 12px;padding-left:18px;font-size:.8125rem;color:#e08a6e;overflow-wrap:anywhere}
+#nlBlock .nl2-errors.warn{color:#e0b46e}
+#nlBlock .nl2-count{font-size:.75rem;color:var(--sand)}
+#nlBlock .nl2-count.err{color:#e08a6e}
+#nlBlock .nl2 [aria-invalid=true]{border-color:#e08a6e}
+#nlBlock .nl2-thumb{display:block;max-width:240px;width:100%;height:auto;margin:0 0 10px;border:1px solid rgba(214,181,122,.2)}
+#nlBlock .nl2-tg{max-width:420px;background:#17212b;border-radius:12px;padding:10px;margin:10px 0}
+#nlBlock .nl2-tg img{display:block;width:100%;height:auto;border-radius:8px;margin:0 0 8px}
+#nlBlock .nl2-tg p{white-space:pre-wrap;font-size:.875rem;line-height:1.45;color:#e8e6e1;overflow-wrap:anywhere;margin:0}
+#nlBlock .nl2-tgbtn{display:block;text-align:center;margin:6px 0 0;padding:8px;border-radius:8px;background:#2b5278;color:#fff;font-size:.8125rem;overflow-wrap:anywhere}
+#nlBlock .nl2-list{margin:8px 0 12px;padding:0;list-style:none;font-size:.8125rem}
+#nlBlock .nl2-list li{padding:6px 0;border-bottom:1px solid rgba(214,181,122,.1);overflow-wrap:anywhere}
+#nlBlock .nl2-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:0 0 14px}
+#nlBlock .nl2-sum div{background:rgba(214,181,122,.06);border-left:2px solid var(--gold);padding:10px 12px;min-width:0}
+#nlBlock .nl2-sum b{display:block;font-size:1.25rem;font-weight:500;color:var(--bone)}
+#nlBlock .nl2-sum span{font-size:.75rem;color:var(--sand);overflow-wrap:anywhere}
+#nlBlock .nl2 .nl-check{min-height:44px;margin-bottom:4px}
+#nlBlock .nl2-blockers{border:1px solid rgba(224,138,110,.45);padding:10px 14px;margin:0 0 12px}
+#nlBlock .nl2-legacy{border:1px dashed rgba(224,180,110,.5);padding:10px 12px;margin:8px 0 14px}
+#nlBlock .nl2-scroll{overflow:auto;max-width:100%}
+#nlBlock .nl2-scroll iframe{width:100%;max-width:360px;height:600px;border:0;background:#0b0b0d;display:block}
+#nlBlock .nl2-scroll iframe.nl-wide{width:600px;max-width:none}
+#nlBlock .nl2-go{border-color:var(--gold);background:rgba(214,181,122,.12)}
+#nlBlock details.nl-v1>summary{cursor:pointer;color:var(--gold);font-size:.875rem;padding:10px 0;min-height:44px}
+@media(max-width:600px){#nlBlock .nl2{padding:0;border:0}#nlBlock .nl2-tabs button,#nlBlock .nl2-steps button,#nlBlock .nl2-jump{flex:1 1 auto;padding:10px 8px;letter-spacing:.04em}#nlBlock .nl2-row .mini-btn,#nlBlock .nl2-row .btn-small{flex:1 1 auto}#nlBlock .nl2-card{padding:12px}#nlBlock .nl2-block{padding:10px}}
+
 </style>
 </head>
 <body>
@@ -756,6 +806,25 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <p class="nl-line" id="nlBgInfo"></p>
       <p class="nl-line" id="nlBounceInfo"></p>
 
+      <div class="nl2" id="nl2" hidden>
+        <p class="nl-h">Рассылка: черновики, аудитория, проверка, отчёт</p>
+        <div class="nl2-nav">
+          <div class="nl2-tabs" role="tablist" aria-label="Разделы рассылки">
+            <button type="button" role="tab" id="nl2-tab-campaigns" aria-controls="nl2-p-campaigns" aria-selected="true" data-nl2-tab="campaigns">Кампании</button>
+            <button type="button" role="tab" id="nl2-tab-drafts" aria-controls="nl2-p-drafts" aria-selected="false" tabindex="-1" data-nl2-tab="drafts">Черновики</button>
+            <button type="button" role="tab" id="nl2-tab-segments" aria-controls="nl2-p-segments" aria-selected="false" tabindex="-1" data-nl2-tab="segments">Сегменты</button>
+            <button type="button" role="tab" id="nl2-tab-state" aria-controls="nl2-p-state" aria-selected="false" tabindex="-1" data-nl2-tab="state">Состояние</button>
+          </div>
+          <button type="button" class="nl2-jump" data-nl2-jump="subs">Подписчики ↓</button>
+        </div>
+        <div id="nl2-p-campaigns" role="tabpanel" aria-labelledby="nl2-tab-campaigns"></div>
+        <div id="nl2-p-drafts" role="tabpanel" aria-labelledby="nl2-tab-drafts" hidden></div>
+        <div id="nl2-p-segments" role="tabpanel" aria-labelledby="nl2-tab-segments" hidden></div>
+        <div id="nl2-p-state" role="tabpanel" aria-labelledby="nl2-tab-state" hidden></div>
+      </div>
+      <p class="nl-line" id="nl2Off" hidden></p>
+
+      <details class="nl-v1" id="nlV1Box" open><summary>Простая рассылка (одно письмо и тот же текст в Telegram)</summary>
       <p class="nl-h">Новая рассылка</p>
       <div class="inv-row">
         <div class="field inv-w2"><label for="nl-subject">Тема</label><input class="ym-disable-keys" type="text" id="nl-subject" maxlength="200" autocomplete="off"></div>
@@ -794,11 +863,12 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <p class="editor-result" id="nlFormResult" role="status"></p>
       <div id="nlProgress"></div>
       <p class="editor-note">Подпись и отписка добавляются автоматически. Отправку продолжает фон — вкладку можно закрыть.</p>
+      </details>
 
       <p class="nl-h">Рассылки</p>
       <div id="nlCampaigns"><div class="empty-state">Рассылок пока не было.</div></div>
 
-      <p class="nl-h">Подписчики почты</p>
+      <p class="nl-h" id="nlSubsHead" tabindex="-1">Подписчики почты</p>
       <div class="inv-row">
         <div class="field"><label for="nl-filter">Показать</label><select id="nl-filter">
           <option value="active">Подписаны</option>
@@ -3667,6 +3737,7 @@ async function loadNewsletter() {
   }
   renderNlStats(); renderNlCampaigns(); renderNlList();
   nlLoadTgCount();
+  nl2Load(); // pack-v731: рассылка v2
   // Идёт рассылка, а вкладка свободна — показать ход (сам ход ведёт фон).
   var live = ((NL.ov && NL.ov.campaigns) || []).filter(function (c) { return c.status === 'sending'; })[0];
   if (live && !NL.running) nlWatch(live);
@@ -3793,6 +3864,7 @@ function renderNlCampaigns() {
         (c.status === 'sending' && NL.running !== c.id ? '<button class="mini-btn" data-nl-go="' + escapeHtml(c.id) + '"' + (NL.running ? ' disabled' : '') + '>Продолжить</button> ' : '') +
         (c.status === 'sending' ? '<button class="mini-btn mini-btn-danger" data-nl-stop="' + escapeHtml(c.id) + '">Остановить</button> ' : '') +
         '<button class="mini-btn" data-nl-copy="' + escapeHtml(c.id) + '">Текст в форму</button>' +
+        (typeof nl2Write === 'function' && nl2Write() ? ' <button class="mini-btn" data-nl-v2copy="' + escapeHtml(c.id) + '">В черновик v2</button>' : '') +
       '</div></div>';
   });
   el.innerHTML = cards.slice(0, keep).join('') + (cards.length > keep ? '<details class="nl-history-more"><summary>Ещё ' + (cards.length - keep) + ' завершённых</summary>' + cards.slice(keep).join('') + '</details>' : '');
@@ -3894,7 +3966,8 @@ function renderNlList() {
     return '<div class="nl-sub' + (live ? '' : ' inv-off') + '">' +
       '<span class="nl-mail">' + escapeHtml(s.email || '— стёрто —') + '</span>' + (s.name ? '<span>' + escapeHtml(s.name) + '</span>' : '') +
       '<details class="nl-compact-meta"><summary>' + escapeHtml(nlStatusText(s)) + ' · ' + escapeHtml(s.lang === 'en' ? 'EN' : 'RU') + '</summary><p>' + escapeHtml(meta.join(' · ')) + '</p></details>' +
-      '<span class="ev-actions">' + (live ? '<button class="mini-btn" data-nl-unsub="' + escapeHtml(s.id) + '">Отписать</button> ' : '') +
+      '<span class="ev-actions">' + (live && typeof nl2Write === 'function' && nl2Write() && s.email ? '<button class="mini-btn" data-nl-profile-btn="' + escapeHtml(s.id) + '" aria-expanded="false">Профиль' + (s.profile && (s.profile.city || (s.profile.tags || []).length || (s.profile.interests || []).length) ? ' ✓' : '') + '</button> ' : '') +
+        (live ? '<button class="mini-btn" data-nl-unsub="' + escapeHtml(s.id) + '">Отписать</button> ' : '') +
         '<button class="mini-btn mini-btn-danger" data-nl-del="' + escapeHtml(s.id) + '">Удалить</button></span>' +
     '</div>';
   }).join('') + (list.length > shown.length ? '<p class="editor-note">Показаны первые ' + shown.length + ' из ' + list.length + ' — уточните поиск или выгрузите таблицу.</p>' : '');
@@ -4114,6 +4187,28 @@ function nlRequestId() {
     invSave(xlsxBlob([{ name: 'Подписчики', title: 'Подписчики рассылки', rows: rows, widths: [32, 22, 6, 18, 22, 22, 36, 22, 22] }]), 'aelita-newsletter-' + new Date().toISOString().slice(0, 10) + '.xlsx');
   });
   $('nlList').addEventListener('click', async function (e) {
+    // pack-v731: профиль подписчика для сегментов рассылки v2.
+    var pb = e.target.closest('[data-nl-profile-btn]');
+    if (pb) {
+      var row = pb.closest('.nl-sub'), open = row.nextElementSibling && row.nextElementSibling.hasAttribute('data-nl-profile');
+      if (open) { row.nextElementSibling.remove(); pb.setAttribute('aria-expanded', 'false'); return; }
+      row.insertAdjacentHTML('afterend', nlProfileForm(nlById(NL.subs, pb.getAttribute('data-nl-profile-btn'))));
+      pb.setAttribute('aria-expanded', 'true'); row.nextElementSibling.querySelector('input').focus();
+      return;
+    }
+    var ps = e.target.closest('[data-nl-profile-save]');
+    if (ps) {
+      var form = ps.closest('[data-nl-profile]'), pid = form.getAttribute('data-nl-profile'), pres = form.querySelector('[data-nl-profile-res]');
+      var val = function (k) { return form.querySelector('[data-p="' + k + '"]').value; };
+      ps.disabled = true;
+      try {
+        var pr = await inboxCall({ action: 'nl_subscriber_profile_save', id: pid, base_revision: Number(form.getAttribute('data-rev')) || 0, city: val('city'), interests: val('interests'), tags: val('tags') });
+        NL.subs = NL.subs.map(function (x) { return x.id === pid ? Object.assign({}, x, { profile: pr.profile }) : x; });
+        form.setAttribute('data-rev', pr.profile.revision); invShow(pres, 'Профиль сохранён.', true);
+      } catch (err) { invShow(pres, err.message, false); }
+      ps.disabled = false;
+      return;
+    }
     var b = e.target.closest('[data-nl-unsub],[data-nl-del]'); if (!b) return;
     var del = b.hasAttribute('data-nl-del'), id = b.getAttribute(del ? 'data-nl-del' : 'data-nl-unsub'), s = nlById(NL.subs, id);
     var who = (s && s.email) || 'запись';
@@ -4160,6 +4255,8 @@ function nlRequestId() {
     btn.disabled = false;
   });
   $('nlCampaigns').addEventListener('click', async function (e) {
+    var v2b = e.target.closest('[data-nl-v2copy]');
+    if (v2b) { v2b.disabled = true; try { await nl2OpenDraft(await nl2Call({ action: 'nl_draft_copy', from: 'campaign', id: v2b.getAttribute('data-nl-v2copy') })); nl2$('nl2').scrollIntoView({ block: 'start' }); } catch (err) { alert(err.message); } v2b.disabled = false; return; }
     var b = e.target.closest('[data-nl-go],[data-nl-stop],[data-nl-copy]'); if (!b) return;
     var id = b.getAttribute('data-nl-go') || b.getAttribute('data-nl-stop') || b.getAttribute('data-nl-copy');
     var c = nlById((NL.ov && NL.ov.campaigns) || [], id); if (!c) return;
@@ -4184,6 +4281,943 @@ function nlRequestId() {
   });
   window.addEventListener('beforeunload', function (e) { if (NL.running && !(NL.ov && NL.ov.background && NL.ov.background.lastSeen)) { e.preventDefault(); e.returnValue = ''; } });
 })();
+// ── pack-v731: рассылка v2 (Admin/lib/newsletter-v2-admin.js) ──
+// Черновик на сервере (автосохранение через 1,5 с, revision, конфликт двух
+// устройств) → содержание по каналам и языкам (блоки письма, Telegram) →
+// аудитория (фильтр среди подписанных, снимок с итогами по каналу и языку)
+// → проверка на сервере (тесты текущей версии, утверждение на 15 минут) →
+// отправка сейчас или по Москве. Кампании: пауза, продолжение, техническая
+// пауза отдельно, остановка, отчёт и выгрузка в Excel. Вся логика допуска — на сервере;
+// страница только показывает и спрашивает.
+var NL2 = { cap: null, tab: 'campaigns', campaigns: [], drafts: [], segments: [], opts: null, draft: null, local: null, state: {}, step: 'content', variant: null,
+  dirty: false, saving: false, again: false, saveTimer: null, editSeq: 0, conflict: null, offline: false, lastSavedAt: null, audience: null, review: null,
+  reqId: null, thumbs: {}, segEdit: null, poll: null, nudgedAt: 0, audPoll: null, pages: {} };
+var NL2_STATUS = { scheduled: 'запланирована', sending: 'идёт', pausing: 'ставим на паузу', paused: 'пауза', stopped: 'остановлена', done: 'обработка завершена', cancelled: 'отменена' };
+var NL2_REASON = { unsubscribed: 'отписались', complained: 'пожаловались', unconfirmed: 'не подтвердили адрес', undeliverable: 'адрес недоступен', deleted: 'контакт удалён',
+  manual_exclusion: 'исключены вручную', filter_mismatch: 'не подходят под фильтр', locale_unavailable: 'нет варианта на их языке', not_subscribed: 'отписались в боте',
+  blocked: 'заблокировали бота', chat_not_found: 'чат недоступен', response_lost: 'ответ не получен', smtp_unknown: 'почта не ответила', smtp_rejected: 'почта отказала',
+  smtp_temporary: 'временный отказ', provider_error: 'ошибка отправителя', tg_rate_limited: 'Telegram просил паузу', tg_bad_request: 'Telegram отклонил',
+  tg_error: 'ошибка Telegram', network_unknown: 'обрыв связи', retries_exhausted: 'повторы исчерпаны', begin_lost: 'начало не подтверждено', not_sent: 'не отправлено' };
+var NL2_DETAIL = { lang: 'язык', city: 'город', city_unknown: 'город не указан', interests: 'интересы', interests_unknown: 'интересы не указаны', tags: 'метки',
+  tags_unknown: 'метки не указаны', source: 'источник', telegram_unknown: 'у подписчиков бота известен только язык' };
+var NL2_BLOCKS = { heading: 'Заголовок', paragraph: 'Абзац', image: 'Фото', event: 'Карточка события', button: 'Кнопка', divider: 'Разделитель' };
+var NL2_CH = { email: 'Письмо', telegram: 'Telegram' };
+var NL2_LG = { ru: 'RU', en: 'EN' };
+var NL2_HOLD = { smtp_error: 'ошибка почты', smtp_unknown: 'почта не ответила', mail_not_configured: 'почта не настроена', image_unavailable: 'картинка недоступна',
+  tg_rate_limited: 'Telegram просит паузу', tg_bad_request: 'Telegram отклонил сообщение', tg_error: 'ошибка Telegram' };
+var NL2_PAUSE = { schedule_disabled: 'расписание выключено (NEWSLETTER_V2_SCHEDULE)', bot_not_ready: 'бот не готов к рассылке v2', mail_not_configured: 'почта не настроена',
+  image_unavailable: 'картинка недоступна', missing: 'кампания не найдена', precheck_error: 'проверка перед стартом не прошла' };
+
+function nl2$(id) { return document.getElementById(id); }
+function nl2E(s) { return escapeHtml(s == null ? '' : String(s)); }
+function nl2Msk(ms) { return ms ? new Date(ms).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) + ' МСК' : '—'; }
+function nl2Hm(ms) { return ms ? new Date(ms).toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit' }) : ''; }
+function nl2Pl(n, a, b, c) { n = Math.abs(n) % 100; var m = n % 10; return n > 10 && n < 20 ? c : m > 1 && m < 5 ? b : m === 1 ? a : c; }
+/** Запрос к функции с кодом ответа (409, 403 — не исключение, а ответ). */
+async function nl2Api(body) {
+  var res;
+  try { res = await fetch(ADMIN_INBOX_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() }, body: JSON.stringify(body) }); }
+  catch (e) { return { ok: false, status: 0, data: { message: 'Нет связи с сервером' } }; }
+  var data = {};
+  try { data = await res.json(); } catch (e) { data = {}; }
+  return { ok: res.ok, status: res.status, data: data };
+}
+async function nl2Call(body) {
+  var r = await nl2Api(body);
+  if (!r.ok) { var e = new Error(r.data.message || errorMessage(r.data)); e.status = r.status; e.data = r.data; throw e; }
+  return r.data;
+}
+function nl2Clone(x) { return JSON.parse(JSON.stringify(x)); }
+/** Идентификатор запуска: один на утверждение; повтор запроса после обрыва — с тем же. */
+function nl2NewRequestId() {
+  var bytes = new Uint8Array(6); crypto.getRandomValues(bytes);
+  return new Date().toISOString().replace(/[-:]/g, '').slice(0, 15).toLowerCase() + '-' + Array.from(bytes).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+}
+function nl2Get(obj, path) { return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj); }
+function nl2Set(obj, path, val) {
+  var ks = path.split('.'), o = obj;
+  for (var i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null) o[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {}; o = o[ks[i]]; }
+  o[ks[ks.length - 1]] = val;
+}
+function nl2Write() { return !!(NL2.cap && NL2.cap.flags && NL2.cap.flags.write); }
+function nl2Send() { return !!(NL2.cap && NL2.cap.flags && NL2.cap.flags.send); }
+function nl2V1Open(open) { var b = nl2$('nlV1Box'); if (b) b.open = open; }
+function nl2Status(el, text, kind) { if (!el) return; el.textContent = text || ''; el.className = 'nl2-status' + (kind ? ' ' + kind : ''); }
+
+// ── загрузка и вкладки ──
+async function nl2Load() {
+  var box = nl2$('nl2'), off = nl2$('nl2Off');
+  if (!box || !ADMIN_INBOX_URL || !getToken()) return;
+  try { NL2.cap = await nl2Call({ action: 'nl_capabilities' }); }
+  catch (e) { box.hidden = true; off.hidden = false; off.textContent = 'Рассылка v2 недоступна: функции ещё не обновлены (' + e.message + '). Работает простая рассылка ниже.'; nl2V1Open(true); return; }
+  try { NL2.campaigns = (await nl2Call({ action: 'nl_v2_list' })).campaigns || []; } catch (e) { NL2.campaigns = []; }
+  if (!nl2Write() && !NL2.campaigns.length) {
+    box.hidden = true; off.hidden = false; nl2V1Open(true);
+    off.textContent = 'Рассылка v2 (черновики, сегменты, проверка, расписание, отчёты) выключена: у функции aelita-admin-inbox нет NEWSLETTER_V2_WRITE=1. Работает простая рассылка ниже.';
+    return;
+  }
+  off.hidden = true; box.hidden = false; nl2V1Open(!nl2Write());
+  document.querySelectorAll('[data-nl2-tab="drafts"],[data-nl2-tab="segments"]').forEach(function (b) { b.hidden = !nl2Write(); });
+  nl2ShowTab(NL2.tab);
+  nl2Poll();
+  if (nl2Write()) { renderNlList(); renderNlCampaigns(); } // кнопки «Профиль» и «В черновик v2»
+}
+function nl2ShowTab(tab) {
+  NL2.tab = tab;
+  document.querySelectorAll('[data-nl2-tab]').forEach(function (b) {
+    var on = b.getAttribute('data-nl2-tab') === tab;
+    b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1;
+    var p = nl2$('nl2-p-' + b.getAttribute('data-nl2-tab')); if (p) p.hidden = !on;
+  });
+  if (tab === 'campaigns') nl2RenderCampaigns();
+  if (tab === 'drafts') { if (NL2.draft) nl2RenderEditor(); else nl2LoadDrafts(); }
+  if (tab === 'segments') nl2LoadSegments();
+  if (tab === 'state') nl2RenderState();
+}
+async function nl2Nudge() {
+  if (Date.now() - NL2.nudgedAt < 30000) return;
+  NL2.nudgedAt = Date.now();
+  try { await nlNudge(); } catch (e) { /* фон зайдёт сам */ }
+}
+function nl2Poll() {
+  clearTimeout(NL2.poll);
+  var live = NL2.campaigns.some(function (c) { return c.status === 'sending' || c.status === 'pausing'; });
+  if (!live) return;
+  NL2.poll = setTimeout(async function () {
+    if (document.hidden || NL2.tab !== 'campaigns') { nl2Poll(); return; }
+    // Только идущие — по одной (два чтения на кампанию), а не весь список.
+    var ids = NL2.campaigns.filter(function (c) { return c.status === 'sending' || c.status === 'pausing'; }).map(function (c) { return c.id; });
+    for (var k = 0; k < ids.length; k++) { try { nl2PutCampaign((await nl2Call({ action: 'nl_v2_campaign', id: ids[k] })).campaign); } catch (e) { /* следующий раз */ } }
+    nl2RenderCampaigns();
+    if (NL2.campaigns.some(function (c) { return c.status === 'sending' && c.channels.telegram && !c.channels.telegram.done; })) nl2Nudge();
+    nl2Poll();
+  }, 10000);
+}
+
+// ── кампании ──
+function nl2StatusText(c) {
+  if (c.status === 'scheduled') return 'запланирована на ' + nl2Msk(c.runAtUtc);
+  if (c.status === 'paused' && c.overdue) return 'просрочена — ждёт решения';
+  if (c.status === 'paused' && c.pause && c.pause.by === 'system') return 'пауза: ' + (NL2_PAUSE[c.pause.reason] || c.pause.reason || 'проверка перед стартом');
+  return NL2_STATUS[c.status] || c.status;
+}
+function nl2ChLine(ch, s) {
+  var p = [NL2_CH[ch] + ': принято ' + s.accepted + ' из ' + s.total];
+  if (s.skipped) p.push('пропущено ' + s.skipped);
+  if (s.failed) p.push('отказ ' + s.failed);
+  if (s.unknown) p.push('исход неизвестен ' + s.unknown);
+  if (s.inFlight) p.push('в работе ' + s.inFlight);
+  if (s.queued && !s.done) p.push('в очереди ' + s.queued);
+  if (s.retryWaiting) p.push('ждут повтора ' + s.retryWaiting);
+  return p.join(' · ') + (s.done ? ' ✓' : '');
+}
+function nl2CampaignCard(c) {
+  var tag = c.status === 'done' ? 'ok' : (c.status === 'sending' || c.status === 'scheduled') ? 'muted' : 'warn';
+  var chs = Object.keys(c.channels || {});
+  var lines = chs.map(function (ch) {
+    var s = c.channels[ch]; if (!s) return '';
+    var pct = s.total ? Math.round((s.accepted + s.skipped + s.failed + s.unknown) / s.total * 100) : 100;
+    var hold = s.hold && s.hold.active ? '<p class="nl-line nl-err">' + nl2E(NL2_CH[ch] + ' — техническая пауза: ' + (NL2_HOLD[s.hold.code] || s.hold.code) + (s.hold.reason ? ' (' + s.hold.reason + ')' : '') + (s.hold.manual ? '. Исправьте причину и нажмите «Снять паузу».' : '. Продолжит сама около ' + nl2Hm(s.hold.until) + '.')) + '</p>' : '';
+    return '<p class="nl-line">' + nl2E(nl2ChLine(ch, s)) + '</p><div class="nl-bar"><i data-w="' + pct + '"></i></div>' + hold;
+  }).join('');
+  var acts = [];
+  if (c.status === 'sending') acts.push('<button type="button" class="mini-btn" data-nl2-act="pause" data-id="' + nl2E(c.id) + '">Пауза</button>');
+  if (c.status === 'pausing') acts.push('<button type="button" class="mini-btn" disabled>Ставим на паузу: в работе ' + nl2E(c.inFlight) + '</button>');
+  if (c.status === 'paused' && nl2Send()) acts.push('<button type="button" class="mini-btn" data-nl2-act="resume" data-id="' + nl2E(c.id) + '">' + (c.overdue ? 'Отправить сейчас' : 'Продолжить') + '</button>');
+  chs.forEach(function (ch) { var s = c.channels[ch]; if (s && s.hold && s.hold.manual && ['done', 'stopped', 'cancelled'].indexOf(c.status) < 0) acts.push('<button type="button" class="mini-btn" data-nl2-act="hold" data-ch="' + ch + '" data-id="' + nl2E(c.id) + '">Снять паузу: ' + NL2_CH[ch] + '</button>'); });
+  if (c.status === 'scheduled' || (c.status === 'paused' && !c.activatedAt)) acts.push('<button type="button" class="mini-btn mini-btn-danger" data-nl2-act="cancel" data-id="' + nl2E(c.id) + '">Отменить расписание</button>');
+  if (['sending', 'pausing', 'paused'].indexOf(c.status) >= 0 && c.activatedAt) acts.push('<button type="button" class="mini-btn mini-btn-danger" data-nl2-act="stop" data-id="' + nl2E(c.id) + '">Остановить окончательно</button>');
+  acts.push('<button type="button" class="mini-btn" data-nl2-act="report" data-id="' + nl2E(c.id) + '" aria-expanded="false" aria-controls="nl2r-' + nl2E(c.id) + '">Отчёт</button>');
+  if (nl2Write()) acts.push('<button type="button" class="mini-btn" data-nl2-act="copy" data-id="' + nl2E(c.id) + '">В новый черновик</button>');
+  return '<div class="nl2-card">' +
+    '<h4>' + nl2E(c.title || 'Рассылка') + ' <span class="nl2-badge ' + tag + '">' + nl2E(nl2StatusText(c)) + '</span></h4>' +
+    '<p class="nl2-meta">' + nl2E((c.runAtUtc ? 'по расписанию ' + nl2Msk(c.runAtUtc) : 'создана ' + nl2Msk(Date.parse(c.createdAt))) + ' · ' + chs.map(function (x) { return NL2_CH[x]; }).join(' + ') +
+      ' · языки: ' + ['ru', 'en'].filter(function (l) { return Object.keys(c.locales || {}).some(function (ch) { return (c.locales[ch] || []).indexOf(l) >= 0; }); }).map(function (l) { return NL2_LG[l]; }).join(', ') + (c.legacyUnconfirmed ? ' · с неподтверждёнными до 28.10' : '')) + '</p>' +
+    lines + '<div class="nl2-row">' + acts.join(' ') + '</div><div class="nl2-report" id="nl2r-' + nl2E(c.id) + '" hidden></div></div>';
+}
+function nl2RenderCampaigns() {
+  var el = nl2$('nl2-p-campaigns'); if (!el) return;
+  var head = '<div class="nl2-row">' + (nl2Write() ? '<button type="button" class="btn-small" data-nl2="new">Новая рассылка</button>' : '') + '<button type="button" class="btn-small btn-ghost" data-nl2="reload">Обновить</button></div>';
+  var open = {};
+  el.querySelectorAll('.nl2-report:not([hidden])').forEach(function (r) { open[r.id] = r.innerHTML; });
+  el.innerHTML = head + (NL2.campaigns.length ? NL2.campaigns.map(nl2CampaignCard).join('')
+    : '<div class="empty-state">Рассылок v2 пока не было. «Новая рассылка» создаёт черновик — ничего не отправляется, пока вы не проверите и не подтвердите отправку.</div>');
+  el.querySelectorAll('.nl-bar i[data-w]').forEach(function (i) { i.style.width = i.getAttribute('data-w') + '%'; });
+  Object.keys(open).forEach(function (id) { var r = nl2$(id); if (r) { r.hidden = false; r.innerHTML = open[id]; var b = el.querySelector('[data-nl2-act="report"][aria-controls="' + id + '"]'); if (b) b.setAttribute('aria-expanded', 'true'); } });
+}
+function nl2PutCampaign(c) {
+  var found = false;
+  NL2.campaigns = NL2.campaigns.map(function (x) { if (x.id === c.id) { found = true; return c; } return x; });
+  if (!found) NL2.campaigns.unshift(c);
+}
+async function nl2CampaignAct(btn) {
+  var act = btn.getAttribute('data-nl2-act'), id = btn.getAttribute('data-id'), c = nlById(NL2.campaigns, id);
+  if (!c) return;
+  if (act === 'report') { var box = nl2$('nl2r-' + id); var show = box.hidden; box.hidden = !show; btn.setAttribute('aria-expanded', show ? 'true' : 'false'); if (show) nl2Report(id, false); return; }
+  if (act === 'copy') { await nl2OpenDraft(await nl2Call({ action: 'nl_draft_copy', from: 'campaign', id: id })); return; }
+  if (act === 'stop') {
+    var done = Object.keys(c.channels).map(function (ch) { var s = c.channels[ch]; return NL2_CH[ch] + ' — принято ' + s.accepted + ' из ' + s.total; }).join(', ');
+    if (!confirm('Остановить «' + (c.title || 'рассылку') + '» окончательно?\n\nСейчас: ' + done + '.\nПродолжить потом будет нельзя. Начатые отправки допишут результат.')) return;
+  }
+  if (act === 'cancel' && !confirm('Отменить запуск «' + (c.title || 'рассылки') + '»? Ничего не будет отправлено. Изменить и запланировать заново — через новый черновик.')) return;
+  if (act === 'resume' && c.overdue && !confirm('Рассылка опоздала больше чем на ' + (NL2.cap ? NL2.cap.overdueMinutes : 15) + ' минут. Отправить её сейчас?')) return;
+  btn.disabled = true;
+  var map = { pause: 'nl_pause', resume: 'nl_v2_resume', stop: 'nl_v2_stop', cancel: 'nl_schedule_cancel', hold: 'nl_hold_clear' };
+  var r = await nl2Api({ action: map[act], id: id, channel: btn.getAttribute('data-ch') || undefined, expected_revision: c.revision });
+  if (!r.ok) alert(r.data.message || 'Не получилось');
+  else { nl2PutCampaign(r.data.campaign); if (act === 'resume' || act === 'hold') nl2Nudge(); }
+  if (!r.ok && r.status === 409) { try { NL2.campaigns = (await nl2Call({ action: 'nl_v2_list' })).campaigns || []; } catch (e) {} }
+  nl2RenderCampaigns(); nl2Poll();
+}
+
+// ── отчёт ──
+async function nl2Report(id, refresh) {
+  var box = nl2$('nl2r-' + id); if (!box) return;
+  box.innerHTML = '<p class="nl-line">Считаем…</p>';
+  try {
+    var r = await nl2Call({ action: 'nl_report', id: id, refresh: !!refresh });
+    var html = '';
+    Object.keys(r.channels).forEach(function (ch) {
+      var x = r.channels[ch], k = x.control || {};
+      html += '<p class="nl-h">' + NL2_CH[ch] + '</p><div class="nl2-sum">' +
+        '<div><b>' + (k.accepted || 0) + '</b><span>' + (ch === 'email' ? 'принято почтовым сервисом' : 'принято Telegram') + '</span></div>' +
+        '<div><b>' + (k.skipped || 0) + '</b><span>пропущено</span></div><div><b>' + (k.failed || 0) + '</b><span>отказ</span></div>' +
+        '<div><b>' + (k.unknown || 0) + '</b><span>исход неизвестен</span></div><div><b>' + (k.queued || 0) + '</b><span>в очереди</span></div></div>';
+      var reasons = Object.keys(k.reasons || {}).filter(function (c) { return k.reasons[c]; }).map(function (c) { return (NL2_REASON[c] || c) + ': ' + k.reasons[c]; });
+      if (reasons.length) html += '<p class="nl-line">Причины: ' + nl2E(reasons.join(' · ')) + '</p>';
+      html += '<p class="nl-line' + (x.consistent === false ? ' nl-err' : '') + '">' + (x.consistent === true ? 'Итоги сходятся с журналом получателей.' : x.consistent === false ? '⚠️ Итоги не сходятся с журналом — нажмите «Пересчитать» и напишите в чат.' : 'Журнал не пересчитан (не хватило времени).') + '</p>';
+      if (x.provider) {
+        var pv = x.provider;
+        html += '<p class="nl-line">Доставка (события Postbox): сервер адресата принял — ' + (pv.delivered || 0) + ', задержка — ' + (pv.delivery_delayed || 0) + ', возврат — ' + (pv.bounced || 0) + ', жалоба — ' + (pv.complained || 0) + ', отписка — ' + (pv.unsubscribed || 0) + ', без событий — ' + (pv.none || 0) + '. «Доставлено» — не «прочитано».</p>';
+      } else html += '<p class="nl-line">' + nl2E(x.providerNote) + '</p>';
+      html += '<div class="nl2-row"><button type="button" class="mini-btn" data-nl2-rep="unknown" data-ch="' + ch + '" data-id="' + nl2E(id) + '">Неизвестный исход</button>' +
+        '<button type="button" class="mini-btn" data-nl2-rep="failed" data-ch="' + ch + '" data-id="' + nl2E(id) + '">Отказы</button>' +
+        '<button type="button" class="mini-btn" data-nl2-rep="xlsx" data-ch="' + ch + '" data-id="' + nl2E(id) + '">Excel</button></div><div id="nl2l-' + nl2E(id) + '-' + ch + '"></div>';
+    });
+    var v = r.visits || {};
+    html += '<p class="nl-line">' + (v.error ? 'Переходы: счётчик сайта недоступен.' : 'Переходы на сайт по меткам рассылки (входы, счётчик без cookie, ' + (v.days || 0) + ' ' + nl2Pl(v.days || 0, 'день', 'дня', 'дней') + '): из писем — ' + (v.email || 0) + ', из Telegram — ' + (v.telegram || 0) + '. Это входы на сайт, не люди и не продажи.') + '</p>';
+    html += '<p class="nl-line">' + nl2E(r.sales && r.sales.note) + '</p>';
+    html += '<div class="nl2-row"><button type="button" class="mini-btn" data-nl2-rep="refresh" data-id="' + nl2E(id) + '">Пересчитать</button><span class="nl2-meta">' + (r.cached ? 'данные до минуты назад' : 'пересчитано ' + nl2Hm(r.builtAt)) + '</span></div>';
+    box.innerHTML = html;
+  } catch (e) { box.innerHTML = '<p class="nl-line nl-err">' + nl2E(e.message) + '</p>'; }
+}
+async function nl2ReportList(id, ch, state) {
+  var el = nl2$('nl2l-' + id + '-' + ch); if (!el) return;
+  el.innerHTML = '<p class="nl-line">Загружаем…</p>';
+  try {
+    var r = await nl2Call({ action: 'nl_report_page', id: id, channel: ch, state: state });
+    el.innerHTML = (state === 'unknown' && r.items.length ? '<p class="nl-line nl-err">Исход неизвестен: письмо или сообщение могло дойти. Само оно не повторяется. Повторить можно только осознанно — новой рассылкой, с риском дубля.</p>' : '') +
+      (r.items.length ? '<ul class="nl2-list">' + r.items.map(function (d) {
+        return '<li>' + nl2E(d.contact || '— контакт удалён —') + ' · ' + nl2E(NL2_REASON[d.reasonCode] || d.reasonCode || d.processState) + (d.lastAttempt && d.lastAttempt.at ? ' · ' + nl2E(nl2Msk(Date.parse(d.lastAttempt.at))) : '') + (d.lastAttempt && d.lastAttempt.detail ? ' · ' + nl2E(d.lastAttempt.detail) : '') + '</li>';
+      }).join('') + '</ul>' : '<p class="nl-line">Таких нет.</p>');
+  } catch (e) { el.innerHTML = '<p class="nl-line nl-err">' + nl2E(e.message) + '</p>'; }
+}
+// Выгрузка по получателям — Excel в дизайне Аэлиты (xlsxBlob), как все таблицы
+// админки (заказчик 11.10). Колонки — из спецификации и в её порядке (сервер
+// отдаёт коды, здесь — подписи); ячейки — текст, формул нет. Контакт удалённого
+// подписчика — пусто.
+var NL2_PSTATE = { queued: 'в очереди', started: 'отправляется', skipped: 'пропущено', accepted: 'принято', failed: 'отказ', unknown: 'исход неизвестен', not_sent: 'не отправлено (рассылку остановили)' };
+var NL2_DSTATE = { none: 'нет данных', delivery_delayed: 'задержка', delivered: 'сервер адресата принял', bounced: 'возврат', complained: 'жалоба', unsubscribed: 'отписка' };
+var NL2_XLSX_HEAD = ['Рассылка (id)', 'Канал', 'Язык', 'Получатель (id)', 'Контакт', 'Обработка', 'Доставка', 'Причина', 'Попыток', 'Принято, МСК', 'Доставлено, МСК', 'Последнее событие, МСК'];
+function nl2MskFull(iso) {
+  var t = Date.parse(iso || '');
+  return t ? new Date(t).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+}
+function nl2XlsxRow(x) {
+  return [x[0], NL2_CH[x[1]] || x[1], NL2_LG[x[2]] || x[2], x[3], x[4], NL2_PSTATE[x[5]] || x[5], NL2_DSTATE[x[6]] || x[6],
+    x[7] ? (NL2_REASON[x[7]] || x[7]) : '', x[8], nl2MskFull(x[9]), nl2MskFull(x[10]), nl2MskFull(x[11])];
+}
+async function nl2Xlsx(id, ch, btn) {
+  btn.disabled = true;
+  try {
+    var rows = [], cursor = '';
+    do {
+      var r = await nl2Call({ action: 'nl_export', id: id, channel: ch, cursor: cursor });
+      (r.rows || []).forEach(function (x) { rows.push(nl2XlsxRow(x)); });
+      cursor = r.next; btn.textContent = 'Excel… ' + rows.length;
+    } while (cursor);
+    var c = nlById(NL2.campaigns, id) || {};
+    invSave(xlsxBlob([{ name: NL2_CH[ch] || ch, title: 'Рассылка «' + (c.title || id) + '» · ' + (NL2_CH[ch] || ch), rows: [NL2_XLSX_HEAD].concat(rows),
+      widths: [24, 10, 6, 26, 32, 16, 22, 24, 9, 20, 20, 22] }]), 'aelita-newsletter-' + id + '-' + ch + '.xlsx');
+  } catch (e) { alert(e.message); }
+  btn.disabled = false; btn.textContent = 'Excel';
+}
+
+// ── черновики ──
+async function nl2LoadDrafts() {
+  var el = nl2$('nl2-p-drafts'); if (!el) return;
+  el.innerHTML = '<div class="empty-state">Загружаем…</div>';
+  try { NL2.drafts = (await nl2Call({ action: 'nl_draft_list' })).drafts || []; } catch (e) { el.innerHTML = '<div class="empty-state">' + nl2E(e.message) + '</div>'; return; }
+  nl2RenderDrafts();
+}
+function nl2Badges(comp) {
+  return Object.keys(comp || {}).map(function (k) {
+    var p = k.split('.'), st = comp[k];
+    return '<span class="nl2-badge ' + (st === 'ready' ? 'ok' : st === 'empty' ? 'err' : 'warn') + '">' + nl2E(NL2_CH[p[0]] + ' ' + NL2_LG[p[1]] + ': ' + (st === 'ready' ? 'готово' : st === 'empty' ? 'нужно заполнить' : 'есть ошибки')) + '</span>';
+  }).join('');
+}
+function nl2RenderDrafts() {
+  var el = nl2$('nl2-p-drafts'); if (!el) return;
+  var tpls = (NL2.cap && NL2.cap.templates) || [];
+  el.innerHTML = '<div class="nl2-row"><label class="nl2-meta" for="nl2-tpl">Начать с</label><select id="nl2-tpl"><option value="">чистого листа</option>' +
+    tpls.map(function (t) { return '<option value="' + nl2E(t.id) + '">шаблона «' + nl2E(t.title.ru) + '»</option>'; }).join('') + '</select>' +
+    '<button type="button" class="btn-small" data-nl2="create">Создать черновик</button></div>' +
+    '<p class="nl2-meta">Шаблон — только структура: поля [[в скобках]] нужно заполнить, ссылки кнопок — указать. Черновик ничего не отправляет.</p>' +
+    (NL2.drafts.length ? NL2.drafts.map(function (d) {
+      return '<div class="nl2-card"><h4>' + nl2E(d.title || 'Без названия') + '</h4><p class="nl2-meta">' + nl2E('изменён ' + nl2Msk(Date.parse(d.updatedAt)) + ' · версия ' + d.revision +
+        (d.campaigns && d.campaigns.length ? ' · запусков: ' + d.campaigns.length : '')) + '</p><p>' + nl2Badges(d.completeness) + '</p>' +
+        '<div class="nl2-row"><button type="button" class="mini-btn" data-nl2-d="open" data-id="' + nl2E(d.id) + '">Открыть</button>' +
+        '<button type="button" class="mini-btn" data-nl2-d="copy" data-id="' + nl2E(d.id) + '">Копия</button>' +
+        '<button type="button" class="mini-btn mini-btn-danger" data-nl2-d="del" data-id="' + nl2E(d.id) + '" data-rev="' + d.revision + '">Удалить</button></div></div>';
+    }).join('') : '<div class="empty-state">Черновиков нет.</div>');
+}
+async function nl2OpenDraft(view) {
+  NL2.draft = view.draft; NL2.local = nl2Clone(view.draft); NL2.state = view.state || {}; NL2.dirty = false; NL2.conflict = null; NL2.offline = false;
+  NL2.audience = null; NL2.review = null; NL2.reqId = null; NL2.step = 'content'; NL2.variant = null; NL2.lastSavedAt = Date.parse(view.draft.updatedAt) || Date.now();
+  if (NL2.tab !== 'drafts') nl2ShowTab('drafts'); else nl2RenderEditor();
+  var t = nl2$('nl2-title'); if (t) t.focus();
+}
+function nl2Pairs() {
+  var d = NL2.local, out = [];
+  ['email', 'telegram'].forEach(function (ch) { if (d.channels[ch]) d.audience.filter.langs.forEach(function (lg) { out.push(ch + '.' + lg); }); });
+  return out;
+}
+function nl2RenderEditor() {
+  var el = nl2$('nl2-p-drafts'); if (!el || !NL2.local) return;
+  var steps = [['content', '1. Содержание'], ['audience', '2. Аудитория'], ['review', '3. Проверка и отправка']];
+  el.innerHTML = '<div class="nl2-row"><button type="button" class="btn-small btn-ghost" data-nl2="close">← Черновики</button></div>' +
+    '<div class="field"><label for="nl2-title">Название (видите только вы)</label><input class="ym-disable-keys" id="nl2-title" data-f="title" maxlength="120" value="' + nl2E(NL2.local.title) + '"></div>' +
+    '<p class="nl2-status" id="nl2-save" role="status" aria-live="polite"></p><div id="nl2-conflict"></div>' +
+    '<div class="nl2-steps" role="group" aria-label="Шаги подготовки">' + steps.map(function (s) {
+      return '<button type="button" data-nl2-step="' + s[0] + '"' + (NL2.step === s[0] ? ' aria-current="step"' : '') + '>' + s[1] + '</button>';
+    }).join('') + '</div><div id="nl2-step"></div>';
+  nl2SaveStatus(); nl2RenderConflict(); nl2RenderStep();
+}
+function nl2RenderStep() {
+  var el = nl2$('nl2-step'); if (!el) return;
+  if (NL2.step === 'content') el.innerHTML = nl2ContentHtml();
+  if (NL2.step === 'audience') { el.innerHTML = nl2AudienceHtml(); if (!NL2.opts) nl2LoadOptions(); }
+  if (NL2.step === 'review') el.innerHTML = nl2ReviewHtml();
+  nl2AfterRender();
+}
+/** Ошибки сервера — у своих полей: aria-invalid и ссылка на текст ошибки (без перерисовки полей). */
+function nl2MarkInvalid() {
+  document.querySelectorAll('#nl2-step [data-f][aria-invalid]').forEach(function (inp) { inp.removeAttribute('aria-invalid'); inp.removeAttribute('aria-describedby'); });
+  if (NL2.step !== 'content' || !NL2.variant) return;
+  var st = NL2.state[NL2.variant] || {};
+  (st.errors || []).filter(function (e) { return e.code !== 'missing'; }).forEach(function (e, i) {
+    if (!e.path || !nl2$('nl2err-' + i)) return;
+    var base = 'variants.' + NL2.variant + '.' + e.path;
+    document.querySelectorAll('#nl2-step [data-f]').forEach(function (inp) {
+      var f = inp.getAttribute('data-f');
+      if (f === base || f.indexOf(base + '.') === 0) { inp.setAttribute('aria-invalid', 'true'); inp.setAttribute('aria-describedby', ((inp.getAttribute('aria-describedby') || '') + ' nl2err-' + i).trim()); }
+    });
+  });
+}
+function nl2AfterRender() {
+  nl2MarkInvalid();
+  document.querySelectorAll('#nl2-step img[data-asset]').forEach(function (img) {
+    var id = img.getAttribute('data-asset');
+    if (NL2.thumbs[id]) { img.src = NL2.thumbs[id]; return; }
+    inboxCall({ action: 'nl_image', image: { id: id, placement: 'above', alt: '' } }).then(function (r) { NL2.thumbs[id] = r.previewSrc; img.src = r.previewSrc; }).catch(function () { img.alt = 'картинка недоступна — загрузите заново'; });
+  });
+  nl2Counters();
+}
+
+// ── содержание ──
+function nl2Check(path, label, checked, extra) {
+  return '<label class="nl-check"><input type="checkbox" data-f="' + path + '"' + (checked ? ' checked' : '') + (extra || '') + '> ' + label + '</label>';
+}
+function nl2Input(path, label, value, opts) {
+  opts = opts || {};
+  var id = 'nl2f-' + path.replace(/\./g, '-');
+  return '<div class="field' + (opts.cls ? ' ' + opts.cls : '') + '"><label for="' + id + '">' + label + '</label>' + (opts.area
+    ? '<textarea class="ym-disable-keys" id="' + id + '" data-f="' + path + '" rows="' + (opts.rows || 4) + '" maxlength="' + (opts.max || 5000) + '">' + nl2E(value) + '</textarea>'
+    : '<input class="ym-disable-keys" id="' + id + '" data-f="' + path + '" type="' + (opts.type || 'text') + '" maxlength="' + (opts.max || 200) + '" value="' + nl2E(value) + '"' + (opts.ph ? ' placeholder="' + nl2E(opts.ph) + '"' : '') + '>') +
+    (opts.count ? '<span class="nl2-count" data-count-for="' + path + '" data-count="' + opts.count + '"></span>' : '') + '</div>';
+}
+function nl2ContentHtml() {
+  var d = NL2.local, pairs = nl2Pairs();
+  if (!NL2.variant || pairs.indexOf(NL2.variant) < 0) NL2.variant = pairs[0] || null;
+  var head = '<div class="nl2-row">' + nl2Check('channels.email', 'Письмо', d.channels.email) + nl2Check('channels.telegram', 'Telegram', d.channels.telegram) + '</div>' +
+    '<div class="nl2-row"><span class="nl2-meta">Языки:</span>' + ['ru', 'en'].map(function (lg) {
+      return '<label class="nl-check"><input type="checkbox" data-nl2-lang="' + lg + '"' + (d.audience.filter.langs.indexOf(lg) >= 0 ? ' checked' : '') + '> ' + (lg === 'ru' ? 'Русский' : 'English') + '</label>';
+    }).join('') + '</div>' +
+    '<p class="nl2-meta">Каждая пара «канал + язык» — отдельный текст. Подписчикам языка без своего текста рассылка не уйдёт: сервер остановит запуск и скажет, что заполнить.</p>';
+  if (!pairs.length) return head + '<div class="empty-state">Выберите канал и язык.</div>';
+  var tabs = '<div class="nl2-tabs" role="tablist" aria-label="Варианты">' + pairs.map(function (k) {
+    var p = k.split('.'), st = NL2.state[k] || {};
+    var mark = st.status === 'ready' ? (st.tested ? ' ✓' : ' · нужен тест') : st.status === 'incomplete' ? ' · есть ошибки' : ' · нужно заполнить';
+    return '<button type="button" role="tab" aria-selected="' + (k === NL2.variant ? 'true' : 'false') + '" data-nl2-variant="' + k + '">' + NL2_CH[p[0]] + ' ' + NL2_LG[p[1]] + nl2E(mark) + '</button>';
+  }).join('') + '</div>';
+  var p = NL2.variant.split('.');
+  return head + tabs + '<div role="tabpanel" id="nl2-variant">' + (p[0] === 'email' ? nl2EmailHtml(p[1]) : nl2TgHtml(p[1])) + '</div>';
+}
+function nl2StateHtml(k) {
+  var st = NL2.state[k] || {};
+  var errs = (st.errors || []).filter(function (e) { return e.code !== 'missing'; });
+  var test = st.tested ? '<p class="nl-line">✓ Эта версия протестирована ' + nl2E(nl2Msk(Date.parse(st.tested.at))) + '. Отправка теста — это «провайдер принял», а не «прочитано».</p>'
+    : st.lastTest ? '<p class="nl-line nl-err">' + (st.lastTest.current ? (st.lastTest.outcome === 'queued' ? 'Тест в очереди бота — придёт в течение минуты.' : 'Тест не прошёл: ' + nl2E(st.lastTest.error || st.lastTest.outcome)) : 'Контент изменился после теста — нужен новый тест.') + '</p>'
+    : '<p class="nl-line">Эта версия ещё не проверена тестом.</p>';
+  return (errs.length ? '<ul class="nl2-errors">' + errs.map(function (e, i) { return '<li id="nl2err-' + i + '">' + nl2E(e.message) + '</li>'; }).join('') + '</ul>' : '') +
+    ((st.warnings || []).length ? '<ul class="nl2-errors warn">' + st.warnings.map(function (e) { return '<li>' + nl2E(e.message) + '</li>'; }).join('') + '</ul>' : '') + test;
+}
+function nl2EmailHtml(lg) {
+  var base = 'variants.email.' + lg, v = nl2Get(NL2.local, base);
+  if (!v) { v = { subject: '', preheader: '', blocks: [{ type: 'paragraph', text: '' }] }; nl2Set(NL2.local, base, v); }
+  var other = lg === 'ru' ? 'en' : 'ru';
+  var blocks = (v.blocks || []).map(function (b, i) {
+    var p = base + '.blocks.' + i, f = '';
+    if (b.type === 'heading') f = nl2Input(p + '.text', 'Текст заголовка', b.text, { max: 200 });
+    if (b.type === 'paragraph') f = nl2Input(p + '.text', 'Текст (пустая строка — новый абзац; ссылки https://)', b.text, { area: true, rows: 5, max: 5000 });
+    if (b.type === 'image') f = (b.assetId ? '<img class="nl2-thumb" data-asset="' + nl2E(b.assetId) + '" alt="' + nl2E(b.alt || 'Фото') + '">' : '') +
+      '<div class="field"><label for="nl2-up-' + i + '">' + (b.assetId ? 'Заменить фото' : 'Фото (JPG, PNG, WebP до 10 МБ; уменьшим до 1600 px)') + '</label><input type="file" id="nl2-up-' + i + '" accept="image/jpeg,image/png,image/webp" data-nl2-upload="' + p + '"></div>' +
+      nl2Input(p + '.alt', 'Что на фото (для тех, у кого картинки выключены)', b.alt, { max: 200 });
+    if (b.type === 'event') f = nl2Input(p + '.title', 'Название', b.title) + '<div class="inv-row">' + nl2Input(p + '.date', 'Дата и время', b.date, { max: 100, ph: '15 ноября, 19:00' }) + nl2Input(p + '.place', 'Город и площадка', b.place) + '</div>' +
+      nl2Input(p + '.details', 'Подробности (длительность, возраст)', b.details, { area: true, rows: 2, max: 500 }) + '<div class="inv-row">' + nl2Input(p + '.buttonText', 'Текст кнопки', b.buttonText, { max: 60, ph: 'Купить билет' }) + nl2Input(p + '.url', 'Ссылка кнопки — конкретная страница', b.url, { type: 'url', max: 2000, ph: 'https://aelita-production.ru/…', cls: 'inv-w2' }) + '</div>';
+    if (b.type === 'button') f = '<div class="inv-row">' + nl2Input(p + '.text', 'Текст кнопки', b.text, { max: 60 }) + nl2Input(p + '.url', 'Ссылка — конкретная страница', b.url, { type: 'url', max: 2000, ph: 'https://aelita-production.ru/…', cls: 'inv-w2' }) + '</div>';
+    if (b.type === 'divider') f = '<p class="nl2-meta">Линия между частями письма.</p>';
+    return '<div class="nl2-block"><div class="nl2-block-head"><b>' + (i + 1) + '. ' + NL2_BLOCKS[b.type] + '</b><span>' +
+      '<button type="button" class="mini-btn" data-nl2-block="up" data-i="' + i + '" aria-label="Выше: блок ' + (i + 1) + '"' + (i ? '' : ' disabled') + '>↑</button> ' +
+      '<button type="button" class="mini-btn" data-nl2-block="down" data-i="' + i + '" aria-label="Ниже: блок ' + (i + 1) + '"' + (i < v.blocks.length - 1 ? '' : ' disabled') + '>↓</button> ' +
+      '<button type="button" class="mini-btn mini-btn-danger" data-nl2-block="del" data-i="' + i + '" aria-label="Удалить блок ' + (i + 1) + '">✕</button></span></div>' + f + '</div>';
+  }).join('');
+  return '<div id="nl2-vstate">' + nl2StateHtml('email.' + lg) + '</div>' +
+    nl2Input(base + '.subject', 'Тема письма', v.subject, { max: 200, count: '200' }) +
+    nl2Input(base + '.preheader', 'Preheader — строка рядом с темой в списке писем (60–120 знаков)', v.preheader, { max: 140, count: 'pre' }) +
+    blocks +
+    '<div class="nl2-row"><label class="nl2-meta" for="nl2-addtype">Добавить</label><select id="nl2-addtype">' + Object.keys(NL2_BLOCKS).map(function (t) { return '<option value="' + t + '">' + NL2_BLOCKS[t] + '</option>'; }).join('') + '</select>' +
+    '<button type="button" class="btn-small" data-nl2="add-block">Добавить блок</button></div>' +
+    '<div class="nl2-row">' + (nl2Get(NL2.local, 'variants.email.' + other) ? '<button type="button" class="mini-btn" data-nl2="copy-locale" data-from="email.' + other + '">Скопировать из письма ' + NL2_LG[other] + '</button>' : '') +
+    (NL2.local.channels.telegram ? '<button type="button" class="mini-btn" data-nl2="to-tg">Скопировать в Telegram ' + NL2_LG[lg] + '</button>' : '') + '</div>' +
+    '<div class="nl2-row"><label class="nl2-meta" for="nl2-pw">Предпросмотр</label><select id="nl2-pw"><option value="360">Телефон · 360 px</option><option value="600">Компьютер · 600 px</option></select>' +
+    '<button type="button" class="btn-small" data-nl2="preview">Показать письмо</button></div>' +
+    '<div class="inv-row"><div class="field inv-w2"><label for="nl2-test-to">Адрес для теста</label><input class="ym-disable-keys" id="nl2-test-to" type="email" maxlength="254" placeholder="' + nl2E((NL.ov && NL.ov.mail && NL.ov.mail.testTo) || '') + '"></div></div>' +
+    '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="test">Отправить тест этой версии</button></div>' +
+    '<p class="nl2-status" id="nl2-vres" role="status" aria-live="polite"></p><div class="nl2-scroll" id="nl2-prev"></div>';
+}
+function nl2TgHtml(lg) {
+  var base = 'variants.telegram.' + lg, v = nl2Get(NL2.local, base);
+  if (!v) { v = { text: '', photo: null, cta: null }; nl2Set(NL2.local, base, v); }
+  var linked = NL2.cap && NL2.cap.telegram && NL2.cap.telegram.testChat;
+  return '<div id="nl2-vstate">' + nl2StateHtml('telegram.' + lg) + '</div>' +
+    nl2Input(base + '.text', 'Текст сообщения', v.text, { area: true, rows: 7, max: 4096, count: 'tg' }) +
+    (v.photo ? '<img class="nl2-thumb" data-asset="' + nl2E(v.photo.assetId) + '" alt="Фото к сообщению"><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="tg-photo-del">Убрать фото</button></div>' : '') +
+    '<div class="field"><label for="nl2-tg-up">' + (v.photo ? 'Заменить фото' : 'Фото (необязательно; с фото подпись — до 1024 знаков)') + '</label><input type="file" id="nl2-tg-up" accept="image/jpeg,image/png,image/webp" data-nl2-upload="' + base + '.photo"></div>' +
+    '<div class="inv-row">' + nl2Input(base + '.cta.text', 'Кнопка действия (необязательно)', v.cta ? v.cta.text : '', { max: 64, ph: 'Купить билет' }) +
+    nl2Input(base + '.cta.url', 'Ссылка кнопки', v.cta ? v.cta.url : '', { type: 'url', max: 2000, ph: 'https://aelita-production.ru/…', cls: 'inv-w2' }) + '</div>' +
+    '<p class="nl2-meta">Кнопка «Отписаться» добавляется всегда и не заменяется кнопкой действия. Длинный текст не обрезается и не делится сам — сервер не даст отправить.</p>' +
+    '<div class="nl2-row">' + (NL2.local.channels.email ? '<button type="button" class="mini-btn" data-nl2="from-email">Скопировать из письма ' + NL2_LG[lg] + '</button>' : '') +
+    (nl2Get(NL2.local, 'variants.telegram.' + (lg === 'ru' ? 'en' : 'ru') + '.text') ? '<button type="button" class="mini-btn" data-nl2="copy-locale" data-from="telegram.' + (lg === 'ru' ? 'en' : 'ru') + '">Скопировать из Telegram ' + NL2_LG[lg === 'ru' ? 'en' : 'ru'] + '</button>' : '') + '</div>' +
+    '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="preview">Предпросмотр</button>' +
+    '<button type="button" class="btn-small" data-nl2="test"' + (linked ? '' : ' disabled') + '>Тест себе в Telegram</button></div>' +
+    (linked ? '' : '<p class="nl2-meta">Для теста привяжите свой Telegram: вкладка «Состояние».</p>') +
+    '<p class="nl2-status" id="nl2-vres" role="status" aria-live="polite"></p><div id="nl2-prev"></div>';
+}
+function nl2Counters() {
+  document.querySelectorAll('#nl2-step [data-count-for]').forEach(function (c) {
+    var v = nl2Get(NL2.local, c.getAttribute('data-count-for')) || '', kind = c.getAttribute('data-count'), n = String(v).length, bad = false, txt;
+    if (kind === 'pre') { txt = n + ' / 140 · лучше 60–120'; bad = n > 140; }
+    else if (kind === 'tg') {
+      var photo = !!nl2Get(NL2.local, c.getAttribute('data-count-for').replace(/\.text$/, '.photo'));
+      var max = photo ? 1024 : 4096; txt = n + ' / ' + max + (photo ? ' (подпись к фото)' : ''); bad = n > max;
+    } else { txt = n + ' / ' + kind; bad = n > Number(kind); }
+    c.textContent = txt; c.className = 'nl2-count' + (bad ? ' err' : '');
+  });
+}
+
+// ── автосохранение ──
+function nl2Payload() {
+  var d = NL2.local;
+  return { title: d.title, channels: d.channels, audience: d.audience, variants: d.variants, templateId: d.templateId };
+}
+function nl2Touch() {
+  NL2.dirty = true; NL2.editSeq++;
+  nl2SaveStatus();
+  clearTimeout(NL2.saveTimer);
+  NL2.saveTimer = setTimeout(nl2Save, 1500);
+}
+function nl2SaveStatus() {
+  var el = nl2$('nl2-save'); if (!el) return;
+  if (NL2.conflict) return nl2Status(el, 'Конфликт версии: черновик изменён на другом устройстве. Ваши правки не записаны поверх.', 'err');
+  if (NL2.saving) return nl2Status(el, 'Сохраняем…');
+  if (NL2.offline) return nl2Status(el, 'Нет связи, изменения пока только на этом устройстве — сохраним, когда связь вернётся. Не закрывайте вкладку.', 'err');
+  if (NL2.dirty) return nl2Status(el, 'Есть несохранённые изменения…');
+  nl2Status(el, 'Сохранено в ' + nl2Hm(NL2.lastSavedAt) + ' · версия ' + NL2.draft.revision, 'ok');
+}
+async function nl2Save() {
+  if (!NL2.draft || NL2.conflict) return;
+  if (NL2.saving) { NL2.again = true; return; }
+  clearTimeout(NL2.saveTimer);
+  NL2.saving = true; nl2SaveStatus();
+  var seq = NL2.editSeq;
+  var r = await nl2Api({ action: 'nl_draft_save', id: NL2.draft.id, base_revision: NL2.draft.revision, draft: nl2Payload() });
+  NL2.saving = false;
+  if (r.ok) {
+    NL2.draft = r.data.draft; NL2.state = r.data.state || {}; NL2.offline = false; NL2.lastSavedAt = Date.now();
+    if (seq === NL2.editSeq) NL2.dirty = false;
+    nl2RefreshMarks();
+  } else if (r.status === 409) { NL2.conflict = r.data.current; nl2RenderConflict(); }
+  else if (r.status === 0) { NL2.offline = true; NL2.saveTimer = setTimeout(nl2Save, 10000); }
+  else { NL2.offline = false; nl2Status(nl2$('nl2-save'), r.data.message || 'Не сохранилось', 'err'); return; }
+  nl2SaveStatus();
+  if ((NL2.again || NL2.dirty) && !NL2.conflict && !NL2.offline) { NL2.again = false; NL2.saveTimer = setTimeout(nl2Save, 300); }
+}
+/** Дождаться сохранения (тест и проверка — только сохранённой версии). */
+async function nl2Flush() {
+  for (var i = 0; i < 40 && (NL2.dirty || NL2.saving); i++) {
+    if (NL2.conflict || NL2.offline) return false;
+    if (!NL2.saving) await nl2Save(); else await nlSleep(250);
+  }
+  return !NL2.dirty && !NL2.conflict;
+}
+function nl2RefreshMarks() {
+  if (NL2.step !== 'content') return;
+  var vs = nl2$('nl2-vstate');
+  if (vs && NL2.variant) { vs.innerHTML = nl2StateHtml(NL2.variant); nl2MarkInvalid(); }
+  document.querySelectorAll('#nl2-step [data-nl2-variant]').forEach(function (b) {
+    var k = b.getAttribute('data-nl2-variant'), p = k.split('.'), st = NL2.state[k] || {};
+    b.textContent = NL2_CH[p[0]] + ' ' + NL2_LG[p[1]] + (st.status === 'ready' ? (st.tested ? ' ✓' : ' · нужен тест') : st.status === 'incomplete' ? ' · есть ошибки' : ' · нужно заполнить');
+  });
+}
+function nl2Diff(mine, theirs) {
+  var out = [], cmp = function (label, a, b) { if (JSON.stringify(a) !== JSON.stringify(b)) out.push(label); };
+  cmp('название', mine.title, theirs.title); cmp('каналы', mine.channels, theirs.channels); cmp('аудитория', mine.audience, theirs.audience);
+  ['email', 'telegram'].forEach(function (ch) { ['ru', 'en'].forEach(function (lg) { cmp(NL2_CH[ch] + ' ' + NL2_LG[lg], (mine.variants[ch] || {})[lg], (theirs.variants[ch] || {})[lg]); }); });
+  return out;
+}
+function nl2RenderConflict() {
+  var el = nl2$('nl2-conflict'); if (!el) return;
+  if (!NL2.conflict) { el.innerHTML = ''; return; }
+  var c = NL2.conflict, diff = nl2Diff(NL2.local, c.draft);
+  el.innerHTML = '<div class="nl2-blockers"><p class="nl-line nl-err">На другом устройстве сохранена версия ' + nl2E(c.revision) + ' (' + nl2E(nl2Msk(Date.parse(c.updatedAt))) + '). Отличается: ' + nl2E(diff.join(', ') || 'ничего — можно открыть версию с сервера') + '.</p>' +
+    '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="conflict-copy">Сохранить мои правки отдельной копией</button><button type="button" class="btn-small btn-ghost" data-nl2="conflict-server">Открыть версию с сервера</button></div></div>';
+}
+
+// ── аудитория ──
+async function nl2LoadOptions() {
+  try { NL2.opts = await nl2Call({ action: 'nl_audience_options' }); NL2.segments = NL2.opts.segments || []; if (NL2.step === 'audience') { nl2$('nl2-step').innerHTML = nl2AudienceHtml(); nl2AfterRender(); } }
+  catch (e) { NL2.opts = { cities: [], interests: [], tags: [], sources: [], segments: [] }; }
+}
+function nl2FilterHtml(prefix, f) {
+  var o = NL2.opts || { cities: [], interests: [], tags: [], sources: [] };
+  var list = function (arr) { return (arr || []).map(function (x) { return String(x).replace(/-/g, ' '); }).join(', '); };
+  var dl = function (id, arr) { return '<datalist id="' + id + '">' + (arr || []).map(function (x) { return '<option value="' + nl2E(x.label || x.id) + '">'; }).join('') + '</datalist>'; };
+  var op = function (path, cur) { return '<select data-ff="' + path + '.op" aria-label="Как сочетать значения"><option value="any"' + (cur === 'all' ? '' : ' selected') + '>любое из</option><option value="all"' + (cur === 'all' ? ' selected' : '') + '>все</option></select>'; };
+  return '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-city">Город (через запятую; пусто — любой)</label><input class="ym-disable-keys" id="' + prefix + '-city" data-ff="cityIds" list="' + prefix + '-dl-city" value="' + nl2E(list(f.cityIds)) + '"></div></div>' + dl(prefix + '-dl-city', o.cities) +
+    '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-int">Интерес к проекту</label><input class="ym-disable-keys" id="' + prefix + '-int" data-ff="interests.values" list="' + prefix + '-dl-int" value="' + nl2E(list(f.interests.values)) + '"></div><div class="field">' + '<label for="' + prefix + '-intop">Сочетание</label>' + op('interests', f.interests.op).replace('<select ', '<select id="' + prefix + '-intop" ') + '</div></div>' + dl(prefix + '-dl-int', o.interests) +
+    '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-tag">Метки</label><input class="ym-disable-keys" id="' + prefix + '-tag" data-ff="tags.values" list="' + prefix + '-dl-tag" value="' + nl2E(list(f.tags.values)) + '"></div><div class="field"><label for="' + prefix + '-tagop">Сочетание</label>' + op('tags', f.tags.op).replace('<select ', '<select id="' + prefix + '-tagop" ') + '</div></div>' + dl(prefix + '-dl-tag', o.tags) +
+    ((o.sources || []).length ? '<fieldset class="nl2-card"><legend class="nl2-meta">Источник подписки (пусто — любой)</legend>' + o.sources.map(function (s) {
+      var on = (f.sources || []).some(function (x) { return x.via === s.via && (x.form || '') === (s.form || ''); });
+      return '<label class="nl-check"><input type="checkbox" data-fsrc="' + nl2E(s.via + '|' + (s.form || '')) + '"' + (on ? ' checked' : '') + '> ' + nl2E((NL_SRC[s.via] || s.via) + (s.form ? ': ' + s.form : '')) + ' (' + s.n + ')</label>';
+    }).join('') + '</fieldset>' : '') +
+    '<p class="nl2-meta">Между полями — «и»; пустые атрибуты не угадываются: при фильтре по городу подписчики без города исключаются. Исключено вручную: ' + (f.excludeIds || []).length + '.</p>';
+}
+function nl2AudienceHtml() {
+  var d = NL2.local, f = d.audience.filter, a = NL2.audience;
+  var segs = NL2.segments || [];
+  var html = '<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
+    (segs.length ? '<div class="nl2-row"><label class="nl2-meta" for="nl2-seg">Сегмент</label><select id="nl2-seg"><option value="">—</option>' + segs.map(function (s) { return '<option value="' + nl2E(s.id) + '"' + (d.audience.segmentId === s.id ? ' selected' : '') + '>' + nl2E(s.name) + '</option>'; }).join('') + '</select><button type="button" class="mini-btn" data-nl2="seg-apply">Применить фильтр сегмента</button></div>' : '') +
+    '<div data-nl2-filter="draft">' + nl2FilterHtml('nl2a', f) + '</div>' +
+    '<div class="inv-row"><div class="field inv-w2"><label for="nl2-excl">Исключить по почте</label><input class="ym-disable-keys" id="nl2-excl" type="email" maxlength="254"></div></div><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="exclude">Исключить</button>' + ((f.excludeIds || []).length ? '<button type="button" class="mini-btn" data-nl2="exclude-clear">Очистить исключения</button>' : '') + '</div>' +
+    '<div class="nl2-legacy">' + nl2Check('audience.legacyUnconfirmed', 'Включить подписчиков до 28.10, не подтвердивших адрес (по умолчанию — нет)', d.audience.legacyUnconfirmed) +
+    '<p class="nl2-meta">Старый режим совместимости. Будет виден при утверждении. Яндекс просит слать только подтверждённым адресам.</p></div>' +
+    '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="prepare">Подготовить снимок аудитории</button><button type="button" class="mini-btn" data-nl2="seg-save">Сохранить фильтр как сегмент</button></div>' +
+    '<p class="nl2-status" id="nl2-ares" role="status" aria-live="polite"></p>';
+  if (a) html += nl2AudienceResult(a);
+  return html;
+}
+function nl2AudienceResult(a) {
+  var parts = [], total = 0;
+  ['email', 'telegram'].forEach(function (ch) {
+    var p = a.channels[ch]; if (!p) return;
+    if (p.state === 'ready') { total += p.count; parts.push('<div><b>' + p.count + '</b><span>' + NL2_CH[ch] + (p.byLang ? ' · RU ' + p.byLang.ru + ' · EN ' + p.byLang.en : '') + '</span></div>'); }
+    else parts.push('<div><b>' + (p.state === 'failed' ? '!' : '…') + '</b><span>' + NL2_CH[ch] + ': ' + (p.state === 'failed' ? 'не собран (' + nl2E(p.error || 'ошибка') + ') — подготовьте заново' : 'собирает бот…') + '</span></div>');
+  });
+  var ready = a.state === 'ready';
+  var html = '<div class="nl2-sum">' + parts.join('') + (ready ? '<div><b>' + total + '</b><span>всего сообщений (не людей: связи почты и Telegram нет)</span></div>' : '') + '</div>';
+  ['email', 'telegram'].forEach(function (ch) {
+    var p = a.channels[ch]; if (!p || p.state !== 'ready') return;
+    var rs = Object.keys(p.reasons || {}).map(function (k) { var x = k.split(':'); return (NL2_REASON[x[0]] || x[0]) + (x[1] ? ' (' + (NL2_DETAIL[x[1]] || x[1]) + ')' : '') + ' — ' + p.reasons[k]; });
+    html += '<p class="nl-line">' + NL2_CH[ch] + ': исключено ' + p.excluded + (rs.length ? ': ' + nl2E(rs.join('; ')) : '') + '</p>' +
+      '<div class="nl2-row"><button type="button" class="mini-btn" data-nl2-aud="included" data-ch="' + ch + '">Получатели: ' + NL2_CH[ch] + '</button><button type="button" class="mini-btn" data-nl2-aud="excluded" data-ch="' + ch + '">Исключения: ' + NL2_CH[ch] + '</button></div><div id="nl2-ap-' + ch + '"></div>';
+  });
+  html += '<p class="nl2-meta">Снимок ' + (a.readyAt ? 'готов ' + nl2Msk(Date.parse(a.readyAt)) : 'собирается') + '. Новые подписчики в него не попадут; отписавшиеся до отправки — исключатся сами.</p>';
+  return html;
+}
+async function nl2PollAudience() {
+  clearTimeout(NL2.audPoll);
+  if (!NL2.audience || NL2.audience.state !== 'building') return;
+  NL2.audPoll = setTimeout(async function () {
+    try { NL2.audience = (await nl2Call({ action: 'nl_audience_status', audienceId: NL2.audience.id })).audience; } catch (e) { /* ещё раз */ }
+    if (NL2.step === 'audience') { nl2$('nl2-step').innerHTML = nl2AudienceHtml(); nl2AfterRender(); }
+    nl2Nudge(); nl2PollAudience();
+  }, 4000);
+}
+async function nl2AudiencePage(ch, kind, page) {
+  var el = nl2$('nl2-ap-' + ch); if (!el || !NL2.audience) return;
+  el.innerHTML = '<p class="nl-line">Загружаем…</p>';
+  try {
+    var r = await nl2Call({ action: 'nl_audience_page', audienceId: NL2.audience.id, channel: ch, kind: kind, page: page || 0 });
+    el.innerHTML = (r.items.length ? '<ul class="nl2-list">' + r.items.map(function (x) {
+      var who = ch === 'email' ? (x.email || '— стёрто —') + (x.name ? ' · ' + x.name : '') : 'Telegram ' + x.id;
+      return '<li>' + nl2E(who) + (x.lang ? ' · ' + NL2_LG[x.lang] : '') + (x.code ? ' · ' + nl2E((NL2_REASON[x.code] || x.code) + (x.detail ? ' (' + (NL2_DETAIL[x.detail] || x.detail) + ')' : '')) : '') + '</li>';
+    }).join('') + '</ul>' : '<p class="nl-line">Пусто.</p>') +
+      (r.pages > 1 ? '<div class="nl2-row"><button type="button" class="mini-btn" data-nl2-aud="' + kind + '" data-ch="' + ch + '" data-page="' + (r.page - 1) + '"' + (r.page > 0 ? '' : ' disabled') + '>← Назад</button><span class="nl2-meta">' + (r.page + 1) + ' из ' + r.pages + '</span><button type="button" class="mini-btn" data-nl2-aud="' + kind + '" data-ch="' + ch + '" data-page="' + (r.page + 1) + '"' + (r.page + 1 < r.pages ? '' : ' disabled') + '>Дальше →</button></div>' : '');
+  } catch (e) { el.innerHTML = '<p class="nl-line nl-err">' + nl2E(e.message) + '</p>'; }
+}
+
+// ── проверка и отправка ──
+function nl2RunAt() {
+  var later = nl2$('nl2-when-later') && nl2$('nl2-when-later').checked;
+  var v = nl2$('nl2-runat') && nl2$('nl2-runat').value;
+  if (!later) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v || '');
+  return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) - 3 * 3600000 : NaN; // Москва — UTC+3 круглый год
+}
+function nl2ReviewHtml() {
+  var r = NL2.review, later = !!(NL2.whenLater);
+  var html = '<fieldset class="nl2-card"><legend class="nl2-meta">Когда отправить</legend>' +
+    '<label class="nl-check"><input type="radio" name="nl2-when" id="nl2-when-now"' + (later ? '' : ' checked') + '> Сейчас</label>' +
+    '<label class="nl-check"><input type="radio" name="nl2-when" id="nl2-when-later"' + (later ? ' checked' : '') + (NL2.cap && NL2.cap.flags.schedule ? '' : ' disabled') + '> По расписанию</label>' +
+    '<div class="field"><label for="nl2-runat">Дата и время, Москва (UTC+3)</label><input type="datetime-local" id="nl2-runat" value="' + nl2E(NL2.runAtInput || '') + '"' + (later ? '' : ' disabled') + '></div>' +
+    (NL2.cap && NL2.cap.flags.schedule ? '<p class="nl2-meta">Если фон простоит дольше ' + NL2.cap.overdueMinutes + ' минут после этого времени, рассылка не уйдёт сама — встанет на паузу и подождёт вашего решения.</p>' : '<p class="nl2-meta">Отложенная отправка выключена (NEWSLETTER_V2_SCHEDULE).</p>') + '</fieldset>' +
+    '<label class="nl-check"><input type="checkbox" id="nl2-checked"' + (NL2.checked ? ' checked' : '') + '> Проверил тест текущей версии и состав аудитории</label>' +
+    '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="review">Проверить рассылку</button></div><p class="nl2-status" id="nl2-rres" role="status" aria-live="polite"></p>';
+  if (!r) return html;
+  if (r.blockers && r.blockers.length) html += '<div class="nl2-blockers"><p class="nl-line nl-err">Запуск невозможен:</p><ul class="nl2-errors">' + r.blockers.map(function (b) { return '<li>' + nl2E(b.message) + '</li>'; }).join('') + '</ul></div>';
+  if (r.warnings && r.warnings.length) html += '<ul class="nl2-errors warn">' + r.warnings.map(function (w) { return '<li>' + nl2E(w.message) + '</li>'; }).join('') + '</ul>';
+  var s = r.summary;
+  if (s) {
+    html += '<div class="nl2-card"><h4>' + nl2E(s.title || 'Рассылка') + '</h4><p class="nl2-meta">Отправитель: ' + nl2E(s.sender.brandRu + ' / ' + s.sender.name + (s.sender.from ? ' · ' + s.sender.from : '')) + '</p>' +
+      (s.pairs || []).map(function (p) {
+        return '<p class="nl-line">' + nl2E(p.label) + ' — ' + (p.count == null ? '?' : p.count) + ' ' + nl2Pl(p.count || 0, 'адресат', 'адресата', 'адресатов') + ': ' +
+          nl2E(p.email ? '«' + p.email.subject + '» · ' + (p.email.preheader || 'без preheader') + (p.email.images ? ' · фото: ' + p.email.images : '') : (p.telegram.excerpt + (p.telegram.length > 200 ? '…' : '') + (p.telegram.photo ? ' · с фото' : '') + (p.telegram.cta ? ' · кнопка «' + p.telegram.cta.text + '» → ' + p.telegram.cta.url : ''))) +
+          (p.test ? ' · тест ' + nl2E(nl2Msk(Date.parse(p.test.at))) : ' · без теста') + '</p>';
+      }).join('') +
+      (s.exclusions ? '<p class="nl2-meta">Исключено: ' + nl2E(Object.keys(s.exclusions).map(function (ch) { return NL2_CH[ch] + ' — ' + s.exclusions[ch].total; }).join(', ')) + '. Всего сообщений: ' + s.totalMessages + '.' + (s.legacyUnconfirmed ? ' ⚠️ С неподтверждёнными до 28.10.' : '') + '</p>' : '') +
+      (s.runAtLabel ? '<p class="nl-line">Запуск: ' + nl2E(s.runAtLabel) + '</p>' : '') + '</div>';
+  }
+  if (r.approvalToken) html += '<p class="nl2-meta">Проверка действует до ' + nl2Hm(r.expiresAt) + '. Изменение текста, аудитории или времени её сбросит.</p><div class="nl2-row"><button type="button" class="btn-small nl2-go" data-nl2="launch">' + nl2E(s.buttonLabel) + '</button></div>';
+  return html;
+}
+async function nl2DoReview() {
+  var res = nl2$('nl2-rres');
+  NL2.checked = !!(nl2$('nl2-checked') && nl2$('nl2-checked').checked);
+  NL2.whenLater = !!(nl2$('nl2-when-later') && nl2$('nl2-when-later').checked);
+  NL2.runAtInput = nl2$('nl2-runat') ? nl2$('nl2-runat').value : '';
+  var runAt = nl2RunAt();
+  if (NL2.whenLater && !Number.isFinite(runAt)) { nl2Status(res, 'Укажите дату и время по Москве.', 'err'); return; }
+  nl2Status(res, 'Сохраняем и проверяем…');
+  if (!await nl2Flush()) { nl2Status(res, 'Сначала дождитесь сохранения черновика.', 'err'); return; }
+  var r = await nl2Api({ action: 'nl_prepare_review', draftId: NL2.draft.id, revision: NL2.draft.revision, audienceId: NL2.audience && NL2.audience.id, runAtUtc: runAt, testsChecked: NL2.checked });
+  if (!r.ok) { nl2Status(res, r.data.message || 'Проверка не прошла', 'err'); return; }
+  NL2.review = r.data; NL2.reqId = null;
+  nl2$('nl2-step').innerHTML = nl2ReviewHtml(); nl2AfterRender();
+  var b = document.querySelector('#nl2-step [data-nl2="launch"]') || document.querySelector('#nl2-step .nl2-blockers');
+  if (b) b.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+async function nl2Launch(btn) {
+  var r = NL2.review; if (!r || !r.approvalToken) return;
+  if (!confirm(r.summary.buttonLabel + '?\n\n«' + (r.summary.title || 'Рассылка') + '». Отправленное не вернуть.')) return;
+  if (!NL2.reqId) NL2.reqId = nl2NewRequestId();
+  btn.disabled = true;
+  var out = await nl2Api({ action: 'nl_v2_create', approvalToken: r.approvalToken, request_id: NL2.reqId });
+  if (!out.ok && out.status === 0) out = await nl2Api({ action: 'nl_v2_create', approvalToken: r.approvalToken, request_id: NL2.reqId }); // повтор — тот же request_id
+  if (!out.ok) { btn.disabled = false; nl2Status(nl2$('nl2-rres'), out.data.message || 'Не запустилась', 'err'); if (out.status === 409 || out.status === 410) { NL2.review = null; } return; }
+  nl2PutCampaign(out.data.campaign);
+  NL2.review = null; NL2.reqId = null;
+  if (out.data.campaign.channels.telegram) nl2Nudge();
+  nl2ShowTab('campaigns'); nl2Poll();
+}
+
+// ── сегменты ──
+async function nl2LoadSegments() {
+  var el = nl2$('nl2-p-segments'); if (!el) return;
+  try { NL2.segments = (await nl2Call({ action: 'nl_segment_list' })).segments || []; if (!NL2.opts) NL2.opts = await nl2Call({ action: 'nl_audience_options' }); }
+  catch (e) { el.innerHTML = '<div class="empty-state">' + nl2E(e.message) + '</div>'; return; }
+  nl2RenderSegments();
+}
+function nl2FilterText(f) {
+  var p = [];
+  if (f.cityIds && f.cityIds.length) p.push('город: ' + f.cityIds.join(', ').replace(/-/g, ' '));
+  if (f.interests && f.interests.values.length) p.push('интересы (' + (f.interests.op === 'all' ? 'все' : 'любое') + '): ' + f.interests.values.join(', '));
+  if (f.tags && f.tags.values.length) p.push('метки (' + (f.tags.op === 'all' ? 'все' : 'любое') + '): ' + f.tags.values.join(', '));
+  if (f.sources && f.sources.length) p.push('источник: ' + f.sources.map(function (s) { return (NL_SRC[s.via] || s.via) + (s.form ? ': ' + s.form : ''); }).join(', '));
+  if (f.excludeIds && f.excludeIds.length) p.push('исключено вручную: ' + f.excludeIds.length);
+  return p.join(' · ') || 'все подписанные';
+}
+function nl2RenderSegments() {
+  var el = nl2$('nl2-p-segments'); if (!el) return;
+  var s = NL2.segEdit;
+  el.innerHTML = '<p class="nl2-meta">Сегмент — сохранённый фильтр среди тех, кому рассылка разрешена. Он не даёт согласия и не возвращает отписавшихся. Город, интересы и метки подписчика задаются кнопкой «Профиль» в списке подписчиков.</p>' +
+    (s ? '<div class="nl2-card"><div class="field"><label for="nl2-seg-name">Название сегмента</label><input class="ym-disable-keys" id="nl2-seg-name" maxlength="80" value="' + nl2E(s.name || '') + '"></div>' +
+      '<div data-nl2-filter="segment">' + nl2FilterHtml('nl2s', s.filter) + '</div><div class="nl2-row"><button type="button" class="btn-small" data-nl2="seg-store">Сохранить сегмент</button><button type="button" class="btn-small btn-ghost" data-nl2="seg-cancel">Отмена</button></div><p class="nl2-status" id="nl2-sres" role="status" aria-live="polite"></p></div>'
+      : '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="seg-new">Новый сегмент</button></div>') +
+    (NL2.segments.length ? NL2.segments.map(function (x) {
+      return '<div class="nl2-card"><h4>' + nl2E(x.name) + '</h4><p class="nl2-meta">' + nl2E(nl2FilterText(x.filter)) + '</p><div class="nl2-row"><button type="button" class="mini-btn" data-nl2-s="edit" data-id="' + nl2E(x.id) + '">Изменить</button><button type="button" class="mini-btn mini-btn-danger" data-nl2-s="del" data-id="' + nl2E(x.id) + '">Удалить</button></div></div>';
+    }).join('') : '<div class="empty-state">Сегментов нет.</div>');
+}
+
+// ── состояние ──
+async function nl2RenderState() {
+  var el = nl2$('nl2-p-state'); if (!el || !NL2.cap) return;
+  var c = NL2.cap, f = c.flags, t = c.telegram;
+  var flag = function (on, name) { return '<span class="nl2-badge ' + (on ? 'ok' : 'muted') + '">' + name + (on ? ': вкл' : ': выкл') + '</span>'; };
+  el.innerHTML = '<p>' + flag(f.write, 'черновики') + flag(f.send, 'отправка') + flag(f.schedule, 'расписание') + '</p>' +
+    '<p class="nl-line">Протокол v' + nl2E(c.protocol.v2) + ', рендер ' + nl2E(c.renderVersion) + '. Почта: ' + nl2E(c.mail.configured ? (NL_PROVIDER[c.mail.provider] || c.mail.provider) + ' · ' + c.mail.from + ' · до ' + c.mail.dailyLimit + ' писем за 24 часа (рассылкам — ' + c.mail.campaignLimit + ')' : 'не настроена' + (c.mail.error ? ': ' + c.mail.error : '')) + '.</p>' +
+    '<p class="nl-line">Бот: ' + nl2E(t.v2Ready ? 'поддерживает рассылку v2, заходил ' + nlAgo(t.botSeenAt) : t.botProto >= 2 ? 'давно не заходил (' + (t.botSeenAt ? nlAgo(t.botSeenAt) : 'ни разу') + ')' : 'старой версии — Telegram в рассылке v2 недоступен, выложите бота v731') + '.</p>' +
+    '<div class="nl2-card"><h4>Telegram для тестов</h4>' + (t.testChat ? '<p class="nl-line">Привязан: ' + nl2E(t.testChat.name || 'чат администратора') + ' (' + nl2E(nl2Msk(t.testChat.linkedAt)) + '). Тесты Telegram приходят только туда.</p><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="tg-link">Привязать другой</button><button type="button" class="mini-btn mini-btn-danger" data-nl2="tg-unlink">Отвязать</button></div>'
+      : '<p class="nl-line">Не привязан. Тест Telegram приходит только в привязанный чат администратора — чужой чат из браузера указать нельзя.</p><div class="nl2-row"><button type="button" class="btn-small" data-nl2="tg-link">Привязать Telegram для тестов</button></div>') +
+    '<div id="nl2-tglink"></div></div><div class="nl2-card"><h4>События Postbox</h4><div id="nl2-fb"><p class="nl-line">Загружаем…</p></div></div>';
+  try {
+    var fb = await nl2Call({ action: 'nl_feedback_status' });
+    var tot = fb.totals || {};
+    nl2$('nl2-fb').innerHTML = '<p class="nl-line">' + (fb.lastBatchAt ? 'Последние события — ' + nlAgo(fb.lastBatchAt) + '. Учтено ' + (tot.processed || 0) + ', повторов ' + (tot.duplicates || 0) + ', в диагностике ' + (tot.diagnostics || 0) + '.' : 'Событий не было: поток Postbox ещё не подключён (POSTBOX.md, «События о доставке»). Пока доставка в отчёте — «нет данных».') + '</p>' +
+      ((fb.attention || []).length ? '<ul class="nl2-list">' + fb.attention.map(function (x) { return '<li>' + nl2E(x.eventType + ' · ' + (x.detail || x.state) + (x.campaignId ? ' · ' + x.campaignId : '') + ' · ' + nlAgo(Date.parse(x.receivedAt))) + '</li>'; }).join('') + '</ul>' : '');
+  } catch (e) { nl2$('nl2-fb').innerHTML = '<p class="nl-line nl-err">' + nl2E(e.message) + '</p>'; }
+}
+
+// ── события ──
+function nl2SetFilter(f, path, val) {
+  if (path === 'cityIds') f.cityIds = val.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+  else if (/\.values$/.test(path)) nl2Set(f, path, val.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean));
+  else nl2Set(f, path, val);
+}
+(function initNl2() {
+  var root = nl2$('nl2'); if (!root) return;
+  root.addEventListener('keydown', function (e) {
+    var tab = e.target.closest('[role="tab"]'); if (!tab || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+    var tabs = Array.prototype.filter.call(tab.parentNode.querySelectorAll('[role="tab"]'), function (b) { return !b.hidden; });
+    var i = tabs.indexOf(tab), next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    if (next) { next.focus(); next.click(); }
+  });
+  root.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.hasAttribute('data-f') && NL2.local && t.closest('#nl2-p-drafts')) {
+      nl2Set(NL2.local, t.getAttribute('data-f'), t.type === 'checkbox' ? t.checked : t.value);
+      var cta = /^variants\.telegram\.(ru|en)\.cta\./.exec(t.getAttribute('data-f'));
+      if (cta) { var cv = nl2Get(NL2.local, 'variants.telegram.' + cta[1] + '.cta'); if (cv && !cv.text && !cv.url) nl2Set(NL2.local, 'variants.telegram.' + cta[1] + '.cta', null); }
+      if (t.getAttribute('data-f') !== 'title') NL2.review = null;
+      nl2Touch(); nl2Counters();
+      if (t.type === 'checkbox' && /^channels\./.test(t.getAttribute('data-f'))) nl2RenderStep();
+      return;
+    }
+    var box = t.closest('[data-nl2-filter]');
+    if (box && t.hasAttribute('data-ff')) {
+      var target = box.getAttribute('data-nl2-filter') === 'draft' ? NL2.local.audience.filter : NL2.segEdit.filter;
+      nl2SetFilter(target, t.getAttribute('data-ff'), t.value);
+      if (box.getAttribute('data-nl2-filter') === 'draft') { NL2.local.audience.segmentId = null; NL2.review = null; nl2Touch(); }
+    }
+  });
+  root.addEventListener('change', async function (e) {
+    var t = e.target;
+    if (t.hasAttribute('data-nl2-lang') && NL2.local) {
+      var lg = t.getAttribute('data-nl2-lang'), langs = NL2.local.audience.filter.langs.filter(function (x) { return x !== lg; });
+      if (t.checked) langs.push(lg);
+      if (!langs.length) { t.checked = true; alert('Нужен хотя бы один язык.'); return; }
+      NL2.local.audience.filter.langs = ['ru', 'en'].filter(function (x) { return langs.indexOf(x) >= 0; });
+      NL2.review = null; nl2Touch(); nl2RenderStep(); return;
+    }
+    if (t.hasAttribute('data-fsrc')) {
+      var fbox = t.closest('[data-nl2-filter]'), f = fbox.getAttribute('data-nl2-filter') === 'draft' ? NL2.local.audience.filter : NL2.segEdit.filter;
+      var vf = t.getAttribute('data-fsrc').split('|'), src = { via: vf[0], form: vf[1] || '' };
+      f.sources = (f.sources || []).filter(function (x) { return !(x.via === src.via && (x.form || '') === src.form); });
+      if (t.checked) f.sources.push(src);
+      if (fbox.getAttribute('data-nl2-filter') === 'draft') { NL2.local.audience.segmentId = null; NL2.review = null; nl2Touch(); }
+      return;
+    }
+    if (t.id === 'nl2-when-later' || t.id === 'nl2-when-now') { nl2$('nl2-runat').disabled = !nl2$('nl2-when-later').checked; NL2.review = null; return; }
+    if (t.id === 'nl2-pw') { var fr = nl2$('nl2-prev').querySelector('iframe'); if (fr) fr.classList.toggle('nl-wide', t.value === '600'); return; }
+    if (t.hasAttribute('data-nl2-upload')) {
+      var file = t.files && t.files[0], path = t.getAttribute('data-nl2-upload'), res = nl2$('nl2-vres');
+      if (!file) return;
+      nl2Status(res, 'Готовим и сохраняем картинку…');
+      try {
+        var dataUrl = await nlPrepareImage(file);
+        var up = await nl2Call({ action: 'nl_upload_image', base64: dataUrl.split(',')[1] });
+        NL2.thumbs[up.image.id] = dataUrl;
+        if (/\.photo$/.test(path)) nl2Set(NL2.local, path, { assetId: up.image.id }); else nl2Set(NL2.local, path + '.assetId', up.image.id);
+        nl2Touch(); nl2RenderStep();
+        nl2Status(nl2$('nl2-vres'), 'Картинка загружена: ' + up.image.width + ' × ' + up.image.height + ' px.', 'ok');
+      } catch (err) { nl2Status(res, err.message, 'err'); }
+    }
+  });
+  root.addEventListener('click', async function (e) {
+    var b = e.target.closest('button,[data-nl2-tab]'); if (!b || b.disabled) return;
+    if (b.hasAttribute('data-nl2-tab')) { nl2ShowTab(b.getAttribute('data-nl2-tab')); return; }
+    if (b.hasAttribute('data-nl2-jump')) { var h = nl2$('nlSubsHead'); if (h) { h.scrollIntoView({ block: 'start', behavior: 'smooth' }); h.focus(); } return; }
+    if (b.hasAttribute('data-nl2-act')) { await nl2CampaignAct(b); return; }
+    if (b.hasAttribute('data-nl2-rep')) {
+      var kind = b.getAttribute('data-nl2-rep'), id = b.getAttribute('data-id'), ch = b.getAttribute('data-ch');
+      if (kind === 'refresh') nl2Report(id, true); else if (kind === 'xlsx') nl2Xlsx(id, ch, b); else nl2ReportList(id, ch, kind);
+      return;
+    }
+    if (b.hasAttribute('data-nl2-step')) {
+      NL2.step = b.getAttribute('data-nl2-step');
+      document.querySelectorAll('[data-nl2-step]').forEach(function (x) { if (x === b) x.setAttribute('aria-current', 'step'); else x.removeAttribute('aria-current'); });
+      nl2RenderStep(); return;
+    }
+    if (b.hasAttribute('data-nl2-variant')) { NL2.variant = b.getAttribute('data-nl2-variant'); nl2RenderStep(); var vb = document.querySelector('[data-nl2-variant="' + NL2.variant + '"]'); if (vb) vb.focus(); return; }
+    if (b.hasAttribute('data-nl2-aud')) { nl2AudiencePage(b.getAttribute('data-ch'), b.getAttribute('data-nl2-aud'), Number(b.getAttribute('data-page') || 0)); return; }
+    if (b.hasAttribute('data-nl2-block')) {
+      var pv = NL2.variant.split('.'), blocks = NL2.local.variants.email[pv[1]].blocks, i = Number(b.getAttribute('data-i')), op = b.getAttribute('data-nl2-block');
+      if (op === 'del') { if (!confirm('Удалить блок «' + NL2_BLOCKS[blocks[i].type] + '»?')) return; blocks.splice(i, 1); }
+      if (op === 'up' && i > 0) blocks.splice(i - 1, 0, blocks.splice(i, 1)[0]);
+      if (op === 'down' && i < blocks.length - 1) blocks.splice(i + 1, 0, blocks.splice(i, 1)[0]);
+      NL2.review = null; nl2Touch(); nl2RenderStep();
+      var again = document.querySelector('[data-nl2-block="' + op + '"][data-i="' + (op === 'up' ? i - 1 : op === 'down' ? i + 1 : Math.max(0, i - 1)) + '"]'); if (again && !again.disabled) again.focus();
+      return;
+    }
+    if (b.hasAttribute('data-nl2-d')) {
+      var did = b.getAttribute('data-id'), dop = b.getAttribute('data-nl2-d');
+      try {
+        if (dop === 'open') await nl2OpenDraft(await nl2Call({ action: 'nl_draft_get', id: did }));
+        if (dop === 'copy') await nl2OpenDraft(await nl2Call({ action: 'nl_draft_copy', from: 'draft', id: did }));
+        if (dop === 'del' && confirm('Удалить черновик? Запущенные из него рассылки останутся.')) { await nl2Call({ action: 'nl_draft_delete', id: did, base_revision: Number(b.getAttribute('data-rev')) }); nl2LoadDrafts(); }
+      } catch (err) { alert(err.message); }
+      return;
+    }
+    if (b.hasAttribute('data-nl2-s')) {
+      var sid = b.getAttribute('data-id'), seg = nlById(NL2.segments, sid);
+      if (b.getAttribute('data-nl2-s') === 'edit' && seg) { NL2.segEdit = nl2Clone(seg); nl2RenderSegments(); nl2$('nl2-seg-name').focus(); }
+      if (b.getAttribute('data-nl2-s') === 'del' && confirm('Удалить сегмент «' + (seg && seg.name) + '»? Черновики сохранят свой фильтр.')) { await nl2Call({ action: 'nl_segment_delete', id: sid }); nl2LoadSegments(); }
+      return;
+    }
+    var act = b.getAttribute('data-nl2'); if (!act) return;
+    var vres = nl2$('nl2-vres');
+    try {
+      if (act === 'reload') { NL2.campaigns = (await nl2Call({ action: 'nl_v2_list' })).campaigns || []; nl2RenderCampaigns(); nl2Poll(); }
+      if (act === 'new') { nl2ShowTab('drafts'); var sel = nl2$('nl2-tpl'); if (sel) sel.focus(); }
+      if (act === 'create') { var tpl = nl2$('nl2-tpl').value; await nl2OpenDraft(tpl ? await nl2Call({ action: 'nl_draft_copy', from: 'template', id: tpl }) : await nl2Call({ action: 'nl_draft_save', draft: { title: '', channels: { email: true, telegram: false }, audience: { filter: { langs: ['ru'] } }, variants: {} } })); }
+      if (act === 'close') { if (NL2.dirty && !(await nl2Flush()) && !confirm('Изменения не сохранены. Закрыть черновик?')) return; NL2.draft = null; NL2.local = null; nl2LoadDrafts(); }
+      if (act === 'add-block') {
+        var lgA = NL2.variant.split('.')[1], type = nl2$('nl2-addtype').value, list = NL2.local.variants.email[lgA].blocks;
+        list.push(type === 'divider' ? { type: type } : type === 'event' ? { type: type, title: '', date: '', place: '', details: '', url: '', buttonText: '' } : type === 'button' ? { type: type, text: '', url: '' } : type === 'image' ? { type: type, assetId: null, alt: '' } : { type: type, text: '' });
+        NL2.review = null; nl2Touch(); nl2RenderStep();
+        var blocksEls = document.querySelectorAll('#nl2-step .nl2-block'); var last = blocksEls[blocksEls.length - 1]; if (last) { var fi = last.querySelector('input,textarea'); if (fi) fi.focus(); last.scrollIntoView({ block: 'center' }); }
+      }
+      if (act === 'copy-locale') {
+        var from = nl2Get(NL2.local, 'variants.' + b.getAttribute('data-from'));
+        if (!from) { nl2Status(vres, 'Там пусто — копировать нечего.', 'err'); return; }
+        if (!confirm('Заменить этот вариант копией? Дальше тексты независимы, перевод — вручную.')) return;
+        nl2Set(NL2.local, 'variants.' + NL2.variant, nl2Clone(from)); NL2.review = null; nl2Touch(); nl2RenderStep();
+      }
+      if (act === 'to-tg' || act === 'from-email') {
+        var lgT = NL2.variant.split('.')[1], em = nl2Get(NL2.local, 'variants.email.' + lgT);
+        if (!em) { nl2Status(vres, 'Письмо на этом языке пустое.', 'err'); return; }
+        if (nl2Get(NL2.local, 'variants.telegram.' + lgT + '.text') && !confirm('Заменить текст Telegram копией из письма? Дальше они независимы.')) return;
+        var parts = [], cta = null, photo = null;
+        (em.blocks || []).forEach(function (x) {
+          if (x.type === 'heading' || x.type === 'paragraph') parts.push(x.text);
+          if (x.type === 'event') parts.push([x.title, x.date, x.place, x.details].filter(Boolean).join('\n'));
+          if (!cta && x.type === 'button') cta = { text: x.text, url: x.url };
+          if (!cta && x.type === 'event' && x.url) cta = { text: x.buttonText, url: x.url };
+          if (!photo && x.type === 'image' && x.assetId) photo = { assetId: x.assetId };
+        });
+        nl2Set(NL2.local, 'variants.telegram.' + lgT, { text: parts.filter(Boolean).join('\n\n'), photo: photo, cta: cta });
+        NL2.review = null; nl2Touch();
+        if (act === 'to-tg') NL2.variant = 'telegram.' + lgT;
+        nl2RenderStep();
+      }
+      if (act === 'tg-photo-del') { nl2Set(NL2.local, 'variants.' + NL2.variant + '.photo', null); NL2.review = null; nl2Touch(); nl2RenderStep(); }
+      if (act === 'preview') {
+        var pp = NL2.variant.split('.'), host = nl2$('nl2-prev');
+        nl2Status(vres, 'Строим на сервере…');
+        var pr = await nl2Call({ action: 'nl_v2_preview', channel: pp[0], locale: pp[1], variant: nl2Get(NL2.local, 'variants.' + NL2.variant) });
+        nl2Status(vres, '');
+        if (pp[0] === 'email') {
+          host.innerHTML = '';
+          var fr = document.createElement('iframe'); fr.title = 'Предпросмотр письма'; fr.setAttribute('sandbox', ''); fr.setAttribute('referrerpolicy', 'no-referrer');
+          fr.classList.toggle('nl-wide', nl2$('nl2-pw').value === '600'); fr.srcdoc = pr.html; host.appendChild(fr);
+        } else {
+          var m = pr.telegram;
+          host.innerHTML = '<div class="nl2-tg">' + (pr.photoSrc ? '<img alt="Фото" src="' + nl2E(pr.photoSrc) + '">' : '') + '<p>' + nl2E(m.text) + '</p>' + (m.cta ? '<span class="nl2-tgbtn">' + nl2E(m.cta.text) + ' ↗</span>' : '') + '<span class="nl2-tgbtn">' + (pp[1] === 'en' ? '🔕 Unsubscribe' : '🔕 Отписаться от рассылки') + '</span></div>';
+        }
+        if (pr.errors && pr.errors.length) nl2Status(vres, 'Отправить пока нельзя: ' + pr.errors.map(function (x) { return x.message; }).join('; '), 'err');
+      }
+      if (act === 'test') {
+        var tp = NL2.variant.split('.');
+        nl2Status(vres, 'Сохраняем…');
+        if (!await nl2Flush()) { nl2Status(vres, 'Тест — только сохранённой версии. Дождитесь «Сохранено».', 'err'); return; }
+        b.disabled = true;
+        var tr = await nl2Api({ action: 'nl_v2_test', draftId: NL2.draft.id, revision: NL2.draft.revision, channel: tp[0], locale: tp[1], to: nl2$('nl2-test-to') ? nl2$('nl2-test-to').value.trim() : undefined });
+        b.disabled = false;
+        if (!tr.ok) { nl2Status(vres, tr.data.message || 'Тест не отправлен', 'err'); return; }
+        nl2Status(vres, (tr.data.to ? 'Тест ушёл на ' + tr.data.to + '. ' : '') + tr.data.note, 'ok');
+        if (tp[0] === 'telegram') nl2Nudge();
+        var st = await nl2Call({ action: 'nl_v2_tests', draftId: NL2.draft.id }); NL2.state = st.state; nl2RefreshMarks();
+        var keep = nl2$('nl2-vres').textContent; nl2RenderStep(); nl2Status(nl2$('nl2-vres'), keep, 'ok');
+      }
+      if (act === 'exclude') {
+        var em2 = nl2$('nl2-excl').value.trim().toLowerCase(), s2 = (NL.subs || []).filter(function (x) { return x.email === em2; })[0];
+        if (!s2) { nl2Status(nl2$('nl2-ares'), 'Нет такого подписчика почты.', 'err'); return; }
+        var fl = NL2.local.audience.filter; fl.excludeIds = (fl.excludeIds || []).filter(function (x) { return x !== s2.id; }).concat([s2.id]);
+        NL2.review = null; nl2Touch(); nl2RenderStep(); nl2Status(nl2$('nl2-ares'), 'Исключён: ' + em2, 'ok');
+      }
+      if (act === 'exclude-clear') { NL2.local.audience.filter.excludeIds = []; NL2.review = null; nl2Touch(); nl2RenderStep(); }
+      if (act === 'seg-apply') {
+        var sg = nlById(NL2.segments || [], nl2$('nl2-seg').value); if (!sg) return;
+        var langs = NL2.local.audience.filter.langs;
+        NL2.local.audience.filter = nl2Clone(sg.filter); NL2.local.audience.filter.langs = langs; NL2.local.audience.segmentId = sg.id;
+        NL2.review = null; nl2Touch(); nl2RenderStep();
+      }
+      if (act === 'seg-save') {
+        var nm = prompt('Название сегмента'); if (!nm) return;
+        await nl2Call({ action: 'nl_segment_save', name: nm, filter: NL2.local.audience.filter });
+        NL2.segments = (await nl2Call({ action: 'nl_segment_list' })).segments || []; nl2RenderStep(); nl2Status(nl2$('nl2-ares'), 'Сегмент «' + nm + '» сохранён.', 'ok');
+      }
+      if (act === 'prepare') {
+        var ares = nl2$('nl2-ares');
+        nl2Status(ares, 'Сохраняем черновик…');
+        if (!await nl2Flush()) { nl2Status(ares, 'Сначала дождитесь сохранения черновика.', 'err'); return; }
+        nl2Status(ares, 'Готовим снимок…'); b.disabled = true;
+        var ar = await nl2Api({ action: 'nl_audience_prepare', draftId: NL2.draft.id, revision: NL2.draft.revision });
+        b.disabled = false;
+        if (!ar.ok) { nl2Status(ares, ar.data.message || 'Не получилось', 'err'); return; }
+        NL2.audience = ar.data.audience; NL2.review = null;
+        nl2$('nl2-step').innerHTML = nl2AudienceHtml(); nl2AfterRender();
+        if (NL2.audience.state === 'building') { nl2Nudge(); nl2PollAudience(); }
+      }
+      if (act === 'review') await nl2DoReview();
+      if (act === 'launch') await nl2Launch(b);
+      if (act === 'conflict-copy') {
+        var copy = nl2Payload(); copy.title = ('Копия: ' + (copy.title || '')).slice(0, 120);
+        var cr = await nl2Call({ action: 'nl_draft_save', draft: copy });
+        await nl2OpenDraft(cr); nl2Status(nl2$('nl2-save'), 'Ваши правки сохранены отдельной копией.', 'ok');
+      }
+      if (act === 'conflict-server') { await nl2OpenDraft(await nl2Call({ action: 'nl_draft_get', id: NL2.draft.id })); }
+      if (act === 'seg-new') { NL2.segEdit = { id: null, revision: null, name: '', filter: { langs: ['ru', 'en'], cityIds: [], interests: { op: 'any', values: [] }, tags: { op: 'any', values: [] }, sources: [], excludeIds: [] } }; nl2RenderSegments(); nl2$('nl2-seg-name').focus(); }
+      if (act === 'seg-cancel') { NL2.segEdit = null; nl2RenderSegments(); }
+      if (act === 'seg-store') {
+        NL2.segEdit.name = nl2$('nl2-seg-name').value.trim();
+        var sr = await nl2Api({ action: 'nl_segment_save', id: NL2.segEdit.id, base_revision: NL2.segEdit.revision, name: NL2.segEdit.name, filter: NL2.segEdit.filter });
+        if (!sr.ok) { nl2Status(nl2$('nl2-sres'), sr.data.message || 'Не сохранилось', 'err'); return; }
+        NL2.segEdit = null; nl2LoadSegments();
+      }
+      if (act === 'tg-link') {
+        var lk = await nl2Call({ action: 'nl_tg_link_start' });
+        nl2$('nl2-tglink').innerHTML = '<p class="nl-line">Откройте на телефоне с Telegram: <a href="' + nl2E(lk.url) + '" target="_blank" rel="noopener">' + nl2E(lk.url.replace('https://', '')) + '</a> и нажмите «Старт». Код действует до ' + nl2Hm(lk.expiresAt) + '.</p><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="tg-check">Проверить привязку</button></div>';
+      }
+      if (act === 'tg-check' || act === 'tg-unlink') {
+        if (act === 'tg-unlink') { if (!confirm('Отвязать Telegram для тестов?')) return; await nl2Call({ action: 'nl_tg_unlink' }); }
+        NL2.cap = await nl2Call({ action: 'nl_capabilities' }); nl2RenderState();
+      }
+    } catch (err) { nl2Status(vres || nl2$('nl2-ares') || nl2$('nl2-rres'), err.message, 'err'); if (!vres && !nl2$('nl2-ares') && !nl2$('nl2-rres')) alert(err.message); }
+  });
+  window.addEventListener('beforeunload', function (e) { if (NL2.dirty || NL2.saving) { e.preventDefault(); e.returnValue = ''; } });
+  window.addEventListener('online', function () { if (NL2.offline) { NL2.offline = false; nl2Save(); } });
+})();
+// Профиль подписчика (город, интересы, метки) — для сегментов v2.
+function nlProfileForm(s) {
+  var p = s.profile || {};
+  return '<div class="nl-form" data-nl-profile="' + escapeHtml(s.id) + '" data-rev="' + (p.revision || 0) + '"><div class="inv-row">' +
+    '<div class="field"><label for="nlp-city-' + escapeHtml(s.id) + '">Город</label><input class="ym-disable-keys" id="nlp-city-' + escapeHtml(s.id) + '" data-p="city" maxlength="60" value="' + escapeHtml(p.city || '') + '"></div>' +
+    '<div class="field inv-w2"><label for="nlp-int-' + escapeHtml(s.id) + '">Интересы (через запятую)</label><input class="ym-disable-keys" id="nlp-int-' + escapeHtml(s.id) + '" data-p="interests" value="' + escapeHtml((p.interests || []).join(', ')) + '"></div>' +
+    '<div class="field inv-w2"><label for="nlp-tag-' + escapeHtml(s.id) + '">Метки</label><input class="ym-disable-keys" id="nlp-tag-' + escapeHtml(s.id) + '" data-p="tags" value="' + escapeHtml((p.tags || []).join(', ')) + '"></div></div>' +
+    '<p class="nl-hint">Только то, что человек сам сообщил или вы знаете точно. Из покупок не заполняется. Согласие и подписку не меняет.</p>' +
+    '<div><button class="btn-small" type="button" data-nl-profile-save="' + escapeHtml(s.id) + '">Сохранить профиль</button></div><p class="editor-result" data-nl-profile-res></p></div>';
+}
 var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
 var INV_WIDTHS = [6, 32, 6, 34, 6, 11, 10, 24, 30];
 function invRow(i, ev) {
