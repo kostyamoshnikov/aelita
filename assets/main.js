@@ -783,18 +783,51 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
     });
     document.body.insertBefore(el, document.body.firstChild);
   }
+  // pack-v734 (заказчик 29.10: статусы показов на сайте без выкладки): продажа
+  // своей кассы закрыта (администратором или сама по окончании события) или
+  // места кончились — кнопки «Купить» этого показа говорят об этом и никуда не
+  // ведут; продажу открыли снова после автозакрытия — festival.js возвращает
+  // кнопки, которые убрал по часам. Тот же ответ кассы (performances-list?notice=1).
+  function showSales(list) {
+    if (!list || !list.length) return;
+    var en = window.AELITA_isEn && window.AELITA_isEn();
+    var reopened = [];
+    list.forEach(function (s) {
+      if (!s || !s.id) return;
+      if (s.state === 'reopened') { reopened.push(s.id); return; }
+      var label = s.state === 'sold_out' ? (en ? 'Sold out' : 'Билеты распроданы')
+        : s.state === 'sales_closed' ? (en ? 'Sales closed' : 'Продажа закрыта') : null;
+      if (!label) return;
+      var links = document.querySelectorAll('a[data-performance-id="' + s.id + '"], a[href*="performance=' + s.id + '"]');
+      Array.prototype.forEach.call(links, function (a) {
+        if (a.getAttribute('data-performance-id') !== s.id && buyKey(a.getAttribute('href') || '') !== 'own:' + s.id) return;
+        if (a.classList.contains('is-canceled')) return;
+        a.removeAttribute('href');
+        a.removeAttribute('target');
+        a.setAttribute('aria-disabled', 'true');
+        a.classList.add(s.state === 'sold_out' ? 'is-soldout' : 'is-closed');
+        a.textContent = label;
+      });
+    });
+    if (reopened.length) {
+      window.__aelitaReopened = reopened; // festival.js, если подключится позже
+      if (window.AelitaFestival && window.AelitaFestival.reopen) window.AelitaFestival.reopen(reopened);
+    }
+  }
   function run() {
     try {
       var c = JSON.parse(sessionStorage.getItem(CACHE) || 'null');
-      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); showChanges(c.ch); return; }
+      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); showChanges(c.ch); showSales(c.s); return; }
     } catch (e) { /* без кэша */ }
     if (!window.fetch) return;
     fetch(URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var n = d && d.notice;
       var ch = (d && d.changes) || [];
-      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null, ch: ch })); } catch (e) { /* приватный режим */ }
+      var sl = (d && d.sales) || [];
+      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null, ch: ch, s: sl })); } catch (e) { /* приватный режим */ }
       show(n);
       showChanges(ch);
+      showSales(sl);
     }).catch(function () { /* баннера нет */ });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
@@ -806,7 +839,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=140';
+    s.src = '/assets/outage.js?v=141';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

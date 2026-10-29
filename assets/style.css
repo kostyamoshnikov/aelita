@@ -1207,7 +1207,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .show-change{position:relative;z-index:50;background:#2a2418;color:#e8e2d6;border-bottom:1px solid rgba(214,181,122,.4);padding:12px 16px;font:0.9375rem/1.5 Georgia,serif;text-align:center}
 .show-change p{margin:0 auto;max-width:860px}
 .show-change p+p{margin-top:8px}
-a.is-canceled{opacity:.55;pointer-events:none;cursor:default}
+a.is-canceled,a.is-closed,a.is-soldout{opacity:.55;pointer-events:none;cursor:default}
 /* pack-v585: «Дополнительные условия» в форме отзыва. */
 .aud-more{margin:2px 0 18px}
 .aud-more>summary{cursor:pointer;color:var(--sand);font-size:0.8125rem;list-style:none;display:inline-flex;align-items:center;gap:6px;border-bottom:1px dotted rgba(201,184,163,.5)}
@@ -1741,7 +1741,7 @@ html.a11y .a11y-keep:not(#a11y-none){outline:2px solid var(--a11y-fg);outline-of
    обычная золотая кнопка (.btn-gold), отдельного стиля не нужно. */
 .fest-slot-done{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin:0 0 8px}
 #main .fest-hero-review{margin:0 14px 10px 0}
-#main :is(.hero-btns,.hero-cta) .fest-hero-review{margin:0}
+#main :is(.hero-btns,.hero-cta,.mx-actions) .fest-hero-review{margin:0}
 
 /* ═══ pack-v711: ссылка на соцсеть человека под подписью на странице людей ═══ */
 #main .bio-info .bio-social{margin:-6px 0 12px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.18em;text-transform:uppercase}

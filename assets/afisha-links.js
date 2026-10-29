@@ -28,6 +28,8 @@
       list.forEach(function (p) {
         var els = document.querySelectorAll('[data-performance-id="' + p.id + '"]');
         els.forEach(function (el) {
+          // pack-v734: кнопку уже погасил main.js (продажа закрыта, распроданы) — не оживлять.
+          if (el.getAttribute('aria-disabled') === 'true') return;
           // pack-v639: на английском сайте — английская страница покупки
           var en = document.documentElement.lang === 'en' && /^\/tickets-buy\//.test(p.buyUrl);
           el.href = en ? '/en' + p.buyUrl : p.buyUrl;

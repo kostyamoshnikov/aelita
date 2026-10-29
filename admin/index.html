@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=140">
+<link rel="stylesheet" href="/assets/fonts.css?v=141">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -120,6 +120,20 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .adm-card.danger{border-color:rgba(224,138,110,.35)}
 .adm-card h3{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone);margin:0 0 8px;font-weight:400}
 .adm-card .lead{font-size:0.8125rem;color:var(--sand);line-height:1.55;margin:0 0 12px}
+/* pack-v734: ссылки с UTM, QR и переходы по показу */
+.pa-l-group{margin:14px 0 0;padding:12px 0 0;border-top:1px solid rgba(214,181,122,.12)}
+.pa-l-h{font-size:0.8125rem;color:var(--bone);margin:0 0 8px;line-height:1.5}
+.pa-l-v{color:var(--gold);white-space:nowrap}
+.pa-l-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px}
+.pa-l-lbl{flex:0 0 132px;font-size:0.75rem;color:var(--sand)}
+.pa-l-url{flex:1 1 220px;min-width:0;font-size:0.75rem;padding:7px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(214,181,122,.18);color:var(--bone)}
+.pa-qr-row{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 12px}
+.pa-qr{margin:0;font-size:0.75rem;color:var(--sand);line-height:1.5}
+.pa-qr figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;max-width:220px}
+.pa-qr-t{flex:0 0 100%}
+.pa-qr img{display:block;width:160px;height:160px;background:#fff;margin:0 0 6px}
+.pa-qr a{color:var(--gold)}
+@media(max-width:600px){.pa-l-lbl{flex-basis:100%}}
 .editor-box .btn-small{display:inline-block;margin:4px 0 12px;line-height:1.5}
 .btn-small + .editor-note,.btn-small + .adm-more{margin-top:4px}
 
@@ -927,6 +941,16 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <select id="pa-perf"><option value="">Загружаем…</option></select>
       </div>
       <p class="editor-note" id="pa-preview"></p>
+
+      <div class="adm-card" id="paLinksCard">
+        <h3>Ссылки для анонсов, QR и переходы</h3>
+        <p class="lead">Ссылки с метками — партнёрам, площадке и команде, QR для печати, и сколько людей по ним пришло. Тут же — черновик письма подписчикам о старте продаж.</p>
+        <div><button class="btn-small" id="paLinksBtn" disabled>Показать ссылки и переходы</button> <button class="btn-small btn-ghost" id="paDraftBtn" disabled>Черновик рассылки «Старт продаж»</button></div>
+        <div id="paLinks"></div>
+        <p class="editor-result" id="paLinksResult" aria-live="polite"></p>
+        <details class="adm-more"><summary>Подробнее</summary><p>Ссылки собираются из каталога по одной схеме: метка источника — кто публикует (партнёр, площадка, команда), отдельная — у QR для печати. Переходы — входы на сайт по этим ссылкам за последние 45 дней (счётчик без cookie); покупки по ссылкам не считаются — заказ не хранит, откуда пришёл человек. Черновик рассылки берёт название, дату, площадку, возраст, цену и ссылку на покупку из каталога; пару фраз о событии и фото допишите сами — без них черновик не пройдёт проверку перед отправкой. Создание черновика ничего не отправляет.</p></details>
+      </div>
+
       <div class="field">
         <label for="pa-title">Для подтверждения — название спектакля, как в афише</label>
         <input class="ym-disable-keys" type="text" id="pa-title" autocomplete="off">
@@ -935,7 +959,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <div class="adm-card">
         <h3>Закрыть продажу</h3>
         <p class="lead">Сайт перестанет продавать билеты на этот показ. Купленное не меняется.</p>
-        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается только вручную, например в начале спектакля. Купленные билеты, места и пригласительные остаются в силе; страница покупки скажет «продажа закрыта».</p></details>
+        <p class="editor-note" id="paSalesNote" aria-live="polite"></p>
+        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сама по окончании события (если окончание не указано — через 3 часа после начала): с сайта и из бота уходят кнопки покупки, страница покупки говорит «продажа закрыта», на странице события — «Событие прошло» и просьба оставить отзыв. Закрыть раньше — эта кнопка: на сайте кнопки покупки сменятся на «Продажа закрыта» (в течение 5 минут). После автозакрытия можно «Открыть продажу снова» — тогда она открыта, пока её не закроют вручную, и сайт возвращает кнопки покупки; в боте ссылка не вернётся (бот живёт по времени из каталога) — давайте ссылку на страницу события. Купленные билеты, места и пригласительные остаются в силе.</p></details>
         <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
       </div>
 
@@ -2496,7 +2521,88 @@ document.addEventListener('DOMContentLoaded', function () {
   var sb = document.getElementById('paSalesBtn');
   if (sb) sb.addEventListener('click', perfSalesToggle);
   if (sel) sel.addEventListener('change', perfSalesBtnState);
+  // pack-v734: ссылки с UTM, QR, переходы; черновик рассылки «Старт продаж»
+  if (sel) sel.addEventListener('change', perfLinksState);
+  var lb = document.getElementById('paLinksBtn');
+  if (lb) lb.addEventListener('click', perfLinks);
+  var db = document.getElementById('paDraftBtn');
+  if (db) db.addEventListener('click', perfSalesStartDraft);
+  var box = document.getElementById('paLinks');
+  if (box) box.addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-pa-copy]');
+    if (!b) return;
+    var done = await stCopy(b.getAttribute('data-pa-copy'));
+    if (done) { var t = b.textContent; b.textContent = 'Скопировано'; setTimeout(function () { b.textContent = t; }, 1500); }
+  });
 });
+
+// ── Ссылки для анонсов, QR и переходы (pack-v734) ─────────────────
+function perfLinksState() {
+  var id = document.getElementById('pa-perf').value;
+  var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  var own = !!(p && p.salesChannel === 'in_house' && !p.isTest);
+  document.getElementById('paLinksBtn').disabled = !own;
+  document.getElementById('paDraftBtn').disabled = !own || p.status === 'canceled';
+  document.getElementById('paLinks').innerHTML = '';
+  document.getElementById('paLinksResult').textContent = p && !own ? 'Этот показ продаёт партнёр — ссылки и метки у него.' : '';
+}
+function paLinkRow(label, url) {
+  return '<div class="pa-l-row"><span class="pa-l-lbl">' + label + '</span><input class="ym-disable-keys pa-l-url" type="text" readonly value="' + escapeHtml(url) + '" aria-label="' + label + '"><button type="button" class="mini-btn" data-pa-copy="' + escapeHtml(url) + '">Копировать</button></div>';
+}
+function paVisits(n) { return n == null ? '' : ' <span class="pa-l-v">· переходов: ' + n + '</span>'; }
+function paQr(label, svg, url, file) {
+  var src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  return '<figure class="pa-qr"><img src="' + src + '" alt="QR-код: ' + escapeHtml(label.toLowerCase()) + '" width="160" height="160"><figcaption><span class="pa-qr-t">' + label + '</span>' +
+    '<a href="' + src + '" download="' + escapeHtml(file) + '">Скачать SVG</a><button type="button" class="mini-btn" data-pa-copy="' + escapeHtml(url) + '">Ссылка</button></figcaption></figure>';
+}
+function paLinksHtml(d) {
+  var html = (d.groups || []).map(function (g) {
+    return '<div class="pa-l-group"><p class="pa-l-h">' + escapeHtml(g.label) + paVisits(g.visits) + '</p>' + paLinkRow('Билеты', g.buy) + (g.page ? paLinkRow('Страница события', g.page) : '') + '</div>';
+  }).join('');
+  var p = d.poster;
+  if (p) {
+    html += '<div class="pa-l-group"><p class="pa-l-h">' + escapeHtml(p.label) + paVisits(p.visits) + '</p><div class="pa-qr-row">' +
+      paQr('На покупку', p.qrBuy, p.buy, d.id + '-qr-bilety.svg') + (p.qrPage ? paQr('На страницу события', p.qrPage, p.page, d.id + '-qr-stranica.svg') : '') + '</div></div>';
+  }
+  var v = d.visits;
+  if (v && !v.error) html += '<p class="editor-note">За ' + v.days + ' дн. (с ' + fmtDay(v.from) + '): страница события — просмотров ' + v.pageViews + ', из них входов на сайт с неё ' + v.pageEntries + '.</p>';
+  if (v && v.error) html += '<p class="editor-note">Переходы сейчас не прочитались — ссылки и QR можно брать.</p>';
+  if (d.note) html += '<p class="editor-note">' + escapeHtml(d.note) + '</p>';
+  return html;
+}
+async function perfLinks() {
+  var id = document.getElementById('pa-perf').value;
+  var out = document.getElementById('paLinksResult');
+  var box = document.getElementById('paLinks');
+  var b = document.getElementById('paLinksBtn');
+  if (!id) return;
+  b.disabled = true; out.textContent = 'Собираем ссылки и считаем переходы…';
+  try {
+    var res = await fetch(ADMIN_PERF_URL + '?links=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
+    var data = await res.json();
+    if (!res.ok) { out.textContent = data.message || errorMessage(data); return; }
+    box.innerHTML = paLinksHtml(data);
+    out.textContent = '';
+  } catch (e) { out.textContent = 'Не получилось — проверьте связь. Если не выходит, обновите функцию aelita-admin-performance-action (v734).'; }
+  finally { b.disabled = false; }
+}
+async function perfSalesStartDraft() {
+  var id = document.getElementById('pa-perf').value;
+  var out = document.getElementById('paLinksResult');
+  var b = document.getElementById('paDraftBtn');
+  if (!id) return;
+  b.disabled = true; out.textContent = 'Готовим черновик…';
+  try {
+    var view = await nl2Call({ action: 'nl_draft_copy', from: 'performance', id: id });
+    out.textContent = 'Черновик готов — открываем «Рассылку». Допишите пару фраз о событии и добавьте фото.';
+    if (window.AELITA_adminTab) window.AELITA_adminTab('news', true);
+    if (!NL2.cap) await nl2Load();
+    await nl2OpenDraft(view);
+    var nb = document.getElementById('nl2'); if (nb) nb.scrollIntoView({ block: 'start' });
+  } catch (e) {
+    out.textContent = (e && e.message) || 'Не получилось — проверьте связь.'; // 403 v2_disabled — сервер сам говорит, какой переменной нет
+  } finally { b.disabled = false; }
+}
 
 // ── Закрыть / открыть продажу (pack-v592) ─────────────────────────
 function perfSalesBtnState() {
@@ -2505,8 +2611,20 @@ function perfSalesBtnState() {
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
   var ok = p && p.salesChannel === 'in_house' && p.status !== 'canceled';
   b.disabled = !ok;
-  b.textContent = p && p.salesClosed ? 'Открыть продажу' : 'Закрыть продажу';
+  b.textContent = p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
+  // pack-v734: автозакрытие по окончании события — когда закроется / закрылась сама.
+  var note = document.getElementById('paSalesNote');
+  if (note) {
+    var at = p && p.salesAutoCloseAt ? perfMsk(p.salesAutoCloseAt) : '';
+    var why = p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
+    note.textContent = !ok || !at ? ''
+      : p.salesClosedAuto ? 'Продажа закрылась сама ' + at + ' (' + why + '). «Открыть продажу снова» — если продаёте дальше: тогда она открыта, пока её не закроют вручную.'
+      : p.salesReopenedAt ? 'Открыта снова после автозакрытия (' + perfMsk(p.salesReopenedAt) + ') — закрыть теперь только вручную.'
+      : p.salesClosed ? 'Закрыта вручную.'
+      : 'Закроется сама ' + at + ' (' + why + ').';
+  }
 }
+function perfMsk(iso) { return new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) + ' МСК'; }
 async function perfSalesToggle() {
   var id = document.getElementById('pa-perf').value;
   var title = document.getElementById('pa-title').value;
@@ -2515,7 +2633,9 @@ async function perfSalesToggle() {
   if (!p) return;
   if (!title.trim()) { out.textContent = 'Введите название спектакля для подтверждения.'; return; }
   var close = !p.salesClosed;
-  if (!confirm((close ? 'Закрыть' : 'Открыть') + ' продажу билетов на «' + p.title + '»?')) return;
+  if (!confirm(close ? 'Закрыть продажу билетов на «' + p.title + '»?'
+    : p.salesClosedAuto ? 'Продажа «' + p.title + '» закрылась сама по окончании события. Открыть снова? Закрыть её потом можно будет только вручную.'
+    : 'Открыть продажу билетов на «' + p.title + '»?')) return;
   var b = document.getElementById('paSalesBtn');
   b.disabled = true;
   try {
@@ -2523,7 +2643,7 @@ async function perfSalesToggle() {
       body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title }) });
     var data = await res.json();
     if (!res.ok) { out.textContent = data.message || errorMessage(data); b.disabled = false; return; }
-    out.textContent = close ? 'Продажа закрыта.' : 'Продажа открыта.';
+    out.textContent = close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
     await loadPerfActions();
     document.getElementById('pa-perf').value = id;
     perfSalesBtnState();
