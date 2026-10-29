@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=141">
+<link rel="stylesheet" href="/assets/fonts.css?v=142">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -232,6 +232,8 @@ html body .buy-btn{font-size:1rem!important;letter-spacing:.12em!important}
 .steps li.on{color:var(--bone)}
 .steps li.on span{background:var(--gold);border-color:var(--gold);color:var(--ink)}
 .steps li.done span{border-color:var(--gold);color:var(--gold)}
+body:not(.step-2) #vpn-note{display:none!important}
+.vpn-note{margin:0 0 14px;padding:10px 14px;border-left:2px solid var(--gold);background:var(--coal);color:var(--bone);font-size:0.875rem;line-height:1.5}
 body.step-1 #form-block,body.step-1 .promo-wrap,body.step-1 #guest-note,body.step-1 #step2-sum,body.step-1 #buy-btn{display:none!important}
 body.step-2 #assigned-block,body.step-2 #general-block,body.step-2 #next-btn{display:none!important}
 body:not(.step-1):not(.step-2) #next-btn,body:not(.step-1):not(.step-2) #steps,body:not(.step-2) #step2-sum{display:none!important}
@@ -265,8 +267,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=141">
-<script src="/assets/a11y.js?v=141"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=142">
+<script src="/assets/a11y.js?v=142"></script>
 </head>
 <body>
 <div class="wrap">
@@ -364,6 +366,10 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <span id="step2-sum-text"></span>
     <button type="button" class="link-btn" onclick="goStep(1)">Изменить</button>
   </div>
+  <!-- pack-v735 (заказчик 29.10: «VPN нужно отключить при оплате»): страница
+       открывается через VPN (GitHub Pages), а заказ и оплата идут через серверы
+       в России — с VPN «Оплатить» не срабатывает. Только на шаге оплаты. -->
+  <p class="vpn-note" id="vpn-note">Перед оплатой отключите VPN — с ним оплата может не пройти.</p>
 
   <div class="form" id="form-block">
     <!-- pack-v442: кто покупает. Страница сама узнаёт, вошёл ли человек в
@@ -516,7 +522,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=141"></script>
+<script src="/assets/payments.js?v=142"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2618,7 +2624,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=141"></script>
-<script src="/assets/outage.js?v=141" defer></script>
+<script src="/assets/phone-prefix.js?v=142"></script>
+<script src="/assets/outage.js?v=142" defer></script>
 </body>
 </html>

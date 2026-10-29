@@ -8,6 +8,12 @@
  * и программок, кабинет, регистрация на события, подарочные карты, отзывы,
  * заявки с сайта.
  *
+ * pack-v735 (заказчик 29.10: «убери уведомление про Яндекс Облако, вроде как
+ * починилось, сейчас важнее про VPN — его нужно отключить при оплате»): облако
+ * работает, а сервер не отвечает в основном тем, кто открыл сайт через VPN
+ * (страницы — на GitHub Pages, API — в Yandex Cloud). Текст — про VPN; при
+ * настоящем сбое он тоже не врёт: «не помогло — напишите».
+ *
  * MODE:
  *   'auto' — сайт спрашивает сервер; не ответил за 6 с или ответил 5xx —
  *            баннер. Сервер ожил (Яндекс восстановился или переехали на
@@ -49,12 +55,12 @@
       + 'padding:12px 44px 12px 16px;font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;text-align:center';
     var a = 'color:#D6B57A;text-decoration:underline';
     el.innerHTML = en
-      ? '<strong>Technical problems.</strong> Because of a major Yandex Cloud outage, buying tickets and programmes, your account, event registration, reviews and site forms are temporarily unavailable. '
-        + 'Tickets you have already bought remain valid. To buy a ticket or sign up, write to <a style="' + a + '" href="mailto:' + mail + '">' + mail + '</a> '
-        + 'or to <a style="' + a + '" href="' + bot + '" target="_blank" rel="noopener">our Telegram bot</a> — we will help. We are fixing it.'
-      : '<strong>Технические неполадки.</strong> Из-за масштабного сбоя Яндекс Облака временно не работают покупка билетов и программок, личный кабинет, регистрация на события, отзывы и заявки с сайта. '
-        + 'Уже купленные билеты действительны. Чтобы купить билет или записаться — напишите на <a style="' + a + '" href="mailto:' + mail + '">' + mail + '</a> '
-        + 'или <a style="' + a + '" href="' + bot + '" target="_blank" rel="noopener">в наш Telegram-бот</a>, поможем. Уже чиним.';
+      ? '<strong>Turn off your VPN.</strong> Buying tickets, payment, your account and site forms run on servers in Russia, and they cannot be reached through a VPN. '
+        + 'Turn the VPN off and reload the page. Tickets you have already bought remain valid. Still not working? Write to <a style="' + a + '" href="mailto:' + mail + '">' + mail + '</a> '
+        + 'or to <a style="' + a + '" href="' + bot + '" target="_blank" rel="noopener">our Telegram bot</a> — we will help.'
+      : '<strong>Отключите VPN.</strong> Покупка билетов, оплата, личный кабинет и формы сайта работают через серверы в России — с включённым VPN до них не достучаться. '
+        + 'Отключите VPN и обновите страницу. Уже купленные билеты действительны. Не помогло — напишите на <a style="' + a + '" href="mailto:' + mail + '">' + mail + '</a> '
+        + 'или <a style="' + a + '" href="' + bot + '" target="_blank" rel="noopener">в наш Telegram-бот</a>, поможем.';
     var x = document.createElement('button');
     x.type = 'button';
     x.setAttribute('aria-label', en ? 'Hide' : 'Скрыть');
