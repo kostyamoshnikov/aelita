@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=144">
+<link rel="stylesheet" href="/assets/fonts.css?v=145">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -125,7 +125,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;text-transform:uppercase;
 .acct-line{font-size:0.75rem;color:var(--sand);margin:0 0 12px;line-height:1.45}
 .acct-line b{color:var(--cream,#E8E6E1);font-weight:400}
 .acct-line a,.acct-guest a{color:var(--gold)}
-.acct-guest{border-top:1px solid rgba(214,181,122,.18);margin:6px 0 10px;padding-top:12px}
+.acct-guest{align-items:center;justify-content:space-between;gap:10px 16px;font-size:0.8125rem;color:var(--sand);margin:0 0 16px;padding-bottom:14px;border-bottom:1px solid rgba(214,181,122,.15);line-height:1.4}
+.acct-code a{color:var(--gold)}
+.acct-login-btn{flex:0 0 auto;background:none;border:1px solid rgba(214,181,122,.55);color:var(--gold);font:inherit;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;border-radius:2px}
+@media(hover:hover){.acct-login-btn:hover{border-color:var(--gold);background:rgba(214,181,122,.08)}}
 .acct-title{font-size:0.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .qty{display:flex;align-items:center;gap:14px;justify-content:center;margin:20px 0}
 .qty button{width:36px;height:36px;border-radius:50%;border:1px solid var(--sand);background:transparent;color:var(--bone);font-size:1.125rem;cursor:pointer}
@@ -234,7 +237,7 @@ html body .buy-btn{font-size:1rem!important;letter-spacing:.12em!important}
 .steps li.done span{border-color:var(--gold);color:var(--gold)}
 body:not(.step-2) #vpn-note{display:none!important}
 .vpn-note{margin:0 0 14px;padding:10px 14px;border-left:2px solid var(--gold);background:var(--coal);color:var(--bone);font-size:0.875rem;line-height:1.5}
-body.step-1 #form-block,body.step-1 .promo-wrap,body.step-1 #guest-note,body.step-1 #step2-sum,body.step-1 #buy-btn{display:none!important}
+body.step-1 #form-block,body.step-1 .promo-wrap,body.step-1 #step2-sum,body.step-1 #buy-btn{display:none!important}
 body.step-2 #assigned-block,body.step-2 #general-block,body.step-2 #next-btn{display:none!important}
 body:not(.step-1):not(.step-2) #next-btn,body:not(.step-1):not(.step-2) #steps,body:not(.step-2) #step2-sum{display:none!important}
 .step2-sum{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--coal);padding:14px 16px;margin-bottom:14px;font-size:0.9375rem;color:var(--bone)}
@@ -267,8 +270,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=144">
-<script src="/assets/a11y.js?v=144"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=145">
+<script src="/assets/a11y.js?v=145"></script>
 </head>
 <body>
 <div class="wrap">
@@ -318,11 +321,10 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
        заранее, но не ценой закрытой двери.
        Тот же блок обслуживает и протухшую сессию — showAuthExpired(). -->
   <div id="auth-block" style="display:none" class="error-box">
-    <p id="auth-text">Чтобы завершить покупку, войдите в личный кабинет или заведите его — это быстро.</p>
+    <p id="auth-text">Чтобы завершить покупку, войдите по коду из письма.</p>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" id="auth-login-link" href="/account/">Войти или зарегистрироваться</a>
   </div>
 
-  <div id="guest-note" style="display:none" class="warn">Для покупки нужен личный кабинет AELITA — заведём его прямо в форме ниже.</div>
 
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Не получилось загрузить показ.</p>
@@ -375,6 +377,9 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
          кабинет (запрос /account/me по сохранённому токену), и подставляет
          имя и почту — повторно их вводить не нужно. -->
     <div class="acct-line" id="acct-in" style="display:none">Вы в личном кабинете как <b id="acct-who"></b> · <a href="#" onclick="acctSignOut();return false">Это не вы?</a></div>
+    <!-- pack-v740: гостю — только «Войти» (код из письма): подставить данные и
+         видеть билеты в кабинете. Пароля и «заведём кабинет» в покупке нет. -->
+    <div class="acct-guest" id="acct-guest" style="display:none"><span>Уже покупали у нас? Войдите — подставим ваши данные</span><button type="button" class="acct-login-btn" id="acct-login-btn" onclick="startLogin()">Войти</button></div>
     <!-- pack-v534: подписи над полями (как в МТС Live), в самом поле —
          пример. Пояснение про телефон — во всплывающей шторке «?». -->
     <div class="f-title">Куда и кому отправить билеты</div>
@@ -386,24 +391,12 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <div class="field-hint">На него придут билеты</div>
     <label class="f-label" for="f-contact">Телефон * <button type="button" class="q-btn" onclick="openSheet('phone')" aria-label="Зачем нужен телефон">?</button></label>
     <input class="ym-disable-keys" id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
-    <!-- pack-v442: регистрация прямо здесь. Имя и почта для кабинета —
-         те же поля, что для билетов выше, поэтому спрашиваем только
-         пароль. Уходить на /account/ и возвращаться больше не нужно. -->
-    <div class="acct-guest" id="acct-guest" style="display:none">
-      <div class="acct-title"><span id="acct-title">Личный кабинет AELITA</span> <button type="button" class="q-btn" onclick="openSheet('acct')" aria-label="Что такое личный кабинет">?</button></div>
-      <div class="field-hint" id="acct-hint">Придумайте пароль — имя и почту возьмём из полей выше.</div>
-      <label class="f-label" for="f-password">Пароль *</label>
-      <input class="ym-disable-keys" id="f-password" type="password" autocomplete="new-password" placeholder="Не короче 8 символов">
-      <div class="field-hint"><a href="#" id="acct-mode-link" onclick="toggleAcctMode();return false">Уже есть кабинет? Войти</a></div>
-      <div class="field-hint" id="acct-code-link-row" hidden><a href="#" id="acct-code-link" onclick="sendLoginCode();return false">Войти по коду из письма — без пароля</a></div>
-      <!-- pack-v607: вход по коду. Почта уже в кабинете — код уходит сам,
-           человек вводит 6 цифр, и оплата продолжается без пароля. -->
-      <div class="acct-code" id="acct-code" hidden>
-        <div class="field-hint" id="acct-code-hint"></div>
-        <label class="f-label" for="f-code">Код из письма *</label>
-        <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
-        <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Прислать код ещё раз</a> · <a href="#" onclick="usePassword();return false">Войти паролем</a></div>
-      </div>
+    <!-- pack-v607/v740: код из письма — подтверждение почты при оплате или вход. -->
+    <div class="acct-code" id="acct-code" hidden>
+      <div class="field-hint" id="acct-code-hint"></div>
+      <label class="f-label" for="f-code">Код из письма *</label>
+      <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+      <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Прислать код ещё раз</a><span id="acct-code-cancel" hidden> · <a href="#" onclick="cancelLogin();return false">Отмена</a></span></div>
     </div>
     <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
   </div>
@@ -522,7 +515,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=144"></script>
+<script src="/assets/payments.js?v=145"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -730,8 +723,6 @@ function showAuthGate(){
   if(link) link.href = '/account/?next=' + encodeURIComponent(location.pathname + location.search);
   const block = document.getElementById('auth-block');
   block.style.display = 'block';
-  const note = document.getElementById('guest-note');
-  if(note) note.style.display = 'none';
   block.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
@@ -742,25 +733,26 @@ function syncBuyButtonLabel(){
   if(!btn) return;
   // pack-v442: гость больше никуда не уходит — кнопка и регистрирует
   // (или впускает), и оплачивает. Надпись говорит, что именно будет.
-  if(accountToken()) btn.textContent = 'Оплатить';
-  else btn.textContent = (typeof acctMode !== 'undefined' && acctMode === 'login')
-    ? 'Войти и оплатить' : 'Оплатить';
+  // pack-v740: всегда «Оплатить» — подтверждение почты кодом не отдельный шаг.
+  btn.textContent = 'Оплатить';
 }
 
-// ─── pack-v442: кабинет прямо на странице покупки ──────────────────
+// ─── pack-v740: покупка без «заводим кабинет», вход — только кодом ──────
 //
-// Схема для человека: пришёл → видит зал и цены → выбирает места →
-// заполняет одну форму → нажимает одну кнопку. Если он уже в кабинете,
-// страница узнаёт это сама и подставляет имя и почту. Если нет — в той
-// же форме появляется одно поле «пароль», и по нажатию кнопки кабинет
-// заводится (или открывается, если почта уже зарегистрирована) и сразу
-// оформляется заказ. Ни перехода на /account/, ни повторного ввода.
+// Заказчик 30.10: в покупке не говорим, что заводим кабинет (это сказано в
+// согласии на обработку ПД и Политике по ссылке у галочки), пароля в
+// покупке нет. Схема:
+//  • вошёл раньше (токен) — «Вы в личном кабинете как …», данные подставлены;
+//  • гость: «Оплатить» → код на почту из формы («подтвердите почту») →
+//    6-я цифра → login-with-code с именем и согласием — кабинет на эту
+//    почту заводится тихо (или открывается, если уже есть) → заказ;
+//  • кнопка «Войти» — код на почту из поля, 6 цифр → данные из кабинета
+//    подставлены. Почты в кабинетах нет — код не гасится, тот же код
+//    подойдёт для «Оплатить».
 
 const ACCOUNT_API = 'https://api.aelita-production.ru/account';
 const PHONE_KEY = 'aelita_last_phone';
-// Режим формы для гостя: регистрация или вход.
-let acctMode = 'register';
-// Профиль {email, name} — после /me, входа или регистрации.
+// Профиль {email, name} — после /me или входа кодом.
 let acctProfile = null;
 
 function setToken(tok){
@@ -773,21 +765,19 @@ function fillIfEmpty(id, value){
   if(el && !el.value.trim() && value) el.value = value;
 }
 
-// Состояние «вошёл»: строка «Вы в кабинете как …», блок пароля скрыт.
+// Состояние «вошёл»: строка «Вы в кабинете как …», кнопка «Войти» скрыта.
 function showSignedIn(profile){
   acctProfile = profile;
   const who = document.getElementById('acct-who');
   if(who) who.textContent = profile.name ? `${profile.name} (${profile.email})` : profile.email;
   document.getElementById('acct-in').style.display = 'block';
   document.getElementById('acct-guest').style.display = 'none';
-  const note = document.getElementById('guest-note');
-  if(note) note.style.display = 'none';
   document.getElementById('auth-block').style.display = 'none';
   fillIfEmpty('f-name', profile.name);
   fillIfEmpty('f-email', profile.email);
-  // pack-v739: в кабинете нет фамилии (заведён до того, как её стали
-  // спрашивать) — подсказка под полем; после оплаты фамилия из формы
-  // запишется в профиль (saveNameToProfile).
+  fillIfEmpty('f-contact', profile.phone);
+  // pack-v739: в кабинете нет фамилии — подсказка под полем; после оплаты
+  // фамилия из формы запишется в профиль (saveNameToProfile).
   const nh = document.getElementById('f-name-hint');
   if(nh) nh.hidden = !(profile.email && !AELITA_fullNameOk(profile.name));
   syncBuyButtonLabel();
@@ -813,58 +803,34 @@ function saveNameToProfile(name, email, token){
   }catch(e){}
 }
 
-// Состояние «гость»: подсказка сверху, поле пароля в форме.
+// Состояние «гость»: кнопка «Войти» над формой.
 function showGuest(){
   acctProfile = null;
   document.getElementById('acct-in').style.display = 'none';
-  document.getElementById('acct-guest').style.display = 'block';
-  const note = document.getElementById('guest-note');
-  if(note) note.style.display = 'block';
-  applyAcctMode();
-}
-
-function applyAcctMode(){
-  const login = acctMode === 'login';
-  document.getElementById('acct-hint').textContent = login
-    ? 'Введите пароль от кабинета — почта та же, что в поле выше.'
-    : 'Придумайте пароль — имя и почту возьмём из полей выше.';
-  const pw = document.getElementById('f-password');
-  pw.placeholder = login ? 'Пароль от кабинета' : 'Не короче 8 символов';
-  pw.autocomplete = login ? 'current-password' : 'new-password';
-  document.getElementById('acct-mode-link').textContent = login
-    ? 'Нет кабинета? Завести новый' : 'Уже есть кабинет? Войти';
-  if(typeof syncCodeLink === 'function') syncCodeLink();
+  document.getElementById('acct-guest').style.display = 'flex';
   syncBuyButtonLabel();
-}
-
-function toggleAcctMode(){
-  if(codeMode) showCodeBox(false);
-  acctMode = acctMode === 'login' ? 'register' : 'login';
-  applyAcctMode();
-  document.getElementById('f-password').focus();
 }
 
 function acctSignOut(){
   setToken(null);
-  acctMode = 'login';
+  showCodeBox(false);
   showGuest();
-  document.getElementById('f-password').value = '';
 }
 
 // Кто на странице. Токен в localStorage ещё не значит «вошёл»: сессия
 // могла истечь, аккаунт — быть удалён. Спрашиваем /me. Если сеть
 // недоступна — токену доверяем: заказ всё равно проверит его сам, и
-// ошибка 401 вернёт человека в форму входа прямо здесь же.
+// ошибка 401 вернёт человека к коду прямо здесь же.
 async function detectAccount(){
   fillIfEmpty('f-contact', (()=>{ try{ return localStorage.getItem(PHONE_KEY); }catch(e){ return null; } })());
   const token = accountToken();
   if(!token){ showGuest(); return; }
   try{
     const res = await apiFetch(`${ACCOUNT_API}/me`, {headers:{'Authorization':'Bearer ' + token}});
-    if(res.status === 401){ setToken(null); acctMode = 'login'; showGuest(); return; }
+    if(res.status === 401){ setToken(null); showGuest(); return; }
     if(res.ok){
       const me = await res.json();
-      showSignedIn({email: me.email, name: me.name || ''});
+      showSignedIn({email: me.email, name: me.name || '', phone: me.phone || ''});
       return;
     }
   }catch(e){ /* сеть — см. комментарий выше */ }
@@ -872,44 +838,48 @@ async function detectAccount(){
   document.getElementById('acct-in').style.display = 'none';
 }
 
-// ─── pack-v607: вход по коду из письма прямо в покупке ───────────────
-// Заказчик 09.10: «если есть личный кабинет — сразу заходить, без лишних
-// действий». Почта уже в кабинете → код уходит сам (тот же сервер, что у
-// входа по коду в кабинете: account/request-login-code и
-// login-with-code), человек вводит 6 цифр — и заказ продолжается: 6-я
-// цифра сама нажимает «Оплатить». Пароль остаётся запасным путём.
-// Вход кодом подтверждает почту кабинета (раздел «Мои билеты» сразу
-// открыт).
+// ─── код из письма ─────────────────────────────────────────────────────
+// codePurpose: 'login' — кнопка «Войти» (только подставить данные);
+// 'pay' — «Оплатить» (подтвердить почту и сразу к оплате).
 let codeMode = false;
 let codeSentTo = '';
+let codeSentAt = 0;
 let codeBusy = false;
-// pack-v635: регистрация паролем идёт в два шага (с pack-v592): register
-// отвечает {need_email_code, pending_id} — кабинет появится после кода из
-// письма. Здесь — ожидающая заявка; код подтверждается тем же register.
-let regPending = null;
+let codePurpose = 'pay';
 
 function showCodeBox(on){
   codeMode = on;
   document.getElementById('acct-code').hidden = !on;
-  const pw = document.getElementById('f-password');
-  const pwLabel = document.querySelector('label[for="f-password"]');
-  pw.style.display = on ? 'none' : '';
-  if(pwLabel) pwLabel.style.display = on ? 'none' : '';
-  document.getElementById('acct-hint').style.display = on ? 'none' : '';
-  syncCodeLink();
+  const cancel = document.getElementById('acct-code-cancel');
+  if(cancel) cancel.hidden = codePurpose !== 'login';
 }
 
-function syncCodeLink(){
-  const row = document.getElementById('acct-code-link-row');
-  if(row) row.hidden = codeMode || acctMode !== 'login';
+function codeHintText(email, again){
+  if(codePurpose === 'login') return (again ? 'Код уже отправлен на ' : 'Отправили код для входа на ') + email + ' (проверьте и «Спам»). Введите 6 цифр — подставим ваши данные.';
+  return (again ? 'Код уже отправлен на ' : 'Подтвердите почту: отправили код на ') + email + ' (проверьте и «Спам»). Введите 6 цифр — и перейдём к оплате.';
 }
 
-function usePassword(){
-  regPending = null;
+// Кнопка «Войти»: код на почту из поля «Email».
+async function startLogin(){
+  const msgEl = document.getElementById('msg');
+  const emailEl = document.getElementById('f-email');
+  if(!AELITA_isValidEmail(emailEl.value.trim())){
+    AELITA_showFieldError(emailEl, 'Укажите email — пришлём на него код для входа');
+    msgEl.textContent = 'Укажите email — на него придёт код для входа.';
+    emailEl.focus();
+    return;
+  }
+  AELITA_clearFieldError(emailEl);
+  codePurpose = 'login';
+  await sendLoginCode();
+}
+
+function cancelLogin(){
   showCodeBox(false);
+  codePurpose = 'pay';
+  codeSentTo = '';
+  document.getElementById('msg').textContent = '';
   saveDraft();
-  const pw = document.getElementById('f-password');
-  if(pw) pw.focus();
 }
 
 async function sendLoginCode(resend){
@@ -918,26 +888,24 @@ async function sendLoginCode(resend){
   const email = emailEl.value.trim().toLowerCase();
   if(!AELITA_isValidEmail(email)){
     AELITA_showFieldError(emailEl, 'Укажите email');
-    msgEl.textContent = 'Укажите email выше — на него придёт код для входа.';
+    msgEl.textContent = 'Укажите email выше — на него придёт код.';
     emailEl.focus();
     return false;
   }
-  acctMode = 'login';
-  applyAcctMode();
   showCodeBox(true);
   msgEl.textContent = 'Отправляем код на почту…';
   let res, out = {};
   try{
     res = await apiFetch(`${ACCOUNT_API}/request-login-code`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({email, lang:'ru'}),
+      body: JSON.stringify({email, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', context: codePurpose === 'pay' ? 'checkout' : 'login'}),
     });
     try{ out = await res.json(); }catch(e){}
   }catch(e){ res = null; }
   if(res && res.ok && out.ok){
     codeSentTo = email;
     codeSentAt = Date.now();
-    document.getElementById('acct-code-hint').textContent = 'Код отправлен на ' + email + ' (проверьте и «Спам»). Введите 6 цифр — и сразу перейдём к оплате.';
+    document.getElementById('acct-code-hint').textContent = codeHintText(email);
     msgEl.textContent = '';
     const c = document.getElementById('f-code');
     c.value = '';
@@ -945,19 +913,32 @@ async function sendLoginCode(resend){
     saveDraft();
     return true;
   }
-  if(res && res.status === 429){ msgEl.textContent = 'Слишком много писем с кодом подряд — подождите несколько минут или войдите паролем.'; return false; }
-  msgEl.textContent = 'Не получилось отправить код — войдите паролем или напишите нам: aelita.production@yandex.ru';
-  usePassword();
+  if(res && res.status === 429){
+    // Коды на эту почту уже уходили — код из последнего письма годен.
+    if(codeSentTo === email || resend){
+      msgEl.textContent = 'Писем с кодом на эту почту было много — новое придёт позже. Код из последнего письма подойдёт.';
+    } else {
+      codeSentTo = email;
+      codeSentAt = Date.now();
+      document.getElementById('acct-code-hint').textContent = 'Код на ' + email + ' уже отправляли — введите 6 цифр из ПОСЛЕДНЕГО письма (проверьте и «Спам»).';
+      msgEl.textContent = '';
+      saveDraft();
+    }
+    return codeSentTo === email;
+  }
+  showCodeBox(false);
+  msgEl.textContent = 'Не получилось отправить код — попробуйте ещё раз через минуту или напишите нам: aelita.production@yandex.ru';
   return false;
 }
 
-// Код — вместо пароля. Возвращает токен или null (сообщение уже в #msg).
-async function loginWithCode(name, email){
+// Код → токен. withProfile — имя и согласие для нового кабинета (оплата);
+// без них сервер ответит need_registration и код не погасит.
+// Возвращает токен, 'no_account' или null (сообщение уже в #msg).
+async function loginWithCode(name, email, withProfile){
   const msgEl = document.getElementById('msg');
   const codeEl = document.getElementById('f-code');
   const code = (codeEl.value || '').replace(/\D+/g, '');
-  const reg = regPending && regPending.email === email.toLowerCase() ? regPending : null;
-  if(!reg && email.toLowerCase() !== codeSentTo){ await sendLoginCode(); return null; }
+  if(email.toLowerCase() !== codeSentTo){ await sendLoginCode(); return null; }
   if(!/^\d{6}$/.test(code)){
     AELITA_showFieldError(codeEl, 'Проверьте код');
     msgEl.textContent = 'Введите 6 цифр из письма.';
@@ -965,15 +946,12 @@ async function loginWithCode(name, email){
     return null;
   }
   AELITA_clearFieldError(codeEl);
-  msgEl.textContent = reg ? 'Заводим личный кабинет…' : 'Входим в кабинет…';
+  msgEl.textContent = withProfile ? 'Проверяем код…' : 'Входим…';
   let res, out = {};
   try{
-    // pack-v635: код регистрации — во второй шаг register (пароль сохранится);
-    // иначе — вход по коду.
-    res = await apiFetch(reg ? `${ACCOUNT_API}/register` : `${ACCOUNT_API}/login-with-code`, {
+    res = await apiFetch(`${ACCOUNT_API}/login-with-code`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      // имя и согласие — на случай, если кабинета всё же нет: он заведётся тем же кодом
-      body: JSON.stringify(reg ? {email: reg.email, code, pending_id: reg.pendingId} : {email, code, name, pd_consent: true}),
+      body: JSON.stringify(withProfile ? {email, code, name, pd_consent: true} : {email, code}),
     });
     try{ out = await res.json(); }catch(e){}
   }catch(e){
@@ -982,29 +960,53 @@ async function loginWithCode(name, email){
   }
   if(res.ok && out.token){
     setToken(out.token);
-    regPending = null;
     codeEl.value = '';
+    codePurpose = 'pay';
     showCodeBox(false);
-    showSignedIn({email: out.email || email, name: out.name || name});
+    showSignedIn({email: out.email || email, name: out.name || name || ''});
     saveDraft();
     return out.token;
   }
+  if(res.ok && out.need_registration) return 'no_account';
   if(out.error === 'code_invalid'){ AELITA_showFieldError(codeEl, 'Проверьте код'); msgEl.textContent = 'Код не подошёл — проверьте цифры' + (out.attemptsLeft ? ' (осталось попыток: ' + out.attemptsLeft + ')' : '') + '.'; codeEl.select(); return null; }
   if(out.error === 'code_expired' || out.error === 'code_attempts_exceeded'){ msgEl.textContent = 'Код устарел или попытки кончились — пришлём новый: нажмите «Прислать код ещё раз».'; return null; }
-  if(out.error === 'account_moved'){ msgEl.textContent = 'Почту этого кабинета сменили — укажите новую почту выше.'; return null; }
-  if(reg && out.error === 'registration_expired'){ regPending = null; codeSentTo = ''; codeEl.value = ''; acctMode = 'register'; applyAcctMode(); usePassword(); msgEl.textContent = 'Код устарел — нажмите «Оплатить» ещё раз, пришлём новый.'; return null; }
-  if(reg && out.error === 'email_taken'){ regPending = null; await sendLoginCode(); return null; }
+  if(out.error === 'account_moved'){ msgEl.textContent = 'Эта почта больше не используется для входа — укажите другую.'; return null; }
   if(res.status === 429){ msgEl.textContent = 'Слишком много попыток подряд — подождите несколько минут и попробуйте снова.'; return null; }
-  msgEl.textContent = 'Не получилось войти — попробуйте ещё раз через минуту или войдите паролем.';
+  msgEl.textContent = 'Не получилось проверить код — попробуйте ещё раз через минуту.';
   return null;
 }
 
-// 6-я цифра — сразу дальше, без поиска кнопки «Оплатить».
+// «Войти»: 6 цифр → данные из кабинета в форму.
+async function loginOnly(){
+  const email = document.getElementById('f-email').value.trim();
+  const msgEl = document.getElementById('msg');
+  const r = await loginWithCode('', email, false);
+  if(r === 'no_account'){
+    // Покупок с этой почтой не было. Код не погашен — подойдёт для оплаты.
+    codePurpose = 'pay';
+    showCodeBox(true);
+    document.getElementById('acct-code-hint').textContent = 'С этой почтой у нас ещё не покупали — заполните форму и нажмите «Оплатить»: код из письма уже введён.';
+    msgEl.textContent = '';
+    return;
+  }
+  if(r){
+    msgEl.textContent = 'Вы вошли — данные подставлены.';
+    // телефон и полное имя — из кабинета
+    detectAccount();
+  }
+}
+
+// 6-я цифра — сразу дальше, без поиска кнопки.
 document.addEventListener('input', e => {
   if(!e.target || e.target.id !== 'f-code') return;
   const v = e.target.value.replace(/\D+/g, '').slice(0, 6);
   if(e.target.value !== v) e.target.value = v;
   if(v.length === 6 && !codeBusy){
+    if(codePurpose === 'login'){
+      codeBusy = true;
+      Promise.resolve(loginOnly()).finally(() => { codeBusy = false; });
+      return;
+    }
     const btn = document.getElementById('buy-btn');
     if(btn && btn.disabled) return;
     codeBusy = true;
@@ -1012,140 +1014,24 @@ document.addEventListener('input', e => {
   }
 });
 
-// Зарегистрировать или впустить гостя одним нажатием «Оплатить».
+// Гость нажал «Оплатить»: подтвердить почту кодом (кабинет заведётся сам).
 // Возвращает токен или null (сообщение уже показано в #msg).
 async function ensureAccount(name, email){
   const existing = accountToken();
   if(existing) return existing;
-  // pack-v540: цель — гость нажал «Оплатить», и покупка упёрлась во
-  // вход/регистрацию кабинета (вход встроен сюда с pack-v442; отдельные
-  // «ворота» showAuthGate выше больше не вызываются). Один раз за визит.
+  // pack-v540: цель — гость нажал «Оплатить», и покупка упёрлась в
+  // подтверждение почты. Один раз за визит.
   if(!window.__aelitaLoginGoal){
     window.__aelitaLoginGoal = true;
-    try{ if(window.AELITA_track) window.AELITA_track('ticket_login_required', { performance: performanceId, mode: acctMode }); }catch(e){}
+    try{ if(window.AELITA_track) window.AELITA_track('ticket_login_required', { performance: performanceId, mode: 'code' }); }catch(e){}
   }
-  if(codeMode) return loginWithCode(name, email);
-  const msgEl = document.getElementById('msg');
-  const pwEl = document.getElementById('f-password');
-  const password = pwEl.value;
-  if(acctMode === 'register' && password.length < 8){
-    AELITA_showFieldError(pwEl, 'Пароль — не короче 8 символов');
-    msgEl.textContent = 'Придумайте пароль для личного кабинета — не короче 8 символов.';
-    pwEl.focus();
-    return null;
+  codePurpose = 'pay';
+  if(codeMode && codeSentTo === email.toLowerCase()){
+    const r = await loginWithCode(name, email, true);
+    return r === 'no_account' ? null : r;
   }
-  // pack-v607: пароля нет — входим кодом из письма, а не ругаемся
-  if(acctMode === 'login' && !password){ await sendLoginCode(); return null; }
-  AELITA_clearFieldError(pwEl);
-  msgEl.textContent = acctMode === 'login' ? 'Входим в кабинет…' : 'Заводим личный кабинет…';
-  const url = `${ACCOUNT_API}/${acctMode === 'login' ? 'login' : 'register'}`;
-  const body = acctMode === 'login' ? {email, password} : {name, email, password};
-  let res, out = {};
-  try{
-    res = await apiFetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
-    try{ out = await res.json(); }catch(e){}
-  }catch(e){
-    msgEl.textContent = (e && e.aelitaTimeout) ? SLOW_CHECK_MSG : 'Не получилось связаться с сервером — проверьте интернет и нажмите ещё раз.';
-    return null;
-  }
-  if(res.ok && out.token){
-    setToken(out.token);
-    pwEl.value = '';
-    showSignedIn({email: out.email || email, name: out.name || name});
-    return out.token;
-  }
-  // pack-v635: регистрация с pack-v592 — в два шага. Кабинета ещё нет, код
-  // ушёл на почту: показываем поле для кода. Шестая цифра сама нажмёт
-  // «Оплатить», код уйдёт во второй шаг register (loginWithCode).
-  if(res.ok && out.need_email_code){
-    regPending = {email: String(out.email || email).toLowerCase(), pendingId: out.pending_id};
-    codeSentTo = regPending.email;
-    codeSentAt = Date.now();
-    showCodeBox(true);
-    document.getElementById('acct-code-hint').textContent = 'Код отправлен на ' + regPending.email + ' (проверьте и «Спам»). Введите 6 цифр — кабинет заведётся, и сразу перейдём к оплате.';
-    msgEl.textContent = '';
-    const c = document.getElementById('f-code');
-    c.value = '';
-    c.focus();
-    saveDraft();
-    return null;
-  }
-  if(res.status === 429 && out.error === 'code_too_many_requests'){
-    // Коды на эту почту уже уходили. Последний из них годен для входа по коду
-    // (слот кода на адрес общий) — login-with-code заведёт кабинет сам.
-    regPending = null;
-    codeSentTo = email.toLowerCase();
-    codeSentAt = Date.now();
-    showCodeBox(true);
-    setTimeout(saveDraft, 0);
-    document.getElementById('acct-code-hint').textContent = 'Код на ' + codeSentTo + ' уже отправляли — введите 6 цифр из ПОСЛЕДНЕГО письма (проверьте и «Спам»).';
-    msgEl.textContent = 'Писем с кодом на эту почту было много — новое придёт не раньше чем через час. Код из последнего письма подойдёт.';
-    const c = document.getElementById('f-code');
-    c.value = '';
-    c.focus();
-    return null;
-  }
-  if(res.status === 429){
-    msgEl.textContent = 'Слишком много попыток входа подряд — подождите 15 минут или войдите по коду из письма.';
-    return null;
-  }
-  // Почта уже в кабинете — самый частый случай «регистрации» повторного
-  // покупателя. Не ругаемся, а переключаем форму на вход: пароль от
-  // этого кабинета и есть следующий шаг.
-  if(out.error === 'email_taken'){
-    // pack-v607: кабинет уже есть — сразу шлём код на эту почту
-    pwEl.value = '';
-    if(await sendLoginCode()) msgEl.textContent = 'На эту почту уже есть кабинет — отправили на неё код для входа. Введите 6 цифр из письма, и сразу перейдём к оплате.';
-    return null;
-  }
-  if(out.error === 'invalid_credentials'){
-    AELITA_showFieldError(pwEl, 'Пароль не подошёл');
-    msgEl.innerHTML = 'Пароль не подошёл. <a href="#" onclick="sendLoginCode();return false">Войти по коду из письма</a> · <a href="#" style="color:var(--gold)" onclick="sendResetFromCheckout();return false">Забыли пароль?</a>';
-    pwEl.focus();
-    return null;
-  }
-  if(out.error === 'bad_email'){
-    AELITA_showFieldError(document.getElementById('f-email'), 'Проверьте email');
-    msgEl.textContent = 'Проверьте email — похоже, в адресе опечатка.';
-    return null;
-  }
-  msgEl.textContent = 'Не получилось открыть личный кабинет — попробуйте ещё раз через минуту.';
+  await sendLoginCode();
   return null;
-}
-
-// pack-v449: «Забыли пароль?» прямо на странице покупки. До этого
-// ссылка вела на /account/ — человек уходил со страницы с выбранными
-// местами, там ещё раз нажимал «Забыли пароль?», а после смены пароля
-// оказывался в кабинете, а не у покупки. Теперь письмо уходит отсюда же,
-// на почту из поля выше, а страница с выбором остаётся открытой: задал
-// новый пароль по ссылке — вернулся на эту вкладку — ввёл его — оплатил.
-async function sendResetFromCheckout(){
-  const msgEl = document.getElementById('msg');
-  const emailEl = document.getElementById('f-email');
-  const email = emailEl.value.trim();
-  if(!email){
-    AELITA_showFieldError(emailEl, 'Укажите email');
-    msgEl.textContent = 'Укажите email выше — на него придёт ссылка для нового пароля.';
-    emailEl.focus();
-    return;
-  }
-  saveDraft();
-  msgEl.textContent = 'Отправляем письмо…';
-  try{
-    const res = await apiFetch(`${ACCOUNT_API}/request-password-reset`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({email, lang:'ru'}),
-    });
-    let out = {};
-    try{ out = await res.json(); }catch(e){}
-    if(res.ok && out.ok){
-      msgEl.textContent = `Письмо со ссылкой отправлено на ${email} (проверьте и «Спам»). Задайте новый пароль по ссылке, вернитесь на эту вкладку и введите его — выбранные места остаются здесь.`;
-      const pw = document.getElementById('f-password');
-      if(pw){ pw.value = ''; pw.focus(); }
-      return;
-    }
-  }catch(e){}
-  msgEl.innerHTML = 'Не получилось отправить письмо. Напишите нам — поможем: <a href="mailto:aelita.production@yandex.ru" style="color:var(--gold)">aelita.production@yandex.ru</a>';
 }
 
 // Гость выбирал места без удержания (hold-seat требует авторизации).
@@ -1183,7 +1069,6 @@ async function holdGuestSelection(){
 const DRAFT_KEY = 'aelita_checkout_draft';
 const DRAFT_TTL = 30*60*1000, CODE_TTL = 10*60*1000;
 let draftReady = false; // до восстановления не пишем — иначе затрём черновик пустой формой
-let codeSentAt = 0;
 
 function saveDraft(){
   if(!draftReady || !performanceId) return;
@@ -1194,8 +1079,7 @@ function saveDraft(){
       performance: performanceId, ts: Date.now(), step: currentStep,
       quantity: quantity, seats: selectedSeats.map(x => ({row: x.row, seat: x.seat})),
       name: v('f-name'), email: v('f-email'), contact: v('f-contact'), consent: !!(c && c.checked),
-      acctMode: acctMode,
-      code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, regPending: regPending, at: codeSentAt || Date.now()} : null,
+      code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, purpose: codePurpose, at: codeSentAt || Date.now()} : null,
     }));
   }catch(e){}
 }
@@ -1252,19 +1136,14 @@ async function restoreSelection(){
   if(d.step === 2 && canStep2) goStep(2, {silent: true});
   // Код уже отправлен — показываем поле для него, а не просим новый.
   if(d.code && d.code.sentTo && Date.now() - (d.code.at || 0) < CODE_TTL && !accountToken()){
-    if(d.acctMode) acctMode = d.acctMode;
-    applyAcctMode();
     codeSentTo = d.code.sentTo;
     codeSentAt = d.code.at;
-    regPending = d.code.regPending || null;
+    codePurpose = d.code.purpose === 'login' ? 'login' : 'pay';
     showCodeBox(true);
-    document.getElementById('acct-code-hint').textContent = 'Код уже отправлен на ' + codeSentTo + ' (проверьте и «Спам»). Введите 6 цифр из письма — новый присылать не нужно.';
+    document.getElementById('acct-code-hint').textContent = codeHintText(codeSentTo, true) + ' Новый присылать не нужно.';
     if(canStep2) goStep(2, {silent: true});
     const c = document.getElementById('f-code');
     if(c){ c.value = ''; try{ c.focus({preventScroll: false}); }catch(e){ c.focus(); } }
-  } else if(d.acctMode && !accountToken()){
-    acctMode = d.acctMode;
-    applyAcctMode();
   }
 }
 
@@ -1275,13 +1154,14 @@ function showAuthExpired(){
   // pack-v442: раньше показывали блок со ссылкой на /account/. Теперь
   // вход есть прямо в форме — переключаем её на ввод пароля, почта уже
   // стоит в поле. Выбранные места никуда не деваются: страница та же.
+  // pack-v740: пароля в покупке нет — заново подтверждаем почту кодом.
   setToken(null);
-  acctMode = 'login';
+  codePurpose = 'pay';
   showGuest();
-  const msgEl = document.getElementById('msg');
-  if(msgEl) msgEl.innerHTML = 'Сеанс в личном кабинете истёк — введите пароль ещё раз, и продолжим. <a href="#" onclick="sendLoginCode();return false">Войти по коду из письма</a>';
-  const pw = document.getElementById('f-password');
-  if(pw){ pw.scrollIntoView({behavior:'smooth', block:'center'}); pw.focus(); }
+  sendLoginCode().then(ok => {
+    const msgEl = document.getElementById('msg');
+    if(ok && msgEl) msgEl.textContent = 'Сеанс истёк — подтвердите почту ещё раз: код уже в письме. Выбранные места остаются за вами.';
+  });
 }
 
 function showError(text){
@@ -1762,7 +1642,7 @@ async function holdRequest(action, seats){
   const token = accountToken();
   // pack-v441: гость не удерживает места на сервере — hold-seat требует
   // авторизации. Выбор у него живёт только в браузере, и подсказка
-  // #guest-note говорит об этом прямым текстом. Возвращаем ok, иначе
+  // места закрепляются сразу после кода из письма (holdGuestSelection). Возвращаем ok, иначе
   // клик по месту у гостя просто ничего не делал бы.
   if(!token) return {ok:true, guest:true};
   const res = await apiFetch(`${API_BASE}/hold-seat`, {
@@ -2284,7 +2164,6 @@ window.addEventListener('popstate', function(e){
 });
 const SHEETS = {
   phone: ['Зачем телефон', 'Телефон нужен для кассового чека и для связи, если с заказом что-то пойдёт не так: например, изменится время или площадка. Звонить и писать без повода не будем.'],
-  acct: ['Личный кабинет', 'В кабинете хранятся ваши билеты и заказы: их можно открыть в любой момент, прислать ещё раз на почту или вернуть. Для покупки нужен только пароль — имя и почту возьмём из полей выше.'],
   hold: ['Держим места', 'Пока идёт отсчёт, выбранные места закреплены за вами и никто другой их не купит. Если не успеете оплатить, места вернутся в продажу — их можно будет выбрать снова, если они ещё свободны.'],
 };
 let sheetReturnFocus = null;
@@ -2654,7 +2533,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=144"></script>
-<script src="/assets/outage.js?v=144" defer></script>
+<script src="/assets/phone-prefix.js?v=145"></script>
+<script src="/assets/outage.js?v=145" defer></script>
 </body>
 </html>
