@@ -933,20 +933,24 @@
         var res = await fetch(TICKETS_RESEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ order_id: orderId }),
+          // pack-v739: opts.toEmail — копия на другую почту (Tickets/resend-ticket.js)
+          body: JSON.stringify(opts.toEmail ? { order_id: orderId, to_email: opts.toEmail } : { order_id: orderId }),
         });
         var data = await res.json().catch(function () { return null; });
         if (res.ok && data && data.ok) {
-          if (buttonEl) buttonEl.textContent = t.resentOk;
+          if (buttonEl) {
+            if (opts.toEmail) { buttonEl.disabled = false; buttonEl.textContent = original; }
+            else buttonEl.textContent = t.resentOk;
+          }
           if (opts.onSuccess) opts.onSuccess(data);
           return data;
         }
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
-        if (opts.onError) opts.onError(errorMessage(data));
+        if (opts.onError) opts.onError(errorMessage(data), data);
         return null;
       } catch (e) {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
-        if (opts.onError) opts.onError(errorMessage(null));
+        if (opts.onError) opts.onError(errorMessage(null), null);
         return null;
       }
     },

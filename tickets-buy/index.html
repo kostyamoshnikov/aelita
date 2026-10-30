@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=143">
+<link rel="stylesheet" href="/assets/fonts.css?v=144">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -267,8 +267,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=143">
-<script src="/assets/a11y.js?v=143"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=144">
+<script src="/assets/a11y.js?v=144"></script>
 </head>
 <body>
 <div class="wrap">
@@ -291,7 +291,6 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <span class="hold-label">Держим места <button type="button" class="q-btn" onclick="openSheet('hold')" aria-label="Что значит «держим места»">?</button></span>
     <span class="hold-time" id="hold-time">—</span>
   </div>
-  <div id="degraded" style="display:none" class="warn">Идёт дополнительная проверка занятости мест — в редком случае выбранное место может оказаться занято, мы проверим ещё раз и предупредим до оплаты.</div>
 
   <div id="success-block" style="display:none" class="success-box">
     <h2>Спасибо! Оплата прошла</h2>
@@ -381,6 +380,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
     <div class="f-title">Куда и кому отправить билеты</div>
     <label class="f-label" for="f-name">Имя и фамилия *</label>
     <input class="ym-disable-keys" id="f-name" placeholder="Иван Иванов" autocomplete="name" required>
+    <div class="field-hint" id="f-name-hint" hidden>Допишите фамилию — запомним её в личном кабинете</div>
     <label class="f-label" for="f-email">Email *</label>
     <input class="ym-disable-keys" id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="ivan@example.ru" required>
     <div class="field-hint">На него придут билеты</div>
@@ -522,7 +522,7 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один и тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=143"></script>
+<script src="/assets/payments.js?v=144"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -637,7 +637,10 @@ document.addEventListener('click', e => {
 /** fetch с пределом времени и замером. Зависание → ошибка с aelitaTimeout. */
 async function apiFetch(url, opts){
   const step = perfStepOf(url);
-  const limit = REQ_TIMEOUT_MS[step] || REQ_TIMEOUT_DEFAULT_MS;
+  // pack-v739: кабинет (вход по коду, регистрация) — 25 с: после холодного
+  // старта функция отвечала дольше 10 с, страница бросала ожидание, а код
+  // на сервере уже был погашен («код устарел» при повторе).
+  const limit = REQ_TIMEOUT_MS[step] || (/\/account\//.test(String(url)) ? 25000 : REQ_TIMEOUT_DEFAULT_MS);
   const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
   const timer = ctrl ? setTimeout(() => ctrl.abort(), limit) : null;
   const t0 = Date.now();
@@ -782,7 +785,32 @@ function showSignedIn(profile){
   document.getElementById('auth-block').style.display = 'none';
   fillIfEmpty('f-name', profile.name);
   fillIfEmpty('f-email', profile.email);
+  // pack-v739: в кабинете нет фамилии (заведён до того, как её стали
+  // спрашивать) — подсказка под полем; после оплаты фамилия из формы
+  // запишется в профиль (saveNameToProfile).
+  const nh = document.getElementById('f-name-hint');
+  if(nh) nh.hidden = !(profile.email && !AELITA_fullNameOk(profile.name));
   syncBuyButtonLabel();
+}
+
+// pack-v739 (заказчик 30.10): кабинеты без фамилии запоминают её из формы
+// покупки. Только если почта в форме — почта кабинета и первое слово то
+// же, что имя в кабинете (или имени нет): билеты другу не переименуют
+// владельца кабинета.
+function saveNameToProfile(name, email, token){
+  const p = acctProfile;
+  if(!p || !p.email || !token) return;
+  if(String(email).trim().toLowerCase() !== String(p.email).trim().toLowerCase()) return;
+  if(AELITA_fullNameOk(p.name) || !AELITA_fullNameOk(name)) return;
+  const first = String(p.name || '').trim().toLowerCase().split(/\s+/)[0];
+  if(first && String(name).trim().toLowerCase().split(/\s+/)[0] !== first) return;
+  p.name = name;
+  try{ sessionStorage.removeItem('aelita_me_cache'); }catch(e){}
+  try{
+    fetch(`${ACCOUNT_API}/update-profile`, {method:'POST', keepalive:true,
+      headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
+      body: JSON.stringify({name})}).catch(()=>{});
+  }catch(e){}
 }
 
 // Состояние «гость»: подсказка сверху, поле пароля в форме.
@@ -1434,7 +1462,9 @@ async function init(){
 
   goStep(1, {silent:true});
   if(data.seating === 'assigned'){
-    if(data.guestCheckDegraded){ document.getElementById('degraded').style.display='block'; }
+    // pack-v739 (заказчик 30.10): плашку «Идёт дополнительная проверка
+    // занятости мест» не показываем — лишнее покупателю. Проверка мест перед
+    // оплатой (create-order) остаётся; guestCheckDegraded — только в замерах.
     document.getElementById('assigned-block').style.display = 'block';
     renderHall();
     renderZoneLegend();
@@ -2380,7 +2410,7 @@ async function submitOrder(){
     const out = await res.json();
     // pack-v442: телефон запоминаем на этом устройстве — в профиле кабинета
     // его нет, а вводить его заново при каждой покупке незачем.
-    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} if(window.AELITA_savePhone) AELITA_savePhone(contact); }
+    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} if(window.AELITA_savePhone) AELITA_savePhone(contact); saveNameToProfile(name, email, orderToken); }
     if(out.zero_amount){
       // pack-v278: скидка (промокод + подарочная карта) покрыла всю
       // сумму — ЮKassa вообще не вызывалась, create-order.js уже
@@ -2624,7 +2654,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=143"></script>
-<script src="/assets/outage.js?v=143" defer></script>
+<script src="/assets/phone-prefix.js?v=144"></script>
+<script src="/assets/outage.js?v=144" defer></script>
 </body>
 </html>
