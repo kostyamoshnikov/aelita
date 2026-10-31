@@ -864,6 +864,15 @@
     // pack-v371: заказы билетов текущего кабинета. Та же осторожность
     // с null, что у listEventRegistrations: 401 — «уводить на
     // /account», остальное — «остаться на странице с ошибкой».
+    switchTicketOnline: async function (ref) {
+      var token = getToken();
+      if (!token) return { ok: false, error: 'auth_required' };
+      try {
+        var r = await fetch(TICKETS_MY_ORDERS_URL, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'switch_online', ref: ref }), cache: 'no-store' });
+        var d = await r.json(); return { ok: r.ok && d.ok, error: d.error };
+      } catch (_) { return { ok: false, error: 'network' }; }
+    },
+
     listTicketOrders: async function (opts) {
       opts = opts || {};
       var token = getToken();

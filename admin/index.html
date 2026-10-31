@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=145">
+<link rel="stylesheet" href="/assets/fonts.css?v=147">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -949,6 +949,18 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <select id="pa-perf"><option value="">Загружаем…</option></select>
       </div>
       <p class="editor-note" id="pa-preview"></p>
+      <div class="adm-card att-admin" id="matrix-online-admin" hidden>
+        <h3>Онлайн-трансляция «Матрицы»</h3>
+        <p class="lead">Онлайн и офлайн — по 1 000 ₽. Переход в онлайн закрывается за сутки до начала.</p>
+        <div class="field"><label for="online-telemost-url">Ссылка встречи в Яндекс Телемосте</label>
+          <input type="url" id="online-telemost-url" placeholder="https://telemost.yandex.ru/j/…" autocomplete="off" class="ym-disable-keys"></div>
+        <p class="editor-note">Сохраните ссылку до первой рассылки. Зрителям приходят персональные ссылки на закрытую страницу. В публичный образ сайта адрес встречи не входит.</p>
+        <ol id="online-mail-schedule"></ol>
+        <button type="button" class="btn-small" id="online-admin-save" disabled>Сохранить ссылку</button>
+        <button type="button" class="btn-small btn-ghost" id="online-admin-reload">Обновить</button>
+        <p class="editor-result" id="online-admin-msg" role="status" aria-live="polite"></p>
+      </div>
+
 
       <div class="adm-card" id="paLinksCard">
         <h3>Ссылки для анонсов, QR и переходы</h3>
@@ -1031,7 +1043,42 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       </div>
       <p class="editor-result" id="editorResult"></p>
     </div>
-  </div>
+      <p class="sec-title sec-gap">ИИ · Тест</p>
+    <section class="ai-scope" id="ai-admin-root" aria-label="Тестовый ИИ Аэлита Продакшен">
+      <div class="ai-box">
+        <p class="ai-eyebrow">АЭЛИТА ПРОДАКШЕН · GLM PILOT</p>
+        <h2>Настройки закрытого пилота</h2>
+        <p class="ai-note">GLM-4.7-Flash. Ключ ZAI_API_KEY задаётся в окружении aelita-admin-inbox. Здесь ключ не вводится и не показывается. Любой результат — материал для проверки.</p>
+        <p id="ai-admin-status" class="ai-status" role="status" aria-live="polite"></p>
+        <label class="ai-check"><input type="checkbox" id="ai-admin-enabled"> Включить пилот для участников из списков ниже и администраторов</label>
+        <div class="ai-grid">
+          <div><label for="ai-admin-emails">Подтверждённые email аккаунтов · по одному на строке</label><textarea class="ym-disable-keys" id="ai-admin-emails" rows="4" autocomplete="off" spellcheck="false" maxlength="13000"></textarea></div>
+          <div><label for="ai-admin-telegram">Числовые Telegram ID · по одному на строке</label><textarea class="ym-disable-keys" id="ai-admin-telegram" rows="4" autocomplete="off" spellcheck="false" maxlength="1000"></textarea></div>
+          <div><label for="ai-admin-daily">Общий лимит запросов в сутки</label><input class="ym-disable-keys" type="number" id="ai-admin-daily" min="1" max="1000" value="100"></div>
+          <div><label for="ai-admin-user-daily">Лимит одного участника в сутки</label><input class="ym-disable-keys" type="number" id="ai-admin-user-daily" min="1" max="1000" value="20"></div>
+        </div>
+        <div class="ai-actions"><button type="button" id="ai-admin-save">Сохранить настройки</button><button type="button" class="ai-secondary" id="ai-admin-refresh">Обновить раздел</button></div>
+        <p class="ai-note">Сутки считаются по Москве. Лимиты — защита пилота, а не квота Z.ai. Telegram дополнительно требует AI_PILOT_ENABLED=1 и WEBHOOK_SECRET в Worker. Выключение пилота блокирует новые запросы и выдачу ответов; уже начатая генерация может завершиться.</p>
+        <p><a href="/ai-test/" target="_blank" rel="noopener">Тестовая страница сайта</a> · <a href="/en/ai-test/" target="_blank" rel="noopener">English test page</a></p>
+      </div>
+      <div class="ai-box">
+        <h2>Помощник редактора</h2>
+        <p class="ai-note">Текст не отправляется подписчикам и не публикуется. В модель передаются введённый текст и общедоступные сведения о выбранном событии. Для сводки — только числа просмотров за 7 дней. Не вставляйте персональные данные, номера заказов и закрытые ссылки.</p>
+        <form id="ai-draft-form">
+          <div class="ai-grid"><div><label for="ai-draft-kind">Задача</label><select id="ai-draft-kind"><option value="newsletter">Черновик письма</option><option value="telegram">Анонс для Telegram</option><option value="shorten">Сократить текст</option><option value="translate">Перевести текст</option><option value="stats">Объяснить посещаемость за 7 дней</option><option value="ask">Проверить помощника по афише</option></select></div><div><label for="ai-draft-lang">Язык результата</label><select id="ai-draft-lang"><option value="ru">Русский</option><option value="en">English</option></select></div></div>
+          <label for="ai-draft-event">Событие из текущего каталога</label><select id="ai-draft-event"><option value="">Без привязки к событию</option></select>
+          <label for="ai-draft-input">Задание или исходный текст · до 1200 знаков</label><textarea class="ym-disable-keys" id="ai-draft-input" required minlength="2" maxlength="1200" rows="5" placeholder="Напиши короткое приглашение на выбранное событие. Спокойный тон, без лишних обещаний."></textarea>
+          <div class="ai-actions"><button id="ai-draft-submit" type="submit" disabled>Подготовить</button><button id="ai-draft-cancel" type="button" class="ai-secondary" hidden>Убрать из очереди</button></div>
+        </form>
+        <p id="ai-draft-status" class="ai-status" role="status" aria-live="polite"></p>
+        <label for="ai-draft-output">Результат для проверки</label><textarea class="ym-disable-keys" id="ai-draft-output" readonly rows="8"></textarea>
+        <div class="ai-actions"><button id="ai-draft-copy" type="button" class="ai-secondary" disabled>Скопировать текст</button></div>
+        <div id="ai-draft-sources" aria-live="polite"></div>
+      </div>
+      <div class="ai-box"><h2>Состояние очереди</h2><p class="ai-note">Последние 10 запросов без текста вопросов и данных участников. Для обновления используйте кнопку «Обновить раздел».</p><div id="ai-admin-diag" class="ai-diagnostics"></div></div>
+    </section>
+</div>
+
 </div>
 
 </div>
@@ -2984,7 +3031,13 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
       });
       if (r.status === 401) { if (win) win.close(); clearToken(); showGate(); return; }
       var d = await r.json().catch(function () { return null; });
-      if (r.ok && d && d.pdf) {
+      if (r.ok && d && d.attendanceMode === 'online') {
+        if (d.accessUrl && /^https:\/\/aelita-production\.ru\/(en\/)?matrix-online\/#access=/.test(d.accessUrl)) {
+          if (win) { win.opener = null; win.location.href = d.accessUrl; }
+          else alert('Разрешите открытие новой вкладки, чтобы посмотреть онлайн-билет.');
+          go.textContent = 'Онлайн-билет';
+        } else { if (win) win.close(); go.textContent = 'Онлайн-билет — доступ не действует'; }
+      } else if (r.ok && d && d.pdf) {
         var bin = atob(d.pdf); var bytes = new Uint8Array(bin.length);
         for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
         var url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
@@ -6199,6 +6252,7 @@ var ADM_TAB_LOADERS = {
   staff: [function () { loadStaffShows(); }], // pack-v621
   events: [function () { loadEvents(); }],
   money: [function () { loadGiftCards(); }, function () { loadSubscriptions(); }],
+  ai: [function () { if (window.AelitaAiPilotAdmin) window.AelitaAiPilotAdmin.load(); }],
   news: [function () { loadNewsletter(); }], // pack-v726
 };
 var ADM_LOADED = {};
@@ -6449,6 +6503,7 @@ if (getToken()) { showData(); } else { showGate(); }
     ['invites', 'Пригласительные', ['Пригласительные']],
     ['staff', 'Контролёры', ['Контролёры на входе']],
     ['inbox', 'Входящие', ['Отзывы', 'Заявки с сайта', 'Заявки из бота']],
+    ['ai', 'ИИ · Тест', ['ИИ · Тест']],
     ['news', 'Рассылка', ['Рассылка новостей']], // pack-v726
     ['events', 'Регистрации', ['Регистрации на встречи']],
     ['clients', 'Клиенты', ['Клиенты']],
@@ -6662,6 +6717,11 @@ if (getToken()) { showData(); } else { showGate(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
-<script src="/assets/admin-snapshot.js?v=145"></script>
+<link rel="stylesheet" href="/assets/attendance-v740.css">
+<script src="/assets/matrix-online-admin.js"></script>
+<script src="/assets/admin-snapshot.js?v=147"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css">
+<script src="/assets/ai-pilot-v741.js"></script>
+<script src="/assets/ai-pilot-admin-v741.js"></script>
 </body>
 </html>

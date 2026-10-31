@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=145">
+<link rel="stylesheet" href="/assets/fonts.css?v=147">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -277,8 +277,8 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js and style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=145">
-<script src="/assets/a11y.js?v=145"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=147">
+<script src="/assets/a11y.js?v=147"></script>
 </head>
 <body>
 <div class="wrap">
@@ -522,7 +522,9 @@ initMetrika();
      AELITA_clearFieldError/AELITA_wireContactValidation. Один and тот же
      код проверки email/телефона на всех страницах с оплатой, не
      дублировать регулярки по каждому файлу отдельно. -->
-<script src="/assets/payments.js?v=145"></script>
+<link rel="stylesheet" href="/assets/attendance-v740.css">
+<script src="/assets/attendance-v740.js"></script>
+<script src="/assets/payments.js?v=147"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1084,6 +1086,7 @@ function saveDraft(){
     const c = document.getElementById('pdConsent');
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       performance: performanceId, ts: Date.now(), step: currentStep,
+      attendanceMode: window.AelitaAttendance.mode(),
       quantity: quantity, seats: selectedSeats.map(x => ({row: x.row, seat: x.seat})),
       name: v('f-name'), email: v('f-email'), contact: v('f-contact'), consent: !!(c && c.checked),
       code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, purpose: codePurpose, at: codeSentAt || Date.now()} : null,
@@ -1329,6 +1332,11 @@ async function init(){
   if(data.error){ showError('Performance not found — sales may not be open yet, or the link is out of date.'); return; }
 
   // pack-v592 (ревью 07.10 Б1): вместимость свободной рассадки исчерпана.
+  window.AelitaAttendance.mount(data, (readDraft() || {}).attendanceMode || params.get('attendance'), () => {
+    if(typeof data.left === 'number' && quantity > data.left) quantity = Math.max(1, data.left);
+    document.getElementById('qty-val').textContent = quantity;
+    updateTotal(); saveDraft();
+  });
   if(data.seating === 'general' && data.left === 0){ showError('Tickets for this performance are sold out.'); return; }
   if(data.seating === 'general' && typeof data.left === 'number' && quantity > data.left){ quantity = Math.max(1, data.left); }
 
@@ -1347,6 +1355,7 @@ async function init(){
   const vn = pickVenue(data);
   document.getElementById('meta').textContent = [dt, [vn.name, vn.address].filter(Boolean).join(', '), data.ageRating].filter(Boolean).join(' · ');
 
+  window.AelitaAttendance.meta(data);
   goStep(1, {silent:true});
   if(data.seating === 'assigned'){
     // pack-v739 (заказчик 30.10): плашку «Идёт дополнительная проверка
@@ -2054,6 +2063,7 @@ async function applyGift(){
 }
 
 function updateTotal(){
+  window.AelitaAttendance.note(data);
   let total = 0;
   if(data.seating === 'assigned'){
     total = selectedSeats.reduce((sum,s)=>sum+s.price,0);
@@ -2078,6 +2088,7 @@ function updateTotal(){
   document.getElementById('next-btn').disabled = (data.seating==='assigned' && selectedSeats.length===0) || (data.seating!=='assigned' && quantity<1);
   if(currentStep === 2){ if(data.seating === 'assigned' && selectedSeats.length === 0) goStep(1); else fillStep2Summary(); }
   renderPicked();
+  window.AelitaAttendance.note(data);
 }
 
 // Сброс применённых кодов при смене выбора мест/количества — вызывается
@@ -2117,6 +2128,7 @@ function fillStep2Summary(){
   } else {
     el.textContent = quantity + ' ' + ticketWord(quantity) + ' · ' + ((data.price || 0) * quantity) + ' ₽';
   }
+  window.AelitaAttendance.note(data);
 }
 // pack-v540: электронная торговля Метрики (см. AELITA_ecomPurchase в
 // assets/analytics-events.js). Сумма — уплаченная (со скидкой), цена
@@ -2248,7 +2260,7 @@ async function submitOrder(){
     hold_id: holdId,
   };
   if(data.seating === 'assigned') payload.seats = selectedSeats.map(s=>({row:s.row, seat:s.seat}));
-  else payload.quantity = quantity;
+  else { payload.quantity = quantity; payload.attendance_mode = window.AelitaAttendance.mode(); }
   // Promo code/карту отправляем ТОЛЬКО если сервер их уже подтвердил при
   // проверке — сумму всё равно пересчитает create-order.js сам.
   if(appliedPromo) payload.promo_code = appliedPromo;
@@ -2540,7 +2552,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=145"></script>
-<script src="/assets/outage.js?v=145" defer></script>
+<script src="/assets/phone-prefix.js?v=147"></script>
+<script src="/assets/outage.js?v=147" defer></script>
 </body>
 </html>

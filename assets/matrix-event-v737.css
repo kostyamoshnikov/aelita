@@ -115,3 +115,9 @@ body.mx-page #main .fest-hero-review{display:flex;align-items:center;justify-con
   .mx-event-card{padding:22px}
 }
 @media(prefers-reduced-motion:reduce){.mx-page *{scroll-behavior:auto;transition:none}}
+
+/* Online format: keep the hero short; instructions below it. */
+.mx-place .mx-online-note{font-size:.8125rem;line-height:1.7;margin-top:10px;color:var(--sand)}
+.mx-online-details{padding:40px 0;border-top:1px solid rgba(214,181,122,.14)}
+.mx-online-details h2{font-size:clamp(20px,3vw,28px);margin:0 0 20px;letter-spacing:.03em}
+.mx-online-details p{max-width:66ch;font-size:.9375rem;line-height:1.8;color:var(--sand);margin:0 0 14px}

@@ -896,6 +896,7 @@ const CHECK_FAIL_MESSAGES = {
   bad_signature: 'Подпись QR не сходится — билет поддельный или испорчен. Не пропускать, позовите администратора.',
   ticket_not_found: 'Такого места нет в заказе — возможно, билет от другого заказа. Не пропускать, позовите администратора.',
   order_not_found: 'Заказ не найден — билет недействителен. Не пропускать.',
+  online_ticket: 'Это билет на онлайн-трансляцию. Вход в зал по нему не предусмотрен.',
   ticket_refunded: 'За этот билет оформлен возврат — не пропускать. Если человек уверен, что не возвращал билет, позовите администратора.',
   // ТЗ С2: билет передан другому человеку — у этого QR старая версия.
   ticket_transferred: 'Этот билет передан другому человеку, QR устарел — не пропускать. Новый QR — у получателя (письмо или страница билета). Если спорно — к администратору.',
@@ -1330,6 +1331,10 @@ async function doorMark(token, unmark, data){
 // → true, если карточка показана (иначе — обычная инструкция «нет связи»).
 async function offlineCheck(token, seq){
   if(!door || door.performanceId !== expectedPerformanceId || !(window.crypto && crypto.subtle)) return false;
+  if(expectedPerformanceId === 'matritsa-2026-11-14' && (!door.formatLockedAt || Date.now() < Date.parse(door.formatLockedAt) || Date.parse(door.at) < Date.parse(door.formatLockedAt))){
+    show('<div class="card warn"><div class="status warn">Обновите базу после закрытия перехода в онлайн — 13 ноября, 17:00 МСК. До обновления проверяйте билеты с интернетом.</div></div>');
+    return true;
+  }
   token = String(token).trim();
   let h, hit;
   try{

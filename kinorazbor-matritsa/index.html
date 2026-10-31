@@ -30,9 +30,9 @@
 <meta name="twitter:title" content="«Матрица» — киноразбор 14 ноября 2026, Калуга — AELITA PRODUCTION">
 <meta name="twitter:description" content="Киноразбор всех четырёх фильмов «Матрицы» с Катей Абдуловой. 14 ноября 2026, 17:00. Творческое пространство «Креативное бюро», Калуга, ул. Билибина, 33. 18+.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/kinorazbor-matritsa-og.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=145">
-<link rel="stylesheet" href="/assets/style.css?v=145">
-<link rel="stylesheet" href="/assets/matrix-event-v737.css?v=145">
+<link rel="stylesheet" href="/assets/fonts.css?v=147">
+<link rel="stylesheet" href="/assets/style.css?v=147">
+<link rel="stylesheet" href="/assets/matrix-event-v737.css?v=147-matrix-online1">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -42,22 +42,29 @@
   "description": "Киноразбор всех четырёх фильмов «Матрицы» с Катей Абдуловой.",
   "startDate": "2026-11-14T17:00:00+03:00",
   "eventStatus": "https://schema.org/EventScheduled",
-  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
   "url": "https://aelita-production.ru/kinorazbor-matritsa/",
   "image": [
     "https://aelita-production.ru/images/kinorazbor-matritsa-og.jpg"
   ],
-  "location": {
-    "@type": "Place",
-    "name": "Творческое пространство «Креативное бюро»",
-    "url": "https://aelita-production.ru/kreativnoe-byuro/",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "ул. Билибина, 33",
-      "addressLocality": "Калуга",
-      "addressCountry": "RU"
+  "location": [
+    {
+      "@type": "Place",
+      "name": "Творческое пространство «Креативное бюро»",
+      "url": "https://aelita-production.ru/kreativnoe-byuro/",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ул. Билибина, 33",
+        "addressLocality": "Калуга",
+        "addressCountry": "RU"
+      }
+    },
+    {
+      "@type": "VirtualLocation",
+      "name": "Яндекс Телемост",
+      "url": "https://aelita-production.ru/kinorazbor-matritsa/#online-format"
     }
-  },
+  ],
   "organizer": {
     "@type": "Organization",
     "name": "АЭЛИТА ПРОДАКШЕН",
@@ -70,7 +77,7 @@
   },
   "isAccessibleForFree": false,
   "typicalAgeRange": "18+",
-  "maximumAttendeeCapacity": 50,
+  "maximumPhysicalAttendeeCapacity": 50,
   "offers": {
     "@type": "Offer",
     "url": "https://aelita-production.ru/tickets-buy/?performance=matritsa-2026-11-14",
@@ -125,12 +132,22 @@
         <a class="mx-more" href="#about">О киноразборе <span aria-hidden="true">↓</span></a>
       </div>
       <div class="mx-place" id="afisha">
-        <p><a href="/kreativnoe-byuro/">«Креативное бюро»</a></p>
+        <p>Офлайн · <a href="/kreativnoe-byuro/">«Креативное бюро»</a></p>
         <p>Калуга, Билибина, 33</p>
+        <p>Онлайн · Яндекс Телемост</p>
+        <p class="mx-online-note">Формат участия — при покупке билета.</p>
       </div>
     </div>
   </div>
 </header>
+<section class="mx-online-details" id="online-format">
+  <div class="wrap">
+    <h2>Как участвовать онлайн</h2>
+    <p>Выберите «Онлайн» при покупке билета. Киноразбор пройдёт в Яндекс Телемосте 14 ноября в 17:00 МСК.</p>
+    <p>Персональная страница трансляции появится в кабинете после оплаты. Ссылку пришлём за сутки, за час и в момент начала.</p>
+    <p>Если планы изменились, переведите офлайн-билет в онлайн в кабинете до 13 ноября, 17:00 МСК. Доплачивать не нужно. Обратного переключения нет.</p>
+  </div>
+</section>
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal"><h2>О киноразборе</h2></div>
@@ -298,7 +315,7 @@
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 <script src="/assets/analytics-events.js"></script>
 <script src="/assets/afisha-links.js"></script>
-<script src="/assets/main.js?v=145"></script>
+<script src="/assets/main.js?v=147"></script>
 
 <script src="/assets/reviews.js"></script>
 <script>AelitaReviews.init('kinorazbor-matritsa');</script>
@@ -313,6 +330,6 @@
     });
   }
 </script>
-<script src="/assets/festival.js?v=145" defer></script>
+<script src="/assets/festival.js?v=147" defer></script>
 </body>
 </html>
