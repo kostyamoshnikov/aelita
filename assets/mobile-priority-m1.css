@@ -7,6 +7,9 @@
  input[type=checkbox],input[type=radio]{flex-shrink:0}
  summary{min-height:44px;padding-top:10px;padding-bottom:10px;touch-action:manipulation}
  nav a:not(.logo),nav a.logo{min-height:44px}
+ /* pack-v744: EN/RU в шапке — по центру своих 44px, вровень со значками (было выше на ~12px).
+    Флексом, не line-height: версия для слабовидящих задаёт всем line-height:1.5 правилом с id. */
+ .nav-in>.lang-switch{display:inline-flex;align-items:center}
  .acc-nav a{display:inline-flex;align-items:center;min-height:44px;padding-top:10px;padding-bottom:10px}
  .acc-nav a[hidden]{display:none!important}
  h1,h2,h3,.sec-title{min-width:0;max-width:100%;overflow-wrap:anywhere}
@@ -34,3 +37,5 @@
 
 /* Editorial visibility is shared by phone and desktop. */
 [data-editor-hidden="true"]{display:none!important}
+/* pack-v744: «Кабинет» виден в шапке шире 760px (на телефоне он скрыт — style.css) */
+@media (min-width:761px) and (max-width:767px),(min-width:761px) and (pointer:coarse){.nav-in>.nav-account{display:inline-flex;align-items:center}}
