@@ -321,6 +321,35 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   
   
   
+
+  /* pack-v750: цифры, главы, линия времени, афиши разговоров */
+  .ka-facts{padding:0;border-top:1px solid rgba(201,184,163,.12);border-bottom:1px solid rgba(201,184,163,.12)}
+  .ka-facts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .ka-fact{padding:44px 28px;text-align:center}
+  .ka-fact+.ka-fact{border-left:1px solid rgba(201,184,163,.12)}
+  .ka-num{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(40px,5.5vw,64px);color:var(--gold);line-height:1;margin:0 0 12px;white-space:nowrap}
+  .ka-label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);line-height:1.7;margin:0}
+  @media(max-width:760px){.ka-facts-grid{grid-template-columns:1fr}.ka-fact{padding:26px 4px;text-align:left}.ka-fact+.ka-fact{border-left:0;border-top:1px solid rgba(201,184,163,.12)}.ka-num{margin:0 0 8px;font-size:clamp(36px,11vw,48px)}.ka-label{letter-spacing:.18em}}
+  .ka-chapters{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  .ka-ch{background:var(--coal);padding:32px 28px;border-top:2px solid var(--gold)}
+  .ka-ch-k{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+  .ka-ch p:not(.ka-ch-k){color:var(--sand);font-size:0.9375rem;line-height:1.8;margin:0}
+  .ka-ch p strong{color:var(--bone);font-weight:400}
+  .ka-ch a:not(.btn-gold):not(.btn-outline){color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px}
+  @media(max-width:900px){.ka-chapters{grid-template-columns:1fr}}
+  .ka-tl{display:block;position:relative;padding-left:28px;max-width:760px}
+  .ka-tl::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:rgba(214,181,122,.3)}
+  .ka-tl .career-item{position:relative;background:none!important;padding:0 0 30px!important;border:0!important;box-shadow:none!important}
+  .ka-tl .career-item::before{content:'';position:absolute;left:-28px;top:4px;width:11px;height:11px;border-radius:50%;border:1px solid var(--gold);background:var(--ink)}
+  .ka-tl .career-item.hl::before{background:var(--gold)}
+  .ka-tl .career-item:last-child{padding-bottom:0}
+  .ka-tl .career-item.hl h3{color:var(--gold)}
+  .ka-poster{padding:0!important;overflow:hidden}
+  .ka-poster img{display:block;width:100%;height:auto;aspect-ratio:1200/630;object-fit:contain;background:var(--ink);filter:brightness(.88);transition:filter .35s} /* афиши 1200×630 — целиком, без обрезки надписей */
+  @media(hover:hover){.ka-poster:hover img{filter:brightness(1)}}
+  .ka-poster .tag,.ka-poster h3,.ka-poster p{margin-left:24px;margin-right:24px}
+  .ka-poster .tag{display:block;margin-top:24px}
+  .ka-poster p{margin-bottom:28px}
 </style>
 <script type="application/ld+json">
 {
@@ -380,10 +409,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 <!-- pack-v510: кнопка действия на первом экране -->
 <div class="hero-cta"><a class="btn-gold" href="#talks">Ближайшие разговоры</a></div>
         <p class="bio-study">Сейчас учится в Петербургской школе нового кино на курсе мастера <strong>Юрия Муравицкого</strong>. Единственная из 800 претендентов получила грант на обучение — поступила в 2026/27 учебном году.</p>
-        <p>Десять успешно реализованных проектов за историю существования компании, более 5 фестивалей современного искусства.</p>
-        <p>Помимо продюсирования снимала как режиссёр тизеры для спектаклей <strong><a href="/stories">«Сюжеты. О земном и небесном»</a></strong>, <strong><a href="/gogol">«Гоголь.Сюита»</a></strong>, <strong><a href="/iov">«ИОВ:материал»</a></strong>. В феврале 2026 стала куратором выставки <a href="/human">«Археология человеческого»</a>.</p>
-        <p>Дебютная режиссёрская работа <strong><a href="/iov">«ИОВ:материал»</a></strong> сыграна на сцене Инновационного Культурного центра в Калуге, а также на гастролях в Санкт-Петербурге.</p>
-        <p>Куратор и продюсер фестиваля современного искусства <strong><a href="/tochkacuire">«Точка Кюри»</a></strong> — на его деловой программе выступила с лекцией «Ландшафты реальности». В Калуге этот разговор пройдёт в формате <a href="/landshafty-realnosti">киноразбора фильма «Люси»</a> — новую дату объявим.</p>
         <div class="bio-tags">
           <span class="bio-tag">Продюсирование</span>
           <span class="bio-tag">Режиссура</span>
@@ -399,17 +424,38 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   </div>
 </div>
 
+<!-- pack-v750 (заказчик 04.11: «придумай, как разнообразить страницу»): цифры из биографии —
+     отдельной полосой, длинные абзацы — из первого экрана в главы. Текст прежний. -->
+<section class="ka-facts" aria-label="Коротко в цифрах">
+  <div class="wrap ka-facts-grid reveal">
+    <div class="ka-fact"><p class="ka-num">10</p><p class="ka-label">проектов за историю компании</p></div>
+    <div class="ka-fact"><p class="ka-num">5+</p><p class="ka-label">фестивалей современного искусства</p></div>
+    <div class="ka-fact"><p class="ka-num">1 из 800</p><p class="ka-label">единственная из 800 претендентов получила грант на обучение</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Режиссура и кураторство</h2></div>
+    <div class="ka-chapters reveal">
+      <article class="ka-ch"><p class="ka-ch-k">Тизеры</p><p>Помимо продюсирования снимала как режиссёр тизеры для спектаклей <strong><a href="/stories">«Сюжеты. О земном и небесном»</a></strong>, <strong><a href="/gogol">«Гоголь.Сюита»</a></strong>, <strong><a href="/iov">«ИОВ:материал»</a></strong>. В феврале 2026 стала куратором выставки <a href="/human">«Археология человеческого»</a>.</p></article>
+      <article class="ka-ch"><p class="ka-ch-k">Дебют</p><p>Дебютная режиссёрская работа <strong><a href="/iov">«ИОВ:материал»</a></strong> сыграна на сцене Инновационного Культурного центра в Калуге, а также на гастролях в Санкт-Петербурге.</p></article>
+      <article class="ka-ch"><p class="ka-ch-k">«Точка Кюри»</p><p>Куратор и продюсер фестиваля современного искусства <strong><a href="/tochkacuire">«Точка Кюри»</a></strong> — на его деловой программе выступила с лекцией «Ландшафты реальности». В Калуге этот разговор пройдёт в формате <a href="/landshafty-realnosti">киноразбора фильма «Люси»</a> — новую дату объявим.</p></article>
+    </div>
+  </div>
+</section>
+
 <section class="bg-coal">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Образование и карьера</h2></div>
-    <div class="career-grid reveal">
+    <div class="career-grid ka-tl reveal">
       <div class="career-item hl"><p class="period">С 2026</p><h3>Петербургская школа нового кино</h3><p>Курс мастера Юрия Муравицкого. Грант на обучение — единственная из 800 претендентов</p></div>
-      <div class="career-item"><p class="period">2010 — 2015</p><h3>Высшая школа психологии</h3><p>Специальность — Психолог</p></div>
+      <div class="career-item"><p class="period">Февраль 2026</p><h3>Куратор выставки</h3><p><a href="/human">«Археология человеческого»</a></p></div>
       <div class="career-item hl"><p class="period">С 2025</p><h3>AELITA PRODUCTION</h3><p>Сооснователь и продюсер</p></div>
       <div class="career-item"><p class="period">Повышение квалификации · 2025</p><h3>РГИСИ</h3><p>Специальность — Режиссёр</p></div>
-      <div class="career-item"><p class="period">С 2023</p><h3>Танцевальная <a href="/koroche">компания «Короче»</a></h3><p>Продюсирование спектаклей</p></div>
       <div class="career-item"><p class="period">До 2025</p><h3>Инновационный Культурный Центр</h3><p>Продюсер фестивалей современного искусства</p></div>
-      <div class="career-item"><p class="period">Февраль 2026</p><h3>Куратор выставки</h3><p><a href="/human">«Археология человеческого»</a></p></div>
+      <div class="career-item"><p class="period">С 2023</p><h3>Танцевальная <a href="/koroche">компания «Короче»</a></h3><p>Продюсирование спектаклей</p></div>
+      <div class="career-item"><p class="period">2010 — 2015</p><h3>Высшая школа психологии</h3><p>Специальность — Психолог</p></div>
     </div>
   </div>
 </section>
@@ -431,8 +477,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие разговоры</h2></div>
     <div class="works-grid reveal">
-      <a class="work-card link-plain" href="/kinorazbor-matritsa"><span class="tag">14 ноября · 17:00 · Калуга</span><h3>Матрица</h3><p>Киноразбор всех четырёх фильмов с Катей Абдуловой. 14 ноября 2026, 17:00. «Креативное бюро», Калуга, ул. Билибина, 33.</p></a>
-      <a class="work-card link-plain" href="/landshafty-realnosti"><span class="tag">Калуга · открытый разговор</span><h3>Ландшафты реальности</h3><p>Киноразбор фильма Люка Бессона «Люси». Новая дата будет объявлена.</p></a>
+      <a class="work-card link-plain ka-poster" href="/kinorazbor-matritsa"><img src="/images/kinorazbor-matritsa-og.jpg" alt="" loading="lazy" decoding="async"><span class="tag">14 ноября · 17:00 · Калуга</span><h3>Матрица</h3><p>Киноразбор всех четырёх фильмов с Катей Абдуловой. 14 ноября 2026, 17:00. «Креативное бюро», Калуга, ул. Билибина, 33.</p></a>
+      <a class="work-card link-plain ka-poster" href="/landshafty-realnosti"><img src="/images/landshafty-realnosti-og.jpg" alt="" loading="lazy" decoding="async"><span class="tag">Калуга · открытый разговор</span><h3>Ландшафты реальности</h3><p>Киноразбор фильма Люка Бессона «Люси». Новая дата будет объявлена.</p></a>
     </div>
   </div>
 </section>

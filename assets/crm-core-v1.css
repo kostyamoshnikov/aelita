@@ -240,3 +240,6 @@ dialog h2{font-size:22px}
 /* pack-v749: удаление персональных данных контакта — отдельный, заметный цвет */
 .actions button.danger{border-color:rgba(242,179,167,.45);color:#f2b3a7}
 .actions button.danger:hover,.actions button.danger:focus-visible{border-color:#f2b3a7}
+/* pack-v750: результаты поиска по почте из заказа */
+.find-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.find-list button{width:100%;text-align:left;min-height:44px}

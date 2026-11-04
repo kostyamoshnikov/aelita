@@ -35,7 +35,7 @@
   function mount(d, desired, changed) {
     if (!supported(d)) return;
     active = d; d._offlineLeft = d.left;
-    var brand = document.createElement('p'); brand.className = 'att-checkout-brand'; brand.textContent = en ? 'AELITA PRODUCTION' : 'АЭЛИТА ПРОДАКШЕН'; document.getElementById('title').before(brand);
+    // pack-v750: строка бренда над названием убрана — на странице покупки теперь шапка сайта.
     var host = document.getElementById('general-block'), fs = document.createElement('fieldset');
     fs.className = 'att-choice'; fs.id = 'attendance-choice';
     var legend = document.createElement('legend'); legend.textContent = text.legend; fs.appendChild(legend);

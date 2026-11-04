@@ -321,6 +321,35 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   
   
   
+
+  /* pack-v750: цифры, главы, линия времени, афиши разговоров */
+  .ka-facts{padding:0;border-top:1px solid rgba(201,184,163,.12);border-bottom:1px solid rgba(201,184,163,.12)}
+  .ka-facts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .ka-fact{padding:44px 28px;text-align:center}
+  .ka-fact+.ka-fact{border-left:1px solid rgba(201,184,163,.12)}
+  .ka-num{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(40px,5.5vw,64px);color:var(--gold);line-height:1;margin:0 0 12px;white-space:nowrap}
+  .ka-label{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sand);line-height:1.7;margin:0}
+  @media(max-width:760px){.ka-facts-grid{grid-template-columns:1fr}.ka-fact{padding:26px 4px;text-align:left}.ka-fact+.ka-fact{border-left:0;border-top:1px solid rgba(201,184,163,.12)}.ka-num{margin:0 0 8px;font-size:clamp(36px,11vw,48px)}.ka-label{letter-spacing:.18em}}
+  .ka-chapters{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  .ka-ch{background:var(--coal);padding:32px 28px;border-top:2px solid var(--gold)}
+  .ka-ch-k{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+  .ka-ch p:not(.ka-ch-k){color:var(--sand);font-size:0.9375rem;line-height:1.8;margin:0}
+  .ka-ch p strong{color:var(--bone);font-weight:400}
+  .ka-ch a:not(.btn-gold):not(.btn-outline){color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px}
+  @media(max-width:900px){.ka-chapters{grid-template-columns:1fr}}
+  .ka-tl{display:block;position:relative;padding-left:28px;max-width:760px}
+  .ka-tl::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:rgba(214,181,122,.3)}
+  .ka-tl .career-item{position:relative;background:none!important;padding:0 0 30px!important;border:0!important;box-shadow:none!important}
+  .ka-tl .career-item::before{content:'';position:absolute;left:-28px;top:4px;width:11px;height:11px;border-radius:50%;border:1px solid var(--gold);background:var(--ink)}
+  .ka-tl .career-item.hl::before{background:var(--gold)}
+  .ka-tl .career-item:last-child{padding-bottom:0}
+  .ka-tl .career-item.hl h3{color:var(--gold)}
+  .ka-poster{padding:0!important;overflow:hidden}
+  .ka-poster img{display:block;width:100%;height:auto;aspect-ratio:1200/630;object-fit:contain;background:var(--ink);filter:brightness(.88);transition:filter .35s} /* афиши 1200×630 — целиком, без обрезки надписей */
+  @media(hover:hover){.ka-poster:hover img{filter:brightness(1)}}
+  .ka-poster .tag,.ka-poster h3,.ka-poster p{margin-left:24px;margin-right:24px}
+  .ka-poster .tag{display:block;margin-top:24px}
+  .ka-poster p{margin-bottom:28px}
 </style>
 <script type="application/ld+json">
 {
@@ -380,10 +409,6 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 <!-- pack-v510: кнопка действия на первом экране -->
 <div class="hero-cta"><a class="btn-gold" href="#talks">Upcoming talks</a></div>
         <p class="bio-study">She is currently studying at the St. Petersburg School of New Cinema in the course of master <strong>Yuri Muravitsky</strong>. The only one of 800 applicants to be awarded a tuition grant — enrolled in the 2026/27 academic year.</p>
-        <p>Ten successfully completed projects since the company's founding, more than 5 festival programmes.</p>
-        <p>In addition to producing, she has directed teasers for productions <strong><a href="/en/stories">“Stories. Of the Earthly and the Heavenly”</a></strong>, <strong><a href="/en/gogol">“Gogol Suite”</a></strong>, <strong><a href="/en/iov">“IOV: Material”</a></strong>. In February 2026 she became curator of an exhibition <a href="/en/human">“Archaeology of the Human”</a>.</p>
-        <p>Directorial debut <strong><a href="/en/iov">“IOV: Material”</a></strong> performed at the Innovative Cultural Centre in Kaluga, and on tour in Saint Petersburg.</p>
-        <p>Curator and producer of the contemporary art festival <strong><a href="/en/tochkacuire">“Tochka Cuire”</a></strong> — she gave a talk at its business programme, “Landscapes of Reality.” In Kaluga the same conversation will take the form of <a href="/en/landshafty-realnosti">a film talk on “Lucy”</a> — the new date will be announced.</p>
         <div class="bio-tags">
           <span class="bio-tag">Production</span>
           <span class="bio-tag">Direction</span>
@@ -399,17 +424,38 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   </div>
 </div>
 
+<!-- pack-v750 (заказчик 04.11: «придумай, как разнообразить страницу»): цифры из биографии —
+     отдельной полосой, длинные абзацы — из первого экрана в главы. Текст прежний. -->
+<section class="ka-facts" aria-label="At a glance">
+  <div class="wrap ka-facts-grid reveal">
+    <div class="ka-fact"><p class="ka-num">10</p><p class="ka-label">projects in the company’s history</p></div>
+    <div class="ka-fact"><p class="ka-num">5+</p><p class="ka-label">contemporary art festivals</p></div>
+    <div class="ka-fact"><p class="ka-num">1 of 800</p><p class="ka-label">the only one of 800 applicants to win a tuition grant</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Directing and curating</h2></div>
+    <div class="ka-chapters reveal">
+      <article class="ka-ch"><p class="ka-ch-k">Teasers</p><p>In addition to producing, she has directed teasers for productions <strong><a href="/en/stories">“Stories. Of the Earthly and the Heavenly”</a></strong>, <strong><a href="/en/gogol">“Gogol Suite”</a></strong>, <strong><a href="/en/iov">“IOV: Material”</a></strong>. In February 2026 she became curator of an exhibition <a href="/en/human">“Archaeology of the Human”</a>.</p></article>
+      <article class="ka-ch"><p class="ka-ch-k">Debut</p><p>Directorial debut <strong><a href="/en/iov">“IOV: Material”</a></strong> performed at the Innovative Cultural Centre in Kaluga, and on tour in Saint Petersburg.</p></article>
+      <article class="ka-ch"><p class="ka-ch-k">“Tochka Cuire”</p><p>Curator and producer of the contemporary art festival <strong><a href="/en/tochkacuire">“Tochka Cuire”</a></strong> — she gave a talk at its business programme, “Landscapes of Reality.” In Kaluga the same conversation will take the form of <a href="/en/landshafty-realnosti">a film talk on “Lucy”</a> — the new date will be announced.</p></article>
+    </div>
+  </div>
+</section>
+
 <section class="bg-coal">
   <div class="wrap">
     <div class="sec-head reveal"><h2>Education &amp; Career</h2></div>
-    <div class="career-grid reveal">
+    <div class="career-grid ka-tl reveal">
       <div class="career-item hl"><p class="period">С 2026</p><h3>St. Petersburg School of New Cinema</h3><p>Course of master Yuri Muravitsky. Tuition grant — the only one of 800 applicants</p></div>
-      <div class="career-item"><p class="period">2010 — 2015</p><h3>Higher School of Psychology</h3><p>Specialisation — Psychologist</p></div>
+      <div class="career-item"><p class="period">February 2026</p><h3>Exhibition curator</h3><p><a href="/en/human">“Archaeology of the Human”</a></p></div>
       <div class="career-item hl"><p class="period">Since 2025</p><h3>AELITA PRODUCTION</h3><p>Co-Founder &amp; Producer</p></div>
       <div class="career-item"><p class="period">Professional development · 2025</p><h3>RGISI</h3><p>Specialisation — Director</p></div>
-      <div class="career-item"><p class="period">Since 2023</p><h3>Dance <a href="/en/koroche">company “Koroche”</a></h3><p>Production of performances</p></div>
       <div class="career-item"><p class="period">Until 2025</p><h3>Innovative Cultural Centre</h3><p>Producer of contemporary arts festivals</p></div>
-      <div class="career-item"><p class="period">February 2026</p><h3>Exhibition curator</h3><p><a href="/en/human">“Archaeology of the Human”</a></p></div>
+      <div class="career-item"><p class="period">Since 2023</p><h3>Dance <a href="/en/koroche">company “Koroche”</a></h3><p>Production of performances</p></div>
+      <div class="career-item"><p class="period">2010 — 2015</p><h3>Higher School of Psychology</h3><p>Specialisation — Psychologist</p></div>
     </div>
   </div>
 </section>
@@ -431,8 +477,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="wrap">
     <div class="sec-head reveal"><h2>Upcoming talks</h2></div>
     <div class="works-grid reveal">
-      <a class="work-card link-plain" href="/en/kinorazbor-matritsa"><span class="tag">November 14 · 17:00 · Kaluga</span><h3>The Matrix</h3><p>A film talk on all four films with Katya Abdulova. November 14, 2026 at 17:00. Kreativnoye Byuro, 33 Bilibina St., Kaluga.</p></a>
-      <a class="work-card link-plain" href="/en/landshafty-realnosti"><span class="tag">Kaluga · open conversation</span><h3>Landscapes of Reality</h3><p>A film talk on Luc Besson’s “Lucy”. New date to be announced.</p></a>
+      <a class="work-card link-plain ka-poster" href="/en/kinorazbor-matritsa"><img src="/images/kinorazbor-matritsa-og.jpg" alt="" loading="lazy" decoding="async"><span class="tag">November 14 · 17:00 · Kaluga</span><h3>The Matrix</h3><p>A film talk on all four films with Katya Abdulova. November 14, 2026 at 17:00. Kreativnoye Byuro, 33 Bilibina St., Kaluga.</p></a>
+      <a class="work-card link-plain ka-poster" href="/en/landshafty-realnosti"><img src="/images/landshafty-realnosti-og.jpg" alt="" loading="lazy" decoding="async"><span class="tag">Kaluga · open conversation</span><h3>Landscapes of Reality</h3><p>A film talk on Luc Besson’s “Lucy”. New date to be announced.</p></a>
     </div>
   </div>
 </section>

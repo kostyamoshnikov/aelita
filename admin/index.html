@@ -430,8 +430,14 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .snapshot-box progress{width:100%;height:10px;accent-color:var(--gold);margin:10px 0}
 #siteSnapshotStatus{overflow-wrap:anywhere;margin-bottom:0}
 .snapshot-box [hidden]{display:none!important}
+.ord-email-chip{margin:0 0 12px;padding:10px 14px;border:1px solid rgba(214,181,122,.4);color:var(--bone);font-size:0.8125rem;line-height:1.6}
+.ord-email-chip b{color:var(--gold);font-weight:500}
+.ord-email-chip .mini-btn{margin-left:8px}
+.crm-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
+.handoff-note{color:var(--gold);font-size:0.875rem;text-align:center;margin:16px 0}
 </style>
 <link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=152">
+<script src="/assets/staff-handoff-v1.js?v=152"></script>
 <script src="/assets/mobile-files-m1.js?v=152"></script>
 </head>
 <body>
@@ -566,6 +572,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <option value="">Все показы</option>
       </select>
     </div>
+    <div class="ord-email-chip" id="ordEmailChip" hidden></div>
     <div id="ordersBlock"><div class="empty-state">Загружаем…</div></div>
 
     <!-- pack-v370. Дозавершение заказов, по которым вебхук не
@@ -616,6 +623,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <label style="font-size:0.75rem;color:var(--sand);display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="coShowTest"> тестовые</label>
     </div>
     <p style="color:var(--sand);font-size:0.75rem;line-height:1.6;margin:0 0 12px">Записи хранятся 30 дней с последнего действия. Оплатившие сюда не попадают; если человек позже купил, запись исчезнет сама.</p>
+    <div class="ord-email-chip" id="coEmailChip" hidden></div>
     <div id="checkoutsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
@@ -2769,6 +2777,41 @@ var ORDER_STATUS_LABELS = {
   paid: 'оплачен', pending_payment: 'ожидает оплаты', cancelled: 'отменён', expired: 'истёк',
 };
 
+// pack-v750 (ТЗ LINK-01…07): «Найти в CRM» у заказа и обратный переход «Заказы в админке» из CRM.
+// Адрес передаётся сообщением между вкладками (assets/staff-handoff-v1.js) — не в ссылке и не в хранилище.
+// CRM проверяет свой вход и права сама; здесь — только кнопка и точный фильтр по почте.
+var ORDER_EMAIL = '';
+function crmFindBtn(email) {
+  var e = window.AelitaHandoff ? AelitaHandoff.cleanEmail(email) : '';
+  return e ? '<button class="mini-btn" data-crm-email="' + escapeHtml(e) + '">Найти в CRM</button>'
+    : '<button class="mini-btn" disabled title="В записи нет корректного адреса почты">Найти в CRM</button><span class="crm-msg">нет почты — искать в CRM не по чему</span>';
+}
+function setOrderEmail(email, note) {
+  ORDER_EMAIL = email || '';
+  ['ordEmailChip', 'coEmailChip'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (!ORDER_EMAIL && !note) { el.hidden = true; el.innerHTML = ''; return; }
+    el.hidden = false;
+    el.innerHTML = ORDER_EMAIL
+      ? 'Из CRM: только записи с почтой <b>' + escapeHtml(ORDER_EMAIL) + '</b> (точное совпадение). <button type="button" class="mini-btn" data-order-email-clear>Показать все</button>'
+      : escapeHtml(note) + ' <button type="button" class="mini-btn" data-order-email-clear>Скрыть</button>';
+  });
+  applyOrderFilters();
+  if (typeof renderCheckouts === 'function') renderCheckouts();
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-crm-email]');
+  if (b) {
+    var r = AelitaHandoff.open('/admin/crm/', 'crm_find', b.getAttribute('data-crm-email'));
+    var msg = b.parentNode.querySelector('.crm-msg') || b.parentNode.insertBefore(document.createElement('span'), b.nextSibling);
+    msg.className = 'crm-msg';
+    msg.textContent = r.ok ? 'CRM открыта в новой вкладке' : AelitaHandoff.reason(r.reason);
+    return;
+  }
+  if (e.target.closest('[data-order-email-clear]')) setOrderEmail('');
+});
+
 var ORDERS_SHOWN = []; // pack-v696: заказы на экране — для формы «Возврат за покупателя»
 function renderOrders(orders) {
   ORDERS_SHOWN = orders;
@@ -2795,7 +2838,7 @@ function renderOrders(orders) {
         (o.emailFixes || []).map(function (x) { return '<div class="ev-when">Почта исправлена ' + fmtDate(x.at) + ': ' + escapeHtml(x.from || '—') + ' → ' + escapeHtml(x.to) + (x.by && x.by !== 'admin' ? ' · ' + escapeHtml(x.by) : '') + '</div>'; }).join('') + '</div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:0.6875rem;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
-      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' +
+      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' + crmFindBtn(o.buyerEmail) +
         (o.status === 'paid'
           // pack-v592 (В7): шлём orderId — номер у тестовых и настоящих заказов может совпадать.
           ? '<button class="mini-btn" data-ord-action="resend" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '" data-ord-test="' + (o.isTest ? '1' : '') + '">Выслать билеты повторно</button>' +
@@ -3109,6 +3152,8 @@ function populatePerfFilter(orders) {
 // вовсе. Всё приводится к строке; одна функция — для списка и для CSV.
 function orderMatches(o, q, perf) {
   if (perf && o.performanceId !== perf) return false;
+  var oe = typeof ORDER_EMAIL === 'string' ? ORDER_EMAIL : ''; // pack-v750: из CRM — точный адрес (функция самодостаточна: её проверяют отдельно)
+  if (oe && String(o.buyerEmail || '').trim().toLowerCase() !== oe) return false;
   if (!q) return true;
   return String(o.buyerName || '').toLowerCase().includes(q) ||
     String(o.buyerEmail || '').toLowerCase().includes(q) ||
@@ -3566,6 +3611,7 @@ function filteredCheckouts() {
   return (allCheckouts || []).filter(function (c) {
     if (!showTest && c.isTest) return false;
     if (stage && c.stage !== stage) return false;
+    if (ORDER_EMAIL && [c.email, c.accountEmail].every(function (v) { return String(v || '').trim().toLowerCase() !== ORDER_EMAIL; })) return false;
     if (!q) return true;
     return [c.name, c.email, c.accountEmail, c.phone, c.title].some(function (v) { return (v || '').toLowerCase().includes(q); });
   });
@@ -3603,7 +3649,7 @@ function renderCheckouts() {
         '<div class="ev-when">Письмо команде: ' + (!c.teamMail ? 'нет сведений' : c.teamMail.pending ? 'ожидает отправки' : c.teamMail.sentAt ? 'принято почтовым сервером ' + escapeHtml(fmtGcDate(c.teamMail.sentAt)) : 'нет сведений') + '</div></div>' +
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
-      '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button></div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button>' + crmFindBtn(c.email || c.accountEmail) + '</div>' +
       '<div class="ev-people" id="co-hist-' + idx + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
     '</div>';
   }).join('');
@@ -6551,6 +6597,17 @@ function showEditorResult(kind, html) {
 // Уже есть токен с прошлого раза в этой вкладке — не заставляем
 // вводить пароль заново, просто пробуем загрузить данные (если токен
 // истёк — loadData сама вернёт на экран входа при 401).
+// pack-v750: открыли кнопкой «Заказы в админке» из CRM — адрес придёт сообщением; без входа — фильтр включится после входа.
+if (window.AelitaHandoff) AelitaHandoff.receive('orders_find', function (email, err) {
+  if (email) setOrderEmail(email); else setOrderEmail('', AelitaHandoff.reason(err));
+  var tries = 0;
+  (function go() { var b = document.querySelector('[data-adm-tab-btn="orders"]'); if (b) b.click(); else if (++tries < 40) setTimeout(go, 100); }());
+  var gate = document.getElementById('gateScreen');
+  if (email && gate && gate.style.display !== 'none' && !document.getElementById('handoffGateNote')) {
+    var p = document.createElement('p'); p.id = 'handoffGateNote'; p.className = 'handoff-note';
+    p.textContent = 'После входа покажем заказы с адресом из CRM.'; gate.insertBefore(p, gate.firstChild);
+  }
+});
 if (getToken()) { showData(); } else { showGate(); }
 </script>
 
