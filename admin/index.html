@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=152">
+<link rel="stylesheet" href="/assets/fonts.css?v=153">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -436,9 +436,9 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .crm-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
 .handoff-note{color:var(--gold);font-size:0.875rem;text-align:center;margin:16px 0}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=152">
-<script src="/assets/staff-handoff-v1.js?v=152"></script>
-<script src="/assets/mobile-files-m1.js?v=152"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=153">
+<script src="/assets/staff-handoff-v1.js?v=153"></script>
+<script src="/assets/mobile-files-m1.js?v=153"></script>
 </head>
 <body>
 
@@ -2781,6 +2781,18 @@ var ORDER_STATUS_LABELS = {
 // Адрес передаётся сообщением между вкладками (assets/staff-handoff-v1.js) — не в ссылке и не в хранилище.
 // CRM проверяет свой вход и права сама; здесь — только кнопка и точный фильтр по почте.
 var ORDER_EMAIL = '';
+var CO_SHOWN = [];
+// pack-v751 (ТЗ TASK-01…06): задача в CRM из незавершённого заказа. Уходит номер попытки (c.ref, его считает
+// сервер админки) и то, что сотрудник и так видит в карточке; CRM сама проверяет вход, права и дубли.
+function crmTaskBtn(c, idx) {
+  return c && c.ref ? '<button class="mini-btn" data-crm-task="' + idx + '">Создать задачу в CRM</button>' : '';
+}
+function crmTaskData(c) {
+  return { sourceRef: c.ref, email: c.email || c.accountEmail || '', accountEmail: c.accountEmail && c.accountEmail !== c.email ? c.accountEmail : '', facts: {
+    title: (c.isTest ? '[ТЕСТ] ' : '') + (c.title || c.subject || ''), when: c.eventDatetime ? fmtEventWhen(c.eventDatetime) : '',
+    stage: CO_STAGE_LABELS[c.stage] || c.stage || '', why: coWhy(c), name: c.name || '', phone: c.phone || '',
+    amount: c.amount != null ? fmtMoney(c.amount) : '', seats: coSeats(c), attempts: c.attempts > 1 ? String(c.attempts) : '' } };
+}
 function crmFindBtn(email) {
   var e = window.AelitaHandoff ? AelitaHandoff.cleanEmail(email) : '';
   return e ? '<button class="mini-btn" data-crm-email="' + escapeHtml(e) + '">Найти в CRM</button>'
@@ -2807,6 +2819,15 @@ document.addEventListener('click', function (e) {
     var msg = b.parentNode.querySelector('.crm-msg') || b.parentNode.insertBefore(document.createElement('span'), b.nextSibling);
     msg.className = 'crm-msg';
     msg.textContent = r.ok ? 'CRM открыта в новой вкладке' : AelitaHandoff.reason(r.reason);
+    return;
+  }
+  var tb = e.target.closest('[data-crm-task]');
+  if (tb) {
+    var c = CO_SHOWN[+tb.getAttribute('data-crm-task')];
+    var r = c ? AelitaHandoff.open('/admin/crm/', 'crm_task', crmTaskData(c)) : { ok: false, reason: 'source' };
+    var m = tb.parentNode.querySelector('.crm-task-msg') || tb.parentNode.insertBefore(document.createElement('span'), tb.nextSibling);
+    m.className = 'crm-msg crm-task-msg';
+    m.textContent = r.ok ? 'Черновик задачи открыт в CRM — проверьте и сохраните там' : AelitaHandoff.reason(r.reason);
     return;
   }
   if (e.target.closest('[data-order-email-clear]')) setOrderEmail('');
@@ -3625,6 +3646,7 @@ function renderCheckouts() {
     return;
   }
   var list = filteredCheckouts();
+  CO_SHOWN = list; // pack-v751: для «Создать задачу в CRM»
   document.getElementById('co-count').textContent = list.length;
   if (!list.length) { el.innerHTML = '<div class="empty-state">Незавершённых заказов нет.</div>'; return; }
   el.innerHTML = list.map(function (c, idx) {
@@ -3649,7 +3671,7 @@ function renderCheckouts() {
         '<div class="ev-when">Письмо команде: ' + (!c.teamMail ? 'нет сведений' : c.teamMail.pending ? 'ожидает отправки' : c.teamMail.sentAt ? 'принято почтовым сервером ' + escapeHtml(fmtGcDate(c.teamMail.sentAt)) : 'нет сведений') + '</div></div>' +
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
-      '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button>' + crmFindBtn(c.email || c.accountEmail) + '</div>' +
+      '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button>' + crmFindBtn(c.email || c.accountEmail) + crmTaskBtn(c, idx) + '</div>' +
       '<div class="ev-people" id="co-hist-' + idx + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
     '</div>';
   }).join('');
@@ -6841,7 +6863,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=152"></script>
+<script src="/assets/admin-snapshot.js?v=153"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>

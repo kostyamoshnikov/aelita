@@ -12,7 +12,10 @@
 (function () {
   'use strict';
   var ORIGIN = location.origin;
-  var KINDS = { crm_find: 1, orders_find: 1 };
+  var KINDS = { crm_find: 1, orders_find: 1, crm_task: 1 };
+  // pack-v751 (ТЗ TASK-01): черновик задачи из незавершённого заказа — номер попытки, почта (если есть)
+  // и короткие сведения о покупке. Только перечисленные поля, строки до 300 знаков.
+  var TASK_FACTS = ['title', 'when', 'stage', 'why', 'name', 'phone', 'amount', 'seats', 'attempts'];
   var WAIT_MS = 6000, KEEP_MS = 60000;
 
   function cleanEmail(v) {
@@ -20,11 +23,22 @@
     return v.length <= 254 && /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(v) ? v : '';
   }
 
-  /** Исходная вкладка: открыть url и передать адрес, когда она попросит. */
-  function open(url, kind, email) {
+  function cleanTask(v) {
+    if (!v || typeof v !== 'object') return null;
+    var ref = String(v.sourceRef || '');
+    if (!/^checkout:[a-f0-9]{24}$/.test(ref)) return null;
+    var facts = {}, f = v.facts && typeof v.facts === 'object' ? v.facts : {};
+    TASK_FACTS.forEach(function (k) { if (f[k] != null && String(f[k]).trim()) facts[k] = String(f[k]).trim().slice(0, 300); });
+    var acc = cleanEmail(v.accountEmail);
+    return { sourceRef: ref, email: cleanEmail(v.email), accountEmail: acc, facts: facts };
+  }
+  function cleanPayload(kind, v) { return kind === 'crm_task' ? cleanTask(v) : (cleanEmail(v) || null); }
+
+  /** Исходная вкладка: открыть url и передать данные (адрес или черновик задачи), когда она попросит. */
+  function open(url, kind, data) {
     if (!KINDS[kind]) return { ok: false, reason: 'kind' };
-    email = cleanEmail(email);
-    if (!email) return { ok: false, reason: 'email' };
+    var email = cleanPayload(kind, data);
+    if (!email) return { ok: false, reason: kind === 'crm_task' ? 'source' : 'email' };
     var w = null;
     try { w = window.open(url + '#handoff=' + kind, '_blank'); } catch (e) { w = null; }
     if (!w) return { ok: false, reason: 'popup' };
@@ -66,8 +80,8 @@
       if (e.source !== op || e.origin !== ORIGIN) return;
       var d = e.data;
       if (!d || d.type !== 'aelita-handoff' || d.kind !== kind) return;
-      var email = cleanEmail(d.email);
-      finish(email || null, email ? null : 'bad_email');
+      var got = cleanPayload(kind, d.email);
+      finish(got || null, got ? null : 'bad_email');
     }
     window.addEventListener('message', on);
     try { op.postMessage({ type: 'aelita-handoff-ready', kind: kind }, ORIGIN); } catch (e) { finish(null, 'no_opener'); }
@@ -80,7 +94,8 @@
     no_opener: 'Адрес не передан: вкладку открыли не кнопкой или исходную уже закрыли. Вернитесь к записи и нажмите кнопку ещё раз.',
     timeout: 'Адрес не передан: исходная вкладка не ответила (её могли закрыть или перезагрузить). Нажмите кнопку ещё раз.',
     bad_email: 'Пришёл некорректный адрес почты. Нажмите кнопку ещё раз.',
+    source: 'У записи нет устойчивого номера попытки — обновите список в админке и нажмите ещё раз.',
   };
 
-  window.AelitaHandoff = { open: open, receive: receive, cleanEmail: cleanEmail, reason: function (r) { return REASONS[r] || 'Не получилось открыть переход. Нажмите ещё раз.'; } };
+  window.AelitaHandoff = { open: open, receive: receive, cleanEmail: cleanEmail, cleanTask: cleanTask, reason: function (r) { return REASONS[r] || 'Не получилось открыть переход. Нажмите ещё раз.'; } };
 }());
