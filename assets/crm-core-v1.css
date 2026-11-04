@@ -237,3 +237,6 @@ dialog h2{font-size:22px}
  .actions>[data-back-list],.actions>[data-segment-list]{flex:1 1 100%}
  .row.between>.actions>[data-back-list]{order:-2}
 }
+/* pack-v749: удаление персональных данных контакта — отдельный, заметный цвет */
+.actions button.danger{border-color:rgba(242,179,167,.45);color:#f2b3a7}
+.actions button.danger:hover,.actions button.danger:focus-visible{border-color:#f2b3a7}
