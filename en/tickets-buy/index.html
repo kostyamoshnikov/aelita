@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=150">
+<link rel="stylesheet" href="/assets/fonts.css?v=152">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -277,10 +277,10 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js and style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=150">
-<script src="/assets/a11y.js?v=150"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=152">
+<script src="/assets/a11y.js?v=152"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=150">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=152">
 </head>
 <body>
 <div class="wrap">
@@ -526,7 +526,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=150"></script>
+<script src="/assets/payments.js?v=152"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1953,6 +1953,10 @@ function giftMsg(text, cls){
 const PROMO_REASONS = {
   unknown: 'No such promo code — check the spelling.',
   expired: 'The promo code has expired.',
+  inactive: 'This promo code has been disabled.',
+  not_started: 'This promo code is not active yet.',
+  min_payment: 'The remaining amount is less than 1 ₽. Change the payment options or contact us.',
+  no_discount: 'The discount is too small to apply to this order.',
   not_for_this_performance: 'This promo code does not apply to the selected performance.',
   misconfigured: 'Something is wrong with this promo code — write to us and we will sort it out.',
   empty: 'Enter a promo code.',
@@ -2037,6 +2041,10 @@ async function applyGift(){
     });
     const out = await res.json();
     if(!res.ok){
+      if(out.error === 'promo_invalid' || out.error === 'promo_limit_reached'){
+        appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
+        promoMsg(PROMO_REASONS[out.reason] || 'This promo code is no longer valid.', 'err');
+      }
       giftMsg('Could not check the gift card — please try again.', 'err');
     } else if(out.valid){
       appliedGift = code;
@@ -2395,10 +2403,17 @@ async function submitOrder(){
       // pack-v279: та же гонка, что gift_card_changed, только за слот
       // промокода с лимитом (config/promocodes.js maxUses) — кто-то
       // забрал последнее место акции между превью and отправкой заказа.
-      appliedPromo = null; combinedFinalAmount = null;
+      appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
       promoMsg('This promo code has just reached its limit — it has been removed from the order.', 'err');
       updateTotal();
-      msgEl.textContent = 'The promo code is used up — we have recalculated without it; check the total and pay again.';
+      msgEl.textContent = 'The promo code is used up. Check the total and reapply the gift card if needed.';
+    } else if(out.error === 'promo_invalid'){
+      appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
+      promoMsg(PROMO_REASONS[out.reason] || 'This promo code is no longer valid.', 'err');
+      updateTotal();
+      msgEl.textContent = 'The promo code terms have changed. Check the total and reapply the gift card if needed.';
+    } else if(out.error === 'promo_unavailable'){
+      msgEl.textContent = 'Could not check the promo code. Please try again.';
     } else if(out.error === 'finalize_failed'){
       // pack-v278: скидка увела сумму в 0, но что-то пошло не так уже
       // при самой материализации заказа (см. create-order.js — крайне
@@ -2554,7 +2569,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=150"></script>
-<script src="/assets/outage.js?v=150" defer></script>
+<script src="/assets/phone-prefix.js?v=152"></script>
+<script src="/assets/outage.js?v=152" defer></script>
 </body>
 </html>

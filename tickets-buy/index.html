@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=150">
+<link rel="stylesheet" href="/assets/fonts.css?v=152">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -270,10 +270,10 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=150">
-<script src="/assets/a11y.js?v=150"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=152">
+<script src="/assets/a11y.js?v=152"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=150">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=152">
 </head>
 <body>
 <div class="wrap">
@@ -519,7 +519,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=150"></script>
+<script src="/assets/payments.js?v=152"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1946,6 +1946,10 @@ function giftMsg(text, cls){
 const PROMO_REASONS = {
   unknown: 'Такого промокода нет — проверьте написание.',
   expired: 'Срок действия промокода истёк.',
+  inactive: 'Этот промокод отключён.',
+  not_started: 'Срок действия промокода ещё не начался.',
+  min_payment: 'После скидки остаётся меньше 1 ₽. Выберите другие условия оплаты или напишите нам.',
+  no_discount: 'Для этого заказа скидка слишком мала и не применяется.',
   not_for_this_performance: 'Этот промокод не действует на выбранный спектакль.',
   misconfigured: 'С этим промокодом что-то не так — напишите нам, разберёмся.',
   empty: 'Введите промокод.',
@@ -2030,6 +2034,10 @@ async function applyGift(){
     });
     const out = await res.json();
     if(!res.ok){
+      if(out.error === 'promo_invalid' || out.error === 'promo_limit_reached'){
+        appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
+        promoMsg(PROMO_REASONS[out.reason] || 'Промокод больше не действует.', 'err');
+      }
       giftMsg('Не удалось проверить карту — попробуйте ещё раз.', 'err');
     } else if(out.valid){
       appliedGift = code;
@@ -2388,10 +2396,17 @@ async function submitOrder(){
       // pack-v279: та же гонка, что gift_card_changed, только за слот
       // промокода с лимитом (config/promocodes.js maxUses) — кто-то
       // забрал последнее место акции между превью и отправкой заказа.
-      appliedPromo = null; combinedFinalAmount = null;
+      appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
       promoMsg('Лимит по этому промокоду только что исчерпан — снят с заказа.', 'err');
       updateTotal();
-      msgEl.textContent = 'Промокод исчерпан — пересчитали без него, проверьте сумму и оплатите ещё раз.';
+      msgEl.textContent = 'Промокод исчерпан. Проверьте сумму и при необходимости примените карту заново.';
+    } else if(out.error === 'promo_invalid'){
+      appliedPromo = null; appliedGift = null; combinedFinalAmount = null; giftUsedAmount = 0;
+      promoMsg(PROMO_REASONS[out.reason] || 'Промокод больше не действует.', 'err');
+      updateTotal();
+      msgEl.textContent = 'Условия промокода изменились. Проверьте сумму и при необходимости примените карту заново.';
+    } else if(out.error === 'promo_unavailable'){
+      msgEl.textContent = 'Не удалось проверить промокод. Попробуйте ещё раз.';
     } else if(out.error === 'finalize_failed'){
       // pack-v278: скидка увела сумму в 0, но что-то пошло не так уже
       // при самой материализации заказа (см. create-order.js — крайне
@@ -2547,7 +2562,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=150"></script>
-<script src="/assets/outage.js?v=150" defer></script>
+<script src="/assets/phone-prefix.js?v=152"></script>
+<script src="/assets/outage.js?v=152" defer></script>
 </body>
 </html>

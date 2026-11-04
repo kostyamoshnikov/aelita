@@ -10,7 +10,7 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 150;
+const SITE_VERSION = 152;
 const MOBILE_ADDON_VERSION='mobile-m1-editor-e1-events-e2-bot-b1-crm-events-directory-r18b-v744r1b';
 const CACHE_NAME = `aelita-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
 const STATIC_CACHE = `aelita-static-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
@@ -32,8 +32,8 @@ const PRECACHE_URLS = [
   '/icons/icon-512x512.png',
   `/assets/style.css?v=${SITE_VERSION}`,
   `/assets/main.js?v=${SITE_VERSION}`,
-  '/assets/mobile-priority-m1.css?v=150',
-  '/assets/mobile-files-m1.js?v=150',
+  '/assets/mobile-priority-m1.css?v=152',
+  '/assets/mobile-files-m1.js?v=152',
 ];
 
 // ── Установка: кэшируем ключевые страницы ───────────────────────

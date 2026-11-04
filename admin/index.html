@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=150">
+<link rel="stylesheet" href="/assets/fonts.css?v=152">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -431,8 +431,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #siteSnapshotStatus{overflow-wrap:anywhere;margin-bottom:0}
 .snapshot-box [hidden]{display:none!important}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=150">
-<script src="/assets/mobile-files-m1.js?v=150"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=152">
+<script src="/assets/mobile-files-m1.js?v=152"></script>
 </head>
 <body>
 
@@ -557,6 +557,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <button class="mini-btn" id="hitsReloadBtn">Обновить</button></p>
     <div id="hitsBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
 
+    <p class="sec-title" style="margin-top:56px">Промокоды</p>
+    <div class="editor-box"><p class="editor-note">Создайте один код или загрузите список, задайте скидку, срок и показы.</p><a class="btn-small" href="/admin/promocodes/">Открыть промокоды →</a></div>
     <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="ordSearch" placeholder="Поиск по имени, email или номеру заказа…">
@@ -3523,6 +3525,21 @@ var CO_ERROR_LABELS = {
   finalize_failed: 'сбой выдачи нулевого заказа',
   bad_amount: 'неверная сумма',
   bad_return_url: 'неверный адрес возврата',
+  // pack-v746: коды, которые раньше показывались в админке как есть
+  online_not_configured: 'онлайн-формат не настроен (нет TICKET_QR_SECRET у функции)',
+  bad_attendance_mode: 'неизвестный формат участия',
+  price_missing: 'у показа не задана цена',
+  sales_closed: 'продажа закрыта',
+  performance_canceled: 'показ отменён',
+  not_enough_left: 'мест осталось меньше, чем выбрано',
+  sold_out: 'мест нет',
+  seat_limit: 'больше 10 мест на покупателя',
+  order_in_progress: 'заказ уже оформляется (повторное нажатие)',
+  gift_code_invalid: 'код подарочной карты не подошёл',
+  gift_store_unreachable: 'хранилище подарочных карт недоступно',
+  auth_required: 'не вошёл в кабинет',
+  timeout: 'страница не дождалась ответа',
+  network: 'нет связи у покупателя',
 };
 
 function coWhy(c) {
@@ -3572,7 +3589,7 @@ function renderCheckouts() {
     var hist = (c.history || []).slice().reverse().map(function (h) {
       var hw = h.stage === 'canceled' ? (CO_REASON_LABELS[h.reason] || h.reason || '') : (h.stage === 'failed' ? (CO_ERROR_LABELS[h.error] || h.error || '') + (h.detail ? ' (' + h.detail + ')' : '') : '');
       return '<div class="ev-person"><span class="who">' + escapeHtml(CO_STAGE_LABELS[h.stage] || h.stage) +
-        '<small>' + fmtGcDate(h.at) + (hw ? ' · ' + escapeHtml(hw) : '') + (h.late ? ' · после оплаты, не учитывается' : '') + '</small></span></div>';
+        '<small>' + fmtGcDate(h.at) + (hw ? ' · ' + escapeHtml(hw) : '') + (h.late ? ' · поздний ответ предыдущей попытки, текущий статус не изменён' : '') + '</small></span></div>';
     }).join('');
     return '<div class="ev-card">' +
       '<div class="ev-head">' +
@@ -3582,7 +3599,8 @@ function renderCheckouts() {
         '<div class="ev-when">' + escapeHtml(CO_STAGE_LABELS[c.stage] || c.stage) + (why ? ': ' + escapeHtml(why) : '') +
           (coMaybeActive(c) ? ' · <span style="color:var(--gold)">возможно, ещё оформляет</span>' : '') + '</div>' +
         '<div class="ev-when">' + (seats ? escapeHtml(seats) + ' · ' : '') + 'первое действие ' + fmtGcDate(c.firstSeenAt) + ' · последнее ' + fmtGcDate(c.updatedAt) +
-          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + (c.reminderSentAt ? ' · письмо-напоминание отправлено ' + new Date(c.reminderSentAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '') + '</div></div>' +
+          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + (c.reminderSentAt ? ' · напоминание покупателю отправлено ' + new Date(c.reminderSentAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '') + '</div>' +
+        '<div class="ev-when">Письмо команде: ' + (!c.teamMail ? 'нет сведений' : c.teamMail.pending ? 'ожидает отправки' : c.teamMail.sentAt ? 'принято почтовым сервером ' + escapeHtml(fmtGcDate(c.teamMail.sentAt)) : 'нет сведений') + '</div></div>' +
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button></div>' +
@@ -6543,7 +6561,7 @@ if (getToken()) { showData(); } else { showGate(); }
 (function () {
   var GROUPS = [
     ['overview', 'Обзор', []],
-    ['orders', 'Заказы', ['Заказы билетов', 'Незавершённые заказы']],
+    ['orders', 'Заказы', ['Промокоды', 'Заказы билетов', 'Незавершённые заказы']],
     // pack-v694: возвраты — своим разделом со счётчиком «ждут решения или выплаты».
     ['refunds', 'Возвраты', ['Заявления на возврат']],
     ['shows', 'Показы', ['Показы:', 'Баннер о сбое']],
@@ -6766,7 +6784,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=150"></script>
+<script src="/assets/admin-snapshot.js?v=152"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>
