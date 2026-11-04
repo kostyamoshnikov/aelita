@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=147">
+<link rel="stylesheet" href="/assets/fonts.css?v=148">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -224,7 +224,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .editor-box select{background:rgba(232,230,225,.05);border:1px solid rgba(201,184,163,.2);padding:12px 14px;color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;width:100%}
 .inv-row{display:flex;gap:12px;flex-wrap:wrap}
 .inv-row .field{flex:1;min-width:140px}
-.inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.inv-mt14{margin-top:14px}
+.inv-row .field.inv-w3{flex:3}.inv-row .field.inv-w2{flex:2}.inv-mt6{margin-top:6px}.adm-mt10{margin-top:10px}.inv-mt14{margin-top:14px}
 .inv-off{opacity:.55}
 /* pack-v600: отзывы и заявки бота */
 .rv-text,.ap-fields{font-size:0.875rem;line-height:1.6;margin:10px 0;white-space:pre-wrap;word-break:break-word}
@@ -431,12 +431,15 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #siteSnapshotStatus{overflow-wrap:anywhere;margin-bottom:0}
 .snapshot-box [hidden]{display:none!important}
 </style>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=148">
+<script src="/assets/mobile-files-m1.js?v=148"></script>
 </head>
 <body>
 
 <nav>
 <div class="nav-in">
 <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
+<a class="nav-back" href="/admin/crm/">CRM</a>
 <a class="nav-back" href="/">← На сайт</a>
 </div>
 </nav>
@@ -577,7 +580,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         безопасен: второй раз билеты не выпустятся.
       </p>
       <textarea id="backfillIds" class="search ym-disable-keys" rows="3" placeholder="323b8651-000f-5000-b0..." style="width:100%;max-width:100%;font-family:monospace;font-size:0.75rem"></textarea>
-      <div style="margin-top:10px">
+      <div class="adm-mt10">
         <button class="mini-btn" id="backfillBtn">Провести</button>
         <span id="backfillMsg" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>
       </div>
@@ -821,7 +824,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <details class="adm-more"><summary>Подробнее</summary><p>Анкеты «Бизнесу», «Площадкам», «Билеты» и др. Сообщение в чат команды бот по-прежнему шлёт сразу.</p></details>
     </div>
 
-    <p class="sec-title sec-gap">Рассылка новостей (почта: <span id="nl-active">0</span><span id="nl-tg-count"></span>)</p>
+    <p class="sec-title sec-gap">Рассылка новостей <span class="m1-heading-meta">(почта: <span id="nl-active">0</span><span id="nl-tg-count"></span>)</span></p>
     <div class="editor-box" id="nlBlock">
       <div class="nl-stats" id="nlStats"><div class="empty-state">Загружаем…</div></div>
       <p class="nl-line" id="nlMailInfo"></p>
@@ -1022,6 +1025,11 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 
     <p class="sec-title" style="margin-top:56px">Правки сайта</p>
     <div class="editor-box">
+      <h3>Управление ботом</h3><p class="editor-note adm-mt10">Меню, кнопки, тексты и материалы Telegram-бота. Черновик и проверка перед публикацией.</p><a class="btn-small" href="/admin/bot/">Открыть редактор бота →</a>
+      <h3>Мастер событий</h3><p class="editor-note adm-mt10">Создайте очное событие, страницу, афишу и данные билетов из одной формы. Сначала проверьте макет, затем опубликуйте анонс.</p><a class="btn-small" href="/admin/events/">Открыть мастер событий →</a>
+      <h3>Люди и площадки</h3><p class="editor-note adm-mt10">Общие публичные карточки и их связи с событиями. Личные данные CRM сюда не переносятся.</p><a class="btn-small" href="/admin/directory/">Открыть справочники →</a>
+      <h3>Редактор страниц</h3><p class="editor-note adm-mt10">Выберите страницу, измените текст, ссылку, фотографию или описание для поиска. Перед публикацией — макет телефона и компьютера.</p><a class="btn-small" href="/admin/editor/">Открыть редактор страниц →</a>
+      <details class="adm-more"><summary>Точная замена текста — прежний инструмент</summary>
       <div class="field">
         <label for="edit-page">Страница (слаг)</label>
         <input class="ym-disable-keys" type="text" id="edit-page" placeholder="например, community или en/community">
@@ -1042,6 +1050,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
         <button class="btn-small btn-ghost" id="editCancelBtn">Отмена</button>
       </div>
       <p class="editor-result" id="editorResult"></p>
+      </details>
     </div>
       <p class="sec-title sec-gap">ИИ · Тест</p>
     <section class="ai-scope" id="ai-admin-root" aria-label="Тестовый ИИ Аэлита Продакшен">
@@ -1315,7 +1324,7 @@ function getToken() {
   // защита — сознательно строже, чем у клиентского кабинета.
 }
 function setToken(t) { try { sessionStorage.setItem(STORAGE_KEY, t); } catch (e) {} }
-function clearToken() { try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} }
+function clearToken() { try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
 
 function fmtMoney(n) {
   if (n == null || !isFinite(n)) return '—';
@@ -1518,13 +1527,16 @@ document.getElementById('custList').addEventListener('click', function (e) {
 // (без export_email) — как раньше, запись из списка.
 async function exportByEmail(email, outEl) {
   if (!ADMIN_DATA_URL || !email) return false;
+  var downloadToken=getToken();
   if (outEl) outEl.textContent = 'Собираем данные — до полуминуты…';
   try {
-    var res = await fetch(ADMIN_DATA_URL + '?export_email=' + encodeURIComponent(email), { headers: { Authorization: 'Bearer ' + getToken() } });
+    var res = await fetch(ADMIN_DATA_URL + '?export_email=' + encodeURIComponent(email), { headers: { Authorization: 'Bearer ' + downloadToken } });
     var type = (res.headers.get('Content-Type') || '').toLowerCase();
     if (res.ok && type.indexOf('application/zip') === 0) {
       var blob = await res.blob();
-      var url = URL.createObjectURL(blob);
+      if(!downloadToken||getToken()!==downloadToken)return true;
+      if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'aelita-data-' + email.replace(/[^a-z0-9]+/gi, '-') + '.zip',{guardToken:downloadToken});}else{
+var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
       a.download = 'aelita-data-' + email.replace(/[^a-z0-9]+/gi, '-') + '.zip';
@@ -1532,6 +1544,7 @@ async function exportByEmail(email, outEl) {
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
       if (outEl) outEl.textContent = 'Готово: архив скачан. Ответ субъекту — в течение 10 рабочих дней с запроса.';
       return true;
     }
@@ -1547,18 +1560,22 @@ async function exportByEmail(email, outEl) {
   }
 }
 async function exportCustomer(email) {
+  var downloadToken=getToken();
   if (await exportByEmail(email, null)) return;
+  if(!downloadToken||getToken()!==downloadToken)return;
   var customer = allCustomers.find(function (c) { return c.email === email; });
   if (!customer) return;
   var blob = new Blob([JSON.stringify(customer, null, 2)], { type: 'application/json' });
-  var url = URL.createObjectURL(blob);
+  if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'aelita-' + email.replace(/[^a-z0-9]+/gi, '-') + '.json',{guardToken:downloadToken});}else{
+var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
   a.download = 'aelita-' + email.replace(/[^a-z0-9]+/gi, '-') + '.json';
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+} // pack-v619: Safari на iOS иначе не успевает скачать
 }
 
 // ── Удаление клиента ─────────────────────────────────────────────
@@ -2327,11 +2344,13 @@ document.getElementById('refundsBlock').addEventListener('click', async function
         return;
       }
       var blob = await res.blob();
-      var url = URL.createObjectURL(blob);
+      if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,filename,{guardToken:token});}else{
+var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+} // pack-v619: Safari на iOS иначе не успевает скачать
     } catch (e2) {
       alert('Не удалось скачать документ.');
     } finally {
@@ -3339,7 +3358,8 @@ function salesFullHtml(d) {
 async function salesAction(card, act) {
   var id = card.getAttribute('data-sales-id');
   var box = card.querySelector('.sales-detail');
-  var auth = { Authorization: 'Bearer ' + getToken() };
+  var downloadToken=getToken();
+  var auth = { Authorization: 'Bearer ' + downloadToken };
   box.textContent = 'Загружаем…';
   try {
     // ТЗ С4: очередь листа ожидания показа (почты — маской).
@@ -3378,11 +3398,13 @@ async function salesAction(card, act) {
       var rs = await fetch(ADMIN_ORDERS_URL + '?view=sales&format=pdf&performance_id=' + encodeURIComponent(id), { headers: auth });
       if (!rs.ok) { box.textContent = 'Не получилось собрать PDF.'; return; }
       var sblob = await rs.blob();
-      var surl = URL.createObjectURL(sblob);
+      if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(sblob,'aelita-prodazhi-' + id + '.pdf',{guardToken:downloadToken});}else{
+var surl = URL.createObjectURL(sblob);
       var sa = document.createElement('a');
       sa.href = surl; sa.download = 'aelita-prodazhi-' + id + '.pdf';
       document.body.appendChild(sa); sa.click(); sa.remove();
       setTimeout(function () { URL.revokeObjectURL(surl); }, 60000);
+}
       box.textContent = '';
       return;
     }
@@ -3390,11 +3412,13 @@ async function salesAction(card, act) {
       var r2 = await fetch(ADMIN_ORDERS_URL + '?view=audience&format=pdf&performance_id=' + encodeURIComponent(id), { headers: auth });
       if (!r2.ok) { box.textContent = 'Не получилось собрать PDF.'; return; }
       var blob = await r2.blob();
-      var url = URL.createObjectURL(blob);
+      if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'aelita-zriteli-' + id + '.pdf',{guardToken:downloadToken});}else{
+var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url; a.download = 'aelita-zriteli-' + id + '.pdf';
       document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 60000); // pack-v619: Safari на iOS иначе не успевает скачать
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+} // pack-v619: Safari на iOS иначе не успевает скачать
       box.textContent = '';
       return;
     }
@@ -4487,7 +4511,7 @@ var NL2 = { cap: null, tab: 'campaigns', campaigns: [], drafts: [], segments: []
   dirty: false, saving: false, again: false, saveTimer: null, editSeq: 0, conflict: null, offline: false, lastSavedAt: null, audience: null, review: null,
   reqId: null, thumbs: {}, segEdit: null, poll: null, nudgedAt: 0, audPoll: null, pages: {} };
 var NL2_STATUS = { scheduled: 'запланирована', sending: 'идёт', pausing: 'ставим на паузу', paused: 'пауза', stopped: 'остановлена', done: 'обработка завершена', cancelled: 'отменена' };
-var NL2_REASON = { unsubscribed: 'отписались', complained: 'пожаловались', unconfirmed: 'не подтвердили адрес', undeliverable: 'адрес недоступен', deleted: 'контакт удалён',
+var NL2_REASON = {consent_missing:'нет отдельного согласия',crm_outside_segment:'вне расчёта CRM',invalid_subscriber:'некорректная запись подписчика', unsubscribed: 'отписались', complained: 'пожаловались', unconfirmed: 'не подтвердили адрес', undeliverable: 'адрес недоступен', deleted: 'контакт удалён',
   manual_exclusion: 'исключены вручную', filter_mismatch: 'не подходят под фильтр', locale_unavailable: 'нет варианта на их языке', not_subscribed: 'отписались в боте',
   blocked: 'заблокировали бота', chat_not_found: 'чат недоступен', response_lost: 'ответ не получен', smtp_unknown: 'почта не ответила', smtp_rejected: 'почта отказала',
   smtp_temporary: 'временный отказ', provider_error: 'ошибка отправителя', tg_rate_limited: 'Telegram просил паузу', tg_bad_request: 'Telegram отклонил',
@@ -4539,6 +4563,23 @@ function nl2V1Open(open) { var b = nl2$('nlV1Box'); if (b) b.open = open; }
 function nl2Status(el, text, kind) { if (!el) return; el.textContent = text || ''; el.className = 'nl2-status' + (kind ? ' ' + kind : ''); }
 
 // ── загрузка и вкладки ──
+async function nl2ImportCRMSegment() {
+  var id;try{id=new URL(location.href).searchParams.get('crm_segment_export');}catch(e){return;}
+  if(!id||!/^ce-[a-f0-9]{24}$/.test(id)||NL2.crmImportBusy)return;
+  NL2.crmImportBusy=true;
+  var box=nl2$('nl2'),notice=document.getElementById('nl2-crm-import');
+  if(!notice){notice=document.createElement('p');notice.id='nl2-crm-import';notice.className='nl2-status';notice.setAttribute('role','status');box.insertBefore(notice,box.firstChild);}
+  try{
+    if(!NL2.cap.crmSegments)throw new Error('Подключение сегментов CRM на сервере рассылки ещё не включено. Черновик не создан.');
+    notice.textContent='Проверяем расчёт CRM и открываем черновик…';
+    var imported=await nl2Call({action:'nl_crm_draft_import',exportId:id});
+    await nl2OpenDraft(imported);
+    notice.textContent='Аудитория CRM подключена. Проверьте текст, тестовую отправку и итоговую аудиторию перед обычным утверждением рассылки.';
+    var url=new URL(location.href);url.searchParams.delete('crm_segment_export');history.replaceState(null,'',url.pathname+url.search+url.hash);
+  }catch(e){notice.className='nl2-status err';notice.textContent=e.message;}
+  finally{NL2.crmImportBusy=false;}
+}
+
 async function nl2Load() {
   var box = nl2$('nl2'), off = nl2$('nl2Off');
   if (!box || !ADMIN_INBOX_URL || !getToken()) return;
@@ -4554,6 +4595,7 @@ async function nl2Load() {
   document.querySelectorAll('[data-nl2-tab="drafts"],[data-nl2-tab="segments"]').forEach(function (b) { b.hidden = !nl2Write(); });
   nl2ShowTab(NL2.tab);
   nl2Poll();
+  if(nl2Write())await nl2ImportCRMSegment();
   if (nl2Write()) { renderNlList(); renderNlCampaigns(); } // кнопки «Профиль» и «В черновик v2»
 }
 function nl2ShowTab(tab) {
@@ -5001,7 +5043,7 @@ function nl2FilterHtml(prefix, f) {
   return '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-city">Город (через запятую; пусто — любой)</label><input class="ym-disable-keys" id="' + prefix + '-city" data-ff="cityIds" list="' + prefix + '-dl-city" value="' + nl2E(list(f.cityIds)) + '"></div></div>' + dl(prefix + '-dl-city', o.cities) +
     '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-int">Интерес к проекту</label><input class="ym-disable-keys" id="' + prefix + '-int" data-ff="interests.values" list="' + prefix + '-dl-int" value="' + nl2E(list(f.interests.values)) + '"></div><div class="field">' + '<label for="' + prefix + '-intop">Сочетание</label>' + op('interests', f.interests.op).replace('<select ', '<select id="' + prefix + '-intop" ') + '</div></div>' + dl(prefix + '-dl-int', o.interests) +
     '<div class="inv-row"><div class="field inv-w2"><label for="' + prefix + '-tag">Метки</label><input class="ym-disable-keys" id="' + prefix + '-tag" data-ff="tags.values" list="' + prefix + '-dl-tag" value="' + nl2E(list(f.tags.values)) + '"></div><div class="field"><label for="' + prefix + '-tagop">Сочетание</label>' + op('tags', f.tags.op).replace('<select ', '<select id="' + prefix + '-tagop" ') + '</div></div>' + dl(prefix + '-dl-tag', o.tags) +
-    ((o.sources || []).length ? '<fieldset class="nl2-card"><legend class="nl2-meta">Источник подписки (пусто — любой)</legend>' + o.sources.map(function (s) {
+    ((o.sources || []).length&&!f.crmExport ? '<fieldset class="nl2-card"><legend class="nl2-meta">Источник подписки (пусто — любой)</legend>' + o.sources.map(function (s) {
       var on = (f.sources || []).some(function (x) { return x.via === s.via && (x.form || '') === (s.form || ''); });
       return '<label class="nl-check"><input type="checkbox" data-fsrc="' + nl2E(s.via + '|' + (s.form || '')) + '"' + (on ? ' checked' : '') + '> ' + nl2E((NL_SRC[s.via] || s.via) + (s.form ? ': ' + s.form : '')) + ' (' + s.n + ')</label>';
     }).join('') + '</fieldset>' : '') +
@@ -5009,12 +5051,13 @@ function nl2FilterHtml(prefix, f) {
 }
 function nl2AudienceHtml() {
   var d = NL2.local, f = d.audience.filter, a = NL2.audience;
+  var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/#segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
   var segs = NL2.segments || [];
-  var html = '<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
+  var html = crmNotice+'<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
     (segs.length ? '<div class="nl2-row"><label class="nl2-meta" for="nl2-seg">Сегмент</label><select id="nl2-seg"><option value="">—</option>' + segs.map(function (s) { return '<option value="' + nl2E(s.id) + '"' + (d.audience.segmentId === s.id ? ' selected' : '') + '>' + nl2E(s.name) + '</option>'; }).join('') + '</select><button type="button" class="mini-btn" data-nl2="seg-apply">Применить фильтр сегмента</button></div>' : '') +
     '<div data-nl2-filter="draft">' + nl2FilterHtml('nl2a', f) + '</div>' +
     '<div class="inv-row"><div class="field inv-w2"><label for="nl2-excl">Исключить по почте</label><input class="ym-disable-keys" id="nl2-excl" type="email" maxlength="254"></div></div><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="exclude">Исключить</button>' + ((f.excludeIds || []).length ? '<button type="button" class="mini-btn" data-nl2="exclude-clear">Очистить исключения</button>' : '') + '</div>' +
-    '<div class="nl2-legacy">' + nl2Check('audience.legacyUnconfirmed', 'Включить подписчиков до 28.10, не подтвердивших адрес (по умолчанию — нет)', d.audience.legacyUnconfirmed) +
+    '<div class="nl2-legacy"'+(f.crm?' hidden':'')+'>' + nl2Check('audience.legacyUnconfirmed', 'Включить подписчиков до 28.10, не подтвердивших адрес (по умолчанию — нет)', d.audience.legacyUnconfirmed) +
     '<p class="nl2-meta">Старый режим совместимости. Будет виден при утверждении. Яндекс просит слать только подтверждённым адресам.</p></div>' +
     '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="prepare">Подготовить снимок аудитории</button><button type="button" class="mini-btn" data-nl2="seg-save">Сохранить фильтр как сегмент</button></div>' +
     '<p class="nl2-status" id="nl2-ares" role="status" aria-live="polite"></p>';
@@ -5424,9 +5467,11 @@ function invSheetName(ev) {
   return (d ? d + ' ' : '') + String(ev.title || ev.id).slice(0, 22);
 }
 function invSave(blob, filename) {
-  var url = URL.createObjectURL(blob);
+  if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,filename,{guardToken:getToken()});}else{
+var url = URL.createObjectURL(blob);
   var a = document.createElement('a'); a.href = url; a.download = filename;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
 }
 // ── pack-v597: .xlsx без библиотек — zip без сжатия + минимальный SpreadsheetML.
 // sheets: [{ name, rows: [[ячейки]], widths: [символов] }]; первая строка — заголовок
@@ -6719,7 +6764,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=147"></script>
+<script src="/assets/admin-snapshot.js?v=148"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>

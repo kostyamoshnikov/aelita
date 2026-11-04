@@ -1,0 +1,36 @@
+/* AELITA PRODUCTION — mobile priority M1 over v742 + R11. */
+@media (max-width:767px),(pointer:coarse){
+ button,input[type=button],input[type=submit],input[type=reset],a.btn,a.button,a.btn-gold,a.btn-outline,a.contract-btn,a.tk-link,a.nav-back,[role=button]{min-height:44px;min-width:44px;touch-action:manipulation}
+ button,a.btn,a.button,a.btn-gold,a.btn-outline,a.contract-btn,a.tk-link{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+ a.contract-btn:not([hidden]),a.tk-link:not([hidden]){display:inline-flex;align-items:center}
+ input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea{font-size:16px!important;min-height:44px;max-width:100%;min-width:0}
+ input[type=checkbox],input[type=radio]{flex-shrink:0}
+ summary{min-height:44px;padding-top:10px;padding-bottom:10px;touch-action:manipulation}
+ nav a:not(.logo),nav a.logo{min-height:44px}
+ .acc-nav a{display:inline-flex;align-items:center;min-height:44px;padding-top:10px;padding-bottom:10px}
+ .acc-nav a[hidden]{display:none!important}
+ h1,h2,h3,.sec-title{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .m1-heading-meta{font-size:.75rem;letter-spacing:.08em}
+ .person-card,.person-overlay{min-width:0}
+ .person-name,.person-desc{overflow-wrap:anywhere}
+ main,.wrap,.container,section,article,.field,.form-grid,.filter-row,.toolbar{min-width:0}
+ .cookie-btn{font-size:14px!important;min-height:44px!important}
+ #cookie-banner .cookie-actions{flex-wrap:wrap}
+ .a11y-btn{min-width:44px!important;min-height:44px!important;flex-shrink:0}
+ .a11y-btn svg{flex-shrink:0}
+ .aud-star-btn{min-width:44px!important;min-height:44px!important}
+ .aud-stars{flex-wrap:wrap}
+ .mini-btn,.btn-small,.filter-toggle,.sort-tab,.nl2-tabs button{min-height:44px!important;font-size:14px}
+ .data-actions,.modal-actions,.nl2-actions,.nl-controls,.purchase-actions{flex-wrap:wrap}
+ .modal-overlay{padding:12px!important;overflow-y:auto!important;overscroll-behavior:contain}
+ .modal-overlay .modal,.modal-overlay .modal-box,.modal-card{max-width:100%!important;min-width:0!important;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto;scroll-padding-bottom:24px}
+ body>[role=dialog][aria-modal=true]>div:not(.m-menu-links){max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto}
+ .att-ticket,.purchase-item,.reg-item,.tk-info,.acc-section,.nl2-field,.nl-field{min-width:0}
+ table th,table td{font-size:max(12px,.75rem)}
+}
+.m1-download-ready{grid-column:1/-1;flex-basis:100%;margin:14px 0;padding:14px;border:1px solid rgba(214,181,122,.35);background:rgba(214,181,122,.05);overflow-wrap:anywhere;max-width:100%}
+.m1-download-ready a{display:inline-flex;align-items:center;min-height:44px;max-width:100%;padding:10px 14px;color:inherit;border:1px solid currentColor;white-space:normal;overflow-wrap:anywhere}
+.m1-download-ready p{font-size:13px;line-height:1.5;margin:0 0 8px}
+
+/* Editorial visibility is shared by phone and desktop. */
+[data-editor-hidden="true"]{display:none!important}

@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=147">
+<link rel="stylesheet" href="/assets/fonts.css?v=148">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -270,8 +270,10 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet .sheet-ok{width:100%}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=147">
-<script src="/assets/a11y.js?v=147"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=148">
+<script src="/assets/a11y.js?v=148"></script>
+<meta name="robots" content="noindex, follow">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=148">
 </head>
 <body>
 <div class="wrap">
@@ -517,7 +519,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=147"></script>
+<script src="/assets/payments.js?v=148"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2545,7 +2547,7 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=147"></script>
-<script src="/assets/outage.js?v=147" defer></script>
+<script src="/assets/phone-prefix.js?v=148"></script>
+<script src="/assets/outage.js?v=148" defer></script>
 </body>
 </html>

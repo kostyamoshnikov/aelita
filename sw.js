@@ -10,9 +10,10 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 147;
-const CACHE_NAME = `aelita-v${SITE_VERSION}`;
-const STATIC_CACHE = `aelita-static-v${SITE_VERSION}`;
+const SITE_VERSION = 148;
+const MOBILE_ADDON_VERSION='mobile-m1-editor-e1-events-e2-bot-b1-crm-events-directory-r18b';
+const CACHE_NAME = `aelita-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
+const STATIC_CACHE = `aelita-static-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
 
 // Страницы и ресурсы для предварительного кэширования при установке
 const PRECACHE_URLS = [
@@ -31,6 +32,8 @@ const PRECACHE_URLS = [
   '/icons/icon-512x512.png',
   `/assets/style.css?v=${SITE_VERSION}`,
   `/assets/main.js?v=${SITE_VERSION}`,
+  '/assets/mobile-priority-m1.css?v=148',
+  '/assets/mobile-files-m1.js?v=148',
 ];
 
 // ── Установка: кэшируем ключевые страницы ───────────────────────
@@ -62,6 +65,11 @@ self.addEventListener('fetch', event => {
 
   // Только наш домен
   if (url.origin !== location.origin) return;
+  // A stale public event catalog must never be used as current ticket data.
+  if (url.pathname === '/content/events-v1.json' || url.pathname === '/content/directory-v1.json') {
+    event.respondWith(fetch(request, {cache: 'no-store'}));
+    return;
+  }
 
   // HTML страницы — Network First (свежий контент важнее)
   if (request.headers.get('accept')?.includes('text/html')) {

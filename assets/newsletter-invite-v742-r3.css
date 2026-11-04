@@ -1,0 +1,17 @@
+/* AELITA PRODUCTION · small, nonmodal newsletter invitation. */
+#aelita-news-invite.ani{position:fixed;z-index:60;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));width:352px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:21px 22px 16px;background:#111212;color:#e8e6e1;border:1px solid rgba(214,181,122,.42);box-shadow:0 10px 40px #0008;text-align:left;font-family:Inter,sans-serif;line-height:1.45;animation:ani-enter .25s ease-out}
+#aelita-news-invite.ani *{box-sizing:border-box}
+#aelita-news-invite .ani-brand{margin:0 24px 10px 0;color:#d6b57a;font-size:10px;line-height:1.5;font-weight:400;letter-spacing:.17em}
+#aelita-news-invite h2{margin:0 18px 8px 0;color:#e8e6e1;font-family:Montserrat,Inter,sans-serif;font-size:20px;font-weight:400;line-height:1.25;letter-spacing:0;text-transform:none}
+#aelita-news-invite .ani-copy{margin:0 0 13px;color:#c9b8a3;font-size:13px;line-height:1.5;letter-spacing:0}
+#aelita-news-invite button,#aelita-news-invite a{font:inherit;letter-spacing:0;text-transform:none;border-radius:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#aelita-news-invite .ani-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#aelita-news-invite .ani-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;background:#d6b57a;border:1px solid #d6b57a;color:#0b0b0d;font-size:13px;font-weight:500;text-decoration:none}
+#aelita-news-invite .ani-later{min-height:44px;padding:9px 4px;background:transparent;border:0;color:#c9b8a3;font-size:13px}
+#aelita-news-invite .ani-close{position:absolute;right:3px;top:3px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:transparent;color:#c9b8a3;font-size:24px;font-weight:300;line-height:1}
+#aelita-news-invite :is(button,a):focus-visible{outline:2px solid #e8e6e1;outline-offset:3px}
+#aelita-news-invite .ani-link:hover{background:#e5c995}
+#aelita-news-invite :is(.ani-close,.ani-later):hover{color:#fff}
+@media(max-width:760px){#aelita-news-invite.ani{right:max(12px,env(safe-area-inset-right));left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));width:auto;max-width:none;padding:17px 18px 12px}#aelita-news-invite .ani-brand{margin-bottom:7px}#aelita-news-invite h2{font-size:19px}#aelita-news-invite .ani-copy{margin-bottom:8px}}
+@keyframes ani-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#aelita-news-invite.ani{animation:none}}

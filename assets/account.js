@@ -207,6 +207,7 @@
   }
   function clearToken() {
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear();
   }
 
   function notConfigured() {
@@ -372,7 +373,8 @@
           return;
         }
         var blob = await res.blob();
-        var url = URL.createObjectURL(blob);
+        if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'AELITA-dogovor-' + paymentId + '.pdf',{guardToken:token,after:opts.buttonEl});}else{
+var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
         a.download = 'AELITA-dogovor-' + paymentId + '.pdf';
@@ -380,6 +382,7 @@
         a.click();
         a.remove();
         setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
         if (opts.onSuccess) opts.onSuccess();
       } catch (e) {
         if (opts.onError) opts.onError(errorMessage(null));
@@ -983,7 +986,8 @@
           var type = (res.headers.get('Content-Type') || '').toLowerCase();
           if (res.ok && type.indexOf('application/zip') === 0) {
             var zip = await res.blob();
-            var zurl = URL.createObjectURL(zip);
+            if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(zip,'aelita-my-data.zip',{guardToken:token});}else{
+var zurl = URL.createObjectURL(zip);
             var za = document.createElement('a');
             za.href = zurl;
             za.download = 'aelita-my-data.zip';
@@ -991,6 +995,7 @@
             za.click();
             za.remove();
             setTimeout(function () { URL.revokeObjectURL(zurl); }, 1000);
+}
             if (opts.onStatus) opts.onStatus('', 'done');
             return;
           }
@@ -1003,7 +1008,8 @@
         }
       }
       var blob = new Blob([JSON.stringify(accountData, null, 2)], { type: 'application/json' });
-      var url = URL.createObjectURL(blob);
+      if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'aelita-account-data.json',{guardToken:token});}else{
+var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
       a.download = 'aelita-account-data.json';
@@ -1011,6 +1017,7 @@
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
     },
   };
 })();
