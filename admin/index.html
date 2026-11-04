@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=149">
+<link rel="stylesheet" href="/assets/fonts.css?v=150">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -431,8 +431,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 #siteSnapshotStatus{overflow-wrap:anywhere;margin-bottom:0}
 .snapshot-box [hidden]{display:none!important}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=149">
-<script src="/assets/mobile-files-m1.js?v=149"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=150">
+<script src="/assets/mobile-files-m1.js?v=150"></script>
 </head>
 <body>
 
@@ -1369,6 +1369,7 @@ var ERRORS = {
   missing_old_text: 'Укажите текущий текст, который нужно найти.',
   no_change: 'Новый текст совпадает со старым — менять нечего.',
   page_excluded: 'Эта страница закрыта от правок из админки — юридические и служебные страницы правятся только вручную.',
+  operational_content_protected: 'Это данные события или билетов. Изменяйте их в мастере событий или разделе «Показы».',
   page_not_found: 'Такой страницы не нашлось. Проверьте слаг (например, «community», не «/community/»).',
   github_unreachable: 'Не достучались до GitHub. Попробуйте ещё раз через минуту.',
   github_rejected: 'GitHub отклонил запрос — проверьте права токена и ветку.',
@@ -3526,7 +3527,8 @@ var CO_ERROR_LABELS = {
 
 function coWhy(c) {
   if (c.stage === 'canceled') return c.reason ? (CO_REASON_LABELS[c.reason] || c.reason) : 'причина не передана';
-  if (c.stage === 'failed') return CO_ERROR_LABELS[c.error] || c.error || '';
+  // pack-v745: у отказа ЮKassa — её код и поле ошибки (c.detail).
+  if (c.stage === 'failed') return (CO_ERROR_LABELS[c.error] || c.error || '') + (c.detail ? ' (' + c.detail + ')' : '');
   return '';
 }
 function coSeats(c) {
@@ -3568,7 +3570,7 @@ function renderCheckouts() {
     var why = coWhy(c);
     var seats = coSeats(c);
     var hist = (c.history || []).slice().reverse().map(function (h) {
-      var hw = h.stage === 'canceled' ? (CO_REASON_LABELS[h.reason] || h.reason || '') : (h.stage === 'failed' ? (CO_ERROR_LABELS[h.error] || h.error || '') : '');
+      var hw = h.stage === 'canceled' ? (CO_REASON_LABELS[h.reason] || h.reason || '') : (h.stage === 'failed' ? (CO_ERROR_LABELS[h.error] || h.error || '') + (h.detail ? ' (' + h.detail + ')' : '') : '');
       return '<div class="ev-person"><span class="who">' + escapeHtml(CO_STAGE_LABELS[h.stage] || h.stage) +
         '<small>' + fmtGcDate(h.at) + (hw ? ' · ' + escapeHtml(hw) : '') + (h.late ? ' · после оплаты, не учитывается' : '') + '</small></span></div>';
     }).join('');
@@ -6764,7 +6766,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=149"></script>
+<script src="/assets/admin-snapshot.js?v=150"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>

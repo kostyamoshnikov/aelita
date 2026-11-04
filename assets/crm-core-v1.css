@@ -67,3 +67,173 @@
 /* Public directory is a private reference; public fields are displayed only on request. */
 .directory-panel{margin:24px 0}.directory-panel .actions{margin-top:14px}.directory-description{white-space:pre-line;overflow-wrap:anywhere}.directory-choice{border-left:2px solid var(--gold);padding:4px 0 4px 14px;margin:18px 0}.directory-choice a{overflow-wrap:anywhere}.directory-confirm{align-items:flex-start;flex-wrap:nowrap;gap:10px;margin:18px 0}.directory-confirm span{min-width:0;flex:1}.directory-confirm input{width:20px;min-width:20px;height:20px;margin-top:3px}
 @media(max-width:760px){.directory-panel{padding:18px}.directory-panel .actions button{width:100%}}
+
+/* ── pack-v745: аккуратная вёрстка CRM в стиле админки (заказчик 04.11: «верстка crm — грязно»).
+   Шрифты сайта (Inter 300 + Montserrat для подписей и кнопок), нейтральные тонкие линии вместо
+   золотисто-коричневых рамок у всего подряд, ровные ряды фильтров, вкладки — подчёркиванием,
+   цифры обзора — карточкой, а не кнопкой в рамке. Только оформление: разметка и поведение прежние. */
+:root{--panel:#111215;--hair:rgba(232,230,225,.08);--hair2:rgba(232,230,225,.14);--goldline:rgba(214,181,122,.3);--field:rgba(232,230,225,.045);--fieldline:rgba(201,184,163,.22);--line:rgba(232,230,225,.1);--label:500 10px/1.4 'Montserrat',sans-serif}
+body{font:300 16px/1.6 'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+b,strong{font-weight:500}
+/* шапка страницы (не заголовки внутри карточек) */
+body>header{border-bottom:1px solid var(--hair);padding-top:20px;padding-bottom:20px}
+.brand{font:300 17px/1.2 'Montserrat',sans-serif;letter-spacing:.32em}
+.brand span{font:400 9px/1.2 'Montserrat',sans-serif;letter-spacing:.32em;margin-top:6px}
+#identity{gap:6px 4px;font-size:13px}
+#identity span{color:var(--sand);margin-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#identity button{border-color:transparent;padding:10px 12px}
+#identity button:hover{border-color:var(--goldline)}
+/* заголовки */
+h1{font:200 clamp(26px,3.4vw,34px)/1.2 'Montserrat',sans-serif;letter-spacing:.04em;margin:8px 0 18px}
+h2{font:300 21px/1.3 'Montserrat',sans-serif;letter-spacing:.03em}
+h3{font-weight:400}
+.eyebrow,.tag{font:var(--label);letter-spacing:.3em;text-transform:uppercase}
+.hint{font-size:13px;line-height:1.55}
+/* кнопки: действия — как в админке; содержательные (имена, ссылки на карточки) — обычным текстом */
+button,.button{font:500 11px/1.3 'Montserrat',sans-serif;letter-spacing:.14em;text-transform:uppercase;border-color:var(--goldline);color:var(--sand);padding:10px 16px;transition:border-color .15s,color .15s,background-color .15s}
+button:hover,.button:hover{border-color:var(--gold);color:var(--bone)}
+button.primary{background:var(--gold);border-color:var(--gold);color:var(--ink);letter-spacing:.2em}
+button.primary:hover{background:#e2c48d;border-color:#e2c48d;color:var(--ink)}
+.record h3 button,.name-link,.stat button,.task-shortcuts button,.followup-panel .actions button,.import-row button{text-transform:none;letter-spacing:.01em;font-family:'Inter',system-ui,sans-serif}
+/* «← Раздел» — ссылкой назад, не кнопкой в рамке */
+[data-back-list],[data-segment-list]{border-color:transparent;padding-left:0;color:var(--sand)}
+[data-back-list]:hover,[data-segment-list]:hover{border-color:transparent;color:var(--gold)}
+/* поля */
+input,select,textarea{background:var(--field);border:1px solid var(--fieldline);font:300 15px/1.4 'Inter',system-ui,sans-serif;letter-spacing:0;text-transform:none}
+select{color-scheme:dark}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+input::placeholder,textarea::placeholder{color:rgba(201,184,163,.72)}
+/* вкладки — подчёркиванием */
+.tabs{gap:0 2px;border-bottom:1px solid var(--hair);padding:0;margin:0 0 26px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:0;border-bottom:1px solid transparent;margin-bottom:-1px;padding:14px 11px;color:var(--sand);background:none}
+.tabs button:hover{color:var(--bone);border-color:transparent;border-bottom-color:var(--hair2)}
+.tabs button[aria-current=true]{color:var(--gold);border-bottom-color:var(--gold)}
+@media(max-width:1199px){.tabs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);padding-right:32px}}
+/* панели и карточки — нейтральные линии */
+.panel,.record,.stat{background:var(--panel);border-color:var(--hair)}
+.panel{padding:24px}
+#view>.panel+.panel,#view>section.panel+section.panel{margin-top:18px}
+.detail>*,.stats>*,.list>*,.board>*{margin-top:0}
+.panel>h2:first-child{margin-top:0}
+.panel h2{margin:0 0 6px}
+.panel h2:not(:first-child){margin-top:26px}
+.panel label:not(.check)>textarea,.panel label:not(.check)>input{margin-top:8px}
+.empty{border:1px dashed var(--hair2);color:var(--sand);background:transparent}
+/* обзор: цифра и подпись — одна карточка, нажимается целиком */
+.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:22px 0 4px}
+.stat{position:relative;padding:18px 22px 8px;display:flex;flex-direction:column;gap:0;transition:border-color .15s}
+.stat:hover{border-color:var(--goldline)}
+.stat strong{font:200 38px/1.1 'Montserrat',sans-serif;color:var(--gold)}
+.stat button{border:0;padding:0;min-height:44px;align-items:center;justify-content:flex-start;text-align:left;color:var(--sand);font:var(--label);letter-spacing:.24em;text-transform:uppercase;background:none}
+.stat button::after{content:'';position:absolute;inset:0}
+.stat button:hover{color:var(--bone)}
+.task-shortcuts,.followup-panel>.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:14px}
+.task-shortcuts button,.followup-panel .actions button{justify-content:flex-start;text-align:left;font-size:15px;color:var(--bone);border-color:var(--hair2)}
+.task-shortcuts button:hover,.followup-panel .actions button:hover{border-color:var(--goldline)}
+/* метки */
+.badge{border:0;background:rgba(214,181,122,.11);color:var(--gold);font:var(--label);letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;margin:2px 6px 2px 0}
+/* заголовок раздела с действиями */
+.row.between{gap:14px 20px;align-items:flex-end;margin-bottom:6px}
+.row.between>h1{margin-bottom:6px}
+.row.between>.actions{gap:8px}
+/* фильтры — ровный ряд: подпись над полем, кнопки вровень с полями */
+.toolbar{gap:12px;align-items:flex-end;margin:14px 0 6px;padding-bottom:16px;border-bottom:1px solid var(--hair)}
+.toolbar>label:not(.check),.filter-fields>label:not(.check){display:flex;flex-direction:column;gap:7px;font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand)}
+.filter-fields{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:12px}
+.filter-fields>label:not(.check){flex:1 1 200px}
+.toolbar label.check{font-size:14px;color:var(--bone);gap:10px}
+.toolbar>button{height:46px;min-height:46px}
+.toolbar details,.toolbar .extra-filters{flex-basis:100%}
+details>summary{color:var(--sand)}
+/* списки карточек */
+.list{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px;margin-top:18px}
+.record{padding:18px 20px;transition:border-color .15s}
+.record:hover{border-color:var(--hair2)}
+.record h3{margin:-8px 0 2px}
+.record h3 button{font:400 18px/1.35 'Inter',system-ui,sans-serif;letter-spacing:0;color:var(--bone);min-height:44px;padding:0}
+.record h3 button:hover{color:var(--gold)}
+.record p{margin:3px 0;font-size:15px}
+.record p:empty{display:none}
+.record .meta{font-size:12px;margin-top:10px;color:var(--sand);opacity:.85}
+.record .actions{margin-top:12px}
+.record .eyebrow{margin:0 0 6px}
+.pages{color:var(--sand)}
+/* сделки по этапам */
+.board{gap:12px;margin-top:18px}
+.column{flex:0 0 260px;background:rgba(232,230,225,.02);border:1px solid var(--hair);padding:14px}
+.column>h2{font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin:2px 0 12px}
+.column .record{padding:14px 16px;margin-bottom:8px}
+.column .record h3 button{font-size:16px}
+/* карточка: подписи полей как в админке */
+.detail{gap:18px}
+.detail dt,.contact-metrics span,.metric span{font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin-top:16px}
+.detail dt:first-child{margin-top:0}
+.contact-metrics span{margin:0 0 6px}
+.detail dd,.contact-metrics b{font-size:15px;font-weight:400}
+.name-link{border-color:var(--hair2);font-size:15px;color:var(--bone)}
+.name-link:hover{border-color:var(--goldline);color:var(--gold)}
+/* окно правки */
+dialog{border:1px solid var(--hair2);background:var(--panel);padding:26px 28px}
+dialog h2{font-size:22px}
+.form-grid{gap:16px 18px}
+.field>span{font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand);margin:0 0 7px}
+.field select[multiple]{padding:6px}
+.field select[multiple] option{padding:6px 8px}
+.checkset label{font-size:15px}
+/* вход */
+.gate{max-width:440px;margin:56px auto;background:transparent;border:0;padding:0}
+.gate h1{margin:6px 0 14px}
+.gate label{font:var(--label);letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin:22px 0 8px}
+.gate .primary{margin-top:26px}
+/* сообщения */
+#notice:not(:empty){background:var(--panel);border:1px solid var(--hair);border-left:2px solid var(--gold)}
+/* проект: подписи, счётчики и разделы — как везде */
+.stat span,.project-stats .stat span{font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand)}
+.project-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.project-info dt{font:var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--sand)}
+.project-info dd{margin:6px 0 0}
+.project-sections{display:flex;flex-wrap:wrap;gap:0 2px;padding:0;border-bottom:1px solid var(--hair);margin:6px 0 16px}
+.project-sections button{border:0;border-bottom:1px solid transparent;margin-bottom:-1px;padding:14px 11px;background:none;color:var(--sand);flex:0 0 auto}
+.project-sections button:hover{color:var(--bone);border-color:transparent;border-bottom-color:var(--hair2)}
+.project-sections button[aria-pressed=true]{color:var(--gold);border-color:transparent;border-bottom-color:var(--gold)}
+.project-history>summary{font:300 20px/1.3 'Montserrat',sans-serif;letter-spacing:.03em}
+.project-next span{font-size:13px}
+[data-back-list],[data-segment-list]{justify-content:flex-start}
+@media(max-width:760px){
+ /* шапка в два ряда: логотип и кнопки, под ними — кто вошёл */
+ body>header{padding:14px 16px 12px;gap:4px 8px;flex-wrap:wrap;align-items:center}
+ #identity{display:contents}
+ #identity button{margin-left:0;padding:10px}
+ #identity button:first-of-type{margin-left:auto}
+ #identity span{order:3;flex:1 1 100%;margin:2px 0 0;text-align:left;font-size:12px}
+ .brand{font-size:15px;letter-spacing:.28em}
+ main{padding:16px 16px 56px}
+ h1{font-size:26px}
+ .tabs{margin:0 -16px 20px;padding-left:10px}
+ .tabs button{padding:14px 10px}
+ .stats{grid-template-columns:1fr 1fr;gap:10px}
+ .stat{padding:16px}
+ .stat strong{font-size:32px}
+ .row.between{align-items:stretch}
+ .row.between>.actions{display:flex;flex-wrap:wrap;width:100%}
+ .row.between>.actions>button{flex:1 1 auto}
+ .row.between>.actions>button.primary{flex-basis:100%;order:-1}
+ .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
+ .toolbar>label,.toolbar details{grid-column:1/-1;min-width:0}
+ .toolbar>button{width:100%}
+ .list{grid-template-columns:1fr}
+ .panel{padding:18px}
+ .column{flex-basis:80vw}
+ dialog{padding:20px 18px}
+ .form-grid{grid-template-columns:1fr}
+
+ .project-stats{grid-template-columns:1fr}
+ .project-stats .stat{flex-direction:row;align-items:center;gap:16px;padding:12px 16px}
+ .project-stats .stat strong{font-size:28px;min-width:2ch}
+ .project-sections{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:6px -16px 16px;padding:0 32px 0 10px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent)}
+ .project-sections::-webkit-scrollbar{display:none}
+ .project-sections button{flex:0 0 auto;font-size:11px;padding:14px 10px}
+ .actions>[data-back-list],.actions>[data-segment-list]{flex:1 1 100%}
+ .row.between>.actions>[data-back-list]{order:-2}
+}
