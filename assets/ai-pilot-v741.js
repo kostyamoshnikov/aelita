@@ -22,6 +22,8 @@
     queue_full: ['Тестовая очередь заполнена. Попробуйте позже.', 'The test queue is full. Try later.'],
     already_started: ['Запрос уже начал обрабатываться или завершён.', 'This request has already started or finished.'],
     not_found: ['Запрос не найден или уже истёк. Можно отправить новый.', 'The request was not found or has expired. Submit a new question.'],
+    event_required: ['Выберите событие с заполненной карточкой.', 'Select an event with a complete event card.'],
+    meaningless_text: ['Уточните пожелания обычными словами или оставьте поле пустым.', 'Use meaningful words for your wishes or leave this field empty.'],
     empty_text: ['Введите вопрос или текст.', 'Enter a question or some text.'],
     text_too_long: ['Текст превышает лимит длины.', 'The text is too long.']
   };

@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=158">
+<link rel="stylesheet" href="/assets/fonts.css?v=159">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -281,12 +281,25 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .sheet-x{background:transparent;border:1px solid rgba(214,181,122,.35);color:var(--bone);width:40px;height:40px;font-size:1rem;cursor:pointer;flex:none}
 .sheet p{font-size:1rem;line-height:1.6;color:var(--sand);margin:14px 0 20px}
 .sheet .sheet-ok{width:100%}
+/* pack-v759 */
+.help-dock{left:max(20px,calc((100vw - 900px)/2))!important;bottom:calc(var(--checkout-bar-height,80px) + 12px + env(safe-area-inset-bottom,0px))!important}
+.help-fab{width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;border-radius:50%!important;padding:0!important;flex:none!important;box-sizing:border-box}
+.help-dock:not(.compact) .help-fab{width:auto!important;border-radius:22px!important;padding:0 14px!important}.help-dock:not(.compact) .help-fab-txt{display:inline}.help-dock.compact .help-fab-txt{display:none!important}
+.f-label{display:flex;align-items:center;gap:4px}.f-label .q-btn{display:inline-flex;align-items:center;justify-content:center;position:relative;width:44px!important;height:44px!important;min-width:44px;min-height:44px;padding:12px!important;border:0;background:transparent;font-size:0.75rem;box-sizing:border-box}.f-label .q-btn:before{content:'';position:absolute;width:20px;height:20px;border:1px solid var(--sand);border-radius:50%;pointer-events:none}
+.checkout-consents{font-size:0.75rem;line-height:1.5;margin:14px 0}.checkout-consents .cb-item{font-size:0.75rem;margin:6px 0;align-items:flex-start}.checkout-consents a{color:var(--gold)}#checkout-news-row[hidden]{display:none!important}
+.acct-guest{padding:0!important;border:0!important;background:none!important;display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:0.75rem!important;margin-bottom:18px!important}.acct-login-btn{border:0!important;padding:6px 4px!important;min-height:32px!important;text-decoration:underline;font:inherit!important;letter-spacing:0!important;text-transform:none!important}.vpn-note{border:0!important;padding:0!important;background:none!important;font-size:0.6875rem!important;margin:0!important;line-height:1.4;max-width:240px}
+.meta{line-height:1.5;white-space:normal}.help-dock.kb{display:none!important}
+@media(min-width:1050px){.help-dock.in-paybar{position:relative!important;left:auto!important;bottom:auto!important;margin-right:20px}.help-dock.in-paybar .help-menu{bottom:56px}}
+
+.checkout-pay-action{display:none;flex-direction:column;align-items:stretch;gap:5px;flex:1;min-width:0;max-width:260px}body.step-2 .checkout-pay-action{display:flex}.checkout-pay-action .vpn-note{font-size:0.625rem!important;line-height:1.3;text-align:center;max-width:none}.bar .total{flex-shrink:0}.help-dock.obstructed{visibility:hidden}
+@media(min-width:1050px){.bar{padding-inline:max(20px,calc((100vw - 900px)/2))}}@media(max-width:600px){.bar{gap:10px}.bar .buy-btn{min-width:0}.checkout-pay-action .buy-btn{width:100%}}
+html body .checkout-consents .cb-item{font-size:0.75rem!important}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=158">
-<script src="/assets/a11y.js?v=158"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=159">
+<script src="/assets/a11y.js?v=159"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=158">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=159">
 </head>
 <body>
 <!-- pack-v750 (заказчик 04.11): шапка как на остальных страницах — название, значок
@@ -422,7 +435,7 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
       <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
       <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Прислать код ещё раз</a><span id="acct-code-cancel" hidden> · <a href="#" onclick="cancelLogin();return false">Отмена</a></span></div>
     </div>
-    <label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label>
+    <div class="checkout-consents"><label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label><label class="cb-item" id="checkout-news-row"><input type="checkbox" id="newsletterConsent"><span>Присылать анонсы и новости AELITA PRODUCTION (<a href="/consent#rassylka">правила рассылки</a>)</span></label></div>
   </div>
   <div class="msg" id="msg"></div>
 </div>
@@ -531,7 +544,7 @@ function initMetrika(){
 }
 initMetrika();
 </script>
-<script src="/assets/analytics-events.js"></script>
+<script src="/assets/analytics-events.js?v=159"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
@@ -541,7 +554,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=158"></script>
+<script src="/assets/payments.js?v=159"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -575,7 +588,7 @@ const SLOW_CHECK_MSG = 'Сервер отвечает дольше обычно�
 // ⚠️ ВЫКЛЮЧАТЕЛЬ замеров (ТЗ Н1): пока false, замеры только копятся в
 // памяти страницы и никуда не уходят. Включить — после выкладки функции
 // aelita-tickets-availability (приём замеров) и обновления шлюза.
-const PERF_LOG = false;
+let PERF_LOG = true;
 const PERF_VISIT = Math.random().toString(36).slice(2, 10);
 const perfQueue = [];
 function perfStepOf(url){
@@ -794,6 +807,15 @@ function fillIfEmpty(id, value){
 // Состояние «вошёл»: строка «Вы в кабинете как …», кнопка «Войти» скрыта.
 function showSignedIn(profile){
   acctProfile = profile;
+  document.getElementById("checkout-news-row").hidden = profile.newsletterSubscribed === true;
+  if(profile.newsletterSubscribed === undefined && profile.email && accountToken()){
+    apiFetch(`${ACCOUNT_API}/me`,{headers:{Authorization:'Bearer '+accountToken()}}).then(async response=>{
+      if(!response.ok)return;const me=await response.json();
+      if(acctProfile!==profile || String(me.email||'').toLowerCase()!==String(profile.email).toLowerCase())return;
+      profile.newsletterSubscribed=me.newsletterSubscribed===true;
+      document.getElementById('checkout-news-row').hidden=profile.newsletterSubscribed;
+    }).catch(()=>{});
+  }
   const who = document.getElementById('acct-who');
   if(who) who.textContent = profile.name ? `${profile.name} (${profile.email})` : profile.email;
   document.getElementById('acct-in').style.display = 'block';
@@ -832,6 +854,8 @@ function saveNameToProfile(name, email, token){
 // Состояние «гость»: кнопка «Войти» над формой.
 function showGuest(){
   acctProfile = null;
+  document.getElementById('checkout-news-row').hidden=false;
+  document.getElementById('newsletterConsent').checked=false;
   document.getElementById('acct-in').style.display = 'none';
   document.getElementById('acct-guest').style.display = 'flex';
   syncBuyButtonLabel();
@@ -856,7 +880,7 @@ async function detectAccount(){
     if(res.status === 401){ setToken(null); showGuest(); return; }
     if(res.ok){
       const me = await res.json();
-      showSignedIn({email: me.email, name: me.name || '', phone: me.phone || ''});
+      showSignedIn({email: me.email, name: me.name || '', phone: me.phone || '', newsletterSubscribed:me.newsletterSubscribed===true});
       return;
     }
   }catch(e){ /* сеть — см. комментарий выше */ }
@@ -891,8 +915,9 @@ async function startLogin(){
   const emailEl = document.getElementById('f-email');
   if(!AELITA_isValidEmail(emailEl.value.trim())){
     AELITA_showFieldError(emailEl, 'Укажите email — пришлём на него код для входа');
-    msgEl.textContent = 'Укажите email — на него придёт код для входа.';
-    emailEl.focus();
+    msgEl.textContent = '';
+    emailEl.scrollIntoView({block:'center',behavior:'smooth'});
+    emailEl.focus({preventScroll:true});
     return;
   }
   AELITA_clearFieldError(emailEl);
@@ -914,8 +939,9 @@ async function sendLoginCode(resend){
   const email = emailEl.value.trim().toLowerCase();
   if(!AELITA_isValidEmail(email)){
     AELITA_showFieldError(emailEl, 'Укажите email');
-    msgEl.textContent = 'Укажите email выше — на него придёт код.';
-    emailEl.focus();
+    msgEl.textContent = '';
+    emailEl.scrollIntoView({block:'center',behavior:'smooth'});
+    emailEl.focus({preventScroll:true});
     return false;
   }
   showCodeBox(true);
@@ -1131,7 +1157,7 @@ async function restoreSelection(){
   const msgEl = document.getElementById('msg');
   const put = (id, val) => { const el = document.getElementById(id); if(el && !el.value.trim() && val) el.value = val; };
   put('f-name', d.name); put('f-email', d.email); put('f-contact', d.contact);
-  if(d.consent){ const c = document.getElementById('pdConsent'); if(c) c.checked = true; }
+  // v759: consent is never restored automatically from an earlier draft.
   if(data.seating !== 'assigned'){
     if(d.quantity > 1){
       const max = typeof data.left === 'number' ? Math.max(1, Math.min(10, data.left)) : 10;
@@ -1366,11 +1392,14 @@ async function init(){
     return;
   }
 
+  PERF_LOG = data.perfLogEnabled !== false;
   renderTitle(data);
+  try{if(window.AELITA_track)AELITA_track('ticket_step_selection',{performance:performanceId});}catch(_){}
   if(data.isTest){ document.getElementById('test-banner').style.display = 'block'; }
-  const dt = data.datetime ? new Date(data.datetime).toLocaleString('ru-RU',{dateStyle:'full',timeStyle:'short',timeZone:'Europe/Moscow'}) : 'Дата уточняется';
+  const eventDate = data.datetime ? new Date(data.datetime) : null;
+  const dt = eventDate ? eventDate.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',timeZone:'Europe/Moscow'}) + ' · ' + eventDate.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}) : 'Дата уточняется';
   const vn = pickVenue(data);
-  document.getElementById('meta').textContent = [dt, [vn.name, vn.address].filter(Boolean).join(', '), data.ageRating].filter(Boolean).join(' · ');
+  document.getElementById('meta').textContent = [dt, [vn.name, vn.city || ((vn.address||'').match(/Калуга|Kaluga/i)||[])[0] || vn.address].filter(Boolean).join(', '), data.ageRating].filter(Boolean).join(' · ');
 
   window.AelitaAttendance.meta(data);
   goStep(1, {silent:true});
@@ -2265,22 +2294,25 @@ async function submitOrder(){
   // фамилии, и на входе по списку человека не найти.
   if(!AELITA_fullNameOk(name)){
     AELITA_showFieldError(nameEl, 'Укажите имя и фамилию');
-    msgEl.textContent = 'Укажите имя и фамилию.';
-    nameEl.focus();
+    msgEl.textContent = '';
+    nameEl.scrollIntoView({block:'center',behavior:'smooth'});
+    nameEl.focus({preventScroll:true});
     return;
   }
   AELITA_clearFieldError(nameEl);
   if(!AELITA_isValidEmail(email)){
     AELITA_showFieldError(emailEl, 'Проверьте email — похоже, в адресе опечатка');
-    msgEl.textContent = 'Проверьте email — на него придут билеты.';
-    emailEl.focus();
+    msgEl.textContent = '';
+    emailEl.scrollIntoView({block:'center',behavior:'smooth'});
+    emailEl.focus({preventScroll:true});
     return;
   }
   AELITA_clearFieldError(emailEl);
   if(!AELITA_normalizePhone(contact)){
     AELITA_showFieldError(phoneEl, 'Проверьте телефон — похоже, номер введён не полностью или с ошибкой');
-    msgEl.textContent = 'Укажите корректный телефон — он нужен для чека и на случай, если понадобится связаться.';
-    phoneEl.focus();
+    msgEl.textContent = '';
+    phoneEl.scrollIntoView({block:'center',behavior:'smooth'});
+    phoneEl.focus({preventScroll:true});
     return;
   }
   AELITA_clearFieldError(phoneEl);
@@ -2288,11 +2320,13 @@ async function submitOrder(){
     msgEl.textContent = 'Отметьте согласие на обработку персональных данных — без него не оформим заказ.';
     return;
   }
+  try{if(window.AELITA_track)AELITA_track('ticket_payment_start',{performance:performanceId});}catch(_){}
   document.getElementById('buy-btn').disabled = true;
   msgEl.textContent = 'Оформляем заказ…';
 
   const payload = {
     performance_id: performanceId, name, email, contact, pd_consent: true,
+    newsletter_consent: !document.getElementById("checkout-news-row").hidden && document.getElementById("newsletterConsent").checked,
     return_url: location.origin + location.pathname + '?performance=' + performanceId + '&aelita_paid=1',
     // pack-v272: этим заказ перенимает холд, поставленный при выборе
     // мест на схеме (hold-seat.js) — иначе покупатель конфликтовал бы
@@ -2599,7 +2633,13 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=158"></script>
-<script src="/assets/outage.js?v=158" defer></script>
-</body>
+<script src="/assets/phone-prefix.js?v=159"></script>
+<script src="/assets/outage.js?v=159" defer></script>
+<script>
+(function(){var dock=document.getElementById('help-dock'),bar=document.querySelector('.bar');if(!dock)return;var anchor=dock.parentNode,next=dock.nextSibling;
+function layout(){dock.classList.toggle('compact',window.scrollY>60);if(bar){document.documentElement.style.setProperty('--checkout-bar-height',bar.getBoundingClientRect().height+'px');var fit=window.innerWidth>=1050&&bar.clientWidth>700;dock.classList.toggle('in-paybar',fit);if(fit&&dock.parentNode!==bar)bar.insertBefore(dock,bar.firstChild);else if(!fit&&dock.parentNode!==anchor)anchor.insertBefore(dock,next);}}window.addEventListener('scroll',layout,{passive:true});window.addEventListener('resize',layout);if(bar&&window.ResizeObserver)new ResizeObserver(layout).observe(bar);layout();
+function avoidOverlap(){if(innerWidth>=1050||dock.classList.contains('open')){dock.classList.remove('obstructed');return;}dock.classList.remove('obstructed');var a=dock.getBoundingClientRect();var collision=Array.from(document.querySelectorAll('.form input,.f-label,h1,h2,#promo-block,#gift-block')).some(function(el){var b=el.getBoundingClientRect();return b.width>0&&b.height>0&&a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;});dock.classList.toggle('obstructed',collision);}window.addEventListener('scroll',avoidOverlap,{passive:true});window.addEventListener('resize',avoidOverlap);avoidOverlap();
+var vpn=document.getElementById('vpn-note'),pay=document.getElementById('buy-btn');if(vpn&&pay){var action=document.createElement('div');action.className='checkout-pay-action';pay.parentNode.insertBefore(action,pay);action.append(pay,vpn);layout();}
+})();
+</script></body>
 </html>
