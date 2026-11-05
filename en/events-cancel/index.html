@@ -58,10 +58,10 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
 @media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:0.75rem!important;letter-spacing:.16em!important;padding:13px 20px!important}}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=155">
-<script src="/assets/a11y.js?v=155"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=157">
+<script src="/assets/a11y.js?v=157"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=155">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=157">
 </head>
 <body>
 <div class="card" id="card">
@@ -140,6 +140,11 @@ async function doCancel(){
         tr('Эта регистрация уже была отменена раньше (например, если вы уже нажимали эту ссылку) — повторно отменять нечего.',
            'This registration was already cancelled earlier (for example, if you had already used this link) — there is nothing left to cancel.'),
         'warn', null, CABINET_BTN);
+    } else if (data && data.error === 'notification_in_progress') {
+      render(tr('Письмо ещё отправляется', 'An email is being sent'),
+        tr('Сейчас отправляется письмо о событии. Попробуйте отменить регистрацию чуть позже.',
+           'An event email is being sent. Please try cancelling the registration shortly.'),
+        'warn', null, retryBtn);
     } else if (data && data.error === 'bad_cancel_token') {
       render(tr('Ссылка недействительна', 'Invalid link'),
         tr('Не удалось проверить код отмены — попробуйте открыть ссылку из письма ещё раз или отмените регистрацию из личного кабинета.',
@@ -170,6 +175,6 @@ function escapeHtml(s){
   return div.innerHTML;
 }
 </script>
-<script src="/assets/outage.js?v=155" defer></script>
+<script src="/assets/outage.js?v=157" defer></script>
 </body>
 </html>

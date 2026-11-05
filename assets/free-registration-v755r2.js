@@ -27,7 +27,7 @@
     payload.request_id=keyFor(payload);submit.disabled=true;say(texts.sending);
     try{var res=await fetch(base+'/events/register',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(payload),cache:'no-store'});var d=await res.json();
       if(res.status===401){say(texts.refresh);login.hidden=false;return;}
-      if(!res.ok){say(d.error==='event_full'?texts.full:d.error==='already_registered'?texts.already:d.error==='pd_consent_required'?texts.consent:d.error==='invalid_phone'?texts.phone:texts.error);return;}
+      if(!res.ok){say(d.error==='event_full'?texts.full:d.error==='already_registered'?texts.already:d.error==='pd_consent_required'?texts.consent:d.error==='invalid_phone'?texts.phone:['event_updating','event_cancelled','unknown_or_closed_event'].includes(d.error)?texts.closed:texts.error);return;}
       form.hidden=true;say(d.mailSent===true?texts.success+d.email+'.':texts.mailFailed);document.getElementById('free-dashboard').hidden=false;
     }catch(_){say(texts.error);}finally{submit.disabled=false;}
   });

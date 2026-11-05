@@ -1,0 +1,9 @@
+/* AELITA PRODUCTION · «Тексты писем» (pack-v757). Основа — site-editor-v1.css и page-builder-admin.css. */
+.mt-pick{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;margin:8px 0 16px}
+.mt-pick label{flex:1 1 280px;min-width:0}
+.mt-field{border-top:1px solid #33302a;padding-top:14px;margin-top:14px}
+.mt-field label small{color:var(--sand);font-weight:400}
+.mt-field textarea{min-height:110px}
+.mt-sample{border:1px solid #5c5343;padding:14px 16px;margin-top:16px;background:#0f0f12}
+.mt-sample .mt-subj{color:var(--gold);margin:0 0 10px}
+.mt-sample pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:15px;line-height:1.6;margin:0;color:var(--bone)}

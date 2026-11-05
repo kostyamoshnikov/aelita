@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Тексты писем — AELITA PRODUCTION</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/assets/fonts.css?v=157">
+<link rel="stylesheet" href="/assets/site-editor-v1.css?v=157">
+<link rel="stylesheet" href="/assets/page-builder-admin.css?v=157">
+<link rel="stylesheet" href="/assets/mail-texts-admin.css?v=157">
+<script defer src="/assets/mail-texts-admin.js?v=157"></script>
+</head><body>
+<header class="ed-header"><a class="ed-brand" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a><a class="ed-back" href="/admin/">← Админка</a></header>
+<main class="ed-wrap"><p class="ed-kicker">ПИСЬМА · ТЕКСТЫ</p><h1>Тексты писем</h1>
+<p class="ed-note">Тема и «тёплые» абзацы писем зрителям и подписчикам — на русском и английском. <b>Пустое поле — стандартный текст</b>, как сейчас. Билеты, QR, даты, площадка, ссылки, строки о возврате, реквизиты и отписка собираются автоматически и здесь не меняются. Правка начинает действовать в течение минуты после сохранения.</p>
+<section id="mt-gate" class="ed-card" hidden><h2>Войдите в админку</h2><p>Сначала войдите в основной админке в этой вкладке.</p><a class="ed-button" href="/admin/">Войти</a></section>
+<p id="mt-status" role="status" aria-live="polite"></p>
+<div id="mt-app" hidden>
+<div class="mt-pick"><label>Письмо<select id="mt-letter"></select></label><div class="pb-tabs" role="tablist"><button type="button" role="tab" data-lang="ru" aria-selected="true">Русский</button><button type="button" role="tab" data-lang="en" aria-selected="false" class="ed-quiet">English</button></div></div>
+<section class="ed-card"><h2 id="mt-title"></h2><p class="ed-note" id="mt-where"></p><div id="mt-fields"></div>
+<div class="ed-actions"><button type="button" class="ed-quiet" id="mt-preview">Показать пример</button><button type="button" class="ed-quiet" id="mt-test">Отправить пример на почту команды</button></div>
+<div id="mt-sample" class="mt-sample" hidden><p class="mt-subj"></p><pre></pre></div></section>
+<div class="ed-bottom"><p id="mt-state">Изменений нет</p><div class="ed-actions"><button type="button" class="ed-quiet" id="mt-history">История версий</button><button type="button" id="mt-save" disabled>Сохранить</button></div></div>
+</div>
+</main>
+<dialog id="mt-history-dialog" class="ed-dialog"><div class="ed-dialog-head"><h2>История версий</h2><button type="button" id="mt-history-close" class="ed-quiet">Закрыть</button></div><p class="ed-note">Откройте прежнюю версию: она загрузится в форму. Чтобы вернуть её — нажмите «Сохранить».</p><p id="mt-history-status" role="status"></p><ul id="mt-history-list" class="pb-list"></ul></dialog>
+</body></html>

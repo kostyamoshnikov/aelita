@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=155">
+<link rel="stylesheet" href="/assets/fonts.css?v=157">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -447,9 +447,9 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .crm-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
 .handoff-note{color:var(--gold);font-size:0.875rem;text-align:center;margin:16px 0}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=155">
-<script src="/assets/staff-handoff-v1.js?v=155"></script>
-<script src="/assets/mobile-files-m1.js?v=155"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=157">
+<script src="/assets/staff-handoff-v1.js?v=157"></script>
+<script src="/assets/mobile-files-m1.js?v=157"></script>
 </head>
 <body>
 
@@ -1011,19 +1011,19 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 
       <div class="adm-card">
         <h3>Перенести показ</h3>
-        <p class="lead">Билеты остаются в силе, покупателям уйдёт письмо с новой датой.</p>
+        <p class="lead" id="paPostponeLead">Билеты остаются в силе, покупателям уйдёт письмо с новой датой.</p>
         <div class="field">
           <label for="pa-date">Новая дата и время (по Москве)</label>
           <input type="datetime-local" id="pa-date">
         </div>
-        <details class="adm-more"><summary>Подробнее</summary><p>Билеты и QR-коды остаются действительными, места сохраняются. В письме — ссылка на возврат 100%: заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p></details>
+        <details class="adm-more"><summary>Подробнее</summary><p id="paPostponeDetail">Билеты и QR-коды остаются действительными, места сохраняются. В письме — ссылка на возврат 100%: заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p></details>
         <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
       </div>
 
       <div class="adm-card danger">
         <h3>Отменить показ</h3>
-        <p class="lead">Всем покупателям — возврат 100%, билеты аннулируются.</p>
-        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сразу. Деньги — через ЮKassa или вручную (см. строку под выбором показа); оплаченное подарочной картой — обратно на карту. Письмо об отмене — на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём.</p></details>
+        <p class="lead" id="paCancelLead">Всем покупателям — возврат 100%, билеты аннулируются.</p>
+        <details class="adm-more"><summary>Подробнее</summary><p id="paCancelDetail">Продажа закрывается сразу. Деньги — через ЮKassa или вручную (см. строку под выбором показа); оплаченное подарочной картой — обратно на карту. Письмо об отмене — на языке покупателя. Повторное нажатие безопасно: второй раз деньги не уйдут, сбойные заказы попробуем снова, недошедшие письма дошлём.</p></details>
         <button class="btn-small mini-btn-danger" id="paCancelBtn">Отменить показ и вернуть деньги</button>
       </div>
       <p class="editor-result" id="paResult"></p>
@@ -1052,6 +1052,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <h3>Люди и площадки</h3><p class="editor-note adm-mt10">Общие публичные карточки и их связи с событиями. Личные данные CRM сюда не переносятся.</p><a class="btn-small" href="/admin/directory/">Открыть справочники →</a>
       <h3>Новые страницы</h3><p class="editor-note adm-mt10">Создайте страницу человека, площадки, проекта или статью: адрес, тексты RU/EN, фото, описание для поиска. Макет, публикация и история версий.</p><a class="btn-small" href="/admin/pages/">Создать страницу →</a>
       <h3>Меню, подвал и главная</h3><p class="editor-note adm-mt10">Пункты меню и подвала, телефон, почта и соцсети — сразу на всех страницах RU и EN. Подборки главной: главный проект, избранные проекты, команда, партнёры.</p><a class="btn-small" href="/admin/site-nav/">Открыть →</a>
+      <h3>Тексты писем</h3><p class="editor-note adm-mt10">Тема и тёплые абзацы писем зрителям и подписчикам — RU и EN: билеты, напоминание, «спасибо, что были», подтверждение подписки, заявление на возврат. Пример, тест на почту команды, история версий.</p><a class="btn-small" href="/admin/mail-texts/">Открыть →</a>
       <h3>Редактор страниц</h3><p class="editor-note adm-mt10">Выберите страницу, измените текст, ссылку, фотографию или описание для поиска. Перед публикацией — макет телефона и компьютера.</p><a class="btn-small" href="/admin/editor/">Открыть редактор страниц →</a>
       <details class="adm-more"><summary>Точная замена текста — прежний инструмент</summary>
       <div class="field">
@@ -2517,7 +2518,18 @@ async function perfPreview() {
   el.textContent = '';
   if (!id) return;
   var selected = PERF_LIST.filter(function(x){ return x.id === id; })[0];
-  if (selected && selected.freeEvent) { el.textContent='Это бесплатное событие. Список участников — в «Регистрациях». Перенос и отмена события с оповещением участников пока не подключены.'; return; }
+  if (selected && selected.freeEvent) {
+    el.textContent='Загружаем регистрации…';
+    try {
+      var fr=await fetch(ADMIN_PERF_URL+'?performance_id='+encodeURIComponent(id),{headers:{Authorization:'Bearer '+getToken()}}),fd=await fr.json();
+      if (!fr.ok) { el.textContent=errorMessage(fd); return; }
+      var n=fd.notice;
+      var pm=n.postponement;
+      el.textContent=n.cancelled ? 'Событие отменено. Получателей: '+n.total+', отправлено: '+n.sent+', ждут: '+n.pending+', отправляются: '+n.sending+', ошибка: '+n.failed+'. Чтобы продолжить или повторить неотправленные письма, нажмите кнопку отмены ещё раз.' : pm ? 'Бесплатное событие. Новая дата: '+perfMsk(pm.to)+'. Зарегистрировано: '+n.registered+'. Писем о переносе: отправлено '+pm.sent+', ждут '+pm.pending+', отправляются '+pm.sending+', ошибка '+pm.failed+'.'+(pm.phase==='publishing'?' Публикация даты не завершена — повторите перенос с той же датой.':'') : 'Бесплатное событие. Зарегистрировано: '+n.registered+'. Список участников — в «Регистрациях».';
+      if(!n.cancelled && n.reminders)el.textContent+=' Напоминания на эту дату (после включения, за 20–32 часа): отправлено '+n.reminders.sent+', ещё не отправлены '+n.reminders.pending+', отправляются '+n.reminders.sending+', ошибка '+n.reminders.failed+', отложены '+n.reminders.skipped+', отключили напоминания '+n.reminders.opted_out+'.';
+    } catch(e) { el.textContent='Не получилось загрузить сведения о регистрациях.'; }
+    return;
+  }
   el.textContent = 'Считаем заказы…';
   try {
     var res = await fetch(ADMIN_PERF_URL + '?performance_id=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
@@ -2553,6 +2565,27 @@ async function perfPostpone() {
   out.textContent = '';
   if (!id || !date || !title.trim()) { out.textContent = 'Выберите показ, новую дату и введите название спектакля.'; return; }
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  if (p && p.freeEvent) {
+    if (!confirm('Перенести бесплатное событие «'+p.title+'» на '+date.replace('T',' ')+' (по Москве)? Регистрации и QR-билеты сохранятся, участникам уйдут письма.')) return;
+    var freeBtn=document.getElementById('paPostponeBtn');freeBtn.disabled=true;out.textContent='Сохраняем перенос и отправляем письма…';
+    try {
+      var moveRes=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{Authorization:'Bearer '+getToken(),'Content-Type':'application/json'},body:JSON.stringify({action:'postpone',performance_id:id,new_datetime:date,confirm_title:title,expected_datetime:p.datetime})});
+      var moveData=await moveRes.json();
+      if(!moveRes.ok){out.textContent=moveData.message || ({confirm_title_mismatch:'Название не совпало с афишей.',bad_datetime:'Проверьте дату.',datetime_in_past:'Новая дата уже прошла.',already_started:'Событие уже началось.'}[moveData.error]) || errorMessage(moveData);return;}
+      var mn=moveData.postponement,rounds=0;
+      while(mn.pending>0 && rounds<500){
+        out.textContent='Событие перенесено. Писем отправлено: '+mn.sent+' из '+mn.total+', ждут: '+mn.pending+', ошибка: '+mn.failed+'. Продолжаем; не закрывайте страницу.';
+        var oldPending=mn.pending;
+        var more=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{Authorization:'Bearer '+getToken(),'Content-Type':'application/json'},body:JSON.stringify({action:'postpone',performance_id:id,new_datetime:date,confirm_title:title,only_pending:true,move_id:mn.id})});
+        var moreData=await more.json();if(!more.ok){var interrupted=Error('send_interrupted');interrupted.notice=moreData.message;throw interrupted;}
+        mn=moreData.postponement;rounds++;if(mn.pending>=oldPending)break;
+      }
+      out.textContent='Событие перенесено. Получателей: '+mn.total+', отправлено: '+mn.sent+', ждут: '+mn.pending+', отправляются: '+mn.sending+', ошибка: '+mn.failed+(mn.skipped?', отменили регистрацию: '+mn.skipped:'')+'.'+(mn.pending || mn.failed || mn.sending ? ' Повторите перенос с той же датой; если отправка зависла, подождите до 10 минут.' : '');
+      await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();await perfPreview();
+    }catch(e){out.textContent=e.notice || 'Связь прервалась. Проверьте статус и повторите перенос с той же датой.';}
+    finally{var latest=PERF_LIST.filter(function(x){return x.id===id;})[0];freeBtn.disabled=!!(latest && latest.status==='canceled');}
+    return;
+  }
   if (!confirm('Перенести «' + (p ? p.title : id) + '» на ' + date.replace('T', ' ') + ' (по Москве)? Покупатели получат письма сразу.')) return;
   var btn = document.getElementById('paPostponeBtn');
   btn.disabled = true;
@@ -2583,6 +2616,27 @@ async function perfCancel() {
   out.textContent = '';
   if (!id || !title.trim()) { out.textContent = 'Выберите показ и введите название спектакля.'; return; }
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
+  if (p && p.freeEvent) {
+    if (!confirm('Отменить бесплатное событие «'+p.title+'» или продолжить отправку уведомлений? Регистрации и QR-билеты станут недействительными.')) return;
+    var freeBtn=document.getElementById('paCancelBtn');freeBtn.disabled=true;out.textContent='Отменяем событие и отправляем письма…';
+    try {
+      var freeRes=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{Authorization:'Bearer '+getToken(),'Content-Type':'application/json'},body:JSON.stringify({action:'cancel',performance_id:id,confirm_title:title})});
+      var freeData=await freeRes.json();
+      if(!freeRes.ok){out.textContent=freeData.message || ({confirm_title_mismatch:'Название не совпало с афишей.',already_started:'Событие уже началось.',free_cancel_disabled:'Отмена бесплатных событий ещё не включена.'}[freeData.error]) || errorMessage(freeData);return;}
+      var no=freeData.notice,rounds=0;
+      while(no.pending>0 && rounds<500){
+        out.textContent='Событие отменено. Отправлено: '+no.sent+' из '+no.total+', ждут: '+no.pending+', ошибка: '+no.failed+'. Продолжаем отправку; не закрывайте эту страницу.';
+        var oldPending=no.pending;
+        var more=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{Authorization:'Bearer '+getToken(),'Content-Type':'application/json'},body:JSON.stringify({action:'cancel',performance_id:id,confirm_title:title,only_pending:true})});
+        var moreData=await more.json();if(!more.ok)throw Error('send_interrupted');
+        no=moreData.notice;rounds++;if(no.pending>=oldPending)break;
+      }
+      out.textContent='Событие отменено. Получателей: '+no.total+', отправлено: '+no.sent+', ждут: '+no.pending+', отправляются: '+no.sending+', ошибка: '+no.failed+'.'+(no.pending || no.failed || no.sending ? ' Нажмите ещё раз, чтобы продолжить; если отправка зависла, подождите до 10 минут.' : '');
+      await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();await perfPreview();
+    } catch(e) {out.textContent='Не получилось связаться с сервером. Проверьте статус и повторите.';}
+    finally {freeBtn.disabled=false;}
+    return;
+  }
   var again = p && p.status === 'canceled';
   if (!confirm(again
     ? 'Показ уже отменён. Повторить: довернуть сбойные заказы и дослать письма?'
@@ -2726,8 +2780,14 @@ function perfSalesBtnState() {
   var id = document.getElementById('pa-perf').value;
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
   var ok = p && p.salesChannel === 'in_house' && p.status !== 'canceled';
-  document.getElementById('paPostponeBtn').disabled = !!(p && p.freeEvent);
-  document.getElementById('paCancelBtn').disabled = !!(p && p.freeEvent);
+  var cancelBtn=document.getElementById('paCancelBtn'),free=!!(p && p.freeEvent);
+  document.getElementById('paPostponeBtn').disabled=!!(free && p.status==='canceled');
+  document.getElementById('paPostponeLead').textContent=free ? 'Регистрации и QR-билеты действуют на новую дату; участникам уйдёт письмо.' : 'Билеты остаются в силе, покупателям уйдёт письмо с новой датой.';
+  document.getElementById('paPostponeDetail').textContent=free ? 'Дата обновится в регистрации и личном кабинете, QR сохранится. Письма отправляются порциями, пока страница открыта. Чтобы продолжить после сбоя, повторите перенос с той же датой.' : 'Билеты и QR-коды остаются действительными, места сохраняются. В письме — ссылка на возврат 100%; заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повтор с той же датой дошлёт несостоявшиеся письма.';
+  cancelBtn.disabled=false;
+  cancelBtn.textContent=free ? 'Отменить событие и отправить письма' : 'Отменить показ и вернуть деньги';
+  document.getElementById('paCancelLead').textContent=free ? 'Регистрации и QR-билеты аннулируются; участникам уйдут письма.' : 'Всем покупателям — возврат 100%, билеты аннулируются.';
+  document.getElementById('paCancelDetail').textContent=free ? 'Запись закроется, а зарегистрированные получат письмо на языке регистрации. Письма отправляются порциями автоматически, пока страница открыта. Если отправка прервалась или остались ошибки, нажмите кнопку ещё раз и проверьте счётчики. После временного сбоя возможно повторное письмо.' : 'Продажа закрывается сразу. Деньги — через ЮKassa или вручную; оплаченное подарочной картой — обратно на карту. Письмо об отмене — на языке покупателя. Повторное нажатие продолжит незавершённые действия.';
   b.disabled = !ok;
   b.textContent = p && p.freeEvent ? (p.salesClosed ? 'Открыть регистрацию' : 'Закрыть регистрацию') : p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
   // pack-v734: автозакрытие по окончании события — когда закроется / закрылась сама.
@@ -6926,7 +6986,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=155"></script>
+<script src="/assets/admin-snapshot.js?v=157"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>
