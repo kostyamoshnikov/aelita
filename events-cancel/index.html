@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
 <title>Отмена регистрации — AELITA PRODUCTION</title>
 <!--
   AELITA PRODUCTION · Events — страница-приёмник ссылки «Отменить
@@ -57,10 +58,10 @@ body :is(.btn-gold,.buy-btn,.promo-apply):disabled{opacity:.45!important;cursor:
 @media(max-width:600px){body :is(.btn-gold,.buy-btn,.install-btn,.retry-btn){font-size:0.75rem!important;letter-spacing:.16em!important;padding:13px 20px!important}}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=153">
-<script src="/assets/a11y.js?v=153"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=155">
+<script src="/assets/a11y.js?v=155"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=153">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=155">
 </head>
 <body>
 <div class="card" id="card">
@@ -92,7 +93,7 @@ const CABINET_BTN = EN
 const EVENTS_BTN = EN
   ? '<a href="/en/"><button class="secondary">All events</button></a>'
   : '<a href="/"><button class="secondary">Все события</button></a>';
-const params = new URLSearchParams(location.search);
+const params = new URLSearchParams(location.hash.startsWith('#token=') ? location.hash.slice(1) : location.search);
 const token = params.get('token');
 const API_BASE = 'https://api.aelita-production.ru/events';
 
@@ -169,6 +170,6 @@ function escapeHtml(s){
   return div.innerHTML;
 }
 </script>
-<script src="/assets/outage.js?v=153" defer></script>
+<script src="/assets/outage.js?v=155" defer></script>
 </body>
 </html>

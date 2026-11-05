@@ -1,0 +1,199 @@
+{
+  "schema": "aelita.home/v1",
+  "revision": 0,
+  "feature": {
+    "href": "/tochkacuire",
+    "image": "/images/home/tochkacuire.jpg",
+    "ru": {
+      "alt": "Фестиваль «Точка Кюри» — обложка",
+      "label": "Крупный проект",
+      "title": "Точка Кюри",
+      "text": "Ежегодный фестиваль современного искусства в Старом Осколе. Спектакли, лекции, выставки, мастер-классы и детская программа — первое издание.",
+      "dates": "22–25 октября 2026",
+      "place": "ЦСИ «Быль»",
+      "button": "О фестивале"
+    },
+    "en": {
+      "alt": "“Tochka Cuire” festival — cover",
+      "label": "Major project",
+      "title": "“Tochka Cuire”",
+      "text": "An annual festival of contemporary art in Stary Oskol. Performances, lectures, exhibitions, workshops and a children’s programme — the first edition.",
+      "dates": "22–25 October 2026",
+      "place": "CSI “Byl”",
+      "button": "About the festival"
+    }
+  },
+  "projects": [
+    {
+      "href": "/iov",
+      "image": "/images/iov-card-1.jpg",
+      "position": "62% 30%",
+      "ru": {
+        "title": "ИОВ:материал",
+        "kicker": "Современная мистерия",
+        "alt": "«ИОВ:материал» — сцена из спектакля"
+      },
+      "en": {
+        "title": "IOV: Material",
+        "kicker": "A contemporary mystery play",
+        "alt": "“IOV: Material” — a scene from the production"
+      }
+    },
+    {
+      "href": "/porfiriy",
+      "image": "/images/porfiriy-card.jpg",
+      "position": "50% 22%",
+      "ru": {
+        "title": "Порфирий",
+        "kicker": "Медитативный детектив",
+        "alt": "«Порфирий» — сцена из спектакля"
+      },
+      "en": {
+        "title": "Porfiry",
+        "kicker": "Meditative detective piece",
+        "alt": "“Porfiry” — a scene from the production"
+      }
+    },
+    {
+      "href": "/listen",
+      "image": "/images/listen/listen-1.jpg",
+      "position": "30% 50%",
+      "ru": {
+        "title": "Послушайте!",
+        "kicker": "Танцевальный спектакль",
+        "alt": "«Послушайте!» — сцена из спектакля"
+      },
+      "en": {
+        "title": "Listen!",
+        "kicker": "Dance Performance",
+        "alt": "“Listen!” — a scene from the performance"
+      }
+    },
+    {
+      "href": "/community",
+      "image": "/images/community/community-1.jpg",
+      "position": "50% 62%",
+      "ru": {
+        "title": "AELITA COMMUNITY",
+        "kicker": "Книжный клуб",
+        "alt": "Участники книжного клуба AELITA COMMUNITY"
+      },
+      "en": {
+        "title": "AELITA COMMUNITY",
+        "kicker": "Book club",
+        "alt": "Members of the AELITA COMMUNITY book club"
+      }
+    }
+  ],
+  "team": [
+    {
+      "href": "/katya-abdulova",
+      "image": "/images/katya-abdulova.jpg",
+      "ru": {
+        "name": "Катя Абдулова"
+      },
+      "en": {
+        "name": "Katya Abdulova"
+      }
+    },
+    {
+      "href": "/konstantin-moshnikov",
+      "image": "/images/moshnikov.jpg",
+      "ru": {
+        "name": "Константин Мошников"
+      },
+      "en": {
+        "name": "Konstantin Moshnikov"
+      }
+    },
+    {
+      "href": "/yulia-bychkova",
+      "image": "/images/yulia-bychkova.jpg",
+      "ru": {
+        "name": "Юлия Бычкова"
+      },
+      "en": {
+        "name": "Yulia Bychkova"
+      }
+    },
+    {
+      "href": "/ivan-sachkov",
+      "image": "/images/sachkov.jpg",
+      "ru": {
+        "name": "Иван Сачков"
+      },
+      "en": {
+        "name": "Ivan Sachkov"
+      }
+    },
+    {
+      "href": "/ekaterina-ilyina",
+      "image": "/images/ilyina.jpg",
+      "ru": {
+        "name": "Екатерина Ильина"
+      },
+      "en": {
+        "name": "Ekaterina Ilyina"
+      }
+    },
+    {
+      "href": "/vanya-dyba",
+      "image": "/images/vanya-dyba.jpg",
+      "ru": {
+        "name": "Ваня Дыба"
+      },
+      "en": {
+        "name": "Vanya Dyba"
+      }
+    }
+  ],
+  "partners": [
+    {
+      "href": "/byl",
+      "ru": {
+        "name": "ЦСИ «Быль»",
+        "note": "Старый Оскол"
+      },
+      "en": {
+        "name": "CSI “Byl”",
+        "note": "Stary Oskol"
+      }
+    },
+    {
+      "href": "/koroche",
+      "ru": {
+        "name": "«Короче»",
+        "note": "Танцевальная компания"
+      },
+      "en": {
+        "name": "“Koroche”",
+        "note": "Dance company"
+      }
+    },
+    {
+      "ru": {
+        "name": "ПараПланов"
+      },
+      "en": {
+        "name": "ParaPlanov"
+      }
+    },
+    {
+      "href": "https://malton.ru/",
+      "ru": {
+        "name": "Malton"
+      },
+      "en": {
+        "name": "Malton"
+      }
+    },
+    {
+      "ru": {
+        "name": "Творческая Калуга"
+      },
+      "en": {
+        "name": "Creative Kaluga"
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+/* AELITA PRODUCTION · страницы из конструктора админки (pack-v753, _tools/Admin/pages).
+   Общая вёрстка (шапка, подвал, кнопки, .wrap, .eyebrow) — из style.css; здесь только своё. */
+.pb-hero-in{padding:140px 0 70px} /* у секции style="padding:0": общее правило main section{padding:80px!important} её не трогает */
+.pb-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:70px;align-items:start}
+.pb-noimage .pb-grid{grid-template-columns:minmax(0,1fr);max-width:900px}
+.pb-photo{margin:0}
+.pb-photo img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block;filter:brightness(.88)}
+.pb-venue .pb-photo img,.pb-project .pb-photo img,.pb-article .pb-photo img{aspect-ratio:4/3}
+.pb-info .eyebrow{margin-bottom:16px}
+.pb-info h1{font-size:clamp(28px,5vw,54px);letter-spacing:.08em;line-height:1.12;margin-bottom:12px;overflow-wrap:anywhere}
+.pb-sub{font-family:'Montserrat',sans-serif;font-size:0.875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);margin-bottom:26px}
+.pb-lead{font-size:1.0625rem;line-height:1.8;color:var(--bone);border-left:2px solid var(--gold);padding-left:18px;margin-bottom:8px}
+.pb-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.pb-links a{margin:0}
+.pb-body{padding:10px 0 90px}
+.pb-text{max-width:820px}
+.pb-text p,.pb-text li{color:var(--sand);font-size:1rem;line-height:1.9;margin-bottom:16px}
+.pb-text h2{font-size:clamp(17px,2.4vw,24px);letter-spacing:.24em;margin:44px 0 18px;color:var(--bone)}
+.pb-text ul{list-style:none;padding:0;margin:0 0 18px}
+.pb-text li{position:relative;padding-left:22px;margin-bottom:8px}
+.pb-text li::before{content:'';position:absolute;left:0;top:.85em;width:10px;height:1px;background:var(--gold)}
+.pb-text strong{color:var(--bone);font-weight:500}
+.pb-text a{color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px;overflow-wrap:anywhere}
+.pb-note{font-size:0.875rem;color:var(--sand);opacity:.8;font-style:italic}
+@media(max-width:900px){.pb-grid{grid-template-columns:minmax(0,1fr);gap:36px}.pb-photo{max-width:340px}.pb-venue .pb-photo,.pb-project .pb-photo,.pb-article .pb-photo{max-width:none}}
+@media(max-width:430px){.pb-hero-in{padding:110px 0 50px}.pb-lead{font-size:1rem}.pb-links a{width:100%;text-align:center}}

@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Меню, подвал и главная — AELITA PRODUCTION</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/assets/fonts.css?v=155">
+<link rel="stylesheet" href="/assets/site-editor-v1.css?v=155">
+<link rel="stylesheet" href="/assets/page-builder-admin.css?v=155">
+<link rel="stylesheet" href="/assets/site-nav-admin.css?v=155">
+<script defer src="/assets/site-nav-admin.js?v=155"></script>
+</head><body>
+<header class="ed-header"><a class="ed-brand" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a><a class="ed-back" href="/admin/">← Админка</a></header>
+<main class="ed-wrap"><p class="ed-kicker">САЙТ · ОБЩИЕ БЛОКИ</p><h1>Меню, подвал и главная</h1>
+<p class="ed-note">Пункты меню, колонки подвала, телефон, почта и соцсети — сразу на всех страницах, на русском и английском. Подборки главной: главный проект, избранные проекты, команда, партнёры. Сначала проверка макета, потом публикация. Реквизиты компании здесь не меняются.</p>
+<section id="sn-gate" class="ed-card" hidden><h2>Войдите в админку</h2><p>Сначала войдите в основной админке в этой вкладке.</p><a class="ed-button" href="/admin/">Войти</a></section>
+<p id="sn-status" role="status" aria-live="polite"></p>
+<div class="pb-tabs" id="sn-tabs" role="tablist" hidden><button type="button" role="tab" data-tab="nav" aria-selected="true">Меню, подвал, контакты</button><button type="button" role="tab" data-tab="home" aria-selected="false" class="ed-quiet">Главная</button></div>
+
+<form id="sn-nav" hidden novalidate>
+<section class="ed-card"><h2>Меню в шапке</h2><p class="ed-note">До 9 пунктов. Адрес — страница сайта, например <code>/tickets</code>. На английских страницах ссылка сама станет <code>/en/tickets</code>.</p><div data-list="menu"></div><button type="button" class="ed-quiet" data-add="menu">Добавить пункт</button>
+<div class="pb-two sn-account"><label>Кнопка кабинета (RU)<input class="ym-disable-keys" id="sn-account-ru" maxlength="60"></label><label>Account button (EN)<input class="ym-disable-keys" id="sn-account-en" maxlength="60"></label></div></section>
+<section class="ed-card"><h2>Мобильное меню</h2><p class="ed-note">До 12 пунктов. Обычно — те же, что в шапке, плюс «Частые вопросы» и «Личный кабинет».</p><div data-list="mobile"></div><button type="button" class="ed-quiet" data-add="mobile">Добавить пункт</button> <button type="button" class="ed-quiet" id="sn-copy-menu">Скопировать из шапки</button></section>
+<section class="ed-card"><h2>Контакты</h2><div class="pb-two"><label>Телефон<input class="ym-disable-keys" id="sn-phone" maxlength="30" inputmode="tel" placeholder="+7 960 515-16-90"></label><label>Почта<input class="ym-disable-keys" id="sn-email" maxlength="120" inputmode="email"></label></div>
+<h3>Соцсети в подвале</h3><p class="ed-note">Адрес https://… Метки для статистики добавятся сами.</p><div data-list="socials"></div><button type="button" class="ed-quiet" data-add="socials">Добавить соцсеть</button></section>
+<section class="ed-card"><h2>Колонки подвала</h2><p class="ed-note">До 4 колонок, в каждой до 8 ссылок. Первая колонка подвала — компания и контакты — собирается сама.</p><div id="sn-cols"></div><button type="button" class="ed-quiet" id="sn-col-add">Добавить колонку</button></section>
+<div class="ed-bottom"><p id="sn-nav-state"></p><div class="ed-actions"><button type="button" class="ed-quiet" data-history="nav">История версий</button><button type="button" class="ed-quiet" id="sn-resync">Разложить по страницам ещё раз</button><button type="submit">Проверить макет</button></div></div>
+</form>
+
+<form id="sn-home" hidden novalidate>
+<section class="ed-card"><h2>Главный проект</h2><div class="sn-feature">
+<div class="pb-two"><label>Ссылка кнопки<input class="ym-disable-keys" id="sn-f-href" maxlength="300" placeholder="/tochkacuire"></label><label>Фото<span class="sn-img"><input class="ym-disable-keys" id="sn-f-image" maxlength="160" list="sn-images" placeholder="/images/…"><label class="ed-upload ed-quiet">Загрузить<input type="file" accept="image/jpeg,image/png,image/webp" data-upload="sn-f-image"></label></span></label></div>
+<div class="pb-two"><fieldset><legend>Русский</legend><label>Подпись над заголовком<input class="ym-disable-keys" id="sn-f-ru-label" maxlength="40"></label><label>Заголовок<input class="ym-disable-keys" id="sn-f-ru-title" maxlength="80"></label><label>Текст<textarea class="ym-disable-keys" id="sn-f-ru-text" maxlength="400" rows="4"></textarea></label><label>Даты<input class="ym-disable-keys" id="sn-f-ru-dates" maxlength="60"></label><label>Место<input class="ym-disable-keys" id="sn-f-ru-place" maxlength="80"></label><label>Кнопка<input class="ym-disable-keys" id="sn-f-ru-button" maxlength="40"></label><label>Описание фото<input class="ym-disable-keys" id="sn-f-ru-alt" maxlength="160"></label></fieldset>
+<fieldset><legend>English</legend><label>Label<input class="ym-disable-keys" id="sn-f-en-label" maxlength="40"></label><label>Title<input class="ym-disable-keys" id="sn-f-en-title" maxlength="80"></label><label>Text<textarea class="ym-disable-keys" id="sn-f-en-text" maxlength="400" rows="4"></textarea></label><label>Dates<input class="ym-disable-keys" id="sn-f-en-dates" maxlength="60"></label><label>Place<input class="ym-disable-keys" id="sn-f-en-place" maxlength="80"></label><label>Button<input class="ym-disable-keys" id="sn-f-en-button" maxlength="40"></label><label>Photo description<input class="ym-disable-keys" id="sn-f-en-alt" maxlength="160"></label></fieldset></div></div></section>
+<section class="ed-card"><h2>Избранные проекты</h2><p class="ed-note">До 8 карточек. «Кадрирование» — какая часть фото видна в карточке: два числа в процентах, по горизонтали и по вертикали (например <code>50% 30%</code>).</p><div data-list="projects"></div><button type="button" class="ed-quiet" data-add="projects">Добавить проект</button></section>
+<section class="ed-card"><h2>Команда</h2><p class="ed-note">До 12 человек: ссылка на страницу, фото и имя.</p><div data-list="team"></div><button type="button" class="ed-quiet" data-add="team">Добавить человека</button></section>
+<section class="ed-card"><h2>Партнёры</h2><p class="ed-note">До 16. Ссылка — страница сайта или https://…; без ссылки — просто название.</p><div data-list="partners"></div><button type="button" class="ed-quiet" data-add="partners">Добавить партнёра</button></section>
+<div class="ed-bottom"><p id="sn-home-state"></p><div class="ed-actions"><button type="button" class="ed-quiet" data-history="home">История версий</button><button type="submit">Проверить макет</button></div></div>
+</form>
+<datalist id="sn-images"></datalist>
+<section id="sn-sync" class="ed-card" hidden><h2>Раскладываем меню по страницам</h2><progress id="sn-sync-bar" max="1" value="0"></progress><p id="sn-sync-text" role="status"></p><p class="ed-note">Не закрывайте вкладку. Если связь оборвётся — нажмите «Разложить по страницам ещё раз»: уже готовые страницы не тронутся.</p></section>
+</main>
+<dialog id="sn-review" class="ed-dialog ed-preview-dialog"><div class="ed-dialog-head"><h2>Проверка перед публикацией</h2><button type="button" id="sn-review-close" class="ed-quiet">Вернуться к правке</button></div>
+<div class="ed-preview-tools"><button type="button" data-preview="ru">Русская</button><button type="button" data-preview="en" class="ed-quiet">English</button></div>
+<iframe id="sn-frame" title="Макет страницы" sandbox="" referrerpolicy="no-referrer"></iframe>
+<p class="ed-note" id="sn-affected"></p><p class="ed-error" id="sn-review-error" role="alert"></p><div class="ed-actions"><button type="button" id="sn-publish">Опубликовать</button></div></dialog>
+<dialog id="sn-history-dialog" class="ed-dialog"><div class="ed-dialog-head"><h2>История версий</h2><button type="button" id="sn-history-close" class="ed-quiet">Закрыть</button></div><p class="ed-note">Откройте прежнюю версию: она загрузится в форму. Чтобы вернуть её на сайт — проверьте макет и опубликуйте.</p><p id="sn-history-status" role="status"></p><ul id="sn-history-list" class="pb-list"></ul></dialog>
+</body></html>

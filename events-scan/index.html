@@ -64,7 +64,7 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=153">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=155">
 </head>
 <body>
 <div id="gate">
@@ -77,7 +77,7 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 <div id="app">
 <h1>Контроль регистраций</h1>
 <div id="event-badge" style="display:none;color:var(--sand);font-size:0.8125rem;margin:-10px 0 14px"></div>
-<div id="queue-badge"></div>
+<div id="queue-badge" role="status"></div><button class="action secondary" id="queue-clear-rejected" type="button" hidden>Очистить отклонённые после проверки</button>
 <input class="ym-disable-keys" id="scan-input" placeholder="Наведите сканер или введите код вручную" autofocus>
 <button class="action secondary" id="camera-toggle" style="width:100%;margin:0 0 10px">📷 Включить камеру</button>
 <video id="camera-video" playsinline style="display:none;width:100%;border-radius:6px;margin-bottom:10px"></video>
@@ -87,7 +87,7 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 
 <a class="help-fab" href="tel:+79605151690">🆘 Позвать помощь</a>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js"></script>
+<script src="/assets/jsQR-1.4.0.js?v=155"></script>
 <script src="/assets/analytics-events.js"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
@@ -149,8 +149,10 @@ document.addEventListener('click', function once(){ requestWakeLock(); document.
 requestWakeLock();
 
 function getQueue(){ try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); }catch(e){ return []; } }
-function saveQueue(arr){ localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr.length); }
-function updateBadge(n){ const el=document.getElementById('queue-badge'); if(n>0){ el.textContent='Не отправлено: '+n; el.style.display='block'; } else el.style.display='none'; }
+function saveQueue(arr){ localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); updateBadge(arr); }
+function updateBadge(arr){ const el=document.getElementById('queue-badge'), bad=arr.filter(x=>x.rejected).length, pending=arr.length-bad; el.textContent=(pending?'Ожидают отправки: '+pending:'')+(pending&&bad?' · ':'')+(bad?'Отклонены сервером: '+bad+' — проверьте с администратором':''); el.style.display=arr.length?'block':'none'; document.getElementById('queue-clear-rejected').hidden=!bad; }
+document.getElementById('queue-clear-rejected').addEventListener('click',()=>{if(confirm('Вы проверили с администратором все отклонённые отметки?')) saveQueue(getQueue().filter(x=>!x.rejected));});
+let queueFlushing=false;
 
 class NetworkError extends Error {}
 class UnauthorizedError extends Error {}
@@ -176,14 +178,23 @@ async function api(action, extra){
 }
 
 async function flushQueue(){
-  const arr = getQueue();
-  if(arr.length === 0) return;
-  const remaining = [];
-  for(const item of arr){
-    try{ await api('checkin', {token: item.token, expected_event_id: item.expectedEventId || undefined}); }
-    catch(e){ if(e instanceof NetworkError || e instanceof UnauthorizedError) remaining.push(item); }
-  }
-  saveQueue(remaining);
+  if(queueFlushing) return;
+  queueFlushing=true;
+  try {
+    const arr=getQueue(); if(!arr.length){ updateBadge(arr); return; }
+    arr.forEach(item=>{if(!item.queueId)item.queueId=crypto.randomUUID();});saveQueue(arr);
+    const completed=new Set(), rejected=new Map();
+    for(const item of arr){
+      if(item.rejected) continue;
+      try{
+        const answer=await api('checkin',{token:item.token,expected_event_id:item.expectedEventId || undefined});
+        if(answer && answer.ok) completed.add(item.queueId);
+        else rejected.set(item.queueId,String(answer?.error || answer?.reason || 'rejected').slice(0,80));
+      }catch(_){ /* сохранить для повтора, включая ошибки сервера */ }
+    }
+    const latest=getQueue();
+    saveQueue(latest.filter(x=>!completed.has(x.queueId)).map(x=>rejected.has(x.queueId)?{...x,rejected:true,rejectionReason:rejected.get(x.queueId)}:x));
+  } finally { queueFlushing=false; }
 }
 window.addEventListener('online', flushQueue);
 setInterval(flushQueue, 15000);
@@ -328,9 +339,9 @@ async function confirmCheckin(){
     if(e instanceof UnauthorizedError) return;
     if(e instanceof NetworkError){
       const arr = getQueue();
-      arr.push({token: currentToken, expectedEventId, ts: Date.now()});
+      arr.push({queueId:crypto.randomUUID(),token: currentToken, expectedEventId, ts: Date.now()});
       saveQueue(arr);
-      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Пропущен (сохранено офлайн, отправим при связи)</div></div>';
+      document.getElementById('result').innerHTML = '<div class="card ok"><div class="status ok">Отметка ожидает связи. После отправки проверьте, что она не отклонена.</div></div>';
     } else {
       document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Сервер ответил с ошибкой — попробуйте ещё раз или позовите помощь.</div></div>';
     }
@@ -352,6 +363,7 @@ async function undoCheckin(){
   }
 }
 
+updateBadge(getQueue());
 if(getStaffCode()) flushQueue();
 </script>
 </body>

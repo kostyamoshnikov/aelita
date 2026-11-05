@@ -1,0 +1,20 @@
+/* AELITA PRODUCTION · админка конструктора страниц (pack-v753). Основа — site-editor-v1.css. */
+.pb-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pb-row h2{margin:0}
+.pb-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.pb-list li{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid #33302a}
+.pb-list li b{display:block;font-weight:400}.pb-list li small{color:var(--sand)}
+.pb-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+.pb-slug{display:flex;align-items:stretch;min-width:0}.pb-slug>span{display:flex;align-items:center;padding:0 10px;border:1px solid #5c5343;border-right:0;color:var(--sand);font-size:14px;white-space:nowrap}
+.pb-tabs{display:flex;gap:8px;margin-bottom:16px}
+.pb-image{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;margin-bottom:12px}
+.pb-image img{width:160px;height:200px;object-fit:cover;border:1px solid #5c5343}
+.pb-body{min-height:220px;font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.pb-link{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:0 12px;align-items:end;border-top:1px solid #33302a;padding-top:12px}
+.pb-link button{margin-bottom:16px}
+.pb-seo,.pb-help{margin:6px 0 14px}.pb-seo summary,.pb-help summary{cursor:pointer;color:var(--gold);min-height:44px;display:flex;align-items:center}
+.pb-help code{color:var(--gold)}
+.pb-bad{border-color:#e07a6a!important;outline:2px solid #e07a6a}
+.pb-import input{position:absolute;opacity:0;width:1px;height:1px}
+#pb-frame{width:100%;height:70vh;border:1px solid #5c5343;background:#0b0b0d}
+@media(max-width:760px){.pb-two{grid-template-columns:minmax(0,1fr)}.pb-link{grid-template-columns:minmax(0,1fr)}.pb-slug>span{font-size:12px;padding:0 6px}.pb-image img{width:120px;height:150px}}

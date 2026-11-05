@@ -1,0 +1,18 @@
+/* AELITA PRODUCTION · меню, подвал и главная (pack-v754). Основа — site-editor-v1.css и page-builder-admin.css. */
+.sn-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:0 12px;align-items:end;border-top:1px solid #33302a;padding-top:12px}
+.sn-row.sn-projects,.sn-row.sn-partners{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sn-row.sn-team{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sn-row.sn-projects .sn-tools,.sn-row.sn-partners .sn-tools,.sn-row.sn-team .sn-tools{grid-column:1/-1}
+.sn-tools{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.sn-tools button{min-width:44px;min-height:44px;padding:0 12px}
+.sn-img{display:flex;gap:8px;align-items:stretch;min-width:0}.sn-img input[type=text],.sn-img input:not([type]){flex:1;min-width:0}
+.sn-img .ed-upload{white-space:nowrap;display:flex;align-items:center}.sn-img .ed-upload input{position:absolute;opacity:0;width:1px;height:1px}
+.sn-col{border-top:1px solid #5c5343;padding-top:14px;margin-top:14px}
+.sn-check{display:flex;gap:10px;align-items:center;min-height:44px}
+.sn-check input{width:22px;height:22px}
+.sn-account{margin-top:14px}
+fieldset{border:1px solid #33302a;padding:12px 14px;margin:0 0 12px;min-width:0}legend{color:var(--gold);padding:0 6px}
+#sn-frame{width:100%;height:70vh;border:1px solid #5c5343;background:#0b0b0d}
+#sn-sync progress{width:100%;height:14px;accent-color:#d6b57a}
+#sn-tabs{margin:8px 0 16px}
+@media(max-width:760px){.sn-row,.sn-row.sn-projects,.sn-row.sn-partners,.sn-row.sn-team{grid-template-columns:minmax(0,1fr)}}

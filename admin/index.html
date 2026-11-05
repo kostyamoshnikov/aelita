@@ -3,9 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
 <title>Админка — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=153">
+<script>
+// Письмо содержит только случайный номер записи в fragment. Убираем его из
+// адресной строки до загрузки остальных скриптов; права проверяет сервер.
+(function () {
+  var m = /^#checkout=([a-f0-9]{32})$/.exec(location.hash || '');
+  if (!m) return;
+  window.AELITA_checkoutMailFocus = m[1];
+  try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
+}());
+</script>
+<link rel="stylesheet" href="/assets/fonts.css?v=155">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -436,9 +447,9 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
 .crm-msg{font-size:0.75rem;color:var(--sand);margin-left:10px}
 .handoff-note{color:var(--gold);font-size:0.875rem;text-align:center;margin:16px 0}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=153">
-<script src="/assets/staff-handoff-v1.js?v=153"></script>
-<script src="/assets/mobile-files-m1.js?v=153"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=155">
+<script src="/assets/staff-handoff-v1.js?v=155"></script>
+<script src="/assets/mobile-files-m1.js?v=155"></script>
 </head>
 <body>
 
@@ -624,6 +635,7 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
     </div>
     <p style="color:var(--sand);font-size:0.75rem;line-height:1.6;margin:0 0 12px">Записи хранятся 30 дней с последнего действия. Оплатившие сюда не попадают; если человек позже купил, запись исчезнет сама.</p>
     <div class="ord-email-chip" id="coEmailChip" hidden></div>
+    <div class="ord-email-chip" id="coMailFocus" hidden aria-live="polite"></div>
     <div id="checkoutsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
@@ -1038,6 +1050,8 @@ p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!im
       <h3>Управление ботом</h3><p class="editor-note adm-mt10">Меню, кнопки, тексты и материалы Telegram-бота. Черновик и проверка перед публикацией.</p><a class="btn-small" href="/admin/bot/">Открыть редактор бота →</a>
       <h3>Мастер событий</h3><p class="editor-note adm-mt10">Создайте очное событие, страницу, афишу и данные билетов из одной формы. Сначала проверьте макет, затем опубликуйте анонс.</p><a class="btn-small" href="/admin/events/">Открыть мастер событий →</a>
       <h3>Люди и площадки</h3><p class="editor-note adm-mt10">Общие публичные карточки и их связи с событиями. Личные данные CRM сюда не переносятся.</p><a class="btn-small" href="/admin/directory/">Открыть справочники →</a>
+      <h3>Новые страницы</h3><p class="editor-note adm-mt10">Создайте страницу человека, площадки, проекта или статью: адрес, тексты RU/EN, фото, описание для поиска. Макет, публикация и история версий.</p><a class="btn-small" href="/admin/pages/">Создать страницу →</a>
+      <h3>Меню, подвал и главная</h3><p class="editor-note adm-mt10">Пункты меню и подвала, телефон, почта и соцсети — сразу на всех страницах RU и EN. Подборки главной: главный проект, избранные проекты, команда, партнёры.</p><a class="btn-small" href="/admin/site-nav/">Открыть →</a>
       <h3>Редактор страниц</h3><p class="editor-note adm-mt10">Выберите страницу, измените текст, ссылку, фотографию или описание для поиска. Перед публикацией — макет телефона и компьютера.</p><a class="btn-small" href="/admin/editor/">Открыть редактор страниц →</a>
       <details class="adm-more"><summary>Точная замена текста — прежний инструмент</summary>
       <div class="field">
@@ -1836,11 +1850,12 @@ async function adminCancelRegistration(eventId, email, btn) {
     var res = await fetch(ADMIN_EVENTS_CANCEL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-      body: JSON.stringify({ event_id: eventId, email: email }),
+      body: JSON.stringify({ event_id: eventId, email: email, registration_id: btn.dataset.evRegistration || '' }),
     });
     if (res.status === 401) { clearToken(); showGate(); return; }
     var data = await res.json();
     if (!res.ok) { alert(errorMessage(data)); return; }
+    if (data.mailSent === false) alert('Регистрация отменена, но письмо об отмене не отправилось.');
     loadEvents();
   } catch (e) {
     alert('Не получилось связаться с сервером.');
@@ -2019,9 +2034,9 @@ function renderEvents(events) {
           // так, будто пришло меньше людей, чем на самом деле.
           var qtyBadge = r.quantity > 1 ? ' <span class="ev-qty">· ' + r.quantity + ' билета</span>' : '';
           return '<div class="ev-person">' +
-            '<span class="who">' + escapeHtml(r.name || '—') + qtyBadge + '<small>' + escapeHtml(r.email) + '</small></span>' +
+            '<span class="who">' + escapeHtml(r.name || '—') + qtyBadge + '<small>' + escapeHtml(r.email) + (r.phone ? ' · ' + escapeHtml(r.phone) : '') + '</small></span>' +
             '<span class="when">' + fmtDate(r.createdAt) + '</span>' +
-            '<button class="mini-btn mini-btn-danger" data-ev-action="cancelReg" data-ev-idx="' + idx + '" data-ev-email="' + escapeHtml(r.email) + '">Отменить</button>' +
+            '<button class="mini-btn mini-btn-danger" data-ev-action="cancelReg" data-ev-idx="' + idx + '" data-ev-email="' + escapeHtml(r.email) + '" data-ev-registration="' + escapeHtml(r.registrationId || '') + '">Отменить</button>' +
           '</div>';
         }).join('')
       : '<div class="ev-empty">Пока никто не записался.</div>';
@@ -2034,7 +2049,7 @@ function renderEvents(events) {
       '<div class="ev-actions">' +
         '<button class="mini-btn" data-ev-action="toggle" data-ev-idx="' + idx + '">Показать список</button>' +
         (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать Excel</button>' : '') +
-        '<button class="mini-btn" data-ev-action="addReg" data-ev-idx="' + idx + '">+ Регистрация</button>' +
+        (ev.freeMaster ? '<a class="mini-btn" href="/events-scan/?event=' + encodeURIComponent(ev.id) + '" target="_blank" rel="noopener">Контроль QR</a>' : '<button class="mini-btn" data-ev-action="addReg" data-ev-idx="' + idx + '">+ Регистрация</button>') +
       '</div>' +
       '<div class="ev-people" id="ev-people-' + idx + '">' + people + '</div>' +
     '</div>';
@@ -2069,12 +2084,12 @@ document.getElementById('eventsBlock').addEventListener('click', function (e) {
  */
 function exportEventCsv(ev) {
   if (!ev) return;
-  var rows = [['Имя', 'Email', 'Записался', 'Отметка о приходе']];
+  var rows = [['Имя', 'Email', 'Телефон', 'Записался', 'Отметка о приходе']];
   ev.registrations.forEach(function (r) {
-    rows.push([r.name || '', r.email || '', fmtDate(r.createdAt), '']);
+    rows.push([r.name || '', r.email || '', r.phone || '', fmtDate(r.createdAt), (r.tickets || []).some(function(t){ return t.checkedInAt; }) ? 'Да' : '']);
   });
   // pack-v644: таблица Excel в дизайне Аэлиты (xlsxBlob) вместо CSV.
-  invSave(xlsxBlob([{ name: 'Регистрации', title: 'Регистрации: ' + (ev.title || ev.id), rows: rows, widths: [30, 30, 18, 18] }]), 'aelita-' + ev.id + '-registrations.xlsx');
+  invSave(xlsxBlob([{ name: 'Регистрации', title: 'Регистрации: ' + (ev.title || ev.id), rows: rows, widths: [30, 30, 20, 18, 18] }]), 'aelita-' + ev.id + '-registrations.xlsx');
 }
 
 async function loadEvents() {
@@ -2446,7 +2461,8 @@ function perfLabel(p) {
   var d = new Date(p.datetime);
   var when = isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
   var tag = p.status === 'canceled' ? ' · ОТМЕНЁН' : p.postponed ? ' · перенесён' : p.isTest ? ' · тест' : '';
-  if (p.salesClosed && p.status !== 'canceled') tag += ' · продажа закрыта'; // pack-v592
+  if (p.freeEvent) tag += ' · бесплатная регистрация';
+  if (p.salesClosed && p.status !== 'canceled') tag += p.freeEvent ? ' · запись закрыта' : ' · продажа закрыта'; // pack-v592
   return when + ' · ' + p.title + tag;
 }
 // ── Баннер о сбое покупки (ТЗ «покупка без зависаний», Н10) ───────────
@@ -2500,6 +2516,8 @@ async function perfPreview() {
   var el = document.getElementById('pa-preview');
   el.textContent = '';
   if (!id) return;
+  var selected = PERF_LIST.filter(function(x){ return x.id === id; })[0];
+  if (selected && selected.freeEvent) { el.textContent='Это бесплатное событие. Список участников — в «Регистрациях». Перенос и отмена события с оповещением участников пока не подключены.'; return; }
   el.textContent = 'Считаем заказы…';
   try {
     var res = await fetch(ADMIN_PERF_URL + '?performance_id=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
@@ -2708,11 +2726,14 @@ function perfSalesBtnState() {
   var id = document.getElementById('pa-perf').value;
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
   var ok = p && p.salesChannel === 'in_house' && p.status !== 'canceled';
+  document.getElementById('paPostponeBtn').disabled = !!(p && p.freeEvent);
+  document.getElementById('paCancelBtn').disabled = !!(p && p.freeEvent);
   b.disabled = !ok;
-  b.textContent = p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
+  b.textContent = p && p.freeEvent ? (p.salesClosed ? 'Открыть регистрацию' : 'Закрыть регистрацию') : p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
   // pack-v734: автозакрытие по окончании события — когда закроется / закрылась сама.
   var note = document.getElementById('paSalesNote');
   if (note) {
+    if (p && p.freeEvent) { note.textContent='Запись закрывается с началом события. Список участников — в «Регистрациях».'; return; }
     var at = p && p.salesAutoCloseAt ? perfMsk(p.salesAutoCloseAt) : '';
     var why = p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
     note.textContent = !ok || !at ? ''
@@ -2731,7 +2752,7 @@ async function perfSalesToggle() {
   if (!p) return;
   if (!title.trim()) { out.textContent = 'Введите название спектакля для подтверждения.'; return; }
   var close = !p.salesClosed;
-  if (!confirm(close ? 'Закрыть продажу билетов на «' + p.title + '»?'
+  if (!confirm(p.freeEvent ? (close ? 'Закрыть регистрацию на «' + p.title + '»?' : 'Открыть регистрацию на «' + p.title + '»?') : close ? 'Закрыть продажу билетов на «' + p.title + '»?'
     : p.salesClosedAuto ? 'Продажа «' + p.title + '» закрылась сама по окончании события. Открыть снова? Закрыть её потом можно будет только вручную.'
     : 'Открыть продажу билетов на «' + p.title + '»?')) return;
   var b = document.getElementById('paSalesBtn');
@@ -2741,7 +2762,7 @@ async function perfSalesToggle() {
       body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title }) });
     var data = await res.json();
     if (!res.ok) { out.textContent = data.message || errorMessage(data); b.disabled = false; return; }
-    out.textContent = close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
+    out.textContent = p.freeEvent ? (close ? 'Регистрация закрыта.' : 'Регистрация открыта.') : close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
     await loadPerfActions();
     document.getElementById('pa-perf').value = id;
     perfSalesBtnState();
@@ -3539,6 +3560,10 @@ async function loadOrders() {
 
 // ── Незавершённые заказы (pack-v539) ──────────────────────────────
 var allCheckouts = null;
+// В памяти вкладки до закрытия; после входа покажется текущая версия записи.
+var CO_MAIL_FOCUS = window.AELITA_checkoutMailFocus || null;
+window.AELITA_checkoutMailFocus = null;
+var CO_MAIL_SCROLLED = false;
 var CO_STAGE_LABELS = {
   selected: 'Выбрал места, к оплате не перешёл',
   payment_started: 'Ушёл на оплату — оплаты нет',
@@ -3626,6 +3651,11 @@ function coMaybeActive(c) {
 }
 
 function filteredCheckouts() {
+  if (CO_MAIL_FOCUS) {
+    var focus = (allCheckouts || []).filter(function (c) { return c.supportRef === CO_MAIL_FOCUS; });
+    // При неожиданном совпадении нескольких записей не выбираем наугад.
+    return focus.length === 1 ? focus : [];
+  }
   var q = (document.getElementById('coSearch').value || '').trim().toLowerCase();
   var stage = document.getElementById('coStageFilter').value;
   var showTest = document.getElementById('coShowTest').checked;
@@ -3640,6 +3670,27 @@ function filteredCheckouts() {
 
 function renderCheckouts() {
   var el = document.getElementById('checkoutsBlock');
+  var mailFocus = document.getElementById('coMailFocus');
+  if (mailFocus) {
+    mailFocus.hidden = !CO_MAIL_FOCUS;
+    if (CO_MAIL_FOCUS) {
+      var matching = (allCheckouts || []).filter(function (c) { return c.supportRef === CO_MAIL_FOCUS; }).length;
+      mailFocus.textContent = allCheckouts === null ? 'Не удалось загрузить запись из письма. Попробуйте обновить.'
+        : matching === 1 ? 'Показана запись из письма; с момента письма её статус мог измениться. '
+        : matching > 1 ? 'Номер совпал у нескольких записей; автоматически выбирать нельзя. '
+        : 'Запись из письма больше не найдена. ';
+      var clear = document.createElement('button');
+      clear.type = 'button'; clear.className = 'mini-btn'; clear.textContent = 'Показать все';
+      clear.addEventListener('click', function () {
+        CO_MAIL_FOCUS = null;
+        document.getElementById('coSearch').value = '';
+        document.getElementById('coStageFilter').value = '';
+        document.getElementById('coShowTest').checked = false;
+        renderCheckouts();
+      });
+      mailFocus.appendChild(clear);
+    } else mailFocus.textContent = '';
+  }
   if (allCheckouts === null) {
     document.getElementById('co-count').textContent = '—';
     el.innerHTML = '<div class="empty-state">Журнал незавершённых заказов не загрузился. Попробуйте «Обновить».</div>';
@@ -3648,7 +3699,9 @@ function renderCheckouts() {
   var list = filteredCheckouts();
   CO_SHOWN = list; // pack-v751: для «Создать задачу в CRM»
   document.getElementById('co-count').textContent = list.length;
-  if (!list.length) { el.innerHTML = '<div class="empty-state">Незавершённых заказов нет.</div>'; return; }
+  if (!list.length) { el.innerHTML = CO_MAIL_FOCUS
+      ? '<div class="empty-state">Запись из письма не найдена или не определена однозначно: заказ мог быть оплачен, удалён или номер совпал. Нажмите «Показать все».</div>'
+      : '<div class="empty-state">Незавершённых заказов нет.</div>'; return; }
   el.innerHTML = list.map(function (c, idx) {
     var who = c.name || c.accountEmail || c.email || '—';
     var contacts = [c.email && c.email !== who ? c.email : '', c.accountEmail && c.accountEmail !== c.email && c.accountEmail !== who ? 'кабинет: ' + c.accountEmail : '', c.phone || ''].filter(Boolean).join(' · ');
@@ -3675,6 +3728,10 @@ function renderCheckouts() {
       '<div class="ev-people" id="co-hist-' + idx + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
     '</div>';
   }).join('');
+  if (CO_MAIL_FOCUS && !CO_MAIL_SCROLLED) {
+    CO_MAIL_SCROLLED = true;
+    setTimeout(function () { if (CO_MAIL_FOCUS && el.scrollIntoView) el.scrollIntoView({ block: 'start' }); }, 0);
+  }
 }
 document.getElementById('coSearch').addEventListener('input', renderCheckouts);
 document.getElementById('coStageFilter').addEventListener('change', renderCheckouts);
@@ -6630,6 +6687,12 @@ if (window.AelitaHandoff) AelitaHandoff.receive('orders_find', function (email, 
     p.textContent = 'После входа покажем заказы с адресом из CRM.'; gate.insertBefore(p, gate.firstChild);
   }
 });
+if (CO_MAIL_FOCUS && !getToken()) {
+  var coGate = document.getElementById('gateScreen');
+  var coGateNote = document.createElement('p');
+  coGateNote.className = 'handoff-note'; coGateNote.textContent = 'После входа покажем актуальную запись из письма.';
+  coGate.insertBefore(coGateNote, coGate.firstChild);
+}
 if (getToken()) { showData(); } else { showGate(); }
 </script>
 
@@ -6863,7 +6926,7 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=153"></script>
+<script src="/assets/admin-snapshot.js?v=155"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css">
 <script src="/assets/ai-pilot-v741.js"></script>
 <script src="/assets/ai-pilot-admin-v741.js"></script>

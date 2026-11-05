@@ -1,0 +1,215 @@
+{
+  "schema": "aelita.site-nav/v1",
+  "revision": 0,
+  "menu": [
+    {
+      "href": "/tickets",
+      "ru": "Афиша",
+      "en": "Schedule"
+    },
+    {
+      "href": "/projects",
+      "ru": "Проекты",
+      "en": "Productions"
+    },
+    {
+      "href": "/tochkacuire",
+      "ru": "Точка Кюри",
+      "en": "“Tochka Cuire”"
+    },
+    {
+      "href": "/shop",
+      "ru": "Магазин",
+      "en": "Shop"
+    },
+    {
+      "href": "/about",
+      "ru": "О компании",
+      "en": "About"
+    },
+    {
+      "href": "/collaboration",
+      "ru": "Сотрудничество",
+      "en": "Collaborate"
+    },
+    {
+      "href": "/community",
+      "ru": "Community",
+      "en": "Community"
+    },
+    {
+      "href": "/contacts",
+      "ru": "Контакты",
+      "en": "Contact"
+    }
+  ],
+  "mobile": [
+    {
+      "href": "/tickets",
+      "ru": "Афиша",
+      "en": "Schedule"
+    },
+    {
+      "href": "/projects",
+      "ru": "Проекты",
+      "en": "Productions"
+    },
+    {
+      "href": "/tochkacuire",
+      "ru": "Точка Кюри",
+      "en": "“Tochka Cuire”"
+    },
+    {
+      "href": "/shop",
+      "ru": "Магазин",
+      "en": "Shop"
+    },
+    {
+      "href": "/about",
+      "ru": "О компании",
+      "en": "About"
+    },
+    {
+      "href": "/collaboration",
+      "ru": "Сотрудничество",
+      "en": "Collaborate"
+    },
+    {
+      "href": "/community",
+      "ru": "Community",
+      "en": "Community"
+    },
+    {
+      "href": "/faq",
+      "ru": "Частые вопросы",
+      "en": "FAQ"
+    },
+    {
+      "href": "/contacts",
+      "ru": "Контакты",
+      "en": "Contact"
+    },
+    {
+      "href": "/account",
+      "ru": "Личный кабинет",
+      "en": "Account"
+    }
+  ],
+  "account": {
+    "href": "/account",
+    "ru": "КАБИНЕТ",
+    "en": "ACCOUNT"
+  },
+  "contacts": {
+    "phone": "+7 960 515-16-90",
+    "email": "aelita.production@yandex.ru",
+    "socials": [
+      {
+        "url": "https://vk.com/aelita_production",
+        "ru": "ВКонтакте",
+        "en": "VKontakte"
+      },
+      {
+        "url": "https://t.me/aelita_production",
+        "ru": "Telegram",
+        "en": "Telegram"
+      },
+      {
+        "url": "https://www.youtube.com/@aelita_production",
+        "ru": "YouTube",
+        "en": "YouTube"
+      },
+      {
+        "url": "https://dzen.ru/aelita_production",
+        "ru": "Дзен",
+        "en": "Dzen"
+      }
+    ]
+  },
+  "footer": [
+    {
+      "ru": "О компании",
+      "en": "About",
+      "links": [
+        {
+          "href": "/rezidents",
+          "ru": "Резиденты компании",
+          "en": "Company residents"
+        },
+        {
+          "href": "/team",
+          "ru": "Команда",
+          "en": "Team"
+        },
+        {
+          "href": "/partners",
+          "ru": "Партнёры",
+          "en": "Partners"
+        },
+        {
+          "href": "/press",
+          "ru": "Пресса",
+          "en": "Press"
+        }
+      ]
+    },
+    {
+      "ru": "Разделы",
+      "en": "Sections",
+      "home": true,
+      "links": [
+        {
+          "href": "/tickets",
+          "ru": "Афиша",
+          "en": "Schedule"
+        },
+        {
+          "href": "/projects",
+          "ru": "Проекты",
+          "en": "Productions"
+        },
+        {
+          "href": "/shop",
+          "ru": "Магазин",
+          "en": "Shop"
+        },
+        {
+          "href": "/account",
+          "ru": "Личный кабинет",
+          "en": "Account"
+        }
+      ]
+    },
+    {
+      "ru": "Продукты",
+      "en": "Products",
+      "links": [
+        {
+          "href": "/community",
+          "ru": "AELITA COMMUNITY",
+          "en": "AELITA COMMUNITY"
+        },
+        {
+          "href": "/gift-card",
+          "ru": "Подарочная карта",
+          "en": "Gift Card"
+        },
+        {
+          "href": "/business",
+          "ru": "Искусство для бизнеса",
+          "en": "Art for business"
+        },
+        {
+          "href": "/collaboration",
+          "ru": "Сотрудничество",
+          "en": "Collaborate"
+        },
+        {
+          "href": "/faq",
+          "ru": "Частые вопросы",
+          "en": "FAQ"
+        }
+      ]
+    }
+  ]
+}
