@@ -39,3 +39,9 @@
 [data-editor-hidden="true"]{display:none!important}
 /* pack-v744: «Кабинет» виден в шапке шире 760px (на телефоне он скрыт — style.css) */
 @media (min-width:761px) and (max-width:767px),(min-width:761px) and (pointer:coarse){.nav-in>.nav-account{display:inline-flex;align-items:center}}
+
+/* pack-v760: center the complete two-line wordmark inside its tap target. */
+.nav-in>.logo{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:44px;line-height:1.25;align-self:center}
+.nav-in>.logo small{flex:none;line-height:1.25}
+.nav-in>.nav-back{display:inline-flex;align-items:center;min-height:44px;align-self:center}
+

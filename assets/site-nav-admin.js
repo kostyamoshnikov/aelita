@@ -31,7 +31,7 @@
   };
   const S = { nav: null, home: null, tab: 'nav', preview: null, previewLang: 'ru', busy: false, assets: new Map(), batch: 25 };
 
-  const token = () => { try { return sessionStorage.getItem('aelita_admin_token'); } catch { return null; } };
+  const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('sn-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('sn-gate').hidden = false; $('sn-tabs').hidden = true; $('sn-nav').hidden = true; $('sn-home').hidden = true; }
   async function api(body) {
@@ -271,6 +271,8 @@
     document.querySelectorAll('[data-add]').forEach((b) => { b.onclick = () => add(box(b.dataset.add)); });
     document.querySelectorAll('[data-history]').forEach((b) => { b.onclick = () => history(b.dataset.history); });
     document.querySelectorAll('[data-upload]').forEach((f) => { f.onchange = () => upload(f, $(f.dataset.upload)); });
+    $('sn-team-founders').onclick = () => { const team=read(box('team')).filter(x=>['/katya-abdulova','/konstantin-moshnikov'].includes((x.href||'').replace(/\/$/,''))); if(team.length!==2)return status('Не найдены обе карточки основателей. Выберите их в списке.',true);list(box('team'),'team',team);changed();status('Остались Катя и Константин. Проверьте макет RU/EN и опубликуйте главную.'); };
+    $('sn-menu-v760').onclick = () => {list(box('menu'),'menu',read(box('menu')).filter(x=>(x.href||'').replace(/\/$/,'')!=='/tochkacuire'));list(box('mobile'),'mobile',read(box('mobile')).filter(x=>!['/tochkacuire','/faq'].includes((x.href||'').replace(/\/$/,''))));changed();status('Меню подготовлено. Проверьте макет RU/EN и опубликуйте. Подвал и главный проект сохранены.');};
     $('sn-copy-menu').onclick = () => { list(box('mobile'), 'mobile', read(box('menu'))); changed(); };
     $('sn-col-add').onclick = () => { if ($('sn-cols').children.length < 4) { col({ ru: '', en: '', links: [{}] }); changed(); } };
     $('sn-resync').onclick = () => { if (!S.busy) sync(); };

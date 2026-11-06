@@ -121,3 +121,6 @@ body.mx-page #main .fest-hero-review{display:flex;align-items:center;justify-con
 .mx-online-details{padding:40px 0;border-top:1px solid rgba(214,181,122,.14)}
 .mx-online-details h2{font-size:clamp(20px,3vw,28px);margin:0 0 20px;letter-spacing:.03em}
 .mx-online-details p{max-width:66ch;font-size:.9375rem;line-height:1.8;color:var(--sand);margin:0 0 14px}
+
+.mx-invitation{padding:48px 0;border-bottom:1px solid rgba(214,181,122,.14)}.mx-invitation-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);align-items:center;gap:32px}.mx-invitation h2{font-size:1.5rem;line-height:1.3;margin-bottom:20px}.mx-invitation p{max-width:32em;line-height:1.7}.mx-invitation-note{font-size:.8125rem;color:var(--sand);margin-top:18px}.mx-invitation figure{margin:0;min-width:0}.mx-invitation video{display:block;width:100%;height:auto;aspect-ratio:9/16;object-fit:contain;background:#0b0b0d;border:1px solid rgba(214,181,122,.22)}@media(max-width:600px){.mx-invitation{padding:32px 0}.mx-invitation-grid{grid-template-columns:1fr;gap:20px}.mx-invitation figure{width:min(100%,280px);justify-self:center}}
+

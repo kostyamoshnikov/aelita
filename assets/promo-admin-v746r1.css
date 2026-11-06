@@ -7,3 +7,9 @@
 @media(max-width:600px){.pr-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pr-filters>label:first-child{grid-column:1/-1}.pr-filters button{white-space:normal;letter-spacing:.03em}.pr-row .ed-actions{max-width:none}}
 
 .pr-filters,.pr-row,.pr-grid,.pr-grid>label{min-width:0}.pr-row h3{overflow-wrap:anywhere}.ed-actions button{word-break:normal}.pr-advanced input[type=file][hidden]{display:none!important}
+
+/* pack-v760: short header and a stable two-row toolbar on phones. */
+.pr-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;margin-bottom:18px}.pr-head h2{margin-top:0}.pr-head>button{width:auto;margin:0}.pr-help{font-size:.8125rem;line-height:1.6;color:var(--sand);max-width:54em}.pr-help summary{min-height:44px;padding:8px 0;cursor:pointer;color:var(--gold)}
+.pr-filters{grid-template-columns:minmax(0,1fr) minmax(160px,.55fr) auto;gap:12px;margin-bottom:20px}.pr-filters>label{display:flex;flex-direction:column;gap:6px;margin:0;min-width:0}.pr-filters button{margin:0;align-self:end;font-size:.8125rem;line-height:1.4;letter-spacing:.03em;padding:10px 12px;min-height:46px;white-space:nowrap}
+@media(max-width:600px){.pr-head{grid-template-columns:minmax(0,1fr) auto}.pr-head>button{width:auto}.pr-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pr-filters>label:first-child{grid-column:1/-1}.pr-filters button{height:46px;white-space:nowrap}.pr-row .ed-actions button{font-size:.8125rem;letter-spacing:.02em}}
+

@@ -98,7 +98,7 @@
   function init(){
     // без общего style.css (страница /app) режиму нечем рисоваться — не включаем;
     // pack-v715: у автономных страниц (покупка, билет, отмена записи) — assets/a11y.css
-    if(!document.querySelector('link[href*="/assets/style.css?v=159"],link[href*="/assets/a11y.css"]')){ st.on=0; cls(); return; }
+    if(!document.querySelector('link[href*="/assets/style.css?v=160"],link[href*="/assets/a11y.css"]')){ st.on=0; cls(); return; }
     var nav=document.querySelector('body > nav');
     if(nav){
       var inner=nav.querySelector('.nav-in')||nav;
@@ -840,7 +840,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=159';
+    s.src = '/assets/outage.js?v=160';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

@@ -1,7 +1,7 @@
 (function () {
  'use strict';
  var currentUrl=null,timer=null,lastTrigger=null,en=document.documentElement.lang==='en';
- function currentToken(){try{return /^\/(?:en\/)?admin(?:\/|$)/.test(location.pathname)?sessionStorage.getItem('aelita_admin_token'):localStorage.getItem('aelita_account_token');}catch(_){return null;}}
+ function currentToken(){try{return /^\/(?:en\/)?admin(?:\/|$)/.test(location.pathname)?localStorage.getItem('aelita_admin_token'):localStorage.getItem('aelita_account_token');}catch(_){return null;}}
  function clear(){clearTimeout(timer);timer=null;if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=null;var old=document.getElementById('m1-download-ready');if(old)old.remove();}
  function save(blob,filename,opts){
   opts=opts||{};var token=currentToken();

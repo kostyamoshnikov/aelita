@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); }, revision = 'new', bound = false;
-  function token() { try { return sessionStorage.getItem('aelita_admin_token') || ''; } catch (_) { return ''; } }
+  function token() { try { return localStorage.getItem('aelita_admin_token') || ''; } catch (_) { return ''; } }
   function api(b) { return window.AelitaAI.api(b, token()); }
   function split(s) { return s.split(/[\s,;]+/).map(function (x) { return x.trim(); }).filter(Boolean); }
   function status(text, bad) { $('ai-admin-status').textContent = text; $('ai-admin-status').classList.toggle('ai-error', !!bad); }

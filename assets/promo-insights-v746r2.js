@@ -6,7 +6,7 @@ const rub=k=>(Number(k||0)/100).toLocaleString('ru-RU',{minimumFractionDigits:2,
 const when=s=>s&&Number.isFinite(Date.parse(s))?new Date(s).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'})+' МСК':'время не сохранено';
 const messages={not_authenticated:'Войдите в админку.',promo_admin_disabled:'Управление промокодами пока выключено.',stale:'Каталог изменился во время проверки. Сформируйте сводку заново.',usage_changed:'Использования кода изменились во время чтения. Повторите сводку.',payment_not_known:'Укажите ID платежа из ЮKassa.',payment_not_verified:'ЮKassa не подтвердила платёж. Резерв сохранён.',payment_mismatch:'Платёж не соответствует этому заказу и коду.',payment_not_canceled:'Отмена платежа не подтверждена. Резерв сохранён.',reservation_not_found:'Резерв уже отсутствует. Обновите сводку.'};
 async function req(body){
- const token=sessionStorage.getItem('aelita_admin_token');if(!token||token!==S.token)throw Object.assign(Error('Войдите в админку.'),{code:'not_authenticated'});
+ const token=localStorage.getItem('aelita_admin_token');if(!token||token!==S.token)throw Object.assign(Error('Войдите в админку.'),{code:'not_authenticated'});
  const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(body)});let d={};try{d=await r.json();}catch(_){}
  if(!r.ok)throw Object.assign(Error(messages[d.error]||'Не удалось получить данные.'),{code:d.error});return d;
 }
@@ -50,7 +50,7 @@ async function one(rule){
  return {first,problems,money};
 }
 $('ins-start').onclick=async()=>{
- if(S.running)return;S.token=sessionStorage.getItem('aelita_admin_token');S.stop=false;S.running=true;S.done=0;S.failures=0;S.problem='';S.shown=50;S.issues=[];S.groups=new Map();S.total=0;$('ins-start').disabled=true;$('ins-stop').hidden=false;$('ins-status').textContent='Загружаем каталог…';
+ if(S.running)return;S.token=localStorage.getItem('aelita_admin_token');S.stop=false;S.running=true;S.done=0;S.failures=0;S.problem='';S.shown=50;S.issues=[];S.groups=new Map();S.total=0;$('ins-start').disabled=true;$('ins-stop').hidden=false;$('ins-status').textContent='Загружаем каталог…';
  try{
   const list=await req({action:'promo_list'});if(!list.enabled)throw Object.assign(Error(messages.promo_admin_disabled),{code:'promo_admin_disabled'});S.version=list.version;
   const q=$('ins-filter').value.trim().toLocaleLowerCase('ru-RU'),test=$('ins-mode').value==='test';

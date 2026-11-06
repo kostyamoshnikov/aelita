@@ -256,3 +256,13 @@ body>header{min-height:80px;box-sizing:border-box;padding:12px max(24px,calc((10
 #identity button,#identity summary{min-height:44px;white-space:nowrap;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
 .crm-header-more{display:none;position:relative}.crm-header-more summary{cursor:pointer;list-style:none;padding:0 12px}.crm-header-more[open] button{position:absolute;top:100%;right:0;background:var(--panel);z-index:20;border:1px solid var(--goldline)!important}
 @media(max-width:600px){body>header{padding-inline:16px}.brand{font-size:0.8125rem;letter-spacing:.2em}.brand span{font-size:0.5rem}.crm-password-wide{display:none!important}.crm-header-more{display:block}#identity .crm-person{left:16px;max-width:58%;font-size:0.5625rem}#identity{gap:0}#identity button{padding-inline:8px;font-size:0.625rem}}
+
+/* pack-v760: intrinsic brand/identity layout, no absolute baseline offsets. */
+body>header{padding:10px 28px;align-items:center;min-height:80px}
+.crm-brand-block{min-width:0;flex:1}.brand{display:inline-flex;flex-direction:column;justify-content:center;min-height:44px}
+.crm-brand-block .crm-person{position:static!important;max-width:100%!important;font:400 .6875rem/1.25 'Inter',sans-serif;color:var(--sand);margin:2px 0 0;overflow-wrap:anywhere}
+#identity{flex:0 0 auto;max-width:none;margin:0;align-self:center}
+.crm-navbox{position:relative;min-width:0;margin-bottom:22px}.crm-navbox .tabs{margin:0;padding:0 0 12px;scroll-padding-inline:44px;scrollbar-width:none}.crm-navbox .tabs::-webkit-scrollbar{display:none}
+.crm-scroll{position:absolute;top:0;bottom:12px;width:44px;min-width:44px;padding:0;z-index:2;background:var(--ink);border:0;font-size:1.5rem;letter-spacing:0}.crm-scroll.prev{left:0;background:linear-gradient(to left,transparent,var(--ink) 65%)}.crm-scroll.next{right:0;background:linear-gradient(to right,transparent,var(--ink) 65%)}.crm-scroll[hidden]{display:none!important}
+@media(max-width:600px){body>header{padding-inline:18px}.crm-brand-block .crm-person{font-size:.625rem}.crm-navbox .tabs button{white-space:nowrap}}
+

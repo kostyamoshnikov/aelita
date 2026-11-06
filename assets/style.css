@@ -1756,7 +1756,7 @@ html.a11y .a11y-keep:not(#a11y-none){outline:2px solid var(--a11y-fg);outline-of
 
 .cb-news-combined{max-width:650px;margin:12px auto;font-size:0.75rem;line-height:1.6;text-align:left}.cb-news-combined input{flex-shrink:0}#subSubmit:disabled{opacity:.45;cursor:not-allowed}
 
-.up-img img[src*="matritsa-cover-source"],.tk-card img[src*="matritsa-cover-source"],.tk-img img[src*="matritsa-cover-source"]{object-fit:contain!important;background:var(--ink)}
+
 
 .nav-in>.lang-switch{display:inline-flex;align-items:center;min-height:44px;margin-right:0}.nav-in .a11y-btn{flex-shrink:0}
 

@@ -23,7 +23,7 @@
   const FIELD_NAME = { slug: 'pb-slug', date: 'pb-date', image: 'pb-image-file', links: 'pb-links' };
   const S = { pages: [], revision: 0, page: null, existing: false, asset: null, imageURL: '', preview: null, busy: false, lang: 'ru', previewLang: 'ru' };
 
-  const token = () => { try { return sessionStorage.getItem('aelita_admin_token'); } catch { return null; } };
+  const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('pb-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('pb-gate').hidden = false; $('pb-list-box').hidden = true; $('pb-form').hidden = true; }
   async function api(body) {

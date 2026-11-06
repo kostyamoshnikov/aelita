@@ -13,7 +13,7 @@
     github_unreachable: 'Нет связи с сервером. Проверьте интернет и повторите.', item_not_in_revision: 'Эта версия не найдена.',
   };
   const S = { doc: null, catalog: null, id: null, lang: 'ru', dirty: false, busy: false };
-  const token = () => { try { return sessionStorage.getItem('aelita_admin_token'); } catch { return null; } };
+  const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('mt-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('mt-gate').hidden = false; $('mt-app').hidden = true; }
   async function api(body) {

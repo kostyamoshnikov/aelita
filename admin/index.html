@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=159">
+<link rel="stylesheet" href="/assets/fonts.css?v=160">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -39,7 +39,7 @@ body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,sans-
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 
-nav{padding:20px 0;border-bottom:1px solid rgba(232,230,225,.07)}
+nav{padding:0;border-bottom:1px solid rgba(232,230,225,.07)}
 .nav-in{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:.4em;font-size:0.875rem}
 .logo small{display:block;font-size:0.5rem;letter-spacing:.6em;color:var(--sand);margin-top:2px}
@@ -465,10 +465,14 @@ body>nav>.nav-in{min-height:80px;padding-block:12px;box-sizing:border-box;align-
 html body .checkout-consents .cb-item{font-size:0.75rem!important}
 .status-paid,.status-active{color:#7ec48c}.status-pending{color:#e0b46e}.status-canceled,.status-refunded{color:#e08a6e}
 @media(max-width:600px){.statistics-section .table-wrap{overflow:visible}.statistics-section table,.statistics-section tbody,.statistics-section tr,.statistics-section td{display:block;width:100%;min-width:0!important;box-sizing:border-box}.statistics-section thead{display:none}.statistics-section tr{margin-bottom:12px;border:1px solid rgba(214,181,122,.15)}.statistics-section td{display:grid;grid-template-columns:minmax(75px,.4fr) minmax(0,1fr);gap:12px;overflow-wrap:anywhere;padding:8px!important}.statistics-section td:before{content:attr(data-label);color:var(--sand)}}
+/* pack-v760: controls fit the usable width inside mobile cards. */
+#ldSubscribeAll,[data-lead-subscribe]{display:flex;align-items:center;justify-content:center;white-space:normal!important;overflow-wrap:normal!important;word-break:normal;line-height:1.5;letter-spacing:.05em;max-width:100%;width:100%;height:auto;min-height:44px;padding:10px 12px;box-sizing:border-box}
+.statistics-period{font-size:.8125rem;color:var(--sand);margin:8px 0 16px}
+@media(max-width:600px){.statistics-controls{flex-wrap:wrap}.statistics-controls label{min-width:0;flex:1}#hitsDays{max-width:100%}}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=159">
-<script src="/assets/staff-handoff-v1.js?v=159"></script>
-<script src="/assets/mobile-files-m1.js?v=159"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=160">
+<script src="/assets/staff-handoff-v1.js?v=160"></script>
+<script src="/assets/mobile-files-m1.js?v=160"></script>
 </head>
 <body>
 
@@ -536,9 +540,10 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 
     <p class="sec-title">Статистика</p>
     <div class="statistics-controls"><label>Период <select id="statisticsDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="statisticsReload">Обновить</button></div>
-    <div id="statisticsTiles" class="statistics-tiles"><p>Загружаем статистику…</p></div>
+    <p id="statisticsPeriod" class="statistics-period" aria-live="polite"></p><div id="statisticsTiles" class="statistics-tiles"><p>Загружаем статистику…</p></div>
     <div id="statisticsReport" aria-live="polite"></div>
     <p class="sec-title">Обзор</p>
+    <div class="statistics-controls"><label for="overviewDays">Период <select id="overviewDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="overviewReload">Обновить</button></div><p id="overviewPeriod" class="statistics-period" aria-live="polite"></p>
     <div id="overviewStatistics" class="statistics-tiles"></div>
     <div class="byproduct" id="byProduct"></div>
 
@@ -588,8 +593,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
          ни IP, ни устройств, ни визитов по людям. Tickets/lib/site-hits.js,
          Admin/tickets-orders.js ?view=hits. -->
     <p class="sec-title sec-gap">Посещаемость сайта
-      <select id="hitsDays" class="mini-btn" hidden><option value="1">сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select>
-      <button class="mini-btn" id="hitsReloadBtn" hidden>Обновить</button></p>
+      <select id="hitsDays" class="mini-btn" aria-label="Период посещаемости"><option value="1">сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select>
+      <button class="mini-btn" id="hitsReloadBtn" type="button">Обновить</button></p>
     <div id="hitsBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
 
     <p class="sec-title" style="margin-top:56px">Промокоды</p>
@@ -1361,15 +1366,11 @@ var ADMIN_INBOX_URL = API_BASE && API_BASE + '/inbox'; // pack-v600: отзыв�
 
 var STORAGE_KEY = 'aelita_admin_token';
 
-function getToken() {
-  try { return sessionStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
-  // sessionStorage, не localStorage — токен админки живёт максимум до
-  // закрытия вкладки, не переживает перезапуск браузера. TTL на
-  // сервере и так короче (12ч), это дополнительная, не единственная
-  // защита — сознательно строже, чем у клиентского кабинета.
-}
-function setToken(t) { try { sessionStorage.setItem(STORAGE_KEY, t); } catch (e) {} }
-function clearToken() { try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
+var adminTokenMemory = '';
+function getToken() { try { return localStorage.getItem(STORAGE_KEY) || adminTokenMemory; } catch (e) { return adminTokenMemory; } }
+function setToken(t) { adminTokenMemory=t;try { localStorage.setItem(STORAGE_KEY,t);sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} }
+function clearToken() { adminTokenMemory='';try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
+window.addEventListener('storage',function(e){if(e.key===STORAGE_KEY&&!e.newValue){adminTokenMemory='';showGate();}});
 
 function fmtMoney(n) {
   if (n == null || !isFinite(n)) return '—';
@@ -1456,7 +1457,7 @@ function errorMessage(data) {
 //      валидацию. Значит любой человек мог самостоятельно
 //      зарегистрироваться с email-полезной нагрузкой, которая
 //      выполнилась бы в браузере АДМИНА при простом открытии списка
-//      клиентов — потенциально кража токена админки из sessionStorage.
+//      клиентов — потенциально кража токена админки из хранилища браузера.
 //      Самый серьёзный вектор из найденного при проверке пути клиента.
 //   2. productLabel — свободный текст до 200 символов, вводит админ
 //      вручную в Admin/add-purchase.js («Название» в форме «Добавить
@@ -1519,7 +1520,7 @@ function renderLinks(links) {
 
 function admCopy(value,label){return '<button type="button" class="adm-copy" data-copy="'+escapeHtml(String(value||''))+'">'+escapeHtml(label||String(value||''))+'</button>';}
 function admContacts(email,phone){return '<div class="adm-contacts">'+(email?'<span class="adm-contact"><span>'+escapeHtml(email)+'</span>'+admCopy(email,'Копировать')+'<a href="mailto:'+escapeHtml(email)+'">Написать</a></span>':'')+(phone?'<span class="adm-contact"><span>'+escapeHtml(phone)+'</span>'+admCopy(phone,'Копировать')+'<a href="tel:'+escapeHtml(String(phone).replace(/[^+0-9]/g,''))+'">Позвонить</a></span>':'')+(email?'<button type="button" class="adm-copy" data-contact-crm="'+escapeHtml(email)+'">Найти в CRM</button>':'')+'</div>';}
-function admFields(fields){return '<dl class="adm-fields">'+fields.map(function(x){return '<div><dt>'+escapeHtml(x.label)+'</dt><dd>'+(String(x.value||'').length>180?admLong(x.value):escapeHtml(x.value||'—'))+'</dd></div>';}).join('')+'</dl>';}
+function admFields(fields){return '<dl class="adm-fields">'+fields.map(function(x){return '<div><dt>'+escapeHtml(x.label)+'</dt><dd>'+(String(x.value==null?'':x.value).length>180?admLong(x.value):escapeHtml(x.value==null||x.value===''?'—':String(x.value)))+'</dd></div>';}).join('')+'</dl>';}
 function admLong(text){return '<details class="adm-long"><summary><span>'+escapeHtml(text||'—')+'</span><b>Подробнее</b></summary></details>';}
 function admHistory(rows){return rows&&rows.length?'<ol class="adm-timeline">'+rows.map(function(x){return '<li><time>'+fmtDate(x.at||x.createdAt)+'</time> '+escapeHtml(x.what||x.text||'')+'</li>';}).join('')+'</ol>':'';}
 document.addEventListener('click',async function(e){var b=e.target.closest('[data-copy]');if(b){try{await navigator.clipboard.writeText(b.dataset.copy);var old=b.textContent;b.textContent='Скопировано';setTimeout(function(){b.textContent=old;},1300);}catch(_){var t=document.createElement('textarea');t.value=b.dataset.copy;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();b.textContent='Скопировано';}}var c=e.target.closest('[data-contact-crm]');if(c&&window.AelitaHandoff)AelitaHandoff.open('/admin/crm/','crm_find',c.dataset.contactCrm);});
@@ -1535,7 +1536,7 @@ function renderCustomers(list) {
   el.innerHTML = list.map(function (c) {
     var purchasesHtml = (c.purchases || []).map(function (p) {
       var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка');
-      return '<div class="purchase-row"><span class="name">' + name + '</span><span>' + fmtDate(p.paidAt) + ' · ' + fmtMoney(p.amount) + '</span></div>';
+      return '<li class="purchase-row"><span class="name">' + name + '</span><span><time>' + fmtDate(p.paidAt) + '</time> · ' + fmtMoney(p.amount) + '</span></li>';
     }).join('');
     var purchaseWord = pluralRu(c.purchaseCount, 'покупка', 'покупки', 'покупок');
     var email = escapeHtml(c.email);
@@ -1553,7 +1554,7 @@ function renderCustomers(list) {
         '<div>' + nameHtml + admContacts(c.email,c.phone) + admFields([{label:'Клиент с',value:fmtDate(c.createdAt)},{label:'Покупки',value:c.purchaseCount+' '+purchaseWord}]) + '</div>' +
         '<div class="cust-total">' + fmtMoney(c.totalSpent) + '</div>' +
       '</div>' +
-      purchasesHtml +
+      (purchasesHtml?'<ol class="adm-timeline">'+purchasesHtml+'</ol>':'') +
       '<div class="cust-actions" style="margin-top:14px">' +
         '<button class="mini-btn" data-action="add-purchase" data-email="' + emailAttr + '">+ Покупка</button>' +
         '<button class="mini-btn" data-action="export" data-email="' + emailAttr + '">Экспорт</button>' +
@@ -2360,11 +2361,11 @@ function renderRefunds(refunds) {
     } else if (r.reason === 'illness' || r.reason === 'death') {
       docsHtml = '<div class="ev-empty">Документ не приложен — ожидается почтой.</div>';
     }
-    return '<div class="ev-card" data-rf-card="' + escapeHtml(r.refundId || '') + '">' +
+    return '<div class="ev-card'+(r.isTest?' admin-test':'')+'" data-rf-card="' + escapeHtml(r.refundId || '') + '">' +
       '<div class="ev-head">' +
-        '<div><div class="ev-title">' + escapeHtml(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
+        '<div><div class="ev-title">' + (r.isTest?'<span class="adm-status">Тест</span> ':'') + admCopy(r.refundNumber || '') + ' · ' + escapeHtml(r.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(r.buyerName || '—') + '</div>' + admContacts(r.contactEmail,r.buyerContact||r.phone) +
-        '<div class="ev-when">Обращение ' + fmtRefundDate(r.requestedAt) + ' · ' + escapeHtml(REFUND_REASON_LABELS[r.reason] || r.reason) + '</div>' + originHtml + '</div>' +
+        admFields([{label:'Обращение',value:fmtRefundDate(r.requestedAt)},{label:'Причина',value:REFUND_REASON_LABELS[r.reason]||r.reason}]) + originHtml + '</div>' +
         '<div class="ev-count"><span class="rf-status rf-status-' + escapeHtml(r.status) + '">' + escapeHtml(REFUND_STATUS_LABELS[r.status] || r.status) + '</span><br>' +
         fmtMoney(r.estimate ? r.estimate.amountRub : null) + '</div>' +
       '</div>' +
@@ -2957,9 +2958,9 @@ function renderOrders(orders) {
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + (o.isTest ? '[ТЕСТ] ' : '') + '№ ' + admCopy(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
         '<div class="ev-when">' + escapeHtml(o.buyerName || '—') + '</div>' + admContacts(o.buyerEmail,o.buyerContact) +
-        '<div class="ev-when">Создан ' + fmtDate(o.createdAt) + (o.paidAt ? ' · оплачен ' + fmtDate(o.paidAt) : '') + ' · <span class="adm-status status-' + escapeHtml(o.status) + '">' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</span></div>' +
+        '<div class="ev-when"><span class="adm-status status-' + escapeHtml(o.status) + '">' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</span></div>' +
         // pack-v695: кто и когда исправлял почту заказа
-        (o.emailFixes || []).map(function (x) { return '<div class="ev-when">Почта исправлена ' + fmtDate(x.at) + ': ' + escapeHtml(x.from || '—') + ' → ' + escapeHtml(x.to) + (x.by && x.by !== 'admin' ? ' · ' + escapeHtml(x.by) : '') + '</div>'; }).join('') + '</div>' +
+        admHistory([{at:o.createdAt,what:'Заказ создан'}].concat(o.paidAt?[{at:o.paidAt,what:'Заказ оплачен'}]:[]).concat((o.emailFixes||[]).map(function(x){return {at:x.at,what:'Почта исправлена: '+(x.from||'—')+' → '+x.to+(x.by&&x.by!=='admin'?' · '+x.by:'')};}))) + '</div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:0.6875rem;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' + crmFindBtn(o.buyerEmail) +
@@ -2974,7 +2975,7 @@ function renderOrders(orders) {
           : '') +
         '<span class="ord-resend-msg" id="ord-resend-' + idx + '" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>' +
       '</div>' +
-      '<div class="ev-people" id="ord-tickets-' + idx + '">' + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
+      '<div class="ev-people" id="ord-tickets-' + idx + '">' + admFields([{label:'Сумма',value:fmtMoney(o.totalAmount)},{label:'Погашено',value:o.redeemedCount+' из '+o.ticketsCount}]) + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
     '</div>';
   }).join('');
   decorateOrderRefunds();
@@ -3320,17 +3321,21 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
 var statisticsJob=0;
 function statisticsTable(title,rows,columns){return '<section class="statistics-section"><h2>'+escapeHtml(title)+'</h2>'+(rows.length?'<div class="table-wrap"><table class="perf-table"><thead><tr>'+columns.map(function(c){return '<th>'+escapeHtml(c[1])+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+columns.map(function(c){return '<td data-label="'+escapeHtml(c[1])+'">'+escapeHtml(String(r[c[0]]==null?'—':r[c[0]]))+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>':'<p class="empty-state">Нет данных за период</p>')+'</section>';}
 async function loadStatistics(){
-  if(!getToken()||!ADMIN_ORDERS_URL)return;var seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;
+  if(!getToken()||!ADMIN_ORDERS_URL)return;var seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
   try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+getToken()},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob)return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
-    var tiles=[['visits','Посещения'],['orders','Заказы'],['revenue','Выручка'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду</small></div>';}).join('');
+    var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
+    document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
+    var tiles=[['visits','Посещения'],['orders','Заказы'],['revenue','Выручка'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
     document.getElementById('statisticsTiles').innerHTML=tiles;document.getElementById('overviewStatistics').innerHTML=tiles;
     var daysData=(v.visitsByDay||[]).slice().reverse(),max=Math.max.apply(null,daysData.map(function(x){return x.entries;}).concat([1]));
     var graph='<section class="statistics-section"><h2>Посещения по дням</h2>'+(v.visits?'<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div>':'<p class="empty-state">Нет данных за период</p>')+'</section>';
     document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment','Оплата'],['paid','Оплачено']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
-    document.getElementById('perfDays').value=String(Math.min(days,30));document.getElementById('hitsDays').value=String(days);loadPerf();
-  }catch(e){if(seq===statisticsJob)document.getElementById('statisticsReport').textContent=e.message;}finally{if(seq===statisticsJob)button.disabled=false;}
+    document.getElementById('perfDays').value=String(Math.min(days,30));document.getElementById('hitsDays').value=String(days);loadPerf();loadHits();
+  }catch(e){if(seq===statisticsJob){document.getElementById('statisticsReport').textContent=e.message;['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Не удалось загрузить данные за выбранный период. Нажмите «Обновить».';});}}finally{if(seq===statisticsJob){button.disabled=false;document.getElementById('overviewReload').disabled=false;}}
 }
-document.getElementById('statisticsReload').onclick=loadStatistics;document.getElementById('statisticsDays').onchange=loadStatistics;
+document.getElementById('statisticsReload').onclick=loadStatistics;document.getElementById('overviewReload').onclick=loadStatistics;
+function changeStatisticsDays(e){document.getElementById('statisticsDays').value=e.target.value;document.getElementById('overviewDays').value=e.target.value;return loadStatistics();}
+document.getElementById('statisticsDays').onchange=changeStatisticsDays;document.getElementById('overviewDays').onchange=changeStatisticsDays;
 
 // ── Продажи по показам (pack-v571, ТЗ С6) ─────────────────────────
 function salesWhen(iso) {
@@ -4117,7 +4122,7 @@ function renderLeadsAdmin() {
     return '<div class="ev-card' + (a.done ? ' inv-off' : '') + '">' +
       '<div class="ev-head"><div>' +
         '<div class="ev-title">' + escapeHtml(a.form) + (a.done ? ' <span class="inv-tag ok">обработана</span>' : ' <span class="inv-tag off">новая</span>') + '</div>' +
-        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + (a.consent && a.consent.newsletter ? ' · согласие на рассылку' : '') + '</div>' +
+        '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page && a.page!=='/' ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + (a.consent && a.consent.newsletter ? ' · согласие на рассылку' : '') + '</div>' +
       '</div></div>' +
       admFields((a.fields||[]).filter(function(x){return !/e-?mail|почт|телефон|phone/i.test(x.label);})) + admContacts(((a.fields||[]).find(function(x){return /e-?mail|почт/i.test(x.label);})||{}).value,((a.fields||[]).find(function(x){return /телефон|phone/i.test(x.label);})||{}).value) + admHistory(a.history) +
       '<div class="ev-actions">' + (a.newsletterStatus ? '<span class="adm-status">'+({confirmed:'Подтвердил',sent:'Письмо отправлено',queued:'Письмо в очереди',unsubscribed:'Отписался',none:'Подписка не запущена'}[a.newsletterStatus]||'')+'</span>'+(a.newsletterStatus==='none'?'<button type="button" class="mini-btn" data-lead-subscribe="'+escapeHtml(a.id)+'">Добавить в подписчики</button>':'') : '') + '<button class="mini-btn" data-ld="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ld="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
@@ -4429,7 +4434,7 @@ function renderNlList() {
     var live = s.status === 'active' || s.status === 'pending';
     return '<div class="nl-sub' + (live ? '' : ' inv-off') + '">' +
       admContacts(s.email,s.phone) + (!s.email ? '<span class="nl-mail">— стёрто —</span>' : '') + (s.name ? '<span>' + escapeHtml(s.name) + '</span>' : '') +
-      '<details class="nl-compact-meta"><summary><span class="adm-status">' + escapeHtml(nlStatusText(s)) + '</span>' + ' · ' + escapeHtml(s.lang === 'en' ? 'EN' : 'RU') + '</summary><p>' + escapeHtml(meta.join(' · ')) + '</p></details>' +
+      '<details class="nl-compact-meta"><summary><span class="adm-status status-'+escapeHtml(s.status)+'">' + escapeHtml(nlStatusText(s)) + '</span>' + ' · ' + escapeHtml(s.lang === 'en' ? 'EN' : 'RU') + '</summary>'+admFields([{label:'Язык',value:s.lang==='en'?'EN':'RU'},{label:'Источник',value:src.length?src[src.length-1]:'—'}])+admHistory([{at:s.subscribedAt,what:'Заявка на подписку'}].concat(s.confirmSentAt?[{at:s.confirmSentAt,what:'Письмо подтверждения отправлено'}]:[]).concat(s.confirmedAt?[{at:s.confirmedAt,what:'Подписка подтверждена'}]:[]).concat(s.unsubscribedAt?[{at:s.unsubscribedAt,what:'Отписка'}]:[]))+admLong(meta.join(' · '))+'</details>' +
       '<span class="ev-actions">' + (live && typeof nl2Write === 'function' && nl2Write() && s.email ? '<button class="mini-btn" data-nl-profile-btn="' + escapeHtml(s.id) + '" aria-expanded="false">Профиль' + (s.profile && (s.profile.city || (s.profile.tags || []).length || (s.profile.interests || []).length) ? ' ✓' : '') + '</button> ' : '') +
         (live ? '<button class="mini-btn" data-nl-unsub="' + escapeHtml(s.id) + '">Отписать</button> ' : '') +
         '<button class="mini-btn mini-btn-danger" data-nl-del="' + escapeHtml(s.id) + '">Удалить</button></span>' +
@@ -6817,8 +6822,8 @@ if (getToken()) { showData(); } else { showGate(); }
 // если доступен) и пишется в адрес (#раздел) — можно дать ссылку.
 (function () {
   var GROUPS = [
-    ['statistics', 'Статистика', ['Статистика']],
     ['overview', 'Обзор', ['Обзор']],
+    ['statistics', 'Статистика', ['Статистика']],
     ['orders', 'Заказы', ['Промокоды', 'Заказы билетов', 'Незавершённые заказы']],
     // pack-v694: возвраты — своим разделом со счётчиком «ждут решения или выплаты».
     ['refunds', 'Возвраты', ['Заявления на возврат']],
@@ -6887,7 +6892,7 @@ if (getToken()) { showData(); } else { showGate(); }
     });
     var start = (location.hash || '').replace('#', '');
     if (!GROUPS.some(function (g) { return g[0] === start; })) {
-      try { start = localStorage.getItem('aelita_admin_tab') || 'statistics'; } catch (e) { start = 'statistics'; }
+      try { start = localStorage.getItem('aelita_admin_tab') || 'overview'; } catch (e) { start = 'overview'; }
     }
     show(start, false);
     requestAnimationFrame(function(){var active=nav.querySelector('.on');if(active)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();});
@@ -7044,9 +7049,9 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=159"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=159">
-<script src="/assets/ai-pilot-v741.js?v=159"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=159"></script>
+<script src="/assets/admin-snapshot.js?v=160"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=160">
+<script src="/assets/ai-pilot-v741.js?v=160"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=160"></script>
 </body>
 </html>

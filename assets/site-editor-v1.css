@@ -4,3 +4,6 @@
 
 /* pack-v759 */
 .ed-header{min-height:80px;box-sizing:border-box;align-items:center;padding-block:12px;gap:12px}.ed-header .ed-brand{line-height:1.25}.ed-header .ed-back{min-height:44px;display:flex;align-items:center;white-space:nowrap}
+
+/* pack-v760: full wordmark centered inside the same touch target as back links. */
+.ed-header .ed-brand{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:44px}

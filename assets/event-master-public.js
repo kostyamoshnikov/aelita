@@ -6,7 +6,7 @@
     cards.forEach(function(card){var key=card.dataset.city;if(!keys.has(key)){keys.add(key);var b=document.createElement('button');b.className='filter-btn';b.textContent=card.dataset.masterCity;b.onclick=function(){window.filterCity(key,b);};filters.append(b);}});
   }
   if(!id&&!cards.length)return;
-  if(id){var css=document.createElement('link');css.rel='stylesheet';css.href='/assets/directory-public.css?v=159';document.head.append(css);var directory=document.createElement('script');directory.src='/assets/directory-public.js?v=159';document.head.append(directory);}
+  if(id){var css=document.createElement('link');css.rel='stylesheet';css.href='/assets/directory-public.css?v=160';document.head.append(css);var directory=document.createElement('script');directory.src='/assets/directory-public.js?v=160';document.head.append(directory);}
   var button=document.getElementById('em-buy'),state=document.getElementById('em-sale-state');
   function date(value){return new Intl.DateTimeFormat(en?'en-GB':'ru-RU',{dateStyle:'long',timeStyle:'short',timeZone:'Europe/Moscow'}).format(new Date(value));}
   function closed(text){if(!button)return;button.removeAttribute('href');button.setAttribute('aria-disabled','true');state.textContent=text;}

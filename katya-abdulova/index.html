@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Катя Абдулова — продюсер и режиссёр — AELITA PRODUCTION">
 <meta name="twitter:description" content="Сооснователь и продюсер AELITA PRODUCTION. Куратор фестиваля «Точка Кюри», режиссёр «ИОВ:материал». Учится в Петербургской школе нового кино у Юрия Муравицкого.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/katya-abdulova-og.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=159">
-<link rel="stylesheet" href="/assets/style.css?v=159">
+<link rel="stylesheet" href="/assets/fonts.css?v=160">
+<link rel="stylesheet" href="/assets/style.css?v=160">
 <style>.btn-gold{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.22em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:14px 28px;text-decoration:none;display:inline-block;transition:opacity .3s;margin-top:24px;margin-right:14px;-webkit-appearance:none;appearance:none;cursor:pointer}
 
 html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
@@ -345,7 +345,10 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   .ka-tl .career-item:last-child{padding-bottom:0}
   .ka-tl .career-item.hl h3{color:var(--gold)}
   .ka-poster{padding:0!important;overflow:hidden}
-  .ka-poster img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:contain;background:var(--ink);filter:brightness(.88);transition:filter .35s} /* афиши 1200×630 — целиком, без обрезки надписей */
+  .ka-matrix-frame{display:block;position:relative;aspect-ratio:1409/1536;overflow:hidden}
+  .ka-poster .ka-matrix-frame img{position:absolute;left:0;bottom:0;width:100%;height:auto;max-width:none;filter:none}
+  .ka-poster img:not(.ka-matrix-crop){aspect-ratio:auto}
+  .ka-poster img{display:block;width:100%;height:auto;object-fit:contain;background:var(--ink);filter:brightness(.88);transition:filter .35s} /* афиши 1200×630 — целиком, без обрезки надписей */
   @media(hover:hover){.ka-poster:hover img{filter:brightness(1)}}
   .ka-poster .tag,.ka-poster h3,.ka-poster p{margin-left:24px;margin-right:24px}
   .ka-poster .tag{display:block;margin-top:24px}
@@ -367,7 +370,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=159">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=160">
 
 <!-- NEWSLETTER_INVITE:BEGIN -->
 <link rel="stylesheet" href="/assets/newsletter-invite-v742-r3.css">
@@ -477,7 +480,7 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ближайшие разговоры</h2></div>
     <div class="works-grid reveal">
-      <a class="work-card link-plain ka-poster" href="/kinorazbor-matritsa"><img src="/images/matritsa-cover-source-v737.png" alt="" loading="lazy" decoding="async"><span class="tag">14 ноября · 17:00 · Калуга</span><h3>Матрица</h3><p>Киноразбор всех четырёх фильмов с Катей Абдуловой.</p><p class="ka-venue">Креативное бюро, ул. Билибина, 33</p></a>
+      <a class="work-card link-plain ka-poster" href="/kinorazbor-matritsa"><span class="ka-matrix-frame"><img src="/images/matritsa-conversation-crop-v760.jpg" class="ka-matrix-crop" alt="" loading="lazy" decoding="async"></span><span class="tag">14 ноября · 17:00 · Калуга</span><h3>Матрица</h3><p>Киноразбор всех четырёх фильмов с Катей Абдуловой.</p><p class="ka-venue">Креативное бюро, ул. Билибина, 33</p></a>
       <a class="work-card link-plain ka-poster" href="/landshafty-realnosti"><img src="/images/landshafty-realnosti.jpg" alt="" loading="lazy" decoding="async"><span class="tag">Калуга · открытый разговор</span><h3>Ландшафты реальности</h3><p>Киноразбор фильма Люка Бессона «Люси». Новая дата будет объявлена.</p></a>
     </div>
   </div>
@@ -606,8 +609,8 @@ html{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 </div>
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
-<script src="/assets/analytics-events.js?v=159"></script>
-<script src="/assets/main.js?v=159"></script>
+<script src="/assets/analytics-events.js?v=160"></script>
+<script src="/assets/main.js?v=160"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
