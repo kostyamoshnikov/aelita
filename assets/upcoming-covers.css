@@ -1,3 +1,8 @@
 /* AELITA upcoming covers · whole frame (v761). */
 .up-img.up-img--whole{aspect-ratio:auto;background:transparent}
 .up-img.up-img--whole img{width:100%;height:auto;object-fit:contain;transform:none!important}
+
+.up-formats{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 12px;font-family:Montserrat,sans-serif;font-size:.75rem;line-height:1.5;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.up-formats span{white-space:nowrap}
+
+@media(max-width:600px){.up-img.up-img--mobile-cover{aspect-ratio:16/10}.up-img.up-img--mobile-cover img{height:100%}.up-img.up-img--mobile-whole{aspect-ratio:auto}.up-img.up-img--mobile-whole img{height:auto}}

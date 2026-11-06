@@ -1,0 +1,4 @@
+/* AELITA image presentation. A mobile image inherits desktop settings unless set. */
+picture[data-editor-picture=true]{display:contents}
+.ed-media-img{--ed-active-fit:var(--ed-fit,cover);--ed-active-position:var(--ed-position,50% 50%)}
+@media(max-width:600px){.ed-media-img{--ed-active-fit:var(--ed-mobile-fit,var(--ed-fit,cover));--ed-active-position:var(--ed-mobile-position,var(--ed-position,50% 50%))}}

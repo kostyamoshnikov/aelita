@@ -1761,3 +1761,8 @@ html.a11y .a11y-keep:not(#a11y-none){outline:2px solid var(--a11y-fg);outline-of
 .nav-in>.lang-switch{display:inline-flex;align-items:center;min-height:44px;margin-right:0}.nav-in .a11y-btn{flex-shrink:0}
 
 .m-menu.open::before,.m-menu.open::after{opacity:.08;pointer-events:none}
+
+/* AELITA image presentation. A mobile image inherits desktop settings unless set. */
+picture[data-editor-picture=true]{display:contents}
+.ed-media-img{--ed-active-fit:var(--ed-fit,cover);--ed-active-position:var(--ed-position,50% 50%)}
+@media(max-width:600px){.ed-media-img{--ed-active-fit:var(--ed-mobile-fit,var(--ed-fit,cover));--ed-active-position:var(--ed-mobile-position,var(--ed-position,50% 50%))}}

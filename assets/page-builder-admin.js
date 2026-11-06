@@ -28,7 +28,7 @@
   const status = (t, bad) => { const s = $('pb-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('pb-gate').hidden = false; $('pb-list-box').hidden = true; $('pb-form').hidden = true; }
   async function api(body) {
-    body = { ...body, reviewVersion: 2 };
+    body = { ...body, reviewVersion: 3 };
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }

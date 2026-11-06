@@ -7,6 +7,7 @@
   const API = 'https://api.aelita-production.ru/admin/site-edit';
   const $ = (id) => document.getElementById(id);
   const ERR = {
+    invalid_media_view:'Проверьте положение кадра (0–100%) и мобильное изображение.',invalid_cover_base:'Шаблон карточки изменён. Обновите страницу редактора и проверьте актуальный образ сайта.',
     editor_reload_required: 'Редактор обновлён. Скачайте черновик и перезагрузите страницу перед продолжением.',
     not_authenticated: 'Войдите в админку снова.', site_nav_disabled: 'Раздел ещё не включён на сервере (нужен SITE_EDITOR_ENABLED=1 или PAGE_BUILDER_ENABLED=1 у aelita-admin-site-edit).',
     editor_not_configured: 'Не настроено подключение к репозиторию сайта.', invalid_field: 'Проверьте отмеченное поле.',
@@ -30,7 +31,7 @@
     links: { max: 8, min: 1, fields: [['href', 'Адрес', '/team'], ['ru', 'Название RU'], ['en', 'Label EN']] },
     projects: { max: 8, min: 1, fields: [['href', 'Ссылка', '/iov'], ['image', 'Фото', '/images/…', 'image'], ['position', 'Кадрирование', '50% 50%'], ['ru.title', 'Название RU'], ['ru.kicker', 'Жанр RU'], ['ru.alt', 'Описание фото RU'], ['en.title', 'Title EN'], ['en.kicker', 'Genre EN'], ['en.alt', 'Photo description EN']] },
     team: { max: 12, min: 1, fields: [['href', 'Ссылка', '/katya-abdulova'], ['image', 'Фото', '/images/…', 'image'], ['ru.name', 'Имя RU'], ['en.name', 'Name EN']] },
-    covers: { max: 8, min: 0, fields: [['href', 'Событие в ближайших показах', '', 'slot'], ['image', 'Изображение только этой карточки', '/images/…', 'image'], ['mode', 'Как показать изображение', '', 'mode']] },
+    covers: { max: 8, min: 0, fields: [['href', 'Событие в ближайших показах', '', 'slot'], ['image', 'Изображение только этой карточки', '/images/…', 'image'], ['altRu', 'Описание изображения RU'], ['altEn', 'Photo description EN']] },
     partners: { max: 16, min: 1, fields: [['href', 'Ссылка (необязательно)', '/byl или https://…'], ['ru.name', 'Название RU'], ['ru.note', 'Подпись RU (необязательно)'], ['en.name', 'Name EN'], ['en.note', 'Note EN']] },
   };
   const S = { head: '', baseHeads: { nav: '', home: '' }, edit: 0, coverSlots: [], previewWidth: 390, merging: null, nav: null, home: null, tab: 'nav', preview: null, previewLang: 'ru', busy: false, assets: new Map(), batch: 25 };
@@ -39,7 +40,7 @@
   const status = (t, bad) => { const s = $('sn-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('sn-gate').hidden = false; $('sn-tabs').hidden = true; $('sn-nav').hidden = true; $('sn-home').hidden = true; }
   async function api(body) {
-    body = { ...body, reviewVersion: 2 };
+    body = { ...body, reviewVersion: 3 };
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }
@@ -47,7 +48,7 @@
     if (!r.ok || d.error) throw { code: d.error || 'site_nav_failed', field: d.field };
     return d;
   }
-  const msg = (e) => ERR[e && e.code] || 'Не получилось: ' + ((e && e.code) || 'неизвестная ошибка');
+  const msg = (e) => window.AelitaMediaOriginals?.message(e) || ERR[e && e.code] || 'Не получилось: ' + ((e && e.code) || 'неизвестная ошибка');
   const get = (o, k) => k.split('.').reduce((x, p) => (x == null ? x : x[p]), o);
   function set(o, k, v) { const ps = k.split('.'); let x = o; for (const p of ps.slice(0, -1)) x = x[p] = x[p] || {}; x[ps.at(-1)] = v; }
 
@@ -69,8 +70,17 @@
         const up = document.createElement('label'); up.className = 'ed-upload ed-quiet'; up.textContent = 'Загрузить';
         const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/jpeg,image/png,image/webp'; f.onchange = () => upload(f, inp); up.appendChild(f); wrap.appendChild(up);
         l.appendChild(wrap);
+        const originalHolder=document.createElement('div');l.append(originalHolder);
+        const refresh=()=>{originalHolder.replaceChildren();const value=inp.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,progress:status,isCurrent:()=>inp.isConnected&&inp.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>inp.isConnected);inp.value=next;inp.dispatchEvent(new Event('input',{bubbles:true}));}});};
+        inp.addEventListener('input',refresh);refresh();
+
       } else l.appendChild(inp);
       div.appendChild(l);
+    }
+    if(['covers','projects','team'].includes(kind)){
+      const view=kind==='covers'?{mode:item.mode||'cover',...Object.fromEntries(['mode','position','mobileImage','mobileMode','mobilePosition'].filter(k=>item[k]!==undefined).map(k=>[k,item[k]]))}:item.view;
+      div.mediaControl=window.AelitaMediaView.mount(div,view,{forceMode:kind==='covers',defaultPosition:item.position,onChange:changed,imageList:'sn-images',api,progress:status,isCurrent:()=>div.isConnected,
+        onMobileFile:async file=>{const result=await preparePhoto(file,()=>div.isConnected);return result;},onError:e=>status(msg(e),true)});
     }
     const tools = document.createElement('div'); tools.className = 'sn-tools';
     for (const [t, title, fn] of [['↑', 'Выше', () => div.previousElementSibling && box.insertBefore(div, div.previousElementSibling)], ['↓', 'Ниже', () => div.nextElementSibling && box.insertBefore(div.nextElementSibling, div)], ['Убрать', 'Убрать', () => { if (box.children.length > ROWS[kind].min) div.remove(); else status('Здесь нужен хотя бы один пункт.', true); }]]) {
@@ -84,6 +94,7 @@
     return [...box.children].map((div) => {
       const o = {};
       for (const inp of div.querySelectorAll('input[data-k], select[data-k]')) { const v = inp.value.trim(); if (v) set(o, inp.dataset.k, v); }
+      if(div.mediaControl){const view=div.mediaControl.get();if(kind==='covers')Object.assign(o,view||{mode:'cover'});else if(view)o.view=view;}
       if (kind === 'partners') { o.ru = o.ru || {}; o.en = o.en || {}; }
       if (['projects', 'team'].includes(kind)) { o.ru = o.ru || {}; o.en = o.en || {}; }
       return o;
@@ -125,18 +136,22 @@
   function fillHome(h) {
     list(box('covers'), 'covers', h.covers || []);
     $('sn-f-href').value = h.feature.href; $('sn-f-image').value = h.feature.image;
+    $('sn-feature-view')?.remove();const holder=document.createElement('div');holder.id='sn-feature-view';$('sn-f-image').closest('label').after(holder);
+    const featureInput=$('sn-f-image'),originalHolder=document.createElement('div');holder.append(originalHolder);const refreshOriginal=()=>{originalHolder.replaceChildren();const value=featureInput.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,progress:status,isCurrent:()=>holder.isConnected&&featureInput.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>holder.isConnected);featureInput.value=next;featureInput.dispatchEvent(new Event('input',{bubbles:true}));changed();}});};featureInput.oninput=refreshOriginal;refreshOriginal();
+    S.featureView=window.AelitaMediaView.mount(holder,h.feature.view,{onChange:changed,imageList:'sn-images',api,progress:status,isCurrent:()=>holder.isConnected,onMobileFile:file=>preparePhoto(file,()=>holder.isConnected),onError:e=>status(msg(e),true)});
+
     for (const L of ['ru', 'en']) for (const k of FEAT) $('sn-f-' + L + '-' + k).value = h.feature[L][k] || '';
     list(box('projects'), 'projects', h.projects); list(box('team'), 'team', h.team); list(box('partners'), 'partners', h.partners);
   }
   function collectHome() {
     const t = (L) => Object.fromEntries(FEAT.map((k) => [k, $('sn-f-' + L + '-' + k).value.trim()]));
     const covers = read(box('covers'));
-    return { schema: S.home.schema, revision: S.home.revision, ...(covers.length || 'covers' in S.home ? { covers } : {}), feature: { href: $('sn-f-href').value.trim(), image: $('sn-f-image').value.trim(), ru: t('ru'), en: t('en') }, projects: read(box('projects')), team: read(box('team')), partners: read(box('partners')) };
+    return { schema: S.home.schema, revision: S.home.revision, ...(covers.length || 'covers' in S.home ? { covers } : {}), feature: { href: $('sn-f-href').value.trim(), image: $('sn-f-image').value.trim(), ...(S.featureView?.get()?{view:S.featureView.get()}:{}), ru: t('ru'), en: t('en') }, projects: read(box('projects')), team: read(box('team')), partners: read(box('partners')) };
   }
   /** Загруженные фото: в форме — «asset:<hash>», на сервер уходят только используемые. */
   function homeBody(action, home = collectHome()) {
-    const used = new Set(), uses = (x) => { if (x && typeof x.image === 'string' && x.image.startsWith('asset:')) used.add(x.image.slice(6)); };
-    uses(home.feature); home.projects.forEach(uses); home.team.forEach(uses); (home.covers || []).forEach(uses);
+    const used=new Set(),uses=x=>{if(!x)return;for(const key of ['image','mobileImage'])if(typeof x[key]==='string'&&x[key].startsWith('asset:'))used.add(x[key].slice(6));if(x.view)uses(x.view);};
+    uses(home.feature);home.projects.forEach(uses);home.team.forEach(uses);(home.covers||[]).forEach(uses);
     const assets = [...used].map((h) => S.assets.get(h)).filter(Boolean).map(({ type, data }) => ({ type, data }));
     return { action, home, revision: S.home.revision, ...(assets.length ? { assets } : {}) };
   }
@@ -150,6 +165,7 @@
     const url = URL.createObjectURL(file);
     try {
       const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej({ code: 'bad_image' }); im.src = url; });
+      if(img.width>20000||img.height>20000||img.width*img.height>40000000)throw{code:'image_dimensions'};
       let side = 1800, q = 0.86, blob;
       for (let j = 0; j < 8; j++) {
         const c = document.createElement('canvas'), k = Math.min(1, side / Math.max(img.width, img.height));
@@ -165,11 +181,15 @@
       return { type: 'image/jpeg', data: btoa(raw) };
     } finally { URL.revokeObjectURL(url); }
   }
-  async function upload(fileInput, target) {
-    const f = fileInput.files[0]; fileInput.value = ''; if (!f) return;
-    status('Уменьшаем фото…');
-    try { const a = await compress(f), h = await sha256(a.data); S.assets.set(h, a); target.value = 'asset:' + h; changed(); status('Фото готово — оно уйдёт на сайт вместе с публикацией.'); }
-    catch (e) { status(msg(e), true); }
+  async function preparePhoto(file,isCurrent=()=>true){
+    S.uploading=(S.uploading||0)+1;changed();status('Готовим фото и сохраняем исходник…');
+    try{const a=await compress(file);if(!isCurrent())throw{code:'superseded'};await window.AelitaMediaOriginals.save(file,a,api,status,isCurrent);if(!isCurrent())throw{code:'superseded'};const h=await sha256(a.data);S.assets.set(h,a);status('Исходник сохранён. Подготовленное фото — в черновике.');return 'asset:'+h;}
+    finally{S.uploading--;}
+  }
+  async function upload(fileInput,target){
+    const f=fileInput.files[0];fileInput.value='';if(!f)return;
+    try{const value=await preparePhoto(f,()=>target.isConnected);target.value=value;target.dispatchEvent(new Event('input',{bubbles:true}));changed();status('Фото готово. Исходник сохранён отдельно.');}
+    catch(e){if(e.code!=='superseded')status(msg(e),true);}
   }
 
   // ── загрузка
@@ -275,6 +295,7 @@
     $('sn-conflicts').close(); changed(); status('Совместный черновик готов. Проверьте макет — сайт будет сверён ещё раз перед публикацией.');
   }
   async function check(kind, e) {
+    if(S.uploading)return status('Дождитесь сохранения исходника.',true);
     e.preventDefault(); if (S.busy) return; S.busy = true; S.preview = null; markField(null); status('Сверяем черновик с текущим сайтом…');
     try {
       const edit = S.edit;
