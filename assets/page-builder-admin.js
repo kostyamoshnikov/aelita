@@ -19,24 +19,25 @@
     github_rejected: 'Сервис публикации отклонил запрос. Проверьте настройки репозитория.', github_limited: 'Сервис публикации временно ограничил запросы. Повторите через минуту.', no_change: 'Изменений нет — публиковать нечего.',
     catalog_too_large: 'Достигнут предел каталога страниц (200).', invalid_catalog: 'Каталог страниц на сайте повреждён или изменён вручную — нужна сверка.', bad_image: 'Подойдёт JPG, PNG или WebP до 20 МБ.', image_too_large: 'Не удалось уменьшить фото до 512 КБ — выберите другое.',
     item_not_in_revision: 'В этой версии страницы ещё нет.', confirm_required: 'Адрес введён не так — проверьте.', page_not_found: 'Такой страницы в каталоге уже нет.',
-    page_in_use: 'На страницу ещё ведут ссылки — сначала уберите их.', too_many_images: 'Можно одну фотографию.', unused_image: 'Фотография не используется — выберите её заново.', layout_changed: 'Карта сайта изменена вручную — публикация остановлена.',
+    page_in_use: 'На страницу ещё ведут ссылки — сначала уберите их.', too_many_images: 'В одной публикации — до трёх новых фотографий.', unused_image: 'Фотография не используется — выберите её заново.', layout_changed: 'Карта сайта изменена вручную — публикация остановлена.',
   };
   const FIELD_NAME = { slug: 'pb-slug', date: 'pb-date', image: 'pb-image-file', links: 'pb-links' };
-  const S = { pages: [], revision: 0, page: null, existing: false, asset: null, imageURL: '', preview: null, busy: false, lang: 'ru', previewLang: 'ru' };
+  const S = { pages: [], revision: 0, page: null, existing: false, asset: null, imageURL: '', preview: null, busy: false, lang: 'ru', previewLang: 'ru',epoch:0,edit:0,uploading:0,images:new Map(),media:window.AelitaContentMedia.createStore(),blocks:null,heroView:null,heroOriginal:null,restoreMedia:null };
 
   const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('pb-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('pb-gate').hidden = false; $('pb-list-box').hidden = true; $('pb-form').hidden = true; }
   async function api(body) {
-    body = { ...body, reviewVersion: 3 };
-    const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
+    body = { ...body, reviewVersion: 4 };
+    const epoch=S.epoch,t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }
+    if(epoch!==S.epoch||t!==token())throw{code:'superseded'};
     if (r.status === 401) gate();
     if (!r.ok || d.error) throw { code: d.error || 'page_builder_failed', field: d.field, usedBy: d.usedBy };
     return d;
   }
-  const msg = (e) => ERR[e && e.code] || 'Не получилось: ' + ((e && e.code) || 'неизвестная ошибка');
+  const msg = (e) => window.AelitaContentMedia.message(e)||ERR[e && e.code] || 'Не получилось: ' + ((e && e.code) || 'неизвестная ошибка');
   const rid = () => 'pg-' + Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, '0')).join('');
   function translit(s) {
     const m = { а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya' };
@@ -50,6 +51,7 @@
     p.kind = $('pb-kind').value; p.slug = $('pb-slug').value.trim(); p.date = p.kind === 'article' ? $('pb-date').value : '';
     for (const l of ['ru', 'en']) for (const f of FIELDS) p[l][f] = $('pb-' + l + '-' + f).value;
     p.links = [...document.querySelectorAll('.pb-link')].map((row) => ({ url: row.querySelector('[data-k=url]').value.trim(), ru: row.querySelector('[data-k=ru]').value.trim(), en: row.querySelector('[data-k=en]').value.trim() })).filter((x) => x.url || x.ru || x.en);
+    const blocks=S.blocks?.get();if(blocks!==undefined)p.blocks=blocks;const view=S.heroView?.get();if(view)p.view=view;else delete p.view;
     return p;
   }
   function linkRow(l = { url: '', ru: '', en: '' }) {
@@ -60,13 +62,15 @@
     $('pb-links').appendChild(row);
   }
   function fill(p) {
+    S.epoch++;S.edit++;S.uploading=0;S.preview=null;S.blocks=null;S.heroView=null;S.media.clear();S.images.clear();S.heroOriginal=null;for(const a of S.restoreMedia?.assets||[])if(/^[a-f0-9]{64}$/.test(a?.hash||'')&&typeof a.data==='string'&&a.data.length<710000)S.images.set(a.hash,a);S.media.restore(S.restoreMedia?.captions);S.restoreMedia=null;
+
     $('pb-kind').value = p.kind; $('pb-slug').value = p.slug; $('pb-date').value = p.date || '';
     for (const l of ['ru', 'en']) for (const f of FIELDS) $('pb-' + l + '-' + f).value = (p[l] && p[l][f]) || '';
     $('pb-links').innerHTML = ''; (p.links || []).forEach(linkRow);
     $('pb-kind').disabled = S.existing; $('pb-slug').readOnly = S.existing;
     $('pb-form-title').textContent = S.existing ? 'Правка: ' + (p.ru.title || p.slug) : 'Новая страница';
     $('pb-history').hidden = !S.existing; $('pb-unpublish').hidden = !S.existing;
-    kindChanged(); showImage(); counts();
+    kindChanged(); showImage(); mountExtras(p); counts();
   }
   function kindChanged() {
     const k = $('pb-kind').value;
@@ -75,28 +79,29 @@
   }
   function showImage() {
     const img = $('pb-image-preview'), src = S.asset ? 'data:' + S.asset.type + ';base64,' + S.asset.data : (S.page.image ? S.page.image : '');
-    img.hidden = !src; if (src) img.src = src; $('pb-image-clear').hidden = !src;
+    img.hidden = !src; if (src) img.src = src; $('pb-image-clear').hidden = !src;refreshHero();
   }
   function counts() { document.querySelectorAll('[data-count]').forEach((el) => { const f = $(el.dataset.count); el.textContent = f.value.length + '/' + f.maxLength; }); }
 
   // ── черновик (sessionStorage вкладки) и файл
   function saveDraft() {
-    try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, revision: S.revision, asset: S.asset, savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU'); }
+    if(!S.page)return;try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, revision: S.revision, asset: S.asset,assets:usedImages(collect()),captions:S.media.snapshot(collect()), savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU'); }
     catch { $('pb-draft-state').textContent = 'Черновик не сохраняется во вкладке (мало места или приватный режим) — скачайте его файлом.'; }
   }
   let timer = null;
-  function changed() { S.preview = null; clearTimeout(timer); timer = setTimeout(saveDraft, 600); counts(); }
+  function changed() { S.edit++;S.preview = null; clearTimeout(timer); timer = setTimeout(saveDraft, 600); counts(); }
   function readDraft() { try { return JSON.parse(sessionStorage.getItem(DRAFT) || 'null'); } catch { return null; } }
   function download() {
-    const blob = new Blob([JSON.stringify({ format: 'aelita-page-draft/v1', page: collect(), existing: S.existing, revision: S.revision }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ format: 'aelita-page-draft/v1', page: collect(), existing: S.existing, revision: S.revision,asset:S.asset,assets:usedImages(collect()),captions:S.media.snapshot(collect()) }, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'page-' + (S.page.slug || 'draft') + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 30000);
   }
   async function importDraft(file) {
     try {
-      const d = JSON.parse(await file.text());
+      if(file.size>4*1024*1024)throw 0;const d = JSON.parse(await file.text());
       if (!d || d.format !== 'aelita-page-draft/v1' || !d.page || !/^pg-[a-f0-9]{32}$/.test(d.page.id || '')) throw 0;
-      S.existing = S.pages.some((p) => p.id === d.page.id); S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = { ...blank(), ...d.page, ru: { ...blank().ru, ...d.page.ru }, en: { ...blank().en, ...d.page.en } }; S.asset = null;
-      fill(S.page); changed(); status('Черновик загружен из файла. Фотографию, если она была новой, выберите заново.');
+      window.AelitaPageBlocks.validate(d.page.blocks);
+      S.existing = S.pages.some((p) => p.id === d.page.id); S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = { ...blank(), ...d.page, ru: { ...blank().ru, ...d.page.ru }, en: { ...blank().en, ...d.page.en } }; S.asset = d.asset||null;S.restoreMedia={assets:d.assets,captions:d.captions};
+      fill(S.page); changed(); status('Черновик загружен. Проверьте медиафайлы и макет перед публикацией.');
     } catch { status('Это не черновик страницы.', true); }
   }
 
@@ -135,6 +140,7 @@
     const url = URL.createObjectURL(file);
     try {
       const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej({ code: 'bad_image' }); im.src = url; });
+      if(img.naturalWidth>20000||img.naturalHeight>20000||img.naturalWidth*img.naturalHeight>40000000)throw{code:'image_dimensions'};
       let side = 1800, q = 0.86, blob;
       for (let j = 0; j < 8; j++) {
         const c = document.createElement('canvas'), k = Math.min(1, side / Math.max(img.width, img.height));
@@ -152,12 +158,23 @@
   }
 
   // ── проверка и публикация
-  function body(action) {
-    const p = collect(), page = JSON.parse(JSON.stringify(p));
-    if (S.asset) page.image = 'asset:upload';
-    if (page.kind !== 'article') page.date = '';
-    return { action, page, revision: S.revision, ...(S.asset ? { assets: [S.asset] } : {}) };
+  function usedImages(input){const ids=window.AelitaContentMedia.refs(input,'asset:');return[...S.images.values()].filter(a=>ids.has(a.hash));}
+  async function body(action){const page=JSON.parse(JSON.stringify(collect())),hero=S.asset;
+    if(hero){if(!hero.hash)hero.hash=await window.AelitaMediaOriginals.digest(Uint8Array.from(atob(hero.data),c=>c.charCodeAt(0)));page.image='asset:'+hero.hash;}
+    if(page.kind!=='article')page.date='';const assets=new Map(usedImages(page).map(a=>[a.hash,a]));if(hero)assets.set(hero.hash,hero);
+    return{action,page,revision:S.revision,assets:[...assets.values()].map(({type,data})=>({type,data})),captions:S.media.captionAssets(page)};
   }
+  function uploadBusy(delta){S.uploading=Math.max(0,S.uploading+delta);if(delta>0)changed();}
+  async function preparePhoto(file,isCurrent){const epoch=S.epoch,current=()=>epoch===S.epoch&&(!isCurrent||isCurrent());const a=await compress(file);if(!current())throw{code:'superseded'};
+    a.hash=await window.AelitaMediaOriginals.digest(Uint8Array.from(atob(a.data),c=>c.charCodeAt(0)));await window.AelitaMediaOriginals.save(file,a,api,status,current);if(!current())throw{code:'superseded'};S.images.set(a.hash,a);return'asset:'+a.hash;
+  }
+  async function heroPhoto(file){const epoch=S.epoch,before=S.page.image;uploadBusy(1);try{const value=await preparePhoto(file,()=>epoch===S.epoch&&S.page.image===before);S.page.image=value;S.asset=S.images.get(value.slice(6));showImage();changed();status('Исходник сохранён. Проверьте макет.');}finally{if(epoch===S.epoch)uploadBusy(-1);}}
+  function refreshHero(){if(!S.heroOriginal)return;S.heroOriginal.replaceChildren();const epoch=S.epoch,value=S.page.image;window.AelitaMediaOriginals.controls(S.heroOriginal,{api,value,onChoose:heroPhoto,progress:status,isCurrent:()=>epoch===S.epoch&&S.page.image===value});}
+  function mountExtras(p){const holder=$('pb-photo-settings');holder.replaceChildren();S.heroOriginal=document.createElement('div');holder.append(S.heroOriginal);refreshHero();const epoch=S.epoch,current=()=>epoch===S.epoch&&holder.isConnected;
+    S.heroView=window.AelitaMediaView.mount(holder,p.view,{api,progress:status,isCurrent:current,onChange:changed,onMobileFile:async file=>{uploadBusy(1);try{return await preparePhoto(file,current);}finally{if(epoch===S.epoch)uploadBusy(-1);}},onError:e=>status(msg(e),true)});
+    const list=$('pb-blocks-editor');list.replaceChildren();S.blocks=window.AelitaPageBlocks.mount(list,p.blocks,{api,store:S.media,progress:status,isCurrent:()=>epoch===S.epoch&&list.isConnected,onChange:changed,onPhoto:preparePhoto,busy:delta=>{if(epoch===S.epoch)uploadBusy(delta);},onError:e=>status(msg(e),true)});
+  }
+
   function markField(field) {
     document.querySelectorAll('.pb-bad').forEach((x) => x.classList.remove('pb-bad'));
     if (!field) return;
@@ -166,18 +183,18 @@
     const el = id && $(id); if (el) { el.classList.add('pb-bad'); el.focus(); }
   }
   async function check(e) {
-    e.preventDefault(); if (S.busy) return; S.busy = true; $('pb-check').disabled = true; markField(null); saveDraft(); status('Собираем макет…');
+    e.preventDefault(); if (S.busy) return;if(S.uploading){status('Дождитесь сохранения медиафайлов.',true);return;}const edit=S.edit,epoch=S.epoch; S.busy = true; $('pb-check').disabled = true; markField(null); saveDraft(); status('Собираем макет…');
     try {
       const l = await api({ action: 'page_list' });
       if (S.existing && S.revision === null) throw { code: 'draft_base_missing' };
       if (S.existing && l.revision !== S.revision) throw { code: 'content_conflict' };
       if (!S.existing) S.revision = l.revision; // A new id does not replace an existing page.
       S.pages = l.pages;
-      const d = await api(body('page_preview'));
-      S.preview = d; S.previewLang = 'ru'; showPreview();
+      const payload=await body('page_preview'),d=await api(payload);if(edit!==S.edit||epoch!==S.epoch)throw{code:'superseded'};const current=()=>edit===S.edit&&epoch===S.epoch;d.ru=await S.media.preview(d.ru,d.videoAssets,api,current);d.en=await S.media.preview(d.en,d.videoAssets,api,current);if(!current())throw{code:'superseded'};
+      S.preview = {...d,payload,edit,epoch}; S.previewLang = 'ru'; showPreview();
       $('pb-affected').textContent = (d.isNew ? 'Новая страница: ' : 'Обновится: ') + d.affected.join(', ') + '. Проверка действует 10 минут.';
       $('pb-review-error').textContent = ''; $('pb-publish').disabled = false; $('pb-review').showModal(); status('');
-    } catch (err) { status(msg(err), true); markField(err.field); }
+    } catch (err) { if(err.code!=='superseded'){status(msg(err), true); markField(err.field);} }
     finally { S.busy = false; $('pb-check').disabled = false; }
   }
   function showPreview() {
@@ -187,7 +204,7 @@
   async function publish() {
     if (!S.preview || S.busy) return; S.busy = true; $('pb-publish').disabled = true; $('pb-review-error').textContent = 'Публикуем…';
     try {
-      const d = await api({ ...body('page_publish'), previewToken: S.preview.previewToken });
+      const d = await api({ ...S.preview.payload,action:'page_publish', previewToken: S.preview.previewToken });
       $('pb-review').close(); try { sessionStorage.removeItem(DRAFT); } catch { /* нет хранилища */ }
       $('pb-form').hidden = true; $('pb-result').hidden = false;
       $('pb-result-ru').href = d.pageURL; $('pb-result-en').href = d.pageURLEn || d.pageURL.replace('aelita-production.ru/', 'aelita-production.ru/en/');
@@ -249,14 +266,14 @@
   function start() {
     if (!token()) return gate();
     $('pb-new').onclick = () => { S.existing = false; S.page = blank(); S.asset = null; openForm(); saveDraft(); };
-    $('pb-cancel').onclick = () => { $('pb-form').hidden = true; load().catch((e) => status(msg(e), true)); };
+    $('pb-cancel').onclick = () => {S.epoch++;S.uploading=0;S.media.clear(); $('pb-form').hidden = true; load().catch((e) => status(msg(e), true)); };
     $('pb-result-back').onclick = () => { $('pb-result').hidden = true; load().catch((e) => status(msg(e), true)); };
     $('pb-kind').onchange = () => { kindChanged(); changed(); };
     $('pb-ru-title').addEventListener('blur', () => { if (!S.existing && !$('pb-slug').value.trim()) { $('pb-slug').value = translit($('pb-ru-title').value); changed(); } });
     $('pb-form').addEventListener('input', changed);
     $('pb-form').addEventListener('submit', check);
     $('pb-link-add').onclick = () => { if (document.querySelectorAll('.pb-link').length < 6) linkRow(); };
-    $('pb-image-file').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; status('Уменьшаем фото…'); try { S.asset = await compress(f); showImage(); changed(); status(''); } catch (err) { status(msg(err), true); } };
+    $('pb-image-file').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; try { await heroPhoto(f); } catch (err) { if(err.code!=='superseded')status(msg(err), true); } };
     $('pb-image-clear').onclick = () => { S.asset = null; S.page.image = ''; showImage(); changed(); };
     $('pb-download').onclick = download;
     $('pb-import').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) importDraft(f); };
@@ -271,10 +288,11 @@
     load().then(() => {
       const d = readDraft();
       if (d && d.page && /^pg-[a-f0-9]{32}$/.test(d.page.id || '')) {
-        S.existing = !!d.existing; S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = d.page; S.asset = d.asset || null; openForm();
+        S.existing = !!d.existing; S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = d.page; S.asset = d.asset || null;S.restoreMedia={assets:d.assets,captions:d.captions}; openForm();
         status('Восстановлен несохранённый черновик из этой вкладки.');
       }
     }).catch((e) => { status(msg(e), true); if (e.code !== 'not_authenticated') $('pb-list-box').hidden = false; });
   }
+  window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token'){S.epoch++;S.uploading=0;S.preview=null;S.media.clear();gate();}});
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 }());

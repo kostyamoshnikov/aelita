@@ -18,3 +18,15 @@
 .pb-import input{position:absolute;opacity:0;width:1px;height:1px}
 #pb-frame{width:100%;height:70vh;border:1px solid #5c5343;background:#0b0b0d}
 @media(max-width:760px){.pb-two{grid-template-columns:minmax(0,1fr)}.pb-link{grid-template-columns:minmax(0,1fr)}.pb-slug>span{font-size:12px;padding:0 6px}.pb-image img{width:120px;height:150px}}
+
+/* Typed blocks and media controls use the existing editor palette. */
+#pb-photo-settings{margin:0 0 28px;padding:0 24px}
+.pb-block-editor{border:1px solid var(--line,rgba(214,181,122,.3));padding:20px;margin:16px 0;min-width:0}
+.pb-block-editor>summary{cursor:pointer;overflow-wrap:anywhere;line-height:1.6}
+.pb-block-editor>.ed-actions{margin:20px 0}
+.pb-block-editor fieldset{min-width:0;border:1px solid var(--line,rgba(214,181,122,.25));padding:16px}
+.pb-block-editor input,.pb-block-editor textarea,.pb-block-editor select{max-width:100%;box-sizing:border-box}
+.pb-block-button{border-top:1px solid var(--line,rgba(214,181,122,.25));padding:20px 0}
+.pb-block-editor-list{min-width:0}
+.pb-block-editor .ed-actions{flex-wrap:wrap}
+@media(max-width:600px){.pb-block-editor{padding:14px}.pb-block-editor .pb-two{grid-template-columns:1fr}.pb-block-editor button{white-space:normal;max-width:100%}}
