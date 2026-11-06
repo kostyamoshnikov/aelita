@@ -9,11 +9,12 @@
   const SUB = { person: ['Роль или профессия', 'Role'], venue: ['Адрес', 'Address'], project: ['Годы, формат', 'Years, format'], article: ['Автор', 'Author'] };
   const FIELDS = ['title', 'subtitle', 'lead', 'body', 'seoTitle', 'seoDescription', 'imageAlt'];
   const ERR = {
+    editor_reload_required: 'Редактор обновлён. Скачайте черновик и перезагрузите страницу перед продолжением.',
     not_authenticated: 'Войдите в админку снова.', page_builder_disabled: 'Конструктор страниц ещё не включён на сервере (нужен SITE_EDITOR_ENABLED=1 или PAGE_BUILDER_ENABLED=1 у aelita-admin-site-edit).',
     editor_not_configured: 'Не настроено подключение к репозиторию сайта.', invalid_field: 'Проверьте отмеченное поле.', slug_taken: 'Такой адрес уже занят на сайте. Выберите другой.',
     address_locked: 'Адрес и тип опубликованной страницы не меняются.', image_missing: 'Фотография не найдена — выберите файл заново.', linked_page_missing: 'Кнопка ведёт на страницу, которой нет на сайте.',
     managed_page_changed: 'Эту страницу после публикации правили не конструктором (вручную или редактором). Конструктор её не перезапишет — правьте в «Редакторе страниц».',
-    content_conflict: 'Сайт изменился, пока вы работали. Черновик сохранён: нажмите «Проверить макет» ещё раз.', preview_required: 'Сначала проверьте свежий макет.', preview_expired: 'Проверка устарела (10 минут). Проверьте макет ещё раз.',
+    content_conflict: 'Каталог изменился после открытия страницы. Скачайте черновик, откройте актуальную страницу и сопоставьте правки. Старая форма не будет опубликована поверх новой.', draft_base_missing: 'У старого черновика нет исходной версии. Скачайте его и сопоставьте с актуальной страницей перед новой правкой.', preview_required: 'Сначала проверьте свежий макет.', preview_expired: 'Проверка устарела (10 минут). Проверьте макет ещё раз.',
     publication_unknown: 'Ответ на публикацию потерян. Нажмите «Опубликовать» ещё раз — конструктор проверит, успела ли она сохраниться.', github_unreachable: 'Нет связи с сервером публикации. Проверьте интернет и повторите.',
     github_rejected: 'Сервис публикации отклонил запрос. Проверьте настройки репозитория.', github_limited: 'Сервис публикации временно ограничил запросы. Повторите через минуту.', no_change: 'Изменений нет — публиковать нечего.',
     catalog_too_large: 'Достигнут предел каталога страниц (200).', invalid_catalog: 'Каталог страниц на сайте повреждён или изменён вручную — нужна сверка.', bad_image: 'Подойдёт JPG, PNG или WebP до 20 МБ.', image_too_large: 'Не удалось уменьшить фото до 512 КБ — выберите другое.',
@@ -27,6 +28,7 @@
   const status = (t, bad) => { const s = $('pb-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('pb-gate').hidden = false; $('pb-list-box').hidden = true; $('pb-form').hidden = true; }
   async function api(body) {
+    body = { ...body, reviewVersion: 2 };
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }
@@ -79,21 +81,21 @@
 
   // ── черновик (sessionStorage вкладки) и файл
   function saveDraft() {
-    try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, asset: S.asset, savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU'); }
+    try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, revision: S.revision, asset: S.asset, savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU'); }
     catch { $('pb-draft-state').textContent = 'Черновик не сохраняется во вкладке (мало места или приватный режим) — скачайте его файлом.'; }
   }
   let timer = null;
   function changed() { S.preview = null; clearTimeout(timer); timer = setTimeout(saveDraft, 600); counts(); }
   function readDraft() { try { return JSON.parse(sessionStorage.getItem(DRAFT) || 'null'); } catch { return null; } }
   function download() {
-    const blob = new Blob([JSON.stringify({ format: 'aelita-page-draft/v1', page: collect(), existing: S.existing }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ format: 'aelita-page-draft/v1', page: collect(), existing: S.existing, revision: S.revision }, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'page-' + (S.page.slug || 'draft') + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 30000);
   }
   async function importDraft(file) {
     try {
       const d = JSON.parse(await file.text());
       if (!d || d.format !== 'aelita-page-draft/v1' || !d.page || !/^pg-[a-f0-9]{32}$/.test(d.page.id || '')) throw 0;
-      S.existing = S.pages.some((p) => p.id === d.page.id); S.page = { ...blank(), ...d.page, ru: { ...blank().ru, ...d.page.ru }, en: { ...blank().en, ...d.page.en } }; S.asset = null;
+      S.existing = S.pages.some((p) => p.id === d.page.id); S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = { ...blank(), ...d.page, ru: { ...blank().ru, ...d.page.ru }, en: { ...blank().en, ...d.page.en } }; S.asset = null;
       fill(S.page); changed(); status('Черновик загружен из файла. Фотографию, если она была новой, выберите заново.');
     } catch { status('Это не черновик страницы.', true); }
   }
@@ -122,7 +124,7 @@
       const h = await api({ action: 'page_history' });
       const last = h.history[0]; if (!last) throw { code: 'item_not_in_revision' };
       const d = await api({ action: 'page_revision', commit: last.sha, id, full: true });
-      S.existing = true; S.page = d.page; S.asset = null; openForm(); status('');
+      S.existing = true; S.revision = d.revision; S.page = d.page; S.asset = null; openForm(); status('');
     } catch (e) { status(msg(e), true); }
   }
   function openForm() { $('pb-list-box').hidden = true; $('pb-result').hidden = true; $('pb-form').hidden = false; fill(S.page); tab('ru'); window.scrollTo(0, 0); }
@@ -166,7 +168,11 @@
   async function check(e) {
     e.preventDefault(); if (S.busy) return; S.busy = true; $('pb-check').disabled = true; markField(null); saveDraft(); status('Собираем макет…');
     try {
-      const l = await api({ action: 'page_list' }); S.revision = l.revision; S.pages = l.pages; // свежая версия каталога
+      const l = await api({ action: 'page_list' });
+      if (S.existing && S.revision === null) throw { code: 'draft_base_missing' };
+      if (S.existing && l.revision !== S.revision) throw { code: 'content_conflict' };
+      if (!S.existing) S.revision = l.revision; // A new id does not replace an existing page.
+      S.pages = l.pages;
       const d = await api(body('page_preview'));
       S.preview = d; S.previewLang = 'ru'; showPreview();
       $('pb-affected').textContent = (d.isNew ? 'Новая страница: ' : 'Обновится: ') + d.affected.join(', ') + '. Проверка действует 10 минут.';
@@ -202,7 +208,9 @@
   async function unpublish() {
     if (S.busy) return; S.busy = true; $('pb-unpublish-go').disabled = true; $('pb-unpublish-error').textContent = 'Снимаем…';
     try {
-      const l = await api({ action: 'page_list' }); S.revision = l.revision;
+      const l = await api({ action: 'page_list' });
+      if (S.revision === null) throw { code: 'draft_base_missing' };
+      if (l.revision !== S.revision) throw { code: 'content_conflict' };
       await api({ action: 'page_unpublish', id: S.page.id, revision: S.revision, confirm: $('pb-unpublish-confirm').value.trim() });
       $('pb-unpublish-dialog').close(); try { sessionStorage.removeItem(DRAFT); } catch { /* нет хранилища */ }
       $('pb-form').hidden = true; await load(); status('Страница /' + S.page.slug + '/ снята с сайта. Сайт обновится через 1–2 минуты.');
@@ -263,7 +271,7 @@
     load().then(() => {
       const d = readDraft();
       if (d && d.page && /^pg-[a-f0-9]{32}$/.test(d.page.id || '')) {
-        S.existing = !!d.existing; S.page = d.page; S.asset = d.asset || null; openForm();
+        S.existing = !!d.existing; S.revision = Number.isSafeInteger(d.revision) && d.revision >= 0 ? d.revision : (S.existing ? null : S.revision); S.page = d.page; S.asset = d.asset || null; openForm();
         status('Восстановлен несохранённый черновик из этой вкладки.');
       }
     }).catch((e) => { status(msg(e), true); if (e.code !== 'not_authenticated') $('pb-list-box').hidden = false; });
