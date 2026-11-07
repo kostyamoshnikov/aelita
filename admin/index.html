@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=164">
+<link rel="stylesheet" href="/assets/fonts.css?v=165">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -469,10 +469,17 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #ldSubscribeAll,[data-lead-subscribe]{display:flex;align-items:center;justify-content:center;white-space:normal!important;overflow-wrap:normal!important;word-break:normal;line-height:1.5;letter-spacing:.05em;max-width:100%;width:100%;height:auto;min-height:44px;padding:10px 12px;box-sizing:border-box}
 .statistics-period{font-size:.8125rem;color:var(--sand);margin:8px 0 16px}
 @media(max-width:600px){.statistics-controls{flex-wrap:wrap}.statistics-controls label{min-width:0;flex:1}#hitsDays{max-width:100%}}
+
+.adm-section-index{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding:12px 0 20px;color:var(--sand);font-size:.875rem}
+.adm-section-index[hidden]{display:none}
+.adm-section-index span{flex-basis:100%;font-size:.75rem}
+.adm-section-index a{color:var(--gold);padding:7px 0;text-underline-offset:.25em}
+[data-adm-index],p.sec-title{scroll-margin-top:24px}
+.statistics-fees{color:var(--sand);line-height:1.55;margin:0 0 20px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=164">
-<script src="/assets/staff-handoff-v1.js?v=164"></script>
-<script src="/assets/mobile-files-m1.js?v=164"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=165">
+<script src="/assets/staff-handoff-v1.js?v=165"></script>
+<script src="/assets/mobile-files-m1.js?v=165"></script>
 </head>
 <body>
 
@@ -541,10 +548,12 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <p class="sec-title">Статистика</p>
     <div class="statistics-controls"><label>Период <select id="statisticsDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="statisticsReload">Обновить</button></div>
     <p id="statisticsPeriod" class="statistics-period" aria-live="polite"></p><div id="statisticsTiles" class="statistics-tiles"><p>Загружаем статистику…</p></div>
+    <p class="statistics-fees" id="statisticsFees" hidden></p>
     <div id="statisticsReport" aria-live="polite"></div>
     <p class="sec-title">Обзор</p>
     <div class="statistics-controls"><label for="overviewDays">Период <select id="overviewDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="overviewReload">Обновить</button></div><p id="overviewPeriod" class="statistics-period" aria-live="polite"></p>
     <div id="overviewStatistics" class="statistics-tiles"></div>
+    <p class="statistics-fees" id="overviewFees" hidden></p>
     <div class="byproduct" id="byProduct"></div>
 
     <div class="links-row" id="adminLinks"></div>
@@ -664,6 +673,25 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
          (маршрут /admin/subscriptions). Счета компаний — выпуск 4 ТЗ, позже. -->
     <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button> <button class="mini-btn" id="subsResetTestBtn" style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button> <button class="mini-btn" id="subsManualBtn">+ Оплата переводом / наличными</button></p>
+    <details id="subscription-materials-editor" class="ai-panel" data-adm-index="Материалы подписки">
+      <summary>Материалы подписок</summary>
+      <p>Ссылки увидят участники выбранного потока в оплаченный период.</p>
+      <form>
+        <label>Поток
+          <select name="plan" class="search">
+            <option value="community_main">Основной поток</option>
+            <option value="community_biz">Для предпринимателей</option>
+          </select>
+        </label>
+        <div data-materials-rows></div>
+        <div class="filter-row">
+          <button type="button" class="mini-btn" data-add-material disabled>Добавить ссылку</button>
+          <button type="submit" class="mini-btn" disabled>Сохранить ссылки</button>
+          <button type="button" class="mini-btn" data-reload-materials>Обновить ссылки</button>
+        </div>
+        <p role="status" aria-live="polite"></p>
+      </form>
+    </details>
     <div id="subsSummary" style="color:var(--sand);font-size:0.8125rem;line-height:1.7;margin:0 0 12px"></div>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="subSearch" placeholder="Поиск по имени, email или телефону…">
@@ -1118,15 +1146,15 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <p class="ai-note">Сутки считаются по Москве. Лимиты — защита пилота, а не квота Z.ai. Telegram дополнительно требует AI_PILOT_ENABLED=1 и WEBHOOK_SECRET в Worker. Выключение пилота блокирует новые запросы и выдачу ответов; уже начатая генерация может завершиться.</p>
         <p><a href="/ai-test/" target="_blank" rel="noopener">Тестовая страница сайта</a> · <a href="/en/ai-test/" target="_blank" rel="noopener">English test page</a></p>
       </div>
-      <div class="ai-box">
+      <div class="ai-box" data-adm-index="Помощник редактора">
         <h2>Помощник редактора</h2>
-        <p class="ai-note">Текст не отправляется подписчикам и не публикуется. В модель передаются введённый текст и общедоступные сведения о выбранном событии. Для сводки — только числа просмотров за 7 дней. Не вставляйте персональные данные, номера заказов и закрытые ссылки.</p>
+        <p class="ai-note">Текст не отправляется подписчикам и не публикуется. В модель передаются введённый текст и общедоступные сведения о выбранном событии. Сводка посещаемости строится по периоду, выбранному в «Статистике». Не вставляйте персональные данные, номера заказов и закрытые ссылки.</p>
         <form id="ai-draft-form">
-          <div class="ai-grid"><div><label for="ai-draft-kind">Задача</label><select id="ai-draft-kind"><option value="newsletter">Черновик письма</option><option value="telegram">Telegram</option><option value="vk">ВКонтакте</option><option value="shorten">Сократить текст</option><option value="translate">Перевести текст</option><option value="stats">Объяснить посещаемость за 7 дней</option><option value="ask">Проверить помощника по афише</option></select></div><div><label for="ai-draft-lang">Язык результата</label><select id="ai-draft-lang"><option value="ru">Русский</option><option value="en">English</option></select></div></div>
+          <div class="ai-grid"><div><label for="ai-draft-kind">Задача</label><select id="ai-draft-kind"><option value="newsletter">Черновик письма</option><option value="telegram">Telegram</option><option value="vk">ВКонтакте</option><option value="press">Письмо для СМИ</option><option value="ad_public">Письмо рекламным пабликам</option><option value="shorten">Сократить текст</option><option value="translate">Перевести текст</option><option value="stats">Объяснить посещаемость</option><option value="ask">Проверить помощника по афише</option></select></div><div><label for="ai-draft-lang">Язык результата</label><select id="ai-draft-lang"><option value="ru">Русский</option><option value="en">English</option></select></div></div>
           <label for="ai-draft-event">Событие из текущего каталога</label><select id="ai-draft-event"><option value="">Без привязки к событию</option></select>
           <div class="ai-grid" id="ai-draft-presets"><label>Тип<select id="ai-draft-type"><option value="announcement">Анонс</option><option value="reminder">Напоминание</option><option value="after">После события</option><option value="newsletter">Рассылка</option><option value="post">Пост</option></select></label><label>Длина<select id="ai-draft-length"><option value="short">Коротко</option><option value="medium" selected>Средне</option><option value="long">Подробно</option></select></label><label>Тон<select id="ai-draft-tone"><option value="warm">Тёплый</option><option value="business">Деловой</option><option value="ceremonial">Торжественный</option></select></label></div>
           <fieldset id="ai-draft-include"><legend>Включить</legend><label><input type="checkbox" value="dateVenue" checked> Дата и место</label><label><input type="checkbox" value="price" checked> Цена</label><label><input type="checkbox" value="tickets" checked> Ссылка на билеты</label><label><input type="checkbox" value="age" checked> Возраст</label></fieldset>
-          <label for="ai-draft-input">Пожелания · необязательно</label><textarea class="ym-disable-keys" id="ai-draft-input" maxlength="1200" rows="3" placeholder="Например: спокойное приглашение без лишних обещаний"></textarea>
+          <label id="ai-draft-input-label" for="ai-draft-input">Пожелания · необязательно</label><textarea class="ym-disable-keys" id="ai-draft-input" maxlength="1200" rows="3" placeholder="Например: спокойное приглашение без лишних обещаний"></textarea>
           <div class="ai-actions"><button id="ai-draft-submit" type="submit" disabled>Подготовить</button><button id="ai-draft-cancel" type="button" class="ai-secondary" hidden>Убрать из очереди</button></div>
         </form>
         <p id="ai-draft-status" class="ai-status" role="status" aria-live="polite"></p>
@@ -1134,7 +1162,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <div class="ai-actions"><button id="ai-draft-copy" type="button" class="ai-secondary" disabled>Скопировать текст</button></div>
         <div id="ai-draft-variants" aria-live="polite"></div><button type="button" class="mini-btn" id="ai-draft-more">Ещё вариант</button><details><summary>Откуда факты</summary><div id="ai-draft-sources" aria-live="polite"></div></details>
       </div>
-      <div class="ai-box"><h2>Состояние очереди</h2><p class="ai-note">Последние 10 запросов без текста вопросов и данных участников. Для обновления используйте кнопку «Обновить раздел».</p><div id="ai-admin-diag" class="ai-diagnostics"></div></div>
+      <div class="ai-box" data-adm-index="Состояние очереди"><h2>Состояние очереди</h2><p class="ai-note">Последние 10 запросов без текста вопросов и данных участников. Для обновления используйте кнопку «Обновить раздел».</p><div id="ai-admin-diag" class="ai-diagnostics"></div></div>
     </section>
 </div>
 
@@ -1536,7 +1564,7 @@ function renderCustomers(list) {
   el.innerHTML = list.map(function (c) {
     var purchasesHtml = (c.purchases || []).map(function (p) {
       var name = escapeHtml(p.productLabel || PRODUCT_NAMES[p.product] || p.product || 'Покупка');
-      return '<li class="purchase-row"><span class="name">' + name + '</span><span><time>' + fmtDate(p.paidAt) + '</time> · ' + fmtMoney(p.amount) + '</span></li>';
+      return '<li class="purchase-row"><span class="name">' + name + '</span><span><time>' + fmtDate(p.paidAt) + '</time> · ' + fmtMoney(p.amount) + (p.yookassaFee ? '<br>Комиссия ЮKassa '+fmtMoney(p.yookassaFee.feeKop/100)+' · после комиссии '+fmtMoney(p.yookassaFee.incomeKop/100) : '') + '</span></li>';
     }).join('');
     var purchaseWord = pluralRu(c.purchaseCount, 'покупка', 'покупки', 'покупок');
     var email = escapeHtml(c.email);
@@ -2975,7 +3003,7 @@ function renderOrders(orders) {
           : '') +
         '<span class="ord-resend-msg" id="ord-resend-' + idx + '" style="font-size:0.75rem;color:var(--sand);margin-left:10px"></span>' +
       '</div>' +
-      '<div class="ev-people" id="ord-tickets-' + idx + '">' + admFields([{label:'Сумма',value:fmtMoney(o.totalAmount)},{label:'Погашено',value:o.redeemedCount+' из '+o.ticketsCount}]) + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
+      '<div class="ev-people" id="ord-tickets-' + idx + '">' + (o.yookassaFee ? '<p class="sales-line">Комиссия ЮKassa '+fmtMoney(o.yookassaFee.feeKop/100)+' · после комиссии '+fmtMoney(o.yookassaFee.incomeKop/100)+' до возвратов.</p>' : '') + admFields([{label:'Сумма',value:fmtMoney(o.totalAmount)},{label:'Погашено',value:o.redeemedCount+' из '+o.ticketsCount}]) + (ticketsLines || '<div class="ev-empty">Билетов нет.</div>') + '</div>' +
     '</div>';
   }).join('');
   decorateOrderRefunds();
@@ -3319,17 +3347,34 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
 });
 
 var statisticsJob=0;
-function statisticsTable(title,rows,columns){return '<section class="statistics-section"><h2>'+escapeHtml(title)+'</h2>'+(rows.length?'<div class="table-wrap"><table class="perf-table"><thead><tr>'+columns.map(function(c){return '<th>'+escapeHtml(c[1])+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+columns.map(function(c){return '<td data-label="'+escapeHtml(c[1])+'">'+escapeHtml(String(r[c[0]]==null?'—':r[c[0]]))+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>':'<p class="empty-state">Нет данных за период</p>')+'</section>';}
+function statisticsTable(title,rows,columns){
+  var data=(Array.isArray(rows)?rows:[]).map(function(row){
+    return Array.isArray(row)?{key:row[0],n:row[1]}:row;
+  }).filter(function(row){return row&&columns.every(function(col){return row[col[0]]!=null&&row[col[0]]!=='';});});
+  if(!data.length)return '';
+  return '<section class="statistics-section"><h2 data-adm-index="'+escapeHtml(title)+'">'+escapeHtml(title)+'</h2><div class="table-wrap"><table class="perf-table"><thead><tr>'+
+    columns.map(function(col){return '<th>'+escapeHtml(col[1])+'</th>';}).join('')+'</tr></thead><tbody>'+
+    data.map(function(row){return '<tr>'+columns.map(function(col){return '<td data-label="'+escapeHtml(col[1])+'">'+escapeHtml(String(row[col[0]]))+'</td>';}).join('')+'</tr>';}).join('')+
+    '</tbody></table></div></section>';
+}
+function actualFees(fees){
+  if(!fees||!(fees.known+fees.missing))return '';
+  if(!fees.known)return 'Комиссия ЮKassa · нет данных по '+fees.missing+' оплатам билетов.';
+  return 'Комиссия ЮKassa '+fmtMoney(fees.feeKop/100)+' · после комиссии '+fmtMoney(fees.incomeKop/100)+
+    ' · '+fees.known+' из '+(fees.known+fees.missing)+' оплат билетов, до учёта возвратов.';
+}
 async function loadStatistics(){
-  if(!getToken()||!ADMIN_ORDERS_URL)return;var seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
-  try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+getToken()},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob)return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
+  if(!getToken()||!ADMIN_ORDERS_URL)return;var token=getToken(),seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsFees','overviewFees'].forEach(function(id){document.getElementById(id).hidden=true;});['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
+  try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob||token!==getToken())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
     var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
     document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
     var tiles=[['visits','Посещения'],['orders','Заказы'],['revenue','Выручка'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
     document.getElementById('statisticsTiles').innerHTML=tiles;document.getElementById('overviewStatistics').innerHTML=tiles;
+    ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;});
     var daysData=(v.visitsByDay||[]).slice().reverse(),max=Math.max.apply(null,daysData.map(function(x){return x.entries;}).concat([1]));
-    var graph='<section class="statistics-section"><h2>Посещения по дням</h2>'+(v.visits?'<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div>':'<p class="empty-state">Нет данных за период</p>')+'</section>';
-    document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment','Оплата'],['paid','Оплачено']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
+    var graph=v.visits?'<section class="statistics-section"><h2 data-adm-index="Посещения по дням">Посещения по дням</h2>'+('<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div></section>'):'<p class="statistics-period">За период нет посещений.</p>';
+    document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment','Оплата'],['paid','Оплачено']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs&&v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
+    if (window.AELITA_adminSectionIndex) window.AELITA_adminSectionIndex();
     document.getElementById('perfDays').value=String(Math.min(days,30));document.getElementById('hitsDays').value=String(days);loadPerf();loadHits();
   }catch(e){if(seq===statisticsJob){document.getElementById('statisticsReport').textContent=e.message;['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Не удалось загрузить данные за выбранный период. Нажмите «Обновить».';});}}finally{if(seq===statisticsJob){button.disabled=false;document.getElementById('overviewReload').disabled=false;}}
 }
@@ -3353,7 +3398,7 @@ function salesCard(s) {
     '<div class="ev-when">' + salesWhen(s.datetime) + ' · заказов ' + s.orders + '</div></div>' +
     '<div class="ev-count">' + (s.tickets.online !== undefined ? 'онлайн ' + s.tickets.online + ' · в зале ' + s.tickets.offline + (s.seats ? ' из ' + s.seats.capacity : '') : s.tickets.sold + (s.seats ? ' <span class="cap">из ' + s.seats.capacity + '</span>' : ' <span class="cap">билетов</span>')) + '</div></div>' +
     '<div class="sales-line">Выручка: ' + fmtMoney(s.revenue.moneyRub) + ' деньгами' + (s.revenue.giftRub ? ' + ' + fmtMoney(s.revenue.giftRub) + ' подарочными картами' : '') +
-    '.</div><details class="sales-extra"><summary>Подробнее</summary><div class="sales-line">Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
+    '.</div>' + (actualFees(s.yookassa) ? '<p class="sales-line">'+escapeHtml(actualFees(s.yookassa))+'</p>' : '') + '<details class="sales-extra"><summary>Подробнее</summary><div class="sales-line">Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
     '. Вошли по QR: ' + s.tickets.redeemed + '.</div>' +
     '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
     (!s.isTest && s.status === 'on_sale' && !s.venueConfirmed ? '<div class="sales-line">⚠️ Площадка не подтверждена — впишите в каталог (venueConfirmed), чем подтверждена: договор, письмо площадки.</div>' : '') +
@@ -6277,7 +6322,7 @@ function renderSubscriptions() {
     var pays = (s.payments || []).slice().reverse().map(function (p) {
       return '<div class="ev-person"><span class="who">' + (p.ok ? (p.refunded ? 'возвращено' : 'оплачено') : 'отказ' + (p.reason ? ' — ' + escapeHtml(p.reason) : '')) +
         '<small>' + fmtGcDate(p.at) + ' · ' + fmtMoney(Number(p.amount)) + ' · ' +
-        (p.kind === 'manual' ? escapeHtml((MANUAL_METHOD[p.method] || 'переводом') + (p.months ? ', ' + p.months + ' мес.' : '') + (p.note ? ' — ' + p.note : '')) : escapeHtml(p.kind || '')) + '</small></span></div>';
+        (p.kind === 'manual' ? escapeHtml((MANUAL_METHOD[p.method] || 'переводом') + (p.months ? ', ' + p.months + ' мес.' : '') + (p.note ? ' — ' + p.note : '')) : escapeHtml(p.kind || '')) + '</small>' + (p.yookassaFee ? '<small>Комиссия ЮKassa '+fmtMoney(p.yookassaFee.feeKop/100)+' · после комиссии '+fmtMoney(p.yookassaFee.incomeKop/100)+' до возвратов.</small>' : '') + '</span></div>';
     }).join('');
     return '<div class="ev-card">' +
       '<div class="ev-head"><div>' +
@@ -6883,6 +6928,11 @@ if (getToken()) { showData(); } else { showGate(); }
     nav.addEventListener('scroll', upd, { passive: true });
     window.addEventListener('resize', upd);
     c.insertBefore(box, c.firstChild);
+    var index = document.createElement('nav');
+    index.className = 'adm-section-index'; index.id = 'admSectionIndex';
+    index.setAttribute('aria-label', 'В этом разделе');
+    index.setAttribute('data-adm-tab', '*');
+    box.after(index);
     search(box, c);
     setTimeout(upd, 0);
     new MutationObserver(function(){var active=nav.querySelector('.on');if(active&&nav.clientWidth)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();}).observe(c, { attributes: true, attributeFilter: ['style'] });
@@ -7025,6 +7075,32 @@ if (getToken()) { showData(); } else { showGate(); }
       setTimeout(function () { h.el.classList.remove('adm-hit'); }, 2500);
     }
   }
+  function sectionIndex(tab, content) {
+    var index = document.getElementById('admSectionIndex');
+    if (!index) return;
+    var label = document.createElement('span');
+    label.textContent = 'В этом разделе';
+    index.replaceChildren(label);
+    var group = '[data-adm-tab="'+tab+'"]';
+    var headings = content.querySelectorAll(group+'[data-adm-index], '+group+' [data-adm-index], p.sec-title'+group+', '+group+' > p.sec-title');
+    headings.forEach(function (heading, i) {
+      if (heading.hidden || heading.closest('[hidden], .adm-off')) return;
+      var title = heading.dataset.admIndex || Array.from(heading.childNodes).filter(function(n){return n.nodeType===3;}).map(function(n){return n.textContent;}).join(' ').replace(/\s*\([^)]*\)\s*$/, '').replace(/\s*\(.*$/, '').trim();
+      if (!title) return;
+      if (!heading.id) heading.id = 'adm-section-' + tab + '-' + i;
+      heading.tabIndex = -1;
+      var link = document.createElement('a');
+      link.href = '#' + heading.id; link.textContent = title;
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        if (heading.matches('details')) heading.open = true;
+        heading.focus({preventScroll:true});
+        heading.scrollIntoView({block:'start'});
+      });
+      index.append(link);
+    });
+    index.hidden = index.children.length === 1;
+  }
   function show(tab, user) {
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
     var c = document.getElementById('content');
@@ -7035,6 +7111,7 @@ if (getToken()) { showData(); } else { showGate(); }
     Array.prototype.slice.call(document.querySelectorAll('[data-adm-tab-btn]')).forEach(function (b) {
       b.classList.toggle('on', b.getAttribute('data-adm-tab-btn') === tab);
     });
+    sectionIndex(tab, c);
     try { localStorage.setItem('aelita_admin_tab', tab); } catch (e) {}
     if (window.AELITA_adminEnsureTab) window.AELITA_adminEnsureTab(tab); // pack-v695: раздел грузится при открытии
     if (user) {
@@ -7044,14 +7121,20 @@ if (getToken()) { showData(); } else { showGate(); }
     }
   }
   window.AELITA_adminTab = show;
+  window.AELITA_adminSectionIndex = function () { sectionIndex(admCurrentTab(), document.getElementById('content')); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=164"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=164">
-<script src="/assets/ai-pilot-v741.js?v=164"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=164"></script>
+<script src="/assets/admin-snapshot.js?v=165"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=165">
+<script src="/assets/ai-pilot-v741.js?v=165"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=165"></script>
+<script src="/assets/subscription-materials-admin.js?v=165"></script>
+<script>
+if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
+  document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
+</script>
 </body>
 </html>

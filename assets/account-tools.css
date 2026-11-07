@@ -1,0 +1,53 @@
+/* Account sections and Community subscription controls. */
+.sub-summary {
+  display: grid;
+  gap: .55rem;
+  margin-bottom: .875rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgba(214,181,122,.32);
+  color: var(--sand);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.sub-summary strong { color: var(--bone); }
+.sub-open { color: var(--gold); font-size: .875rem; }
+.sub-summary:focus-visible, .sub-summary:hover { border-color: var(--gold); }
+.sub-test { color: #c98b6b; font-size: .75rem; }
+.sub-action-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.sub-action-row button { max-width: 100%; white-space: normal; }
+.account-subscription-detail { max-width: 42rem; margin-inline: auto; }
+.account-subscription-detail h2, .sub-materials h2 { margin: 1rem 0; }
+.sub-materials { border-top: 1px solid rgba(214,181,122,.28); margin-top: 1.5rem; padding-top: .5rem; }
+.sub-materials li { margin-block: .65rem; }
+.sub-materials a { color: var(--gold); overflow-wrap: anywhere; }
+
+html:has(#accountSectionBar){scroll-padding-top:var(--cab-scroll,168px)}
+.acc-sticky{position:sticky;top:var(--cab-header,0);z-index:30;background:var(--ink);border-bottom:1px solid rgba(201,184,163,.22);margin:0 0 24px;isolation:isolate}
+.acc-sticky .acc-nav{margin:0;padding:8px 42px;gap:8px;mask-image:none;-webkit-mask-image:none;scroll-padding-inline:42px}
+.acc-sticky .acc-nav a{letter-spacing:.07em}
+.acc-nav-arrow{position:absolute;z-index:1;top:8px;left:0;width:38px;min-height:40px;border:1px solid rgba(201,184,163,.3);background:var(--ink);color:var(--gold);font:1.4rem/1 sans-serif;cursor:pointer}
+.acc-nav-arrow[data-scroll="1"]{left:auto;right:0}
+.acc-nav-arrow[hidden],.profile-extras[hidden],.acc-email-change[hidden],.city-suggestions[hidden]{display:none}
+#content :is(#tickets,#regs,#subscriptions,#buys,#settings,#password,#documents,#data,#delete){scroll-margin-top:12px}
+.acc-email-change{margin:22px 0 0;border:1px solid rgba(201,184,163,.28);padding:14px 16px;max-width:560px}
+.acc-email-change summary{cursor:pointer;color:var(--gold)}
+.acc-email-change[open] summary{margin-bottom:12px}
+.acc-email-change .pw-form{margin-top:12px}
+.acc-email-change strong,.acc-email-change p{overflow-wrap:anywhere}
+.acc-email-change .verify-box{margin-top:12px}
+.profile-extras{display:grid;gap:8px}
+.profile-extras .pf-label:not(:first-child){margin-top:12px}
+.profile-extras input[type="date"]{color-scheme:dark;min-width:0}
+.birthday-consent{margin:6px 0;align-items:start}
+.city-suggestions{display:flex;gap:6px;flex-wrap:wrap}
+.city-suggestions .contract-btn{letter-spacing:0;text-transform:none;text-align:left;overflow-wrap:anywhere}
+html.a11y .acc-sticky,html.a11y .acc-nav-arrow{background:var(--a11y-bg);color:var(--a11y-fg)}
+html.a11y .profile-extras input[type="date"]{color-scheme:light}
+
+#giftCards .gift-item{display:grid;gap:11px;min-width:0;padding:16px;border:1px solid rgba(201,184,163,.24);margin:10px 0 16px}
+.gift-amount{color:var(--gold);font-size:1.05rem;margin:0}
+.gift-code-row{display:grid;gap:4px;min-width:0;color:var(--sand);font-size:.8rem}
+.gift-code-row code{color:var(--bone);font-size:.95rem;overflow-wrap:anywhere}
+.gift-actions{display:flex;flex-wrap:wrap;gap:8px}
+.gift-actions .contract-btn{margin:0;min-height:40px;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:normal}
+.gift-item summary{cursor:pointer;color:var(--sand);font-size:.8rem}

@@ -398,6 +398,20 @@
       giftTo = gtEl && gtEl.value.trim() ? gtEl.value.trim().slice(0, 100) : undefined;
       giftMessage = gmEl && gmEl.value.trim() ? gmEl.value.trim().slice(0, 300) : undefined;
     }
+    var giftRecipient;
+    if (product === 'gift') {
+      var giftMode = document.getElementById('j-gift-mode'), giftRecipientInput = document.getElementById('j-gift-email');
+      if (giftMode && giftMode.value === 'recipient') {
+        giftRecipient = giftRecipientInput && giftRecipientInput.value.trim();
+        if (!giftRecipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(giftRecipient)) {
+          var msg = LANG === 'en' ? 'Enter the recipient’s email address.' : 'Укажите электронную почту получателя.';
+          showFieldError(giftRecipientInput, msg);
+          showPayMsg(msgElId, msg);
+          giftRecipientInput && giftRecipientInput.focus();
+          return;
+        }
+      }
+    }
     var isGuestCheckout = product === 'program'; // касается ТОЛЬКО входа/логина, не контакта — см. докстринг выше
 
     var nameEl = document.getElementById(opts.nameFieldId || 'j-name');
@@ -500,7 +514,7 @@
       var res = await fetch(CREATE_PAYMENT_URL, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined, lang: LANG /* З-11 этап 5, ч. 4 (pack-v479) */, gift_to: giftTo, gift_message: giftMessage }),
+        body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined, lang: LANG /* З-11 этап 5, ч. 4 (pack-v479) */, gift_to: giftTo, gift_message: giftMessage, gift_recipient_email: giftRecipient }),
       });
       if (res.status === 401) {
         if (isGuestCheckout) {
@@ -558,6 +572,12 @@
       // вернул один из этих кодов (например, другая, более старая
       // версия страницы без обновлённой проверки), подсвечиваем то же
       // поле, а не молчим общей фразой.
+      if (data && (data.error === 'bad_gift_recipient' || data.error === 'gift_recipient_unavailable')) {
+        showPayMsg(msgElId, data.error === 'bad_gift_recipient'
+          ? (LANG === 'en' ? 'Check the recipient email address.' : 'Проверьте электронную почту получателя.')
+          : (LANG === 'en' ? 'Delivery to another address is currently unavailable.' : 'Отправка на другой адрес пока недоступна.'));
+        return;
+      }
       if (data && data.error === 'bad_email') { showFieldError(emailEl, t.badEmail); showPayMsg(msgElId, t.badEmail); }
       else if (data && data.error === 'bad_phone') { showFieldError(phoneEl, t.badPhone); showPayMsg(msgElId, t.badPhone); }
       else if (data && data.error === 'bad_name') { showFieldError(nameEl, t.badName); showPayMsg(msgElId, t.badName); }

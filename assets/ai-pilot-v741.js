@@ -65,7 +65,7 @@
           await new Promise(function (resolve) { setTimeout(resolve, 2000); });
           data = await api({ action: 'ai_poll', id: job.id }, options.token()); job = data.job;
         }
-        if (job.status === 'done') { options.done ? options.done(job.result) : render(options.result, job.result); say(lang === 'en' ? 'Ready. Check the source links.' : 'Готово. Проверьте сведения по ссылкам.'); }
+        if (job.status === 'done') { options.done ? options.done(job.result) : render(options.result, job.result); say(job.result.fallback ? (lang === 'en' ? 'Template draft. The model did not respond. Review before using.' : 'Черновик по шаблону. Модель не ответила. Проверьте текст перед использованием.') : (lang === 'en' ? 'Ready. Check the source links.' : 'Готово. Проверьте сведения по ссылкам.')); }
         else if (job.status === 'error') say(message(job.error, lang), true);
         else say(job.status === 'canceled' ? (lang === 'en' ? 'Canceled.' : 'Запрос отменён.') : (lang === 'en' ? 'The request has expired.' : 'Время ожидания истекло.'), false);
       } catch (e) { say(message(e.code, lang), true); }

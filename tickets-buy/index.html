@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=164">
+<link rel="stylesheet" href="/assets/fonts.css?v=165">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -294,12 +294,15 @@ html body .promo-wrap .promo-toggle{font-size:1rem!important}
 .checkout-pay-action{display:none;flex-direction:column;align-items:stretch;gap:5px;flex:1;min-width:0;max-width:260px}body.step-2 .checkout-pay-action{display:flex}.checkout-pay-action .vpn-note{font-size:0.625rem!important;line-height:1.3;text-align:center;max-width:none}.bar .total{flex-shrink:0}.help-dock.obstructed{visibility:hidden}
 @media(min-width:1050px){.bar{padding-inline:max(20px,calc((100vw - 900px)/2))}}@media(max-width:600px){.bar{gap:10px}.bar .buy-btn{min-width:0}.checkout-pay-action .buy-btn{width:100%}}
 html body .checkout-consents .cb-item{font-size:0.75rem!important}
+.gift-owned{display:grid;gap:5px;color:var(--sand);margin-top:10px;font-size:.82rem}
+.gift-owned[hidden]{display:none}
+.gift-owned select{max-width:100%;min-height:42px;background:var(--coal);color:var(--bone);border:1px solid rgba(201,184,163,.35);padding:6px 10px}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=164">
-<script src="/assets/a11y.js?v=164"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=165">
+<script src="/assets/a11y.js?v=165"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=164">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=165">
 </head>
 <body>
 <!-- pack-v750 (заказчик 04.11): шапка как на остальных страницах — название, значок
@@ -483,6 +486,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <input class="ym-disable-keys" type="text" id="gift-input" placeholder="AELITA-XXXX-XXXX-XXXX" aria-label="Подарочная карта" autocomplete="off" spellcheck="false" maxlength="21">
     <button type="button" class="promo-apply" id="gift-apply" onclick="applyGift()">Применить</button>
   </div>
+  <label class="gift-owned" id="gift-owned" hidden><span>Карты из моего кабинета</span><select id="gift-owned-select"><option value="">Выберите карту</option></select></label>
   <div class="promo-msg" id="gift-msg"></div>
 </div>
 
@@ -544,7 +548,7 @@ function initMetrika(){
 }
 initMetrika();
 </script>
-<script src="/assets/analytics-events.js?v=164"></script>
+<script src="/assets/analytics-events.js?v=165"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
@@ -554,7 +558,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=164"></script>
+<script src="/assets/payments.js?v=165"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1998,7 +2002,42 @@ function toggleGift(){
   const row = document.getElementById('gift-row');
   row.hidden = !row.hidden;
   document.getElementById('gift-toggle').setAttribute('aria-expanded', String(!row.hidden));
-  if(!row.hidden) document.getElementById('gift-input').focus();
+  if(!row.hidden) {
+    document.getElementById('gift-input').focus();
+    loadOwnedGiftCards();
+  } else document.getElementById('gift-owned').hidden = true;
+}
+
+let giftListRequest = 0;
+async function loadOwnedGiftCards(preselected) {
+  const seq = ++giftListRequest, token = accountToken();
+  const label = document.getElementById('gift-owned'), select = document.getElementById('gift-owned-select');
+  label.hidden = true;
+  if (!token) return;
+  try {
+    const res = await apiFetch(API_BASE + '/my-orders?gift_cards=1', { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' });
+    if (!res.ok) return;
+    const result = await res.json();
+    if (seq !== giftListRequest || token !== accountToken() || document.getElementById('gift-row').hidden) return;
+    const cards = (result.giftCards || []).filter(c => c.status === 'active' && c.availableRub > 0 && Boolean(c.isTest) === Boolean(data.isTest));
+    select.replaceChildren(new Option('Выберите карту', ''));
+    cards.forEach(c => select.add(new Option(c.code.slice(-4) + ' · ' + c.availableRub.toLocaleString('ru-RU') + ' ₽', c.code)));
+    label.hidden = cards.length === 0;
+    select.onchange = function () { if (select.value) document.getElementById('gift-input').value = select.value; };
+    if (preselected && cards.some(c => c.code === preselected)) {
+      select.value = preselected;
+      select.onchange();
+      try { sessionStorage.removeItem('aelita_gift_selected'); } catch (_) {}
+    }
+  } catch (_) {}
+}
+function showSelectedGiftCard() {
+  let code;
+  try { code = sessionStorage.getItem('aelita_gift_selected'); } catch (_) {}
+  if (!code) return;
+  document.getElementById('gift-row').hidden = false;
+  document.getElementById('gift-toggle').setAttribute('aria-expanded', 'true');
+  loadOwnedGiftCards(code);
 }
 
 function giftMsg(text, cls){
@@ -2055,7 +2094,7 @@ async function applyPromo(){
   if(appliedGift) payload.gift_code = appliedGift;
   try{
     const res = await apiFetch(`${API_BASE}/check-promo`, {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      method:'POST', headers:{'Content-Type':'application/json', ...(accountToken()?{Authorization:'Bearer '+accountToken()}: {})}, body: JSON.stringify(payload)
     });
     const out = await res.json();
     if(!res.ok){
@@ -2096,7 +2135,7 @@ async function applyGift(){
   if(appliedPromo) payload.promo_code = appliedPromo;
   try{
     const res = await apiFetch(`${API_BASE}/check-gift-code`, {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      method:'POST', headers:{'Content-Type':'application/json', ...(accountToken()?{Authorization:'Bearer '+accountToken()}: {})}, body: JSON.stringify(payload)
     });
     const out = await res.json();
     if(!res.ok){
@@ -2111,8 +2150,8 @@ async function applyGift(){
       giftUsedAmount = out.gift_used_amount || 0;
       const rest = out.available_amount - out.gift_used_amount;
       giftMsg(
-        `Карта применена — списано ${out.gift_used_amount} ₽` +
-        (rest > 0 ? `, на карте останется ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : ', остаток исчерпан.'),
+        `С карты спишется ${out.gift_used_amount} ₽. К доплате ${out.final_amount} ₽` +
+        (rest > 0 ? `. На карте останется ${rest.toFixed(2).replace(/\.00$/,'')} ₽.` : '.'),
         'ok'
       );
       // pack-v278: нулевой заказ поддержан — при клике «Оплатить» на
@@ -2232,6 +2271,7 @@ function goStep(n, opts){
   }
   if(n === 2){
     fillStep2Summary();
+    showSelectedGiftCard();
     // pack-v540: цель воронки — дошёл до контактов и оплаты. Вместе с
     // ticket_checkout_click («Оплатить») и ticket_purchase видно, на
     // каком шаге уходят.
@@ -2633,8 +2673,8 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=164"></script>
-<script src="/assets/outage.js?v=164" defer></script>
+<script src="/assets/phone-prefix.js?v=165"></script>
+<script src="/assets/outage.js?v=165" defer></script>
 <script>
 (function(){var dock=document.getElementById('help-dock'),bar=document.querySelector('.bar');if(!dock)return;var anchor=dock.parentNode,next=dock.nextSibling;
 function layout(){dock.classList.toggle('compact',window.scrollY>60);if(bar){document.documentElement.style.setProperty('--checkout-bar-height',bar.getBoundingClientRect().height+'px');var fit=window.innerWidth>=1050&&bar.clientWidth>700;dock.classList.toggle('in-paybar',fit);if(fit&&dock.parentNode!==bar)bar.insertBefore(dock,bar.firstChild);else if(!fit&&dock.parentNode!==anchor)anchor.insertBefore(dock,next);}}window.addEventListener('scroll',layout,{passive:true});window.addEventListener('resize',layout);if(bar&&window.ResizeObserver)new ResizeObserver(layout).observe(bar);layout();

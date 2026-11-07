@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="История покупок в личном кабинете AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=164">
-<link rel="stylesheet" href="/assets/style.css?v=164">
+<link rel="stylesheet" href="/assets/fonts.css?v=165">
+<link rel="stylesheet" href="/assets/style.css?v=165">
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <style>
 body{max-width:100vw}
@@ -180,8 +180,9 @@ body{max-width:100vw}
 .pw-form input.pf-need{border-color:var(--gold)}
 .tk-other-form{margin-top:12px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=164">
-<script src="/assets/mobile-files-m1.js?v=164"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=165">
+<script src="/assets/mobile-files-m1.js?v=165"></script>
+<link rel="stylesheet" href="/assets/account-tools.css?v=165">
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -238,12 +239,20 @@ body{max-width:100vw}
     <div id="content" style="display:none">
       <p class="acc-meta">Вы в кабинете как <strong id="acc-email"></strong> · с нами с <span id="acc-since"></span></p>
       <!-- pack-v694: разделы кабинета — ссылками сверху; ссылка на скрытый раздел прячется сама -->
-      <div class="acc-nav" role="navigation" aria-label="Разделы кабинета">
-        <a href="#tickets">Билеты</a>
-        <a href="#regs">Регистрации</a>
-        <a href="#subscriptions">Подписки</a>
-        <a href="#buys">Покупки</a>
-        <a href="#settings">Настройки</a>
+      <div class="acc-sticky" id="accountSectionBar">
+        <button class="acc-nav-arrow" type="button" data-scroll="-1" aria-label="Листать влево" hidden>‹</button>
+        <div class="acc-nav" role="navigation" aria-label="Разделы кабинета">
+          <a href="#tickets">Билеты</a>
+          <a href="#regs">Регистрации</a>
+          <a href="#subscriptions">Подписки</a>
+          <a href="#buys">Покупки</a>
+          <a href="#settings">Профиль</a>
+          <a href="#password">Пароль</a>
+          <a href="#documents">Документы</a>
+          <a href="#data">Данные</a>
+          <a href="#delete">Удаление</a>
+        </div>
+        <button class="acc-nav-arrow" type="button" data-scroll="1" aria-label="Листать вправо" hidden>›</button>
       </div>
       <!-- pack-v694: ближайшее событие — карточкой сверху (билет или регистрация) -->
       <div class="acc-next" id="nextEvent" hidden></div>
@@ -282,17 +291,37 @@ body{max-width:100vw}
           <!-- pack-v536: телефон в профиле -->
           <input class="ym-disable-keys" type="tel" id="pf-phone" inputmode="tel" autocomplete="tel" placeholder="Телефон">
           <p class="acc-hint">Подставим его в формы покупки и заявок на сайте, чтобы не вводить заново.</p>
-          <div id="pf-email-block">
-            <input class="ym-disable-keys" type="email" id="pf-email" placeholder="Адрес почты" autocomplete="email" required>
-            <input class="ym-disable-keys" type="password" id="pf-password" placeholder="Текущий пароль — нужен только для смены почты" autocomplete="current-password">
-            <p class="acc-hint">Имя меняется сразу. Для смены почты нужен пароль и код, который придёт на новый адрес, — заказы и регистрации останутся с вами.</p>
+          <div class="profile-extras" id="profile-extras" hidden>
+            <label class="pf-label" for="pf-city">Город · необязательно</label>
+            <input class="ym-disable-keys" id="pf-city" type="text" autocomplete="off" maxlength="80" aria-describedby="pf-city-note">
+            <div class="city-suggestions" id="pf-city-results" hidden></div>
+            <p class="acc-hint" id="pf-city-note">Можно выбрать город или ввести свой. Если вы подписаны на новости, пришлём анонсы старта продаж в вашем городе и онлайн.</p>
+            <p class="acc-hint" id="pf-city-source" hidden><a href="https://www.geonames.org/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=account_dashboard" target="_blank" rel="noopener noreferrer">GeoNames</a></p>
+            <label class="pf-label" for="pf-birthday">Дата рождения · необязательно</label>
+            <input class="ym-disable-keys" id="pf-birthday" type="date" autocomplete="bday" min="1900-01-01" aria-describedby="pf-birthday-note">
+            <label class="cb-item birthday-consent"><input type="checkbox" id="pf-birthday-offers"> <span>Хочу получать по почте поздравление и личный промокод на скидку 20% в день рождения</span></label>
+            <p class="acc-hint" id="pf-birthday-note">Согласие можно отозвать здесь в любое время.</p>
           </div>
           <button type="submit" class="btn-outline" id="pf-submit">Сохранить</button>
           <div id="pf-message"></div>
         </form>
+        <details class="acc-email-change" id="pf-email-block" hidden>
+          <summary>Изменить электронную почту</summary>
+          <p class="acc-hint">Текущий адрес <strong id="pf-email-current"></strong></p>
+          <form class="pw-form" id="pf-email-form" onsubmit="onStartEmailChange(event)">
+            <label class="pf-label" for="pf-email">Новый адрес почты</label>
+            <input class="ym-disable-keys" type="email" id="pf-email" autocomplete="email" maxlength="254" required>
+            <label class="pf-label" for="pf-password" id="pf-password-label">Текущий пароль</label>
+            <input class="ym-disable-keys" type="password" id="pf-password" autocomplete="current-password">
+            <p class="acc-hint">Подтвердите вход и введите код из письма на новый адрес. Билеты и подписки сохранятся.</p>
+            <button type="submit" class="btn-outline" id="pf-email-submit">Отправить код на новый адрес</button>
+            <p id="pf-email-message" class="acc-hint" role="status" aria-live="polite"></p>
+          </form>
+        </details>
+
       </div>
 
-      <div class="acc-section">
+      <div class="acc-section" id="password">
         <h2>Сменить пароль</h2>
         <form class="pw-form" id="pw-form" onsubmit="onChangePassword(event)">
           <input class="ym-disable-keys" type="password" id="pw-current" placeholder="Текущий пароль" autocomplete="current-password" required>
@@ -302,7 +331,16 @@ body{max-width:100vw}
         </form>
       </div>
 
-      <div class="acc-section">
+      <div class="acc-section" id="documents">
+        <h2>Документы</h2>
+        <p class="acc-hint">Условия покупки и пользования кабинетом описаны в публичной оферте. Индивидуальные договоры доступны рядом с соответствующими покупками.</p>
+        <div class="acc-actions">
+          <a class="btn-outline btn-quiet" href="/documents-pdf/oferta.pdf" download>Скачать публичную оферту</a>
+          <a class="btn-outline btn-quiet" href="/documents-pdf/privacy.pdf" download>Скачать политику конфиденциальности</a>
+        </div>
+      </div>
+
+      <div class="acc-section" id="data">
         <h2>Данные и выход</h2>
         <div class="acc-actions acc-actions-top">
           <button class="btn-outline btn-quiet" onclick="onExportData()">Скачать мои данные</button>
@@ -310,7 +348,7 @@ body{max-width:100vw}
         </div>
       </div>
 
-      <div class="acc-section acc-danger">
+      <div class="acc-section acc-danger" id="delete">
         <h2>Удалить аккаунт</h2>
         <p class="acc-hint">Удалим имя, почту, пароль и историю в кабинете — это необратимо. Выданные билеты и регистрации продолжат действовать.</p>
         <details class="acc-more">
@@ -372,10 +410,11 @@ body{max-width:100vw}
   </div>
 </div>
 
-<script src="/assets/analytics-events.js?v=164"></script>
+<script src="/assets/analytics-events.js?v=165"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=164"></script>
-<script src="/assets/main.js?v=164"></script>
+<script src="/assets/account.js?v=165"></script>
+<script src="/assets/account-preferences.js?v=165"></script>
+<script src="/assets/main.js?v=165"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -1002,17 +1041,31 @@ body{max-width:100vw}
     el.innerHTML = '<h3 class="acc-sub">' + escapeHtml(t.giftTitle) + '</h3>' + cards.map(function (c) {
       var hist = (c.used || []).map(function (x) { return escapeHtml(t.giftUsed + ' ' + fmtAmount(x.rub, 'RUB') + (x.at ? ' · ' + fmtDate(x.at) : '')); })
         .concat((c.returned || []).map(function (x) { return escapeHtml(t.giftBack + ' ' + fmtAmount(x.rub, 'RUB') + (x.at ? ' · ' + fmtDate(x.at) : '')); }));
-      return '<div class="purchase-item gift-item">' +
-        '<span class="name">' + escapeHtml(t.giftCode) + ': <code class="gift-code">' + escapeHtml(c.code) + '</code> <button type="button" class="contract-btn gift-copy" data-code="' + escapeHtml(c.code) + '">' + escapeHtml(t.copy) + '</button>' + (c.isTest ? ' <span class="acc-hint">(' + (LANG === 'en' ? 'test' : 'тест') + ')</span>' : '') + '</span>' +
-        '<span class="amount">' + escapeHtml(t.giftLeft(fmtAmount(c.availableRub, 'RUB'), fmtAmount(c.initialRub, 'RUB'))) + '</span>' +
-        '<span class="acc-hint">' + escapeHtml(t.giftHow) + '</span>' +
-        '<span class="acc-hint">' + (c.issuedAt ? escapeHtml(t.giftIssued + ' ' + fmtDate(c.issuedAt)) + (hist.length ? '<br>' : '') : '') + hist.join('<br>') + '</span>' +
-      '</div>';
+      var usable = c.availableRub > 0 && (!c.status || c.status === 'active');
+      return '<article class="gift-item">' +
+        '<p class="gift-amount">' + escapeHtml(t.giftLeft(fmtAmount(c.availableRub, 'RUB'), fmtAmount(c.initialRub, 'RUB'))) + '</p>' +
+        '<div class="gift-code-row"><span>' + escapeHtml(t.giftCode) + '</span><code class="gift-code">' + escapeHtml(c.code) + '</code></div>' +
+        '<p class="acc-hint">' + escapeHtml(t.giftHow) + (c.isTest ? ' · ' + (LANG === 'en' ? 'test' : 'тест') : '') + '</p>' +
+        '<div class="gift-actions">' +
+        (usable && !c.isTest ? '<a class="contract-btn gift-use" href="' + (LANG === 'en' ? '/en/tickets/' : '/tickets/') + '" data-code="' + escapeHtml(c.code) + '">' + (LANG === 'en' ? 'Use card' : 'Использовать карту') + '</a>' : '') +
+        '<button type="button" class="contract-btn gift-copy" data-code="' + escapeHtml(c.code) + '">' + escapeHtml(t.copy) + '</button></div>' +
+        (c.issuedAt || hist.length ? '<details><summary>' + (LANG === 'en' ? 'Card activity' : 'История карты') + '</summary><p class="acc-hint">' + (c.issuedAt ? escapeHtml(t.giftIssued + ' ' + fmtDate(c.issuedAt)) + (hist.length ? '<br>' : '') : '') + hist.join('<br>') + '</p></details>' : '') +
+      '</article>';
     }).join('');
+    el.querySelectorAll('.gift-use').forEach(function (link) {
+      link.addEventListener('click', function () {
+        try { sessionStorage.setItem('aelita_gift_selected', link.dataset.code); } catch (_) {}
+      });
+    });
     Array.prototype.forEach.call(el.querySelectorAll('.gift-copy'), function (b) {
       b.addEventListener('click', function () {
         var code = b.getAttribute('data-code');
-        try { navigator.clipboard.writeText(code).then(function () { b.textContent = t.copied; }); } catch (e) { /* без буфера — код виден */ }
+        if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { b.textContent = t.copied; }).catch(function () {
+          var range = document.createRange();
+          range.selectNodeContents(b.closest('.gift-item').querySelector('code'));
+          var selection = window.getSelection();
+          selection.removeAllRanges(); selection.addRange(range);
+        });
       });
     });
   }
@@ -1172,21 +1225,7 @@ body{max-width:100vw}
     });
   }
 
-  // pack-v448: смена почты ВЫКЛЮЧЕНА до обновления старых функций.
-  // Новые функции (списки заказов, «прислать билет») ищут историю по всем
-  // адресам аккаунта, а старые — список регистраций на встречи, их
-  // отмена, повторная отправка билета на встречу — ещё на коде от 7
-  // сентября и ищут только по текущему адресу. Сменивший почту сейчас
-  // потерял бы из кабинета свои регистрации и не смог бы их отменить.
-  // Включить (true) после того, как все функции обновлены из одного
-  // архива — план в DEPLOY_SESSION_NOTES.md, «после 10.10». Имя и
-  // удаление аккаунта от этого не зависят и работают уже сейчас.
   var EMAIL_CHANGE_ENABLED = false;
-  if (!EMAIL_CHANGE_ENABLED) {
-    document.getElementById('pf-email-block').style.display = 'none';
-    // required на скрытом поле заблокировал бы отправку формы с одним именем
-    document.getElementById('pf-email').removeAttribute('required');
-  }
   var lastAccountData = null;
   var currentEmail = null;
   // Через LANG, а не строкой: английская страница собирается из этой
@@ -1269,20 +1308,21 @@ body{max-width:100vw}
     box.innerHTML = '<p class="acc-hint">' + escapeHtml(t.newEmailCodeAsk(to)) + '</p>' +
       '<input class="ym-disable-keys" type="text" id="pf-newcode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="' + escapeHtml(t.codePlaceholder) + '">' +
       '<button type="button" class="contract-btn" id="pf-newcode-btn">' + escapeHtml(t.verifyConfirmBtn) + '</button>';
+    document.getElementById('pf-email-block').open = true;
     document.getElementById('pf-email-block').appendChild(box);
     document.getElementById('pf-email').value = to;
     var inp = document.getElementById('pf-newcode'), btn = document.getElementById('pf-newcode-btn');
-    var msgEl = document.getElementById('pf-message');
+    var msgEl = document.getElementById('pf-email-message');
     function go() {
       var code = (inp.value || '').replace(/\D+/g, '');
       if (!/^\d{6}$/.test(code)) { msgEl.textContent = t.verifyNeedCode; inp.focus(); return; }
       window.AELITA_account.updateProfile({ newEmail: to, newEmailCode: code }, {
         buttonEl: btn,
         onSuccess: function (data) {
-          if (window.__aelitaProfileSaved) return window.__aelitaProfileSaved(data);
-          // после перезагрузки вкладки обработчика формы ещё нет — сохраняем и перечитываем кабинет
           saveEmailDraft(null);
-          if (data && data.need_new_email_code) { showNewEmailCode(data.newEmail); return; }
+          if (!data.token) { doLogout(); return; }
+          try { sessionStorage.setItem('aelita_email_changed', '1'); } catch (_) {}
+          location.hash = 'settings';
           location.reload();
         },
         onError: function (msg) { msgEl.textContent = msg; },
@@ -1291,8 +1331,7 @@ body{max-width:100vw}
     btn.addEventListener('click', go);
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); go(); } });
     inp.addEventListener('input', function () { var v = inp.value.replace(/\D+/g, '').slice(0, 6); if (inp.value !== v) inp.value = v; if (v.length === 6 && !btn.disabled) go(); });
-    inp.scrollIntoView({ block: 'center' });
-    inp.focus();
+    if (!keepAt) { inp.scrollIntoView({ block: 'center' }); inp.focus({preventScroll:true}); }
   }
 
   // pack-v739 (заказчик 30.10): фамилия в кабинете обязательна — у кабинета
@@ -1306,58 +1345,51 @@ body{max-width:100vw}
     inp.classList.toggle('pf-need', need);
   }
 
+  function onStartEmailChange(evt) {
+    evt.preventDefault();
+    if (!EMAIL_CHANGE_ENABLED) return;
+    var msg = document.getElementById('pf-email-message');
+    var email = document.getElementById('pf-email').value.trim().toLowerCase();
+    var password = document.getElementById('pf-password');
+    msg.textContent = '';
+    if (email === currentEmail) { msg.textContent = LANG === 'en' ? 'Enter a different email address.' : 'Укажите другой адрес.'; return; }
+    if (!password.value) { msg.textContent = NO_PASSWORD ? t.codeNeeded : t.passwordNeededForEmail; password.focus(); return; }
+    var fields = { newEmail: email };
+    fields[NO_PASSWORD ? 'loginCode' : 'currentPassword'] = password.value;
+    window.AELITA_account.updateProfile(fields, {
+      buttonEl: document.getElementById('pf-email-submit'),
+      onSuccess: function (data) {
+        password.value = '';
+        if (data.need_new_email_code) showNewEmailCode(data.newEmail);
+      },
+      onError: function (text) { msg.textContent = text; }
+    });
+  }
+
   function onSaveProfile(evt) {
     evt.preventDefault();
     var msgEl = document.getElementById('pf-message');
-    var submitEl = document.getElementById('pf-submit');
     var name = document.getElementById('pf-name').value.trim();
-    var email = document.getElementById('pf-email').value.trim().toLowerCase();
-    var password = document.getElementById('pf-password').value;
+    var phone = document.getElementById('pf-phone').value.trim();
     msgEl.textContent = '';
     msgEl.classList.remove('ok');
-
-    // pack-v580: имя и фамилия обязательны (старым кабинетам с одним именем
-    // это подскажет дописать фамилию при следующем сохранении профиля).
-    if (!fullNameOk(name)) { msgEl.textContent = (document.documentElement.lang === 'en' ? 'Enter your first and last name.' : 'Укажите имя и фамилию.'); return; }
-    var fields = { name: name };
-    // pack-v536: телефон — всегда (пустой — удалить из профиля)
-    fields.phone = document.getElementById('pf-phone').value.trim();
-    if (fields.phone && fields.phone.replace(/\D/g, '').length < 10) { msgEl.textContent = 'Проверьте телефон — номер введён не полностью.'; return; }
-    // Адрес отправляем ТОЛЬКО если он правда изменился: иначе сервер
-    // потребовал бы пароль ради сохранения одного имени.
-    var changingEmail = EMAIL_CHANGE_ENABLED && currentEmail && email && email !== currentEmail.toLowerCase();
-    if (changingEmail) {
-      if (!password) { msgEl.textContent = NO_PASSWORD ? t.codeNeeded : t.passwordNeededForEmail; return; }
-      fields.newEmail = email;
-      if (NO_PASSWORD) fields.loginCode = password; else fields.currentPassword = password;
+    if (!fullNameOk(name)) { msgEl.textContent = LANG === 'en' ? 'Enter your first and last name.' : 'Укажите имя и фамилию.'; return; }
+    if (phone && phone.replace(/\D/g, '').length < 10) { msgEl.textContent = LANG === 'en' ? 'Check your phone number.' : 'Проверьте телефон — номер введён не полностью.'; return; }
+    var fields = Object.assign({ name: name, phone: phone }, window.AelitaPreferences.fields());
+    if (fields.birthdayOffers && !fields.birthday) {
+      msgEl.textContent = LANG === 'en' ? 'Enter your birth date to receive a birthday offer.' : 'Укажите дату рождения, чтобы получать поздравление.';
+      return;
     }
-
     window.AELITA_account.updateProfile(fields, {
-      buttonEl: submitEl,
-      onSuccess: window.__aelitaProfileSaved = function onProfileSaved(data) {
-        // pack-v592 (ревизия 07.10, Б4): новый адрес подтверждается кодом,
-        // присланным на него; без кода адрес не меняется.
-        if (data && data.need_new_email_code) {
-          document.getElementById('pf-password').value = '';
-          showNewEmailCode(data.newEmail);
-          return;
-        }
-        saveEmailDraft(null);
-        var nb = document.getElementById('pf-newcode-box'); if (nb) nb.remove();
-        msgEl.textContent = data && data.previousEmail ? t.emailChanged : t.profileSaved;
+      buttonEl: document.getElementById('pf-submit'),
+      onSuccess: function (data) {
+        msgEl.textContent = t.profileSaved;
         msgEl.classList.add('ok');
-        document.getElementById('pf-password').value = '';
-        if (data && data.email) {
-          currentEmail = data.email;
-          document.getElementById('pf-email').value = data.email;
+        if (data.name) { setGreeting(data.name); syncSurname(data.name); }
+        if (typeof data.phone === 'string') {
+          document.getElementById('pf-phone').value = data.phone;
+          try { if (data.phone) localStorage.setItem('aelita_last_phone', data.phone); else localStorage.removeItem('aelita_last_phone'); } catch (_) {}
         }
-        if (data && data.name) { setGreeting(data.name); syncSurname(data.name); }
-        if (data && typeof data.phone === 'string'){ document.getElementById('pf-phone').value = data.phone; try { if (data.phone) localStorage.setItem('aelita_last_phone', data.phone); } catch (e) {} }
-        // Списки перечитываем: после смены адреса их отдаёт уже новый
-        // токен, и убедиться, что история на месте, человек должен
-        // сразу — а не гадать, не потерялась ли она.
-        loadTicketOrders();
-        loadEventRegistrations();
       },
       onError: function (msg) { msgEl.textContent = msg; },
     });
@@ -1424,8 +1456,7 @@ body{max-width:100vw}
       hint.textContent = t.setPasswordHint;
       pwForm.insertAdjacentElement('beforebegin', hint);
     }
-    var emailHint = document.querySelector('#pf-email-block .acc-hint');
-    if (emailHint) emailHint.textContent = t.emailHintCode;
+    document.getElementById('pf-password-label').textContent = t.codePlaceholder;
   }
 
   // pack-v575 (ТЗ С8): переключатель напоминаний — под формой профиля,
@@ -1495,13 +1526,23 @@ body{max-width:100vw}
     document.getElementById('pf-name').value = data.name || '';
     syncSurname(data.name);
     document.getElementById('pf-phone').value = data.phone || '';
-    document.getElementById('pf-email').value = data.email || '';
+    EMAIL_CHANGE_ENABLED = data.emailChangeAvailable === true;
+    document.getElementById('pf-email-block').hidden = !EMAIL_CHANGE_ENABLED;
+    document.getElementById('pf-email-current').textContent = currentEmail;
+    window.AelitaPreferences.mount(data, LANG);
+    try {
+      if (sessionStorage.getItem('aelita_email_changed')) {
+        sessionStorage.removeItem('aelita_email_changed');
+        document.getElementById('pf-email-block').open = true;
+        document.getElementById('pf-email-message').textContent = t.emailChanged;
+      }
+    } catch (_) {}
     // data.name пуст у аккаунтов, зарегистрированных до pack-v170 (тогда
     // поле не спрашивали) — показываем email как раньше, не пустую строку.
     setGreeting(data.name);
     if (data.hasPassword === false) enableCodeConfirm();
     var ed = readEmailDraft();
-    if (ed) { showNewEmailCode(ed.to, true); document.getElementById('pf-message').textContent = ''; }
+    if (ed && EMAIL_CHANGE_ENABLED) { showNewEmailCode(ed.to, true); document.getElementById('pf-message').textContent = ''; }
     if (window.AELITA_account.mailPrefsEnabled && window.AELITA_account.mailPrefsEnabled()) renderMailPrefs(data.mailPrefs || { reminders: true });
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
@@ -1509,7 +1550,9 @@ body{max-width:100vw}
     loadEventRegistrations();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
+    window.AelitaPreferences.sticky();
     syncNav();
+    if (location.hash && document.getElementById(location.hash.slice(1))) requestAnimationFrame(function () { document.getElementById(location.hash.slice(1)).scrollIntoView({block:'start'}); });
     // подписки показывает subscription.js позже — ссылка в навигации появится вместе с разделом
     try { new MutationObserver(syncNav).observe(document.getElementById('subscriptions'), { attributes: true, attributeFilter: ['hidden'] }); } catch (e) { /* старый браузер — ссылка просто видна */ }
   })();
@@ -1528,7 +1571,7 @@ body{max-width:100vw}
     var links = Array.prototype.filter.call(document.querySelectorAll('.acc-nav a'), function (a) { return !a.hidden; });
     if (!links.length) return;
     var cur = links[0];
-    var line = Math.max(window.innerHeight * 0.4, 300);
+    var line = document.getElementById('accountSectionBar').getBoundingClientRect().bottom + 32;
     links.forEach(function (a) {
       var el = document.getElementById(a.getAttribute('href').slice(1));
       if (el && el.getBoundingClientRect().top <= line) cur = a;
@@ -1538,15 +1581,15 @@ body{max-width:100vw}
       var on = a === cur;
       if (a.classList.contains('is-active') === on) return;
       a.classList.toggle('is-active', on);
-      if (on) { a.setAttribute('aria-current', 'true'); var nav = a.parentNode; if (nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: a.offsetLeft - 24, behavior: 'smooth' }); }
+      if (on) { a.setAttribute('aria-current', 'true'); var nav = a.parentNode; if (nav.scrollWidth > nav.clientWidth && (a.getBoundingClientRect().left < nav.getBoundingClientRect().left || a.getBoundingClientRect().right > nav.getBoundingClientRect().right)) nav.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' }); }
       else a.removeAttribute('aria-current');
     });
   }
   var navTick = false;
   window.addEventListener('scroll', function () { if (navTick) return; navTick = true; requestAnimationFrame(function () { navTick = false; markNav(); }); }, { passive: true });
 </script>
-<script src="/assets/subscription.js?v=164"></script>
-<script src="/assets/phone-prefix.js?v=164"></script>
+<script src="/assets/subscription.js?v=165"></script>
+<script src="/assets/phone-prefix.js?v=165"></script>
 <button class="m-menu-close" id="close-btn" type="button" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
 </body>
 </html>

@@ -22,6 +22,7 @@
       changingPassword: 'Сохраняем новый пароль…',
       errors: {
         bad_name: 'Укажите имя и фамилию.',
+        email_change_unavailable: 'Смена почты пока недоступна. Попробуйте позже.',
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
         email_taken: 'Этот email нам уже знаком — попробуйте войти. Не помните пароль — нажмите «Забыли пароль?» у формы входа.',
@@ -97,6 +98,7 @@
       changingPassword: 'Saving new password…',
       errors: {
         bad_name: 'Please enter your first and last name.',
+        email_change_unavailable: 'Email changes are currently unavailable. Try again later.',
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
         email_taken: "That email is already registered — try signing in. Don't remember the password? Use “Forgot password?” by the sign-in form.",
@@ -448,6 +450,13 @@ var url = URL.createObjectURL(blob);
     // запросе. Поэтому localStorage не трогаем и никуда не уводим —
     // иначе человек, один раз ошибшись в пароле, вылетал бы из
     // кабинета.
+    searchCities: async function (query, signal) {
+      var auth = getToken();
+      if (!ME_URL || !auth) return { places: [], unavailable: true };
+      var qs = new URLSearchParams({ city_query: query, lang: LANG });
+      var res = await fetch(ME_URL + '?' + qs, { headers: { Authorization: 'Bearer ' + auth }, signal: signal, cache: 'no-store' });
+      return res.ok && auth === getToken() ? res.json() : { places: [], unavailable: true };
+    },
     updateProfile: async function (fields, opts) {
       opts = opts || {};
       if (!UPDATE_PROFILE_URL) { notConfigured(); return; }
@@ -467,6 +476,7 @@ var url = URL.createObjectURL(blob);
         // pack-v592: ответ {ok, need_new_email_code} — код ушёл на новый
         // адрес, смена ещё не состоялась; страница спрашивает код и
         // присылает {newEmail, newEmailCode} (Account/update-profile.js).
+        if (token !== getToken()) return null;
         if (res.ok && data && data.ok) {
           // Адрес сменился — старый токен подписывал старый адрес и
           // теперь везде отвечал бы 401. Подменяем молча: человек

@@ -339,9 +339,11 @@
     return { status: res.status, ok: res.ok, data: data };
   }
   async function listSubs() {
-    if (!token()) return null;
+    var authToken = token();
+    if (!authToken) return null;
     try {
       var r = await api(SUBS_API);
+      if (authToken !== token()) return null;
       if (r.status === 401) { clearToken(); return null; }
       return r.ok ? r.data : null;
     } catch (e) { return null; }
@@ -808,7 +810,13 @@
   }
 
   // ── Кабинет: блок «Подписки» ───────────────────────────────────────
-  function initDashboard(block) {
+  function initDashboard(block, detail) {
+    var selectedPlan = QS.get('plan');
+    var detailHref = function (s) {
+      var params = new URLSearchParams({ plan: s.plan });
+      if (s.isTest) params.set('aelita_test', '1');
+      return PREFIX + '/account/subscription/?' + params.toString();
+    };
     var list = $('subsList');
     var note = $('subsMsg');
     var subsCache = [];
@@ -851,52 +859,122 @@
 
     function render(data) {
       subsCache = (data && data.subscriptions) || [];
-      if (!subsCache.length) { block.hidden = true; return; }
+      if (detail) subsCache = subsCache.filter(function (s) { return s.plan === selectedPlan && Boolean(s.isTest) === IS_TEST; });
+      if (!subsCache.length) {
+        block.hidden = !detail;
+        list.textContent = detail ? (EN ? 'Subscription unavailable. Sign in to your account and try again.' : 'Подписка недоступна. Войдите в кабинет и попробуйте снова.') : '';
+        return;
+      }
       block.hidden = false;
       list.innerHTML = subsCache.map(function (s, i) {
         var title = (EN ? s.titleEn : s.title) || T.plans[s.plan] || s.plan;
         var st = (T.status[s.status] || T.status.ended)(s);
         var card = s.methodTitle ? '<p class="acc-hint">' + esc(T.card) + ': ' + esc(s.methodTitle) + '</p>' : '';
+        if (!detail && !DEMO) {
+          return '<a class="sub-summary" href="' + esc(detailHref(s)) + '"><strong>' + esc(title) + '</strong>'
+            + (s.isTest ? ' <span class="sub-test">[' + esc(T.test) + ']</span>' : '')
+            + '<span>' + esc(st) + '</span><span class="sub-open">' + (EN ? 'Open subscription' : 'Открыть подписку') + ' →</span></a>';
+        }
         var btns = buttons(s).map(function (x) {
-          return '<button type="button" class="' + (x[2] === 'gold' ? 'btn-gold' : 'btn-outline') + '" style="margin:8px 10px 0 0" data-i="' + i + '" data-act="' + x[0] + '">' + esc(x[1]) + '</button>';
+          return '<button type="button" class="' + (x[2] === 'gold' ? 'btn-gold' : 'btn-outline') + '" data-i="' + i + '" data-act="' + x[0] + '">' + esc(x[1]) + '</button>';
         }).join('');
         return '<div class="sub-item" style="border:1px solid rgba(214,181,122,.28);padding:16px 18px;margin:0 0 14px">'
           + '<p style="margin:0 0 6px;color:var(--bone)"><strong>' + esc(title) + '</strong>' + (s.isTest ? ' <span style="color:#C98B6B;font-size:0.75rem">[' + esc(T.test) + ']</span>' : '') + '</p>'
-          + '<p style="margin:0;color:var(--sand)">' + esc(st) + '</p>' + card + btns + '</div>';
+          + '<p style="margin:0;color:var(--sand)">' + esc(st) + '</p>' + card + '<div class="sub-action-row">' + btns + '</div></div>';
       }).join('');
     }
 
-    async function load() {
-      if (DEMO) { render({ subscriptions: subsCache.length ? subsCache : demoSubs() }); return; }
-      var data = await listSubs();
-      render(data);
+    var loadSequence = 0;
+    async function loadMaterials(sub, sequence, authToken) {
+      var section = $('subMaterials'), output = $('subMaterialList');
+      section.hidden = !sub;
+      output.replaceChildren();
+      if (!sub) return;
+      var empty = EN ? 'Materials will appear here.' : 'Материалы появятся здесь.';
+      output.textContent = empty;
+      if (sub.isTest || DEMO) return;
+      try {
+        var response = await api(SUBS_API + '?materials=1&plan=' + encodeURIComponent(sub.plan));
+        if (sequence !== loadSequence || authToken !== token()) return;
+        if (response.data.error === 'materials_access_required') {
+          output.textContent = EN ? 'Materials are available during the paid period.' : 'Материалы доступны в оплаченный период.';
+          return;
+        }
+        if (!response.ok) throw new Error('materials_unavailable');
+        var items = response.data.items || [];
+        if (!items.length) return;
+        var links = document.createElement('ul');
+        items.forEach(function (item) {
+          var url;
+          try { url = new URL(item.url); } catch (_) { return; }
+          if (url.protocol !== 'https:' || url.username || url.password) return;
+          var row = document.createElement('li'), link = document.createElement('a');
+          link.href = url.href;
+          link.textContent = (EN && item.titleEn) || item.title;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          row.append(link);
+          links.append(row);
+        });
+        if (links.children.length) output.replaceChildren(links);
+      } catch (_) {
+        if (sequence === loadSequence && authToken === token()) output.textContent = T.error;
+      }
     }
 
+    async function load() {
+      var sequence = ++loadSequence, authToken = token();
+      if (detail) $('subMaterials').hidden = true;
+      if (DEMO) { render({ subscriptions: subsCache.length ? subsCache : demoSubs() }); return; }
+      var data = await listSubs();
+      if (sequence !== loadSequence || authToken !== token() && token()) return;
+      render(data);
+      if (detail) await loadMaterials(subsCache[0], sequence, token());
+    }
+
+    var acting = false;
     list.addEventListener('click', async function (e) {
       var el = e.target.closest && e.target.closest('[data-act]');
-      if (!el) return;
+      if (!el || acting) return;
       var s = subsCache[+el.getAttribute('data-i')];
+      if (!s) return;
+      var actionToken = token();
       var act = el.getAttribute('data-act');
       note.textContent = '';
       if (act === 'again') {
         location.href = PREFIX + (s.plan === 'community_biz' ? '/book-space/business/pay' : '/book-space/main/pay') + (s.isTest ? '?aelita_test=1' : '');
         return;
       }
-      if (act === 'cancel' && !(await sheet(T.sheetCancel(s), T.btn.cancel))) return;
-      if (act === 'refund' && !(await sheet(T.sheetRefund(s), T.btn.refund(s)))) return;
-      if (act === 'resume' && !(await sheet(T.sheetResume(s), T.btn.resume))) return;
-      if (act === 'unlink_card' && !(await sheet(T.sheetUnlink(s), T.btn.unlinkCard))) return;
-      if (DEMO) { demoAct(s, act); render({ subscriptions: subsCache }); note.textContent = act === 'unlink_card' ? T.unlinked : T.done; return; }
-      el.disabled = true;
+      acting = true;
       try {
-        var r = await api(SUBS_API, { method: 'POST', body: { action: act, plan: s.plan, test: Boolean(s.isTest) } });
-        if (r.data && r.data.confirmation_url) { location.href = r.data.confirmation_url; return; }
-        if (r.ok) { note.textContent = act === 'unlink_card' ? T.unlinked : T.done; await load(); return; }
-        note.textContent = (r.data.error === 'refund_window_closed' || r.data.error === 'nothing_to_refund') ? T.refundClosed : r.data.error === 'autopay_not_enabled' ? T.notEnabled : (T.actErr[r.data.error] || T.error);
-      } catch (x) { note.textContent = T.error; }
-      el.disabled = false;
+        if (act === 'cancel' && !(await sheet(T.sheetCancel(s), T.btn.cancel))) return;
+        if (act === 'refund' && !(await sheet(T.sheetRefund(s), T.btn.refund(s)))) return;
+        if (act === 'resume' && !(await sheet(T.sheetResume(s), T.btn.resume))) return;
+        if (act === 'unlink_card' && !(await sheet(T.sheetUnlink(s), T.btn.unlinkCard))) return;
+        if (!DEMO && (!actionToken || actionToken !== token())) return;
+        if (DEMO) { demoAct(s, act); render({ subscriptions: subsCache }); note.textContent = act === 'unlink_card' ? T.unlinked : T.done; return; }
+        el.disabled = true;
+        try {
+          var r = await api(SUBS_API, { method: 'POST', body: { action: act, plan: s.plan, test: Boolean(s.isTest), detail: Boolean(detail) } });
+          if (r.data && r.data.confirmation_url) { location.href = r.data.confirmation_url; return; }
+          if (r.ok) { note.textContent = act === 'unlink_card' ? T.unlinked : T.done; await load(); return; }
+          note.textContent = (r.data.error === 'refund_window_closed' || r.data.error === 'nothing_to_refund') ? T.refundClosed : r.data.error === 'autopay_not_enabled' ? T.notEnabled : (T.actErr[r.data.error] || T.error);
+        } catch (x) { note.textContent = T.error; }
+      } finally {
+        acting = false;
+        el.disabled = false;
+      }
     });
 
+    if (detail) window.addEventListener('storage', function (event) {
+      if (event.key === TOKEN_KEY || event.key === null) {
+        ++loadSequence;
+        subsCache = [];
+        list.replaceChildren();
+        $('subMaterialList').replaceChildren();
+        load();
+      }
+    });
     if (QS.get('sub_return')) {
       note.textContent = T.cardReturn;
       setTimeout(load, 4000);
@@ -943,9 +1021,16 @@
     var main = document.querySelector('main[data-plan]');
     if (main) initPayPage(main);
     var block = $('subscriptions');
-    if (block && $('subsList')) initDashboard(block);
     var link = $('subLink');
-    if (link) initLinkPage(link);
+    var detail = link && block && block.hasAttribute('data-sub-detail') && !QS.has('t') && QS.has('plan');
+    if (detail) {
+      link.hidden = true;
+      block.hidden = false;
+      initDashboard(block, true);
+    } else {
+      if (block && $('subsList') && !link) initDashboard(block, false);
+      if (link) initLinkPage(link);
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
