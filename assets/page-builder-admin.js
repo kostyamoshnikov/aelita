@@ -172,7 +172,7 @@
   function refreshHero(){if(!S.heroOriginal)return;S.heroOriginal.replaceChildren();const epoch=S.epoch,value=S.page.image;window.AelitaMediaOriginals.controls(S.heroOriginal,{api,value,onChoose:heroPhoto,progress:status,isCurrent:()=>epoch===S.epoch&&S.page.image===value});}
   function mountExtras(p){const holder=$('pb-photo-settings');holder.replaceChildren();S.heroOriginal=document.createElement('div');holder.append(S.heroOriginal);refreshHero();const epoch=S.epoch,current=()=>epoch===S.epoch&&holder.isConnected;
     S.heroView=window.AelitaMediaView.mount(holder,p.view,{api,progress:status,isCurrent:current,onChange:changed,onMobileFile:async file=>{uploadBusy(1);try{return await preparePhoto(file,current);}finally{if(epoch===S.epoch)uploadBusy(-1);}},onError:e=>status(msg(e),true)});
-    const list=$('pb-blocks-editor');list.replaceChildren();S.blocks=window.AelitaPageBlocks.mount(list,p.blocks,{api,store:S.media,progress:status,isCurrent:()=>epoch===S.epoch&&list.isConnected,onChange:changed,onPhoto:preparePhoto,busy:delta=>{if(epoch===S.epoch)uploadBusy(delta);},onError:e=>status(msg(e),true)});
+    const list=$('pb-blocks-editor');list.replaceChildren();S.blocks=window.AelitaPageBlocks.mount(list,p.blocks,{api,store:S.media,progress:status,imageSource:value=>{const a=value?.startsWith('asset:')?S.images.get(value.slice(6)):null;return a?'data:'+a.type+';base64,'+a.data:value||'';},isCurrent:()=>epoch===S.epoch&&list.isConnected,onChange:changed,onPhoto:preparePhoto,busy:delta=>{if(epoch===S.epoch)uploadBusy(delta);},onError:e=>status(msg(e),true)});
   }
 
   function markField(field) {
