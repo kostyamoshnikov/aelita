@@ -16,9 +16,10 @@ export function normalizeContent(value,seed){
  for(const id of Object.keys(seed.screens))if(!ids.includes(id))problem('builtin_screen_required',400,id);
  const screens={};
  for(const id of ids){
-  const s=value.screens[id],original=seed.screens[id];
+  const s=value.screens[id],original=Object.hasOwn(seed.screens,id)?seed.screens[id]:null;
   if(!s||s.id!==id||(!original&&!/^s[a-f0-9]{12}$/.test(id)))problem('invalid_screen');
   const next={id,label:string(s.label,'label',80),builtin:!!original,dynamic:!!original?.dynamic,locales:{}};
+  if(s.eventId!==undefined&&s.eventId!==''){if(next.dynamic)problem('invalid_event');next.eventId=eventId(s.eventId);}
   for(const lang of ['ru','en']){
    const l=s.locales?.[lang];if(!l)problem('invalid_locale');
    const text=next.dynamic?'':string(l.text,lang+'.text',LIMITS.text,lang==='en');
@@ -26,9 +27,10 @@ export function normalizeContent(value,seed){
    if(!Array.isArray(l.buttons)||l.buttons.length>LIMITS.buttons)problem('too_many_buttons');
    const seen=new Set();const buttons=l.buttons.map(b=>{
     if(!b||typeof b.id!=='string'||! /^(?:b\d{1,3}|b[a-f0-9]{12})$/.test(b.id)||seen.has(b.id))problem('invalid_button');seen.add(b.id);
-    if(!['route','url','screen','language'].includes(b.kind)||typeof b.visible!=='boolean'||!Number.isSafeInteger(b.row)||b.row<0||b.row>29)problem('invalid_button');
+    if(!['route','url','screen','language','event'].includes(b.kind)||typeof b.visible!=='boolean'||!Number.isSafeInteger(b.row)||b.row<0||b.row>29)problem('invalid_button');
     let target;
-    if(b.kind==='url')target=safeURL(b.target);
+    if(b.kind==='event'){if(!next.eventId||!['details','buy'].includes(b.target))problem('invalid_event_button');target=b.target;}
+    else if(b.kind==='url')target=safeURL(b.target);
     else if(b.kind==='route'){if(!seed.routes.includes(b.target))problem('invalid_route');target=b.target;}
     else if(b.kind==='language'){if(b.target!=='toggle')problem('invalid_route');target='toggle';}
     else {if(!ids.includes(b.target))problem('screen_not_found');target=b.target;}
@@ -36,7 +38,9 @@ export function normalizeContent(value,seed){
    });
    // No more than two controls across, including inherited seed menus.
    for(const row of new Set(buttons.filter(b=>b.visible).map(b=>b.row)))if(buttons.filter(b=>b.visible&&b.row===row).length>2)problem('too_many_columns');
-   next.locales[lang]={text,format:original&&text===original.locales[lang].text&&l.format==='Markdown'?'Markdown':'Plain',revision:l.revision,translationOf:l.translationOf,media:normalizeMedia(l.media),buttons};
+   if(l.template!==undefined&&typeof l.template!=='boolean')problem('invalid_template');
+   if(l.template){if(next.dynamic||l.format!=='Plain')problem('invalid_template');validateTemplate(text,!!next.eventId);for(const b of buttons){validateTemplate(b.label,!!next.eventId);if(b.kind==='url'&&/[{}]{2}/.test(b.target))problem('invalid_variable');}}
+   next.locales[lang]={text,format:original&&text===original.locales[lang].text&&l.format==='Markdown'?'Markdown':'Plain',revision:l.revision,translationOf:l.translationOf,media:normalizeMedia(l.media),buttons,...(l.template?{template:true}:{})};
   }
   screens[id]=next;
  }
@@ -44,11 +48,12 @@ export function normalizeContent(value,seed){
  if(new TextEncoder().encode(JSON.stringify(result)).byteLength>LIMITS.contentBytes)problem('content_too_large',413);
  return result;
 }
-export function keyboard(content,screenId,lang='ru'){
+export function keyboard(content,screenId,lang='ru',event=null){
  const s=Object.hasOwn(content.screens,screenId)?content.screens[screenId]:null;if(!s)problem('screen_not_found',404);
  const l=s.locales[lang],rows=new Map();
- for(const b of l.buttons){if(!b.visible)continue;const out={text:b.label};
-  if(b.kind==='url')out.url=b.target;
+ for(const b of l.buttons){if(!b.visible)continue;const out={text:l.template?renderTemplate(b.label,event,lang):b.label};if(out.text.length>60)problem('rendered_button_too_long');
+  if(b.kind==='event'){const url=event&&event[lang]?.[b.target==='buy'?'buyURL':'pageURL'];if(!url||(b.target==='buy'&&!event.salesOpen))continue;out.url=url;}
+  else if(b.kind==='url')out.url=b.target;
   else if(b.kind==='language')out.callback_data='lang_toggle|'+(lang==='en'?'ru':'en');
   else if(b.kind==='screen')out.callback_data='bc1:'+b.target+'|'+lang;
   else out.callback_data=b.target+'|'+lang;
@@ -59,10 +64,10 @@ export function keyboard(content,screenId,lang='ru'){
  if(screenId!=='welcome'&&!result.some(row=>row.some(b=>b.callback_data==='back|'+lang)))result.push([{text:lang==='en'?'Main menu':'Главное меню',callback_data:'back|'+lang}]);
  return{inline_keyboard:result};
 }
-export function screenView(content,id,lang='ru'){
+export function screenView(content,id,lang='ru',event=null){
  const s=Object.hasOwn(content.screens,id)?content.screens[id]:null;if(!s)problem('screen_not_found',404);
  const local=s.locales[lang],fallback=lang==='en'&&!local.text&&!s.dynamic,l=fallback?s.locales.ru:local;
- return{id,label:s.label,text:l.text,format:l.format,media:l.media,dynamic:s.dynamic,fallback,translationStale:lang==='en'&&s.locales.en.translationOf<s.locales.ru.revision,keyboard:keyboard(content,id,lang)};
+ return{id,label:s.label,text:l.template?renderTemplate(l.text,event,fallback?'ru':lang):l.text,format:l.format,media:l.media,dynamic:s.dynamic,fallback,translationStale:lang==='en'&&s.locales.en.translationOf<s.locales.ru.revision,keyboard:keyboard(content,id,lang,event),...(s.eventId?{eventId:s.eventId}:{})};
 }
 export function applyChange(input,patch,seed){
  const content=normalizeContent(input,seed);if(!patch||typeof patch!=='object')problem('invalid_change');
@@ -71,7 +76,13 @@ export function applyChange(input,patch,seed){
   content.screens[patch.id]={id:patch.id,label:string(patch.label,'label',80),builtin:false,dynamic:false,locales:{ru:{text:'Новый раздел',format:'Plain',revision:0,translationOf:0,media:null,buttons:[]},en:{text:'',format:'Plain',revision:0,translationOf:0,media:null,buttons:[]}}};return normalizeContent(content,seed);
  }
  const s=Object.hasOwn(content.screens,patch.screen)?content.screens[patch.screen]:null;if(!s)problem('screen_not_found',404);const lang=patch.lang==='en'?'en':'ru',l=s.locales[lang];
- if(patch.kind==='text'){if(s.dynamic)problem('dynamic_text_locked');l.text=string(patch.text,'text',LIMITS.text,lang==='en');l.format='Plain';l.revision++;}
+ if(patch.kind==='event_bind'){if(s.dynamic)problem('dynamic_text_locked');if(patch.eventId)s.eventId=eventId(patch.eventId);else delete s.eventId;return normalizeContent(content,seed);}
+ if(patch.kind==='template_text'){
+  if(s.dynamic)problem('dynamic_text_locked');if(typeof patch.template!=='boolean')problem('invalid_template');
+  if(patch.eventId) s.eventId=eventId(patch.eventId);else delete s.eventId;
+  l.text=string(patch.text,'text',LIMITS.text,lang==='en');l.format='Plain';if(patch.template)l.template=true;else delete l.template;l.revision++;
+ }
+ else if(patch.kind==='text'){if(s.dynamic)problem('dynamic_text_locked');l.text=string(patch.text,'text',LIMITS.text,lang==='en');l.format='Plain';l.revision++;}
  else if(patch.kind==='label')s.label=string(patch.label,'label',80);
  else if(patch.kind==='translation_checked'){s.locales.en.translationOf=s.locales.ru.revision;}
  else if(patch.kind==='media'){l.media=normalizeMedia(patch.media);l.revision++;}
@@ -105,4 +116,60 @@ export function contentSummary(before,after){
  const changed=[];
  for(const id of Object.keys(after.screens))if(JSON.stringify(before.screens[id])!==JSON.stringify(after.screens[id]))changed.push({id,label:after.screens[id].label});
  return changed;
+}
+
+// B2: optional templates preserve byte-compatible normalization of old B1 content.
+export const BOT_CONTENT_RUNTIME=2;
+export const EVENT_FACTS_SCHEMA='aelita.bot-event-facts/v1';
+export const EVENT_FACTS_URL='https://api.aelita-production.ru/tickets/performances-list?bot=1';
+export const BOT_RUNTIME_STATUS_URL='https://aelita-bot.kostyamoshnikov.workers.dev/notify/status';
+export const TEMPLATE_VARIABLES=Object.freeze({
+ 'company.name':'Название компании','site.url':'Сайт на выбранном языке',
+ 'event.title':'Название события','event.date':'Дата','event.time':'Время','event.timezone':'Часовой пояс',
+ 'event.city':'Город','event.venue':'Площадка','event.address':'Адрес','event.format':'Формат участия',
+ 'event.price':'Цена из каталога','event.status':'Статус продажи','event.page_url':'Страница события','event.buy_url':'Ссылка покупки'
+});
+export function eventId(value){const s=string(value,'eventId',120);if(!/^[a-z][a-z0-9-]{1,119}$/i.test(s))problem('invalid_event');return s;}
+export function validateTemplate(text,hasEvent=false){
+ const found=[];const remaining=String(text).replace(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g,(_m,key)=>{if(!Object.hasOwn(TEMPLATE_VARIABLES,key))problem('unknown_variable',400,key);if(key.startsWith('event.')&&!hasEvent)problem('event_required');found.push(key);return'';});
+ if(remaining.includes('{{')||remaining.includes('}}'))problem('invalid_variable');return found;
+}
+export function normalizeEventCatalog(value){
+ if(!value||value.schema!==EVENT_FACTS_SCHEMA||!Array.isArray(value.events)||value.events.length>250||new TextEncoder().encode(JSON.stringify(value)).byteLength>1024*1024)problem('event_source_invalid',502);
+ const ids=new Set();const events=value.events.map(e=>{
+  if(!e||typeof e!=='object')problem('event_source_invalid',502);const id=eventId(e.id);if(ids.has(id)||e.timeZone!=='Europe/Moscow'||typeof e.salesOpen!=='boolean'||typeof e.canceled!=='boolean')problem('event_source_invalid',502);ids.add(id);
+  if(e.canceled&&e.salesOpen||e.datetime===null&&e.salesOpen)problem('event_source_invalid',502);
+  for(const key of ['datetime','endsAt'])if(e[key]!==null&&(typeof e[key]!=='string'||!Number.isFinite(Date.parse(e[key]))))problem('event_source_invalid',502);
+  const next={id,datetime:e.datetime,endsAt:e.endsAt,timeZone:e.timeZone,canceled:e.canceled,salesOpen:e.salesOpen,ru:{},en:{}};
+  for(const lang of ['ru','en']){
+   const l=e[lang];if(!l||typeof l!=='object'||Array.isArray(l))problem('event_source_invalid',502);
+   for(const [k,max]of Object.entries({title:180,city:80,venue:180,address:220,format:160,price:100,status:120}))next[lang][k]=string(l[k],lang+'.'+k,max,k!=='title');
+   next[lang].pageURL=safeURL(l.pageURL);if(new URL(next[lang].pageURL).origin!=='https://aelita-production.ru')problem('event_source_invalid',502);
+   if(l.fallbackFields!==undefined){if(!Array.isArray(l.fallbackFields)||l.fallbackFields.length>4||l.fallbackFields.some(k=>!['title','city','venue','address'].includes(k)))problem('event_source_invalid',502);if(l.fallbackFields.length)next[lang].fallbackFields=[...new Set(l.fallbackFields)].sort();}
+   next[lang].buyURL=l.buyURL?safeURL(l.buyURL):'';if(!next.salesOpen&&next[lang].buyURL)problem('event_source_invalid',502);
+  }return next;
+ });return{schema:EVENT_FACTS_SCHEMA,events};
+}
+export function currentEvent(event,now=Date.now()){
+ const copyEvent=clone(event),end=Date.parse(event.endsAt),start=Date.parse(event.datetime);
+ if(event.canceled){copyEvent.salesOpen=false;copyEvent.ru.buyURL='';copyEvent.en.buyURL='';}
+ else if(!Number.isFinite(start)||event.salesOpen&&Number.isFinite(end)&&now>=end){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=Number.isFinite(start)?(lang==='en'?'Booking closed':'Продажа закрыта'):(lang==='en'?'Date to be announced':'Дата будет объявлена');}}
+ return copyEvent;
+}
+export function renderTemplate(text,event,lang='ru'){
+ const keys=validateTemplate(text,!!event),local=event?.[lang],en=lang==='en',date=event?.datetime?new Date(event.datetime):null;
+ const values={'company.name':'AELITA PRODUCTION','site.url':'https://aelita-production.ru/'+(en?'en/':''),
+  'event.title':local?.title,'event.date':date?new Intl.DateTimeFormat(en?'en-GB':'ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Moscow'}).format(date):(en?'Date to be announced':'Дата будет объявлена'),
+  'event.time':date?new Intl.DateTimeFormat(en?'en-GB':'ru-RU',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Europe/Moscow'}).format(date):'',
+  'event.timezone':en?'MSK (UTC+3)':'МСК (UTC+3)', 'event.city':local?.city,'event.venue':local?.venue,'event.address':local?.address,'event.format':local?.format,'event.price':local?.price,'event.status':local?.status,'event.page_url':local?.pageURL,'event.buy_url':local?.buyURL};
+ for(const k of keys)if(values[k]===undefined)problem('event_source_unavailable',503);
+ const result=String(text).replace(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g,(_m,key)=>values[key]);if(result.length>LIMITS.text)problem('rendered_text_too_long');return result;
+}
+export function requiredRuntime(content){return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
+export function eventRefs(content){return[...new Set(Object.values(content.screens).filter(s=>s.eventId).map(s=>s.eventId))].sort();}
+export function selectedFacts(content,catalog){
+ const normalized=normalizeEventCatalog(catalog);return eventRefs(content).map(id=>{const e=normalized.events.find(e=>e.id===id);if(!e)problem('event_not_found',409,id);return e;});
+}
+export function validateEventViews(content,catalog,now=Date.now()){
+ const events=selectedFacts(content,catalog).map(e=>currentEvent(e,now));for(const s of Object.values(content.screens))for(const lang of ['ru','en'])screenView(content,s.id,lang,s.eventId?currentEvent(events.find(e=>e.id===s.eventId),now):null);return events;
 }
