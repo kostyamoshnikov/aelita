@@ -209,6 +209,7 @@ export function normalizeEventCatalog(value){
   if(e.canceled&&e.salesOpen||e.datetime===null&&e.salesOpen)problem('event_source_invalid',502);
   for(const key of ['datetime','endsAt'])if(e[key]!==null&&(typeof e[key]!=='string'||!Number.isFinite(Date.parse(e[key]))))problem('event_source_invalid',502);
   const next={id,datetime:e.datetime,endsAt:e.endsAt,timeZone:e.timeZone,canceled:e.canceled,salesOpen:e.salesOpen,ru:{},en:{}};
+  if(Object.hasOwn(e,'salesCloseAt')){if(e.salesCloseAt!==null&&(typeof e.salesCloseAt!=='string'||!Number.isFinite(Date.parse(e.salesCloseAt))))problem('event_source_invalid',502);next.salesCloseAt=e.salesCloseAt;}
   for(const lang of ['ru','en']){
    const l=e[lang];if(!l||typeof l!=='object'||Array.isArray(l))problem('event_source_invalid',502);
    for(const [k,max]of Object.entries({title:180,city:80,venue:180,address:220,format:160,price:100,status:120}))next[lang][k]=string(l[k],lang+'.'+k,max,k!=='title');
@@ -219,7 +220,7 @@ export function normalizeEventCatalog(value){
  });return{schema:EVENT_FACTS_SCHEMA,events};
 }
 export function currentEvent(event,now=Date.now()){
- const copyEvent=clone(event),end=Date.parse(event.endsAt),start=Date.parse(event.datetime);
+ const copyEvent=clone(event),end=Date.parse(Object.hasOwn(event,'salesCloseAt')?event.salesCloseAt:event.endsAt),start=Date.parse(event.datetime);
  if(event.canceled){copyEvent.salesOpen=false;copyEvent.ru.buyURL='';copyEvent.en.buyURL='';}
  else if(!Number.isFinite(start)||event.salesOpen&&Number.isFinite(end)&&now>=end){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=Number.isFinite(start)?(lang==='en'?'Booking closed':'Продажа закрыта'):(lang==='en'?'Date to be announced':'Дата будет объявлена');}}
  return copyEvent;

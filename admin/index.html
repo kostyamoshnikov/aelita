@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=178">
+<link rel="stylesheet" href="/assets/fonts.css?v=179">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -476,10 +476,14 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 .adm-section-index a{color:var(--gold);padding:7px 0;text-underline-offset:.25em}
 [data-adm-index],p.sec-title{scroll-margin-top:24px}
 .statistics-fees{color:var(--sand);line-height:1.55;margin:0 0 20px}
+#paDeadlineFields{margin-top:18px;padding:16px;min-width:0;border:1px solid rgba(174,149,97,.4)}
+#paDeadlineFields legend{padding:0 6px}#paDeadlineFields label{display:block;margin:10px 0 6px}
+#paDeadlineFields input,#paDeadlineFields select{width:100%;max-width:100%;box-sizing:border-box}
+#paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=178">
-<script src="/assets/staff-handoff-v1.js?v=178"></script>
-<script src="/assets/mobile-files-m1.js?v=178"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=179">
+<script src="/assets/staff-handoff-v1.js?v=179"></script>
+<script src="/assets/mobile-files-m1.js?v=179"></script>
 </head>
 <body>
 
@@ -1059,6 +1063,17 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сама по окончании события (если окончание не указано — через 3 часа после начала): с сайта и из бота уходят кнопки покупки, страница покупки говорит «продажа закрыта», на странице события — «Событие прошло» и просьба оставить отзыв. Закрыть раньше — эта кнопка: на сайте кнопки покупки сменятся на «Продажа закрыта» (в течение 5 минут). После автозакрытия можно «Открыть продажу снова» — тогда она открыта, пока её не закроют вручную, и сайт возвращает кнопки покупки; в боте ссылка не вернётся (бот живёт по времени из каталога) — давайте ссылку на страницу события. Купленные билеты, места и пригласительные остаются в силе.</p></details>
         <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
         <div id="paSalesHistory" class="pa-preview" aria-live="polite"></div>
+        <fieldset id="paDeadlineFields" disabled>
+          <legend>Срок продажи платных билетов</legend>
+          <label for="paDeadlineMode">Когда закрывать кассу</label>
+          <select id="paDeadlineMode"><option value="default">По окончании события — прежнее правило</option><option value="before">За указанное число минут до начала</option></select>
+          <label for="paDeadlineMinutes">Минут до начала (0 — с началом)</label>
+          <input id="paDeadlineMinutes" class="ym-disable-keys" type="number" min="0" max="525600" step="1" value="60" inputmode="numeric">
+          <p class="editor-note">При переносе срок сдвигается вместе с началом. Ручное закрытие сохраняется; изменение срока сбрасывает прежнее исключение «открыть снова». Новые оформления зависят от срока. Созданные заказы, начатые оплаты и выданные билеты не меняются.</p>
+          <button type="button" class="btn-small" id="paDeadlinePreviewBtn" onclick="perfDeadlinePreview()">Рассчитать изменение</button>
+          <p id="paDeadlinePreview" class="editor-result" role="status"></p>
+          <button type="button" class="btn-small" id="paDeadlineSaveBtn" onclick="perfDeadlineSave()" disabled>Применить срок</button>
+        </fieldset>
       </div>
 
       <div class="adm-card">
@@ -2827,11 +2842,13 @@ async function perfSalesStartDraft() {
 }
 
 // История решений владельца: отдельное чтение без заказов, писем и платежей.
+var PA_DEADLINE_PREVIEW = null;
 var PA_SALES_HISTORY = { request: 0, id: null, revision: undefined };
 async function perfSalesHistoryLoad() {
   var box = document.getElementById('paSalesHistory'), id = document.getElementById('pa-perf').value;
   var request = ++PA_SALES_HISTORY.request;
   PA_SALES_HISTORY.id = id; PA_SALES_HISTORY.revision = undefined;
+  perfDeadlineInvalidate(true);
   if (!box) return;
   box.textContent = id ? 'Читаем историю продаж…' : '';
   if (!id) return;
@@ -2845,14 +2862,69 @@ async function perfSalesHistoryLoad() {
       PERF_LIST = PERF_LIST.map(function (p) { return p.id === id ? data.performance : p; });
       perfSalesBtnState(true);
     }
+    perfDeadlineReady(data, id);
     var lines = ['История решений о продаже · время московское'];
     if (h.legacy) lines.push('Прежняя отметка: ' + (h.legacy.closed ? 'закрыта' : 'открыта') + (h.legacy.at ? ' · ' + perfMsk(h.legacy.at) : '') + '. Полной истории до v778 нет.');
     if (!h.entries.length) lines.push('Новых решений пока нет. Автозакрытие по времени здесь не записывается.');
-    h.entries.slice().reverse().forEach(function (e) { lines.push(perfMsk(e.at) + ' · владелец · ' + (e.previousClosed ? 'закрыта' : 'открыта') + ' → ' + (e.closed ? 'закрыта' : 'открыта')); });
+    h.entries.slice().reverse().forEach(function (e) { lines.push(perfMsk(e.at) + ' · владелец · ' + (e.kind === 'deadline' ? 'срок: ' + perfDeadlineLabel(e.fromMinutes) + ' → ' + perfDeadlineLabel(e.toMinutes) : (e.previousClosed ? 'закрыта' : 'открыта') + ' → ' + (e.closed ? 'закрыта' : 'открыта'))); });
     lines.push('Показаны последние ' + h.entries.length + ' из ' + h.retained + ' сохранённых решений. Хранятся последние 100.' + (h.omitted ? ' Более ранних: ' + h.omitted + '.' : ''));
     lines.push('Изменение действует на новые оформления. Созданные заказы и удержания не отменяются; ранее начатая оплата может завершиться. Оплаченные суммы, чеки, билеты и остатки сертификатов не меняются.');
     box.replaceChildren(); lines.forEach(function (text) { var p = document.createElement('p'); p.textContent = text; box.appendChild(p); });
   } catch (_) { if (request === PA_SALES_HISTORY.request) box.textContent = 'История продаж не проверена — не удалось прочитать. Обновите показ. Для истории нужна функция v778.'; }
+}
+
+function perfDeadlineLabel(minutes) { return minutes === null ? 'по окончании события' : 'за ' + minutes + ' мин до начала'; }
+function perfDeadlineInvalidate(loading) {
+  PA_DEADLINE_PREVIEW = null;
+  var fields=document.getElementById('paDeadlineFields'),save=document.getElementById('paDeadlineSaveBtn'),out=document.getElementById('paDeadlinePreview');
+  if (fields && loading) fields.disabled=true;
+  if (save) save.disabled=true;
+  if (out) out.textContent='';
+}
+function perfDeadlineReady(data,id) {
+  var fields=document.getElementById('paDeadlineFields');if(!fields)return;
+  var p=data.performance;
+  fields.disabled=!(data.salesDeadline && p && p.id===id && p.salesChannel==='in_house' && !p.freeEvent && !p.isTest && p.status==='on_sale' && Date.parse(p.datetime)>Date.now());
+  if(fields.disabled)return;
+  var m=data.salesDeadline.closeBeforeMinutes;
+  document.getElementById('paDeadlineMode').value=m===null?'default':'before';
+  document.getElementById('paDeadlineMinutes').value=m===null?'60':String(m);
+  document.getElementById('paDeadlineMode').onchange=function(){perfDeadlineInvalidate(false);};
+  document.getElementById('paDeadlineMinutes').oninput=function(){perfDeadlineInvalidate(false);};
+}
+function perfDeadlineInput() {
+  if(document.getElementById('paDeadlineMode').value==='default')return null;
+  var raw=document.getElementById('paDeadlineMinutes').value.trim();
+  if(!/^\d+$/.test(raw)||!Number.isSafeInteger(Number(raw))||Number(raw)>525600)throw Error('Введите целое число минут от 0 до 525600.');
+  return Number(raw);
+}
+async function perfDeadlineCall(body) {
+  var r=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+getToken()},body:JSON.stringify(body)}),data=await r.json();
+  if(!r.ok)throw Error(data.message||errorMessage(data));return data;
+}
+async function perfDeadlinePreview() {
+  perfDeadlineInvalidate(false);
+  var id=document.getElementById('pa-perf').value,request=PA_SALES_HISTORY.request,out=document.getElementById('paDeadlinePreview');
+  try {
+    var minutes=perfDeadlineInput();
+    if(PA_SALES_HISTORY.id!==id||!Number.isSafeInteger(PA_SALES_HISTORY.revision))throw Error('Сначала обновите показ и историю.');
+    var data=await perfDeadlineCall({action:'sales_deadline_preview',performance_id:id,close_before_minutes:minutes,sales_revision:PA_SALES_HISTORY.revision});
+    if(request!==PA_SALES_HISTORY.request||id!==document.getElementById('pa-perf').value||minutes!==perfDeadlineInput())return;
+    PA_DEADLINE_PREVIEW=data.preview;
+    out.textContent='Новый срок: '+perfMsk(data.preview.closeAt)+'. Сразу после применения касса будет '+(data.preview.willBeClosed?'закрыта':'открыта')+(data.preview.manualClosed?' (сохранится ручное закрытие)':'')+'. Начало события: '+perfMsk(data.preview.datetime)+'. Настройка ещё не сохранена.';
+    document.getElementById('paDeadlineSaveBtn').disabled=false;
+  }catch(e){if(request===PA_SALES_HISTORY.request)out.textContent=e.message||'Не удалось рассчитать изменение.';}
+}
+async function perfDeadlineSave() {
+  var preview=PA_DEADLINE_PREVIEW,id=document.getElementById('pa-perf').value,out=document.getElementById('paDeadlinePreview'),title=document.getElementById('pa-title').value;
+  if(!preview||preview.id!==id||!title.trim()){out.textContent='Рассчитайте изменение и введите название показа для подтверждения.';return;}
+  try { if(perfDeadlineInput()!==preview.closeBeforeMinutes){perfDeadlineInvalidate(false);return;} }catch(e){out.textContent=e.message;return;}
+  if(!confirm('Применить срок '+perfMsk(preview.closeAt)+'? Касса станет '+(preview.willBeClosed?'закрыта':'открыта')+'. Созданные заказы и оплаты не отменяются.'))return;
+  document.getElementById('paDeadlineSaveBtn').disabled=true;
+  try {
+    await perfDeadlineCall({action:'sales_deadline_save',performance_id:id,close_before_minutes:preview.closeBeforeMinutes,sales_revision:preview.revision,confirm_title:title,expected_datetime:preview.datetime,expected_close_at:preview.closeAt,expected_closed:preview.willBeClosed});
+    await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();document.getElementById('paResult').textContent='Срок продажи сохранён. Проверьте историю и рассчитанное время.';
+  }catch(e){out.textContent=(e.message||'Ответ не получен.')+' Сначала обновите показ и историю перед повтором.';PA_DEADLINE_PREVIEW=null;}
 }
 
 // ── Закрыть / открыть продажу (pack-v592) ─────────────────────────
@@ -2877,7 +2949,7 @@ function perfSalesBtnState(skipHistory) {
   if (note) {
     if (p && p.freeEvent) { note.textContent='Запись закрывается с началом события. Список участников — в «Регистрациях».'; return; }
     var at = p && p.salesAutoCloseAt ? perfMsk(p.salesAutoCloseAt) : '';
-    var why = p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
+    var why = p && p.salesCloseBeforeMinutes !== null && p.salesCloseBeforeMinutes !== undefined ? perfDeadlineLabel(p.salesCloseBeforeMinutes) : p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
     note.textContent = !ok || !at ? ''
       : p.salesClosedAuto ? 'Продажа закрылась сама ' + at + ' (' + why + '). «Открыть продажу снова» — если продаёте дальше: тогда она открыта, пока её не закроют вручную.'
       : p.salesReopenedAt ? 'Открыта снова после автозакрытия (' + perfMsk(p.salesReopenedAt) + ') — закрыть теперь только вручную.'
@@ -7159,11 +7231,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=178"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=178">
-<script src="/assets/ai-pilot-v741.js?v=178"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=178"></script>
-<script src="/assets/subscription-materials-admin.js?v=178"></script>
+<script src="/assets/admin-snapshot.js?v=179"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=179">
+<script src="/assets/ai-pilot-v741.js?v=179"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=179"></script>
+<script src="/assets/subscription-materials-admin.js?v=179"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
