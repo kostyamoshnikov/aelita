@@ -147,18 +147,19 @@ export function contentSummary(before,after){
 
 // Telegram entities use UTF-16 offsets, the same units as JS string indices.
 // Keeping text and ranges separate avoids reparsing user text as HTML/Markdown.
-export const ENTITY_TYPES=Object.freeze(['bold','italic','underline','strikethrough','text_link']);
+export const ENTITY_TYPES=Object.freeze(['bold','italic','underline','strikethrough','spoiler','code','pre','blockquote','text_link']);
 function formattedText(v,empty=false){string(v,'text',LIMITS.text,empty);return v;}
 function boundary(text,n){return !(n>0&&n<text.length&&/[\uD800-\uDBFF]/.test(text[n-1])&&/[\uDC00-\uDFFF]/.test(text[n]));}
 export function normalizeEntities(text,values){
  if(typeof text!=='string'||!Array.isArray(values)||values.length>100)problem('invalid_formatting');
  const out=values.map(e=>{
-  if(!e||typeof e!=='object'||Array.isArray(e)||!ENTITY_TYPES.includes(e.type)||Object.keys(e).some(k=>!['type','offset','length',...(e.type==='text_link'?['url']:[])].includes(k))||!Number.isSafeInteger(e.offset)||!Number.isSafeInteger(e.length)||e.offset<0||e.length<1||e.offset+e.length>text.length||!boundary(text,e.offset)||!boundary(text,e.offset+e.length))problem('invalid_formatting');
-  return{type:e.type,offset:e.offset,length:e.length,...(e.type==='text_link'?{url:safeURL(e.url)}:{})};
+  if(!e||typeof e!=='object'||Array.isArray(e)||!ENTITY_TYPES.includes(e.type)||Object.keys(e).some(k=>!['type','offset','length',...(e.type==='text_link'?['url']:e.type==='pre'?['language']:[])].includes(k))||!Number.isSafeInteger(e.offset)||!Number.isSafeInteger(e.length)||e.offset<0||e.length<1||e.offset+e.length>text.length||!boundary(text,e.offset)||!boundary(text,e.offset+e.length))problem('invalid_formatting');
+  if(e.type==='pre'&&e.language!==undefined&&(typeof e.language!=='string'||e.language.length>64||! /^[A-Za-z0-9_+#.\-]*$/.test(e.language)))problem('invalid_formatting');
+  return{type:e.type,offset:e.offset,length:e.length,...(e.type==='text_link'?{url:safeURL(e.url)}:{}),...(e.type==='pre'&&e.language!==undefined?{language:e.language}:{})};
  }).sort((a,b)=>a.offset-b.offset||b.length-a.length||a.type.localeCompare(b.type));
  for(let i=0;i<out.length;i++)for(let j=i+1;j<out.length;j++){
   const a=out[i],b=out[j],end=a.offset+a.length;if(b.offset>=end)break;
-  if(b.offset+b.length>end||a.type===b.type||a.type==='text_link'&&b.type==='text_link')problem('invalid_formatting');
+  if(['code','pre'].includes(a.type)||['code','pre'].includes(b.type)||(a.type==='blockquote'&&b.type==='text_link'||b.type==='blockquote'&&a.type==='text_link')||b.offset+b.length>end||a.type===b.type||a.type==='text_link'&&b.type==='text_link')problem('invalid_formatting');
  }
  return out;
 }
@@ -187,7 +188,7 @@ export function editEntities(before,after,values=[],edit=null){
 }
 
 // B2: optional templates preserve byte-compatible normalization of old B1 content.
-export const BOT_CONTENT_RUNTIME=5;
+export const BOT_CONTENT_RUNTIME=9;
 export const EVENT_FACTS_SCHEMA='aelita.bot-event-facts/v1';
 export const EVENT_FACTS_URL='https://api.aelita-production.ru/tickets/performances-list?bot=1';
 export const BOT_RUNTIME_STATUS_URL='https://aelita-bot.kostyamoshnikov.workers.dev/notify/status';
@@ -209,6 +210,7 @@ export function normalizeEventCatalog(value){
   if(e.canceled&&e.salesOpen||e.datetime===null&&e.salesOpen)problem('event_source_invalid',502);
   for(const key of ['datetime','endsAt'])if(e[key]!==null&&(typeof e[key]!=='string'||!Number.isFinite(Date.parse(e[key]))))problem('event_source_invalid',502);
   const next={id,datetime:e.datetime,endsAt:e.endsAt,timeZone:e.timeZone,canceled:e.canceled,salesOpen:e.salesOpen,ru:{},en:{}};
+  if(Object.hasOwn(e,'salesOpenAt')){if(e.salesOpenAt!==null&&(typeof e.salesOpenAt!=='string'||!Number.isFinite(Date.parse(e.salesOpenAt))))problem('event_source_invalid',502);next.salesOpenAt=e.salesOpenAt;}
   if(Object.hasOwn(e,'salesCloseAt')){if(e.salesCloseAt!==null&&(typeof e.salesCloseAt!=='string'||!Number.isFinite(Date.parse(e.salesCloseAt))))problem('event_source_invalid',502);next.salesCloseAt=e.salesCloseAt;}
   for(const lang of ['ru','en']){
    const l=e[lang];if(!l||typeof l!=='object'||Array.isArray(l))problem('event_source_invalid',502);
@@ -222,6 +224,7 @@ export function normalizeEventCatalog(value){
 export function currentEvent(event,now=Date.now()){
  const copyEvent=clone(event),end=Date.parse(Object.hasOwn(event,'salesCloseAt')?event.salesCloseAt:event.endsAt),start=Date.parse(event.datetime);
  if(event.canceled){copyEvent.salesOpen=false;copyEvent.ru.buyURL='';copyEvent.en.buyURL='';}
+ else if(event.salesOpen&&event.salesOpenAt&&now<Date.parse(event.salesOpenAt)){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=lang==='en'?'Booking not yet open':'Продажа ещё не началась';}}
  else if(!Number.isFinite(start)||event.salesOpen&&Number.isFinite(end)&&now>=end){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=Number.isFinite(start)?(lang==='en'?'Booking closed':'Продажа закрыта'):(lang==='en'?'Date to be announced':'Дата будет объявлена');}}
  return copyEvent;
 }
@@ -234,7 +237,7 @@ export function renderTemplate(text,event,lang='ru'){
  for(const k of keys)if(values[k]===undefined)problem('event_source_unavailable',503);
  const result=String(text).replace(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g,(_m,key)=>values[key]);if(result.length>LIMITS.text)problem('rendered_text_too_long');return result;
 }
-export function requiredRuntime(content){if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.template&&l.entities?.length)))return 5;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.entities?.length)))return 4;if(hasAfishaAnnouncements(content))return 3;return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
+export function requiredRuntime(content){if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>(l.entities||[]).some(e=>e.type==='pre'))))return 9;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>(l.entities||[]).some(e=>e.type==='blockquote'))))return 8;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>(l.entities||[]).some(e=>e.type==='code'))))return 7;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>(l.entities||[]).some(e=>e.type==='spoiler'))))return 6;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.template&&l.entities?.length)))return 5;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.entities?.length)))return 4;if(hasAfishaAnnouncements(content))return 3;return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
 export function eventRefs(content){return[...new Set(Object.values(content.screens).filter(s=>s.eventId).map(s=>s.eventId))].sort();}
 export function selectedFacts(content,catalog){
  const normalized=normalizeEventCatalog(catalog);return eventRefs(content).map(id=>{const e=normalized.events.find(e=>e.id===id);if(!e)problem('event_not_found',409,id);return e;});

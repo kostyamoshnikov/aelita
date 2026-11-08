@@ -19,3 +19,13 @@
 
 /* Stable viewport for overview fitting; only the scheme itself scrolls. */
 .ba-flow-viewport{height:55vh}.ba-flow-search-results{grid-column:1/-1;min-width:0;display:flex;flex-wrap:wrap;gap:8px}.ba-flow-search-results p{flex-basis:100%;margin:0;font-size:14px}.ba-flow-search-results button{white-space:normal;overflow-wrap:anywhere;max-width:100%;min-height:44px}
+
+.ba-format-spoiler{background:#62584b;color:#fff;border-radius:3px;padding:0 2px;outline:1px dashed #d6b57a}
+
+.ba-format-code{font-family:ui-monospace,Consolas,monospace;background:rgba(128,128,128,.18);border-radius:3px;padding:0 2px}
+
+.ba-quote-preview{margin:8px 0;padding:8px 12px;border-left:3px solid currentColor;background:rgba(128,128,128,.12);overflow-wrap:anywhere}
+
+.ba-flow-neighbors{display:flex;flex-wrap:wrap;gap:8px}.ba-flow-neighbors p{flex-basis:100%}.ba-flow-neighbors button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+
+.ba-code-block-preview{margin:8px 0;padding:12px;border:1px solid currentColor;border-radius:4px;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:rgba(128,128,128,.12)}

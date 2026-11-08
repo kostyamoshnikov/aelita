@@ -797,7 +797,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
       if (!s || !s.id) return;
       if (s.state === 'reopened') { reopened.push(s.id); return; }
       var label = s.state === 'sold_out' ? (en ? 'Sold out' : 'Билеты распроданы')
-        : s.state === 'sales_closed' ? (en ? 'Sales closed' : 'Продажа закрыта') : null;
+        : s.state === 'sales_closed' ? (s.notStarted ? (en ? 'Sales not yet open' : 'Продажа ещё не началась') : (en ? 'Sales closed' : 'Продажа закрыта')) : null;
       if (!label) return;
       var links = document.querySelectorAll('a[data-performance-id="' + s.id + '"], a[href*="performance=' + s.id + '"]');
       Array.prototype.forEach.call(links, function (a) {
@@ -840,7 +840,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   try {
     if (window.__aelitaOutage) return;
     var s = document.createElement('script');
-    s.src = '/assets/outage.js?v=179';
+    s.src = '/assets/outage.js?v=181';
     s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) { /* баннер — не главное, страница работает и без него */ }

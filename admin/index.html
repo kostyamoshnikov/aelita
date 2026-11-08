@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=179">
+<link rel="stylesheet" href="/assets/fonts.css?v=181">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -479,11 +479,13 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields{margin-top:18px;padding:16px;min-width:0;border:1px solid rgba(174,149,97,.4)}
 #paDeadlineFields legend{padding:0 6px}#paDeadlineFields label{display:block;margin:10px 0 6px}
 #paDeadlineFields input,#paDeadlineFields select{width:100%;max-width:100%;box-sizing:border-box}
+#paDeadlinePreview:not(:empty),#paResult:not(:empty){display:block}
+@media(max-width:400px){#paDeadlineFields{padding:10px 8px}#paDeadlineFields input[type="datetime-local"]{padding:10px 6px;font-size:0.8125rem}}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=179">
-<script src="/assets/staff-handoff-v1.js?v=179"></script>
-<script src="/assets/mobile-files-m1.js?v=179"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=181">
+<script src="/assets/staff-handoff-v1.js?v=181"></script>
+<script src="/assets/mobile-files-m1.js?v=181"></script>
 </head>
 <body>
 
@@ -1060,19 +1062,24 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <h3>Закрыть продажу</h3>
         <p class="lead">Сайт перестанет продавать билеты на этот показ. Купленное не меняется.</p>
         <p class="editor-note" id="paSalesNote" aria-live="polite"></p>
-        <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сама по окончании события (если окончание не указано — через 3 часа после начала): с сайта и из бота уходят кнопки покупки, страница покупки говорит «продажа закрыта», на странице события — «Событие прошло» и просьба оставить отзыв. Закрыть раньше — эта кнопка: на сайте кнопки покупки сменятся на «Продажа закрыта» (в течение 5 минут). После автозакрытия можно «Открыть продажу снова» — тогда она открыта, пока её не закроют вручную, и сайт возвращает кнопки покупки; в боте ссылка не вернётся (бот живёт по времени из каталога) — давайте ссылку на страницу события. Купленные билеты, места и пригласительные остаются в силе.</p></details>
+        <details class="adm-more"><summary>Подробнее</summary><p>Касса закрывается по выбранному расписанию; окончание события остаётся отдельной датой. До начала продаж покупка недоступна, даже после ручного разрешения. Ручное закрытие не снимается автоматически. После автозакрытия «Открыть продажу снова» разрешает новые покупки до следующего ручного закрытия или изменения расписания. Сайт и бот получают актуальные сведения через прежний кэш; уже открытая страница может потребовать обновления. Купленные билеты, места и пригласительные сохраняются.</p></details>
         <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
         <div id="paSalesHistory" class="pa-preview" aria-live="polite"></div>
         <fieldset id="paDeadlineFields" disabled>
-          <legend>Срок продажи платных билетов</legend>
+          <legend>Расписание продажи платных билетов</legend>
+          <label for="paSalesOpenAt">Начало продаж — дата и время по Москве</label>
+          <input id="paSalesOpenAt" class="ym-disable-keys" type="datetime-local" min="2000-01-01T00:00" max="2199-12-31T23:59" step="60">
+          <p class="editor-note">Пустое начало — без ограничения по времени. Ручное закрытие сохраняется: расписание само его не снимает.</p>
           <label for="paDeadlineMode">Когда закрывать кассу</label>
-          <select id="paDeadlineMode"><option value="default">По окончании события — прежнее правило</option><option value="before">За указанное число минут до начала</option></select>
+          <select id="paDeadlineMode"><option value="default">По окончании события — прежнее правило</option><option value="before">За указанное число минут до начала</option><option value="absolute">В конкретную дату и время</option></select>
           <label for="paDeadlineMinutes">Минут до начала (0 — с началом)</label>
           <input id="paDeadlineMinutes" class="ym-disable-keys" type="number" min="0" max="525600" step="1" value="60" inputmode="numeric">
-          <p class="editor-note">При переносе срок сдвигается вместе с началом. Ручное закрытие сохраняется; изменение срока сбрасывает прежнее исключение «открыть снова». Новые оформления зависят от срока. Созданные заказы, начатые оплаты и выданные билеты не меняются.</p>
+          <label for="paSalesCloseAt">Конкретное закрытие — дата и время по Москве</label>
+          <input id="paSalesCloseAt" class="ym-disable-keys" type="datetime-local" min="2000-01-01T00:00" max="2199-12-31T23:59" step="60">
+          <p class="editor-note">Начало должно быть раньше закрытия; конкретное закрытие — не позже окончания события. При переносе относительное закрытие сдвигается с началом события, конкретные даты продаж сохраняются. Если новое окончание окажется раньше окна продаж, касса останется закрытой до исправления расписания. Ручное закрытие сохраняется; изменение расписания сбрасывает прежнее исключение «открыть снова». Созданные заказы, начатые оплаты и билеты не меняются.</p>
           <button type="button" class="btn-small" id="paDeadlinePreviewBtn" onclick="perfDeadlinePreview()">Рассчитать изменение</button>
           <p id="paDeadlinePreview" class="editor-result" role="status"></p>
-          <button type="button" class="btn-small" id="paDeadlineSaveBtn" onclick="perfDeadlineSave()" disabled>Применить срок</button>
+          <button type="button" class="btn-small" id="paDeadlineSaveBtn" onclick="perfDeadlineSave()" disabled>Применить расписание</button>
         </fieldset>
       </div>
 
@@ -2856,7 +2863,7 @@ async function perfSalesHistoryLoad() {
     var res = await fetch(ADMIN_PERF_URL + '?sales_history=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
     var data = await res.json(), h = data.salesHistory;
     if (request !== PA_SALES_HISTORY.request) return;
-    if (!res.ok || !h || h.version !== 1) throw new Error('history');
+    if (!res.ok || !h || ![1,2].includes(h.version)) throw new Error('history');
     PA_SALES_HISTORY.revision = h.revision;
     if (data.performance && data.performance.id === id) {
       PERF_LIST = PERF_LIST.map(function (p) { return p.id === id ? data.performance : p; });
@@ -2866,7 +2873,7 @@ async function perfSalesHistoryLoad() {
     var lines = ['История решений о продаже · время московское'];
     if (h.legacy) lines.push('Прежняя отметка: ' + (h.legacy.closed ? 'закрыта' : 'открыта') + (h.legacy.at ? ' · ' + perfMsk(h.legacy.at) : '') + '. Полной истории до v778 нет.');
     if (!h.entries.length) lines.push('Новых решений пока нет. Автозакрытие по времени здесь не записывается.');
-    h.entries.slice().reverse().forEach(function (e) { lines.push(perfMsk(e.at) + ' · владелец · ' + (e.kind === 'deadline' ? 'срок: ' + perfDeadlineLabel(e.fromMinutes) + ' → ' + perfDeadlineLabel(e.toMinutes) : (e.previousClosed ? 'закрыта' : 'открыта') + ' → ' + (e.closed ? 'закрыта' : 'открыта'))); });
+    h.entries.slice().reverse().forEach(function (e) { lines.push(perfMsk(e.at) + ' · владелец · ' + (e.kind === 'schedule' ? 'расписание: ' + perfScheduleLabel(e.fromSchedule) + ' → ' + perfScheduleLabel(e.toSchedule) : e.kind === 'deadline' ? 'срок: ' + perfDeadlineLabel(e.fromMinutes) + ' → ' + perfDeadlineLabel(e.toMinutes) : (e.previousClosed ? 'закрыта' : 'открыта') + ' → ' + (e.closed ? 'закрыта' : 'открыта'))); });
     lines.push('Показаны последние ' + h.entries.length + ' из ' + h.retained + ' сохранённых решений. Хранятся последние 100.' + (h.omitted ? ' Более ранних: ' + h.omitted + '.' : ''));
     lines.push('Изменение действует на новые оформления. Созданные заказы и удержания не отменяются; ранее начатая оплата может завершиться. Оплаченные суммы, чеки, билеты и остатки сертификатов не меняются.');
     box.replaceChildren(); lines.forEach(function (text) { var p = document.createElement('p'); p.textContent = text; box.appendChild(p); });
@@ -2874,6 +2881,15 @@ async function perfSalesHistoryLoad() {
 }
 
 function perfDeadlineLabel(minutes) { return minutes === null ? 'по окончании события' : 'за ' + minutes + ' мин до начала'; }
+function perfScheduleLabel(s) { return (s.opensAt ? 'начало ' + perfMsk(s.opensAt) : 'без ограничения начала') + '; закрытие ' + (s.closeAt ? perfMsk(s.closeAt) : perfDeadlineLabel(s.closeBeforeMinutes)); }
+function perfScheduleLocal(iso) { return iso ? new Date(Date.parse(iso)+3*3600000).toISOString().slice(0,16) : ''; }
+function perfScheduleDate(raw) {
+  if (!raw) return null;
+  if (!/^20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}$|^21\d{2}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(raw)) throw Error('Укажите дату и время по Москве, 2000–2199 год.');
+  var date=new Date(raw+':00+03:00');
+  if (!Number.isFinite(date.getTime()) || perfScheduleLocal(date.toISOString())!==raw) throw Error('Проверьте календарную дату и время.');
+  return date.toISOString();
+}
 function perfDeadlineInvalidate(loading) {
   PA_DEADLINE_PREVIEW = null;
   var fields=document.getElementById('paDeadlineFields'),save=document.getElementById('paDeadlineSaveBtn'),out=document.getElementById('paDeadlinePreview');
@@ -2884,19 +2900,29 @@ function perfDeadlineInvalidate(loading) {
 function perfDeadlineReady(data,id) {
   var fields=document.getElementById('paDeadlineFields');if(!fields)return;
   var p=data.performance;
-  fields.disabled=!(data.salesDeadline && p && p.id===id && p.salesChannel==='in_house' && !p.freeEvent && !p.isTest && p.status==='on_sale' && Date.parse(p.datetime)>Date.now());
+  fields.disabled=!(data.salesSchedule && p && p.id===id && p.salesChannel==='in_house' && !p.freeEvent && !p.isTest && p.status==='on_sale' && Date.parse(p.datetime)>Date.now());
   if(fields.disabled)return;
-  var m=data.salesDeadline.closeBeforeMinutes;
-  document.getElementById('paDeadlineMode').value=m===null?'default':'before';
+  var s=data.salesSchedule,m=s.closeBeforeMinutes;
+  document.getElementById('paDeadlineMode').value=s.closeAt?'absolute':m===null?'default':'before';
   document.getElementById('paDeadlineMinutes').value=m===null?'60':String(m);
-  document.getElementById('paDeadlineMode').onchange=function(){perfDeadlineInvalidate(false);};
-  document.getElementById('paDeadlineMinutes').oninput=function(){perfDeadlineInvalidate(false);};
+  document.getElementById('paSalesOpenAt').value=perfScheduleLocal(s.opensAt);
+  document.getElementById('paSalesCloseAt').value=perfScheduleLocal(s.closeAt);
+  function sync() { var mode=document.getElementById('paDeadlineMode').value;document.getElementById('paDeadlineMinutes').disabled=mode!=='before';document.getElementById('paSalesCloseAt').disabled=mode!=='absolute'; }
+  document.getElementById('paDeadlineMode').onchange=function(){sync();perfDeadlineInvalidate(false);};
+  ['paDeadlineMinutes','paSalesOpenAt','paSalesCloseAt'].forEach(function(k){document.getElementById(k).oninput=function(){perfDeadlineInvalidate(false);};});sync();
 }
 function perfDeadlineInput() {
-  if(document.getElementById('paDeadlineMode').value==='default')return null;
+  if(document.getElementById('paDeadlineMode').value!=='before')return null;
   var raw=document.getElementById('paDeadlineMinutes').value.trim();
   if(!/^\d+$/.test(raw)||!Number.isSafeInteger(Number(raw))||Number(raw)>525600)throw Error('Введите целое число минут от 0 до 525600.');
   return Number(raw);
+}
+function perfScheduleInput() {
+  var mode=document.getElementById('paDeadlineMode').value;
+  if(!['default','before','absolute'].includes(mode))throw Error('Выберите правило закрытия.');
+  var closeAt=mode==='absolute'?perfScheduleDate(document.getElementById('paSalesCloseAt').value):null;
+  if(mode==='absolute'&&!closeAt)throw Error('Укажите конкретное закрытие кассы.');
+  return {opensAt:perfScheduleDate(document.getElementById('paSalesOpenAt').value),closeAt:closeAt,closeBeforeMinutes:perfDeadlineInput()};
 }
 async function perfDeadlineCall(body) {
   var r=await fetch(ADMIN_PERF_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+getToken()},body:JSON.stringify(body)}),data=await r.json();
@@ -2906,25 +2932,26 @@ async function perfDeadlinePreview() {
   perfDeadlineInvalidate(false);
   var id=document.getElementById('pa-perf').value,request=PA_SALES_HISTORY.request,out=document.getElementById('paDeadlinePreview');
   try {
-    var minutes=perfDeadlineInput();
+    var schedule=perfScheduleInput(),key=JSON.stringify(schedule);
     if(PA_SALES_HISTORY.id!==id||!Number.isSafeInteger(PA_SALES_HISTORY.revision))throw Error('Сначала обновите показ и историю.');
-    var data=await perfDeadlineCall({action:'sales_deadline_preview',performance_id:id,close_before_minutes:minutes,sales_revision:PA_SALES_HISTORY.revision});
-    if(request!==PA_SALES_HISTORY.request||id!==document.getElementById('pa-perf').value||minutes!==perfDeadlineInput())return;
+    var data=await perfDeadlineCall({action:'sales_schedule_preview',performance_id:id,schedule:schedule,sales_revision:PA_SALES_HISTORY.revision});
+    if(request!==PA_SALES_HISTORY.request||id!==document.getElementById('pa-perf').value||key!==JSON.stringify(perfScheduleInput()))return;
+    if(!data.preview||!data.preview.schedule)throw Error('Нужна актуальная функция расписания. Обновите сервис.');
     PA_DEADLINE_PREVIEW=data.preview;
-    out.textContent='Новый срок: '+perfMsk(data.preview.closeAt)+'. Сразу после применения касса будет '+(data.preview.willBeClosed?'закрыта':'открыта')+(data.preview.manualClosed?' (сохранится ручное закрытие)':'')+'. Начало события: '+perfMsk(data.preview.datetime)+'. Настройка ещё не сохранена.';
+    out.textContent=perfScheduleLabel(data.preview.schedule)+'. Сразу после применения касса будет '+(data.preview.willBeClosed?'закрыта':'открыта')+(data.preview.notStarted?' (начало продаж ещё не наступило)':'')+(data.preview.manualClosed?' (сохранится ручное закрытие)':'')+'. Начало события: '+perfMsk(data.preview.datetime)+'. Настройка ещё не сохранена.';
     document.getElementById('paDeadlineSaveBtn').disabled=false;
   }catch(e){if(request===PA_SALES_HISTORY.request)out.textContent=e.message||'Не удалось рассчитать изменение.';}
 }
 async function perfDeadlineSave() {
   var preview=PA_DEADLINE_PREVIEW,id=document.getElementById('pa-perf').value,out=document.getElementById('paDeadlinePreview'),title=document.getElementById('pa-title').value;
   if(!preview||preview.id!==id||!title.trim()){out.textContent='Рассчитайте изменение и введите название показа для подтверждения.';return;}
-  try { if(perfDeadlineInput()!==preview.closeBeforeMinutes){perfDeadlineInvalidate(false);return;} }catch(e){out.textContent=e.message;return;}
-  if(!confirm('Применить срок '+perfMsk(preview.closeAt)+'? Касса станет '+(preview.willBeClosed?'закрыта':'открыта')+'. Созданные заказы и оплаты не отменяются.'))return;
-  document.getElementById('paDeadlineSaveBtn').disabled=true;
+  try { if(JSON.stringify(perfScheduleInput())!==JSON.stringify(preview.schedule)){perfDeadlineInvalidate(false);return;} }catch(e){out.textContent=e.message;return;}
+  if(!confirm('Применить расписание: '+perfScheduleLabel(preview.schedule)+'? Касса станет '+(preview.willBeClosed?'закрыта':'открыта')+'. Созданные заказы и оплаты не отменяются.'))return;
+  document.getElementById('paDeadlineSaveBtn').disabled=true;PA_DEADLINE_PREVIEW=null;
   try {
-    await perfDeadlineCall({action:'sales_deadline_save',performance_id:id,close_before_minutes:preview.closeBeforeMinutes,sales_revision:preview.revision,confirm_title:title,expected_datetime:preview.datetime,expected_close_at:preview.closeAt,expected_closed:preview.willBeClosed});
-    await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();document.getElementById('paResult').textContent='Срок продажи сохранён. Проверьте историю и рассчитанное время.';
-  }catch(e){out.textContent=(e.message||'Ответ не получен.')+' Сначала обновите показ и историю перед повтором.';PA_DEADLINE_PREVIEW=null;}
+    await perfDeadlineCall({action:'sales_schedule_save',performance_id:id,schedule:preview.schedule,sales_revision:preview.revision,confirm_title:title,expected_datetime:preview.datetime,expected_open_at:preview.opensAt,expected_close_at:preview.closeAt,expected_closed:preview.willBeClosed,expected_not_started:preview.notStarted});
+    await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();document.getElementById('paResult').textContent='Расписание продажи сохранено. Проверьте историю и рассчитанное время.';
+  }catch(e){out.textContent=(e.message||'Ответ не получен.')+' Сначала обновите показ и историю перед повтором.';}
 }
 
 // ── Закрыть / открыть продажу (pack-v592) ─────────────────────────
@@ -2943,21 +2970,22 @@ function perfSalesBtnState(skipHistory) {
   document.getElementById('paCancelLead').textContent=free ? 'Регистрации и QR-билеты аннулируются; участникам уйдут письма.' : 'Всем покупателям — возврат 100%, билеты аннулируются.';
   document.getElementById('paCancelDetail').textContent=free ? 'Запись закроется, а зарегистрированные получат письмо на языке регистрации. Письма отправляются порциями автоматически, пока страница открыта. Если отправка прервалась или остались ошибки, нажмите кнопку ещё раз и проверьте счётчики. После временного сбоя возможно повторное письмо.' : 'Продажа закрывается сразу. Деньги — через ЮKassa или вручную; оплаченное подарочной картой — обратно на карту. Письмо об отмене — на языке покупателя. Повторное нажатие продолжит незавершённые действия.';
   b.disabled = !ok;
-  b.textContent = p && p.freeEvent ? (p.salesClosed ? 'Открыть регистрацию' : 'Закрыть регистрацию') : p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
+  b.textContent = p && p.salesNotStarted ? (p.salesManualClosed?'Разрешить продажу по расписанию':'Закрыть продажу вручную') : p && p.freeEvent ? (p.salesClosed ? 'Открыть регистрацию' : 'Закрыть регистрацию') : p && p.salesClosed ? (p.salesClosedAuto ? 'Открыть продажу снова' : 'Открыть продажу') : 'Закрыть продажу';
   // pack-v734: автозакрытие по окончании события — когда закроется / закрылась сама.
   var note = document.getElementById('paSalesNote');
   if (note) {
     if (p && p.freeEvent) { note.textContent='Запись закрывается с началом события. Список участников — в «Регистрациях».'; return; }
     var at = p && p.salesAutoCloseAt ? perfMsk(p.salesAutoCloseAt) : '';
-    var why = p && p.salesCloseBeforeMinutes !== null && p.salesCloseBeforeMinutes !== undefined ? perfDeadlineLabel(p.salesCloseBeforeMinutes) : p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
+    var why = p && p.salesAbsoluteCloseAt ? 'конкретная дата закрытия' : p && p.salesCloseBeforeMinutes !== null && p.salesCloseBeforeMinutes !== undefined ? perfDeadlineLabel(p.salesCloseBeforeMinutes) : p && p.endsAtKnown ? 'по окончании события' : 'через 3 часа после начала — окончание не указано';
     note.textContent = !ok || !at ? ''
+      : p.salesNotStarted ? 'Начало продаж: ' + perfMsk(p.salesOpenAt) + (p.salesManualClosed ? '. Дополнительно закрыта вручную: расписание само её не откроет.' : '. Продажа разрешена, но начнётся только в это время.')
       : p.salesClosedAuto ? 'Продажа закрылась сама ' + at + ' (' + why + '). «Открыть продажу снова» — если продаёте дальше: тогда она открыта, пока её не закроют вручную.'
       : p.salesReopenedAt ? 'Открыта снова после автозакрытия (' + perfMsk(p.salesReopenedAt) + ') — закрыть теперь только вручную.'
       : p.salesClosed ? 'Закрыта вручную.'
       : 'Закроется сама ' + at + ' (' + why + ').';
   }
 }
-function perfMsk(iso) { return new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) + ' МСК'; }
+function perfMsk(iso) { return new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' МСК'; }
 async function perfSalesToggle() {
   var id = document.getElementById('pa-perf').value;
   var title = document.getElementById('pa-title').value;
@@ -2965,10 +2993,11 @@ async function perfSalesToggle() {
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
   if (!p) return;
   if (!title.trim()) { out.textContent = 'Введите название спектакля для подтверждения.'; return; }
-  var close = !p.salesClosed;
+  var close = p.salesNotStarted ? !p.salesManualClosed : !p.salesClosed;
   if (PA_SALES_HISTORY.id !== id || !Number.isSafeInteger(PA_SALES_HISTORY.revision)) { out.textContent = 'Дождитесь загрузки истории продаж. Если она недоступна, обновите показ.'; return; }
   if (!confirm(p.freeEvent ? (close ? 'Закрыть регистрацию на «' + p.title + '»?' : 'Открыть регистрацию на «' + p.title + '»?') : close ? 'Закрыть продажу билетов на «' + p.title + '»?'
-    : p.salesClosedAuto ? 'Продажа «' + p.title + '» закрылась сама по окончании события. Открыть снова? Закрыть её потом можно будет только вручную.'
+    : p.salesNotStarted ? 'Разрешить продажу по расписанию? До ' + perfMsk(p.salesOpenAt) + ' покупка останется закрыта.'
+    : p.salesClosedAuto ? 'Продажа «' + p.title + '» закрылась сама по настроенному сроку. Открыть снова? Закрыть её потом можно будет только вручную.'
     : 'Открыть продажу билетов на «' + p.title + '»?')) return;
   var b = document.getElementById('paSalesBtn');
   b.disabled = true;
@@ -2977,7 +3006,7 @@ async function perfSalesToggle() {
       body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title, sales_revision: PA_SALES_HISTORY.id === id ? PA_SALES_HISTORY.revision : undefined }) });
     var data = await res.json();
     if (!res.ok) { out.textContent = data.message || errorMessage(data); b.disabled = false; return; }
-    out.textContent = p.freeEvent ? (close ? 'Регистрация закрыта.' : 'Регистрация открыта.') : close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
+    out.textContent = p.salesNotStarted ? (close?'Продажа закрыта вручную.':'Продажа разрешена по расписанию; до начала касса закрыта.') : p.freeEvent ? (close ? 'Регистрация закрыта.' : 'Регистрация открыта.') : close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
     await loadPerfActions();
     document.getElementById('pa-perf').value = id;
     perfSalesBtnState();
@@ -3969,7 +3998,7 @@ function renderCheckouts() {
         '<div class="ev-when">' + escapeHtml(CO_STAGE_LABELS[c.stage] || c.stage) + (why ? ': ' + escapeHtml(why) : '') +
           (coMaybeActive(c) ? ' · <span style="color:var(--gold)">возможно, ещё оформляет</span>' : '') + '</div>' +
         '<div class="ev-when">' + (seats ? escapeHtml(seats) + ' · ' : '') + 'первое действие ' + fmtGcDate(c.firstSeenAt) + ' · последнее ' + fmtGcDate(c.updatedAt) +
-          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + (c.reminderSentAt ? ' · напоминание покупателю отправлено ' + new Date(c.reminderSentAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '') + '</div>' +
+          (c.attempts > 1 ? ' · попыток оплаты: ' + c.attempts : '') + (c.reminderSentAt ? ' · напоминание покупателю отправлено ' + new Date(c.reminderSentAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '') + '</div>' +
         '<div class="ev-when">Письмо команде: ' + (!c.teamMail ? 'нет сведений' : c.teamMail.pending ? 'ожидает отправки' : c.teamMail.sentAt ? 'принято почтовым сервером ' + escapeHtml(fmtGcDate(c.teamMail.sentAt)) : 'нет сведений') + '</div></div>' +
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
@@ -7231,11 +7260,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=179"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=179">
-<script src="/assets/ai-pilot-v741.js?v=179"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=179"></script>
-<script src="/assets/subscription-materials-admin.js?v=179"></script>
+<script src="/assets/admin-snapshot.js?v=181"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=181">
+<script src="/assets/ai-pilot-v741.js?v=181"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=181"></script>
+<script src="/assets/subscription-materials-admin.js?v=181"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

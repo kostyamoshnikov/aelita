@@ -26,7 +26,8 @@ function createStore(){
 }
 function mountVideo(container,value,options){
  const state={src:'',poster:'',tracks:{},title:'',caption:'',...clone(value||{})};if(!state.tracks||typeof state.tracks!=='object')state.tracks={};
- const holder=document.createElement('div');holder.className='ed-video-settings';container.append(holder);const current=()=>holder.isConnected&&(!options.isCurrent||options.isCurrent()),emit=()=>options.onChange(clone(state));
+ let posterQuality;
+ const holder=document.createElement('div');holder.className='ed-video-settings';container.append(holder);const current=()=>holder.isConnected&&(!options.isCurrent||options.isCurrent()),emit=()=>{posterQuality?.update();options.onChange(clone(state));};
  function field(label,key){const l=document.createElement('label'),n=document.createElement(key==='caption'?'textarea':'input');n.className='ym-disable-keys';n.value=state[key]||'';n.maxLength=key==='caption'?1000:2000;l.append(label,n);holder.append(l);n.addEventListener('input',()=>{state[key]=n.value.trim();if(key==='src'){state.width=null;state.height=null;refresh();}emit();});return n;}
  const src=field('Видео MP4','src');src.placeholder='/images/…mp4 или https://…mp4';
  function upload(label,accept,fn){const l=document.createElement('label');l.className='ed-upload';l.append(label);const file=document.createElement('input');file.type='file';file.accept=accept;l.append(file);holder.append(l);file.addEventListener('change',async()=>{const chosen=file.files[0];file.value='';if(!chosen)return;file.disabled=true;options.busy?.(1);try{const result=await fn(chosen);if(current()){Object.assign(state,result);sync();emit();}}catch(e){if(e.code!=='superseded')options.onError?.(e);}finally{file.disabled=false;options.busy?.(-1);}});}
@@ -42,7 +43,8 @@ function mountVideo(container,value,options){
  let title,caption;if(!options.hideText){title=field('Название видео для доступности','title');if(options.canCaption!==false)caption=field('Подпись под видео','caption');}
  const note=document.createElement('p');note.className='ed-help';note.textContent='После публикации видео будет доступно посетителям. Без автозапуска; воспроизведение — по нажатию. Изменения сначала проверьте в макете страницы.';holder.append(note);
  function sync(){src.value=state.src;poster.value=state.poster||'';for(const l of ['ru','en'])trackInputs[l].value=state.tracks[l]||'';if(title)title.value=state.title;if(caption)caption.value=state.caption;refresh();}
- refresh();return{get:()=>clone(state)};
+ if(root.AelitaImageQuality?.mountPoster)posterQuality=root.AelitaImageQuality.mountPoster(holder,{source:()=>options.imageSource?options.imageSource(state.poster||''):(state.poster||''),videoSize:()=>({width:state.width,height:state.height}),isCurrent:current,context:()=>JSON.stringify([state.src,state.poster,state.width,state.height])});
+ refresh();Promise.resolve().then(()=>posterQuality?.update());return{get:()=>clone(state)};
 }
 const api={createStore,mountVideo,message,refs,MAX};if(typeof module==='object'&&module.exports)module.exports=api;else root.AelitaContentMedia=api;
 })(typeof window==='object'?window:globalThis);

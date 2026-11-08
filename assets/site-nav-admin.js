@@ -77,16 +77,23 @@
       } else l.appendChild(inp);
       div.appendChild(l);
     }
+    let quality;
     if(['covers','projects','team'].includes(kind)){
       const view=kind==='covers'?{mode:item.mode||'cover',...Object.fromEntries(['mode','position','mobileImage','mobileMode','mobilePosition'].filter(k=>item[k]!==undefined).map(k=>[k,item[k]]))}:item.view;
-      div.mediaControl=window.AelitaMediaView.mount(div,view,{forceMode:kind==='covers',defaultPosition:item.position,onChange:changed,imageList:'sn-images',api,progress:status,isCurrent:()=>div.isConnected,
+      div.mediaControl=window.AelitaMediaView.mount(div,view,{forceMode:kind==='covers',defaultPosition:item.position,onChange:()=>{changed();quality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>div.isConnected,
         onMobileFile:async file=>{const result=await preparePhoto(file,()=>div.isConnected);return result;},onError:e=>status(msg(e),true)});
+    }
+    if(['covers','projects','team'].includes(kind)&&window.AelitaImageQuality){
+      const source=()=>div.querySelector('[data-k="image"]').value.trim();
+      const resolve=value=>{const a=S.assets.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value;};
+      quality=window.AelitaImageQuality.mountVariants(div,{usage:kind==='covers'?'homeUpcoming':kind==='team'?'homeTeam':'homeProject',target:'desktop',source:()=>resolve(source()),resolve,view:()=>div.mediaControl?.get()||{},isCurrent:()=>div.isConnected});
+      div.querySelector('[data-k="image"]').addEventListener('input',()=>quality.update());
     }
     const tools = document.createElement('div'); tools.className = 'sn-tools';
     for (const [t, title, fn] of [['↑', 'Выше', () => div.previousElementSibling && box.insertBefore(div, div.previousElementSibling)], ['↓', 'Ниже', () => div.nextElementSibling && box.insertBefore(div.nextElementSibling, div)], ['Убрать', 'Убрать', () => { if (box.children.length > ROWS[kind].min) div.remove(); else status('Здесь нужен хотя бы один пункт.', true); }]]) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'ed-quiet'; b.textContent = t; b.title = title; b.setAttribute('aria-label', title); b.onclick = () => { fn(); changed(); }; tools.appendChild(b);
     }
-    div.appendChild(tools); box.appendChild(div);
+    div.appendChild(tools); box.appendChild(div);quality?.update();
   }
   function list(box, kind, items) { box.innerHTML = ''; box.dataset.kind = kind; (items || []).forEach((x) => row(kind, x, box)); }
   function read(box) {
@@ -138,7 +145,14 @@
     $('sn-f-href').value = h.feature.href; $('sn-f-image').value = h.feature.image;
     $('sn-feature-view')?.remove();const holder=document.createElement('div');holder.id='sn-feature-view';$('sn-f-image').closest('label').after(holder);
     const featureInput=$('sn-f-image'),originalHolder=document.createElement('div');holder.append(originalHolder);const refreshOriginal=()=>{originalHolder.replaceChildren();const value=featureInput.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,progress:status,isCurrent:()=>holder.isConnected&&featureInput.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>holder.isConnected);featureInput.value=next;featureInput.dispatchEvent(new Event('input',{bubbles:true}));changed();}});};featureInput.oninput=refreshOriginal;refreshOriginal();
-    S.featureView=window.AelitaMediaView.mount(holder,h.feature.view,{onChange:changed,imageList:'sn-images',api,progress:status,isCurrent:()=>holder.isConnected,onMobileFile:file=>preparePhoto(file,()=>holder.isConnected),onError:e=>status(msg(e),true)});
+    let featureQuality;
+    S.featureView=window.AelitaMediaView.mount(holder,h.feature.view,{onChange:()=>{changed();featureQuality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>holder.isConnected,onMobileFile:file=>preparePhoto(file,()=>holder.isConnected),onError:e=>status(msg(e),true)});
+
+    if(window.AelitaImageQuality){
+      const resolve=value=>{const a=S.assets.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value;};
+      featureQuality=window.AelitaImageQuality.mountVariants(holder,{usage:'homeFeature',target:'desktop',source:()=>resolve(featureInput.value.trim()),resolve,view:()=>S.featureView?.get()||{},isCurrent:()=>holder.isConnected});
+      featureInput.oninput=()=>{refreshOriginal();featureQuality.update();};
+    }
 
     for (const L of ['ru', 'en']) for (const k of FEAT) $('sn-f-' + L + '-' + k).value = h.feature[L][k] || '';
     list(box('projects'), 'projects', h.projects); list(box('team'), 'team', h.team); list(box('partners'), 'partners', h.partners);
@@ -254,11 +268,11 @@
         assets.set(await sha256(a.data), { type: a.type, data: a.data });
       }
       if (edit !== S.edit) throw 0;
-      previous = { kind: d.kind, data: d.kind === 'nav' ? collectNav() : collectHome() };
-      fill(d.kind, d.mine); S[d.kind] = clone(d.base); S.assets = assets;
+      previous = { kind: d.kind, data: d.kind === 'nav' ? collectNav() : collectHome(), assets: S.assets, base: S[d.kind], baseHead: S.baseHeads[d.kind] };
+      S.assets = assets; fill(d.kind, d.mine); S[d.kind] = clone(d.base);
       S.baseHeads[d.kind] = /^[a-f0-9]{40}$/.test(d.baseCommit || '') ? d.baseCommit : '';
       tab(d.kind); changed(); status('Черновик загружен с исходной версией. «Проверить макет» сверит его с текущим сайтом.');
-    } catch { if (previous) fill(previous.kind, previous.data); status('Не удалось загрузить черновик: файл не подходит или форма уже изменилась. Текущая форма сохранена.', true); }
+    } catch { if (previous) { S.assets=previous.assets; S[previous.kind]=previous.base; S.baseHeads[previous.kind]=previous.baseHead; fill(previous.kind, previous.data); } status('Не удалось загрузить черновик: файл не подходит или форма уже изменилась. Текущая форма сохранена.', true); }
   }
   function conflictText(v, present) {
     if (!present) return 'Поле отсутствует';
