@@ -28,7 +28,7 @@ function mount(container,initial,options){
    async function choose(source){const before=b.image,value=await photo(source,()=>current()&&b.image===before);if(!current())return;b.image=value;image.value=value;refresh();changed();}
    file.addEventListener('change',async()=>{const selected=file.files[0];file.value='';if(!selected)return;file.disabled=true;try{await choose(selected);}catch(e){if(e.code!=='superseded')options.onError?.(e);}finally{file.disabled=false;}});
    const original=document.createElement('div');card.append(original);let quality;function refresh(){original.replaceChildren();const selected=b.image;root.AelitaMediaOriginals.controls(original,{api:options.api,value:selected,onChoose:choose,progress:options.progress,isCurrent:()=>current()&&b.image===selected});quality?.update();}refresh();
-   if(root.AelitaImageQuality&&options.imageSource)quality=root.AelitaImageQuality.mount(card,{source:()=>options.imageSource(b.image),view:()=>b.view});
+   if(root.AelitaImageQuality&&options.imageSource)quality=(root.AelitaImageQuality.mountVariants||root.AelitaImageQuality.mount)(card,{source:()=>options.imageSource(b.image),view:()=>b.view,resolve:options.imageSource});
    root.AelitaMediaView.mount(card,b.view,{api:options.api,progress:options.progress,isCurrent:current,onChange:v=>{if(v)b.view=v;else delete b.view;quality?.update();changed();},onMobileFile:file=>photo(file,current),onError:options.onError});
    langs(card,b,[['alt','Описание фотографии (alt)',false,240],['caption','Подпись',true,1000]]);
   }

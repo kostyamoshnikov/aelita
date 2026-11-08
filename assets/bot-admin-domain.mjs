@@ -24,7 +24,7 @@ export function normalizeContent(value,seed){
    const l=s.locales?.[lang];if(!l)problem('invalid_locale');
    const text=next.dynamic?'':l.format==='Entities'?formattedText(l.text,lang==='en'):string(l.text,lang+'.text',LIMITS.text,lang==='en');
    const entities=l.entities===undefined?[]:normalizeEntities(text,l.entities);
-   if(l.format==='Entities'&&!entities.length||entities.length&&(next.dynamic||l.format!=='Entities'||l.template))problem('invalid_formatting');
+   if(l.format==='Entities'&&!entities.length||entities.length&&(next.dynamic||l.format!=='Entities'))problem('invalid_formatting');
    if(!Number.isSafeInteger(l.revision)||l.revision<0||!Number.isSafeInteger(l.translationOf)||l.translationOf<0)problem('invalid_locale');
    if(!Array.isArray(l.buttons)||l.buttons.length>LIMITS.buttons)problem('too_many_buttons');
    const seen=new Set();const buttons=l.buttons.map(b=>{
@@ -41,7 +41,7 @@ export function normalizeContent(value,seed){
    // No more than two controls across, including inherited seed menus.
    for(const row of new Set(buttons.filter(b=>b.visible).map(b=>b.row)))if(buttons.filter(b=>b.visible&&b.row===row).length>2)problem('too_many_columns');
    if(l.template!==undefined&&typeof l.template!=='boolean')problem('invalid_template');
-   if(l.template){if(next.dynamic||l.format!=='Plain')problem('invalid_template');validateTemplate(text,!!next.eventId);for(const b of buttons){validateTemplate(b.label,!!next.eventId);if(b.kind==='url'&&/[{}]{2}/.test(b.target))problem('invalid_variable');}}
+   if(l.template){if(next.dynamic||!['Plain','Entities'].includes(l.format))problem('invalid_template');validateTemplateEntities(text,entities,!!next.eventId);for(const b of buttons){validateTemplate(b.label,!!next.eventId);if(b.kind==='url'&&/[{}]{2}/.test(b.target))problem('invalid_variable');}}
    next.locales[lang]={text,format:entities.length?'Entities':original&&text===original.locales[lang].text&&l.format==='Markdown'?'Markdown':'Plain',revision:l.revision,translationOf:l.translationOf,media:normalizeMedia(l.media),buttons,...(l.template?{template:true}:{}),...(entities.length?{entities}:{})};
    if(Object.hasOwn(l,'announcements')){
     if(id!=='afisha'||!next.dynamic)problem('invalid_announcements');
@@ -75,7 +75,8 @@ export function keyboard(content,screenId,lang='ru',event=null){
 export function screenView(content,id,lang='ru',event=null){
  const s=Object.hasOwn(content.screens,id)?content.screens[id]:null;if(!s)problem('screen_not_found',404);
  const local=s.locales[lang],fallback=lang==='en'&&!local.text&&!s.dynamic,l=fallback?s.locales.ru:local;
- return{id,label:s.label,text:l.template?renderTemplate(l.text,event,fallback?'ru':lang):l.text,format:l.format,media:l.media,dynamic:s.dynamic,fallback,translationStale:lang==='en'&&s.locales.en.translationOf<s.locales.ru.revision,keyboard:keyboard(content,id,lang,event),...(s.eventId?{eventId:s.eventId}:{}),...(l.entities?.length?{entities:clone(l.entities)}:{})};
+ const rendered=l.template?renderTemplateEntities(l.text,event,fallback?'ru':lang,l.entities||[]):{text:l.text,entities:l.entities||[]};
+ return{id,label:s.label,text:rendered.text,format:l.format,media:l.media,dynamic:s.dynamic,fallback,translationStale:lang==='en'&&s.locales.en.translationOf<s.locales.ru.revision,keyboard:keyboard(content,id,lang,event),...(s.eventId?{eventId:s.eventId}:{}),...(rendered.entities.length?{entities:clone(rendered.entities)}:{})};
 }
 export function applyChange(input,patch,seed){
  const content=normalizeContent(input,seed);if(!patch||typeof patch!=='object')problem('invalid_change');
@@ -90,7 +91,14 @@ export function applyChange(input,patch,seed){
   l.revision++;return normalizeContent(content,seed);
  }
  if(patch.kind==='event_bind'){if(s.dynamic)problem('dynamic_text_locked');if(patch.eventId)s.eventId=eventId(patch.eventId);else delete s.eventId;return normalizeContent(content,seed);}
- if(patch.kind==='formatted_text'){
+ if(patch.kind==='formatted_template_text'){
+  if(s.dynamic)problem('dynamic_text_locked');if(typeof patch.template!=='boolean')problem('invalid_template');
+  if(patch.eventId)s.eventId=eventId(patch.eventId);else delete s.eventId;
+  const text=formattedText(patch.text,lang==='en'),entities=patch.template?validateTemplateEntities(text,patch.entities,!!s.eventId):normalizeEntities(text,patch.entities);
+  l.text=entities.length?text:string(text,'text',LIMITS.text,lang==='en');l.format=entities.length?'Entities':'Plain';if(entities.length)l.entities=entities;else delete l.entities;
+  if(patch.template)l.template=true;else delete l.template;l.revision++;
+ }
+ else if(patch.kind==='formatted_text'){
   if(s.dynamic)problem('dynamic_text_locked');if(l.template)problem('formatted_template_locked');if(Object.hasOwn(patch,'eventId')){if(patch.eventId)s.eventId=eventId(patch.eventId);else delete s.eventId;}
   l.text=formattedText(patch.text,lang==='en');const entities=normalizeEntities(l.text,patch.entities);
   if(entities.length){l.format='Entities';l.entities=entities;}else{l.text=string(l.text,'text',LIMITS.text,lang==='en');l.format='Plain';delete l.entities;}l.revision++;
@@ -179,7 +187,7 @@ export function editEntities(before,after,values=[],edit=null){
 }
 
 // B2: optional templates preserve byte-compatible normalization of old B1 content.
-export const BOT_CONTENT_RUNTIME=4;
+export const BOT_CONTENT_RUNTIME=5;
 export const EVENT_FACTS_SCHEMA='aelita.bot-event-facts/v1';
 export const EVENT_FACTS_URL='https://api.aelita-production.ru/tickets/performances-list?bot=1';
 export const BOT_RUNTIME_STATUS_URL='https://aelita-bot.kostyamoshnikov.workers.dev/notify/status';
@@ -225,7 +233,7 @@ export function renderTemplate(text,event,lang='ru'){
  for(const k of keys)if(values[k]===undefined)problem('event_source_unavailable',503);
  const result=String(text).replace(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g,(_m,key)=>values[key]);if(result.length>LIMITS.text)problem('rendered_text_too_long');return result;
 }
-export function requiredRuntime(content){if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.entities?.length)))return 4;if(hasAfishaAnnouncements(content))return 3;return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
+export function requiredRuntime(content){if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.template&&l.entities?.length)))return 5;if(Object.values(content.screens).some(s=>Object.values(s.locales).some(l=>l.entities?.length)))return 4;if(hasAfishaAnnouncements(content))return 3;return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
 export function eventRefs(content){return[...new Set(Object.values(content.screens).filter(s=>s.eventId).map(s=>s.eventId))].sort();}
 export function selectedFacts(content,catalog){
  const normalized=normalizeEventCatalog(catalog);return eventRefs(content).map(id=>{const e=normalized.events.find(e=>e.id===id);if(!e)problem('event_not_found',409,id);return e;});
@@ -260,4 +268,19 @@ export function renderAfisha(content,catalog,lang='ru',now=Date.now()){
 }
 export function unavailableAfisha(content,lang='ru'){
  const {head,note,tail}=afishaFrame(content,lang);return[head,lang==='en'?'The event list could not be refreshed.':'Не удалось обновить список событий.',note,tail].filter(Boolean).join('\n\n');
+}
+
+// B5: a variable is an indivisible source span. Rebase style boundaries after
+// expansion; inserted values remain literal and are never parsed as markup.
+export function validateTemplateEntities(text,values=[],hasEvent=false){
+ validateTemplate(text,hasEvent);const entities=normalizeEntities(text,values);
+ const spans=[...text.matchAll(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g)];
+ for(const e of entities)for(const m of spans)for(const n of [e.offset,e.offset+e.length])if(n>m.index&&n<m.index+m[0].length)problem('format_variable_boundary');
+ return entities;
+}
+export function renderTemplateEntities(text,event,lang='ru',values=[]){
+ const entities=validateTemplateEntities(text,values,!!event),replacements=[...text.matchAll(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g)].map(m=>({start:m.index,end:m.index+m[0].length,text:renderTemplate(m[0],event,lang)}));
+ const result=renderTemplate(text,event,lang),point=n=>n+replacements.filter(r=>r.end<=n).reduce((delta,r)=>delta+r.text.length-(r.end-r.start),0);
+ const rebased=entities.map(e=>({...e,offset:point(e.offset),length:point(e.offset+e.length)-point(e.offset)})).filter(e=>e.length>0);
+ return{text:result,entities:normalizeEntities(result,rebased)};
 }

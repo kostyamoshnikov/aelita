@@ -11,3 +11,8 @@
 .ba-format-text_link[role=button]{cursor:pointer}.ba-format-text_link:focus-visible{outline:2px solid #d6b57a;outline-offset:3px}
 
 .ba-flow-dialog{width:min(1120px,96vw);max-width:96vw}.ba-flow-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ba-flow-tools label{min-width:0}.ba-flow-viewport{max-width:100%;overflow:auto;max-height:55vh;border:1px solid #77684f;margin-top:16px}.ba-flow-viewport svg{display:block}.ba-flow-viewport g[role=button]{cursor:pointer}.ba-flow-viewport g:focus-visible rect{stroke:#fff;stroke-width:3}@media(max-width:600px){.ba-flow-tools{grid-template-columns:1fr}}
+.ba-flow-viewport[data-move=true] g[role=button]{cursor:grab;touch-action:none}.ba-flow-viewport svg{max-width:none;overflow:visible}.ba-flow-viewport[data-move=true] g[role=button]:active{cursor:grabbing}.ba-flow-tools input{min-width:0;max-width:100%}.ba-flow-tools .ed-actions{grid-column:1/-1}
+
+/* D-01: readable metadata, bounded to the viewport. */
+.ba-diag-dialog{width:min(860px,calc(100% - 24px));box-sizing:border-box;max-height:calc(100dvh - 24px);overflow:auto}
+.ba-diag-dialog .ed-actions{flex-wrap:wrap}.ba-diag-card{margin:16px 0;padding:16px;min-width:0}.ba-diag-card p,.ba-diag-campaign h4{overflow-wrap:anywhere}.ba-diag-state{font-weight:700}.ba-diag-campaign{border-top:1px solid var(--ed-line,#666);margin-top:16px;padding-top:8px}.ba-diag-campaign h4{font-size:1rem}.ba-diag-campaign h5{font-size:1rem;margin-bottom:4px}
