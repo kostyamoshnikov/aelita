@@ -1,6 +1,6 @@
 // Read-only bot menu simulation. The source of button layout and event facts
 // remains the same domain model as the published bot; no network or I/O here.
-import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=169';
+import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=171';
 
 // Matches publicHandle's routeScreen in _tools/Bot/Admin/controller.mjs.
 export const ROUTE_SCREENS=Object.freeze({back:'welcome',lang_toggle:'welcome',meetings:'community',tickets_menu:'tickets_menu',afisha:'afisha',shows:'shows',shop:'shop',community:'community',book_concierge:'book_concierge',gift_card:'gift_card',about:'about',docs:'docs',collab:'collab',collab_business:'collab_business',collab_event:'collab_event',collab_venues:'collab_venues',collab_partners:'collab_partners',collab_investors:'collab_investors',collab_artists:'collab_artists',socials:'socials'});
@@ -51,7 +51,7 @@ export function createSimulation(content,{screen='welcome',lang='ru',now=()=>Dat
   const text=editedAfisha?(catalog?renderAfisha(data,catalog,locale,now()):'События не загружены. Нажмите «Загрузить события», чтобы проверить полную афишу.\n\n'+(afishaAnnouncements(data,locale)||'Анонсы без даты скрыты.')):s.dynamic?'Афиша формируется в работающем боте из событий и анонсов. Ниже показана проверка датированных событий; старые анонсы здесь не воспроизводятся.':s.format==='Markdown'?legacyPlain(s.text):s.text||'Перевод пока не заполнен.';
   let events=[];
   if(s.dynamic&&!editedAfisha&&catalog){events=catalog.events.filter(x=>!x.canceled&&x.datetime&&Date.parse(x.endsAt||x.datetime)>now()).sort((a,b)=>Date.parse(a.datetime)-Date.parse(b.datetime)).slice(0,4).map(raw=>{const e=currentEvent(raw,now()),v=e[locale];return{id:e.id,title:v.title,date:renderTemplate('{{event.date}} · {{event.time}} {{event.timezone}}',e,locale),city:v.city,status:v.status,details:v.pageURL};});}
-  return{id,lang:locale,kind:editedAfisha?'afisha_text':s.dynamic?'afisha':'screen',title:s.label,text,media:s.media?{type:s.media.type,name:s.media.name}:null,buttons:s.keyboard.inline_keyboard,events,hasCatalog:!!catalog};
+  return{id,lang:locale,kind:editedAfisha?'afisha_text':s.dynamic?'afisha':'screen',title:s.label,text,...(s.entities?.length?{entities:s.entities}:{}),media:s.media?{type:s.media.type,name:s.media.name}:null,buttons:s.keyboard.inline_keyboard,events,hasCatalog:!!catalog};
  }
  function activate(button){
   const view=get(),all=view.buttons.flat();
