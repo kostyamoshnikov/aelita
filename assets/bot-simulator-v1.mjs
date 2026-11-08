@@ -1,6 +1,6 @@
 // Read-only bot menu simulation. The source of button layout and event facts
 // remains the same domain model as the published bot; no network or I/O here.
-import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=175';
+import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=178';
 
 // Matches publicHandle's routeScreen in _tools/Bot/Admin/controller.mjs.
 export const ROUTE_SCREENS=Object.freeze({back:'welcome',lang_toggle:'welcome',meetings:'community',tickets_menu:'tickets_menu',afisha:'afisha',shows:'shows',shop:'shop',community:'community',book_concierge:'book_concierge',gift_card:'gift_card',about:'about',docs:'docs',collab:'collab',collab_business:'collab_business',collab_event:'collab_event',collab_venues:'collab_venues',collab_partners:'collab_partners',collab_investors:'collab_investors',collab_artists:'collab_artists',socials:'socials'});

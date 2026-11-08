@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=175">
+<link rel="stylesheet" href="/assets/fonts.css?v=178">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -477,9 +477,9 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 [data-adm-index],p.sec-title{scroll-margin-top:24px}
 .statistics-fees{color:var(--sand);line-height:1.55;margin:0 0 20px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=175">
-<script src="/assets/staff-handoff-v1.js?v=175"></script>
-<script src="/assets/mobile-files-m1.js?v=175"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=178">
+<script src="/assets/staff-handoff-v1.js?v=178"></script>
+<script src="/assets/mobile-files-m1.js?v=178"></script>
 </head>
 <body>
 
@@ -1058,6 +1058,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <p class="editor-note" id="paSalesNote" aria-live="polite"></p>
         <details class="adm-more"><summary>Подробнее</summary><p>Продажа закрывается сама по окончании события (если окончание не указано — через 3 часа после начала): с сайта и из бота уходят кнопки покупки, страница покупки говорит «продажа закрыта», на странице события — «Событие прошло» и просьба оставить отзыв. Закрыть раньше — эта кнопка: на сайте кнопки покупки сменятся на «Продажа закрыта» (в течение 5 минут). После автозакрытия можно «Открыть продажу снова» — тогда она открыта, пока её не закроют вручную, и сайт возвращает кнопки покупки; в боте ссылка не вернётся (бот живёт по времени из каталога) — давайте ссылку на страницу события. Купленные билеты, места и пригласительные остаются в силе.</p></details>
         <button class="btn-small" id="paSalesBtn" disabled>Закрыть продажу</button>
+        <div id="paSalesHistory" class="pa-preview" aria-live="polite"></div>
       </div>
 
       <div class="adm-card">
@@ -2825,8 +2826,38 @@ async function perfSalesStartDraft() {
   } finally { b.disabled = false; }
 }
 
+// История решений владельца: отдельное чтение без заказов, писем и платежей.
+var PA_SALES_HISTORY = { request: 0, id: null, revision: undefined };
+async function perfSalesHistoryLoad() {
+  var box = document.getElementById('paSalesHistory'), id = document.getElementById('pa-perf').value;
+  var request = ++PA_SALES_HISTORY.request;
+  PA_SALES_HISTORY.id = id; PA_SALES_HISTORY.revision = undefined;
+  if (!box) return;
+  box.textContent = id ? 'Читаем историю продаж…' : '';
+  if (!id) return;
+  try {
+    var res = await fetch(ADMIN_PERF_URL + '?sales_history=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + getToken() } });
+    var data = await res.json(), h = data.salesHistory;
+    if (request !== PA_SALES_HISTORY.request) return;
+    if (!res.ok || !h || h.version !== 1) throw new Error('history');
+    PA_SALES_HISTORY.revision = h.revision;
+    if (data.performance && data.performance.id === id) {
+      PERF_LIST = PERF_LIST.map(function (p) { return p.id === id ? data.performance : p; });
+      perfSalesBtnState(true);
+    }
+    var lines = ['История решений о продаже · время московское'];
+    if (h.legacy) lines.push('Прежняя отметка: ' + (h.legacy.closed ? 'закрыта' : 'открыта') + (h.legacy.at ? ' · ' + perfMsk(h.legacy.at) : '') + '. Полной истории до v778 нет.');
+    if (!h.entries.length) lines.push('Новых решений пока нет. Автозакрытие по времени здесь не записывается.');
+    h.entries.slice().reverse().forEach(function (e) { lines.push(perfMsk(e.at) + ' · владелец · ' + (e.previousClosed ? 'закрыта' : 'открыта') + ' → ' + (e.closed ? 'закрыта' : 'открыта')); });
+    lines.push('Показаны последние ' + h.entries.length + ' из ' + h.retained + ' сохранённых решений. Хранятся последние 100.' + (h.omitted ? ' Более ранних: ' + h.omitted + '.' : ''));
+    lines.push('Изменение действует на новые оформления. Созданные заказы и удержания не отменяются; ранее начатая оплата может завершиться. Оплаченные суммы, чеки, билеты и остатки сертификатов не меняются.');
+    box.replaceChildren(); lines.forEach(function (text) { var p = document.createElement('p'); p.textContent = text; box.appendChild(p); });
+  } catch (_) { if (request === PA_SALES_HISTORY.request) box.textContent = 'История продаж не проверена — не удалось прочитать. Обновите показ. Для истории нужна функция v778.'; }
+}
+
 // ── Закрыть / открыть продажу (pack-v592) ─────────────────────────
-function perfSalesBtnState() {
+function perfSalesBtnState(skipHistory) {
+  if (!skipHistory) perfSalesHistoryLoad();
   var b = document.getElementById('paSalesBtn');
   var id = document.getElementById('pa-perf').value;
   var p = PERF_LIST.filter(function (x) { return x.id === id; })[0];
@@ -2863,6 +2894,7 @@ async function perfSalesToggle() {
   if (!p) return;
   if (!title.trim()) { out.textContent = 'Введите название спектакля для подтверждения.'; return; }
   var close = !p.salesClosed;
+  if (PA_SALES_HISTORY.id !== id || !Number.isSafeInteger(PA_SALES_HISTORY.revision)) { out.textContent = 'Дождитесь загрузки истории продаж. Если она недоступна, обновите показ.'; return; }
   if (!confirm(p.freeEvent ? (close ? 'Закрыть регистрацию на «' + p.title + '»?' : 'Открыть регистрацию на «' + p.title + '»?') : close ? 'Закрыть продажу билетов на «' + p.title + '»?'
     : p.salesClosedAuto ? 'Продажа «' + p.title + '» закрылась сама по окончании события. Открыть снова? Закрыть её потом можно будет только вручную.'
     : 'Открыть продажу билетов на «' + p.title + '»?')) return;
@@ -2870,7 +2902,7 @@ async function perfSalesToggle() {
   b.disabled = true;
   try {
     var res = await fetch(ADMIN_PERF_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
-      body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title }) });
+      body: JSON.stringify({ action: close ? 'close_sales' : 'open_sales', performance_id: id, confirm_title: title, sales_revision: PA_SALES_HISTORY.id === id ? PA_SALES_HISTORY.revision : undefined }) });
     var data = await res.json();
     if (!res.ok) { out.textContent = data.message || errorMessage(data); b.disabled = false; return; }
     out.textContent = p.freeEvent ? (close ? 'Регистрация закрыта.' : 'Регистрация открыта.') : close ? 'Продажа закрыта.' : (p.salesClosedAuto ? 'Продажа открыта снова — закрыть её можно только вручную.' : 'Продажа открыта.');
@@ -7127,11 +7159,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=175"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=175">
-<script src="/assets/ai-pilot-v741.js?v=175"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=175"></script>
-<script src="/assets/subscription-materials-admin.js?v=175"></script>
+<script src="/assets/admin-snapshot.js?v=178"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=178">
+<script src="/assets/ai-pilot-v741.js?v=178"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=178"></script>
+<script src="/assets/subscription-materials-admin.js?v=178"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

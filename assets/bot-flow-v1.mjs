@@ -1,6 +1,28 @@
-import {scenarioMap} from './bot-simulator-v1.mjs?v=175';
+import {scenarioMap} from './bot-simulator-v1.mjs?v=178';
 
 export const FLOW_LIMIT=12000;
+const ZOOMS=[['0.5','50%'],['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']];
+// Reuse the existing shortest paths. Geometry is common to RU/EN and never
+// rewrites transitions; a back button or cycle cannot create an infinite rank.
+export function rankedPositions(content){
+ const maps=['ru','en'].map(lang=>scenarioMap(content,lang)),depths=new Map();
+ for(const map of maps)for(const item of map.items)if(item.path!==null)depths.set(item.id,Math.min(depths.get(item.id)??Infinity,item.path.length));
+ const detached=Math.max(0,...depths.values())+1,rows=new Map(),out={};
+ const ids=Object.keys(content.screens).sort((a,b)=>(depths.get(a)??detached)-(depths.get(b)??detached)||(a<b?-1:a>b?1:0));
+ for(const id of ids){const depth=depths.get(id)??detached,row=rows.get(depth)||0;rows.set(depth,row+1);out[id]={x:24+depth*270,y:28+row*112};}
+ return layoutPositions(out,ids);
+}
+const folded=value=>String(value||'').normalize('NFKC').toLocaleLowerCase('ru-RU').replace(/ё/g,'е');
+export function searchFlow(content,query){
+ const terms=folded(query).trim().slice(0,120).split(/\s+/).filter(Boolean);if(!terms.length)return[];
+ return Object.keys(content.screens).filter(id=>{const s=content.screens[id],text=folded([id,s.label,...['ru','en'].flatMap(lang=>[s.locales[lang].text,...s.locales[lang].buttons.map(b=>b.label)])].join(' '));return terms.every(term=>text.includes(term));}).sort();
+}
+export function fitFlow(graph,width,height){
+ const nodes=graph?.nodes;if(!Array.isArray(nodes)||!nodes.length||!Number.isFinite(width)||!Number.isFinite(height)||width<=48||height<=48||nodes.some(n=>!Number.isFinite(n.x)||!Number.isFinite(n.y)))return null;
+ const x=Math.min(...nodes.map(n=>n.x)),y=Math.min(...nodes.map(n=>n.y)),right=Math.max(...nodes.map(n=>n.x+220)),bottom=Math.max(...nodes.map(n=>n.y+80));
+ const zoom=Math.min(1,(width-48)/(right-x+48),(height-48)/(bottom-y+48));
+ return{zoom,left:Math.max(0,x*zoom-24),top:Math.max(0,y*zoom-24)};
+}
 export function layoutPositions(value,ids){
  if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length>40)throw{code:'invalid_flow_layout'};
  const allowed=new Set(ids);return Object.fromEntries(Object.keys(value).sort().map(id=>{const p=value[id];if(!allowed.has(id))throw{code:'flow_layout_content_changed'};if(!p||Object.keys(p).sort().join(',')!=='x,y'||!Number.isSafeInteger(p.x)||!Number.isSafeInteger(p.y)||p.x<0||p.y<0||p.x>FLOW_LIMIT||p.y>FLOW_LIMIT)throw{code:'invalid_flow_layout'};return[id,{x:p.x,y:p.y}];}));
@@ -19,7 +41,7 @@ export function connectionPatch(content,source,lang,buttonId,target){
 }
 export function mountFlow(root,options){
  let view=options.view,lang=options.lang==='en'?'en':'ru',source=options.screen||'welcome',target='',selected='',picking=false,pending=false,alive=true;
- let positions={},base={},revision=0,remote=null,ready=false,loading=false,moving=false,zoom=1,operation=null,suppress=false,drag=null,scene=null;
+ let positions={},base={},revision=0,remote=null,ready=false,loading=false,moving=false,zoom=1,operation=null,suppress=false,drag=null,scene=null,beforeArrange=null;
  const copy=x=>JSON.parse(JSON.stringify(x)),ids=()=>Object.keys(view.content.screens),clean=p=>layoutPositions(p,ids()),same=(a,b)=>JSON.stringify(clean(a))===JSON.stringify(clean(b)),dirty=()=>!same(positions,base);
  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const note=node('p');note.setAttribute('role','status');
@@ -36,12 +58,17 @@ export function mountFlow(root,options){
  action('Кнопки и действия шага',()=>options.edit(source,lang,'menu'));
  action('Пройти с этого шага',()=>options.simulate(source,lang));
  const name=node('input');name.maxLength=80;name.className='ym-disable-keys';field('Название нового шага',name);
+ const search=field('Найти исходный шаг',node('input'));search.type='search';search.maxLength=120;search.className='ym-disable-keys';search.placeholder='Название, текст или подпись кнопки';
+ const searchResults=node('div');searchResults.className='ba-flow-search-results';tools.append(searchResults);
  action('Добавить шаг',async()=>{if(!name.value.trim())throw{code:'invalid_field'};const id=options.newId();await mutate({kind:'screen_add',id,label:name.value});source=id;target='';selected='';name.value='';render();note.textContent='Шаг создан в черновике. Задайте текст и добавьте входящую кнопку перехода.';});
  const moveMode=action('Перемещать шаги',()=>{moving=!moving;picking=false;renderControls();note.textContent=moving?'Перетащите шаг или выберите его и используйте стрелки (Shift — быстрее). Сохранение расположения отдельно.':'Перемещение выключено. Схему можно прокручивать.';});
  const x=field('Координата X выбранного шага',node('input')),y=field('Координата Y выбранного шага',node('input'));for(const n of [x,y]){n.type='number';n.min='0';n.max=String(FLOW_LIMIT);n.step='10';n.className='ym-disable-keys';}
  action('Переместить выбранный шаг',()=>{move(source,Number(x.value),Number(y.value));});
- const scale=field('Масштаб схемы',node('select'));choices(scale,[['0.5','50%'],['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']],String(zoom));scale.onchange=()=>{zoom=Number(scale.value);render();};
- action('Показать выбранный шаг',()=>{const n=flowGraph(view.content,lang,positions).nodes.find(n=>n.id===source);viewport.scrollTo?.({left:Math.max(0,n.x*zoom-viewport.clientWidth/2+110*zoom),top:Math.max(0,n.y*zoom-viewport.clientHeight/2+40*zoom),behavior:'smooth'});});
+ const scale=field('Масштаб схемы',node('select'));choices(scale,ZOOMS,String(zoom));scale.onchange=()=>{zoom=Number(scale.value);render();};
+ function setZoom(value){zoom=value;const key=String(value);choices(scale,ZOOMS.some(x=>x[0]===key)?ZOOMS:[...ZOOMS,[key,'Вся схема · ≈'+Math.round(value*1000)/10+'%']],key);}
+ function centerStep(){const n=flowGraph(view.content,lang,positions).nodes.find(n=>n.id===source);viewport.scrollTo?.({left:Math.max(0,n.x*zoom-viewport.clientWidth/2+110*zoom),top:Math.max(0,n.y*zoom-viewport.clientHeight/2+40*zoom),behavior:'auto'});}
+ action('Показать выбранный шаг',centerStep);
+ const fit=action('Вся схема',()=>{const v=fitFlow(flowGraph(view.content,lang,positions),viewport.clientWidth,viewport.clientHeight);if(!v)throw{code:'invalid_field'};setZoom(v.zoom);render();viewport.scrollTo?.({left:v.left,top:v.top,behavior:'auto'});note.textContent='Показаны все шаги. Для чтения отдельного шага найдите его по названию или тексту.';});
  const importFile=field('Загрузить расположение из JSON',node('input'));importFile.type='file';importFile.accept='application/json,.json';
  importFile.onchange=async()=>{const file=importFile.files?.[0];importFile.value='';if(!file||pending||loading)return;try{if(file.size>64*1024)throw{code:'invalid_flow_layout'};const d=JSON.parse(await file.text());if(!alive)return;if(d.schema!=='aelita.bot-flow-local/v1')throw{code:'invalid_flow_layout'};positions=clean(d.positions);changed();render();note.textContent='Расположение из файла загружено в эту вкладку. Сверьте и сохраните отдельно.';}catch(e){if(alive)note.textContent=options.error(e.code?e:{code:'invalid_flow_layout'});}};
  const savedNote=node('p');savedNote.setAttribute('role','status');savedNote.className='ed-note';tools.append(savedNote);
@@ -52,6 +79,8 @@ export function mountFlow(root,options){
  });
  const loadSaved=action('Взять сохранённое расположение',async()=>{await load(true);});
  action('Автоматическая раскладка',()=>{positions={};changed();render();note.textContent='Автоматическая раскладка в этой вкладке. Для сохранения нажмите «Сохранить расположение».';});
+ const arrange=action('Разложить по переходам',()=>{if(loading)throw{code:'flow_layout_unavailable'};beforeArrange=copy(positions);positions=rankedPositions(view.content);changed(true);render();note.textContent='Шаги разложены по уровням без наложения узлов. Линии могут пересекаться. Расположение изменено только в этой вкладке: можно отменить или сохранить отдельно.';});
+ const undoArrange=action('Отменить раскладку',()=>{if(beforeArrange===null)return;positions=clean(beforeArrange);beforeArrange=null;changed();render();note.textContent='Восстановлено расположение до раскладки. Сохранение отдельно.';});
  const restore=action('Восстановить локальное расположение',()=>{const d=options.local?.read();if(!d||d.schema!=='aelita.bot-flow-local/v1')throw{code:'invalid_flow_layout'};positions=clean(d.positions);changed();render();note.textContent='Локальное расположение восстановлено. Сверьте схему перед сохранением.';});
  const download=action('Скачать расположение',()=>options.download?.({schema:'aelita.bot-flow-local/v1',revision,positions:clean(positions)}));
  const history=node('div');history.className='ed-actions';tools.append(history);
@@ -59,9 +88,9 @@ export function mountFlow(root,options){
  const viewport=node('div');viewport.className='ba-flow-viewport';viewport.setAttribute('tabindex','0');viewport.setAttribute('aria-label','Схема шагов. Прокручивайте или включите перемещение. Шаги и координаты доступны в списках выше.');
  root.replaceChildren(tools,actions,note,viewport);
  function backup(){options.local?.write({schema:'aelita.bot-flow-local/v1',revision,positions:clean(positions)});}
- function changed(){operation=null;backup();renderControls();}
+ function changed(keepArrangement=false){if(!keepArrangement)beforeArrange=null;operation=null;backup();renderControls();}
  function move(id,nx,ny){if(loading)throw{code:'flow_layout_unavailable'};if(!ids().includes(id)||!Number.isFinite(nx)||!Number.isFinite(ny)||nx<0||ny<0||nx>FLOW_LIMIT||ny>FLOW_LIMIT||!Number.isInteger(nx)||!Number.isInteger(ny))throw{code:'invalid_flow_layout'};positions={...positions,[id]:{x:nx,y:ny}};changed();render();}
- function accept(d){if(d.layoutVersion!==1||!Number.isSafeInteger(d.revision)||d.revision<0||!Array.isArray(d.history))throw{code:'flow_layout_unavailable'};positions=clean(d.positions);base=copy(positions);revision=d.revision;remote=d;operation=null;ready=true;}
+ function accept(d){if(d.layoutVersion!==1||!Number.isSafeInteger(d.revision)||d.revision<0||!Array.isArray(d.history))throw{code:'flow_layout_unavailable'};positions=clean(d.positions);base=copy(positions);revision=d.revision;remote=d;operation=null;beforeArrange=null;ready=true;}
  async function load(explicit=false){
   if(!options.loadLayout)return;loading=true;renderControls();try{const d=await options.loadLayout();if(!alive)return;accept(d);render();if(explicit)note.textContent='Сохранённое расположение загружено. Несохранённую локальную копию можно восстановить отдельно.';}catch(e){if(alive){ready=false;note.textContent=options.error(e);}}finally{loading=false;if(alive)renderControls();}
  }
@@ -69,14 +98,20 @@ export function mountFlow(root,options){
   moveMode.setAttribute('aria-pressed',String(moving));viewport.setAttribute('data-move',String(moving));
   savedNote.textContent=(dirty()?'Расположение изменено только в этой вкладке. ':'')+(ready?'Сохранённая ревизия: '+revision+(remote?.savedAt?' · '+new Date(remote.savedAt).toLocaleString('ru-RU'):'')+'.':loading?'Читаем расположение…':'Сохранение расположения недоступно. Можно скачать локальную копию.')+' Общее для RU/EN; переходы и тексты сохраняются отдельно.';
   saveLayout.disabled=pending||loading||!ready||!dirty()||options.canSaveLayout===false;loadSaved.disabled=pending||loading||!options.loadLayout;restore.disabled=pending||loading||!options.local?.read();download.disabled=pending||!options.download;moveMode.disabled=pending||loading;importFile.disabled=pending||loading;x.disabled=y.disabled=pending||loading;
+  arrange.disabled=pending||loading;undoArrange.disabled=pending||loading||beforeArrange===null;fit.disabled=pending||loading;search.disabled=pending;
  }
- async function mutate(patch){pending=true;for(const b of root.querySelectorAll('button,select,input'))b.disabled=true;try{const next=await options.change(view,patch);options.changed(next);if(!alive)return;view=next;render();}finally{pending=false;if(alive){for(const b of root.querySelectorAll('button,select,input'))b.disabled=false;renderControls();}}}
+ async function mutate(patch){pending=true;for(const b of root.querySelectorAll('button,select,input'))b.disabled=true;try{const next=await options.change(view,patch);options.changed(next);if(!alive)return;view=next;beforeArrange=null;render();}finally{pending=false;if(alive){for(const b of root.querySelectorAll('button,select,input'))b.disabled=false;renderControls();}}}
+ function renderSearch(){
+  searchResults.replaceChildren();const ids=searchFlow(view.content,search.value),summary=node('p',search.value.trim()?'Найдено шагов: '+ids.length+'.':'Поиск по RU/EN: выберите результат, чтобы показать исходный шаг.');summary.setAttribute('role','status');searchResults.append(summary);
+  for(const id of ids){const b=node('button',view.content.screens[id].label);b.type='button';b.className='ed-quiet';b.setAttribute('aria-pressed',String(id===source));b.disabled=pending;b.onclick=()=>{if(!alive||pending||!view.content.screens[id])return;source=id;selected='';picking=false;if(zoom<.5)setZoom(1);render();centerStep();viewport.scrollIntoView?.({block:'nearest'});scene.groups.get(id)?.focus?.({preventScroll:true});};searchResults.append(b);}
+ }
+ search.oninput=renderSearch;
  function render(){
   if(!alive)return;const graph=flowGraph(view.content,lang,positions),byId=new Map(graph.nodes.map(n=>[n.id,n]));if(!byId.has(source))source='welcome';
   choices(sources,graph.nodes.map(n=>[n.id,n.label]),source);const list=view.content.screens[source].locales[lang].buttons;if(!list.some(b=>b.id===selected))selected='';
   choices(buttons,[['','Выберите кнопку'],...list.map(b=>[b.id,b.label+(b.visible?'':' · скрыта')])],selected);choices(targets,[['','Выберите назначение'],...graph.nodes.map(n=>[n.id,n.label])],target);
   const old=list.find(b=>b.id===selected);note.textContent=(old?'Текущее назначение: '+({screen:'Шаг',route:'Существующее действие',url:'Ссылка',event:'Данные события',language:'Смена языка'}[old.kind]||'Действие')+' → '+(view.content.screens[old.target]?.label||old.target)+'. Новый переход заменит только назначение этой кнопки. ':'')+'Без пути из меню: '+graph.unreachable.length+'. Возврат в меню добавляется ботом. Схема не проверяет внешние сервисы.';
-  x.value=String(byId.get(source).x);y.value=String(byId.get(source).y);renderControls();
+  x.value=String(byId.get(source).x);y.value=String(byId.get(source).y);renderControls();renderSearch();
   viewport.replaceChildren();const ns='http://www.w3.org/2000/svg',svg=(tag,attrs={})=>{const e=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;};
   const canvas=svg('svg',{width:graph.width*zoom,height:graph.height*zoom,viewBox:'0 0 '+graph.width+' '+graph.height,role:'group','aria-label':'Шаги и переходы'}),edgeNodes=[],groups=new Map();
   function geometry(){for(const [id,g]of groups){const n=byId.get(id);g.setAttribute('transform',`translate(${n.x} ${n.y})`);}for(const {edge,path,arrow}of edgeNodes){const a=byId.get(edge.from),b=byId.get(edge.to);path.setAttribute('d',`M${a.x+220},${a.y+40} C${a.x+260},${a.y+40} ${b.x-30},${b.y+40} ${b.x},${b.y+40}`);arrow.setAttribute('d',`M${b.x-7},${b.y+36} L${b.x},${b.y+40} L${b.x-7},${b.y+44}`);}}
