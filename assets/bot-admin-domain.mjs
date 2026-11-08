@@ -1,6 +1,6 @@
 // Shared validation and rendering data. No network, credentials or customer records.
 export const CONTENT_SCHEMA='aelita.bot-content/v1';
-export const LIMITS=Object.freeze({screens:40,buttons:30,text:4000,contentBytes:128*1024,mediaBytes:10*1024*1024,members:12,history:60});
+export const LIMITS=Object.freeze({screens:40,buttons:30,text:4000,announcements:1200,contentBytes:128*1024,mediaBytes:10*1024*1024,members:12,history:60});
 export function problem(code,status=400,field){throw Object.assign(new Error(code),{code,status,field});}
 export function clone(v){return JSON.parse(JSON.stringify(v));}
 export function string(v,field,max,empty=false){if(typeof v!=='string'||(!empty&&!v.trim())||v.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(v))problem('invalid_field',400,field);return v.trim();}
@@ -41,6 +41,12 @@ export function normalizeContent(value,seed){
    if(l.template!==undefined&&typeof l.template!=='boolean')problem('invalid_template');
    if(l.template){if(next.dynamic||l.format!=='Plain')problem('invalid_template');validateTemplate(text,!!next.eventId);for(const b of buttons){validateTemplate(b.label,!!next.eventId);if(b.kind==='url'&&/[{}]{2}/.test(b.target))problem('invalid_variable');}}
    next.locales[lang]={text,format:original&&text===original.locales[lang].text&&l.format==='Markdown'?'Markdown':'Plain',revision:l.revision,translationOf:l.translationOf,media:normalizeMedia(l.media),buttons,...(l.template?{template:true}:{})};
+   if(Object.hasOwn(l,'announcements')){
+    if(id!=='afisha'||!next.dynamic)problem('invalid_announcements');
+    const note=string(l.announcements,'announcements',LIMITS.announcements,true);
+    if(note.includes('{{')||note.includes('}}'))problem('invalid_announcements');
+    next.locales[lang].announcements=note;
+   }
   }
   screens[id]=next;
  }
@@ -76,6 +82,11 @@ export function applyChange(input,patch,seed){
   content.screens[patch.id]={id:patch.id,label:string(patch.label,'label',80),builtin:false,dynamic:false,locales:{ru:{text:'Новый раздел',format:'Plain',revision:0,translationOf:0,media:null,buttons:[]},en:{text:'',format:'Plain',revision:0,translationOf:0,media:null,buttons:[]}}};return normalizeContent(content,seed);
  }
  const s=Object.hasOwn(content.screens,patch.screen)?content.screens[patch.screen]:null;if(!s)problem('screen_not_found',404);const lang=patch.lang==='en'?'en':'ru',l=s.locales[lang];
+ if(patch.kind==='announcements'){
+  if(s.id!=='afisha'||!s.dynamic)problem('invalid_announcements');
+  if(patch.text===null)delete l.announcements;else l.announcements=string(patch.text,'announcements',LIMITS.announcements,true);
+  l.revision++;return normalizeContent(content,seed);
+ }
  if(patch.kind==='event_bind'){if(s.dynamic)problem('dynamic_text_locked');if(patch.eventId)s.eventId=eventId(patch.eventId);else delete s.eventId;return normalizeContent(content,seed);}
  if(patch.kind==='template_text'){
   if(s.dynamic)problem('dynamic_text_locked');if(typeof patch.template!=='boolean')problem('invalid_template');
@@ -119,7 +130,7 @@ export function contentSummary(before,after){
 }
 
 // B2: optional templates preserve byte-compatible normalization of old B1 content.
-export const BOT_CONTENT_RUNTIME=2;
+export const BOT_CONTENT_RUNTIME=3;
 export const EVENT_FACTS_SCHEMA='aelita.bot-event-facts/v1';
 export const EVENT_FACTS_URL='https://api.aelita-production.ru/tickets/performances-list?bot=1';
 export const BOT_RUNTIME_STATUS_URL='https://aelita-bot.kostyamoshnikov.workers.dev/notify/status';
@@ -165,11 +176,39 @@ export function renderTemplate(text,event,lang='ru'){
  for(const k of keys)if(values[k]===undefined)problem('event_source_unavailable',503);
  const result=String(text).replace(/\{\{\s*([a-z][a-z0-9_.]*)\s*\}\}/g,(_m,key)=>values[key]);if(result.length>LIMITS.text)problem('rendered_text_too_long');return result;
 }
-export function requiredRuntime(content){return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
+export function requiredRuntime(content){if(hasAfishaAnnouncements(content))return 3;return Object.values(content.screens).some(s=>s.eventId||Object.values(s.locales).some(l=>l.template||l.buttons.some(b=>b.kind==='event')))?2:1;}
 export function eventRefs(content){return[...new Set(Object.values(content.screens).filter(s=>s.eventId).map(s=>s.eventId))].sort();}
 export function selectedFacts(content,catalog){
  const normalized=normalizeEventCatalog(catalog);return eventRefs(content).map(id=>{const e=normalized.events.find(e=>e.id===id);if(!e)problem('event_not_found',409,id);return e;});
 }
 export function validateEventViews(content,catalog,now=Date.now()){
  const events=selectedFacts(content,catalog).map(e=>currentEvent(e,now));for(const s of Object.values(content.screens))for(const lang of ['ru','en'])screenView(content,s.id,lang,s.eventId?currentEvent(events.find(e=>e.id===s.eventId),now):null);return events;
+}
+
+// B3: omission keeps the inherited afisha. An explicit empty string hides its
+// undated announcements for this language only. Event facts remain read-only.
+export function afishaAnnouncements(content,lang='ru'){
+ const local=content?.screens?.afisha?.locales?.[lang==='en'?'en':'ru'];
+ return local&&Object.hasOwn(local,'announcements')?local.announcements:null;
+}
+export function hasAfishaAnnouncements(content){return ['ru','en'].some(lang=>afishaAnnouncements(content,lang)!==null);}
+function afishaFrame(content,lang){
+ const en=lang==='en',note=afishaAnnouncements(content,lang);
+ if(note===null)problem('legacy_afisha');
+ return{head:en?"🎭 What's on":'🎭 Афиша',note:note?(en?'Coming soon\n':'Анонсы без даты\n')+note:'',tail:(en?'All events: ':'Все показы: ')+'https://aelita-production.ru/'+(en?'en/':'')+'tickets/'};
+}
+export function renderAfisha(content,catalog,lang='ru',now=Date.now()){
+ lang=lang==='en'?'en':'ru';const {head,note,tail}=afishaFrame(content,lang),doc=normalizeEventCatalog(catalog);
+ const upcoming=doc.events.filter(e=>!e.canceled&&e.datetime&&Date.parse(e.endsAt||e.datetime)>now).sort((a,b)=>Date.parse(a.datetime)-Date.parse(b.datetime)),blocks=[];
+ for(const event of upcoming.slice(0,4)){
+  const e=currentEvent(event,now),l=e[lang],date=renderTemplate('{{event.date}} · {{event.time}} {{event.timezone}}',e,lang);
+  const block=[l.title,date+(l.city?' · '+l.city:''),[l.venue,l.format,l.price,l.status].filter(Boolean).join(' · '),l.pageURL].filter(Boolean).join('\n');
+  if([head,...blocks,block,note,tail].filter(Boolean).join('\n\n').length>LIMITS.text)break;
+  blocks.push(block);
+ }
+ const empty=lang==='en'?'New dates have not been announced yet.':'Новые даты пока не объявлены.';
+ return [head,...(blocks.length?blocks:[empty]),note,tail].filter(Boolean).join('\n\n');
+}
+export function unavailableAfisha(content,lang='ru'){
+ const {head,note,tail}=afishaFrame(content,lang);return[head,lang==='en'?'The event list could not be refreshed.':'Не удалось обновить список событий.',note,tail].filter(Boolean).join('\n\n');
 }
