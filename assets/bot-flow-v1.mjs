@@ -1,4 +1,4 @@
-import {scenarioMap} from './bot-simulator-v1.mjs?v=194';
+import {scenarioMap} from './bot-simulator-v1.mjs?v=195';
 
 export const FLOW_LIMIT=12000;
 const ZOOMS=[['0.5','50%'],['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']];

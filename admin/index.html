@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=194">
+<link rel="stylesheet" href="/assets/fonts.css?v=196">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -483,11 +483,12 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 @media(max-width:400px){#paDeadlineFields{padding:10px 8px}#paDeadlineFields input[type="datetime-local"]{padding:10px 6px;font-size:0.8125rem}}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=194">
-<script src="/assets/staff-handoff-v1.js?v=194"></script>
-<script src="/assets/mobile-files-m1.js?v=194"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=194"><script defer src="/assets/delivery-admin-v1.js?v=194"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=194"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=196">
+<script src="/assets/staff-handoff-v1.js?v=196"></script>
+<script src="/assets/mobile-files-m1.js?v=196"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=196"><script defer src="/assets/delivery-admin-v1.js?v=196"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=196"></script><script src="/assets/staff-session-v796.js?v=196"></script>
+</head>
 <body>
 
 <nav>
@@ -506,18 +507,18 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <p class="eyebrow">Только для команды</p>
     <h1 style="margin-bottom:28px">Вход в админку</h1>
     <div class="field">
-      <label for="admin-password">Пароль</label>
+      <label for="staff-login">Логин или электронная почта</label><input class="ym-disable-keys" id="staff-login" type="text" autocomplete="username" maxlength="254"><label for="admin-password">Пароль</label>
       <div class="pw-row">
         <input class="ym-disable-keys" type="password" id="admin-password" autocomplete="current-password" autofocus>
         <button type="button" class="pw-toggle" id="pwToggle">Показать</button>
       </div>
     </div>
-    <!-- pack-v694: пароль общий — имя нужно, чтобы в заявлениях было видно, кто решил -->
+    <details id="legacy-admin-gate"><summary>Вход по прежнему общему паролю</summary><p>Доступен до перехода владельца на личный вход.</p>
     <div class="field">
       <label for="admin-name">Ваше имя (для журнала решений)</label>
       <select id="admin-name-choice" aria-label="Имя сотрудника"><option>Екатерина</option><option>Константин</option><option value="__other">Другое имя…</option></select><input class="ym-disable-keys" type="text" id="admin-name" maxlength="40" autocomplete="name" placeholder="Введите имя" hidden>
     </div>
-    <button class="btn" id="loginBtn">Войти →</button>
+    <button class="btn" type="button" id="legacyLoginBtn">Войти по общему паролю</button></details><button class="btn" id="loginBtn">Войти →</button><p><a href="/admin/crm/">CRM и управление сотрудниками</a></p>
     <p class="err" id="loginErr"></p>
   </div>
 </div>
@@ -1421,7 +1422,7 @@ var STORAGE_KEY = 'aelita_admin_token';
 var adminTokenMemory = '';
 function getToken() { try { return localStorage.getItem(STORAGE_KEY) || adminTokenMemory; } catch (e) { return adminTokenMemory; } }
 function setToken(t) { adminTokenMemory=t;try { localStorage.setItem(STORAGE_KEY,t);sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} }
-function clearToken() { if(window.AelitaDeliveryAdmin)window.AelitaDeliveryAdmin.close();if(window.AelitaCommercialAdmin)window.AelitaCommercialAdmin.close();adminTokenMemory='';try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
+function clearToken() { if(window.AelitaStaffSession)window.AelitaStaffSession.clear(); if(window.AelitaDeliveryAdmin)window.AelitaDeliveryAdmin.close();if(window.AelitaCommercialAdmin)window.AelitaCommercialAdmin.close();adminTokenMemory='';try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
 window.addEventListener('storage',function(e){if(e.key===STORAGE_KEY&&!e.newValue){adminTokenMemory='';showGate();}});
 
 function fmtMoney(n) {
@@ -1462,6 +1463,7 @@ var ERRORS = {
   bad_amount: 'Укажите сумму больше нуля.',
   // login
   invalid_password: 'Неверный пароль.',
+  personal_login_required: 'Общий пароль отключён. Войдите по личному логину или почте.',
   // site-edit
   missing_page: 'Укажите страницу.',
   missing_old_text: 'Укажите текущий текст, который нужно найти.',
@@ -6805,21 +6807,48 @@ function showData() {
 
 document.getElementById('refreshBtn').addEventListener('click', function () { loadData({ refresh: true }); });
 document.getElementById('retryBtn').addEventListener('click', function () { loadData(); });
-document.getElementById('logoutBtn').addEventListener('click', function () {
-  clearToken();
-  showGate();
+document.getElementById('logoutBtn').addEventListener('click', async function () {
+  var session=window.AelitaStaffSession&&window.AelitaStaffSession.read();
+  if(session&&session.crmToken){try{await staffCall({action:'logout',request_id:crypto.randomUUID()},session.crmToken);}catch(e){alert(e.message);return;}}
+  clearToken();showGate();
 });
 
 function hideErr() { document.getElementById('loginErr').style.display = 'none'; }
 function showErr(msg) { var el = document.getElementById('loginErr'); el.textContent = msg; el.style.display = 'block'; }
 
-async function doLogin() {
+
+async function staffCall(body,token){
+  var res=await fetch('https://api.aelita-production.ru/crm',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},token?{Authorization:'Bearer '+token}:{}),cache:'no-store',body:JSON.stringify(body)});
+  var data=await res.json();if(!res.ok){var error=Error(data.message||'Не удалось выполнить вход. Попробуйте позже.');error.status=res.status;throw error;}return data;
+}
+async function doLogin(){
+  hideErr();var login=document.getElementById('staff-login').value.trim(),password=document.getElementById('admin-password').value,btn=document.getElementById('loginBtn');
+  if(!login||!password){showErr('Введите логин или почту и пароль.');return;}
+  btn.disabled=true;
+  try{var data=await staffCall({action:'login',login:login,password:password});window.AelitaStaffSession.set(data);document.getElementById('admin-password').value='';
+    if(data.user.mustChange||!data.user.emailVerified){location.assign('/admin/crm/');return;}
+    if(!data.adminToken){showErr(data.user.adminAccess?'Не удалось получить сеанс админки. Войдите в CRM и повторите попытку позже.':'У вашей учётной записи нет доступа к админке. В CRM можно войти по ссылке ниже.');return;}
+    setToken(data.adminToken);setAdminName(data.user.name);showData();
+  }catch(e){showErr(e.message);}finally{btn.disabled=false;}
+}
+async function startStaffAdmin(){
+  var session=window.AelitaStaffSession&&window.AelitaStaffSession.read();
+  if(session&&session.crmToken){
+    try{var data=await staffCall({action:'staff_admin_session'},session.crmToken);window.AelitaStaffSession.set({token:session.crmToken,adminToken:data.adminToken,user:data.user});setToken(data.adminToken);setAdminName(data.user.name);showData();}
+    catch(e){if(e.status===401)clearToken();else{adminTokenMemory='';try{localStorage.removeItem(STORAGE_KEY);}catch(_){}}showGate();showErr(e.message);}
+  }else if(getToken())showData();else showGate();
+}
+
+document.getElementById('legacyLoginBtn').addEventListener('click',doLegacyLogin);
+document.getElementById('staff-login').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+async function doLegacyLogin() {
   hideErr();
   if(document.getElementById('admin-name-choice').value==='__other'&&!document.getElementById('admin-name').value.trim()){showErr('Введите имя для подписи действий.');document.getElementById('admin-name').focus();return;}
   if (!ADMIN_LOGIN_URL) { showErr('Админка ещё не подключена — заполните ADMIN_LOGIN_URL после деплоя _tools/Admin/.'); return; }
   var password = document.getElementById('admin-password').value;
   if (!password) { showErr('Введите пароль.'); return; }
-  var btn = document.getElementById('loginBtn');
+  var btn = document.getElementById('legacyLoginBtn');
   var original = btn.textContent;
   btn.disabled = true; btn.textContent = 'Входим…';
   try {
@@ -6992,7 +7021,7 @@ if (CO_MAIL_FOCUS && !getToken()) {
   coGateNote.className = 'handoff-note'; coGateNote.textContent = 'После входа покажем актуальную запись из письма.';
   coGate.insertBefore(coGateNote, coGate.firstChild);
 }
-if (getToken()) { showData(); } else { showGate(); }
+startStaffAdmin();
 </script>
 
 <script>
@@ -7261,11 +7290,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=194"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=194">
-<script src="/assets/ai-pilot-v741.js?v=194"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=194"></script>
-<script src="/assets/subscription-materials-admin.js?v=194"></script>
+<script src="/assets/admin-snapshot.js?v=196"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=196">
+<script src="/assets/ai-pilot-v741.js?v=196"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=196"></script>
+<script src="/assets/subscription-materials-admin.js?v=196"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

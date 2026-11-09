@@ -11,34 +11,54 @@
       ]
     }
   ],
-  "release": 795,
+  "release": 798,
   "removed_files": [],
   "changed_files": [
     {
-      "path": "en/online-invitation/index.html",
-      "sha256": "afb89ef2c820d9afed573be345293c7f4686f5729346aefbe890ea904b863a47"
+      "path": "byl/index.html",
+      "sha256": "052d9883c34e7d365d0863ce06157cbd6d680504ba3e3d1f6080fd76d0ff636f"
     },
     {
-      "path": "en/tarusa-theatre-tour/index.html",
-      "sha256": "08054a0048413619b19c8689f41a949201d5957872d9395a96d917fd9eee3898"
+      "path": "en/byl/index.html",
+      "sha256": "fa57ca1728919ddd9221a7753ed2696fb560a01b7f4587223af6e81ccbe99c12"
     },
     {
-      "path": "tarusa-theatre-tour/index.html",
-      "sha256": "a78b60c9da92e1e5b144f2609a2466f2065de3d6ca1743526a1b62feabf69f3a"
+      "path": "en/index.html",
+      "sha256": "386dcebda5f6ee972bbbc9c04ab93f2ae2f040cf7d2f3e311d509b31bf30a125"
+    },
+    {
+      "path": "en/iov/index.html",
+      "sha256": "0be98a4778275ea0e43bdda431c47b687302494dc9238cb69635abe434cbdfde"
+    },
+    {
+      "path": "en/tickets/index.html",
+      "sha256": "4808d36a4ee6601362cbdd80ab7d40a3fc8f0c7ee1bf5bae02c9878f075f7fd1"
+    },
+    {
+      "path": "index.html",
+      "sha256": "b14a18d5323c264587f18931b1b6c1a9638fa2cf8a314ad6781048ac95f07130"
+    },
+    {
+      "path": "iov/index.html",
+      "sha256": "2505f7dbe1ec1c177ece1a73dd2118ccb6575aa2a6d16ec2291d1b5a61696a03"
+    },
+    {
+      "path": "tickets/index.html",
+      "sha256": "a671db2f85036e9df1913d10f79216b83239a9aa7668d1416eef3b6b51fce92e"
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "6d6d6570a6e59d0c03fce965d5669be6290a264896778d16b338362df53abff4",
+  "changelog_sha256": "3df0c49f9aa31a6b878e17626a20798a4476aca6dfacf29a7f08a29d1398e27b",
   "recent_versions": [
+    798,
+    797,
+    796,
     795,
     794,
     793,
     792,
     791,
     790,
-    789,
-    788,
-    787,
-    786
+    789
   ]
 }
