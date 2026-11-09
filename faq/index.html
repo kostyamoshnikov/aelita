@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="section-nav-page">
 <head>
 <meta charset="UTF-8">
 <link rel="manifest" href="/manifest.json">
@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="Частые вопросы — AELITA PRODUCTION">
 <meta name="twitter:description" content="Частые вопросы о билетах, подписке AELITA COMMUNITY, возрасте, Пушкинской карте и связи с AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=190">
-<link rel="stylesheet" href="/assets/style.css?v=190">
+<link rel="stylesheet" href="/assets/fonts.css?v=191">
+<link rel="stylesheet" href="/assets/style.css?v=191">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,7 +80,8 @@
 .faq-more p{color:var(--sand);font-size:0.875rem;margin-bottom:18px}
 a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=190">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=191">
+<link rel="stylesheet" href="/assets/section-navigation.css?v=191">
 </head>
 <body>
 
@@ -119,15 +120,19 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 <section style="padding:60px 0 100px">
   <div class="wrap w-760">
 
-    <div class="faq-toc" role="navigation" aria-label="Разделы">
+    <div class="section-nav-bar" id="faqSectionBar" data-section-nav data-section-track>
+      <button class="section-nav-arrow" type="button" data-scroll="-1" aria-label="Листать влево" aria-controls="faqSections" hidden>‹</button>
+      <div class="faq-toc section-nav-rail" id="faqSections" data-section-rail role="navigation" aria-label="Разделы">
       <a href="#bilety">Билеты</a>
       <a href="#vozvrat">Возврат и перенос</a>
       <a href="#na-spektakle">На спектакле</a>
       <a href="#podpiska">Подписка и подарки</a>
       <a href="#svyaz">Новости и связь</a>
     </div>
+      <button class="section-nav-arrow" type="button" data-scroll="1" aria-label="Листать вправо" aria-controls="faqSections" hidden>›</button>
+    </div>
 
-    <h2 class="faq-group" id="bilety">Билеты</h2>
+    <h2 class="faq-group" data-section-target id="bilety">Билеты</h2>
 
     <div class="faq-item reveal">
       <h3>Где купить билеты на спектакль?</h3>
@@ -177,7 +182,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       <p>По ссылке в письме с подтверждением регистрации или в <a href="/account">личном кабинете</a>, в разделе «Мои регистрации на мероприятия». Место освободится для другого человека.</p>
     </div>
 
-    <h2 class="faq-group" id="vozvrat">Возврат и перенос</h2>
+    <h2 class="faq-group" data-section-target id="vozvrat">Возврат и перенос</h2>
 
     <div class="faq-item reveal">
       <h3>Как вернуть билет и сколько денег вернётся?</h3>
@@ -219,7 +224,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="na-spektakle">На спектакле</h2>
+    <h2 class="faq-group" data-section-target id="na-spektakle">На спектакле</h2>
 
     <div class="faq-item reveal">
       <h3>Можно ли прийти после начала?</h3>
@@ -254,7 +259,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="podpiska">Подписка и подарки</h2>
+    <h2 class="faq-group" data-section-target id="podpiska">Подписка и подарки</h2>
 
     <div class="faq-item reveal">
       <h3>Как пользоваться подарочной картой?</h3>
@@ -294,7 +299,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="svyaz">Новости и связь</h2>
+    <h2 class="faq-group" data-section-target id="svyaz">Новости и связь</h2>
 
     <div class="faq-item reveal" id="novosti">
       <h3>Как узнать о новых датах и премьерах?</h3>
@@ -426,8 +431,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 </div>
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
-<script src="/assets/analytics-events.js?v=190"></script>
-<script src="/assets/main.js?v=190"></script>
+<script src="/assets/analytics-events.js?v=191"></script>
+<script src="/assets/section-navigation.js?v=191"></script>
+<script src="/assets/main.js?v=191"></script>
 
 <script>
   if ('serviceWorker' in navigator) {

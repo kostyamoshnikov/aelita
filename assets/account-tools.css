@@ -21,13 +21,7 @@
 .sub-materials li { margin-block: .65rem; }
 .sub-materials a { color: var(--gold); overflow-wrap: anywhere; }
 
-html:has(#accountSectionBar){scroll-padding-top:var(--cab-scroll,168px)}
-.acc-sticky{position:sticky;top:var(--cab-header,0);z-index:30;background:var(--ink);border-bottom:1px solid rgba(201,184,163,.22);margin:0 0 24px;isolation:isolate}
-.acc-sticky .acc-nav{margin:0;padding:8px 42px;gap:8px;mask-image:none;-webkit-mask-image:none;scroll-padding-inline:42px}
-.acc-sticky .acc-nav a{letter-spacing:.07em}
-.acc-nav-arrow{position:absolute;z-index:1;top:8px;left:0;width:38px;min-height:40px;border:1px solid rgba(201,184,163,.3);background:var(--ink);color:var(--gold);font:1.4rem/1 sans-serif;cursor:pointer}
-.acc-nav-arrow[data-scroll="1"]{left:auto;right:0}
-.acc-nav-arrow[hidden],.profile-extras[hidden],.acc-email-change[hidden],.city-suggestions[hidden]{display:none}
+.profile-extras[hidden],.acc-email-change[hidden],.city-suggestions[hidden]{display:none}
 #content :is(#tickets,#regs,#subscriptions,#buys,#settings,#password,#documents,#data,#delete){scroll-margin-top:12px}
 .acc-email-change{margin:22px 0 0;border:1px solid rgba(201,184,163,.28);padding:14px 16px;max-width:560px}
 .acc-email-change summary{cursor:pointer;color:var(--gold)}
@@ -41,7 +35,6 @@ html:has(#accountSectionBar){scroll-padding-top:var(--cab-scroll,168px)}
 .birthday-consent{margin:6px 0;align-items:start}
 .city-suggestions{display:flex;gap:6px;flex-wrap:wrap}
 .city-suggestions .contract-btn{letter-spacing:0;text-transform:none;text-align:left;overflow-wrap:anywhere}
-html.a11y .acc-sticky,html.a11y .acc-nav-arrow{background:var(--a11y-bg);color:var(--a11y-fg)}
 html.a11y .profile-extras input[type="date"]{color-scheme:light}
 
 #giftCards .gift-item{display:grid;gap:11px;min-width:0;padding:16px;border:1px solid rgba(201,184,163,.24);margin:10px 0 16px}
@@ -51,3 +44,10 @@ html.a11y .profile-extras input[type="date"]{color-scheme:light}
 .gift-actions{display:flex;flex-wrap:wrap;gap:8px}
 .gift-actions .contract-btn{margin:0;min-height:40px;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:normal}
 .gift-item summary{cursor:pointer;color:var(--sand);font-size:.8rem}
+
+/* Account explanations stay secondary; details are available without crowding the form. */
+.profile-help{color:var(--sand);font-size:.8125rem;line-height:1.6;margin:6px 0 2px}
+.profile-help summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.profile-help p{margin:8px 0 0}
+.birthday-consent span{font-size:.875rem;line-height:1.55}
+.profile-extras .acc-hint{margin:0;font-size:.8125rem;line-height:1.55}

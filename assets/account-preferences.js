@@ -72,26 +72,8 @@
   }
 
   function sticky() {
-    var header = document.querySelector('nav .nav-in').closest('nav'), bar = $('accountSectionBar'), rail = bar.querySelector('.acc-nav');
-    var arrows = bar.querySelectorAll('.acc-nav-arrow');
-    function measure() {
-      var top = Math.ceil(header.getBoundingClientRect().height), height = Math.ceil(bar.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--cab-header', top + 'px');
-      document.documentElement.style.setProperty('--cab-scroll', top + height + 'px');
-      arrows[0].hidden = rail.scrollLeft < 4;
-      arrows[1].hidden = rail.scrollWidth - rail.clientWidth - rail.scrollLeft < 4;
-    }
-    arrows.forEach(function (button) {
-      button.addEventListener('click', function () { rail.scrollBy({ left: Number(button.dataset.scroll) * rail.clientWidth * .7, behavior: 'smooth' }); });
-    });
-    measure();
-    rail.addEventListener('scroll', measure, { passive: true });
-    window.addEventListener('resize', measure);
-    if (window.ResizeObserver) {
-      var observer = new ResizeObserver(measure);
-      observer.observe(header); observer.observe(rail);
-    }
-    new MutationObserver(measure).observe(rail, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
+    return window.AelitaSectionNavigation.init($('accountSectionBar'));
   }
+
   window.AelitaPreferences = { mount: mount, fields: fields, sticky: sticky };
 })();

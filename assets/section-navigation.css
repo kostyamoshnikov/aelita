@@ -1,0 +1,17 @@
+/* Shared section bar: account and FAQ. Arrows own their columns. */
+html.section-nav-page{overflow-x:clip;scroll-padding-top:var(--section-nav-offset,168px)}
+html.section-nav-page body{overflow-x:clip}
+.section-nav-bar{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;align-items:center;position:sticky;top:var(--section-nav-top,0px);z-index:30;background:var(--ink);border-bottom:1px solid rgba(201,184,163,.22);margin:0 0 24px;isolation:isolate}
+.section-nav-bar .section-nav-rail{position:relative;display:flex;flex-wrap:nowrap;grid-column:2;grid-row:1;min-width:0;overflow-x:auto;margin:0;padding:8px 2px;gap:8px;mask-image:none;-webkit-mask-image:none;scroll-padding-inline:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;border:0}
+.section-nav-rail::-webkit-scrollbar{display:none}
+.section-nav-bar .section-nav-rail a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;max-width:100%;padding:8px 16px;border:1px solid rgba(214,181,122,.45);border-radius:999px;color:var(--bone);font-family:'Montserrat',sans-serif;font-size:.6875rem;line-height:1.4;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;text-align:center;white-space:normal;overflow-wrap:anywhere;box-sizing:border-box}
+.section-nav-bar .section-nav-rail a[hidden]{display:none}
+.section-nav-bar .section-nav-rail a.is-active{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.section-nav-arrow{position:static;grid-column:1;grid-row:1;display:block;width:44px;min-height:44px;border-radius:50%;border:1px solid rgba(201,184,163,.3);background:var(--ink);color:var(--gold);font:1.4rem/1 sans-serif;cursor:pointer}
+.section-nav-arrow[data-scroll="1"]{grid-column:3}
+.section-nav-arrow[hidden]{display:block;visibility:hidden;pointer-events:none}
+.section-nav-arrow:focus-visible,.section-nav-rail a:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+@media(hover:hover){.section-nav-arrow:hover,.section-nav-rail a:hover{border-color:var(--gold)}}
+[data-section-target]{scroll-margin-top:12px}
+html.a11y .section-nav-bar,html.a11y .section-nav-arrow{background:var(--a11y-bg);color:var(--a11y-fg)}
+@media(prefers-reduced-motion:reduce){.section-nav-rail{scroll-behavior:auto}}

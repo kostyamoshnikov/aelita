@@ -23,9 +23,9 @@ const USAGES=Object.freeze({
   Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:390,height:488})
  ]),note:'На компьютере обложка занимает 60% окна, а её высота определяется текстом. Проверка ширины не оценивает вертикальное увеличение. На телефоне рамка 4:5. Проверьте обе версии макета.'}),
  homeTeam:Object.freeze({title:'Фото команды на главной',frames:Object.freeze([
-  Object.freeze({label:'компьютер, окно 1280 CSS px',target:'desktop',width:182,height:242}),
+  Object.freeze({label:'компьютер, окно 1280 CSS px',target:'desktop',width:302,height:403}),
   Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:177,height:222})
- ]),note:'Контроль для текущей сетки: три фото в правой колонке на компьютере и два фото в ряд на телефоне. На других ширинах сетка меняется; проверьте макет.'}),
+ ]),note:'Контроль для текущей сетки: два портрета основателей в левой колонке на компьютере и два фото в ряд на телефоне. На других ширинах сетка меняется; проверьте макет.'}),
  homeUpcoming:Object.freeze({title:'Карточка ближайших показов на главной',frames:Object.freeze([
   Object.freeze({label:'компьютер, окно 1280 CSS px',target:'desktop',width:392,height:245}),
   Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:358,height:224})

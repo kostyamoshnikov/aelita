@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="section-nav-page">
 <head>
 <meta charset="UTF-8">
 <link rel="manifest" href="/en/manifest.json">
@@ -30,8 +30,8 @@
 <meta name="twitter:title" content="FAQ — AELITA PRODUCTION">
 <meta name="twitter:description" content="Frequently asked questions about tickets, the AELITA COMMUNITY subscription, age ratings, the Pushkin Card and how to reach AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
-<link rel="stylesheet" href="/assets/fonts.css?v=190">
-<link rel="stylesheet" href="/assets/style.css?v=190">
+<link rel="stylesheet" href="/assets/fonts.css?v=191">
+<link rel="stylesheet" href="/assets/style.css?v=191">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,7 +80,8 @@
 .faq-more p{color:var(--sand);font-size:0.875rem;margin-bottom:18px}
 a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=190">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=191">
+<link rel="stylesheet" href="/assets/section-navigation.css?v=191">
 </head>
 <body>
 
@@ -119,15 +120,19 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 <section style="padding:60px 0 100px">
   <div class="wrap w-760">
 
-    <div class="faq-toc" role="navigation" aria-label="Sections">
+    <div class="section-nav-bar" id="faqSectionBar" data-section-nav data-section-track>
+      <button class="section-nav-arrow" type="button" data-scroll="-1" aria-label="Scroll left" aria-controls="faqSections" hidden>‹</button>
+      <div class="faq-toc section-nav-rail" id="faqSections" data-section-rail role="navigation" aria-label="Sections">
       <a href="#bilety">Tickets</a>
       <a href="#vozvrat">Refunds and changes</a>
       <a href="#na-spektakle">At the performance</a>
       <a href="#podpiska">Subscription and gifts</a>
       <a href="#svyaz">News and contact</a>
     </div>
+      <button class="section-nav-arrow" type="button" data-scroll="1" aria-label="Scroll right" aria-controls="faqSections" hidden>›</button>
+    </div>
 
-    <h2 class="faq-group" id="bilety">Tickets</h2>
+    <h2 class="faq-group" data-section-target id="bilety">Tickets</h2>
 
     <div class="faq-item reveal">
       <h3>Where can I buy tickets to a show?</h3>
@@ -177,7 +182,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       <p>Use the link in the registration confirmation email, or go to <a href="/en/account">your account</a>, “My event registrations”. Your place will go to someone else.</p>
     </div>
 
-    <h2 class="faq-group" id="vozvrat">Refunds and changes</h2>
+    <h2 class="faq-group" data-section-target id="vozvrat">Refunds and changes</h2>
 
     <div class="faq-item reveal">
       <h3>How do I return a ticket and how much will I get back?</h3>
@@ -219,7 +224,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="na-spektakle">At the performance</h2>
+    <h2 class="faq-group" data-section-target id="na-spektakle">At the performance</h2>
 
     <div class="faq-item reveal">
       <h3>Can I come in after the show has started?</h3>
@@ -254,7 +259,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="podpiska">Subscription and gifts</h2>
+    <h2 class="faq-group" data-section-target id="podpiska">Subscription and gifts</h2>
 
     <div class="faq-item reveal">
       <h3>How do I use a gift card?</h3>
@@ -294,7 +299,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
       </ul>
     </div>
 
-    <h2 class="faq-group" id="svyaz">News and contact</h2>
+    <h2 class="faq-group" data-section-target id="svyaz">News and contact</h2>
 
     <div class="faq-item reveal" id="novosti">
       <h3>How do I find out about new dates and premieres?</h3>
@@ -426,8 +431,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offse
 </div>
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
-<script src="/assets/analytics-events.js?v=190"></script>
-<script src="/assets/main.js?v=190"></script>
+<script src="/assets/analytics-events.js?v=191"></script>
+<script src="/assets/section-navigation.js?v=191"></script>
+<script src="/assets/main.js?v=191"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
