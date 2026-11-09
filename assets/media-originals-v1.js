@@ -9,7 +9,7 @@ async function digest(bytes){const value=await crypto.subtle.digest('SHA-256',by
 function encode(bytes){let s='';for(let at=0;at<bytes.length;at+=0x8000)s+=String.fromCharCode.apply(null,bytes.subarray(at,at+0x8000));return btoa(s);}
 const decode=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 const size=n=>n<1024*1024?Math.ceil(n/1024)+' КБ':(n/1024/1024).toLocaleString('ru-RU',{maximumFractionDigits:1})+' МБ';
-function imageId(value){const s=String(value||'');if(s.startsWith('asset:')&&SHA.test(s.slice(6)))return s.slice(6);if(s.startsWith('video:')&&SHA.test(s.slice(6)))return s.slice(6);return /\/(?:images|videos)\/editorial\/([a-f0-9]{64})\.(?:jpg|png|webp|mp4)$/.exec(s)?.[1]||null;}
+function imageId(value){let s=String(value||'');if(s.startsWith('asset:')&&SHA.test(s.slice(6)))return s.slice(6);if(s.startsWith('video:')&&SHA.test(s.slice(6)))return s.slice(6);if(/^https:\/\//i.test(s)&&!/^https:\/\/(?:www\.)?aelita-production\.ru\//i.test(s))return null;s=s.split(/[?#]/)[0];return /^(?:https:\/\/(?:www\.)?aelita-production\.ru)?\/(?:images|videos)\/editorial\/([a-f0-9]{64})\.(?:jpg|png|webp|mp4)$/i.exec(s)?.[1]?.toLowerCase()||null;}
 async function request(api,body,isCurrent){for(let attempt=0;;attempt++){check(isCurrent);try{return await api(body);}catch(e){if(attempt>=2||!['github_unreachable','media_storage_unavailable'].includes(e?.code))throw e;check(isCurrent);await new Promise(r=>setTimeout(r,250*(attempt+1)));}}}
 async function save(file,prepared,api,progress=()=>{},isCurrent){
  isCurrent=bindSession(isCurrent);
@@ -59,12 +59,22 @@ async function library({api,onChoose,progress=()=>{},isCurrent,kind='image'}){
  }
  try{await page();}catch(e){if(active())state.textContent=message(e)||'Архив недоступен.';}
 }
-function controls(container,{api,value,onChoose,progress=()=>{},isCurrent,kind='image'}){
+function controls(container,{api,value,onChoose,progress=()=>{},isCurrent,kind='image',resolve,usages}){
  isCurrent=bindSession(isCurrent);
  const wrap=document.createElement('div');wrap.className='ed-original-controls';const note=document.createElement('p');note.className='ed-help';note.textContent='';wrap.append(note);
  wrap.append(button(kind==='video'?'Видеофайлы':'Исходники фотографий',()=>library({api,onChoose,progress,isCurrent,kind})));container.append(wrap);
- const id=imageId(value);if(!id)return;
- api({action:'media_info',id}).then(r=>{if(!current(isCurrent)||!wrap.isConnected)return;const x=r.original;note.textContent='Исходник сохранён · '+x.width+'×'+x.height+' · '+size(x.size);wrap.append(button('Скачать исходник',async()=>{try{const file=await getFile(x.id,api,progress,isCurrent);if(current(isCurrent))download(file);}catch(e){if(current(isCurrent))progress(message(e)||'Не удалось скачать исходник.',true);}}));}).catch(e=>{if(current(isCurrent)&&wrap.isConnected)note.textContent=e?.code==='media_missing'?'Для этой фотографии исходник в архиве не найден.':message(e)||'Не удалось проверить исходник.';});
+ const info=document.createElement('p');info.className='ed-help';info.setAttribute('role','status');wrap.append(info);
+ const url=typeof resolve==='function'?resolve(value):value;
+ const external=typeof url==='string'&&/^https:\/\//i.test(url)&&!/^https:\/\/(?:www\.)?aelita-production\.ru\//i.test(url);
+ info.textContent=external?'Внешний ресурс: наличие и формат сервером не подтверждены.':'Параметры подготовленной копии пока не определены.';
+ if(kind==='image'&&typeof url==='string'&&(/^(?:\/(?!\/)|https:\/\/|data:image\/(?:jpeg|png|webp);base64,|blob:)/i.test(url))&&typeof root.Image==='function'){
+  const image=new root.Image();image.referrerPolicy='no-referrer';
+  image.onload=()=>{if(!current(isCurrent)||!wrap.isConnected)return;const format=/^data:image\/(jpeg|png|webp)/i.exec(url)?.[1]||/\.(jpe?g|png|webp)(?:[?#]|$)/i.exec(url)?.[1];info.textContent='Подготовленная копия · '+image.naturalWidth+'×'+image.naturalHeight+(format?' · '+format.toUpperCase()+(/^data:/i.test(url)?'':' (по адресу)'):' · формат не подтверждён')+(external?' · внешний ресурс, сервером не проверен':'');};
+  image.onerror=()=>{if(current(isCurrent)&&wrap.isConnected)info.textContent=external?'Внешний ресурс не удалось отобразить; сервер его не проверяет.':'Подготовленную копию не удалось прочитать. Проверьте файл и макет.';};image.src=url;
+ }
+ if(usages){const places=document.createElement('p');places.className='ed-help';const rows=typeof usages==='function'?usages():usages;places.textContent='Использование в открытом черновике: '+(rows?.length?rows.join('; '):'выбранное назначение')+'. Другие страницы здесь не проверялись.';wrap.append(places);}
+ const id=imageId(value);if(!id){note.textContent=external?'Связь с исходником не подтверждена.':'Для этого ресурса связь с архивным исходником не подтверждена.';return;}
+ api({action:'media_info',id}).then(r=>{if(!current(isCurrent)||!wrap.isConnected)return;const x=r.original;if(kind==='video')info.textContent='Подготовленный MP4 · '+x.width+'×'+x.height+' · '+size(x.size);note.textContent='Исходник сохранён · '+x.width+'×'+x.height+' · '+size(x.size);wrap.append(button('Скачать исходник',async()=>{try{const file=await getFile(x.id,api,progress,isCurrent);if(current(isCurrent))download(file);}catch(e){if(current(isCurrent))progress(message(e)||'Не удалось скачать исходник.',true);}}));}).catch(e=>{if(current(isCurrent)&&wrap.isConnected)note.textContent=e?.code==='media_missing'?'Для этой фотографии исходник в архиве не найден.':message(e)||'Не удалось проверить исходник.';});
 }
 const exported={save,getFile,controls,library,imageId,digest,message,MAX};if(typeof module==='object'&&module.exports)module.exports=exported;else root.AelitaMediaOriginals=exported;
 })(typeof window==='object'?window:globalThis);

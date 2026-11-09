@@ -1,19 +1,19 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Меню, подвал и главная — AELITA PRODUCTION</title>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Меню, подвал, главная и афиша — AELITA PRODUCTION</title>
 <link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/assets/fonts.css?v=181">
-<link rel="stylesheet" href="/assets/site-editor-v1.css?v=181">
-<link rel="stylesheet" href="/assets/page-builder-admin.css?v=181">
-<link rel="stylesheet" href="/assets/site-nav-admin.css?v=181">
-<script defer src="/assets/content-reconcile.js?v=181"></script>
-<script defer src="/assets/media-originals-v1.js?v=181"></script><script defer src="/assets/media-view-admin-v1.js?v=181"></script><script defer src="/assets/media-quality-v1.js?v=181"></script><script defer src="/assets/site-nav-admin.js?v=181"></script>
+<link rel="stylesheet" href="/assets/fonts.css?v=184">
+<link rel="stylesheet" href="/assets/site-editor-v1.css?v=184">
+<link rel="stylesheet" href="/assets/page-builder-admin.css?v=184">
+<link rel="stylesheet" href="/assets/site-nav-admin.css?v=184">
+<script defer src="/assets/content-reconcile.js?v=184"></script>
+<script defer src="/assets/media-originals-v1.js?v=184"></script><script defer src="/assets/media-view-admin-v1.js?v=184"></script><script defer src="/assets/media-quality-v1.js?v=184"></script><script defer src="/assets/site-nav-admin.js?v=184"></script>
 </head><body>
 <header class="ed-header"><a class="ed-brand" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a><a class="ed-back" href="/admin/">← Админка</a></header>
-<main class="ed-wrap"><p class="ed-kicker">САЙТ · ОБЩИЕ БЛОКИ</p><h1>Меню, подвал и главная</h1>
+<main class="ed-wrap"><p class="ed-kicker">САЙТ · ОБЩИЕ БЛОКИ</p><h1>Меню, подвал, главная и афиша</h1>
 <p class="ed-note">Пункты меню, колонки подвала, телефон, почта и соцсети — сразу на всех страницах, на русском и английском. Подборки главной: главный проект, избранные проекты, команда, партнёры. Сначала проверка макета, потом публикация. Реквизиты компании здесь не меняются.</p>
 <section id="sn-gate" class="ed-card" hidden><h2>Войдите в админку</h2><p>Сначала войдите в основной админке в этой вкладке.</p><a class="ed-button" href="/admin/">Войти</a></section>
 <p id="sn-status" role="status" aria-live="polite"></p>
 <div id="sn-draft-tools" class="ed-actions" hidden><button type="button" id="sn-draft-download" class="ed-quiet">Скачать черновик</button><label class="ed-upload ed-quiet">Открыть черновик<input type="file" id="sn-draft-file" accept="application/json,.json"></label></div>
-<div class="pb-tabs" id="sn-tabs" role="tablist" hidden><button type="button" role="tab" data-tab="nav" aria-selected="true">Меню, подвал, контакты</button><button type="button" role="tab" data-tab="home" aria-selected="false" class="ed-quiet">Главная</button></div>
+<div class="pb-tabs" id="sn-tabs" role="tablist" hidden><button type="button" role="tab" data-tab="nav" aria-selected="true">Меню, подвал, контакты</button><button type="button" role="tab" data-tab="home" aria-selected="false" class="ed-quiet">Главная и афиша</button></div>
 
 <form id="sn-nav" hidden novalidate>
 <section class="ed-card"><h2>Меню в шапке</h2><p class="ed-note">До 9 пунктов. Адрес — страница сайта, например <code>/tickets</code>. На английских страницах ссылка сама станет <code>/en/tickets</code>.</p><div data-list="menu"></div><button type="button" class="ed-quiet" data-add="menu">Добавить пункт</button>
@@ -27,6 +27,7 @@
 
 <form id="sn-home" hidden novalidate>
 <section class="ed-card"><h2>Изображения ближайших показов</h2><p class="ed-note">Здесь меняется только карточка на главной. Страница события, афиша, разговоры и картинка ссылки сохраняют свои изображения. Без назначения используется обычная обложка карточки.</p><div data-list="covers"></div><button type="button" class="ed-quiet" data-add="covers">Выбрать изображение показа</button></section>
+<section class="ed-card"><h2>Обложки афиши</h2><p class="ed-note">Изображение только выбранной карточки на странице «Афиша». Главная, фото события, разговоры Кати, OG и постер видео сохраняют свои назначения. Без отдельного назначения используется обложка карточки. Для внешнего фото выберите собственное из списка или загрузите новое. Пустое описание наследуется из соответствующей карточки RU/EN.</p><div data-list="afishaCovers"></div><button type="button" class="ed-quiet" data-add="afishaCovers">Выбрать обложку афиши</button></section>
 <section class="ed-card"><h2>Главный проект</h2><div class="sn-feature">
 <div class="pb-two"><label>Ссылка кнопки<input class="ym-disable-keys" id="sn-f-href" maxlength="300" placeholder="/tochkacuire"></label><label>Фото<span class="sn-img"><input class="ym-disable-keys" id="sn-f-image" maxlength="160" list="sn-images" placeholder="/images/…"><label class="ed-upload ed-quiet">Загрузить<input type="file" accept="image/jpeg,image/png,image/webp" data-upload="sn-f-image"></label></span></label></div>
 <div class="pb-two"><fieldset><legend>Русский</legend><label>Подпись над заголовком<input class="ym-disable-keys" id="sn-f-ru-label" maxlength="40"></label><label>Заголовок<input class="ym-disable-keys" id="sn-f-ru-title" maxlength="80"></label><label>Текст<textarea class="ym-disable-keys" id="sn-f-ru-text" maxlength="400" rows="4"></textarea></label><label>Даты<input class="ym-disable-keys" id="sn-f-ru-dates" maxlength="60"></label><label>Место<input class="ym-disable-keys" id="sn-f-ru-place" maxlength="80"></label><label>Кнопка<input class="ym-disable-keys" id="sn-f-ru-button" maxlength="40"></label><label>Описание фото<input class="ym-disable-keys" id="sn-f-ru-alt" maxlength="160"></label></fieldset>
@@ -40,10 +41,11 @@
 <section id="sn-sync" class="ed-card" hidden><h2>Раскладываем меню по страницам</h2><progress id="sn-sync-bar" max="1" value="0"></progress><p id="sn-sync-text" role="status"></p><p class="ed-note">Не закрывайте вкладку. Если связь оборвётся — нажмите «Разложить по страницам ещё раз»: уже готовые страницы не тронутся.</p></section>
 </main>
 <dialog id="sn-review" class="ed-dialog ed-preview-dialog"><div class="ed-dialog-head"><h2>Проверка перед публикацией</h2><button type="button" id="sn-review-close" class="ed-quiet">Вернуться к правке</button></div>
+<div id="sn-preview-pages" class="ed-preview-tools" hidden><button type="button" data-preview-page="home" aria-pressed="true">Главная</button><button type="button" data-preview-page="afisha" aria-pressed="false" class="ed-quiet">Афиша</button></div>
 <div class="ed-preview-tools"><button type="button" data-preview="ru">Русская</button><button type="button" data-preview="en" class="ed-quiet">English</button><button type="button" data-viewport="390" aria-pressed="true">Телефон</button><button type="button" data-viewport="1280" aria-pressed="false" class="ed-quiet">Компьютер</button></div>
 <div id="sn-frame-wrap"><iframe id="sn-frame" title="Макет страницы" sandbox="" referrerpolicy="no-referrer"></iframe></div>
 <p class="ed-note" id="sn-affected"></p><p class="ed-error" id="sn-review-error" role="alert"></p><div class="ed-actions"><button type="button" id="sn-publish">Опубликовать</button></div></dialog>
-<dialog id="sn-history-dialog" class="ed-dialog"><div class="ed-dialog-head"><h2>История версий</h2><button type="button" id="sn-history-close" class="ed-quiet">Закрыть</button></div><p class="ed-note">Откройте прежнюю версию: она загрузится в форму. Чтобы вернуть её на сайт — проверьте макет и опубликуйте.</p><p id="sn-history-status" role="status"></p><ul id="sn-history-list" class="pb-list"></ul></dialog>
+<dialog id="sn-history-dialog" class="ed-dialog"><div class="ed-dialog-head"><h2 id="sn-history-title">История версий</h2><button type="button" id="sn-history-close" class="ed-quiet">Закрыть</button></div><p class="ed-note" id="sn-history-note">Откройте прежнюю версию: она загрузится в форму. Чтобы вернуть её на сайт — проверьте макет и опубликуйте.</p><p id="sn-history-status" role="status"></p><ul id="sn-history-list" class="pb-list"></ul></dialog>
 <dialog id="sn-conflicts" class="ed-dialog"><div class="ed-dialog-head"><h2>Изменения пересеклись</h2><button type="button" class="ed-quiet" id="sn-conflict-close">Вернуться к черновику</button></div>
 <p>Сайт изменился после начала правки. Разные поля объединены; для каждого совпавшего поля выберите нужный вариант. Публикации ещё нет.</p><p class="ed-note">Списки сравниваются целиком, чтобы изменение порядка не перенесло правку на другой пункт.</p><div id="sn-conflict-list"></div>
 <div class="ed-actions"><button type="button" class="ed-quiet" id="sn-conflict-download">Скачать мой черновик</button><button type="button" id="sn-conflict-apply" disabled>Собрать совместный черновик</button></div></dialog>

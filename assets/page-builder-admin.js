@@ -22,7 +22,7 @@
     page_in_use: 'На страницу ещё ведут ссылки — сначала уберите их.', too_many_images: 'В одной публикации — до трёх новых фотографий.', unused_image: 'Фотография не используется — выберите её заново.', layout_changed: 'Карта сайта изменена вручную — публикация остановлена.',
   };
   const FIELD_NAME = { slug: 'pb-slug', date: 'pb-date', image: 'pb-image-file', links: 'pb-links' };
-  const S = { pages: [], revision: 0, page: null, existing: false, asset: null, imageURL: '', preview: null, busy: false, lang: 'ru', previewLang: 'ru',epoch:0,edit:0,uploading:0,images:new Map(),media:window.AelitaContentMedia.createStore(),blocks:null,heroView:null,heroOriginal:null,restoreMedia:null };
+  const S = { pages: [], revision: 0, page: null, existing: false, asset: null, imageURL: '', preview: null, busy: false, lang: 'ru', previewLang: 'ru',epoch:0,edit:0,uploading:0,images:new Map(),media:window.AelitaContentMedia.createStore(),blocks:null,heroView:null,heroOriginal:null,social:null,restoreMedia:null };
 
   const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('pb-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
@@ -52,6 +52,7 @@
     for (const l of ['ru', 'en']) for (const f of FIELDS) p[l][f] = $('pb-' + l + '-' + f).value;
     p.links = [...document.querySelectorAll('.pb-link')].map((row) => ({ url: row.querySelector('[data-k=url]').value.trim(), ru: row.querySelector('[data-k=ru]').value.trim(), en: row.querySelector('[data-k=en]').value.trim() })).filter((x) => x.url || x.ru || x.en);
     const blocks=S.blocks?.get();if(blocks!==undefined)p.blocks=blocks;const view=S.heroView?.get();if(view)p.view=view;else delete p.view;
+    const social=S.social?.get();if(social)p.social=social;else delete p.social;
     return p;
   }
   function linkRow(l = { url: '', ru: '', en: '' }) {
@@ -62,7 +63,7 @@
     $('pb-links').appendChild(row);
   }
   function fill(p) {
-    S.epoch++;S.edit++;S.uploading=0;S.preview=null;S.blocks=null;S.heroView=null;S.media.clear();S.images.clear();S.heroOriginal=null;for(const a of S.restoreMedia?.assets||[])if(/^[a-f0-9]{64}$/.test(a?.hash||'')&&typeof a.data==='string'&&a.data.length<710000)S.images.set(a.hash,a);S.media.restore(S.restoreMedia?.captions);S.restoreMedia=null;
+    S.epoch++;S.edit++;S.uploading=0;S.preview=null;S.blocks=null;S.heroView=null;S.media.clear();S.images.clear();S.heroOriginal=null;S.social=null;for(const a of S.restoreMedia?.assets||[])if(/^[a-f0-9]{64}$/.test(a?.hash||'')&&typeof a.data==='string'&&a.data.length<710000)S.images.set(a.hash,a);S.media.restore(S.restoreMedia?.captions);S.restoreMedia=null;
 
     $('pb-kind').value = p.kind; $('pb-slug').value = p.slug; $('pb-date').value = p.date || '';
     for (const l of ['ru', 'en']) for (const f of FIELDS) $('pb-' + l + '-' + f).value = (p[l] && p[l][f]) || '';
@@ -162,16 +163,18 @@
   async function body(action){const page=JSON.parse(JSON.stringify(collect())),hero=S.asset;
     if(hero){if(!hero.hash)hero.hash=await window.AelitaMediaOriginals.digest(Uint8Array.from(atob(hero.data),c=>c.charCodeAt(0)));page.image='asset:'+hero.hash;}
     if(page.kind!=='article')page.date='';const assets=new Map(usedImages(page).map(a=>[a.hash,a]));if(hero)assets.set(hero.hash,hero);
-    return{action,page,revision:S.revision,assets:[...assets.values()].map(({type,data})=>({type,data})),captions:S.media.captionAssets(page)};
+    return{action,mediaReviewVersion:1,page,revision:S.revision,assets:[...assets.values()].map(({type,data})=>({type,data})),captions:S.media.captionAssets(page)};
   }
   function uploadBusy(delta){S.uploading=Math.max(0,S.uploading+delta);if(delta>0)changed();}
   async function preparePhoto(file,isCurrent){const epoch=S.epoch,current=()=>epoch===S.epoch&&(!isCurrent||isCurrent());const a=await compress(file);if(!current())throw{code:'superseded'};
     a.hash=await window.AelitaMediaOriginals.digest(Uint8Array.from(atob(a.data),c=>c.charCodeAt(0)));await window.AelitaMediaOriginals.save(file,a,api,status,current);if(!current())throw{code:'superseded'};S.images.set(a.hash,a);return'asset:'+a.hash;
   }
   async function heroPhoto(file){const epoch=S.epoch,before=S.page.image;uploadBusy(1);try{const value=await preparePhoto(file,()=>epoch===S.epoch&&S.page.image===before);S.page.image=value;S.asset=S.images.get(value.slice(6));showImage();changed();status('Исходник сохранён. Проверьте макет.');}finally{if(epoch===S.epoch)uploadBusy(-1);}}
-  function refreshHero(){if(!S.heroOriginal)return;S.heroOriginal.replaceChildren();const epoch=S.epoch,value=S.page.image;window.AelitaMediaOriginals.controls(S.heroOriginal,{api,value,onChoose:heroPhoto,progress:status,isCurrent:()=>epoch===S.epoch&&S.page.image===value});}
+function imageSource(value){const a=S.images?.get(String(value).replace(/^asset:/,''))||S.assets?.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value||'';}
+  function refreshHero(){if(!S.heroOriginal)return;S.heroOriginal.replaceChildren();const epoch=S.epoch,value=S.page.image;window.AelitaMediaOriginals.controls(S.heroOriginal,{api,value,resolve:imageSource,usages:['основное фото страницы'],onChoose:heroPhoto,progress:status,isCurrent:()=>epoch===S.epoch&&S.page.image===value});}
   function mountExtras(p){const holder=$('pb-photo-settings');holder.replaceChildren();S.heroOriginal=document.createElement('div');holder.append(S.heroOriginal);refreshHero();const epoch=S.epoch,current=()=>epoch===S.epoch&&holder.isConnected;
-    S.heroView=window.AelitaMediaView.mount(holder,p.view,{api,progress:status,isCurrent:current,onChange:changed,onMobileFile:async file=>{uploadBusy(1);try{return await preparePhoto(file,current);}finally{if(epoch===S.epoch)uploadBusy(-1);}},onError:e=>status(msg(e),true)});
+    S.heroView=window.AelitaMediaView.mount(holder,p.view,{resolve:imageSource,api,progress:status,isCurrent:current,onChange:changed,onMobileFile:async file=>{uploadBusy(1);try{return await preparePhoto(file,current);}finally{if(epoch===S.epoch)uploadBusy(-1);}},onError:e=>status(msg(e),true)});
+    const social=$('pb-social-editor');social.replaceChildren();S.social=window.AelitaContentMedia.mountSocial(social,p.social,{api,progress:status,imageSource,isCurrent:current,onChange:changed,onPhoto:preparePhoto,busy:delta=>{if(epoch===S.epoch)uploadBusy(delta);},onError:e=>status(msg(e),true)});
     const list=$('pb-blocks-editor');list.replaceChildren();S.blocks=window.AelitaPageBlocks.mount(list,p.blocks,{api,store:S.media,progress:status,imageSource:value=>{const a=value?.startsWith('asset:')?S.images.get(value.slice(6)):null;return a?'data:'+a.type+';base64,'+a.data:value||'';},isCurrent:()=>epoch===S.epoch&&list.isConnected,onChange:changed,onPhoto:preparePhoto,busy:delta=>{if(epoch===S.epoch)uploadBusy(delta);},onError:e=>status(msg(e),true)});
   }
 

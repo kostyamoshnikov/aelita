@@ -6,3 +6,8 @@
 .up-formats span{white-space:nowrap}
 
 @media(max-width:600px){.up-img.up-img--mobile-cover{aspect-ratio:16/10}.up-img.up-img--mobile-cover img{height:100%}.up-img.up-img--mobile-whole{aspect-ratio:auto}.up-img.up-img--mobile-whole img{height:auto}}
+
+/* The tickets card has an independent assignment and the same frame modes. */
+.tk-img.tk-img--whole{aspect-ratio:auto;background:transparent}
+.tk-img.tk-img--whole img{width:100%;height:auto;object-fit:contain;transform:none!important}
+@media(max-width:600px){.tk-img.tk-img--mobile-cover{aspect-ratio:16/10}.tk-img.tk-img--mobile-cover img{height:100%}.tk-img.tk-img--mobile-whole{aspect-ratio:auto}.tk-img.tk-img--mobile-whole img{height:auto}}

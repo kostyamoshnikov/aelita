@@ -6,6 +6,18 @@ const MOBILE_WIDTH=600-2*16,MOBILE_HEIGHT=Math.ceil(MOBILE_WIDTH*10/16);
 // Named control frames, derived from each public template's own CSS.
 // These are 1:1 checks of the public copy, not of the archived original.
 const USAGES=Object.freeze({
+ afishaSingle:Object.freeze({title:'Одиночная карточка афиши',frames:Object.freeze([
+  Object.freeze({label:'компьютер, окно 1280 CSS px, фото слева от текста',target:'desktop',width:Math.ceil((1280-48-1280*.04)*1.25/2.25),height:Math.ceil((1280-48-1280*.04)*1.25/2.25*10/16)}),
+  Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:358,height:224})
+ ]),note:'Одна карточка занимает всю сетку: фото и текст в двух колонках. На телефоне рамка 16:10. Проверьте макет.'}),
+ homeUpcomingSingle:Object.freeze({title:'Одиночный ближайший показ на главной',frames:Object.freeze([
+  Object.freeze({label:'компьютер, окно 1280 CSS px, фото слева от текста',target:'desktop',width:Math.ceil((1280-48-1280*.04)*1.25/2.25),height:Math.ceil((1280-48-1280*.04)*1.25/2.25*10/16)}),
+  Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:358,height:224})
+ ]),note:'Контроль одиночного показа с фото слева от текста; фактическое положение и чёткость проверьте в макете главной.'}),
+ afishaCard:Object.freeze({title:'Обложка карточки афиши',frames:Object.freeze([
+  Object.freeze({label:'компьютер, окно 1280 CSS px, сетка из трёх колонок',target:'desktop',width:392,height:245}),
+  Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:358,height:224})
+ ]),note:'Контроль для сетки афиши: поля 24/16 px, промежутки 28 px и рамка 16:10. Одиночная карточка на компьютере шире; проверьте макет афиши.'}),
  homeFeature:Object.freeze({title:'Крупная обложка проекта на главной',frames:Object.freeze([
   Object.freeze({label:'компьютер, окно 1280 CSS px; проверяется только ширина, высота зависит от текста',target:'desktop',width:768,height:0}),
   Object.freeze({label:'телефон, окно 390 CSS px',target:'mobile',width:390,height:488})
@@ -48,16 +60,17 @@ function evaluatePoster(width,height,videoWidth,videoHeight){
 }
 function mount(container,options){
  const note=document.createElement('p');note.className='ed-help';note.setAttribute('role','status');container.append(note);let sequence=0;
+ const usageOf=()=>typeof options.usage==='function'?options.usage():options.usage;
  function update(){
-  const at=++sequence,src=options.source(),mobile=options.target==='mobile',prefix=mobile?'Фото для телефона ('+(options.inherited?.()?'наследуется основное':'отдельное')+'): ':'',context=options.context?.(),profile=USAGES[options.usage];
-  const valid=()=>at===sequence&&container.isConnected&&(!options.isCurrent||options.isCurrent())&&(!options.context||options.context()===context);
+  const at=++sequence,src=options.source(),mobile=options.target==='mobile',prefix=mobile?'Фото для телефона ('+(options.inherited?.()?'наследуется основное':'отдельное')+'): ':'',context=options.context?.(),usage=usageOf(),profile=USAGES[usage];
+  const valid=()=>at===sequence&&usageOf()===usage&&container.isConnected&&(!options.isCurrent||options.isCurrent())&&(!options.context||options.context()===context);
   note.textContent='';if(!src||!valid())return;
   // Restrict loads to the same-origin image namespace or an editor's local draft.
   if((!/^\/images\/[A-Za-z0-9_./-]+\.(?:jpe?g|png|webp)$/i.test(src)||src.includes('..'))&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(src)){if(mobile||profile||options.poster)note.textContent=prefix+(mobile?'размер':'Размер')+' не проверен: адрес вне локального каталога. Проверьте макет.';return;}
   if(profile||options.poster)note.textContent='Определяю размер подготовленной копии фото…';
   const img=new Image();img.onload=()=>{if(!valid())return;
    if(options.poster){const size=options.videoSize?.()||{},result=evaluatePoster(img.naturalWidth,img.naturalHeight,size.width,size.height);if(!result){note.textContent='Размер постера не удалось определить. Проверьте макет.';return;}note.textContent='Постер: '+result.width+'×'+result.height+' px (копия для сайта). '+(result.known?'Видео: '+result.videoWidth+'×'+result.videoHeight+' px. '+(result.different?'Пропорции отличаются; проверьте поля или обрезку в макете.':'Пропорции совпадают с точностью 2%; чёткость проверьте в макете.'):'Размеры видео неизвестны: пропорции не сравнены. Проверьте макет.')+' Проверка не оценивает качество сжатия и не запускает видео.';return;}
-   if(profile){const result=evaluateUsage(img.naturalWidth,img.naturalHeight,options.usage,options.target||'desktop',options.view?.()?.mode);if(!result){note.textContent='Размер изображения не удалось определить. Проверьте фото в макете.';return;}
+   if(profile){const result=evaluateUsage(img.naturalWidth,img.naturalHeight,usage,options.target||'desktop',options.view?.()?.mode);if(!result){note.textContent='Размер изображения не удалось определить. Проверьте фото в макете.';return;}
     note.textContent=prefix+profile.title+': '+result.width+'×'+result.height+' px (копия для сайта). '+result.frames.map(f=>'Контрольная рамка — '+f.label+': '+f.width+(f.height?'×'+f.height:' (только ширина)')+' px; '+(f.low?'разрешения может не хватать.':'увеличения при масштабе 1:1 не требуется (для указанной контрольной рамки).')).join(' ')+' '+profile.note+' На экранах с высокой плотностью пикселей проверьте чёткость в макете.';return;
    }
    const result=evaluate(img.naturalWidth,img.naturalHeight,options.view()?.mode,options.target);

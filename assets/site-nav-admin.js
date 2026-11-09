@@ -13,7 +13,9 @@
     editor_not_configured: 'Не настроено подключение к репозиторию сайта.', invalid_field: 'Проверьте отмеченное поле.',
     linked_page_missing: 'Ссылка ведёт на страницу, которой нет на сайте.', linked_page_no_en: 'У этой страницы нет английской версии — в меню её поставить нельзя (на английских страницах ссылка вела бы в никуда).',
     draft_changed: 'Черновик изменён во время проверки. Новая правка сохранена в форме — проверьте макет ещё раз.',
-    cover_slot_missing: 'Этого события сейчас нет в ближайших показах. Выберите событие из списка.',
+    cover_slot_missing: 'Этой карточки сейчас нет в выбранном назначении RU/EN. Выберите актуальную карточку из списка.',
+    cover_slot_ambiguous: 'Карточки неоднозначны, различаются в RU/EN или используют неподдерживаемую разметку фото. Публикация остановлена; нужна сверка карточек.',
+    afisha_layout_missing: 'Нет полной пары страниц афиши RU/EN. Изменение обложек остановлено; прежняя версия сохранена.',
     image_missing: 'Фото не найдено на сайте — выберите из списка или загрузите.', unused_image: 'Загруженное фото не используется — выберите его заново.',
     site_nav_missing: 'На сайте ещё нет файла меню — выложите пак v754 или новее.', home_missing: 'На сайте ещё нет файла подборок главной — выложите пак v754 или новее.',
     invalid_nav_file: 'Файл меню на сайте повреждён или изменён вручную — нужна сверка.', invalid_home_file: 'Файл подборок главной на сайте повреждён или изменён вручную — нужна сверка.',
@@ -32,15 +34,16 @@
     projects: { max: 8, min: 1, fields: [['href', 'Ссылка', '/iov'], ['image', 'Фото', '/images/…', 'image'], ['position', 'Кадрирование', '50% 50%'], ['ru.title', 'Название RU'], ['ru.kicker', 'Жанр RU'], ['ru.alt', 'Описание фото RU'], ['en.title', 'Title EN'], ['en.kicker', 'Genre EN'], ['en.alt', 'Photo description EN']] },
     team: { max: 12, min: 1, fields: [['href', 'Ссылка', '/katya-abdulova'], ['image', 'Фото', '/images/…', 'image'], ['ru.name', 'Имя RU'], ['en.name', 'Name EN']] },
     covers: { max: 8, min: 0, fields: [['href', 'Событие в ближайших показах', '', 'slot'], ['image', 'Изображение только этой карточки', '/images/…', 'image'], ['altRu', 'Описание изображения RU'], ['altEn', 'Photo description EN']] },
+    afishaCovers: { max: 8, min: 0, fields: [['slot', 'Карточка афиши', '', 'afisha-slot'], ['image', 'Изображение только в афише', '/images/…', 'image'], ['altRu', 'Описание изображения RU'], ['altEn', 'Photo description EN']] },
     partners: { max: 16, min: 1, fields: [['href', 'Ссылка (необязательно)', '/byl или https://…'], ['ru.name', 'Название RU'], ['ru.note', 'Подпись RU (необязательно)'], ['en.name', 'Name EN'], ['en.note', 'Note EN']] },
   };
-  const S = { head: '', baseHeads: { nav: '', home: '' }, edit: 0, coverSlots: [], previewWidth: 390, merging: null, nav: null, home: null, tab: 'nav', preview: null, previewLang: 'ru', busy: false, assets: new Map(), batch: 25 };
+  const S = { head: '', baseHeads: { nav: '', home: '' }, edit: 0, coverSlots: [], afishaSlots: [], previewPage: 'home', previewWidth: 390, merging: null, nav: null, home: null, tab: 'nav', preview: null, previewLang: 'ru', busy: false, assets: new Map(), batch: 25 };
 
   const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('sn-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('sn-gate').hidden = false; $('sn-tabs').hidden = true; $('sn-nav').hidden = true; $('sn-home').hidden = true; }
   async function api(body) {
-    body = { ...body, reviewVersion: 3 };
+    body = { ...body, reviewVersion: body.action?.startsWith('home_') ? 4 : 3 };
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }
@@ -53,45 +56,70 @@
   function set(o, k, v) { const ps = k.split('.'); let x = o; for (const p of ps.slice(0, -1)) x = x[p] = x[p] || {}; x[ps.at(-1)] = v; }
 
   // ── редактор списков
+  function imageSource(value){const a=S.images?.get(String(value).replace(/^asset:/,''))||S.assets?.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value||'';}
+  function assignmentView(item) {
+    return {mode:item.mode||'cover',...(!item.image?{position:'50% 50%'}:{}),...Object.fromEntries(['mode','position','mobileImage','mobileMode','mobilePosition'].filter(k=>item[k]!==undefined).map(k=>[k,item[k]]))};
+  }
   function row(kind, item, box) {
     const div = document.createElement('div'); div.className = 'sn-row sn-' + kind;
+    const assignment = ['covers','afishaCovers'].includes(kind);
+    div.assignmentHref = item.href || '';
+    const slots = () => kind === 'afishaCovers' ? S.afishaSlots : S.coverSlots;
     for (const [k, label, ph, type] of ROWS[kind].fields) {
       const l = document.createElement('label'); l.textContent = label;
-      const inp = document.createElement(type === 'mode' || type === 'slot' ? 'select' : 'input'); inp.className = 'ym-disable-keys'; inp.dataset.k = k; inp.maxLength = k === 'href' || k === 'url' ? 300 : 160; if (ph) inp.placeholder = ph;
+      const isSlot = type === 'slot' || type === 'afisha-slot';
+      const inp = document.createElement(type === 'mode' || isSlot ? 'select' : 'input'); inp.className = 'ym-disable-keys'; inp.dataset.k = k; inp.maxLength = k === 'href' || k === 'url' ? 300 : k.startsWith('alt') ? 500 : 160; if (ph) inp.placeholder = ph;
       if (type === 'mode') { inp.add(new Option('Показать целиком', 'whole')); inp.add(new Option('Заполнить рамку', 'cover')); }
-      if (type === 'slot') {
+      if (isSlot) {
         inp.add(new Option('Выберите событие', ''));
-        for (const x of S.coverSlots) inp.add(new Option(x.title, x.href));
-        if (item.href && !S.coverSlots.some(x => x.href === item.href)) inp.add(new Option('Сейчас отсутствует: ' + item.href, item.href));
+        for (const x of slots()) { const option = new Option(x.title + (x.ambiguous ? ' — неоднозначная карточка' : x.unsupported ? ' — неподдерживаемая разметка фото' : ''), x.slot || x.href); option.disabled = !!(x.ambiguous||x.unsupported); inp.add(option); }
+        const matching = slots().filter(x=>!x.ambiguous && !x.unsupported && x.href===item.href);
+        const value = item.slot || (matching.length===1 ? matching[0].slot || item.href : item.href) || '';
+        if(value && !slots().some(x=>(x.slot||x.href)===value)) inp.add(new Option('Сейчас отсутствует: ' + (item.href || value),value));
+        inp.value = value;
+        inp.onchange = () => {
+          const slot = slots().find(x=>(x.slot||x.href)===inp.value);
+          const image = div.querySelector('[data-k="image"]');
+          if(slot && image && !image.value && slot.image.startsWith('/images/')) { image.value=slot.image; image.dispatchEvent(new Event('input',{bubbles:true})); }
+          if(slot) div.assignmentHref = slot.href;
+          changed(); quality?.update();
+        };
       }
-      inp.value = get(item, k) || (type === 'mode' ? 'whole' : '');
+      if(!isSlot) inp.value = get(item, k) || (type === 'mode' ? 'whole' : '');
       if (type === 'image') {
         inp.setAttribute('list', 'sn-images'); const wrap = document.createElement('span'); wrap.className = 'sn-img'; wrap.appendChild(inp);
         const up = document.createElement('label'); up.className = 'ed-upload ed-quiet'; up.textContent = 'Загрузить';
         const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/jpeg,image/png,image/webp'; f.onchange = () => upload(f, inp); up.appendChild(f); wrap.appendChild(up);
         l.appendChild(wrap);
         const originalHolder=document.createElement('div');l.append(originalHolder);
-        const refresh=()=>{originalHolder.replaceChildren();const value=inp.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,progress:status,isCurrent:()=>inp.isConnected&&inp.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>inp.isConnected);inp.value=next;inp.dispatchEvent(new Event('input',{bubbles:true}));}});};
+        const refresh=()=>{originalHolder.replaceChildren();const value=inp.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,resolve:imageSource,progress:status,isCurrent:()=>inp.isConnected&&inp.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>inp.isConnected);inp.value=next;inp.dispatchEvent(new Event('input',{bubbles:true}));}});};
         inp.addEventListener('input',refresh);refresh();
 
       } else l.appendChild(inp);
       div.appendChild(l);
     }
     let quality;
-    if(['covers','projects','team'].includes(kind)){
-      const view=kind==='covers'?{mode:item.mode||'cover',...Object.fromEntries(['mode','position','mobileImage','mobileMode','mobilePosition'].filter(k=>item[k]!==undefined).map(k=>[k,item[k]]))}:item.view;
-      div.mediaControl=window.AelitaMediaView.mount(div,view,{forceMode:kind==='covers',defaultPosition:item.position,onChange:()=>{changed();quality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>div.isConnected,
+    if(assignment||['projects','team'].includes(kind)){
+      const view=assignment?assignmentView(item):item.view;
+      const matching=assignment?slots().filter(x=>item.slot?x.slot===item.slot:x.href===item.href):[];
+      div.mediaControl=window.AelitaMediaView.mount(div,view,{resolve:imageSource,forceMode:assignment,defaultPosition:item.position||(matching.length===1?matching[0].position:undefined),onChange:()=>{changed();quality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>div.isConnected,
         onMobileFile:async file=>{const result=await preparePhoto(file,()=>div.isConnected);return result;},onError:e=>status(msg(e),true)});
     }
-    if(['covers','projects','team'].includes(kind)&&window.AelitaImageQuality){
+    if((assignment||['projects','team'].includes(kind))&&window.AelitaImageQuality){
       const source=()=>div.querySelector('[data-k="image"]').value.trim();
       const resolve=value=>{const a=S.assets.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value;};
-      quality=window.AelitaImageQuality.mountVariants(div,{usage:kind==='covers'?'homeUpcoming':kind==='team'?'homeTeam':'homeProject',target:'desktop',source:()=>resolve(source()),resolve,view:()=>div.mediaControl?.get()||{},isCurrent:()=>div.isConnected});
+      const usage=()=>{if(!assignment)return kind==='team'?'homeTeam':'homeProject';const value=div.querySelector('select[data-k]')?.value;const selected=slots().find(x=>(x.slot||x.href)===value);return kind==='afishaCovers'?(selected?.single?'afishaSingle':'afishaCard'):(selected?.single?'homeUpcomingSingle':'homeUpcoming');};
+      quality=window.AelitaImageQuality.mountVariants(div,{usage,target:'desktop',source:()=>resolve(source()),resolve,view:()=>div.mediaControl?.get()||{},isCurrent:()=>div.isConnected});
       div.querySelector('[data-k="image"]').addEventListener('input',()=>quality.update());
     }
     const tools = document.createElement('div'); tools.className = 'sn-tools';
     for (const [t, title, fn] of [['↑', 'Выше', () => div.previousElementSibling && box.insertBefore(div, div.previousElementSibling)], ['↓', 'Ниже', () => div.nextElementSibling && box.insertBefore(div.nextElementSibling, div)], ['Убрать', 'Убрать', () => { if (box.children.length > ROWS[kind].min) div.remove(); else status('Здесь нужен хотя бы один пункт.', true); }]]) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'ed-quiet'; b.textContent = t; b.title = title; b.setAttribute('aria-label', title); b.onclick = () => { fn(); changed(); }; tools.appendChild(b);
+    }
+    if(assignment) {
+      const restore=document.createElement('button');restore.type='button';restore.className='ed-quiet';restore.dataset.historyAssignment='true';restore.textContent='История этой обложки';
+      restore.onclick=()=>{const value=div.querySelector('select[data-k]')?.value,selected=slots().find(x=>(x.slot||x.href)===value);if(!value)return status('Сначала выберите карточку.',true);history('home',{field:kind,slot:selected?.slot||item.slot||null,href:selected?.href||div.assignmentHref});};
+      tools.appendChild(restore);
     }
     div.appendChild(tools); box.appendChild(div);quality?.update();
   }
@@ -101,7 +129,15 @@
     return [...box.children].map((div) => {
       const o = {};
       for (const inp of div.querySelectorAll('input[data-k], select[data-k]')) { const v = inp.value.trim(); if (v) set(o, inp.dataset.k, v); }
-      if(div.mediaControl){const view=div.mediaControl.get();if(kind==='covers')Object.assign(o,view||{mode:'cover'});else if(view)o.view=view;}
+      if(div.mediaControl){const view=div.mediaControl.get();if(['covers','afishaCovers'].includes(kind))Object.assign(o,view||{mode:'cover'});else if(view)o.view=view;}
+      if(['covers','afishaCovers'].includes(kind)) {
+        const selected=kind==='covers'?o.href:o.slot;
+        const slots=kind==='covers'?S.coverSlots:S.afishaSlots;
+        const matches=slots.filter(x=>(x.slot||x.href)===selected);
+        if(matches.length===1) { o.href=matches[0].href; if(matches[0].slot)o.slot=matches[0].slot; }
+        else if(kind==='afishaCovers')o.href=div.assignmentHref;
+        else if(selected?.startsWith('event:')||selected?.startsWith('performance:')||selected?.startsWith('page:')){o.slot=selected;o.href=div.assignmentHref;}
+      }
       if (kind === 'partners') { o.ru = o.ru || {}; o.en = o.en || {}; }
       if (['projects', 'team'].includes(kind)) { o.ru = o.ru || {}; o.en = o.en || {}; }
       return o;
@@ -142,11 +178,12 @@
   const FEAT = ['label', 'title', 'text', 'dates', 'place', 'button', 'alt'];
   function fillHome(h) {
     list(box('covers'), 'covers', h.covers || []);
+    list(box('afishaCovers'), 'afishaCovers', h.afishaCovers || []);
     $('sn-f-href').value = h.feature.href; $('sn-f-image').value = h.feature.image;
     $('sn-feature-view')?.remove();const holder=document.createElement('div');holder.id='sn-feature-view';$('sn-f-image').closest('label').after(holder);
-    const featureInput=$('sn-f-image'),originalHolder=document.createElement('div');holder.append(originalHolder);const refreshOriginal=()=>{originalHolder.replaceChildren();const value=featureInput.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,progress:status,isCurrent:()=>holder.isConnected&&featureInput.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>holder.isConnected);featureInput.value=next;featureInput.dispatchEvent(new Event('input',{bubbles:true}));changed();}});};featureInput.oninput=refreshOriginal;refreshOriginal();
+    const featureInput=$('sn-f-image'),originalHolder=document.createElement('div');holder.append(originalHolder);const refreshOriginal=()=>{originalHolder.replaceChildren();const value=featureInput.value;window.AelitaMediaOriginals.controls(originalHolder,{api,value,resolve:imageSource,progress:status,isCurrent:()=>holder.isConnected&&featureInput.value===value,onChoose:async file=>{const next=await preparePhoto(file,()=>holder.isConnected);featureInput.value=next;featureInput.dispatchEvent(new Event('input',{bubbles:true}));changed();}});};featureInput.oninput=refreshOriginal;refreshOriginal();
     let featureQuality;
-    S.featureView=window.AelitaMediaView.mount(holder,h.feature.view,{onChange:()=>{changed();featureQuality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>holder.isConnected,onMobileFile:file=>preparePhoto(file,()=>holder.isConnected),onError:e=>status(msg(e),true)});
+    S.featureView=window.AelitaMediaView.mount(holder,h.feature.view,{resolve:imageSource,onChange:()=>{changed();featureQuality?.update();},imageList:'sn-images',api,progress:status,isCurrent:()=>holder.isConnected,onMobileFile:file=>preparePhoto(file,()=>holder.isConnected),onError:e=>status(msg(e),true)});
 
     if(window.AelitaImageQuality){
       const resolve=value=>{const a=S.assets.get(String(value).replace(/^asset:/,''));return a?'data:'+a.type+';base64,'+a.data:value;};
@@ -160,14 +197,15 @@
   function collectHome() {
     const t = (L) => Object.fromEntries(FEAT.map((k) => [k, $('sn-f-' + L + '-' + k).value.trim()]));
     const covers = read(box('covers'));
-    return { schema: S.home.schema, revision: S.home.revision, ...(covers.length || 'covers' in S.home ? { covers } : {}), feature: { href: $('sn-f-href').value.trim(), image: $('sn-f-image').value.trim(), ...(S.featureView?.get()?{view:S.featureView.get()}:{}), ru: t('ru'), en: t('en') }, projects: read(box('projects')), team: read(box('team')), partners: read(box('partners')) };
+    const afishaCovers = read(box('afishaCovers'));
+    return { schema: S.home.schema, revision: S.home.revision, ...(covers.length || 'covers' in S.home ? { covers } : {}), ...(afishaCovers.length || 'afishaCovers' in S.home ? {afishaCovers} : {}), feature: { href: $('sn-f-href').value.trim(), image: $('sn-f-image').value.trim(), ...(S.featureView?.get()?{view:S.featureView.get()}:{}), ru: t('ru'), en: t('en') }, projects: read(box('projects')), team: read(box('team')), partners: read(box('partners')) };
   }
   /** Загруженные фото: в форме — «asset:<hash>», на сервер уходят только используемые. */
   function homeBody(action, home = collectHome()) {
     const used=new Set(),uses=x=>{if(!x)return;for(const key of ['image','mobileImage'])if(typeof x[key]==='string'&&x[key].startsWith('asset:'))used.add(x[key].slice(6));if(x.view)uses(x.view);};
-    uses(home.feature);home.projects.forEach(uses);home.team.forEach(uses);(home.covers||[]).forEach(uses);
+    uses(home.feature);home.projects.forEach(uses);home.team.forEach(uses);(home.covers||[]).forEach(uses);(home.afishaCovers||[]).forEach(uses);
     const assets = [...used].map((h) => S.assets.get(h)).filter(Boolean).map(({ type, data }) => ({ type, data }));
-    return { action, home, revision: S.home.revision, ...(assets.length ? { assets } : {}) };
+    return { action, home, revision: home.revision, ...(assets.length ? { assets } : {}) };
   }
   let dirty = false;
   function changed() { S.preview = null; S.edit++; dirty = true; }
@@ -210,7 +248,7 @@
   async function load() {
     status('Загружаем…');
     const d = await api({ action: 'nav_get' });
-    S.coverSlots = d.coverSlots || []; S.batch = d.batch || 25; S.head = d.head || ''; S.baseHeads.nav = S.head; S.baseHeads.home = S.head; $('sn-draft-tools').hidden = false;
+    S.coverSlots = d.coverSlots || []; S.afishaSlots = d.afishaSlots || []; S.batch = d.batch || 25; S.head = d.head || ''; S.baseHeads.nav = S.head; S.baseHeads.home = S.head; $('sn-draft-tools').hidden = false;
     $('sn-images').innerHTML = ''; for (const src of d.images || []) { const o = document.createElement('option'); o.value = src; $('sn-images').appendChild(o); }
     $('sn-gate').hidden = true; $('sn-tabs').hidden = false;
     if (!d.nav) status(ERR.site_nav_missing, true); else { S.nav = d.nav; fillNav(d.nav); }
@@ -235,7 +273,7 @@
       else if (p[0] === 'contacts') el = p[1] === 'socials' ? box('socials').children[+p[2]]?.querySelector('[data-k="' + p[3] + '"]') : $('sn-' + p[1]);
       else if (p[0] === 'footer') { const sec = $('sn-cols').children[+p[1]]; el = sec && (p[2] === 'links' ? sec.querySelector('.sn-links').children[+p[3]]?.querySelector('[data-k="' + p[4] + '"]') : sec.querySelector('[data-c="' + (p[2] || 'ru') + '"]')); }
     } else if (p[0] === 'feature') el = $(p.length === 2 ? 'sn-f-' + p[1] : 'sn-f-' + p[1] + '-' + p[2]);
-    else if (['projects', 'team', 'partners'].includes(p[0])) el = box(p[0]).children[+p[1]]?.querySelector('[data-k="' + p.slice(2).join('.') + '"]');
+    else if (['projects', 'team', 'partners','covers','afishaCovers'].includes(p[0])) el = box(p[0]).children[+p[1]]?.querySelector('[data-k="' + p.slice(2).join('.') + '"]');
     if (el) { el.classList.add('pb-bad'); el.focus(); }
   }
   const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -309,8 +347,9 @@
     $('sn-conflicts').close(); changed(); status('Совместный черновик готов. Проверьте макет — сайт будет сверён ещё раз перед публикацией.');
   }
   async function check(kind, e) {
+    e.preventDefault();
     if(S.uploading)return status('Дождитесь сохранения исходника.',true);
-    e.preventDefault(); if (S.busy) return; S.busy = true; S.preview = null; markField(null); status('Сверяем черновик с текущим сайтом…');
+    if (S.busy) return; S.busy = true; S.preview = null; markField(null); status('Сверяем черновик с текущим сайтом…');
     try {
       const edit = S.edit;
       const mine = kind === 'nav' ? collectNav() : collectHome();
@@ -327,15 +366,20 @@
       if (edit !== S.edit) throw { code: 'draft_changed' };
       // Only an actually reconciled draft may adopt a new baseline. A fresh
       // revision number alone must never make an old form current.
-      S.coverSlots = fresh.coverSlots || S.coverSlots; S[kind] = clone(current); S.baseHeads[kind] = fresh.head || S.baseHeads[kind]; fill(kind, merged);
+      S.coverSlots = fresh.coverSlots || S.coverSlots; S.afishaSlots = fresh.afishaSlots || S.afishaSlots; S[kind] = clone(current); S.baseHeads[kind] = fresh.head || S.baseHeads[kind]; fill(kind, merged);
+      S.previewPage = kind==='home' && !AelitaContentReconcile.equal(merged.afishaCovers,current.afishaCovers) && d.afisha ? 'afisha' : 'home';
       S.preview = { kind, body, ...d }; S.previewLang = 'ru'; showPreview();
-      $('sn-affected').textContent = (kind === 'nav' ? 'Меню, подвал и контакты обновятся на всех страницах сайта (' + (d.pages || 'все') + ') — после публикации раскладка займёт пару минут. Макет — страница «О компании».' : 'Обновятся подборки на главной (русской и английской); остальной текст главной не меняется.') + ' Проверка действует 10 минут.';
+      $('sn-affected').textContent = (kind === 'nav' ? 'Меню, подвал и контакты обновятся на всех страницах сайта (' + (d.pages || 'все') + ') — после публикации раскладка займёт пару минут. Макет — страница «О компании».' : 'Обновятся выбранные назначения главной и афиши RU/EN. Проверьте обе страницы и мобильные кадры. Фото события, OG, видео и настройки продажи этой формой не меняются.') + ' Проверка действует 10 минут.';
       $('sn-review-error').textContent = ''; $('sn-publish').disabled = false; $('sn-review').showModal(); sizePreview(); status('Непересекающиеся изменения объединены. Проверьте совместный результат.');
     } catch (err) { status(msg(err), true); markField(err.field); }
     finally { S.busy = false; }
   }
   function showPreview() {
-    const html = S.preview[S.previewLang];
+    const afisha = S.preview.kind==='home' && S.preview.afisha;
+    $('sn-preview-pages').hidden = S.preview.kind!=='home';
+    document.querySelectorAll('[data-preview-page]').forEach(b=>{const on=b.dataset.previewPage===(S.previewPage||'home');b.disabled=b.dataset.previewPage==='afisha'&&!afisha;b.setAttribute('aria-pressed',String(on));b.classList.toggle('ed-quiet',!on);});
+    const page = S.previewPage==='afisha' && afisha ? afisha : S.preview;
+    const html = page[S.previewLang];
     $('sn-frame').srcdoc = html || '<p style="font-family:sans-serif;color:#ccc">Английской версии этой страницы нет.</p>';
     document.querySelectorAll('[data-preview]').forEach((b) => b.classList.toggle('ed-quiet', b.dataset.preview !== S.previewLang));
     sizePreview();
@@ -354,12 +398,13 @@
       const d = await api(body);
       $('sn-review').close(); S.preview = null; dirty = false;
       S[kind] = { ...(kind === 'nav' ? body.nav : body.home), revision: d.revision };
-      if (kind === 'home') { await load(); status('Главная обновлена. Сайт покажет изменения через 1–2 минуты.'); }
+      if (kind === 'home') { await load(); status('Подборки и обложки обновлены (RU/EN). Сайт покажет изменения через 1–2 минуты.'); }
       else await sync();
     } catch (err) {
-      $('sn-review-error').textContent = msg(err);
-      $('sn-publish').disabled = !['publication_unknown', 'github_unreachable', 'github_limited'].includes(err.code) ? true : false;
-      if (['content_conflict', 'preview_expired', 'preview_required'].includes(err.code)) S.preview = null;
+      const unknown = ['publication_unknown','github_unreachable'].includes(err.code);
+      $('sn-review-error').textContent = unknown ? ERR.publication_unknown + ' Черновик сохранён; закройте макет и перечитайте сайт перед новой проверкой.' : msg(err);
+      $('sn-publish').disabled = err.code !== 'github_limited';
+      if (unknown || ['content_conflict', 'preview_expired', 'preview_required'].includes(err.code)) S.preview = null;
     } finally { S.busy = false; }
   }
   /** Раскладка меню по страницам: пачками, с повтором при сбое связи. */
@@ -380,7 +425,22 @@
     $('sn-sync-text').textContent = 'Меню, подвал и контакты разложены: ' + total + ' страниц, обновлено ' + changedPages + '. Сайт покажет изменения через 1–2 минуты.';
     $('sn-tabs').hidden = false; tab('nav');
   }
-  async function history(kind) {
+  function restoreAssignment(current, historical, target) {
+    if(!['covers','afishaCovers'].includes(target.field)) throw {code:'invalid_field'};
+    const copy=clone(current),rows=copy[target.field]||[],old=historical[target.field]||[];
+    const match=c=>target.slot&&c.slot?c.slot===target.slot:c.href.replace(/^\/en(?=\/)/,'').replace(/\/$/,'')===target.href.replace(/\/$/,'');
+    const chosen=old.filter(match);
+    if(chosen.length>1||rows.filter(match).length>1)throw{code:'cover_slot_ambiguous'};
+    const restored=chosen[0]?{...clone(chosen[0]),...(target.slot?{slot:target.slot}:{})}:null;
+    const index=rows.findIndex(match);
+    if(index>=0){if(restored)rows[index]=restored;else rows.splice(index,1);}else if(restored)rows.push(restored);
+    if(target.field in copy||rows.length)copy[target.field]=rows;
+    return copy;
+  }
+  async function history(kind, target = null) {
+    const edit = S.edit;
+    $('sn-history-title').textContent=target?'История выбранной обложки':'История всего раздела';
+    $('sn-history-note').textContent=target?'Вернётся только эта обложка на выбранной странице, включая мобильный кадр и RU/EN. Другие назначения и тексты сохранятся. Затем нужны новый макет и публикация.':'Откроется весь прежний снимок раздела в форме. Чтобы вернуть только одну обложку, используйте «История этой обложки» у карточки. Публикация требует нового макета.';
     $('sn-history-list').innerHTML = ''; $('sn-history-status').textContent = 'Загружаем…'; $('sn-history-dialog').showModal();
     try {
       const d = await api({ action: 'nav_history', kind });
@@ -388,11 +448,12 @@
       for (const h of d.history) {
         const li = document.createElement('li');
         li.innerHTML = '<div><b></b><small></small></div><button type="button" class="ed-quiet">Открыть эту версию</button>';
-        li.querySelector('b').textContent = new Date(h.date).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }); li.querySelector('small').textContent = h.message;
+        li.querySelector('b').textContent = new Date(h.date).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }); li.querySelector('small').textContent = h.message + (h.publication ? ' · '+h.publication.actor+' (общая сессия, имя сотрудника недоступно) · поля: '+h.publication.fields.join(', ')+' · назначения: '+h.publication.assignments.map(a=>a.surface+'/'+a.id).join(', ') : '');
         li.querySelector('button').onclick = async () => {
           try {
             const r = await api({ action: 'nav_revision', kind, commit: h.sha });
-            const data = { ...r[kind], revision: S[kind].revision };
+            if(edit!==S.edit)throw{code:'draft_changed'};
+            const data = target ? restoreAssignment(collectHome(),r.home,target) : { ...r[kind], revision: S[kind].revision };
             if (kind === 'nav') fillNav(data); else fillHome(data);
             changed(); $('sn-history-dialog').close(); status('Загружена версия от ' + li.querySelector('b').textContent + '. Проверьте макет и опубликуйте, чтобы вернуть её.');
           } catch (e) { $('sn-history-status').textContent = msg(e); }
@@ -427,6 +488,7 @@
     $('sn-conflict-download').onclick = downloadDraft;
     $('sn-conflict-apply').onclick = acceptConflicts;
     document.querySelectorAll('[data-preview]').forEach((b) => { b.onclick = () => { S.previewLang = b.dataset.preview; showPreview(); }; });
+    document.querySelectorAll('[data-preview-page]').forEach(b=>{b.onclick=()=>{S.previewPage=b.dataset.previewPage;showPreview();};});
     window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
     load().catch((e) => status(msg(e), true));
   }

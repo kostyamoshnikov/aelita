@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=181">
+<link rel="stylesheet" href="/assets/fonts.css?v=184">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -483,9 +483,10 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 @media(max-width:400px){#paDeadlineFields{padding:10px 8px}#paDeadlineFields input[type="datetime-local"]{padding:10px 6px;font-size:0.8125rem}}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=181">
-<script src="/assets/staff-handoff-v1.js?v=181"></script>
-<script src="/assets/mobile-files-m1.js?v=181"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=184">
+<script src="/assets/staff-handoff-v1.js?v=184"></script>
+<script src="/assets/mobile-files-m1.js?v=184"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=184"><script defer src="/assets/delivery-admin-v1.js?v=184"></script>
 </head>
 <body>
 
@@ -1420,7 +1421,7 @@ var STORAGE_KEY = 'aelita_admin_token';
 var adminTokenMemory = '';
 function getToken() { try { return localStorage.getItem(STORAGE_KEY) || adminTokenMemory; } catch (e) { return adminTokenMemory; } }
 function setToken(t) { adminTokenMemory=t;try { localStorage.setItem(STORAGE_KEY,t);sessionStorage.removeItem(STORAGE_KEY); } catch (e) {} }
-function clearToken() { adminTokenMemory='';try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
+function clearToken() { if(window.AelitaDeliveryAdmin)window.AelitaDeliveryAdmin.close();adminTokenMemory='';try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear(); }
 window.addEventListener('storage',function(e){if(e.key===STORAGE_KEY&&!e.newValue){adminTokenMemory='';showGate();}});
 
 function fmtMoney(n) {
@@ -3219,37 +3220,10 @@ document.getElementById('backfillBtn').addEventListener('click', async function 
 document.getElementById('ordersBlock').addEventListener('click', async function (e) {
   var resendBtn = e.target.closest('button[data-ord-action="resend"]');
   if (resendBtn) {
-    // ⚠️ Подтверждение обязательно: покупатель получит письмо немедленно,
-    // отменить отправку нельзя. Случайное нажатие в списке из сотни
-    // заказов иначе уходит человеку молча.
-    var num = resendBtn.dataset.ordNum;
-    var oid = resendBtn.dataset.ordId;
-    if (!confirm('Выслать билеты по ' + (resendBtn.dataset.ordTest ? 'ТЕСТОВОМУ ' : '') + 'заказу № ' + num + ' повторно? Письмо уйдёт на адрес, указанный в заказе.')) return;
-    var msgEl = resendBtn.parentNode.querySelector('.ord-resend-msg');
-    resendBtn.disabled = true; msgEl.textContent = 'Отправляем…';
-    try {
-      var res = await fetch(ADMIN_RESEND_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
-        body: JSON.stringify(oid ? { order_id: oid, order_number: num } : { order_number: num }),
-      });
-      if (res.status === 401) { clearToken(); showGate(); return; }
-      var data = await res.json().catch(function () { return null; });
-      if (res.ok && data && data.ok) {
-        msgEl.textContent = 'Отправлено на ' + (data.email || 'адрес из заказа') + ' · билетов: ' + data.tickets;
-      } else {
-        var code = data && data.error;
-        msgEl.textContent =
-          code === 'nothing_to_send' ? 'Все билеты заказа возвращены — отправлять нечего.' :
-          code === 'order_not_paid' ? 'Заказ не оплачен.' :
-          code === 'mail_failed' ? 'Почта не приняла письмо. Проверьте MAIL_USER/MAIL_PASS.' :
-          code === 'order_not_found' ? 'Заказ не найден.' : 'Не получилось отправить.';
-        resendBtn.disabled = false;
-      }
-    } catch (err) {
-      msgEl.textContent = 'Нет связи с сервером.';
-      resendBtn.disabled = false;
-    }
+    if(!window.AelitaDeliveryAdmin){alert('Обновите страницу: нужен новый экран доставки.');return;}
+    window.AelitaDeliveryAdmin.open({orderId:resendBtn.dataset.ordId,orderNumber:resendBtn.dataset.ordNum,
+      apiURL:ADMIN_RESEND_URL,getToken:getToken,onUnauthorized:function(){clearToken();showGate();}});
+
     return;
   }
 
@@ -3330,7 +3304,7 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
     var f = document.createElement('form');
     f.className = 'ord-fix-form';
     f.innerHTML = '<input class="ym-disable-keys" type="email" required maxlength="120" placeholder="Правильная почта покупателя">' +
-      '<div class="row"><button type="submit" class="mini-btn">Исправить и выслать билеты</button><button type="button" class="mini-btn" data-cancel>Отмена</button><span class="msg">Старый адрес останется в истории заказа, на него уйдёт короткое уведомление (без билетов); заказ появится в кабинете нового адреса.</span></div>';
+      '<div class="row"><button type="submit" class="mini-btn">Сохранить правильную почту</button><button type="button" class="mini-btn" data-cancel>Отмена</button><span class="msg">Старый адрес останется в истории заказа, на него уйдёт короткое уведомление (без билетов); заказ появится в кабинете нового адреса.</span></div>';
     fixBtn.parentNode.parentNode.insertBefore(f, fixBtn.parentNode.nextSibling);
     var inp = f.querySelector('input');
     inp.focus();
@@ -3340,23 +3314,25 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
       var to = inp.value.trim();
       var msg = f.querySelector('.msg');
       if (!to) return;
-      if (!confirm('Исправить почту заказа № ' + fixBtn.dataset.ordNum + ' на ' + to + ' и выслать туда билеты?')) return;
+      if (!confirm('Исправить почту заказа № ' + fixBtn.dataset.ordNum + ' на ' + to + '? Отправка билетов выполняется отдельно после проверки доставки.')) return;
+      var fixToken=getToken();
       var sb = f.querySelector('button[type=submit]');
       sb.disabled = true; msg.textContent = 'Исправляем…';
       try {
         var res = await fetch(ADMIN_RESEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
-          body: JSON.stringify({ order_id: fixBtn.dataset.ordId, mode: 'fix_email', new_email: to, admin_name: adminName() || undefined }),
+          body: JSON.stringify({ action:'delivery_fix_email',order_id: fixBtn.dataset.ordId,mode:'view',ticket_number:'',deliveryVersion:1, new_email: to, admin_name: adminName() || undefined }),
         });
         if (res.status === 401) { clearToken(); showGate(); return; }
         var d = await res.json().catch(function () { return null; });
+        if(fixToken!==getToken()||!f.isConnected)return;
         if (res.ok && d && d.ok) {
-          msg.textContent = 'Готово: почта исправлена, билеты отправлены на ' + (d.email || to) + '.';
-          setTimeout(loadOrders, 1500);
+          msg.textContent = 'Почта исправлена. Для отправки откройте доставку и проверьте актуальный адрес.';
+          setTimeout(function(){if(fixToken===getToken())loadOrders();},1500);
         } else {
           var c = d && d.error;
-          msg.textContent = c === 'bad_email' ? 'Похоже, в адресе ошибка.' : c === 'same_email' ? 'Это тот же адрес, что в заказе.' :
+          msg.textContent = c==='ticket_not_found'||c==='delivery_review_required'?'Сначала обновите сервер доставки и страницу админки.':c === 'bad_email' ? 'Похоже, в адресе ошибка.' : c === 'same_email' ? 'Это тот же адрес, что в заказе.' :
             c === 'mail_failed' ? 'Почта исправлена, но письмо не ушло — нажмите «Выслать билеты повторно».' :
             c === 'nothing_to_send' ? 'Почта исправлена; все билеты возвращены — отправлять нечего.' :
             res.status === 404 && !c ? 'Функция tickets-resend ещё не обновлена.' : 'Не получилось.';
@@ -6793,6 +6769,7 @@ async function loadData(opts) {
 }
 
 function showGate() {
+  if(window.AelitaDeliveryAdmin)window.AelitaDeliveryAdmin.close();
   document.getElementById('gateScreen').style.display = 'block';
   document.getElementById('dataScreen').style.display = 'none';
 }
@@ -7260,11 +7237,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=181"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=181">
-<script src="/assets/ai-pilot-v741.js?v=181"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=181"></script>
-<script src="/assets/subscription-materials-admin.js?v=181"></script>
+<script src="/assets/admin-snapshot.js?v=184"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=184">
+<script src="/assets/ai-pilot-v741.js?v=184"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=184"></script>
+<script src="/assets/subscription-materials-admin.js?v=184"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

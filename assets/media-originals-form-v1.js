@@ -10,7 +10,7 @@ function mount(options){
  function refresh(){
   const holder=options.holder;if(!holder)return;
   holder.replaceChildren();const initial=value(),generationAtRender=generation;
-  media.controls(holder,{api:options.api,value:initial,progress:options.progress,
+  media.controls(holder,{api:options.api,value:initial,resolve:v=>{const a=options.selection().asset;return v.startsWith('asset:')&&a?.data?'data:'+a.type+';base64,'+a.data:v;},usages:options.usages||['фото выбранной карточки'],progress:options.progress,
    isCurrent:()=>current()&&generation===generationAtRender&&value()===initial,
    onChoose:choose});
  }
