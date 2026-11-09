@@ -1,6 +1,6 @@
 // Read-only bot menu simulation. The source of button layout and event facts
 // remains the same domain model as the published bot; no network or I/O here.
-import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=181';
+import {screenView,currentEvent,normalizeEventCatalog,legacyPlain,renderTemplate,afishaAnnouncements,renderAfisha} from './bot-admin-domain.mjs?v=190';
 
 // Matches publicHandle's routeScreen in _tools/Bot/Admin/controller.mjs.
 export const ROUTE_SCREENS=Object.freeze({back:'welcome',lang_toggle:'welcome',meetings:'community',tickets_menu:'tickets_menu',afisha:'afisha',shows:'shows',shop:'shop',community:'community',book_concierge:'book_concierge',gift_card:'gift_card',about:'about',docs:'docs',collab:'collab',collab_business:'collab_business',collab_event:'collab_event',collab_venues:'collab_venues',collab_partners:'collab_partners',collab_investors:'collab_investors',collab_artists:'collab_artists',socials:'socials'});
@@ -20,7 +20,7 @@ export function scenarioMap(content,language='ru'){
     const target=b.kind==='screen'?b.target:ROUTE_SCREENS[b.target];
     if(Object.hasOwn(screens,target))to=target;else missing=true;
    }
-   return{label:b.label,kind:b.kind,target:b.target,visible:b.visible,to,missing,row:b.row,index,implicit:false};
+   return{id:b.id,label:b.label,kind:b.kind,target:b.target,visible:b.visible,to,missing,row:b.row,index,implicit:false};
   }).sort((a,b)=>a.row-b.row||a.index-b.index);
   // keyboard() inserts this return even when all configured buttons are hidden.
   if(id!=='welcome'&&!buttons.some(b=>b.visible&&b.kind==='route'&&b.target==='back'))

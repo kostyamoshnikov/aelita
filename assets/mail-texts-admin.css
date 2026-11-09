@@ -9,3 +9,5 @@
 .mt-sample pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:15px;line-height:1.6;margin:0;color:var(--bone)}
 
 #nr-panel{margin:24px 0;padding-bottom:36px}#nr-panel fieldset{border:1px solid #4b4130;min-width:0;padding:16px}#nr-panel label{display:block;margin:12px 0}#nr-panel input:not([type=checkbox]),#nr-panel select{width:100%;max-width:100%;box-sizing:border-box}#nr-panel pre{white-space:pre-wrap;overflow-wrap:anywhere}#nr-panel .ed-actions{flex-wrap:wrap}#nr-panel button{max-width:100%;white-space:normal}#nr-panel [role=status]{overflow-wrap:anywhere}
+
+#ni-body{overflow-wrap:anywhere}#ni-body .ed-card{margin-top:16px}

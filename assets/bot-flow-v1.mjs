@@ -1,4 +1,4 @@
-import {scenarioMap} from './bot-simulator-v1.mjs?v=181';
+import {scenarioMap} from './bot-simulator-v1.mjs?v=190';
 
 export const FLOW_LIMIT=12000;
 const ZOOMS=[['0.5','50%'],['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']];
@@ -31,16 +31,17 @@ export function layoutPositions(value,ids){
 export function flowGraph(content,lang='ru',positions={}){
  const map=scenarioMap(content,lang),rows=new Map(),manual=layoutPositions(positions,Object.keys(content.screens));
  const nodes=map.items.map(item=>{const column=item.path===null?4:Math.min(3,item.path.length),row=rows.get(column)||0;rows.set(column,row+1);return{...item,x:manual[item.id]?.x??24+column*270,y:manual[item.id]?.y??28+row*112};});
- const edges=nodes.flatMap(n=>n.buttons.filter(b=>b.visible&&b.to&&!b.implicit).map(b=>({from:n.id,to:b.to,label:b.label})));
+ const edges=nodes.flatMap(n=>n.buttons.filter(b=>b.visible&&b.to&&!b.implicit).map(b=>({id:n.id+':'+b.id,buttonId:b.id,from:n.id,to:b.to,label:b.label})));
  return{nodes,edges,width:Math.max(1380,...nodes.map(n=>n.x+244)),height:Math.max(240,...nodes.map(n=>n.y+100)),unreachable:nodes.filter(n=>n.path===null).map(n=>n.id)};
 }
 // Bounded orthogonal candidates; routing affects only SVG geometry.
-export function routeFlowEdge(nodes,edge){
+export function routeFlowEdge(nodes,edge,options={}){
  const a=nodes.find(n=>n.id===edge.from),b=nodes.find(n=>n.id===edge.to);if(!a||!b)return null;
- const start={x:a.x+220,y:a.y+40},end={x:b.x,y:b.y+40},out={x:start.x+12,y:start.y},entry={x:end.x-12,y:end.y};
- const fallback={clear:false,d:`M${start.x},${start.y} C${start.x+40},${start.y} ${end.x-30},${end.y} ${end.x},${end.y}`,points:[]};
+ const start={x:a.x+220,y:a.y+(options.sourcePort??40)},end={x:b.x,y:b.y+(options.targetPort??40)},out={x:start.x+12+(options.lane??0),y:start.y},entry={x:end.x-12-(options.lane??0),y:end.y};
+ const fallback={clear:false,d:`M${start.x},${start.y} C${start.x+40},${start.y} ${end.x-30},${end.y} ${end.x},${end.y}`,points:[],end,reason:'obstacle'};
+ if(options.simple||options.budget?.checks<=0||options.deadline!==undefined&&options.clock()>=options.deadline)return{...fallback,reason:'budget'};
  if(entry.x<0)return fallback;
- const blocked=(p,q,n)=>{const l=n.x-6,r=n.x+226,t=n.y-6,b=n.y+86;return p.x===q.x?p.x>l&&p.x<r&&Math.max(p.y,q.y)>t&&Math.min(p.y,q.y)<b:p.y===q.y?p.y>t&&p.y<b&&Math.max(p.x,q.x)>l&&Math.min(p.x,q.x)<r:true;};
+ const blocked=(p,q,n)=>{if(options.budget){if(--options.budget.checks<0)return true;}if(options.deadline!==undefined&&options.clock()>=options.deadline){if(options.budget)options.budget.checks=0;return true;}const l=n.x-6,r=n.x+226,t=n.y-6,b=n.y+86;return p.x===q.x?p.x>l&&p.x<r&&Math.max(p.y,q.y)>t&&Math.min(p.y,q.y)<b:p.y===q.y?p.y>t&&p.y<b&&Math.max(p.x,q.x)>l&&Math.min(p.x,q.x)<r:true;};
  const compact=points=>points.filter((p,i)=>!i||p.x!==points[i-1].x||p.y!==points[i-1].y);
  const valid=points=>points.every(p=>p.x>=0&&p.y>=0)&&points.slice(1).every((q,i)=>!nodes.some(n=>(i!==0||n.id!==a.id)&&(i!==points.length-2||n.id!==b.id)&&blocked(points[i],q,n)));
  const candidates=[],add=middle=>{const points=compact([start,out,...middle,entry,end]);candidates.push({points,length:points.slice(1).reduce((sum,p,i)=>sum+Math.abs(p.x-points[i].x)+Math.abs(p.y-points[i].y),0)});};
@@ -50,7 +51,20 @@ export function routeFlowEdge(nodes,edge){
  for(const x of lanes(nodes.flatMap(n=>[n.x-12,n.x+232]),out.x))add([{x,y:out.y},{x,y:entry.y}]);
  candidates.sort((x,y)=>x.length-y.length||x.points.length-y.points.length);
  const found=candidates.find(c=>valid(c.points));if(!found)return fallback;
- return{clear:true,points:found.points,d:found.points.map((p,i)=>(i?'L':'M')+p.x+','+p.y).join(' ')};
+ return{clear:true,end,points:found.points,d:found.points.map((p,i)=>(i?'L':'M')+p.x+','+p.y).join(' ')};
+}
+
+// Rendering-only ports and a shared finite budget; no content mutation.
+export function routeFlowEdges(nodes,edges,options={}){
+ const outgoing=new Map(),incoming=new Map(),result=new Map(),index=new Map(edges.map((e,i)=>[e,i]));
+ for(const edge of edges){if(!outgoing.has(edge.from))outgoing.set(edge.from,[]);outgoing.get(edge.from).push(edge);if(!incoming.has(edge.to))incoming.set(edge.to,[]);incoming.get(edge.to).push(edge);}
+ const key=e=>e.id||e.from+':'+e.to+':'+index.get(e),order=(a,b)=>key(a).localeCompare(key(b));for(const group of [...outgoing.values(),...incoming.values()])group.sort(order);
+ const ports=map=>new Map([...map.values()].flatMap(group=>group.map((edge,i)=>[edge,group.length===1?40:8+64*(i+1)/(group.length+1)]))),sourcePorts=ports(outgoing),targetPorts=ports(incoming);
+ const budget={checks:options.maxChecks??250000},ordered=[...edges].sort((a,b)=>(key(a)===options.priorityId?-1:key(b)===options.priorityId?1:order(a,b)));
+ let computed=0;for(const edge of ordered){const lane=[...key(edge)].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,0)%7*2,simple=options.simple||computed>=(options.maxRoutes??180)||budget.checks<=0;
+  const route=routeFlowEdge(nodes,edge,{sourcePort:sourcePorts.get(edge),targetPort:targetPorts.get(edge),lane,simple,budget,clock:options.clock||(()=>0),deadline:options.deadline});result.set(key(edge),route);if(!simple)computed++;
+ }
+ return{routes:result,checked:computed,remainingChecks:Math.max(0,budget.checks),unresolved:[...result.values()].filter(r=>r&&!r.clear).length};
 }
 
 export function flowNeighborhood(graph,id){const incoming=graph.edges.filter(e=>e.to===id),outgoing=graph.edges.filter(e=>e.from===id);return{incoming,outgoing,nodes:new Set([id,...incoming.map(e=>e.from),...outgoing.map(e=>e.to)])};}
@@ -61,7 +75,7 @@ export function connectionPatch(content,source,lang,buttonId,target){
 }
 export function mountFlow(root,options){
  let view=options.view,lang=options.lang==='en'?'en':'ru',source=options.screen||'welcome',target='',selected='',picking=false,pending=false,alive=true;
- let focusLinks=false;
+ let focusLinks=false,selectedEdge=null;
  let positions={},base={},revision=0,remote=null,ready=false,loading=false,moving=false,zoom=1,operation=null,suppress=false,drag=null,scene=null,beforeArrange=null;
  const copy=x=>JSON.parse(JSON.stringify(x)),ids=()=>Object.keys(view.content.screens),clean=p=>layoutPositions(p,ids()),same=(a,b)=>JSON.stringify(clean(a))===JSON.stringify(clean(b)),dirty=()=>!same(positions,base);
  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
@@ -141,8 +155,8 @@ export function mountFlow(root,options){
   viewport.replaceChildren();const ns='http://www.w3.org/2000/svg',svg=(tag,attrs={})=>{const e=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;};
   const canvas=svg('svg',{width:graph.width*zoom,height:graph.height*zoom,viewBox:'0 0 '+graph.width+' '+graph.height,role:'group','aria-label':'Шаги и переходы'}),edgeNodes=[],groups=new Map();
   const routingNote=node('p');routingNote.className='ed-note';routingNote.setAttribute('role','status');neighbors.append(routingNote);
-  function geometry(quick=false){let unresolved=0;const routes=new Map();for(const [id,g]of groups){const n=byId.get(id);g.setAttribute('transform',`translate(${n.x} ${n.y})`);}for(const {edge,path,arrow}of edgeNodes){const a=byId.get(edge.from),b=byId.get(edge.to),key=edge.from+'\0'+edge.to;let route=routes.get(key);if(!route){route=quick?null:routeFlowEdge(graph.nodes,edge);routes.set(key,route);}path.setAttribute('d',route?.d||`M${a.x+220},${a.y+40} C${a.x+260},${a.y+40} ${b.x-30},${b.y+40} ${b.x},${b.y+40}`);path.setAttribute('stroke-dasharray',route&&!route.clear?'5 4':'none');if(route&&!route.clear)unresolved++;arrow.setAttribute('d',`M${b.x-7},${b.y+36} L${b.x},${b.y+40} L${b.x-7},${b.y+44}`);}routingNote.textContent=quick?'Во время перемещения показаны упрощённые линии.':unresolved?'Для '+unresolved+' переходов свободный маршрут не найден — они показаны пунктиром. Раздвиньте карточки. Пересечения линий между собой возможны.':'Линии проложены в обход карточек с зазором. Пересечения линий между собой возможны.';}
-  for(const edge of graph.edges){const a=byId.get(edge.from),b=byId.get(edge.to),active=edge.from===source||edge.to===source,path=svg('path',{fill:'none',stroke:focusLinks&&active?'#f0cc88':'#77684f','stroke-width':focusLinks&&active?3:1.5,opacity:focusLinks&&!active?0.15:1}),title=svg('title');title.textContent=a.label+' → '+b.label+' · '+edge.label;path.append(title);canvas.append(path);const arrow=svg('path',{fill:'none',stroke:'#d6b57a',opacity:focusLinks&&!active?0.15:1});canvas.append(arrow);edgeNodes.push({edge,path,arrow});}
+  function geometry(quick=false){for(const [id,g]of groups){const n=byId.get(id);g.setAttribute('transform',`translate(${n.x} ${n.y})`);}const routed=routeFlowEdges(graph.nodes,graph.edges,{simple:quick,priorityId:selectedEdge,clock:()=>performance.now(),deadline:performance.now()+20});for(const {edge,path,arrow}of edgeNodes){const b=byId.get(edge.to),route=routed.routes.get(edge.id),end=route?.end||{x:b.x,y:b.y+40};path.setAttribute('d',route?.d||'');path.setAttribute('stroke-dasharray',route&&!route.clear?'5 4':'none');arrow.setAttribute('d',`M${end.x-7},${end.y-4} L${end.x},${end.y} L${end.x-7},${end.y+4}`);}const chosen=graph.edges.find(e=>e.id===selectedEdge),label=chosen?' Выбран переход: «'+chosen.label+'», '+byId.get(chosen.from).label+' → '+byId.get(chosen.to).label+'.':'';routingNote.textContent=(quick?'Во время перемещения показаны упрощённые линии.':routed.unresolved?'Для '+routed.unresolved+' переходов обход не подтверждён либо исчерпан бюджет — пунктир. Используйте текстовый список связей/выделение стрелки.':'Обход карточек подтверждён для показанных линий. Пересечения линий между собой возможны.')+label;}
+  for(const edge of graph.edges){const a=byId.get(edge.from),b=byId.get(edge.to),active=selectedEdge?edge.id===selectedEdge:edge.from===source||edge.to===source,path=svg('path',{fill:'none',stroke:(focusLinks||selectedEdge)&&active?'#f0cc88':'#77684f','stroke-width':(focusLinks||selectedEdge)&&active?3:1.5,opacity:(focusLinks||selectedEdge)&&!active?0.15:1}),title=svg('title');title.textContent=a.label+' → '+b.label+' · '+edge.label;path.setAttribute('tabindex','0');path.setAttribute('role','button');path.setAttribute('aria-label',title.textContent);const choose=()=>{if(!alive||pending||loading)return;selectedEdge=edge.id;source=edge.from;selected=edge.buttonId||selected;target=edge.to;render();};path.onclick=choose;path.onkeydown=e=>{if(['Enter',' '].includes(e.key)){e.preventDefault?.();choose();}else if(e.key==='Escape'){selectedEdge=null;render();}};path.append(title);canvas.append(path);const arrow=svg('path',{fill:'none',stroke:'#d6b57a',opacity:(focusLinks||selectedEdge)&&!active?0.15:1});canvas.append(arrow);edgeNodes.push({edge,path,arrow});}
   for(const n of graph.nodes){const group=svg('g',{opacity:focusLinks&&!neighborhood.nodes.has(n.id)?0.45:1,role:'button',tabindex:0,'aria-label':n.label+(n.path===null?' · путь не найден':''),'aria-pressed':n.id===source});groups.set(n.id,group);
    const rect=svg('rect',{x:0,y:0,width:220,height:80,rx:8,fill:n.id===source?'#443925':'#1b1b1e',stroke:n.id===target?'#92cda5':n.path===null?'#d18b77':'#d6b57a'}),title=svg('title');title.textContent=n.label;
    const text=svg('text',{x:12,y:30,fill:'#e8e6e1','font-size':14});text.textContent=n.label.length>25?n.label.slice(0,24)+'…':n.label;const sub=svg('text',{x:12,y:55,fill:'#c9b8a3','font-size':11});sub.textContent=n.dynamic?'События из каталога':n.path===null?'Нет пути из меню':'Кнопок: '+n.buttons.filter(b=>b.visible).length;

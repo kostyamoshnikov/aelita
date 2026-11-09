@@ -20,6 +20,7 @@
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
     let d; try { d = await r.json(); } catch { throw { code: 'github_unreachable' }; }
+    if(t!==token()){gate();throw{code:'not_authenticated'};}
     if (r.status === 401) gate();
     if (!r.ok || d.error) throw { code: d.error || 'mail_texts_failed', field: d.field };
     return d;
@@ -80,7 +81,7 @@
     if (S.busy) return; S.busy = true; mark(null);
     try {
       const d = await api({ action: test ? 'mail_texts_test' : 'mail_texts_preview', doc: S.doc, id: S.id, lang: S.lang });
-      if (test) status('Пример ушёл на почту команды.');
+      if(test)status(d.state==='accepted'?'SMTP принял тест на один адрес почты команды. Доставка не подтверждена.':'Исход теста неизвестен. Не повторяйте вслепую.',d.state!=='accepted');
       else { $('mt-sample').hidden = false; $('mt-sample').querySelector('.mt-subj').textContent = 'Тема: ' + d.subject; $('mt-sample').querySelector('pre').textContent = d.text; status(''); }
     } catch (e) { status(msg(e), true); mark(e.field); } finally { S.busy = false; }
   }

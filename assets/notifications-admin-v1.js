@@ -1,0 +1,15 @@
+(function(){'use strict';
+const $=id=>document.getElementById(id),root=$('ni-body'),status=$('ni-status'),button=$('ni-refresh');let epoch=0,busy=false;
+const token=()=>{try{return localStorage.getItem('aelita_admin_token');}catch{return null;}};
+function clear(){epoch++;root.replaceChildren();status.textContent='Для чтения войдите в админку.';}
+async function load(){if(busy)return;const t=token(),version=++epoch;if(!t){clear();return;}busy=true;button.disabled=true;root.replaceChildren();status.textContent='Читаем реестр и наблюдения канала…';try{
+ const r=await fetch('https://api.aelita-production.ru/admin/site-edit',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({action:'mail_texts_notifications_get'}),cache:'no-store',signal:AbortSignal.timeout(15000)}),d=await r.json();
+ if(version!==epoch||t!==token())return;if(!r.ok)throw Error(r.status===401?'Войдите в админку.':'Реестр пока недоступен.');
+ const text=(tag,value)=>{const n=document.createElement(tag);n.textContent=value;return n;};
+ for(const f of d.families){const section=document.createElement('section');section.className='ed-card';section.append(text('h3',f.title),text('p','Каналы: '+f.channels.join(', ')+' · шаблон RU/EN: '+(f.template||'кодовый')+' · '+(f.templateMode==='existing_editor'?'редактор текста доступен':'текст только для чтения')),text('p',f.reason),text('p','Получатель: '+f.recipientAuthority),text('p','Отправитель: '+f.sender));if(/^\/admin\/[a-z0-9/-]*$/.test(f.href)){const link=document.createElement('a');link.href=f.href;link.textContent='Открыть действующий раздел';section.append(link);}root.append(section);}
+ const x=d.technical,labels={configured:'переменные заданы',not_configured:'настройка неполная',unsafe_same_bucket:'нужен отдельный бакет, сейчас совпадает с основным',not_checked:'не проверено',not_observed:'свежего наблюдения нет',unavailable:'источник недоступен',error:'есть ошибка',recent_observation:'есть недавнее наблюдение',match:'конфигурации совпадают',mismatch:'конфигурации различаются',read_observed:'доступ к чтению наблюдался',worker_recent_read:'Worker недавно читал ящик'};
+ root.prepend(text('p','Технический Telegram: запись — '+(labels[x.writer.state]||'не проверено')+'; доступ — '+(labels[x.writer.access]||'не проверено')+'; Worker — '+(labels[x.worker.state]||'не проверено')+'; сверка — '+(labels[x.worker.comparison]||'не проверено')+'. Последнее свежее наблюдение: '+(x.worker.observedAt?new Date(x.worker.observedAt).toLocaleString('ru-RU'):'нет')+'. Доставка и тест не проверены.'));
+ status.textContent='Наблюдение: '+new Date(d.checkedAt).toLocaleString('ru-RU')+'. Секреты и получатели не выгружались. Чтение никому не отправляет сообщения.';
+ }catch(e){if(version===epoch&&t===token())status.textContent=e.message==='Реестр пока недоступен.'?e.message:'Чтение не подтверждено. Проверьте сессию и связь.';}finally{busy=false;button.disabled=false;}}
+button.onclick=load;window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token')clear();});window.addEventListener('pagehide',clear);
+})();
