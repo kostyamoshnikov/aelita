@@ -2,7 +2,7 @@
   'use strict';
   var panel = document.getElementById('matrix-online-admin');
   if (!panel) return;
-  var cfg = null, pid = 'matritsa-2026-11-14', sel = document.getElementById('pa-perf');
+  var cfg = null, pid = '', request = 0, sel = document.getElementById('pa-perf');
   var field = document.getElementById('online-telemost-url'), msg = document.getElementById('online-admin-msg'), save = document.getElementById('online-admin-save');
   function fmt(iso) { return new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' МСК'; }
   async function call(body) {
@@ -15,17 +15,28 @@
     return d;
   }
   async function load() {
+    if (!pid) return;
+    var current = ++request, loadingPid = pid;
+    cfg = null;
     save.disabled = true; msg.textContent = 'Загружаем…';
     try {
-      cfg = await call(); field.value = cfg.telemostUrl || '';
+      var result = await call();
+      if (current !== request || loadingPid !== pid) return;
+      cfg = result; field.value = cfg.telemostUrl || '';
       var schedule = document.getElementById('online-mail-schedule'); schedule.replaceChildren();
       (cfg.schedule || []).forEach(function (s, i) { var li = document.createElement('li'); li.textContent = ['За сутки: ', 'За час: ', 'В момент начала: '][i] + fmt(s.at); schedule.appendChild(li); });
       var counts = {}; (cfg.deliveries || []).forEach(function (d) { counts[d.state] = (counts[d.state] || 0) + 1; });
       msg.textContent = (cfg.telemostUrl ? 'Ссылка сохранена.' : 'Добавьте ссылку Телемоста до первой отправки.') + ' Онлайн-билетов: ' + cfg.tickets.online + ', офлайн: ' + cfg.tickets.offline + '. Писем принято сервером: ' + (counts.sent || 0) + (counts.retry || counts.uncertain ? '. Требуют внимания: ' + ((counts.retry || 0) + (counts.uncertain || 0)) + '. Проверьте почтовый журнал и при необходимости перешлите билет из заказа.' : '');
       save.disabled = false;
-    } catch (e) { cfg = null; msg.textContent = e.message; }
+    } catch (e) { if (current === request) { cfg = null; msg.textContent = e.message; } }
   }
-  function selected() { panel.hidden = sel.value !== pid; if (!panel.hidden) load(); }
+  function selected() {
+    request++; cfg = null; save.disabled = true; field.value = '';
+    var p = typeof PERF_LIST !== 'undefined' && PERF_LIST.find(function (p) { return p.id === sel.value; });
+    pid = p && (p.onlineInvites || p.id === 'matritsa-2026-11-14') ? p.id : '';
+    panel.hidden = !pid;
+    if (pid) load();
+  }
   sel.addEventListener('change', selected);
   document.getElementById('online-admin-reload').addEventListener('click', load);
   save.addEventListener('click', async function () {

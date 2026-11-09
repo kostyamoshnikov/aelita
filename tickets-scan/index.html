@@ -112,7 +112,7 @@ button.action:disabled{opacity:.5}
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=193">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=194">
 </head>
 <body>
 <div id="gate">
@@ -166,7 +166,7 @@ button.action:disabled{opacity:.5}
      может не открыться (Cloudflare в РФ замедляют). Где есть встроенный
      BarcodeDetector (Chrome на Android) — сначала он, jsQR — запасной. -->
 <script src="/assets/jsQR-1.4.0.js"></script>
-<script src="/assets/analytics-events.js?v=193"></script>
+<script src="/assets/analytics-events.js?v=194"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -898,6 +898,7 @@ const CHECK_FAIL_MESSAGES = {
   bad_signature: 'Подпись QR не сходится — билет поддельный или испорчен. Не пропускать, позовите администратора.',
   ticket_not_found: 'Такого места нет в заказе — возможно, билет от другого заказа. Не пропускать, позовите администратора.',
   order_not_found: 'Заказ не найден — билет недействителен. Не пропускать.',
+  online_invitation: 'Это онлайн-пригласительный. Вход в зал по нему не предусмотрен.',
   online_ticket: 'Это билет на онлайн-трансляцию. Вход в зал по нему не предусмотрен.',
   ticket_refunded: 'За этот билет оформлен возврат — не пропускать. Если человек уверен, что не возвращал билет, позовите администратора.',
   // ТЗ С2: билет передан другому человеку — у этого QR старая версия.

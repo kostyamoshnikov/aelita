@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=193">
+<link rel="stylesheet" href="/assets/fonts.css?v=194">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -483,11 +483,11 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 @media(max-width:400px){#paDeadlineFields{padding:10px 8px}#paDeadlineFields input[type="datetime-local"]{padding:10px 6px;font-size:0.8125rem}}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=193">
-<script src="/assets/staff-handoff-v1.js?v=193"></script>
-<script src="/assets/mobile-files-m1.js?v=193"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=193"><script defer src="/assets/delivery-admin-v1.js?v=193"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=193"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=194">
+<script src="/assets/staff-handoff-v1.js?v=194"></script>
+<script src="/assets/mobile-files-m1.js?v=194"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=194"><script defer src="/assets/delivery-admin-v1.js?v=194"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=194"></script></head>
 <body>
 
 <nav>
@@ -792,7 +792,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <div class="inv-row">
           <div class="field inv-w3"><label for="inv-name">Имя и фамилия гостя</label><input class="ym-disable-keys" type="text" id="inv-name" autocomplete="off" maxlength="120"></div>
           <div class="field"><label for="inv-persons">На сколько лиц</label><input class="ym-disable-keys" type="number" id="inv-persons" min="1" max="50" value="1"></div>
-          <div class="field"><label for="inv-lang">Язык бланка</label><select id="inv-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+          <div class="field"><label for="inv-attendance">Формат участия</label><select id="inv-attendance"><option value="offline">В зале</option></select></div>
         </div>
         <div class="inv-row" id="inv-seats-row">
           <div class="field"><label for="inv-seat-mode">Места</label><select id="inv-seat-mode">
@@ -808,8 +808,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
           <div class="field"><label>&nbsp;</label><button type="button" class="mini-btn" id="invMapBtn">Выбрать на схеме</button></div>
           <div class="inv-map" id="inv-seat-map"></div>
         </div>
-        <p class="editor-note">Мест столько же, сколько лиц. Вписанные места уходят из продажи на этот показ; снятые и места отозванного пригласительного возвращаются в продажу.</p>
-        <div class="field"><label for="inv-note">Заметка (видна только в админке)</label><input class="ym-disable-keys" type="text" id="inv-note" autocomplete="off" maxlength="300"></div>
+        <p class="editor-note" id="inv-seats-note">Мест столько же, сколько лиц. Вписанные места уходят из продажи на этот показ; снятые и места отозванного пригласительного возвращаются в продажу.</p>
+        <p class="editor-note">В каждом PDF два листа: русский, затем английский. Онлайн-пригласительный открывает персональную страницу подключения и не занимает место в зале.</p><div class="field"><label for="inv-note">Заметка (видна только в админке)</label><input class="ym-disable-keys" type="text" id="inv-note" autocomplete="off" maxlength="300"></div>
         <div class="inv-row inv-mail-row">
           <div class="field inv-w2"><label for="inv-email">Почта гостя — по желанию</label><input class="ym-disable-keys" type="email" id="inv-email" autocomplete="off" maxlength="254" placeholder="guest@mail.ru"></div>
           <label class="inv-check"><input type="checkbox" id="inv-send"> <span id="inv-send-label">Отправить пригласительный на почту</span></label>
@@ -823,7 +823,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
           <label for="inv-lines">Гости — по одному в строке: «Имя Фамилия — 2» (без числа — на одно лицо). Почту можно дописать в строку: «Анна Иванова — 2 — anna@mail.ru» — отправить потом из карточки («Ещё ▾ → Отправить на почту»)</label>
           <textarea class="ym-disable-keys" id="inv-lines" rows="8" placeholder="Анна Иванова — 2&#10;Пётр Петров"></textarea>
         </div>
-        <div class="field"><label for="inv-import-lang">Язык бланков</label><select id="inv-import-lang"><option value="ru">Русский</option><option value="en">English</option></select></div>
+        <div class="field"><label for="inv-import-attendance">Формат участия</label><select id="inv-import-attendance"><option value="offline">В зале</option></select></div><p class="editor-note">В каждом PDF два листа: русский, затем английский.</p>
         <button class="btn-small" id="invImportSave">Выпустить списком</button>
         <button class="btn-small btn-ghost" id="invImportCancel">Отмена</button>
         <p class="editor-result" id="invImportResult"></p>
@@ -1033,8 +1033,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       </div>
       <p class="editor-note" id="pa-preview"></p><button type="button" class="mini-btn" id="pa-commercial">Цена и вместимость</button>
       <div class="adm-card att-admin" id="matrix-online-admin" hidden>
-        <h3>Онлайн-трансляция «Матрицы»</h3>
-        <p class="lead">Онлайн и офлайн — по 1 000 ₽. Переход в онлайн закрывается за сутки до начала.</p>
+        <h3>Онлайн-трансляция</h3>
+        <p class="lead">Доступ по онлайн-пригласительному открывается за сутки до начала. Вход в зал в него не входит.</p>
         <div class="field"><label for="online-telemost-url">Ссылка встречи в Яндекс Телемосте</label>
           <input type="url" id="online-telemost-url" placeholder="https://telemost.yandex.ru/j/…" autocomplete="off" class="ym-disable-keys"></div>
         <p class="editor-note">Сохраните ссылку до первой рассылки. Зрителям приходят персональные ссылки на закрытую страницу. В публичный образ сайта адрес встречи не входит.</p>
@@ -2583,6 +2583,7 @@ async function loadPerfActions() {
     sel.innerHTML = '<option value="">— выберите показ —</option>' + PERF_LIST.map(function (p) {
       return '<option value="' + escapeHtml(p.id) + '">' + escapeHtml(perfLabel(p)) + '</option>';
     }).join('');
+    sel.dispatchEvent(new Event('change'));
   } catch (e) {
     sel.innerHTML = '<option value="">Раздел заработает, когда функция aelita-admin-performance-action создана</option>';
   }
@@ -5861,10 +5862,10 @@ function nlProfileForm(s) {
     '<p class="nl-hint">Только то, что человек сам сообщил или вы знаете точно. Из покупок не заполняется. Согласие и подписку не меняет.</p>' +
     '<div><button class="btn-small" type="button" data-nl-profile-save="' + escapeHtml(s.id) + '">Сохранить профиль</button></div><p class="editor-result" data-nl-profile-res></p></div>';
 }
-var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Язык', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
-var INV_WIDTHS = [6, 32, 6, 34, 6, 11, 10, 24, 30];
+var INV_HEAD = ['№', 'Гость', 'Лиц', 'Места', 'Формат', 'Бланк', 'Статус', 'Проходов', 'Первый проход', 'Заметка'];
+var INV_WIDTHS = [6, 32, 6, 34, 12, 14, 11, 10, 24, 30];
 function invRow(i, ev) {
-  return [i.number, i.name, i.persons, invSeatsText(i, ev) || (i.entry ? 'входной' : (i.seatsLater ? 'назначить на входе' : '')), i.lang, i.status === 'active' ? 'действует' : 'отозван', i.visits || 0, i.firstVisitAt ? fmtGcDate(i.firstVisitAt) : '', i.note || ''];
+  return [i.number, i.name, i.persons, invSeatsText(i, ev) || (i.entry ? 'входной' : (i.seatsLater ? 'назначить на входе' : '')), i.attendanceMode === 'online' ? 'Онлайн' : 'В зале', 'RU / EN', i.status === 'active' ? 'действует' : 'отозван', i.visits || 0, i.firstVisitAt ? fmtGcDate(i.firstVisitAt) : '', i.note || ''];
 }
 // Имя листа (≤ 31 знака): дата «22.10» всегда видна, название — сколько влезет.
 function invSheetName(ev) {
@@ -5989,6 +5990,23 @@ async function loadInviteEvents() {
       ' · Если раздел открывается впервые — функция aelita-admin-invites ещё не создана (выкладка).</div>';
   }
 }
+function invAttendanceUi() {
+  var ev = invEvent(), online = document.getElementById('inv-attendance').value === 'online';
+  var hasSeats = !!(ev && ev.seatOptions && ev.seatOptions.length);
+  document.getElementById('inv-seats-row').style.display = !online && hasSeats ? '' : 'none';
+  document.getElementById('inv-seats-note').hidden = online || !hasSeats;
+  if (online || !hasSeats) { document.getElementById('inv-seat-mode').value = 'none'; document.getElementById('inv-seat-keys').value = ''; }
+  invSeatModeUi();
+}
+function invFormatOptions() {
+  var ev = invEvent(), modes = ev && ev.attendanceModes || ['offline'];
+  ['inv-attendance', 'inv-import-attendance'].forEach(function(id) {
+    var el = document.getElementById(id), keep = el.value;
+    el.innerHTML = modes.map(function(m) { return '<option value="' + m + '">' + (m === 'online' ? 'Онлайн' : 'В зале') + '</option>'; }).join('');
+    el.value = modes.indexOf(keep) >= 0 ? keep : 'offline';
+  });
+  invAttendanceUi();
+}
 function invSeatModeUi() {
   var m = document.getElementById('inv-seat-mode').value;
   document.getElementById('inv-seat-pick-row').style.display = m === 'seats' && document.getElementById('inv-seats-row').style.display !== 'none' ? '' : 'none';
@@ -6039,6 +6057,7 @@ async function invOpenMap() {
   } catch (e) { box.innerHTML = '<div class="inv-map-sum">' + escapeHtml(e.message) + '</div>'; }
 }
 function invFillSeatOptions() {
+  invFormatOptions();
   var ev = invEvent();
   var opts = ev ? ev.seatOptions || [] : [];
   document.getElementById('inv-seats-row').style.display = opts.length ? '' : 'none';
@@ -6049,6 +6068,7 @@ function invFillSeatOptions() {
   document.getElementById('inv-seat-perf').innerHTML = opts.map(function (o) {
     return '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.title) + '</option>';
   }).join('');
+  invAttendanceUi();
 }
 async function loadInvites() {
   var ev = invEvent();
@@ -6090,11 +6110,12 @@ function renderInvites() {
   var el = document.getElementById('invList');
   var active = INV_LIST.filter(function (i) { return i.status === 'active'; });
   var persons = active.reduce(function (a, i) { return a + i.persons; }, 0);
+  var onlinePersons = active.filter(function (i) { return i.attendanceMode === 'online'; }).reduce(function (a, i) { return a + i.persons; }, 0);
   var arrived = active.filter(function (i) { return i.visits; });
   document.getElementById('inv-total').textContent = active.length;
   var evc = invEvent();
   document.getElementById('inv-summary').textContent = (evc && evc.capacity ? 'Мест в зале: ' + evc.capacity.total + (evc.capacity.left !== null ? ', свободно: ' + evc.capacity.left + ' (билеты и пригласительные вместе) · ' : ' · ') : '') + 'Действующих: ' + active.length + ' на ' + invPersonsWord(persons) +
-    ' · прошли на вход: ' + arrived.length +
+    (onlinePersons ? ' · онлайн: ' + invPersonsWord(onlinePersons) + ' · в зале: ' + invPersonsWord(persons - onlinePersons) : '') + ' · прошли на вход: ' + arrived.length +
     (function () { var n = active.filter(function (i) { return i.seatsLater; }).length; return n ? ' · ждут мест: ' + n : ''; })() +
     (function () { var n = active.filter(function (i) { return i.entry; }); return n.length ? ' · входных: ' + n.length + ' на ' + invPersonsWord(n.reduce(function (a, i) { return a + i.persons; }, 0)) : ''; })() + (INV_LIST.length > active.length ? ' · отозвано: ' + (INV_LIST.length - active.length) : '');
   invRenderRecount(evc);
@@ -6123,7 +6144,7 @@ function renderInvites() {
       '<div class="ev-head"><div>' +
         '<div class="ev-title">№ ' + String(i.number).padStart(3, '0') + ' · ' + escapeHtml(i.name) +
           (off ? '<span class="inv-tag off">отозван</span>' : (i.visits ? '<span class="inv-tag ok">прошёл(а), ' + fmtGcDate(i.firstVisitAt) + '</span>' : '')) + '</div>' +
-        '<div class="ev-when">На ' + invPersonsWord(i.persons) + (seats ? ' · ' + escapeHtml(seats) : (i.entry ? ' · <b>входной</b> (свободные места после 3-го звонка)' : (i.seatsLater ? ' · <b>места — назначить на входе</b>' : ''))) + (i.lang === 'en' ? ' · бланк на английском' : '') +
+        '<div class="ev-when">На ' + invPersonsWord(i.persons) + (seats ? ' · ' + escapeHtml(seats) : (i.entry ? ' · <b>входной</b> (свободные места после 3-го звонка)' : (i.seatsLater ? ' · <b>места — назначить на входе</b>' : ''))) + (i.attendanceMode === 'online' ? ' · <b>онлайн</b>' : ' · в зале') + ' · PDF: RU / EN' +
           (i.rev ? ' · QR перевыпущен (' + i.rev + ')' : '') + (i.note ? ' · ' + escapeHtml(i.note) : '') + '</div>' +
         (i.email ? '<div class="ev-when inv-mail">✉ ' + escapeHtml(i.email) + (i.mailedAt ? ' · <span class="ok">отправлен ' + fmtGcDate(i.mailedAt) + '</span>' : ' · ещё не отправлен') + '</div>' : '') +
       '</div><div class="ev-count">' + (i.visits ? i.visits + ' прох.' : '') + '</div></div>' +
@@ -6140,7 +6161,9 @@ function invOpenForm(inv) {
   document.getElementById('inv-form').classList.add('open');
   document.getElementById('inv-name').value = inv ? inv.name : '';
   document.getElementById('inv-persons').value = inv ? inv.persons : 1;
-  document.getElementById('inv-lang').value = inv ? inv.lang : 'ru';
+  invFormatOptions();
+  document.getElementById('inv-attendance').value = inv && inv.attendanceMode === 'online' ? 'online' : 'offline';
+  document.getElementById('inv-attendance').disabled = !!inv;
   document.getElementById('inv-note').value = inv ? inv.note : '';
   document.getElementById('inv-email').value = inv ? (inv.email || '') : '';
   document.getElementById('inv-send').checked = false;
@@ -6153,7 +6176,7 @@ function invOpenForm(inv) {
   if (!perfSel.value && perfSel.options.length) perfSel.selectedIndex = 0;
   document.getElementById('inv-seat-keys').value = inv && inv.seats ? inv.seats.keys.join(', ') : '';
   document.getElementById('inv-seat-mode').value = !inv ? 'none' : (inv.seats ? 'seats' : (inv.entry ? 'entry' : (inv.seatsLater ? 'later' : 'none')));
-  invSeatModeUi();
+  invAttendanceUi();
   document.getElementById('invSaveBtn').textContent = inv ? 'Сохранить' : 'Выпустить';
   invShow(document.getElementById('invFormResult'), '', true);
   document.getElementById('inv-name').focus();
@@ -6178,6 +6201,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('invSaveBtn').textContent = 'Выпустить';
     invFillSeatOptions(); loadInvites();
   });
+  document.getElementById('inv-attendance').addEventListener('change', invAttendanceUi);
   document.getElementById('inv-seat-mode').addEventListener('change', invSeatModeUi);
   document.getElementById('invMapBtn').addEventListener('click', invOpenMap);
   document.getElementById('inv-seat-perf').addEventListener('change', function () { var b = document.getElementById('inv-seat-map'); b.innerHTML = ''; b.removeAttribute('data-open'); });
@@ -6211,7 +6235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var body = {
       action: INV_EDIT_ID ? 'update' : 'create', event_id: ev.id, id: INV_EDIT_ID || undefined,
       name: document.getElementById('inv-name').value, persons: Number(document.getElementById('inv-persons').value),
-      lang: document.getElementById('inv-lang').value, note: document.getElementById('inv-note').value,
+      attendance_mode: document.getElementById('inv-attendance').value, note: document.getElementById('inv-note').value,
       seats: perf && keys ? { performance_id: perf, keys: keys } : null,
       seats_later: mode === 'later',
       entry: mode === 'entry',
@@ -6262,7 +6286,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       var nLines = document.getElementById('inv-lines').value.split('\n').filter(function (l) { return l.trim(); }).length;
       if (nLines > 150) throw new Error('За раз — не больше 150 строк (сейчас ' + nLines + '): выпустите список частями');
-      var data = await invCall({ action: 'import', event_id: ev.id, lines: document.getElementById('inv-lines').value, lang: document.getElementById('inv-import-lang').value });
+      var data = await invCall({ action: 'import', event_id: ev.id, lines: document.getElementById('inv-lines').value, attendance_mode: document.getElementById('inv-import-attendance').value });
       var msg = 'Выпущено: ' + data.created.length;
       if (data.errors.length) msg += '. Не выпущены (' + data.errors.length + '): ' + data.errors.map(function (x) { return '«' + x.line + '» — ' + x.message; }).join('; ');
       invShow(out, msg, !data.errors.length);
@@ -6274,14 +6298,14 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('invPdfAllBtn').addEventListener('click', async function () {
     var btn = this, ev = invEvent();
     if (!ev) return;
-    // По 150 в файл: ответ сервера ограничен по размеру (≈ 3,5 МБ).
+    // По 75 в файл: ответ сервера ограничен по размеру (≈ 3,5 МБ).
     var ids = INV_LIST.filter(function (i) { return i.status === 'active'; }).map(function (i) { return i.id; });
     if (!ids.length) { alert('Действующих пригласительных нет'); return; }
     btn.disabled = true; var old = btn.textContent;
     try {
-      for (var k = 0; k < ids.length; k += 150) {
-        btn.textContent = ids.length > 150 ? 'Собираем PDF ' + (k / 150 + 1) + ' из ' + Math.ceil(ids.length / 150) + '…' : 'Собираем PDF…';
-        invDownload(await invCall({ action: 'pdf', event_id: ev.id, ids: ids.slice(k, k + 150) }));
+      for (var k = 0; k < ids.length; k += 75) {
+        btn.textContent = ids.length > 75 ? 'Собираем PDF ' + (k / 75 + 1) + ' из ' + Math.ceil(ids.length / 75) + '…' : 'Собираем PDF…';
+        invDownload(await invCall({ action: 'pdf', event_id: ev.id, ids: ids.slice(k, k + 75) }));
       }
     } catch (e) { alert(e.message); }
     btn.disabled = false; btn.textContent = old;
@@ -7237,11 +7261,11 @@ if (getToken()) { showData(); } else { showGate(); }
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=193"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=193">
-<script src="/assets/ai-pilot-v741.js?v=193"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=193"></script>
-<script src="/assets/subscription-materials-admin.js?v=193"></script>
+<script src="/assets/admin-snapshot.js?v=194"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=194">
+<script src="/assets/ai-pilot-v741.js?v=194"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=194"></script>
+<script src="/assets/subscription-materials-admin.js?v=194"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
