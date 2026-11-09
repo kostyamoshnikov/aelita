@@ -698,11 +698,11 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
 
 // ТЗ «покупка без зависаний», Н10: баннер «покупка сейчас может идти
 // медленнее» — включается из админки, гаснет сам через 6 часов. Спрашиваем
-// сервер не чаще раза в 5 минут за визит (sessionStorage); любой сбой —
+// сервер не чаще раза в минуту за визит (sessionStorage); любой сбой —
 // баннера нет, сайт работает как обычно.
 (function () {
   var URL = 'https://api.aelita-production.ru/tickets/performances-list?notice=1';
-  var CACHE = 'aelita_notice';
+  var CACHE = 'aelita_notice_sales_v2';
   function show(n) {
     if (!n || !n.on || !(Date.parse(n.until) > Date.now()) || document.getElementById('aelitaNotice')) return;
     var en = window.AELITA_isEn && window.AELITA_isEn();
@@ -796,6 +796,7 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
     list.forEach(function (s) {
       if (!s || !s.id) return;
       if (s.state === 'reopened') { reopened.push(s.id); return; }
+      if (s.state === 'unavailable') return; // no false closure; checkout validates current availability
       var label = s.state === 'sold_out' ? (en ? 'Sold out' : 'Билеты распроданы')
         : s.state === 'sales_closed' ? (s.notStarted ? (en ? 'Sales not yet open' : 'Продажа ещё не началась') : (en ? 'Sales closed' : 'Продажа закрыта')) : null;
       if (!label) return;
@@ -818,14 +819,14 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
   function run() {
     try {
       var c = JSON.parse(sessionStorage.getItem(CACHE) || 'null');
-      if (c && Date.now() - c.t < 5 * 60 * 1000) { show(c.n); showChanges(c.ch); showSales(c.s); return; }
+      if (c && Date.now() >= c.t && Date.now() - c.t < 60 * 1000 && !(c.s || []).some(function(s){ return s.state === 'unavailable'; })) { show(c.n); showChanges(c.ch); showSales(c.s); return; }
     } catch (e) { /* без кэша */ }
     if (!window.fetch) return;
-    fetch(URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    fetch(URL, {cache:'no-store'}).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var n = d && d.notice;
       var ch = (d && d.changes) || [];
       var sl = (d && d.sales) || [];
-      try { sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null, ch: ch, s: sl })); } catch (e) { /* приватный режим */ }
+      try { if (d && d.salesSource !== 'unavailable' && !sl.some(function(s){ return s.state === 'unavailable'; })) sessionStorage.setItem(CACHE, JSON.stringify({ t: Date.now(), n: n || null, ch: ch, s: sl })); } catch (e) { /* приватный режим */ }
       show(n);
       showChanges(ch);
       showSales(sl);

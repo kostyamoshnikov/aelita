@@ -1,6 +1,6 @@
 {
   "schema": "aelita.home/v1",
-  "revision": 0,
+  "revision": 1,
   "feature": {
     "href": "/tochkacuire",
     "image": "/images/home/tochkacuire.jpg",
@@ -104,46 +104,6 @@
       },
       "en": {
         "name": "Konstantin Moshnikov"
-      }
-    },
-    {
-      "href": "/yulia-bychkova",
-      "image": "/images/yulia-bychkova.jpg",
-      "ru": {
-        "name": "Юлия Бычкова"
-      },
-      "en": {
-        "name": "Yulia Bychkova"
-      }
-    },
-    {
-      "href": "/ivan-sachkov",
-      "image": "/images/sachkov.jpg",
-      "ru": {
-        "name": "Иван Сачков"
-      },
-      "en": {
-        "name": "Ivan Sachkov"
-      }
-    },
-    {
-      "href": "/ekaterina-ilyina",
-      "image": "/images/ilyina.jpg",
-      "ru": {
-        "name": "Екатерина Ильина"
-      },
-      "en": {
-        "name": "Ekaterina Ilyina"
-      }
-    },
-    {
-      "href": "/vanya-dyba",
-      "image": "/images/vanya-dyba.jpg",
-      "ru": {
-        "name": "Ваня Дыба"
-      },
-      "en": {
-        "name": "Vanya Dyba"
       }
     }
   ],
