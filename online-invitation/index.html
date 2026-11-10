@@ -8,24 +8,27 @@
 <meta name="theme-color" content="#0B0B0D">
 <title>Онлайн-пригласительный — AELITA PRODUCTION</title>
 <link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/assets/fonts.css?v=196">
-<link rel="stylesheet" href="/assets/style.css?v=196">
+<link rel="stylesheet" href="/assets/fonts.css?v=197">
+<link rel="stylesheet" href="/assets/style.css?v=197">
 <link rel="stylesheet" href="/assets/attendance-v740.css">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=196">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=197">
+<link rel="stylesheet" href="/assets/online-invitation.css?v=197">
 </head>
-<body>
-<header class="att-gate-nav"><a href="/" aria-label="Аэлита Продакшен — главная">АЭЛИТА<br><small>ПРОДАКШЕН</small></a></header>
-<main class="att-gate" id="main">
-  <p class="att-brand">AELITA PRODUCTION</p>
+<body class="online-invitation-page">
+<header class="online-invitation-header"><a href="/" aria-label="AELITA PRODUCTION">АЭЛИТА<small>ПРОДАКШЕН</small></a></header>
+<main class="att-gate online-invitation" id="main">
+  <p class="att-brand">Онлайн-пригласительный</p>
   <h1 id="stream-title">Онлайн-пригласительный</h1>
   <p>Персональный доступ к онлайн-событию АЭЛИТА ПРОДАКШЕН.</p>
-  <p id="stream-when"></p>
-  <p id="stream-status" role="status" aria-live="polite">Проверяем ваш доступ…</p>
-  <a class="btn-gold" id="stream-join" target="_blank" rel="noopener noreferrer" hidden>Открыть Телемост</a>
-  <button class="btn-outline" type="button" id="stream-refresh">Проверить ещё раз</button>
-  <p class="att-help"><a href="/account/dashboard/">Личный кабинет</a><br>Не получается подключиться? <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
+  <dl class="online-invitation-schedule" id="stream-when" hidden></dl>
+  <p class="online-invitation-status" id="stream-status" role="status" aria-live="polite">Проверяем ваш доступ…</p>
+  <div class="online-invitation-actions">
+    <a class="btn-gold" id="stream-join" target="_blank" rel="noopener noreferrer" hidden>Открыть Телемост</a>
+    <button class="btn-outline" type="button" id="stream-refresh">Проверить ещё раз</button>
+  </div>
+  <div class="att-help"><div class="online-invitation-help-links"><a href="/account/dashboard/">Личный кабинет</a></div><p>Не получается подключиться?<br><a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p></div>
   <noscript><p>Включите JavaScript, чтобы проверить пригласительный и открыть трансляцию.</p></noscript>
 </main>
-<script src="/assets/online-invitation-gate.js?v=196"></script>
+<script src="/assets/online-invitation-gate.js?v=197"></script>
 </body>
 </html>

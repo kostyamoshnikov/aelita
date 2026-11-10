@@ -8,24 +8,27 @@
 <meta name="theme-color" content="#0B0B0D">
 <title>Online invitation — AELITA PRODUCTION</title>
 <link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/assets/fonts.css?v=196">
-<link rel="stylesheet" href="/assets/style.css?v=196">
+<link rel="stylesheet" href="/assets/fonts.css?v=197">
+<link rel="stylesheet" href="/assets/style.css?v=197">
 <link rel="stylesheet" href="/assets/attendance-v740.css">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=196">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=197">
+<link rel="stylesheet" href="/assets/online-invitation.css?v=197">
 </head>
-<body>
-<header class="att-gate-nav"><a href="/en/" aria-label="Aelita Production home">AELITA<br><small>PRODUCTION</small></a></header>
-<main class="att-gate" id="main">
-  <p class="att-brand">AELITA PRODUCTION</p>
+<body class="online-invitation-page">
+<header class="online-invitation-header"><a href="/en/" aria-label="AELITA PRODUCTION">AELITA<small>PRODUCTION</small></a></header>
+<main class="att-gate online-invitation" id="main">
+  <p class="att-brand">Online invitation</p>
   <h1 id="stream-title">Online invitation</h1>
   <p>Personal access to an AELITA PRODUCTION online event.</p>
-  <p id="stream-when"></p>
-  <p id="stream-status" role="status" aria-live="polite">Checking your access…</p>
-  <a class="btn-gold" id="stream-join" target="_blank" rel="noopener noreferrer" hidden>Open Telemost</a>
-  <button class="btn-outline" type="button" id="stream-refresh">Check again</button>
-  <p class="att-help"><a href="/en/account/dashboard/">Your account</a><br>Need help? <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
+  <dl class="online-invitation-schedule" id="stream-when" hidden></dl>
+  <p class="online-invitation-status" id="stream-status" role="status" aria-live="polite">Checking your access…</p>
+  <div class="online-invitation-actions">
+    <a class="btn-gold" id="stream-join" target="_blank" rel="noopener noreferrer" hidden>Open Telemost</a>
+    <button class="btn-outline" type="button" id="stream-refresh">Check again</button>
+  </div>
+  <div class="att-help"><div class="online-invitation-help-links"><a href="/en/account/dashboard/">Your account</a></div><p>Need help connecting?<br><a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p></div>
   <noscript><p>Enable JavaScript to verify your invitation and access the stream.</p></noscript>
 </main>
-<script src="/assets/online-invitation-gate.js?v=196"></script>
+<script src="/assets/online-invitation-gate.js?v=197"></script>
 </body>
 </html>

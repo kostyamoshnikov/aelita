@@ -1,4 +1,6 @@
-.tarusa-tour{color:var(--bone);overflow-wrap:break-word}
+.tarusa-page{scroll-padding-top:calc(var(--tour-nav-height,144px) + 20px)}
+.tarusa-tour{color:var(--bone);overflow-wrap:break-word;padding-top:var(--tour-nav-height,144px)}
+.tarusa-tour section[id],.tarusa-tour form[id]{scroll-margin-top:16px}
 .tarusa-tour .wrap{max-width:1240px}
 .tarusa-tour p,.tarusa-tour li{font-family:Inter,sans-serif;letter-spacing:normal;font-size:1rem;line-height:1.75}
 .tarusa-tour h1,.tarusa-tour h2,.tarusa-tour h3{overflow-wrap:normal;letter-spacing:.015em;line-height:1.25}
@@ -11,9 +13,15 @@
 .tour-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
 .tour-hero-grid>*{min-width:0}
 .tarusa-tour .tour-deck{color:var(--gold);font-size:1.18rem;line-height:1.6;max-width:28em}
-.tour-cover{margin:0;min-width:0;background:#171613;aspect-ratio:3/2;position:relative}
-.tour-cover img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
-.tour-cover figcaption{font:400 .66rem/1.5 Inter,sans-serif;color:#a89b83;padding:9px 0;background:var(--ink,#0b0b0d)}
+.tour-gallery{min-width:0;max-width:100%}
+.tour-gallery-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#6d5b42 #171613;outline-offset:4px;position:relative}
+.tour-slide{flex:0 0 100%;min-width:0;margin:0;scroll-snap-align:start;scroll-snap-stop:always;background:#171613}
+.tour-slide img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.tour-gallery-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px}
+.tour-gallery-controls[hidden]{display:none}
+.tour-gallery-controls button{width:46px;height:46px;flex:0 0 46px;padding:0;border:1px solid #6d5b42;background:transparent;color:var(--gold);font:400 1.4rem/1 Inter,sans-serif;cursor:pointer}
+.tour-gallery-controls button:disabled{opacity:.35;cursor:default}
+.tour-gallery-controls output{font:400 .85rem/1.5 Inter,sans-serif;color:var(--sand,#b7afa3);font-variant-numeric:tabular-nums}
 .tour-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:28px 0 8px}
 .tarusa-tour .btn-gold,.tarusa-tour .btn-outline{font:500 .7rem/1.5 Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;justify-content:center;padding:16px 22px;text-decoration:none;max-width:100%;box-sizing:border-box;text-align:center}
 .tarusa-tour .btn-gold{background:var(--gold);color:var(--ink,#0b0b0d);border:1px solid var(--gold)}
@@ -44,6 +52,22 @@
 .tour-contact .wrap{max-width:900px}
 .tarusa-tour .tour-company{font-size:.85rem;max-width:650px;margin:48px 0 0}
 .tour-company strong{font:400 .8rem/2 Montserrat,sans-serif;letter-spacing:.12em;color:var(--gold)}
-.tarusa-tour a:focus-visible{outline:2px solid var(--gold);outline-offset:6px}
-@media(max-width:900px){.tour-hero-grid{grid-template-columns:1fr;gap:36px}.tour-cover{max-width:720px}.tour-repertoire{grid-template-columns:1fr 1fr}.tour-formats{grid-template-columns:1fr}.tour-details-grid{gap:36px}.tour-formats article{padding:28px}.tour-hero{padding-top:42px}}
+.tour-request{margin-top:36px;padding-top:32px;border-top:1px solid #4c4132}
+.tour-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px}
+.tour-field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.tour-field-full{grid-column:1/-1}
+.tour-field label,.tour-consent{font:400 .9rem/1.6 Inter,sans-serif;color:var(--bone);letter-spacing:normal;text-transform:none}
+.tour-field label span{color:var(--sand,#b7afa3);font-size:.8rem}
+.tour-field input,.tour-field textarea{font:400 1rem/1.5 Inter,sans-serif;color:var(--bone);width:100%;min-width:0;box-sizing:border-box;padding:13px 14px;background:#151416;border:1px solid #554a3b;border-radius:0;letter-spacing:normal}
+.tour-field textarea{min-height:112px;resize:vertical}
+.tour-consent{display:flex;align-items:flex-start;gap:12px;margin:24px 0}
+.tour-consent input{flex:0 0 20px;width:20px;height:20px;margin:3px 0 0;accent-color:var(--gold)}
+.tour-consent a{color:var(--gold);text-underline-offset:3px}
+.tarusa-tour .tour-form-status{font-size:.9rem;line-height:1.6;margin-top:18px;max-width:42em}
+.tour-form-status[data-state=error]{color:#f2bbad}
+.tour-request button:disabled{opacity:.6;cursor:wait}
+.tarusa-tour a:focus-visible,.tarusa-tour button:focus-visible,.tarusa-tour input:focus-visible,.tarusa-tour textarea:focus-visible,.tour-gallery-track:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.tarusa-page{scroll-behavior:auto}.tour-gallery-track{scroll-behavior:auto}}
+@media(max-width:900px){.tour-hero-grid{grid-template-columns:1fr;gap:36px}.tour-gallery{width:100%;max-width:720px}.tour-repertoire{grid-template-columns:1fr 1fr}.tour-formats{grid-template-columns:1fr}.tour-details-grid{gap:36px}.tour-formats article{padding:28px}.tour-hero{padding-top:42px}}
+@media(max-width:600px){.tarusa-tour h1{font-size:clamp(1.65rem,7.2vw,2.5rem);line-height:1.2;overflow-wrap:anywhere}.tour-form-grid{grid-template-columns:1fr}.tour-request .btn-gold{width:100%}}
 @media(max-width:600px){.tour-hero{padding:30px 0 36px}.tour-section{padding:46px 0}.tour-intro{padding:20px 0 36px}.tour-intro p{font-size:1.02rem}.tour-timeline>li{grid-template-columns:1fr;gap:10px;padding:24px 0}.tour-venues,.tour-repertoire,.tour-details-grid{grid-template-columns:1fr}.tour-section-head{margin-bottom:24px}.tour-hero-grid{gap:28px}.tour-actions{gap:18px}.tour-details-grid{gap:40px}.tour-venues{gap:0}.tour-repertoire{gap:26px}}
