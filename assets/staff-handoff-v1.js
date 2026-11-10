@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   var ORIGIN = location.origin;
-  var KINDS = { crm_find: 1, orders_find: 1, crm_task: 1 };
+  var KINDS = { crm_find: 1, orders_find: 1, crm_task: 1, crm_invite: 1 };
   // pack-v751 (ТЗ TASK-01): черновик задачи из незавершённого заказа — номер попытки, почта (если есть)
   // и короткие сведения о покупке. Только перечисленные поля, строки до 300 знаков.
   var TASK_FACTS = ['title', 'when', 'stage', 'why', 'name', 'phone', 'amount', 'seats', 'attempts'];
@@ -32,7 +32,8 @@
     var acc = cleanEmail(v.accountEmail);
     return { sourceRef: ref, email: cleanEmail(v.email), accountEmail: acc, facts: facts };
   }
-  function cleanPayload(kind, v) { return kind === 'crm_task' ? cleanTask(v) : (cleanEmail(v) || null); }
+  function cleanInvite(v) { return v && /^[A-Za-z0-9_-]{1,160}\/[a-f0-9]{12}\.json$/.test(v.key||'') ? {key:v.key} : null; }
+  function cleanPayload(kind, v) { if(kind==='crm_invite')return cleanInvite(v); return kind === 'crm_task' ? cleanTask(v) : (cleanEmail(v) || null); }
 
   /** Исходная вкладка: открыть url и передать данные (адрес или черновик задачи), когда она попросит. */
   function open(url, kind, data) {

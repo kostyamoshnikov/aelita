@@ -9,6 +9,7 @@
     var arrows = bar.querySelectorAll('[data-scroll]');
     var headerIn = document.querySelector('nav .nav-in');
     var header = headerIn && headerIn.closest('nav');
+    var stackSelector=bar.getAttribute('data-section-stack'),stack=stackSelector?document.querySelector(stackSelector):null;
     var track = bar.hasAttribute('data-section-track'), scheduled = false;
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function reveal(link) {
@@ -34,6 +35,7 @@
     }
     function measure() {
       var top = header ? Math.max(0, Math.ceil(header.getBoundingClientRect().bottom)) : 0;
+      if(stack)top=Math.max(top,Math.ceil(stack.getBoundingClientRect().height));
       var height = Math.ceil(bar.getBoundingClientRect().height);
       document.documentElement.style.setProperty('--section-nav-top', top + 'px');
       document.documentElement.style.setProperty('--section-nav-offset', top + height + 'px');
@@ -56,6 +58,7 @@
     if (window.ResizeObserver) {
       var resize = new ResizeObserver(schedule);
       if (header) resize.observe(header);
+      if(stack)resize.observe(stack);
       resize.observe(bar); resize.observe(rail);
     }
     if (window.MutationObserver) new MutationObserver(schedule).observe(rail, { subtree: true, attributes: true, attributeFilter: ['hidden'] });

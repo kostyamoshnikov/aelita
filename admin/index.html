@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="section-nav-page">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=197">
+<link rel="stylesheet" href="/assets/fonts.css?v=198">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -482,12 +482,15 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlinePreview:not(:empty),#paResult:not(:empty){display:block}
 @media(max-width:400px){#paDeadlineFields{padding:10px 8px}#paDeadlineFields input[type="datetime-local"]{padding:10px 6px;font-size:0.8125rem}}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
+#invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=197">
-<script src="/assets/staff-handoff-v1.js?v=197"></script>
-<script src="/assets/mobile-files-m1.js?v=197"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=197"><script defer src="/assets/delivery-admin-v1.js?v=197"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=197"></script><script src="/assets/staff-session-v796.js?v=197"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=198">
+<script src="/assets/staff-handoff-v1.js?v=198"></script>
+<script src="/assets/mobile-files-m1.js?v=198"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=198"><script defer src="/assets/delivery-admin-v1.js?v=198"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=198"></script><script src="/assets/staff-session-v796.js?v=198"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=198">
+<script src="/assets/section-navigation.js?v=198" defer></script>
 </head>
 <body>
 
@@ -779,6 +782,10 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <label for="inv-event">Событие</label>
         <select id="inv-event"><option value="">Загружаем…</option></select>
       </div>
+      <div class="inv-tools"><button type="button" class="mini-btn" id="invMoveUp" aria-label="Переместить событие выше">↑ Выше</button><button type="button" class="mini-btn" id="invMoveDown" aria-label="Переместить событие ниже">↓ Ниже</button><button type="button" class="mini-btn" id="invCreateEvent">Создать событие</button><button type="button" class="mini-btn" id="invPartnerEvent">Подключить партнёрский показ</button></div>
+      <p class="editor-note">Ближайшие события сверху, прошедшие — в архиве. Порядок внутри группы сохраняется для всех сотрудников.</p>
+      <dialog id="invEventDialog" class="editor-box"><form id="invEventForm"><h2>Событие только по пригласительным</h2><p>Не создаёт продажу билетов. Без нумерованных мест; количество гостей согласуйте с площадкой.</p><div class="field"><label>Название RU<input name="title" maxlength="180" required></label></div><div class="field"><label>Название EN<input name="titleEn" maxlength="180" required></label></div><div class="field"><label>Начало · МСК<input name="datetime" type="datetime-local" required></label></div><div class="field"><label>Площадка RU<input name="venueName" maxlength="180" required></label></div><div class="field"><label>Площадка EN<input name="venueNameEn" maxlength="180" required></label></div><div class="field"><label>Адрес RU<input name="venueAddress" maxlength="220" required></label></div><div class="field"><label>Адрес EN<input name="venueAddressEn" maxlength="220" required></label></div><p role="alert" id="invEventError"></p><button class="mini-btn" type="submit">Создать</button><button class="mini-btn" type="button" id="invEventClose">Закрыть</button></form></dialog>
+      <dialog id="invPartnerDialog" class="editor-box"><form id="invPartnerForm"><h2>Наши пригласительные на партнёрский показ</h2><label>Показ<select id="invPartnerSelect" required></select></label><p>Билеты продаёт партнёр. Наши QR проверяются нашим сканером. Квоту и размещение гостей согласуйте с партнёром; остаток его билетов здесь недоступен.</p><p role="alert" id="invPartnerError"></p><button class="mini-btn" type="submit">Подключить</button><button class="mini-btn" type="button" id="invPartnerClose">Закрыть</button></form></dialog>
       <p class="editor-note" id="inv-summary"></p>
       <div class="inv-tools">
         <button class="btn-small" id="invNewBtn">+ Пригласительный</button>
@@ -832,7 +839,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <div class="field inv-mt6"><label for="inv-search">Поиск по имени или номеру («места» — кому ещё назначить, «входной»)</label><input class="ym-disable-keys" type="text" id="inv-search" autocomplete="off"></div>
       <div id="invList"><div class="empty-state">Загружаем…</div></div>
       <p class="inv-recount" id="inv-recount" hidden></p>
-      <details class="adm-more inv-mt14"><summary>Как работают пригласительные</summary><p>События: открытие «Точки Кюри» и каждый показ, который продаётся нашей кассой (появляются здесь сами, когда показ открыт к продаже). QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p></details>
+      <details class="adm-more inv-mt14"><summary>Как работают пригласительные</summary><p>События нашей кассы появляются автоматически. Партнёрский показ можно подключить отдельно: продажа остаётся у партнёра. Кнопка «Создать событие» создаёт событие только по пригласительным, без продажи билетов. QR каждого пригласительного проверяется на входе той же страницей контроля, что и билеты. Отозванный и перевыпущенный (старый QR) не проходят. QR открытия «Точки Кюри» — многоразовый: гость выходит и входит весь день, каждый проход отмечается. На показы — один вход, как по билету.</p></details>
     </div>
 
     <!-- pack-v621 (заказчик 09.10): код контролёра на каждый показ, каждому свой
@@ -4012,6 +4019,7 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
 });
 
 // ── Пригласительные (pack-v587) ─────────────────────────────────
+var INV_REVISION=0, INV_PARTNERS=[];
 var INV_EVENTS = [], INV_LIST = [], INV_EDIT_ID = null, INV_EDIT_INV = null;
 async function invCall(body) {
   var res = await fetch(ADMIN_INVITES_URL, {
@@ -5980,9 +5988,9 @@ async function loadInviteEvents() {
   if (!sel || !ADMIN_INVITES_URL || !getToken()) return;
   try {
     var data = await invCall({ action: 'events' });
-    INV_EVENTS = data.events || [];
+    INV_EVENTS = data.events || []; INV_REVISION=data.revision||0; INV_PARTNERS=data.partners||[];
     var keep = sel.value;
-    sel.innerHTML = INV_EVENTS.map(function (e) { return '<option value="' + escapeHtml(e.id) + '">' + escapeHtml(e.title) + ' — ' + escapeHtml(e.dateLabel) + (e.canceled ? ' · ПОКАЗ ОТМЕНЁН' : '') + (e.counts && e.counts.invites ? ' · ' + e.counts.invites + ' пригл.' : '') + '</option>'; }).join('');
+    sel.innerHTML = [false,true].map(function(archived){var group=INV_EVENTS.filter(function(e){return !!e.archived===archived;});return group.length?'<optgroup label="'+(archived?'Архив':'Предстоящие события')+'">'+group.map(function (e) { return '<option value="' + escapeHtml(e.id) + '">' + (e.archived?'Архив · ':'') + escapeHtml(e.title) + ' — ' + escapeHtml(e.dateLabel) + (e.canceled ? ' · ПОКАЗ ОТМЕНЁН' : '') + (e.counts && e.counts.invites ? ' · ' + e.counts.invites + ' пригл.' : '') + '</option>'; }).join('')+'</optgroup>':'';}).join('');
     if (keep && INV_EVENTS.some(function (e) { return e.id === keep; })) sel.value = keep;
     invFillSeatOptions();
     loadInvites();
@@ -5992,6 +6000,15 @@ async function loadInviteEvents() {
       ' · Если раздел открывается впервые — функция aelita-admin-invites ещё не создана (выкладка).</div>';
   }
 }
+document.addEventListener('DOMContentLoaded',function(){
+ ['invMoveUp','invMoveDown'].forEach(function(id,i){document.getElementById(id).onclick=async function(){this.disabled=true;try{await invCall({action:'event_move',event_id:document.getElementById('inv-event').value,direction:i?1:-1,revision:INV_REVISION,usedIds:INV_EVENTS.map(function(e){return e.id;})});await loadInviteEvents();}catch(e){alert(e.message);}finally{this.disabled=false;}};});
+ document.getElementById('invCreateEvent').onclick=function(){document.getElementById('invEventDialog').showModal();};
+ document.getElementById('invEventClose').onclick=function(){document.getElementById('invEventDialog').close();};
+ document.getElementById('invEventForm').onsubmit=async function(e){e.preventDefault();var form=this,button=form.querySelector('[type=submit]'),event=Object.fromEntries(new FormData(form));event.datetime=event.datetime.slice(0,16)+':00+03:00';button.disabled=true;try{var result=await invCall({action:'event_create',revision:INV_REVISION,event:event});await loadInviteEvents();document.getElementById('inv-event').value=result.id;invFillSeatOptions();await loadInvites();document.getElementById('invEventDialog').close();form.reset();}catch(err){document.getElementById('invEventError').textContent=err.message;}finally{button.disabled=false;}};
+ document.getElementById('invPartnerEvent').onclick=function(){document.getElementById('invPartnerSelect').innerHTML=INV_PARTNERS.map(function(p){return '<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.title)+' · '+escapeHtml(stWhen(p.datetime))+'</option>';}).join('');document.getElementById('invPartnerDialog').showModal();};
+ document.getElementById('invPartnerClose').onclick=function(){document.getElementById('invPartnerDialog').close();};
+ document.getElementById('invPartnerForm').onsubmit=async function(e){e.preventDefault();var button=this.querySelector('[type=submit]'),id=document.getElementById('invPartnerSelect').value;button.disabled=true;try{await invCall({action:'partner_enable',revision:INV_REVISION,performance_id:id});await loadInviteEvents();document.getElementById('inv-event').value='show-'+id;invFillSeatOptions();await loadInvites();document.getElementById('invPartnerDialog').close();}catch(err){document.getElementById('invPartnerError').textContent=err.message;}finally{button.disabled=false;}};
+});
 function invAttendanceUi() {
   var ev = invEvent(), online = document.getElementById('inv-attendance').value === 'online';
   var hasSeats = !!(ev && ev.seatOptions && ev.seatOptions.length);
@@ -6061,6 +6078,8 @@ async function invOpenMap() {
 function invFillSeatOptions() {
   invFormatOptions();
   var ev = invEvent();
+  var same=INV_EVENTS.filter(function(e){return ev&&!!e.archived===!!ev.archived;}),position=same.findIndex(function(e){return ev&&e.id===ev.id;});
+  var up=document.getElementById('invMoveUp'),down=document.getElementById('invMoveDown');if(up)up.disabled=position<=0;if(down)down.disabled=position<0||position>=same.length-1;
   var opts = ev ? ev.seatOptions || [] : [];
   document.getElementById('inv-seats-row').style.display = opts.length ? '' : 'none';
   if (!opts.length) document.getElementById('inv-seat-mode').value = 'none'; // свободная рассадка — мест нет
@@ -6116,7 +6135,7 @@ function renderInvites() {
   var arrived = active.filter(function (i) { return i.visits; });
   document.getElementById('inv-total').textContent = active.length;
   var evc = invEvent();
-  document.getElementById('inv-summary').textContent = (evc && evc.capacity ? 'Мест в зале: ' + evc.capacity.total + (evc.capacity.left !== null ? ', свободно: ' + evc.capacity.left + ' (билеты и пригласительные вместе) · ' : ' · ') : '') + 'Действующих: ' + active.length + ' на ' + invPersonsWord(persons) +
+  document.getElementById('inv-summary').textContent = (evc && evc.capacity ? 'Мест в зале: ' + evc.capacity.total + (evc.capacity.left !== null ? ', свободно: ' + evc.capacity.left + ' (билеты и пригласительные вместе) · ' : ' · ') : '') + (evc&&evc.partnerSales?'Продажи у партнёра. Здесь учитываются только наши приглашения; квоту и места согласуйте с площадкой. ':'') + 'Действующих: ' + active.length + ' на ' + invPersonsWord(persons) +
     (onlinePersons ? ' · онлайн: ' + invPersonsWord(onlinePersons) + ' · в зале: ' + invPersonsWord(persons - onlinePersons) : '') + ' · прошли на вход: ' + arrived.length +
     (function () { var n = active.filter(function (i) { return i.seatsLater; }).length; return n ? ' · ждут мест: ' + n : ''; })() +
     (function () { var n = active.filter(function (i) { return i.entry; }); return n.length ? ' · входных: ' + n.length + ' на ' + invPersonsWord(n.reduce(function (a, i) { return a + i.persons; }, 0)) : ''; })() + (INV_LIST.length > active.length ? ' · отозвано: ' + (INV_LIST.length - active.length) : '');
@@ -6132,6 +6151,7 @@ function renderInvites() {
         '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>'
       : '<button class="mini-btn" data-inv="pdf" data-id="' + i.id + '">PDF</button>' +
         '<button class="mini-btn" data-inv="edit" data-id="' + i.id + '">Изменить</button>';
+    acts += '<button class="mini-btn" data-inv="crm" data-id="' + escapeHtml(i.id) + '">Добавить в CRM</button>';
     // pack-v611: редкие действия — в «Ещё ▾», «Отозвать» — красным внизу списка
     var more = '<details class="adm-menu"><summary class="mini-btn">Ещё ▾</summary><div class="adm-menu-list">' +
       (off ? '' : '<button class="mini-btn" data-inv="mail" data-id="' + i.id + '">' + (i.mailedAt ? 'Отправить на почту ещё раз' : 'Отправить на почту') + '</button>') +
@@ -6345,6 +6365,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var act = b.getAttribute('data-inv'), id = b.getAttribute('data-id'), ev = invEvent();
     var inv = INV_LIST.find(function (x) { return x.id === id; });
     if (!ev || !inv) return;
+    if (act === 'crm') { var cr = AelitaHandoff.open('/admin/crm/', 'crm_invite', {key:ev.id+'/'+inv.id+'.json'}); if(!cr.ok)alert(AelitaHandoff.reason(cr.reason)); return; }
     if (act === 'hist') { document.getElementById('inv-hist-' + id).classList.toggle('open'); return; }
     if (act === 'edit') { invOpenForm(inv); document.getElementById('inv-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (act === 'revoke' && !confirm('Отозвать пригласительный № ' + inv.number + ' (' + inv.name + ')? Он перестанет проходить на входе, места вернутся в продажу.')) return;
@@ -7092,7 +7113,7 @@ startStaffAdmin();
     window.addEventListener('resize', upd);
     c.insertBefore(box, c.firstChild);
     var index = document.createElement('nav');
-    index.className = 'adm-section-index'; index.id = 'admSectionIndex';
+    index.className = 'section-nav-bar'; index.id = 'admSectionIndex'; index.setAttribute('data-section-nav',''); index.setAttribute('data-section-track',''); index.setAttribute('data-section-stack','.adm-navbox');
     index.setAttribute('aria-label', 'В этом разделе');
     index.setAttribute('data-adm-tab', '*');
     box.after(index);
@@ -7243,7 +7264,12 @@ startStaffAdmin();
     if (!index) return;
     var label = document.createElement('span');
     label.textContent = 'В этом разделе';
-    index.replaceChildren(label);
+    var rail = index.querySelector('[data-section-rail]');
+    if(!rail){rail = document.createElement('div'); rail.className='section-nav-rail'; rail.setAttribute('data-section-rail',''); rail.setAttribute('aria-label','В этом разделе');
+    var prev=document.createElement('button'),next=document.createElement('button');
+    [prev,next].forEach(function(b,i){b.type='button';b.className='section-nav-arrow';b.dataset.scroll=i?'1':'-1';b.setAttribute('aria-label',i?'Листать вправо':'Листать влево');b.textContent=i?'›':'‹';});
+    index.replaceChildren(prev,rail,next);
+    }else rail.replaceChildren();
     var group = '[data-adm-tab="'+tab+'"]';
     var headings = content.querySelectorAll(group+'[data-adm-index], '+group+' [data-adm-index], p.sec-title'+group+', '+group+' > p.sec-title');
     headings.forEach(function (heading, i) {
@@ -7260,9 +7286,10 @@ startStaffAdmin();
         heading.focus({preventScroll:true});
         heading.scrollIntoView({block:'start'});
       });
-      index.append(link);
+      rail.append(link);
     });
-    index.hidden = index.children.length === 1;
+    index.hidden = !rail.children.length;
+    if(index._sectionController)index._sectionController.refresh(); else if(window.AelitaSectionNavigation)index._sectionController=AelitaSectionNavigation.init(index);
   }
   function show(tab, user) {
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
@@ -7290,11 +7317,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=197"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=197">
-<script src="/assets/ai-pilot-v741.js?v=197"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=197"></script>
-<script src="/assets/subscription-materials-admin.js?v=197"></script>
+<script src="/assets/admin-snapshot.js?v=198"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=198">
+<script src="/assets/ai-pilot-v741.js?v=198"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=198"></script>
+<script src="/assets/subscription-materials-admin.js?v=198"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
