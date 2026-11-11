@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=202">
+<link rel="stylesheet" href="/assets/fonts.css?v=207">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,13 +484,13 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=202">
-<script src="/assets/staff-handoff-v1.js?v=202"></script>
-<script src="/assets/mobile-files-m1.js?v=202"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=202"><script defer src="/assets/delivery-admin-v1.js?v=202"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=202"></script><script src="/assets/staff-session-v796.js?v=202"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=202">
-<script src="/assets/section-navigation.js?v=202" defer></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=207">
+<script src="/assets/staff-handoff-v1.js?v=207"></script>
+<script src="/assets/mobile-files-m1.js?v=207"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=207"><script defer src="/assets/delivery-admin-v1.js?v=207"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=207"></script><script src="/assets/staff-session-v796.js?v=207"></script><script defer src="/assets/crm-show-events-v1.js?v=207"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=207">
+<script src="/assets/section-navigation.js?v=207" defer></script>
 </head>
 <body>
 
@@ -1040,6 +1040,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <label for="pa-perf">Показ</label>
         <select id="pa-perf"><option value="">Загружаем…</option></select>
       </div>
+      <div class="editor-note" id="pa-crm-show" aria-live="polite"></div>
       <p class="editor-note" id="pa-preview"></p><button type="button" class="mini-btn" id="pa-commercial">Цена и вместимость</button>
       <div class="adm-card att-admin" id="matrix-online-admin" hidden>
         <h3>Онлайн-трансляция</h3>
@@ -2135,9 +2136,22 @@ function renderEvents(events) {
         (ev.registrations.length ? '<button class="mini-btn" data-ev-action="csv" data-ev-idx="' + idx + '">Скачать Excel</button>' : '') +
         (ev.freeMaster ? '<a class="mini-btn" href="/events-scan/?event=' + encodeURIComponent(ev.id) + '" target="_blank" rel="noopener">Контроль QR</a>' : '<button class="mini-btn" data-ev-action="addReg" data-ev-idx="' + idx + '">+ Регистрация</button>') +
       '</div>' +
+      '<details class="editor-note" data-ev-crm="' + idx + '"><summary>Показ в CRM</summary><div></div></details>' +
       '<div class="ev-people" id="ev-people-' + idx + '">' + people + '</div>' +
     '</div>';
   }).join('');
+  var selected = new URLSearchParams(location.search).get('crmRegistration');
+  el.querySelectorAll('[data-ev-crm]').forEach(function (details) {
+    var ev = events[Number(details.dataset.evCrm)], panel = details.querySelector('div');
+    if (!ev) return;
+    var load = function () {
+      if (!details.open || details.dataset.loaded || !window.AelitaCrmShowEvents) return;
+      details.dataset.loaded = '1';
+      window.AelitaCrmShowEvents.reverse(panel, (ev.freeMaster ? 'tickets:' : 'events:') + ev.id, function () { return !!getToken(); });
+    };
+    details.addEventListener('toggle', load);
+    if (selected === ev.id) { details.open = true; details.closest('.ev-card').scrollIntoView({block:'start'}); }
+  });
 }
 
 document.getElementById('eventsBlock').addEventListener('click', function (e) {
@@ -2584,6 +2598,7 @@ async function loadPerfActions() {
   if (!sel || !ADMIN_PERF_URL) return;
   var token = getToken();
   if (!token) return;
+  var preferred = sel.value || new URLSearchParams(location.search).get('crmPerformance');
   try {
     var res = await fetch(ADMIN_PERF_URL, { headers: { Authorization: 'Bearer ' + token } });
     if (res.status === 401) return;
@@ -2593,6 +2608,7 @@ async function loadPerfActions() {
     sel.innerHTML = '<option value="">— выберите показ —</option>' + PERF_LIST.map(function (p) {
       return '<option value="' + escapeHtml(p.id) + '">' + escapeHtml(perfLabel(p)) + '</option>';
     }).join('');
+    if (preferred && PERF_LIST.some(function (p) { return p.id === preferred; })) sel.value = preferred;
     sel.dispatchEvent(new Event('change'));
   } catch (e) {
     sel.innerHTML = '<option value="">Раздел заработает, когда функция aelita-admin-performance-action создана</option>';
@@ -2600,8 +2616,18 @@ async function loadPerfActions() {
 }
 async function perfPreview() {
   var id = document.getElementById('pa-perf').value;
-  var el = document.getElementById('pa-preview');
+  var el = document.getElementById('pa-preview'), crm = document.getElementById('pa-crm-show');
   el.textContent = '';
+  if (crm) {
+    crm.replaceChildren();
+    if (id && window.AelitaCrmShowEvents) {
+      var panel = document.createElement('div');
+      crm.append(panel);
+      window.AelitaCrmShowEvents.reverse(panel, 'tickets:' + id, function () {
+        return getToken() && document.getElementById('pa-perf').value === id;
+      });
+    }
+  }
   if (!id) return;
   var selected = PERF_LIST.filter(function(x){ return x.id === id; })[0];
   if (selected && selected.freeEvent) {
@@ -3813,6 +3839,12 @@ async function loadOrders() {
     if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; allCheckouts = null; renderCheckouts(); return; }
     allOrders = data.orders || [];
     populatePerfFilter(allOrders);
+    var eventFocus=new URLSearchParams(location.search).get('crmOrders')||'';
+    if(/^[a-zA-Z0-9_-]{1,120}$/.test(eventFocus)){
+      var filter=document.getElementById('ordPerfFilter');
+      if(!Array.from(filter.options).some(function(o){return o.value===eventFocus;}))filter.add(new Option('Связанный показ',eventFocus));
+      filter.value=eventFocus;
+    }
     applyOrderFilters();
     // pack-v539: незавершённые заказы приходят тем же ответом.
     allCheckouts = Array.isArray(data.checkouts) ? data.checkouts : null;
@@ -7318,11 +7350,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=202"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=202">
-<script src="/assets/ai-pilot-v741.js?v=202"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=202"></script>
-<script src="/assets/subscription-materials-admin.js?v=202"></script>
+<script src="/assets/admin-snapshot.js?v=207"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=207">
+<script src="/assets/ai-pilot-v741.js?v=207"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=207"></script>
+<script src="/assets/subscription-materials-admin.js?v=207"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

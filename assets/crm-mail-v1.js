@@ -1,7 +1,7 @@
 'use strict';
 
-window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
-  const request = (action, fields = {}) => api({action, contactId: contact.id, ...fields});
+window.AelitaCrmMail = function mountMail(root, {api, contact, canSend, context=null, contextLabel='', draftDelete=false, autoOpen=false, onSent=null, focusMail='', onTask=null}) {
+  const request = (action, fields = {}) => api({action, contactId: contact.id, ...(context?{context}:{}), ...fields});
   const active = () => root.isConnected;
   const status = {accepted: 'Принято почтовым сервером', unknown: 'Исход неизвестен', rejected: 'Отклонено сервером', received: 'Получено'};
   root.innerHTML = '<h2>Личная почта</h2><div class="actions"></div><div class="crm-mail-compose"></div><p role="status" aria-live="polite"></p><div class="crm-mail-history"></div>';
@@ -37,7 +37,10 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
     if (!cursor) history.replaceChildren();
     history.querySelector('[data-mail-more]')?.remove();
     if (!result.items.length && !cursor) paragraph(history, 'Писем пока нет.');
-    for (const item of result.items) {
+    for(const item of result.items)renderItem(item);
+    if (result.next) button(history, 'Ещё письма', () => load(result.next)).dataset.mailMore = '';
+  }
+  function renderItem(item,open=false){
       const details = document.createElement('details');
       details.className = 'record';
       const heading = document.createElement('summary');
@@ -51,9 +54,8 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
       details.append(text);
       if (item.attachments?.length) paragraph(details, 'Вложения: ' + item.attachments.map(file => file.name).join(', '));
       if (item.hasAttachments) paragraph(details, 'Вложения доступны в рабочем почтовом ящике.');
-      history.append(details);
-    }
-    if (result.next) button(history, 'Ещё письма', () => load(result.next)).dataset.mailMore = '';
+      if(onTask&&['accepted','received'].includes(item.status))button(details,'Поставить задачу',()=>onTask(item));
+      details.open=open;history.append(details);
   }
   async function encodeFiles(files) {
     if (files.length > 3 || Array.from(files).reduce((sum, file) => sum + file.size, 0) > 48 * 1024) {
@@ -66,12 +68,13 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
   }
   async function open() {
     if (compose.firstChild) { compose.querySelector('select')?.focus(); return; }
-    const {draft} = await request('mail_draft_get');
+    const saved = await request('mail_draft_get'),draft=saved.draft;
     if (!active()) return;
-    let revision = draft?.revision || 0;
+    let revision = saved.revision||draft?.revision||0;
     const form = document.createElement('form');
     form.className = 'inline-form';
     form.innerHTML = '<label>Кому<select name="to" required></select></label><label>Тема<input name="subject" maxlength="200" required></label><label>Текст<textarea name="body" class="ym-disable-keys" maxlength="16000" rows="7" required></textarea></label><label>Вложения до 48 КБ<input name="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple></label><div class="actions"></div><div class="crm-mail-preview" aria-live="polite"></div>';
+    if(contextLabel)paragraph(compose,'Контекст письма · '+contextLabel);
     compose.append(form);
     const {to, subject, body, files} = form.elements;
     contact.emails.forEach(email => to.add(new Option(email, email)));
@@ -99,6 +102,11 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
       revision = result.draft.revision;
       notice.textContent = files.files.length ? 'Черновик сохранён. Вложения добавляются при отправке.' : 'Черновик сохранён.';
     });
+    if(draftDelete)button(toolbar,'Удалить черновик',async()=>{
+      if(!confirm('Удалить черновик письма?'))return;
+      await request('mail_draft_delete',{revision});
+      if(active()){compose.replaceChildren();notice.textContent='Черновик удалён.';}
+    });
     const submit = document.createElement('button');
     submit.className = 'primary';
     submit.type = 'submit';
@@ -115,6 +123,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
         const {preview, token} = await request('mail_preview', payload);
         if (!active() || JSON.stringify(sentFields) !== JSON.stringify(fields()) ||
             selected.length !== files.files.length || selected.some((file, index) => file !== files.files[index])) return;
+        if(contextLabel)paragraph(previewBox,'Контекст · '+contextLabel);
         paragraph(previewBox, 'От: ' + preview.from + ' · Кому: ' + preview.to);
         paragraph(previewBox, preview.subject);
         const text = document.createElement('div');
@@ -129,11 +138,17 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, canSend}) {
           notice.textContent = status[message.status] + (message.status === 'unknown' ? '. Проверьте историю и рабочий ящик.' : '.');
           previewBox.replaceChildren();
           await load();
+          if(message.status==='accepted'&&onSent)onSent();
         }).className = 'primary';
       });
     };
     to.focus();
   }
   if (canSend && contact.emails.length) button(actions, 'Написать письмо', open).className = 'primary';
-  button(actions, 'Загрузить историю писем', () => load());
+  if(!context)button(actions, 'Загрузить историю писем', () => load());
+  if(autoOpen&&canSend&&contact.emails.length)operation(open);
+  if(focusMail)operation(async()=>{
+    const {message}=await request('mail_read',{id:focusMail});
+    if(active()){history.replaceChildren();renderItem(message,true);history.scrollIntoView({block:'nearest'});}
+  });
 };

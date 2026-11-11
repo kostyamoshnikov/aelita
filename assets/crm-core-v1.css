@@ -296,3 +296,25 @@ body>header{padding:10px 28px;align-items:center;min-height:80px}
 .production-picker .field{margin-top:.65rem}
 .production-picker .actions{margin-block:.4rem}
 @media(max-width:560px){.production-edit-row,.production-edit-row[data-social-row],.production-edit-row[data-social-row="other"]{grid-template-columns:minmax(0,1fr)}}
+
+.production-entry-actions summary{font-size:.92rem}
+.production-entry-actions .actions{margin-top:.5rem}
+.production-entry-actions button{min-height:44px}
+[data-entry-filters][hidden]{display:none}
+[data-entry-filters]{margin:.7rem 0}
+
+.crm-calendar-range{margin:16px 0;flex-wrap:wrap;gap:8px}
+.crm-calendar-filters summary{cursor:pointer;font-weight:650}
+.crm-calendar-filters form{margin-top:14px}
+.crm-calendar-filters form>label:not(.row){display:grid;gap:5px;min-width:0}
+.crm-calendar-list{display:grid;gap:8px}
+.crm-calendar-card{min-width:0;overflow-wrap:anywhere;border:1px solid var(--line,#51473b);padding:10px;border-radius:8px}
+.crm-calendar-card p{margin:4px 0}
+.crm-calendar-card[data-cal-kind=confirmed],.crm-calendar-card[data-cal-kind=public]{border-left:3px solid var(--gold,#c6a875)}
+.crm-calendar-scroll{overflow:auto}
+.crm-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(115px,1fr));gap:6px;min-width:840px}
+.crm-calendar-day,.crm-calendar-dayname{padding:6px;min-width:0}
+.crm-calendar-day{min-height:60px;border:1px solid var(--line,#51473b);border-radius:8px}
+.crm-calendar-day h2{font-size:.8rem;margin:0 0 6px}
+.crm-calendar-day .crm-calendar-card{font-size:.78rem;padding:6px;margin:5px 0}
+.crm-calendar-padding{opacity:.25}

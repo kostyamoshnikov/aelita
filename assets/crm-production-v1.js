@@ -73,7 +73,7 @@
      input('s_riderUrl','Ссылка на райдер',s.riderUrl,'url',true)+input('s_pressKitUrl','Ссылка на пресс-кит',s.pressKitUrl,'url',true);
     return {fields:fieldset('show','потенциальный показ',input('s_city','Город показа',s.city)+
      selectRelated('s_venueOrganizationId','Площадка показа',orgs().filter(y=>!y.archived||y.id===s.venueOrganizationId),s.venueOrganizationId,'Площадка обсуждается')+
-     input('s_dateFrom','Окно дат · начало',s.dateFrom,'date')+input('s_dateTo','Окно дат · конец',s.dateTo,'date')+terms,!!x.show)};
+     input('s_dateFrom','Окно дат · начало',s.dateFrom,'date')+input('s_dateTo','Окно дат · конец',s.dateTo,'date')+terms+(state.showEventsReady?window.AelitaCrmShowEvents.editor(x,input,state.calendarReady):''),!!x.show)};
    }
    return {fields:''};
   }
@@ -162,7 +162,7 @@
    return rows.length?'<section class="panel production-panel"><h2>'+(type==='contacts'?'Роли в организациях':'Роли организаций в проекте')+'</h2>'+list(rows)+'</section>':'';
   }
   function badges(type,x) {
-   if(type==='deals'&&x.show)return '<p class="eyebrow">Потенциальный показ</p><p>'+esc([x.show.city,stageNames[x.stage]||stages[x.stage],[x.show.dateFrom,x.show.dateTo].filter(Boolean).join(' — ')].filter(Boolean).join(' · '))+'</p>';
+   if(type==='deals'&&x.show)return '<p class="eyebrow">Потенциальный показ'+(state.showEventsReady?(x.showEvent?' · событие связано':x.showDraft?' · черновик события':''):'')+'</p><p>'+esc([x.show.city,stageNames[x.stage]||stages[x.stage],[x.show.dateFrom,x.show.dateTo].filter(Boolean).join(' — ')].filter(Boolean).join(' · '))+'</p>';
    if(type==='tasks'&&x.commitment)return '<p class="eyebrow">Обязательство · '+esc(commitments[x.commitment])+'</p>';
    return '';
   }
@@ -194,16 +194,16 @@
      '<p class="hint">Открытых задач со сроком пока нет.</p>')+'</section>':'');
   }
 
-  function orgHistory(view,x,job) {
+  function orgHistory(view,x,job,mailOnly=false) {
    const canAdd=!x.archivedAt&&canWrite('organizations',x);
    const showMail=state.mailEnabled&&state.externalAllowed&&canRead('contacts');
    const block=(key,title,action)=>'<section class="panel production-panel"><div class="row between"><h2>'+title+'</h2>'+
     (canAdd&&action?button('data-log-add="'+key+'"',action):'')+'</div><div data-log="'+key+'" aria-live="polite"></div></section>';
    const area=view.querySelector('[data-production-history]');
-   area.innerHTML=block('notes','Заметки','+ Добавить заметку')+block('interactions','История общения','+ Записать общение')+
+   area.innerHTML=(mailOnly?'':block('notes','Заметки','+ Добавить заметку')+block('interactions','История общения','+ Записать общение'))+
     (showMail?block('mail','Письма из CRM'):'');
    const active=()=>state.viewJob===job&&state.token===job.token&&area.isConnected;
-   const keys=['notes','interactions',...(showMail?['mail']:[])];
+   const keys=[...(mailOnly?[]:['notes','interactions']),...(showMail?['mail']:[])];
    const versions={};
    async function load(key,offset=0) {
     const box=area.querySelector('[data-log="'+key+'"]');
