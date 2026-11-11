@@ -1,0 +1,62 @@
+:root {
+  color-scheme: dark;
+  font-family: Montserrat, system-ui, sans-serif;
+  background: #0b0b0d;
+  color: #f1e9dc;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body {
+  min-height: 100dvh;
+  margin: 0;
+  background: radial-gradient(ellipse at 50% 0%, #272017 0%, #0b0b0d 65%);
+}
+.team {
+  width: min(100%, 38rem);
+  margin-inline: auto;
+  padding: max(2.5rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+}
+.team-header { display: flex; align-items: center; gap: 1rem; margin: 0 0 2.25rem; }
+.team-header img { flex: none; border: 1px solid #59482d; border-radius: 1rem; }
+.team-brand {
+  margin: 0 0 .25rem;
+  color: #dfbb7e;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+h1 { margin: 0; font: 500 clamp(2.65rem, 9vw, 4.5rem)/.95 'Cormorant Garamond', Georgia, serif; }
+.team-sections { display: grid; gap: .8rem; }
+.team-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 5.65rem;
+  padding: .9rem 1.15rem;
+  border: 1px solid #645036;
+  border-radius: .7rem;
+  background: #151416;
+  color: inherit;
+  text-decoration: none;
+}
+.team-link strong { display: block; font: 600 1.9rem/1.1 'Cormorant Garamond', Georgia, serif; }
+.team-link small { display: block; margin-top: .25rem; color: #d1c2ab; font-size: .84rem; line-height: 1.45; }
+.team-link > span:last-child { color: #dfbb7e; font-size: 1.4rem; }
+.team-install { margin-top: 1.5rem; }
+.team-install button {
+  min-height: 44px;
+  padding: .65rem .9rem;
+  border: 1px solid #a4824c;
+  border-radius: .45rem;
+  background: transparent;
+  color: #f1d4a4;
+  font: inherit;
+  cursor: pointer;
+}
+.team-install p { max-width: 34rem; color: #d1c2ab; font-size: .88rem; line-height: 1.55; }
+:focus-visible { outline: 2px solid #ffdc9d; outline-offset: 4px; }
+@media (hover: hover) {
+  .team-link:hover, .team-install button:hover { background: #262019; }
+}

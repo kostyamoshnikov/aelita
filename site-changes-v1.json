@@ -11,1387 +11,1365 @@
       ]
     }
   ],
-  "release": 802,
+  "release": 804,
   "removed_files": [
     "images/tarusa-theatre-tour-illustration-v795.png"
   ],
   "changed_files": [
     {
       "path": "404.html",
-      "sha256": "2144fc2d29385d7653697e9df98080fa70f752c1f6a6b91dcbfeb0d6b0964314"
+      "sha256": "3087bbb64e127efea6b7362feb673bdfa0714ef120a34d66a91b78af93d5fe76"
     },
     {
       "path": "abdulova/index.html",
-      "sha256": "56b96e08b2ef4fc91d01875a42bfc4f9c0f179ed80e8e3fa669491d49f60a61c"
+      "sha256": "d7a6032bc339284506109e8248bef0a791eea3dab3b8b147123299bb088551fa"
     },
     {
       "path": "about/index.html",
-      "sha256": "8653365df15ddcfa698f3e040aad1f5b98441d0d22f8daafa92f1d7e2335f8c9"
+      "sha256": "356a36c3104cc82bda8bf71ba895076e6c570a61609044179ece80c5c8fdcfdc"
     },
     {
       "path": "account/dashboard/index.html",
-      "sha256": "a94cee70097253ea730d11ea569d17d1c874bae05a53c1b2d42d53f4ba82bbec"
+      "sha256": "78cd4e9f6f1ef69615a894f06a0018e7becb02fd9a5091971df829ee4e8d5b02"
     },
     {
       "path": "account/index.html",
-      "sha256": "3f75c66e8746f8b7196adb4cd9c90bf6bcdcd2e9e6a425778d667822a8d8cb89"
+      "sha256": "299b5325f78109552dd199a2ad83e70233b963c07948292d1e95ed8854b4db35"
     },
     {
       "path": "account/reset/index.html",
-      "sha256": "9d5b629b2545439a4a8b3f8579dc5d73de1e6906a678e3b069791ba5e249a68c"
+      "sha256": "a7491ac501099012e7e5194cccf3bb2c478347129cf37c2d44df2ca211d7d40b"
     },
     {
       "path": "account/subscription/index.html",
-      "sha256": "416391ed1e765deb4818728b89a3f2fec2ac2af7109bd857f23114fcd4cae17f"
+      "sha256": "307283fbddf48f80ee53ce50955c554f1ab18945010fc9f5d883ae8011c50800"
     },
     {
       "path": "admin/access/index.html",
-      "sha256": "746b50322f21e74da2f945f6f0243e3bb1e6e16e51dc9e32e0ec991ae2e4fbe9"
+      "sha256": "98f22de70dac5a789626eaad3656c366608a6987a80970ad3c8c84a67e2f894e"
     },
     {
       "path": "admin/bot/index.html",
-      "sha256": "fcd31c4b06aaddc90dd61817a4d0d6e9340e544cacb0463eefe20381188564be"
+      "sha256": "9341a7c4eb3c3962f30cb1a2d3e37dd48876a7a07d2d18dfe18954d382331755"
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "ffa1821ae67de20c964bd622048fa8a2d81e82cbd08526587f04f464aecb3c60"
+      "sha256": "2ef0d034f9852a9ee406b1a5b514b3a03e232f10eff3f3562afd8d6255d9cbdc"
     },
     {
       "path": "admin/directory/index.html",
-      "sha256": "c2f4c48c21c18c2d0f46344e4b2e5ce32fbad4741a83ec3c82f3a80bf939cbe2"
+      "sha256": "08543cb22392b872885449c60b96edea96de4c3f26098d2fbcbf9f9044ffecac"
     },
     {
       "path": "admin/editor/index.html",
-      "sha256": "1da886f74d0379736a732b3f93dee65a08c4033177226d281f3ccb605e335031"
+      "sha256": "7c73ebdedba9434b1e178428d52988afa2ac131da0af6b86c36f789c00b1523e"
     },
     {
       "path": "admin/events/index.html",
-      "sha256": "dd0af5ee8ebd964b0d80e52dc9e0524889cb574e072e2238c46ce1d60145b27a"
+      "sha256": "3570b47d3b0f9edcab8dcf93282c97ebbdee1f385abfff704b4c154ad27e85a5"
     },
     {
       "path": "admin/index.html",
-      "sha256": "ed9bc6c063de4207fdc824e4652127dc3d234456c649358e1b08400f01364b91"
+      "sha256": "df55d567edead55188e25e21ed9cb08ad3860fc46f83bd763f91573587690f9b"
     },
     {
       "path": "admin/mail-texts/index.html",
-      "sha256": "2fac146058ca54bb48bf00208c301947bb1b91c9a843c863bd02e0c348cf5a00"
+      "sha256": "a95a3a8de77528a5c299883eb923a25ef6ca86b01010361d3a26371a96e6b21e"
     },
     {
       "path": "admin/pages/index.html",
-      "sha256": "a372428fc62c4add6795fc4756be1ae3d7c286240b3d2c6dd071fd1315afd54b"
+      "sha256": "9b450bd606dd11dc29e8739d9a1e1e43af82dcbcdc2652f0a04a479bbf0170f9"
     },
     {
       "path": "admin/promocodes/index.html",
-      "sha256": "caf389fc0c4a83268c934d8147e8f5fda42767983ef24b90de059c7dfcfa62d5"
+      "sha256": "5b659177ee11bff2ee307a62f96985d89945a081bc4840d829ed129eefa18f11"
     },
     {
       "path": "admin/site-nav/index.html",
-      "sha256": "1169d3b85755ae3109b86bc4d5cedbeb946ee53e7cde6674d5ec79b5fe538458"
+      "sha256": "f7567356003761a90191ec43b8db1c9dac26cff582e69f02a46970f5ff745ff9"
+    },
+    {
+      "path": "admin/team/index.html",
+      "sha256": "59748b054b96db23650973cfd753a18d693cc426ced4f9c77ec600e23bffe93b"
     },
     {
       "path": "ai-test/index.html",
-      "sha256": "8050a594610ff6da155c0933b42df6254bab59ccff3e472de71ab43344a046f2"
+      "sha256": "d12ff8770dda99ba7459182312bbfd5c7ac98c0d5a0ef1c252e5045880266232"
     },
     {
       "path": "alena-bychkova/index.html",
-      "sha256": "80ae46463d4d55c87225352890e9eb29ab4eef4a45390f9d7b58916cb1aa05c7"
+      "sha256": "6b40d971baeabb28c21191e698da1ecf68b09a5dd99bdbb26853d8c830bc6a12"
     },
     {
       "path": "alexandra-chubenko/index.html",
-      "sha256": "d29598892809168d643e8cf03d360ba21db335eeb02493ae9530d97191f75698"
+      "sha256": "494d44ac2ea4ce691ca301035e8e233074f8ce483ee7cabfd5d5bba8ff186bec"
     },
     {
       "path": "alexandra-gubanova/index.html",
-      "sha256": "82318d6db840b9d8dded747369cb6a4162b817804e72fdb29d59ff1d369146ee"
+      "sha256": "4f9722caafa0a92e0fa50bea96da2f887d91896172c313beb15780a7f6811d55"
     },
     {
       "path": "alexey-tsymlov/index.html",
-      "sha256": "c21376140504fd80e2dbbf8606185ffa6dda64a66bb49a6244c8dd6f66a4b48a"
+      "sha256": "b07e44c1ea03d8d781ffec952bfe0be199cbbf74957c1aac4bb9b7e84f775870"
     },
     {
       "path": "anastasia-silantyeva/index.html",
-      "sha256": "e4640e29c3588ddc82d257668183fbd3d336392c5818bd8ea2aa63b3a66af2f8"
+      "sha256": "a40ae084b07685954f87fdc4b5fc265f852270c19caf752a977a2dd9344cf204"
     },
     {
       "path": "anton-vdovichenko/index.html",
-      "sha256": "12caa0684b17713d3fe1694e08f5b46562032cac496651f8a9422933409edcd1"
+      "sha256": "93a382b83ce50b738a511741f3980c201e96b6984e9eabf076729f26112721db"
     },
     {
       "path": "app/index.html",
-      "sha256": "0676e62bfa1ec69a318989abe3f09ebcb8aee624be044681d5e3b1c070a7f4af"
+      "sha256": "5a8714cecf90844099c934c823957d8c113411941f1c06f1a886022b815a92a0"
     },
     {
       "path": "art-kvest/index.html",
-      "sha256": "e425825e9b3dbdd3eb696ee99f615dcef6c8adb16d96439b7225c6beb353f643"
+      "sha256": "9f40d94ed8cc6bfda6dc1fa3fe84cff974d7a4750be3d1f1b21caa8a397bb85c"
     },
     {
       "path": "assets/crm-core-v1.css",
-      "sha256": "cfb9c3aea0e4f6beaa9f3ca5b4c381f1e0ea4feb6d381b32225cfc4ce23db63f"
+      "sha256": "8d5ec3d302733b6e7548838798ed67c1919f01f3988abdd06bffe5e48a36d291"
     },
     {
       "path": "assets/crm-core-v1.js",
-      "sha256": "ec7a22c8a13232f9ddc714f78a094d4525b11055857791c41681d02fa197a67d"
+      "sha256": "60a17f86e74e853e82aba7d91275ff2eafdb3dd84752638acd37cff98a8e6c0b"
     },
     {
-      "path": "assets/crm-mail-v1.js",
-      "sha256": "954771c6101344a332f5d079fdadb8a07c09b67c6ba59d5bb78dfc2143aa210c"
-    },
-    {
-      "path": "assets/editorial-v801.css",
-      "sha256": "563dc96a59099560b9cc8f5c889775de8fd24a7c6b5881ee4665b7e69e8a34fd"
-    },
-    {
-      "path": "assets/main.js",
-      "sha256": "a7b6ec5fcf710dbe105908c11c4536ac0bf5a2e71a970eb419f4b50e6f7c180b"
+      "path": "assets/crm-production-v1.js",
+      "sha256": "5a5b82f244fd35d897ca610f045169da1d891b1ba068c473abc6cec4b447de02"
     },
     {
       "path": "blue-ocean-strategy/index.html",
-      "sha256": "7b8baa92af8a2322b01ed0b67a6647bc10a51dffbeab86d4b7b29c4413fb6e38"
+      "sha256": "5b69620d64e70d81442e93b008529cae368c656e78f39793d88c4e549c1d509a"
     },
     {
       "path": "book-concierge/index.html",
-      "sha256": "162e7bcc889fe6b13b484328fb1216fa1a290dfc65a3f756dddc9983cc30acdf"
+      "sha256": "2ec7b4f52e5ba0a1b2f5afe6aca479afe71d08ea62c985380b06b8f01fc30500"
     },
     {
       "path": "book-space/business/pay/index.html",
-      "sha256": "b2d5da51782b52f5539a523c11d92b394ba5813f15594a1c4038a734f0c0053d"
+      "sha256": "2fca544865a5096df66b7dc3f8508c0c8524b98b6649cc23e4e6c003b3e90a0e"
     },
     {
       "path": "book-space/index.html",
-      "sha256": "1d1af6b1a3d9068529b0299df471bfc694d20d0897ec182691dbaad47b21be60"
+      "sha256": "3a9ac8095eb4e70e031cd82e12a8fe83f7085d1878caad968f970ae02bdfdaa9"
     },
     {
       "path": "book-space/main/pay/index.html",
-      "sha256": "93392c8b41c8d8c0c08979d591a28ce043414291e051c3e37a295c082a20527a"
+      "sha256": "95947164172e05e7b0abfdf5a912fd4e0d633720bcfd09e71504bb8cb4550d0f"
     },
     {
       "path": "bot/index.html",
-      "sha256": "9208ce6f3538a90c1e908f932fb6b83a3a1277aa2edfb1b447620f119ca07c5a"
+      "sha256": "6ba7a4eae64ee9d20c16d6cc92627cbe333381bc9df08e65dfe7ac32eddf4f31"
     },
     {
       "path": "bred/index.html",
-      "sha256": "e5acbe1869d2377b29a7b1e12328d01e657009e11eaf11d127135a32e78e1c6b"
+      "sha256": "d88f0180d3728da9552251eda245f441eae66cc43ee69c28cd8e20bb9d679809"
     },
     {
       "path": "budu/index.html",
-      "sha256": "7a448d05f550058707b57cded7e67b6407b2824d00ec5640adb60ee727a055fb"
+      "sha256": "9305506d346d5cd639e7d850cae152d8b5ee188b033a32d2444cb37bfd21b824"
     },
     {
       "path": "business/index.html",
-      "sha256": "4906eb01bbccaee3b97f641b27ee8d62bb0ea4a62888298775367eb44cf18088"
+      "sha256": "c3f5772866bb871c160bde80d166d17fed15f6c38b38a7a76980ea5e48152d8d"
     },
     {
       "path": "business-program/index.html",
-      "sha256": "d8a5af671e9fff562298b31490819a36014a51aab52882c9e3ad650f2093f571"
+      "sha256": "c0fa076dc2b0b7fb350f5753cddce1ebe7244b326db0d7eabf0ee63dde3e968b"
     },
     {
       "path": "bychkova/index.html",
-      "sha256": "320f76689a50494f3c76a4ff018ab1736c80cf3a8ff13e2ed5d9418edad8b8c7"
+      "sha256": "c06f536ef4b7d8e89459252d676abb91631df2722e55e41b85803249b8d7103d"
     },
     {
       "path": "byl/index.html",
-      "sha256": "ca5200c4daadb0b46cc41471f58dde5336dac93b95cd9ff2a417d0203e1b56c5"
+      "sha256": "1f6b1bbdc36a2c852f41ab9e73a8c4727775dcec37562f6218e3dc37e93d27a5"
     },
     {
       "path": "collaboration/index.html",
-      "sha256": "fd47d55fea314b78b912bcda3269c2cc01cb3be99afdfd74ca6ae7a6611f198b"
+      "sha256": "08db64b3b0de68e1a4098d2be88f7d66ecbb58711f5bc64278dbaddbe95f16e9"
     },
     {
       "path": "community/index.html",
-      "sha256": "7e2268622935a9e72bdd7438b36a86c0f5ce2adedd01accd5544346f01091c76"
+      "sha256": "dcca93efee04a29bc97dd88c580849518c6940d9b4a856f541b834c95fb4b292"
     },
     {
       "path": "consent/index.html",
-      "sha256": "39acdfd829ff905af8274bc80c2f9ae8612867631c10a8ae956182f3fe5dd0b0"
+      "sha256": "5c56b3f43e0b869ff87501f61e4f4a3d187fada005507bd93a23ee6ff249f949"
     },
     {
       "path": "contact/index.html",
-      "sha256": "9ee536e67d422bd20cd0c47575efaa3038abb33e9a5585705c7277d5a5dcdec3"
+      "sha256": "00c80e660bc9c3965bee583fce65d46b67b2963ae34fd54f463804f14983a988"
     },
     {
       "path": "contacts/index.html",
-      "sha256": "6facc78df8a9445710781e2439b1deafba845e73217dd14e7f05935022315ef6"
+      "sha256": "82c74c2021714597e184695e70872b8aff50c9c5b51c33a2ed586e77cef82f44"
     },
     {
       "path": "cookies/index.html",
-      "sha256": "c1d9decdc52b952f859f2e162709a549dd8335e7c8a8a513a90fbf557efd3cd5"
+      "sha256": "59d82c626f3947108d0d0eb0a6b17f7c2723514f351fa00348a9d00f1c87a110"
     },
     {
       "path": "corner/index.html",
-      "sha256": "f7b111b1416574b887dcc933c802d4065181c292a07eb411d4562f8937f1096a"
+      "sha256": "5886e7c35695c58607631aed865a820eab5fd4d70d35463e663633681db2f277"
     },
     {
       "path": "crave/index.html",
-      "sha256": "f328d149cb0312e74c5402497218daf5644a5289bde36bb03796b52292b49d28"
+      "sha256": "2ce75424928f6930bfda8e728fc72af4eefbb898315ac9bc746313447d028cd2"
     },
     {
       "path": "creativity/index.html",
-      "sha256": "b996e07c1e7a8bc0071a2518659ea22b6014d174b839847150bbf67fe165a259"
+      "sha256": "ae168f650c2561f37866021a844afe54aaf60e76dfff2e5484527355b31ef773"
     },
     {
       "path": "detskaya-programma/index.html",
-      "sha256": "da2f1e175c3fe8584979968a50af44175ab35f92edfaf32095ba311a2e53b44c"
+      "sha256": "3af9266089a1c03751ccda7a4ff3d2694258203e2f05bddd93abc9378a416c82"
     },
     {
       "path": "directory/index.html",
-      "sha256": "07448302dd73167adab6791bc6c6d81e7d9af1ced8c113339e479e56cf6029ea"
+      "sha256": "39e44549cc14142f845eb3aa0f4f20b59d194ef5c04cb01dd13c1df5d7c502af"
     },
     {
       "path": "documents/index.html",
-      "sha256": "3fe58b90191497cfb8b9392c9314ae630c2f462582b2ab49ff33b470b8363f27"
+      "sha256": "da360f4d77514c354acb142dd4044c239252ff4175217427ef72657c2c28a419"
     },
     {
       "path": "dom-arhitektora/index.html",
-      "sha256": "b4a8ae4433c56c5455107d1101524fb705749fd516a085fcc44beedae6287f3b"
+      "sha256": "7fe6247d801375998405b8b1728c930b1e94d4e0b61a2162ffb623a6f847de98"
     },
     {
       "path": "dyba/index.html",
-      "sha256": "92660c8ab1f47f2eef5d203c9f90416e74305f4735501da13a2013607a45334d"
+      "sha256": "478a01c6bd9dd4daa95cea759220b6c6fcaab6815bbee9efaea18c0e76272b5c"
     },
     {
       "path": "dyba-show/index.html",
-      "sha256": "8ed60a151032cd4a512cb08fc7dcc18f03fa98cbbf3dd1bf6a454d1fc07721c3"
+      "sha256": "73a30c9d82338d2f158e28bacaba9cc278c3e44a7c4b9fb3134ed5d5b3e5cbd8"
     },
     {
       "path": "edinorozhka/index.html",
-      "sha256": "4ac36c5f9a93e839c993d1be784ccd8711a24693274a8cdd21931062de5a52b1"
+      "sha256": "d2745b6bd13e2cbed7be81f155e8c80d3aa98155d2a4f9fd70bced3a58428e65"
     },
     {
       "path": "ekaterina-ilyina/index.html",
-      "sha256": "da106f75d7c8f9a8b6b3546b87fc5d25fd95fbe24a636a030ebb57f24dd66db9"
+      "sha256": "fe74cf969eaf64b2610c1980146f832372526d942eafcfdfd5245bbd91018126"
     },
     {
       "path": "en/abdulova/index.html",
-      "sha256": "ca155dcfc0cdde6371b13a1127c96e8100ea126791e17c35fa83460db93fbbe9"
+      "sha256": "c42004b245f98a2271e55ece229924fc0f80bcdd5a9d7e7cb863e791c40401cb"
     },
     {
       "path": "en/about/index.html",
-      "sha256": "d67ce4194785994a9eccd897196838a53cc2b68fb4e12e1233bc920e430b97b5"
+      "sha256": "78e3d7f89425f8ef68b23b20d620339fadfdbddaec492d0aaaaab879558a32b7"
     },
     {
       "path": "en/account/dashboard/index.html",
-      "sha256": "c4515dcdc621c001764dd018a400043a480bea1eb250c2997a7afb6bd86f0154"
+      "sha256": "8be65cc4cf5abd40d3039fad9900173708abe83e3f4dfac471a3138b28114c8a"
     },
     {
       "path": "en/account/index.html",
-      "sha256": "cbc12b86a6b9f1ee523c6125e44caea33e6c14c8d8e2878786c0db14d99e8e38"
+      "sha256": "98ad6cb4d1256ea531e328fff52ce63acca4b4c554c40e1e6a1c3a64d36201ad"
     },
     {
       "path": "en/account/reset/index.html",
-      "sha256": "ba81c3c143f6405ba97fecd1b64ffbe7ffae76a173e10000520792139b84680a"
+      "sha256": "597f66e260567ca8180e50bae731fedf753cbed2b97beebc2cf2285b5356339c"
     },
     {
       "path": "en/account/subscription/index.html",
-      "sha256": "fccdf7f135b9cc58c07f76f3c78ffc6a3737599ed8cfbe2e80ec6a77116d12f0"
+      "sha256": "0752624fe1a7d91102bdbcd4ff1089d858d555dfa5a1b6352c9608c355f3d7df"
     },
     {
       "path": "en/ai-test/index.html",
-      "sha256": "fd1b0a99ef6073d6ba3d47342eb6b47d01704cb175e04db40c95c0cd3332afb8"
+      "sha256": "2d22ecc135bc5698d10639815bcf1e4b645fd059a1fc10664b03dd6691158d70"
     },
     {
       "path": "en/alena-bychkova/index.html",
-      "sha256": "f45888146efe3997cc04b57f05ffd306544bf5d73768189221e07f29ac92d957"
+      "sha256": "47d3a1dd06959a7269055aadcce16a046cbcd455f26d7fc661c0dccc65e09ea4"
     },
     {
       "path": "en/alexandra-chubenko/index.html",
-      "sha256": "0262b3d1621897683bd71161d92edc72d028868aa287ef6b61b5f1b4fcfd59ba"
+      "sha256": "c9c11bf0fcd2727632c26172fe4af8595c25dcfa75835e3f219ae8551b0638ea"
     },
     {
       "path": "en/alexandra-gubanova/index.html",
-      "sha256": "4e210b417aeb72dc5110638974403eb5194f82e57f007f4f72bfeda2798c198c"
+      "sha256": "f9552f29e6af1a33bc57e38347bd7ebe260eb74baca9c388df224deb24c9ef7f"
     },
     {
       "path": "en/alexey-tsymlov/index.html",
-      "sha256": "7c8aeac0417172e7c69b7ff92e1f1ef04827d9545af31517e4d9a68a9bc05807"
+      "sha256": "5ebf39ba82b191050a2087b7be59c6a89809a90630cb916b028be801667d9fd8"
     },
     {
       "path": "en/anastasia-silantyeva/index.html",
-      "sha256": "7c946a32ad6aad37b4d5734c3a0c4cec60ef89d13b2d45f8461887fe0d599946"
+      "sha256": "a90f89ef91d690e7de22cfcdebb81941c6902190161740306e5a265448ce8439"
     },
     {
       "path": "en/anton-vdovichenko/index.html",
-      "sha256": "75fc8e1e0e3267b2e7c3175577bf41e369f8b3c64ee21f93bbb7f2cf588bbdff"
+      "sha256": "3aa071e74afc802b1e570f6fdaa5c898ec66c420b535b0373a69d588f49d8c65"
     },
     {
       "path": "en/app/index.html",
-      "sha256": "04627f8c090c05fa265afef97b8e77e4d5d1d2fb38f3ddeee8a6f4ffe59a4f63"
+      "sha256": "aca01862eede5e848c1d18b84ddfe71ef58986d4c548afe57f69496ca76e698e"
     },
     {
       "path": "en/art-kvest/index.html",
-      "sha256": "72e1f9cf36bfe26230f50e9dab6809d6822e9d16684fc50febd264d45e626136"
+      "sha256": "1a0f24402cc35c70463c3fa41ad35fe11be5b5b460829952acbafa46de1c49b7"
     },
     {
       "path": "en/blue-ocean-strategy/index.html",
-      "sha256": "a1decf0262950331413412d81859933ac959d9fd2ad3c2c3d993ad6745c3cb64"
+      "sha256": "883df81e7ec77882e5da84a952579a5039923a8529644b2eb8268a0136cd85bf"
     },
     {
       "path": "en/book-concierge/index.html",
-      "sha256": "4de7db49613729b0541e615560c9eb17652617cc9028c0e41f5d877c65d98f5b"
+      "sha256": "509c476ae3edd80285896037efedc1f587878005ca9d095eb5304f45ea3e3feb"
     },
     {
       "path": "en/book-space/business/pay/index.html",
-      "sha256": "be5a1284b49d8f00d9907695d05cb985c64c9f17edfecfa11b9669af58bfafb0"
+      "sha256": "247865a091b5a5518bb7456a4d2229ab557b620af4b6caf3008afeda110f4d17"
     },
     {
       "path": "en/book-space/index.html",
-      "sha256": "a36aae5617b753cd58381428151b8dfd3446f0dafb5ca5a5f39fce0e75d19662"
+      "sha256": "9ee7342359604044d79c9f3f2a23a87afb8120b936a47ddc0952cb39072bda01"
     },
     {
       "path": "en/book-space/main/pay/index.html",
-      "sha256": "8af75e4d78e0284a9c010356712ff72dc74e6899907841410d2536fc18fe9c3f"
+      "sha256": "da30ff3b2e789a4c0cb111f845e5141f19cd20ec8143f50bd96c7122b098219c"
     },
     {
       "path": "en/bot/index.html",
-      "sha256": "d9c1c2b2fe9ba0c5ea2ae0582ff1b782b242bfa4dc30f5b3dc8011a581b4ba60"
+      "sha256": "f9c7f33b6641cf0d432cb9153ed78207a8065b3b06bee800910d2c8e19868186"
     },
     {
       "path": "en/bred/index.html",
-      "sha256": "520b1575902397ee09a37bf0ef4407b7b41c625c71b4e808a74f6ce302b53274"
+      "sha256": "f0db9125ab0202146af592db08fbcf7ccf76d16519d0e69e75c1d28cc31f7e6a"
     },
     {
       "path": "en/budu/index.html",
-      "sha256": "0056f031f495d44575b00c3bf01a410945ef0b59f02368ef4d3e9c2d697dc64b"
+      "sha256": "69ad9f53b3f57246a91336854d34cf000112758dfcf1a4036e2933046248fed0"
     },
     {
       "path": "en/business/index.html",
-      "sha256": "14289d1d4d7a445e1c6b6a402256aff1b9f60cf9201b8054e55792b3c7121831"
+      "sha256": "c1ddcd6408568c9d2c6bd69febf30d2d71d3c92517b45ba6fe767f37b198bdc4"
     },
     {
       "path": "en/business-program/index.html",
-      "sha256": "96a15b00c029a1f686b00012fd20630e830b76d17e0c4f567e99fa44b6861e66"
+      "sha256": "585d7ec8beb643c411d0607a4eea2271376ada14ccd779e4f1511a48de4e4d77"
     },
     {
       "path": "en/bychkova/index.html",
-      "sha256": "b511552b3fc6012458b61816c57bc55004eb522dc4708ee8c64242881f2f3aab"
+      "sha256": "0217219e223c49d58fb855557c104a33ae24d92a91e5e5ecebcb71a579f6d067"
     },
     {
       "path": "en/byl/index.html",
-      "sha256": "83362e7706c54d1fb70614df7946e236b7531d1f9a0b4f2f799850858bcb168c"
+      "sha256": "b015a84719d4100fb51c1b5ff21fad2e111a91530b6b5012e01d77892fdfdfa8"
     },
     {
       "path": "en/collaboration/index.html",
-      "sha256": "a1628310adbb9c286eb6a5ff9a3106bf7eacd8cc79dbb076e693feb617351321"
+      "sha256": "21f189303e5e69f01b13333512c0c792c97a0c8b2a8ec49af61874eb7adb14d9"
     },
     {
       "path": "en/community/index.html",
-      "sha256": "1dacf604e6b92b1cc9e917572067ce7fc73c9783080e583dd1f6bca9e53b9d82"
+      "sha256": "d295aab407363e16b5aeadd04c9ecd6da18dfb5f5a7b5afb055c9daba2e25d25"
     },
     {
       "path": "en/consent/index.html",
-      "sha256": "8865f6002b0061d3f0e20e7b559afe1be4ed0d5929765e6dfb4a98a31b04a2f7"
+      "sha256": "8b44839acd16ac8d6135aeac9afa55a6bf79c02e2c5d22bd639c0570c95b2eb4"
     },
     {
       "path": "en/contact/index.html",
-      "sha256": "6bcee85a1522c5bb2ccd322d5f083810829c44c9b674c8dba87c3fedaa979748"
+      "sha256": "6dc72d1abe85cb111f0a856368692855e36111c219026e41e268eecfa17c67f2"
     },
     {
       "path": "en/contacts/index.html",
-      "sha256": "74ef7686ddbd2820d4ea925c50a8fbfb603cbfb0d58ad961193a8755ce25166a"
+      "sha256": "5a75d831b4b113a853fe7973c6cb89754916378bcc8076fe954c659fe066b0b2"
     },
     {
       "path": "en/cookies/index.html",
-      "sha256": "8252ac38193aec7a6444ee207f00403e7d941bebf8f893820be14e8cdc9276a5"
+      "sha256": "ac70de66bfe1d60f4acae491642cf26deb1acbc607f549e84a89b1010051d5d4"
     },
     {
       "path": "en/corner/index.html",
-      "sha256": "8855712f1d26f13e2e010c91f0fa8661813faba46ffd3db444c57dcc067ff0d9"
+      "sha256": "3a763e1f47db47a43189d51b23cc156486d125813b40e22002ed15927294ba97"
     },
     {
       "path": "en/crave/index.html",
-      "sha256": "8a63fc59d9b1f2ab4bb810b332ff347e4e68cd33d87bfe034df08ef740b5c12a"
+      "sha256": "e728e36cbb11a8bd7b871a9aeda9671a2ad4ab907c1ad6163a256500fe8875a8"
     },
     {
       "path": "en/creativity/index.html",
-      "sha256": "3f9b20d98ff7e4e0582fb928740300d1a179ea79fa9f1e53eb3fb3c9a166d7e8"
+      "sha256": "946cb033393eeb72b997e443c713a133c41dc43d68d16df8cd2e768eb5839d9b"
     },
     {
       "path": "en/detskaya-programma/index.html",
-      "sha256": "89e7633a365ef85c4e7e107b4810afe7382176a47a8750066a2f10263c3eb1be"
+      "sha256": "4ed3346f808f8d7eeafcb069432c1213080c398310c9413ae7c4e92b51ace5bd"
     },
     {
       "path": "en/directory/index.html",
-      "sha256": "102fee6397e06c4e7240e8592c706156e36e5533fe67586fec3c071ed655b73f"
+      "sha256": "7e0f58600b8c7e5412c1a2d2422038f083fffc6d1af4948476486286eacc2219"
     },
     {
       "path": "en/documents/index.html",
-      "sha256": "c1edea450f4f7224919ac8f7de9332214aea1b31b55c2b43887246ff931c66d0"
+      "sha256": "806712a872d2daf302e3b657e48eedd1d26bf025df5b7b1b1d6c15b4a6de47fb"
     },
     {
       "path": "en/dom-arhitektora/index.html",
-      "sha256": "35d4e04da9942ecd6d4379f75dce7c26f00fc55b856efa07c5059449cea4f0dd"
+      "sha256": "395d645b186e1d9caeec96de1c8c74a4b93e9d9f9ddab5bcb4ce06431abe0830"
     },
     {
       "path": "en/dyba/index.html",
-      "sha256": "dc460433eab81609467eff9c75128a59aa7feeac15adeaad773ab24c2e6ced1f"
+      "sha256": "74f531eb7b472b16e61755ecd8d80cc38f8055d9c219a321d0159f0a0de90b20"
     },
     {
       "path": "en/dyba-show/index.html",
-      "sha256": "39812f2d05903448fef948edd5a913913e6ff31540bd89e3dfbe90c1d7267fed"
+      "sha256": "51be27f45fd60a26d5edb6102d0db87eec5dadfd4a61af3d06bcac396898852d"
     },
     {
       "path": "en/edinorozhka/index.html",
-      "sha256": "d2b901c72c20e278ec69a9d3350bb6659a07d27331e438e94dea25cbfd5e8da8"
+      "sha256": "71ad4077719386aedcda8d388dc38725fb9668158661cb3994059ae8479df754"
     },
     {
       "path": "en/ekaterina-ilyina/index.html",
-      "sha256": "0352e4c151aae2303daedb30670d87e464eabf5ba20750a307ece95dd9e10f3a"
+      "sha256": "2ac2804b4d734580343f35983a5bbbbb6fcb0924dec849b53f4daf0ef2e59d36"
     },
     {
       "path": "en/event/index.html",
-      "sha256": "783b38b07fea1179c3f3353b909f396a1502a3ed0218b408897d2575718f2c56"
+      "sha256": "b38ed16cc5de3bfb848773fcb9e60f1e51fcc9e38af9cbb3a4946fc35f6f5d62"
     },
     {
       "path": "en/event-registration/index.html",
-      "sha256": "3ef26c361478568abb55897e77f5b4de2cbe37d66fe70ea415ad2d9a3c07c9ac"
+      "sha256": "9a0c37628b46a7feeb586065e88187cad5cc1e9bb985c8a36f8aa6be9cd57bd7"
     },
     {
       "path": "en/events-cancel/index.html",
-      "sha256": "d6e2123081ed2aa09e9bed029f33870ee20eda83f3d4da7d70ac0d25e87e4031"
+      "sha256": "3c79eec742d6e8494fa68fee02309c0a7f6f341d3a41b298327b372208ed64bd"
     },
     {
       "path": "en/exhibition-program/index.html",
-      "sha256": "43ebb5c721a6b8bc130e75121b751cf706bacdeb841c7d18bf1f8f9c3831bc53"
+      "sha256": "96e5e3a0fd3ea5ec5d11daf95b607a404eb0af5eb7b8f7bbf596fb421926c0ac"
     },
     {
       "path": "en/faq/index.html",
-      "sha256": "b0e8a9a26cc68f462d58158d66f0a47af4b9a8aeb83181bfcb13516f03e7c2ce"
+      "sha256": "0d84a1b9311386a561f7f39aa1f61908cc75c048853773a677c3b13749b57a0f"
     },
     {
       "path": "en/festival-team/index.html",
-      "sha256": "67f3bcaaae34a2703745b61b2a009b655dad558c1f25ce2f670c8efcccdd3301"
+      "sha256": "6ddef865e19c91b01b5687edb818b6c93c4d2ac4922bbd8b239783d2d3b95bdf"
     },
     {
       "path": "en/fifth-element/index.html",
-      "sha256": "a540aee874dbb79f71817c469eb77d72d028d820773fd7567a2d250799c3aaae"
+      "sha256": "8d0c6e7ca7300f46fff3fb5b0e523dcb085592db4c68758bb842370e7a91f3b3"
     },
     {
       "path": "en/films/matritsa/index.html",
-      "sha256": "fc09602fdfcf38fe509beda4db9202c0ca0eb9d906f7e37b45f8553d636ed872"
+      "sha256": "e4606564052a74db77acac03db9ef45d57f5b8d1232f1660c19c8ec374863b6b"
     },
     {
       "path": "en/fotovystavka-ilyina/index.html",
-      "sha256": "38bf5c5b38ead3a8f51b71b5967023f2443af76705b5d923f68eca0aea8f5a90"
+      "sha256": "b634df7f44c013f1e0a82a05a7cda09e99e1ea67be5dbaa498ee71f88df9d08e"
     },
     {
       "path": "en/galina-mosalova/index.html",
-      "sha256": "23021a6b42088dfe97e03a3fb692cbc451199fcfa9172e7bbf3cc4eb32ca4e52"
+      "sha256": "c65abadfeb8ff8c5fc9d17d4c9fffc62ea5dde2687bfa3a7fc6d6cc898e58148"
     },
     {
       "path": "en/gift-card/index.html",
-      "sha256": "c6197efc0709e94079b59bcbd6d0a29523251cf533a1f5d0aa958c6912853712"
+      "sha256": "416e60f4c43e47fb72ce55b5e2a470436f44465b0aa21ef156441869b74cb60f"
     },
     {
       "path": "en/godo/index.html",
-      "sha256": "3092175be56f96cfa471bf41854556acb2c1e94cf61f8c8b6629c164e6e12fa5"
+      "sha256": "0935d7c77a31df0d5830dcae6bf58b642eb1806c281dbfb151d84de4a122ffed"
     },
     {
       "path": "en/gogol/index.html",
-      "sha256": "d6d1697deaffb65c8105a9f78a1336c52787b40f70ce30d4408b44d32afb5b28"
+      "sha256": "16750af02bef34e5d83f493e89de3b50f2fffa461d17ca0eaa022d90ad872828"
     },
     {
       "path": "en/gubanova/index.html",
-      "sha256": "cf4533e74971d51f360b8ecff7384681bddfedee83fe388fdf53e86a1a291b6d"
+      "sha256": "e59f895be08560e34c03f717fcb122ea8edb2c675b1dddf53e76760767bf9bf4"
     },
     {
       "path": "en/human/index.html",
-      "sha256": "76f53aad25a9ebcd9c999839c0679dbd3428420bbc461caeffaa3fe9044f85d3"
+      "sha256": "2c2249a5f8a91cf54225cb6ee3fc7c107bf8a6b45d7214f63a42df986fefec63"
     },
     {
       "path": "en/human_photo/index.html",
-      "sha256": "93dad780f5fb1512af85a4ba016155504835b91242905d01925d7b138adcdaa0"
+      "sha256": "ecb72963d756ed3bf856123db1347d301fe0e9dddfad6173b506ab4236cc48cb"
     },
     {
       "path": "en/ilyina/index.html",
-      "sha256": "d175fecdbb587c1def846390ab0ac0a8ef411b1094353f0f711866b9f737f8f4"
+      "sha256": "d9caeb53b4631f96187ee638bc318a3ed4e5db776eb123a1ef90c6e87eaa0413"
     },
     {
       "path": "en/index.html",
-      "sha256": "cff89c2550ca9629bf49b3ad35edbd5aa511b35a5f47c439478a726df45ac7a6"
+      "sha256": "23dffd442b805f24813e75cdc08801e6143989ed2f5104b44cacec4076e876f8"
     },
     {
       "path": "en/instruction/index.html",
-      "sha256": "2478e892984b0db91ab71fbcdf6cbef9b2b296dcaa95997013291bcbbcfe6092"
+      "sha256": "9e853bc85e46cae4a173cfba9906b3f6c562563fe97e73156a714ef9d263bae0"
     },
     {
       "path": "en/iov/index.html",
-      "sha256": "6815f0ed564b8cd5d9de865952d86865e7208212fc038da655a08a8165a604f8"
+      "sha256": "b01930cdd05ef7e310a6342c78455db7bfb2e75535ec484b594a6dd368f80a7c"
     },
     {
       "path": "en/ivan-sachkov/index.html",
-      "sha256": "b2127629f132125504d029d6e19258dc01c3bd030aa53590c77530469c71b4c8"
+      "sha256": "71e2ad71cdca198bad875126b1f834744b4f6be5fc9aa83b65ace00fe9ecc147"
     },
     {
       "path": "en/jazz-dance/index.html",
-      "sha256": "564bfaf5c968a21ffbbd81d4dfd8acec7776e74e1d22aad210ea4367fb847c64"
+      "sha256": "f89850e84442620bc6183018e277487ac4e43d36c0f681cc14c2425e98c097e5"
     },
     {
       "path": "en/jazz_dance/index.html",
-      "sha256": "a45c150632bcf72f9e0c643299c114caab6a67d077496a335ffd377aec603878"
+      "sha256": "262cac29667f656a4de92b7c117bed8230bdeb36cd2a82beb35e26bb3cd28bc7"
     },
     {
       "path": "en/kaliostro/index.html",
-      "sha256": "82b6847ce61607bd188711ebdc2ecbce3648de495779f13f1a634fb3dc7c8005"
+      "sha256": "3defe1d88cff82a77f156199c7d29a07bc879c3895cfe8626a9916574d98c163"
     },
     {
       "path": "en/katya-abdulova/index.html",
-      "sha256": "0891ae9ffba57fb3e515f307d2ca9b7baf3c93914dd5eac8e78739cf2612f66d"
+      "sha256": "ac5e00eaf14e5d0c40bcd6a7755b8fbba6b113233c5c78713c1bb81cb9ba66c0"
     },
     {
       "path": "en/kazmiruk/index.html",
-      "sha256": "cb291aac3a845b492896f295a872c332dbf3c22805866f8868560f9c500d01a5"
+      "sha256": "2e416d3a5ade66edd3c877759e1405c977a0e7568c0f578162ee3a45e2930a7f"
     },
     {
       "path": "en/kinorazbor-matritsa/index.html",
-      "sha256": "95a3736789c5710bb176ea6677bef847590622de5fba2c0a8dc8e2e402f1ed76"
+      "sha256": "5b2613c22709d8407963d6115d58cb4eb7e370a72670fe99a43ba2308ade7453"
     },
     {
       "path": "en/konstantin-moshnikov/index.html",
-      "sha256": "bf37b684035cfaf0bd0f2da26730c348d61da3c219a6bfce516b91a6219f4318"
+      "sha256": "6d31fd7ce3c50c05a8192a89c3469c901bbebe414762fefab7d82d3a64347049"
     },
     {
       "path": "en/koroche/index.html",
-      "sha256": "90e0c4e8e43a0f7f684def6af79367e1f68e2a07a3bd6a602afa8fb79d11ae8c"
+      "sha256": "d540cecf215e613edd13e2194cd6277f41c4e3c7c6928c8b0a63c1a7a34a15f4"
     },
     {
       "path": "en/kotlovan/index.html",
-      "sha256": "a540aee874dbb79f71817c469eb77d72d028d820773fd7567a2d250799c3aaae"
+      "sha256": "8d0c6e7ca7300f46fff3fb5b0e523dcb085592db4c68758bb842370e7a91f3b3"
     },
     {
       "path": "en/kreativnoe-byuro/index.html",
-      "sha256": "f0d7969fdfd99cdb6c558bd2d8bb25541c95b6cbddcb52bccd0ba3821741d28e"
+      "sha256": "f8e8ea1cc43ba306ccee45a6b7b98d141ff25c5cbbe93a676999965d3fdd052e"
     },
     {
       "path": "en/ksenia-shamarina/index.html",
-      "sha256": "09954e99243e8a4675e839c4a8861301974c403cd3bdd8cfa1910d573028d252"
+      "sha256": "a4a45daa35e1183bd5c2c4c25c42627e30bcc1f34f9639ff673b631c40b533f3"
     },
     {
       "path": "en/kseniya-ilina/index.html",
-      "sha256": "3d355ea55b1c893644010e67b95ee5eaf6f10a238b1bd10c6e9c7657aff14f34"
+      "sha256": "b62b968c6380252451e1f27eb0060e85281fd6f128da6237df3a5e10a9eda1d6"
     },
     {
       "path": "en/landshafty-realnosti/index.html",
-      "sha256": "edac9c3cfcb3df74be3865d1229af280d7df6946f3d7ced452354ced0397c673"
+      "sha256": "92418c5a9266c519fefac49a05236f2740b93972f0bb1912e45643fa8c464f4c"
     },
     {
       "path": "en/lecture-abdulova/index.html",
-      "sha256": "e153fe468bc66ee3d009396ec49b605a7ce97b462164d8d8acae4d1d90e114a8"
+      "sha256": "5a0693f415e8d6c6cda8451abe9b658e142a371c5b522e464b0aa9366e4a37e9"
     },
     {
       "path": "en/lecture-alena-bychkova/index.html",
-      "sha256": "1a0bff79759ac0ff075096346fca2366ecad15a7950e3f45ef6fbc75ecf8419e"
+      "sha256": "f5326765d2187bf673e5babcf16a6e2232ba90b2d614280f5d5b01bd4f673c48"
     },
     {
       "path": "en/lecture-alexandra-gubanova/index.html",
-      "sha256": "cbf0b6b0327382188ead3295d9a10b8a1313a4fa1225beeabe21c1de7e7de32e"
+      "sha256": "0dbc8ff6ff97d7a7ffef80daace474bcb08739fa2c21048882da16e59c5ef0f0"
     },
     {
       "path": "en/lecture-alexey-tsymlov/index.html",
-      "sha256": "9c56c9cd764f33335cb89a6e1412937ae35b212cbb08c8c6658db3d791c79440"
+      "sha256": "71731f54318664c68e99352758725cbb5cee98d307c673b69e308d6da3a87a40"
     },
     {
       "path": "en/lecture-art-goroda/index.html",
-      "sha256": "d084785c6cb97e36d0880e08237b4f85183de2826ac8ccb19434c04e9366d054"
+      "sha256": "622045a31dd28a914ac1100fdcdb732ec1255115d7a6621862fef4d98ef41a7d"
     },
     {
       "path": "en/lecture-bez-suflera/index.html",
-      "sha256": "b43206dc8779393712c0bedd8cdd6babb3ffea7e104df049c3fe26c7411184ae"
+      "sha256": "2515bccff38c72a150279947c5ef914510d7ddd481d93baaf299f0408834a3f4"
     },
     {
       "path": "en/lecture-bychkova/index.html",
-      "sha256": "172b963a853ea4c9ff99247460c2df2423f8f5272563bbb471d9ab9e875a20eb"
+      "sha256": "25889165232e2097cd2d15e923d84a3ef6f0826df18b776eac4e5d3c92ac3837"
     },
     {
       "path": "en/lecture-chubenko/index.html",
-      "sha256": "2df893f82fc376a3ae544d459670063a806a7a30a2e6c2d894fc0a68ee4c662c"
+      "sha256": "3d5be247a0f18473e3087b2e8ac651e275c0451d05d81ec5303ef5d0412f2405"
     },
     {
       "path": "en/lecture-gubanova/index.html",
-      "sha256": "b0f020c3f4c30678fe2f890ee0cf488e6c1941c6d7cdb57a9bc01ca111f00ca9"
+      "sha256": "c28a7105bffb9a3c3700b9f42b659434ee25201e9a8aec61b4f22e0bc628aa98"
     },
     {
       "path": "en/lecture-iskusstvennyy-intellekt/index.html",
-      "sha256": "72b39b6a08d4000481d0864dacf7cdfac54a432c9b4a09a6014ff05264d39925"
+      "sha256": "1b37441ca3e7871fd6c15f9fc24de3114b70e116b5672d9d9e46c30c7cc0b5d9"
     },
     {
       "path": "en/lecture-katya-abdulova/index.html",
-      "sha256": "fdd8a5d02fab0e86b2ac876c826055686a5fb59a08b6bd49446a5f4be433d421"
+      "sha256": "f4ca705fb89a8ee9c48038fc130d63b14a40ec599fa9ec04743e64bc6a01ec0a"
     },
     {
       "path": "en/lecture-kazmiruk/index.html",
-      "sha256": "0ec2825985c407d01b16de4c63c56c207fdde96a27dc4cb4cd1f558f8464222e"
+      "sha256": "24bba803163e7146c4c6ff0ea7bf1dff08b9d1f13947b68363479a7691931024"
     },
     {
       "path": "en/lecture-kulturnyy-kod/index.html",
-      "sha256": "4d804c4a9cfa47c5abd8ea5f13e2ec83ef06aa92f8f8cb2e1c171f0535a24088"
+      "sha256": "85fff85ef10b42589518f8b522edcb9ef0fbb3c8431084b850575a0e40646ee9"
     },
     {
       "path": "en/lecture-landshafty-realnosti/index.html",
-      "sha256": "d3f3b179ec02df790fd3c3875bc28141d48f6ed8815012015ce9eed0bae0efb0"
+      "sha256": "865154ce5c164b5a94815f2cdda8b9e67d55ed3cde21de60061e5b0864e1878e"
     },
     {
       "path": "en/lecture-mikhail-kazmiruk/index.html",
-      "sha256": "ac23698d01cd47779a702df2f3a2a5fcc317ace7982a663490b67b24bc68dda7"
+      "sha256": "8eb8ccaa1359e4d24dbb81c38deabc62121d7e0d6a25b37e8ead52837a1aee05"
     },
     {
       "path": "en/lecture-tanets-v-realnom-mire/index.html",
-      "sha256": "ab2f6ed1f916bf600add443abb710e3b7153bb20bfa6818166a4ade94f099b01"
+      "sha256": "24f2535e6791df23e0314668c47f5168c96db2cde8f1656c9c5c886222caf058"
     },
     {
       "path": "en/lecture-tochka-sborki/index.html",
-      "sha256": "5e351f004e436909cb47036b16301f1f04569d25b812dc215ba8859fe36710af"
+      "sha256": "b6fc9f658571cd29f0718989ac81b2b37de188130d47a08ba4ad74faa6cd0092"
     },
     {
       "path": "en/lecture-tsymlov/index.html",
-      "sha256": "d0cc2e9fb1a1a46974a0224189a56e76bcbf8ba3e3b4a3a94a0485ff3c843e0d"
+      "sha256": "264615a77530758e68dfa040476caeb99d38ae3cddfe8f75a3ed5e5ffd53f9ce"
     },
     {
       "path": "en/listen/index.html",
-      "sha256": "d01dcd83aeee9d4d86c3d5500ade094afc4d1f32d2e03b0a5f7162dda397827a"
+      "sha256": "5eb50615e7d2449bda3f5d8d390c31319e2a57a611d35349b1bee0166491ad6e"
     },
     {
       "path": "en/maria-pavlova/index.html",
-      "sha256": "42df2b5a6b63852393cd4a8da1056b60622efdc1f280ed6d4007bcb82a1cba99"
+      "sha256": "b676b09de376f32694b070ba9e9d5f03170a75568f034eafc4456bcd21ebc1ff"
     },
     {
       "path": "en/matrix-online/index.html",
-      "sha256": "a75ad80af75b584fb8b7069919ae4df93dd93e40b0341e381252ec04053aaae6"
+      "sha256": "9f2be790a55f3db49a4a466d9b5bc90edefcefba0ec450263e6d560ff5f85173"
     },
     {
       "path": "en/mentions/index.html",
-      "sha256": "265e2169c4607c497acf1d09a9ec1b0a91e85877847d14dd07326a7ebb7381a0"
+      "sha256": "c691d3e43a5f0dc44ac7a197a6999d9dbc5797e9095cdb45ab57ea9763037dcd"
     },
     {
       "path": "en/meydey/index.html",
-      "sha256": "67e5655bfe10c43c0e5ff772b8285c932a1f1796188a51e5a8ccb003b05121d0"
+      "sha256": "9fdc91a09306058ed91b0cf784068b407ae882adb5addaf122051529f9df7ecc"
     },
     {
       "path": "en/mikhail-kazmiruk/index.html",
-      "sha256": "0ca0925e68833bfe7409678b2a7e28e9485ef6931e344ba05245c74e0f4dd1ba"
+      "sha256": "c7c7fb7efb1b69ddd394a88767d7cb4a8e07308d0c50dc26747969454831230d"
     },
     {
       "path": "en/mk-dinozavry/index.html",
-      "sha256": "8a056673423d47cd05f4cf07ced94675aa115e17f8f6b8f44bf7a891bdfba811"
+      "sha256": "e6f7cd915c67b3606f97631a2d4140ab1d7d7371b6f8ca4aaec74a3a94868234"
     },
     {
       "path": "en/mk-prokachay-mozg/index.html",
-      "sha256": "5766277edbe2fb380d535fecbf6050d576059f141747df4d09ff762092c75b9f"
+      "sha256": "07937c6b24965fdb2c9d07d95f113d8a9ec966f5ec867400a0b4a1e147912e19"
     },
     {
       "path": "en/mk-rospis-gipsa/index.html",
-      "sha256": "d95c8e3f9da485ca35991c0367e760da4ff8ac3fab1ad6c862379af9d0d3cb79"
+      "sha256": "b2a0f0bbba15a46a1fc378af793c1945e4489f19160b79f60153201da18d0f6c"
     },
     {
       "path": "en/mk-svecha-iz-voshchiny/index.html",
-      "sha256": "128675ca11b0a810d62a0e496cd4c79bb897b0662b5dac4eb946edad2f4b69dc"
+      "sha256": "b4ff28e2d2a18b2b9d6c12b67108c46d26dafc9e67e385ed1666aa0f6d2c9b11"
     },
     {
       "path": "en/mk-tykovka/index.html",
-      "sha256": "43cc8598d318b103e8edfa99686b99956eac47b017abd3349a5fecbac85c10ff"
+      "sha256": "877ff759273d858401efaac1100bf4a1d98a3af4f5911385233ce0b4d964530a"
     },
     {
       "path": "en/mk-volshebnye-kraski/index.html",
-      "sha256": "746cc5b2752ae8bf60110eade1bd33ff74be97f01531755a01a5553e910cd77b"
+      "sha256": "d5ee6e257e54fe1466acaab655e4f2d86bf1c87ece13b5d33b543d78eb42e750"
     },
     {
       "path": "en/molodo-zeleno/index.html",
-      "sha256": "16fa3eebe31307d326914a274a98274e6c0a76b7da4e0c131c8f3e19b875c581"
+      "sha256": "77e898c583ed579d450f8c81041ef8575578ded765cff5f4ae67cb26f52e9286"
     },
     {
       "path": "en/mosalova/index.html",
-      "sha256": "d2265cb0f6bdbd26d5af9f4f090f9f754f1ee33a2e62e6b426cc7915cfb706fa"
+      "sha256": "28e51593466c2766b6ba4e74d1524c04986be7ae9ad358686b21312557fed2af"
     },
     {
       "path": "en/moshnikov/index.html",
-      "sha256": "5cb78947f94f98aeb1b8e13b5ae604440569884b16a5e8f06fecec811f41e6ba"
+      "sha256": "b3e2975f32052e6a4908d337926ae3e376b5c9577cc8b7e041bea6d85a45ac6e"
     },
     {
       "path": "en/mozgi/index.html",
-      "sha256": "a0f122f3754732f48fe0aa7b41859acd3971077a39e487faf635963e5a056865"
+      "sha256": "48510913b979d3a226f6f29da332fb51dcd4e6357538ab91d92e4a3b509be4a0"
     },
     {
       "path": "en/oferta/index.html",
-      "sha256": "28da9b2e78e4508560ecf9dab08145927edc9bd074e90400f5b86375efe1c3e3"
+      "sha256": "62d6d81819487b0e8d0b77bf9f0b54a5c6041a04cbac39bed6a9d38f096fcbae"
     },
     {
       "path": "en/omyt/index.html",
-      "sha256": "cb541ec37fdf9e26110b7828baeedd3f42dc2c674fdf16c8fe5f81271d973d47"
+      "sha256": "a0bd6a941f6c6f1ab13012e2cb74e133409566fa82ad01fa9af553dd291680bc"
     },
     {
       "path": "en/online-invitation/index.html",
-      "sha256": "8ce20b7c15d77bf942217bf2c7128fd08337078f82e152056ddd7c5960d2f83f"
+      "sha256": "b21a8fb361ae265e76ae7e210302ce8013adb43c5236f52cc3fe5120458fd9e4"
     },
     {
       "path": "en/partners/index.html",
-      "sha256": "a88b8ff736dbc9f011952f835bcf86f731c5c94ec59956660bc1b6f65730419f"
+      "sha256": "8e5ce96edbc9d4443ed0562f277a94abd157d3b6918a3746a53bc420b9a6befa"
     },
     {
       "path": "en/pavlova/index.html",
-      "sha256": "085ce63938ff2a7bd7e3dfa31a6f62d29de7c2e64489d4f0f9f16feecf444c42"
+      "sha256": "c7d43371bdcf283b610b1f95f4c57bd731625914b0c9f0d8f2ca6da2a5c87dbf"
     },
     {
       "path": "en/porfiriy/index.html",
-      "sha256": "865a8435687d1ae879598a0d3356fa7d3aa459b4a3da38c6684971b9f41a1b27"
+      "sha256": "30d19fe4f98ce78f8d6bebb90f132257e58bb851306465c8b6a0b3da9da15548"
     },
     {
       "path": "en/press/index.html",
-      "sha256": "04a9140c683c0d5c69bc5ba8da9004103d18c1eeff7b5b23674f979c9ef17c06"
+      "sha256": "0c302e906b1201e2b74538d41dfd2b1eaadccae165faac6fd2be7efa0764b115"
     },
     {
       "path": "en/press-konferentsiya-14-oktyabrya/index.html",
-      "sha256": "c0134e497fd53b9cfc4ad712c46755aa4e7f3792d9a23c3cd59c2d2b0725e25c"
+      "sha256": "1ea6d0fba5569f6b1b9811d381b5041251df5ce935aff22dcdd1677c1c1efc8d"
     },
     {
       "path": "en/privacy/index.html",
-      "sha256": "494889b32596ea22a64565028700d8bc969ad417c520dbdf9f0f6f771fe2729b"
+      "sha256": "237aa0f59408c9c7f4c5a823faeb6194a695f4d4137defcd447cefd8ca7f4b1c"
     },
     {
       "path": "en/producer/index.html",
-      "sha256": "f17f933c6994ef86ab3abb649f15b7473f0371d55056975c983f2a63e17d645e"
+      "sha256": "fa79ec2c5374a0d436f249d20a9a0c277f095fc47992d35fd9520969be557419"
     },
     {
       "path": "en/programs/index.html",
-      "sha256": "f25897a85cf1008e0c6f2369088bfe6a26c9b1214789be91641b987bb44cbcc7"
+      "sha256": "f3bdc5e603e0bda8605ef665c734335f13612eaf57bd90fb5bf179e206300c92"
     },
     {
       "path": "en/projects/index.html",
-      "sha256": "ae95a2f562c6d7c26cac4e4f4f061db2dac336d425e6c2ac70c931734a640369"
+      "sha256": "09c6aa6769bb1851e5fa8771ae55e7f682db0394fda625c2109b417340ab8506"
     },
     {
       "path": "en/prorochestva/index.html",
-      "sha256": "1bcc97a93a20afea9760054d2f11b44fbff5e138c54672b59b1f85174fb999cd"
+      "sha256": "b8bfc36ef4ef1ccd3969f667fbf2f66980a1febc05003cd5415a191943f42d53"
     },
     {
       "path": "en/pushkin/index.html",
-      "sha256": "82b6847ce61607bd188711ebdc2ecbce3648de495779f13f1a634fb3dc7c8005"
+      "sha256": "3defe1d88cff82a77f156199c7d29a07bc879c3895cfe8626a9916574d98c163"
     },
     {
       "path": "en/puteshestvenniki/index.html",
-      "sha256": "cfdfc2dd905d5e0a006b92b3cf5be3135dfed5054a8f1e25c373f594a31681b1"
+      "sha256": "5436ca6af90c08155cecc235069caeeccdda1a475c643f756590f8dda2951512"
     },
     {
       "path": "en/rasyomon/index.html",
-      "sha256": "d4dca668b5f5ba2491314eb3ec74133e627449bf257be50aeed4417c4d2941bc"
+      "sha256": "18abd1a7aa9dba55aa087ab73a110b273614102dfc8fcdc6f16b1242d2708b26"
     },
     {
       "path": "en/rezidents/index.html",
-      "sha256": "0f761ccbd3b85395aef5985f911b81f2eea983c934160d055ccbfb14dc6e0c11"
+      "sha256": "089104da29876c0bbf3ea14cd291afbb2a5238c07e193acdd98498f8f91eeaa4"
     },
     {
       "path": "en/rozovoe-maslo/index.html",
-      "sha256": "816e6fcc1aec36063fb2fdfc34a112485e9c1fcde3e013040b675cacfc88085c"
+      "sha256": "0d3b49516768e4b986b0a924fa33fb33347b61e5d6d8208c4efb95148a23c843"
     },
     {
       "path": "en/sachkov/index.html",
-      "sha256": "3b879e4e38f0cd2157c32028b593a182f11fe76a905351449411f50b2fdbba32"
+      "sha256": "24d85f62fc85e19df7ad6c5ba801893ba88aebc9b9a423f21c48130089182e37"
     },
     {
       "path": "en/security-measures/index.html",
-      "sha256": "61f6ff908aaa7a6d579f0dd669f89f8e9ff605c8f9e07e57e091fbc8697f8afb"
+      "sha256": "6ebc32bab14328e85738ce412cab11f2fee672ccb52e360d45d59b6eccd6251f"
     },
     {
       "path": "en/shamarina/index.html",
-      "sha256": "9b948a190bec2362f993495740f99dcd009fa5f73dfb900ec351c3c8d7a035c6"
+      "sha256": "fd4ba69fdcd2a388bd8c1542c4e82bc1b79b68eb4f4b131b74b476d77cd2f4ec"
     },
     {
       "path": "en/shop/index.html",
-      "sha256": "14dabb625119eb83541abb183ff218b06e9a6811baa497cdcd01a41151deb6bb"
+      "sha256": "3f5bae4fe16e51af4cdc1930c4fca3324ddeb01f088df557899980306ac0c345"
     },
     {
       "path": "en/stories/index.html",
-      "sha256": "b7c309658e2e3934b059747ae09a73c932cc4f157e727f7b7bd7382f6d28dfb5"
+      "sha256": "93211a2b9b326a1d46c394705318d4eeed2750a273bc5f4d9a1fc68bc696e864"
     },
     {
       "path": "en/subscribe-confirm/index.html",
-      "sha256": "a161ca3940a1b12bd0283efa7abaf96cc11da04174f000bc0b2ff19c18af23f4"
+      "sha256": "d6f5dba2e2090b2202538e2e9406d51c907f0dbae83e2a54f1bb90238780ed5d"
     },
     {
       "path": "en/svetlana-nikiforova/index.html",
-      "sha256": "3e4abbeeb6b85b6d6f987996ec5603089b5a1daa2ebc2955154cac0cadaa9085"
+      "sha256": "4b62a6f71fc99016589cc7822dc18c485ef8d1afb497997bc6313c77b8e6eac4"
     },
     {
       "path": "en/tarusa-theatre-tour/index.html",
-      "sha256": "7c0ed424737cfd353b1a6780f2cbbdb51fbf87e3d85176e72ee4c910d89fa1c9"
+      "sha256": "ff3611ce95da1b87f1340b7d2bf56035ab318e3b7d037308cddf48da65211b86"
     },
     {
       "path": "en/team/index.html",
-      "sha256": "6902b2f05f0a30b3bad1dd90ede293d06b6593524ae301a63a115ff32919eb02"
+      "sha256": "df99e434816f42cde61599b3899e8a2cc50b4d508488b29b6cbf30811809e0f3"
     },
     {
       "path": "en/ticket-refund/index.html",
-      "sha256": "d449590168e641d24d23702040eb0fa7fd2a46312ece5c20acb92a7139e80eb3"
+      "sha256": "77f36787ed0246d39b6078a342e02f138db848891ae0b707a1c34397563e46e6"
     },
     {
       "path": "en/tickets/index.html",
-      "sha256": "48d204ee5b2828a869e9758caf06fa5335d48a1870824570b023cb5565c4f00d"
+      "sha256": "0b8ffa83ea16b61335526143b7c7291c4732131b322b30400d4f66359f853819"
     },
     {
       "path": "en/tickets-buy/index.html",
-      "sha256": "a06a7f56aaa6626f9e3600653296df20573240188a0ccd5aa7b59a9ddb8a0a13"
+      "sha256": "6fbcad19cbc52649cc336abe3ce8706add9bf0b8886b59fb04143105bcef58f6"
     },
     {
       "path": "en/tochkacuire/index.html",
-      "sha256": "8569d60785a53a3b71f6bee2eb9adac50c33ceae7e091f6e103b3fbf15804592"
+      "sha256": "ed5e9593276a969e27e4f5accd6d762dd063704a947a0ef96aec1dbc504a52f8"
     },
     {
       "path": "en/tochkacuiri/index.html",
-      "sha256": "735834bf83503339218e912ecf7ca713e436aeb7f756ee67cf11ffb788849305"
+      "sha256": "0c7715d130d16c41c3e8c16a7adcbe4aab91dbdf9ad133e5d9ffbf927a963a02"
     },
     {
       "path": "en/tsymlov/index.html",
-      "sha256": "c1771cba9f7c16a443e8cae20eedb31821389f44a064d7b29cbf4d6001fd04d5"
+      "sha256": "ee86f011932f7b736868940b61ff081b56576838ce0f23671b0dd9f8be9e43d9"
     },
     {
       "path": "en/unsubscribe/index.html",
-      "sha256": "c4e8d4f70cd29b436ef5bf3525ed81b9a5206c7d14031fce3cccd8a43df6db1c"
+      "sha256": "a405cb0e12e456ddc8666266fd0e82ed22df6dd12a08e8b4691fb9a9841ba9ed"
     },
     {
       "path": "en/valentina-bykova/index.html",
-      "sha256": "db00349298e8c790846012ff6c55206ebf2912f08ef3c1c9ca950b8fa036d523"
+      "sha256": "b281e20c04e8c7834185ce7ada9869df3d0ee23c35b7d037dff6cef0702f2daa"
     },
     {
       "path": "en/vanya-dyba/index.html",
-      "sha256": "419158cd46c0a15dc1e9c3f0136404c755f0a47a4b393e430238a33fd897ff1d"
+      "sha256": "f974eeeb68e77b50589dc9454b80751b4fc903cd7a29c9796579c4def0fcadfa"
     },
     {
       "path": "en/vdovichenko/index.html",
-      "sha256": "f88227821c10e7b0bd51d261986f8912a983b029ca5b7e5e34dcdf91eb22de89"
+      "sha256": "3344b91cba1c6864a29848c2b053ead4664c46b5e0c713971ccbf09283342173"
     },
     {
       "path": "en/venues/index.html",
-      "sha256": "c10314b7841f91b1aded26e4da2953b4566e556c8dad774f084f446b6dd1abff"
+      "sha256": "ae9b23ac8fb5b00a8bd7585f6a1410d5bd340686de5cf0a9c78c7f1d9dcbacd1"
     },
     {
       "path": "en/viktor-ignatov/index.html",
-      "sha256": "d385f5869f0b093fe9810413d5a536682e34948a722777ffe00fac2d6dc3969c"
+      "sha256": "ca9a7b63f50a8442a65c3561fa7529c6c55944e8167e99416e423b3e3159f94d"
     },
     {
       "path": "en/visiting-rules/index.html",
-      "sha256": "5be4ce9667398573c1da87371f4aaffbb2620682c1f3db8f992393a40cef73ea"
+      "sha256": "63cbf45cccbe8c9e280e1ce69c3357f30b8b614f6cc56f0d10255698e730ddad"
     },
     {
       "path": "en/vystavka-prolog/index.html",
-      "sha256": "0dac1b8456a3b83dac7b263eaa62f8735d7fb4802ffc6f32d49b56ca0c78b0b3"
+      "sha256": "20cafc2cfe020b6b21c2883d8b520c99aeaa03b1d5c70540e005a96ca5985c6c"
     },
     {
       "path": "en/workshop-2026-09-12/index.html",
-      "sha256": "554683b9fc4a4422554de8fbd7b9687ba6b6533d6936715b369e0a59ff77e517"
+      "sha256": "729fc23230c74d8cba2f388982800083ab236a0fd1d93aba0c04c8109c971df7"
     },
     {
       "path": "en/workshop-2026-09-13/index.html",
-      "sha256": "a1066a620e71621fbbbd97a4ba89bec4ab5fc41d3c3f4d9d040cefff83d95b87"
+      "sha256": "b1b20c31938e688a94e4bc03e77474d302e9cad85268edebfc38f3ad653e2ffe"
     },
     {
       "path": "en/workshop-entrepreneurs/index.html",
-      "sha256": "405e1a0066c92ce0bea176531ccfc0622e1bb01ffdb7f07ecd91e8926397b5c9"
+      "sha256": "ae8c5e15081b2bb35b26483e28324afc66ed5bfacb599f10f29e442b31979d5d"
     },
     {
       "path": "en/workshop-main/index.html",
-      "sha256": "1b174df57c2a94e780050ee11dc313ce2af19c9c519fb20f64892448b1e8d5de"
+      "sha256": "57b76bbed87040b8f8d50d2530268feb280ab9cc1428d33d9e3f01ffbf2fe2f7"
     },
     {
       "path": "en/yulia-bychkova/index.html",
-      "sha256": "eda8343ced604bfd97c69e30cb721b7d5b7dd668725d033ce1c971394ea30b49"
+      "sha256": "fe6d46df24c6a71d8c466b1f8afda99fd20c45d54f144e68e1d75b617a710b79"
     },
     {
       "path": "event/index.html",
-      "sha256": "4dd9e19d9f5857f2dc1e9a544fa2a9a34c2294ebc236a84415f828f6ecd8aada"
+      "sha256": "b8ec7b0dfb4c7a7aff4f48f4afdb2fce870a47f0f1066b9b832b520644ba8089"
     },
     {
       "path": "event-registration/index.html",
-      "sha256": "5416ec3ccc8af6d2b42c7e130416126945a0427a590a789289fdec02b272e79f"
+      "sha256": "9077b8490cce716cbf4a42fb691451a9c2ea6a21b39d329e1c1b5efc8be76335"
     },
     {
       "path": "events-cancel/index.html",
-      "sha256": "56b2364d266182cb3b39ae9af431ad309c6120533aab4d65b11bb9d063846c01"
+      "sha256": "8db946b3a2c710b41eae906200518e24165a1aa0d18614a7e5b24b0fc7d20f1b"
     },
     {
       "path": "events-scan/index.html",
-      "sha256": "6d7fa661b337ae212d5125816454dbd69f7415f135223eefdc9992942db5caa3"
+      "sha256": "9489b33a1f375cdafadbbcc0eb1954543c2bb6215dbb077f538314db331831d1"
     },
     {
       "path": "exhibition-program/index.html",
-      "sha256": "7fc54b21fb676e0f656ee58aa223b27cb7f34b33331b7f029a3f0a764ba47205"
+      "sha256": "7dee9c3df168c43294b4ccfc103fb77eddb97fdc13352e42b03ed3cfc5eb2012"
     },
     {
       "path": "faq/index.html",
-      "sha256": "b711c4694b5e60574223f1922bea448c4704b59324fe119db5a68efa0d201894"
+      "sha256": "d21c5767278717d6b04342bf74ad186191b3c7b08a715cbeef984968344533fc"
     },
     {
       "path": "festival-team/index.html",
-      "sha256": "dce69d73f740a3569f424c5d194a84d2a0fd4a0334306f9f2f3540b3911d6e0f"
+      "sha256": "7585ab8e70d0806e6fe3433a38e583237bb1fc5f278e57e0c8fd81b22f1a46a9"
     },
     {
       "path": "fifth-element/index.html",
-      "sha256": "b20416edf9dc1c8d50d444529ead3a4fa26ab44765e71e54607e5bee707cdb7a"
+      "sha256": "0b6802caa8739922dd368fda78e98a4ba8f79bf3b4911a10b9cf0e8dc01a9ac2"
     },
     {
       "path": "films/matritsa/index.html",
-      "sha256": "9ad66f90e09166a0090341c9752aa05cdbf0a59fc829a6fbe57d2e641eada699"
+      "sha256": "0e2789a8586229c8882a1bb688c7cc90b5e34b1c961016c51879a1b844f32f73"
     },
     {
       "path": "fotovystavka-ilyina/index.html",
-      "sha256": "06731ec28d82c1340f22439e67f0be510f0806da4416cacd5420510e05551ed6"
+      "sha256": "1380e03b856a103d748b86d128157c4f648791ea0b61f4f92ad17153faa79047"
     },
     {
       "path": "galina-mosalova/index.html",
-      "sha256": "3cee0222f997ba8dc1a7b23d1b630cdd5ca33c9b92c6405ca1dc0fa5d2500a88"
+      "sha256": "e88a2d193d16d8405c6804464d81fd4c1f8868dc463ff6d8a5e6caa4000de30c"
     },
     {
       "path": "gift-card/index.html",
-      "sha256": "6698a0465d9b2d0dc03c5d457781a72551300e731907fd575f4fc19f730ef8a6"
+      "sha256": "507e30db3618395af1e8b4be8975d0fdfa14a7f129d6f17ab0b4677741090477"
     },
     {
       "path": "godo/index.html",
-      "sha256": "28aaaecbf66dc9cdda706c86158ffc1f33d622dcac5b1b8d164311cc8453973f"
+      "sha256": "b71e9b24878c09ed0d8cc1bc21869a95acd7386b21b1f13827d403c57de71d80"
     },
     {
       "path": "gogol/index.html",
-      "sha256": "d38eebdf52c983e41b7c86cd20412404723b3e6b1f9ba03481cce47da9627fa8"
+      "sha256": "53a275ffecb5f9d79251d66d04312b7233da78cb44d75cff379356fa77fefbd4"
     },
     {
       "path": "gubanova/index.html",
-      "sha256": "fc0bad2e05deac5cf3849ee27a7200203d33b539f2b248d2babc4518ff86bd89"
+      "sha256": "3915b78b7ca8f71acbfabbcf4359c18df31a1f8d9c0445150734d18b0fd39dab"
     },
     {
       "path": "human/index.html",
-      "sha256": "1fe194bdc8132c1984fc5bc01804c91485169314a6b57e4be0ec8e2c0ef97aa5"
+      "sha256": "b88f06e7fceb2970d9c292e0ea670671eb772bfb540d0855885eb255131bc317"
     },
     {
       "path": "human_photo/index.html",
-      "sha256": "ea443fde3bd1fa3124c81ba5bb90ee5dd6c0496d116748bcc8d10119a8165c00"
+      "sha256": "5a24f3c5704ef9e0744170cb19d8ba78a6446a91b08cc2c10da34612725bc057"
     },
     {
       "path": "ilyina/index.html",
-      "sha256": "b8b202faa2725edde25e21fec03297ec17013d8114131c103cedb577d4dafd69"
-    },
-    {
-      "path": "images/crave-cover-v801.jpg",
-      "sha256": "3f2d4601ac58e3ac5023a2523cce96bed5ade8388efb45a309bfc77f75a45ab5"
-    },
-    {
-      "path": "images/jazz-dance-cover-v801.jpg",
-      "sha256": "74fff8c6d209c2002349de7aee68d05f01f167c91e8d3ba612acb1bbdde3fa3b"
-    },
-    {
-      "path": "images/kseniya-ilina-kluch-v801.jpg",
-      "sha256": "fa878d1ca45ded070503086e1dfd2b97bb8102c6edd585c966e9d6cadfbd533b"
-    },
-    {
-      "path": "images/kseniya-ilina-v801.jpg",
-      "sha256": "e4b257689001bcf62824df07d33e27307650971da892e0b08df9402014c10e08"
+      "sha256": "72a225baf534f621896dd603dfcf9dea889e726c4a51f0c6e62853ed7bdb6d66"
     },
     {
       "path": "index.html",
-      "sha256": "ce4850605851395edc80ab804a0d8c644ee0f544ea241eba9a8fbde887001c7e"
+      "sha256": "4748b18f7434a32f638021f7afeb63a86823c1267939bdfb0b00936a97732665"
     },
     {
       "path": "instruction/index.html",
-      "sha256": "757f0e3ad49223d6f6f72b21570c25b59c57d90e7cef25f9e36649aaa2402c76"
+      "sha256": "b5cd098ac94b5d585e9b094a4cc644d1e152440773ac2ace6d2309ba7cae5f3b"
     },
     {
       "path": "iov/index.html",
-      "sha256": "1a43dfb9d758e39bd31514759a1ae7d4b0533320ee159362e89566bbf9b22877"
+      "sha256": "1d8f24be0525abc0f2b25170374ef47a89361d281012bdbe5a04fb50af8ccc85"
     },
     {
       "path": "ivan-sachkov/index.html",
-      "sha256": "0daa4dd3b51cffc2845ca743183e73dfbbf8490d805778ecaafba748d0527fa7"
+      "sha256": "b10aee2dcea03dc1d48ef8b75df88895e21b9f9d54ab8dcd448d057751cd2a86"
     },
     {
       "path": "jazz-dance/index.html",
-      "sha256": "15fb790db7f093a0e8b9aa6bcb9748d35e38c92ae5bce1c85b336645a5cfb41b"
+      "sha256": "8439d1f49e1cbbf1596b9a6be9620a9112b268be3cc1b308b2a0f9623c3ac573"
     },
     {
       "path": "jazz_dance/index.html",
-      "sha256": "9e1de14f6c47b588196ea2f1b623237bc1591ed621ed56472db8392f430a2051"
+      "sha256": "9619f8ede5acb3faa3359cba69772e430dbe5db008ac767ad2b39af05931109d"
     },
     {
       "path": "kaliostro/index.html",
-      "sha256": "68d915f63e7a202ffc700a14e4772c7c2c37361812e724a5a368ba096bd70cd5"
+      "sha256": "462b0be2698fdc99cddc5d4c05bffce14047fb8bdeec677dc48125c5658912f4"
     },
     {
       "path": "katya-abdulova/index.html",
-      "sha256": "330d546943d8cf8dd590e95b23c333d4abb2077eacd6eb3a19559f088a7d311d"
+      "sha256": "565b99290a734b7b0fe6fad5b85aea79f08f7474823d87b664aefffeabe25ddc"
     },
     {
       "path": "kazmiruk/index.html",
-      "sha256": "26a127e36d80d3743b8012df0617c79e8d3e16cabe960e5cfd81f9bf347e77b3"
+      "sha256": "50924f5feae5d83b6cd22db52481b181c739c726bcaf7edadfbc58d5f9c4e992"
     },
     {
       "path": "kinorazbor-matritsa/index.html",
-      "sha256": "1402ee82aa9c981d052ac653376a7579c6ac3e660927cd9e751fbc9319b12870"
+      "sha256": "5e0b8e9ee4daa9a73838b082ab72b9f2bc079b99ac6bdfec6ab76861b697863c"
     },
     {
       "path": "konstantin-moshnikov/index.html",
-      "sha256": "0f75ab63a1869f8d7a2fd408fdd2a9c54231ffdc7182029777fa705f9bf50827"
+      "sha256": "a62a61a5eb92d8afda1ef26f92d22eee5d33a27ee50a72013f9d388cc6a1478b"
     },
     {
       "path": "koroche/index.html",
-      "sha256": "453b68c173ed90e51640e7e43946950fd7752e81e2dc86c567d71304143c3c41"
+      "sha256": "eaacfac85e5c71022894b4f81c844ce7fa6187b796736ba5d5f434deb1b1ef42"
     },
     {
       "path": "kotlovan/index.html",
-      "sha256": "b20416edf9dc1c8d50d444529ead3a4fa26ab44765e71e54607e5bee707cdb7a"
+      "sha256": "0b6802caa8739922dd368fda78e98a4ba8f79bf3b4911a10b9cf0e8dc01a9ac2"
     },
     {
       "path": "kreativnoe-byuro/index.html",
-      "sha256": "711e2bdf70e912aa5b8479f4c7b731fb9476fa4a238410056aadaee57cf640dc"
+      "sha256": "e24cab7a58dd1cf226c1d53e2064a5787aafa6907b97892189bebfb033be637d"
     },
     {
       "path": "ksenia-shamarina/index.html",
-      "sha256": "d5e344df415e89cb510e0139beecb00805f829bc307cb330fb82fdbbd5d08171"
+      "sha256": "081ac909edae0d078040b1f2e83f444e876f5400ca3b86d1ec48bd6e03bbb356"
     },
     {
       "path": "kseniya-ilina/index.html",
-      "sha256": "afef0c54b29a6e4f7c2505f7e61553c5c279ad2c2b2e9b6bd97cdd9aced5fe89"
+      "sha256": "51c52bae29358e34e82e9dc79428437e0846dc16f3967784a4525fb28242b1bf"
     },
     {
       "path": "landshafty-realnosti/index.html",
-      "sha256": "5e72cedf317ed594c8e0c2e33087221a1782e038176f34fb36e09c6aaf4b46e8"
+      "sha256": "f8c887c5f986eab987e8f1062ca3d7897667f3829fb1919d3ed71a7788e23e1a"
     },
     {
       "path": "lecture-abdulova/index.html",
-      "sha256": "66d664aa0781d3db2cbbed64bd1106aa5850be565207f800464015ff84df20dc"
+      "sha256": "cb0435aac9d9d1e9349d7670e8d2f0acbff97f426cbff976f24ec14e740413d7"
     },
     {
       "path": "lecture-alena-bychkova/index.html",
-      "sha256": "2a93f7ce7753c16dffbd164e3ddc28de0626b56bea8971622b89665e03929711"
+      "sha256": "a68895a788b61fc260dcb4de206f42416fc396630d24eef9bc985d8034b4c663"
     },
     {
       "path": "lecture-alexandra-gubanova/index.html",
-      "sha256": "3d166194accbbea18b7af6b6e4bdf242f947972689433ba4c79c9b8f9185cec6"
+      "sha256": "2432574ccddde6247b1736963ffd7b5d493633124094f200706a7e7dcc813b80"
     },
     {
       "path": "lecture-alexey-tsymlov/index.html",
-      "sha256": "7c31e130fe18857d979a7d78b05475cc0d6f11de94632d29996c02f5c9362e76"
+      "sha256": "15fa6b47930aeca52d47f2a32d6fa9e66321bf61f864c4cae3eddd87f6f2312b"
     },
     {
       "path": "lecture-art-goroda/index.html",
-      "sha256": "e2abc164eae24e9af9fc0f4dff0c36434ae4124b7590f5570e5622bd03721342"
+      "sha256": "3dadd0442cec9c4003f161512269f7839a2a6b7e448f90717c68938ed3619143"
     },
     {
       "path": "lecture-bez-suflera/index.html",
-      "sha256": "243acd99d61b77fe7bf06337392d7f958b88658b11fa046310a3b90365fc7dd3"
+      "sha256": "0f904acae747dd3733760a10112a617abd5107d6bd0a981e8f720acdbbb383d3"
     },
     {
       "path": "lecture-bychkova/index.html",
-      "sha256": "d7ad37f37e9937dfb2d29774a7624ca441512d8404517d949e9c4f3a27589e3c"
+      "sha256": "fa751f1727f105feeaa2e333c398cb91d8edb5c174ddcf640f20285e393714b2"
     },
     {
       "path": "lecture-chubenko/index.html",
-      "sha256": "3daebad09813373485d02efccaf8c7555be2c60a08748c3b9d5212fb95f52576"
+      "sha256": "74db3b602d567f10b70ae6a0235a18497894974cb3eb21d1199a5a81f50b7920"
     },
     {
       "path": "lecture-gubanova/index.html",
-      "sha256": "f47b07b70555b730da83697071bdeb701dfd4c22d26f1debea4d43dbe153b45f"
+      "sha256": "02acab93eac59273db00b3d4831d03c9226bd3b9e8270070a35c0cf44c7ae2d3"
     },
     {
       "path": "lecture-iskusstvennyy-intellekt/index.html",
-      "sha256": "21b9e93da066f00930c7fd1565318e0990909f3a4361467c6916d108170e4945"
+      "sha256": "c42f76964bbfed1a985703ea76737b2151b509014a512dae0963614e8861f812"
     },
     {
       "path": "lecture-katya-abdulova/index.html",
-      "sha256": "d3a05ad705ee387e08a71ea145b0714b2db8c9cadfd1757c19e65e07304dc86d"
+      "sha256": "46ed074cafd1d3bb01de8318d71c0a60739de8ed8a03b65a1beb15df2c6558f4"
     },
     {
       "path": "lecture-kazmiruk/index.html",
-      "sha256": "63d0e499c564a83e6a5214fa285eef9772a37e6f068c03c466b8ff07d55d5507"
+      "sha256": "e5e3bbc9379f2c59114b8f94cb61d61b3b26ddb201ef4402d315e1c449daf815"
     },
     {
       "path": "lecture-kulturnyy-kod/index.html",
-      "sha256": "504ae5e63a6d08725dd5f3996a12fdd2317217e131ffc70656e5151ec0ab9062"
+      "sha256": "5e1308ac5482f3cf07e4e47b0104b8f042782b834cd68f5f769e8a8d20b0aacd"
     },
     {
       "path": "lecture-landshafty-realnosti/index.html",
-      "sha256": "5611b24ed7b5a5f7493130d973c5502802c8c36b1e78b3b084b65ee28c219c21"
+      "sha256": "880c2750f46200c24915a7fa373a15fc3f31c3d901678b66928a03fae365655a"
     },
     {
       "path": "lecture-mikhail-kazmiruk/index.html",
-      "sha256": "8b9ed31d98daa884322d971581411d0c8083df14ed08b764ac17ab64d06aa0c8"
+      "sha256": "2f6b038d6bfe4de4fd9c7f1f0e8b0175f4a564c3a2abaa24473dfcb5c1acb6b0"
     },
     {
       "path": "lecture-tanets-v-realnom-mire/index.html",
-      "sha256": "62dfee6ca8a09240d18518f2b9175287cc26cf2fdcf889554398e4c07c6bb694"
+      "sha256": "3c6c6cf5535e96ac3fc0dab53b4faa562acdfccebd631f7fc8eddd039e7ddfa5"
     },
     {
       "path": "lecture-tochka-sborki/index.html",
-      "sha256": "47e9bb543055dcb29930ccdf7ce1b6bf1aa8df306dcadd9fcc637cddf48e5b4c"
+      "sha256": "86d3af1ad0f407dd849b4cecb99baaed62c5032ac42c09c003413fe59a4daf1e"
     },
     {
       "path": "lecture-tsymlov/index.html",
-      "sha256": "48c71e8d035c5e03e2f1ec2827394f9b94a9311f19930cac0f2c73b94d28ce30"
+      "sha256": "e543185014df67a6ae846f359054437a4e291a0e9d4c9743e4a9a2aff06af55d"
     },
     {
       "path": "listen/index.html",
-      "sha256": "9bef95825faea35fe9a11d5ef2e007a73b52f9b4eb08bedf6147727e6d16c697"
+      "sha256": "7d935f1c1a0056bf528286c285a0a688f6f398587eb8f01a1815884de6bffad4"
     },
     {
       "path": "maria-pavlova/index.html",
-      "sha256": "7159e64f11d7ee0cae9d5383707b3d57c91f8f36538f63a8501deccf775da28a"
+      "sha256": "b15f2e10b10ba1f6914e4ca0ef0eeac8d7445f8aedc8523818a8597ac252ff3f"
     },
     {
       "path": "matrix-online/index.html",
-      "sha256": "6d8c76ff66ca0b0ff36107b833fc314a97c590d7f8996e3aeaac47f4c7aed545"
+      "sha256": "a50f9080a7c1fcddac5c60585645685b2182a26aa881139a059eb87abbba301b"
     },
     {
       "path": "mentions/index.html",
-      "sha256": "aec7af5e122830ad9a961b4495a4898cff59cee6f869ead67a4832410f0cbe9c"
+      "sha256": "4d286113bd09c95186d0070ecbc8aabf8838a4e8331621462380b2280325c303"
     },
     {
       "path": "meydey/index.html",
-      "sha256": "e4524802d1b8dcb516d6203fdde8c4ec0ea5343994a1f72cd2c8ad7949724f05"
+      "sha256": "0918322e0096895dafc60973ef066af37181d974ddb4d7a0bdebed2d17b03bac"
     },
     {
       "path": "mikhail-kazmiruk/index.html",
-      "sha256": "4f5e43a099a598aea60ff0777e79c21561828fdb4d0f72db7211a47a5e480f6f"
+      "sha256": "65f18246b83159935582126152a09189efcbabc16fb58fbfaf156482015bde72"
     },
     {
       "path": "mk-dinozavry/index.html",
-      "sha256": "9481f91227272413fb5dac524fcfe953f5a0d7b81cf8b8cb7881c39fa4c2083a"
+      "sha256": "d41b4dab8f4a1c2913ac165ece26f7733203519027bd92276a703203c51d7d8e"
     },
     {
       "path": "mk-prokachay-mozg/index.html",
-      "sha256": "98e924c4a0816cecc5620f671fbaf06594a6beda99d23f0d1c81c04ca3f2d3d6"
+      "sha256": "d2f4905225eb3543a67f263b585123a51db04465f80fe55009f2a83bc561ddd5"
     },
     {
       "path": "mk-rospis-gipsa/index.html",
-      "sha256": "b57f56f376b51835ad6940d6484f1c2efdf82644ed602245ca6548ca20406e15"
+      "sha256": "5b8c1ee6442207ae710d3d6630b6ed6122bf6159cee02f76637bca4c16768477"
     },
     {
       "path": "mk-svecha-iz-voshchiny/index.html",
-      "sha256": "f840575c88cf2d651916883b0a2567934c9f122a1d54560118155a5c35c90e63"
+      "sha256": "711acd045fab02ad721297f944c1f84ea354056799181c04700506d494f7adc0"
     },
     {
       "path": "mk-tykovka/index.html",
-      "sha256": "e28f03e5e98ececfbd07f54afe48a98957abd48562927f9e5adecc4821319dc9"
+      "sha256": "7661c4ff9025afb1d2a323277f6b772341b99170435f3c9f1f151a48d8764fb8"
     },
     {
       "path": "mk-volshebnye-kraski/index.html",
-      "sha256": "2437a6fe4d298bda7a1cf5e923be788cb545785cdc977611b8f5cf4aed680751"
+      "sha256": "28651ad5dfaccff8de6ccf6a76bd12f6af6901149cec2cb8da5a980eec68ff03"
     },
     {
       "path": "molodo-zeleno/index.html",
-      "sha256": "7eb6ce8ed5b4597a176f835d68f23e4cd6f6b61f356f4277e51ed204a802af03"
+      "sha256": "b745e719bebd008e15cd2f8e2ccb457f03b262b5f5717e2e0bd167bfc9b8a170"
     },
     {
       "path": "mosalova/index.html",
-      "sha256": "31f739cb14697384c1b8d76883fab3bb94eb5a54c3872777b33ee54c95c4a2c4"
+      "sha256": "723c530f67701853127bdef1da684bdba3c2126725f1585c998a4da6f024efb4"
     },
     {
       "path": "moshnikov/index.html",
-      "sha256": "1e84ed4f5b30072aeee72597b495ac9666a2c4108e4e0f1c0585b04827ef2a90"
+      "sha256": "147014373fe6edd68c109106b7440f2b803398d8ad725eb207798555b63ec259"
     },
     {
       "path": "mozgi/index.html",
-      "sha256": "3d5a19a73edece74f29680869485cef4bd20ea7ca1819ac2bc82a0dd748d7c54"
+      "sha256": "81c7604f4f989bac2064d463432a137302383a41ca35703614d140b9dcc0de5a"
     },
     {
       "path": "oferta/index.html",
-      "sha256": "60eb6e6fc64d7800a6f9c985149ee871ed6c7b9dcc0e80a4d36070106b9ec942"
+      "sha256": "77a9ecd6c282df300302c2e0a8b82ff64052b35041126326f4e2aaa544b1dd30"
     },
     {
       "path": "offline.html",
-      "sha256": "a50610dd0a8420d3cbc5b72ff469e910cfb6b30024d02cb5d1ce2500486af445"
+      "sha256": "d989a3686439c07bf7096b2d8398e648e934b308883c94f2ed3db99bdf98bc78"
     },
     {
       "path": "omyt/index.html",
-      "sha256": "d9e3eddbb54ce5a7022f660b76eef881a8b191097060dde6899cf692bb033a04"
+      "sha256": "65f6fa15e6c91c0abbee6d492fa2ffd35a555de8dde65bafa6fc20597072bb8e"
     },
     {
       "path": "online-invitation/index.html",
-      "sha256": "1f056e478c955455a1421854f29fb7325bb0673d1c89b1f930464d9c007c4a70"
+      "sha256": "c1b43a8a0d7c936bc234218f16f4d13376349baebf1b7ac8548d3e98e882fe1f"
     },
     {
       "path": "partners/index.html",
-      "sha256": "09c25dfa74d9c06261d925393c82dc792557d6e385e576b0f1f66683a89dd728"
+      "sha256": "4873a2097d27ee3a357b5218024353610ca8dd2e590347921e7112d0d7a469a8"
     },
     {
       "path": "pavlova/index.html",
-      "sha256": "1fbaad268dcd91a74d5da657a45bf24bc38543e1b44da09053bffc42788a446f"
+      "sha256": "4db98209411152760fb32ad7e22d3d945b1852c71c0b3824bf4bde172186c7ce"
     },
     {
       "path": "porfiriy/index.html",
-      "sha256": "1f26a15f92b9c3e07b3a055f89447667a21429ca4a45db0f7094e2a8ad33bb2d"
+      "sha256": "542907c4daeb692644c1d15df32a035d6e4295a811cb1376ef52961d9f5c740d"
     },
     {
       "path": "press/index.html",
-      "sha256": "5e2eab0a2079f7f4fba8ee4e4338a3ea88f38d550a98dffa5705db4158dec229"
+      "sha256": "e9c8c01f1ebea6db57fd0a0835df10eadede4dcc74933cc1fd8c88dfafbd6162"
     },
     {
       "path": "press-konferentsiya-14-oktyabrya/index.html",
-      "sha256": "eefd139b4d34f92474ee75d2823b08b30d33dc99b6148bea4cacfaa7cb430eaa"
+      "sha256": "9b55aa8a347a005482af7709f46724534c36becb86eb45e3ec23018ce7cba9f9"
     },
     {
       "path": "privacy/index.html",
-      "sha256": "8048c70e42f466c03e878938701af8a125eb9d5bd52021217501749f56431b97"
+      "sha256": "3457290e0dba2e1bebeda0bf769ce79e6f462544b3bc9ab556a198fe3f68a879"
     },
     {
       "path": "producer/index.html",
-      "sha256": "e98ab1ce2f48608064d8d1dd3bdaa52c41955b977ba13bed59d0b58f5d9927ac"
+      "sha256": "e356d11d26345ab66cbf6887fdfe05fa1b26ad0e2d9a7180a02f743442ac79a3"
     },
     {
       "path": "programs/index.html",
-      "sha256": "0e39ccb76f1cac49613664d4e7e46a6130e870c02409cb652efdb14f42e4e05f"
+      "sha256": "2b87e7e400bc2127073501ade54912575009dea8baf85b242f3605205bbe14cd"
     },
     {
       "path": "projects/index.html",
-      "sha256": "bf55b6e78719a2e7f37928f565f4604f22c07ba2a226c1d3e25c18489f779ebf"
+      "sha256": "4f724b3414a316737a9819eaf8f35edb7c7e22899b00865017b76dc44e030994"
     },
     {
       "path": "prorochestva/index.html",
-      "sha256": "cf4fff6fef92c71f7a2861c122149d42e693496f246e6cfe54fd7e3f5d68d763"
+      "sha256": "22dc21e3a82a3734d160d21f7f6a98b0438401d70414f3968aeeb2a1279b276b"
     },
     {
       "path": "pushkin/index.html",
-      "sha256": "68d915f63e7a202ffc700a14e4772c7c2c37361812e724a5a368ba096bd70cd5"
+      "sha256": "462b0be2698fdc99cddc5d4c05bffce14047fb8bdeec677dc48125c5658912f4"
     },
     {
       "path": "puteshestvenniki/index.html",
-      "sha256": "c22648d135d3a0e1b2d01c7c2d89d58f7dfe0c718dd88e43a9fd58a65c219ca8"
+      "sha256": "4bcb7dbc4c7f28cd9226c6dac31c6cbb89ff869ed2c136909c583b5aa96f0c4c"
     },
     {
       "path": "rasyomon/index.html",
-      "sha256": "dcac50eeee78de63e6ec00481ce213d7885697851cbc12da68ecc760db7af451"
+      "sha256": "e79d8cfae73ca7e122ab230b72e09e9ada8a195d02870abbafc22e708d869d54"
     },
     {
       "path": "rezidents/index.html",
-      "sha256": "4aededdadb400bced4810847261d31d3e80e585662c84522f59933ea092a455f"
+      "sha256": "b54af9fff57735c6b293348bcf1430df32ded4addd1abfcbdfc1b04093932634"
     },
     {
       "path": "rozovoe-maslo/index.html",
-      "sha256": "e8e62bfbf6338c639ebf03163c43380dc7f73aafdec719283e70622bf6e5a30b"
+      "sha256": "b21c18143e36a31d9fc90c686d60e873add6aa7e44a15a5ba0794afff01315df"
     },
     {
       "path": "sachkov/index.html",
-      "sha256": "f39b9cab8d0543c7df43250608ad42a1133611d4434d6deeebc716b42e9b3e80"
+      "sha256": "605635dc0d339c32a405c8f86d3328e5b073a3e9845b5a588e772e2a65375566"
     },
     {
       "path": "security-measures/index.html",
-      "sha256": "97f672c1fbe3f3a890655028322ce1edb7f1350b6ad1908679d401c2029dfb3a"
+      "sha256": "b1e1397569dcc425c43cc6d421e2aff44ec821fca982cd7e8b5def7220368a91"
     },
     {
       "path": "shamarina/index.html",
-      "sha256": "5c917e436012bf2efe66c86f37660d01db22c399a37d144854ce6bf76542c755"
+      "sha256": "4647a9267bb15d78afc44dd14766f13e18cc5f61abd212b02f6eff2500e4de73"
     },
     {
       "path": "shop/index.html",
-      "sha256": "c41202c503921e965518c10bcf23266dd4fad60c26688d7163b538e60258cf4b"
-    },
-    {
-      "path": "sitemap.xml",
-      "sha256": "c5542a2d670eb2b7468d9e37778775e05d0ff53e3a2a3e032abbeb29971772e5"
+      "sha256": "906e61cccb3257aa8d7a2ce1f5a4a0a7d0afa4dcc3fb9bd37f087abba003a644"
     },
     {
       "path": "stories/index.html",
-      "sha256": "a108b1dc68a17c11557e6772b450ad8b7ecb4510284d30fd9ed3273c9368d1ff"
+      "sha256": "fdf90f919cc783c3caafa4f79d9c989e9db51504f776ff8e8f8a43dcd8260ad3"
     },
     {
       "path": "subscribe-confirm/index.html",
-      "sha256": "91ea4b29ab0e272288f4ea1c90fd599746e9a0f7fedc93245a6fadc2fea24e69"
+      "sha256": "fb73ac20fcd2b27ae1943c64c834d08a9dabb42d72f6b2996bfcce094d2d9e2f"
     },
     {
       "path": "svetlana-nikiforova/index.html",
-      "sha256": "db7307bbe4d82c4c29d176b92bcf7b5dbf8736f5af6f4d425ee14964ad13163b"
+      "sha256": "d4720f5d3ecb33b8672e401b05af31749e8b99cce686e2e9449618e051fc2275"
     },
     {
       "path": "sw.js",
-      "sha256": "9a6186d10ec76c339ecaf413fdc300b791cdc755b9443a9edd25c19cf5459c2e"
+      "sha256": "cfc473b381489c61dc26af72840798889aa02637712d92058de415542bc1c589"
     },
     {
       "path": "tarusa-theatre-tour/index.html",
-      "sha256": "ea39d648969845c35a1ce916ba5d499dd198cd40dbb4e2df443ac54b58943ee8"
+      "sha256": "50ef250b256c79b6ceeb68120c85cff5040e363146fd8e476d6a821560bf6e05"
     },
     {
       "path": "team/index.html",
-      "sha256": "412f62e5b7ecb18ddf5e15d14cd8bc8d18f383912b30f3d3f61d6b6d2dfeddc7"
+      "sha256": "2c37ef722b379f494cc0d68577a487b2c493c3a8c71e039f64c088d466c76d88"
     },
     {
       "path": "ticket/index.html",
-      "sha256": "cc1d85874c36ce1b92c4036fad35bd42e0dd079c5376fff5d611f1fcd451f831"
+      "sha256": "9754394b6b5c6582a0460276e0a63faa4b01c297692fdb46272db9449f304bd7"
     },
     {
       "path": "ticket-refund/index.html",
-      "sha256": "56c820e85da9769bb4e8dcf6563f73dcbb65f96845a3a029f0da0a9bb7a0873b"
+      "sha256": "916394bdcc91a391ce00bc61f0ec19255d15c3b0cae790167d27f2889e45be4c"
     },
     {
       "path": "tickets/index.html",
-      "sha256": "be1a49f48ccc984bcc62e6d30c7ccac2fd3e0b5ca4f7d86ce7073b87d9365c26"
+      "sha256": "e6292b5e2f1849ec6da97f71d6ab45a0b70095efd04642fc718579e80bde7dae"
     },
     {
       "path": "tickets-buy/index.html",
-      "sha256": "6f4ae5a6fd1cde0b09ccce409787be6eea95c0d8b3d39d1478ea342486b8897d"
+      "sha256": "85aa01b2bad60aa060eab02d4ca56e833cd1638ea16c43fa17e4552d4b8a9b38"
     },
     {
       "path": "tickets-scan/index.html",
-      "sha256": "9714106b0c6c39a78587cf90ea79791f30c49f0e633ba2e29cdbfdd3468bf437"
+      "sha256": "4bb2a9e7b530341c242b16c09771ad0d8f122d9b75ba7bc2f7412dffa6045722"
     },
     {
       "path": "tochkacuire/index.html",
-      "sha256": "60aeb7bb03d26787ebedeb95588fef77b94b2b94e5bf66b656b078a07f51e1af"
+      "sha256": "0dc40adf978ab7e10415ea83afe98a9f5390e9b8b87209eebfc6dc3e1f885a94"
     },
     {
       "path": "tochkacuiri/index.html",
-      "sha256": "4a1f39e224e84a27951e9c5dad9163e3d09326252e6bd50215c8d9436f59bf78"
+      "sha256": "57f5583d40b6aad35b320d57416dae1e2e13a5fb2262897c4b2150f3f2a5249f"
     },
     {
       "path": "tsymlov/index.html",
-      "sha256": "40ba3a020703c32dc603965333452d4608d739b303819e64e71b83d33b22a93b"
+      "sha256": "f4294e5ad6def67e5e91a012fdd0d8bce7c07c0f67821af005f45a7c0a81f4b5"
     },
     {
       "path": "unsubscribe/index.html",
-      "sha256": "5c9db34bd781570b534d7e12993c9a90178142f674610a447b82d127af0d971c"
+      "sha256": "049603851c3c64a035e03d390f6b9abab00c6497483bb9f56ce807672a8aa1fc"
     },
     {
       "path": "valentina-bykova/index.html",
-      "sha256": "63889b709409efea8530990582106e5c6157e5bd8a786ad16979a916d5ecd520"
+      "sha256": "0f6fbac1f1da793b8b594c7c708495662f0cce0cc37a21d6f1ac25a6ac033588"
     },
     {
       "path": "vanya-dyba/index.html",
-      "sha256": "bb674df38a14d98f8d27b5ad5a89e9fa1eff27c4ce300dc81f122bc37cf9162a"
+      "sha256": "e317c9cd0c017297fe769ad789db25f3503cb0ae244a4f68375ea908496db021"
     },
     {
       "path": "vdovichenko/index.html",
-      "sha256": "09c54325596067cc99042eaffc09e840a72e846127056c50d9399aa3972b00e9"
+      "sha256": "79088982e27b04cfbee0726ce74309d3506ac7cff10ac29932140a982ccfaa4f"
     },
     {
       "path": "venues/index.html",
-      "sha256": "89b5201bccec587429a0b9810a524ff8df59f39f9fb074564511b255ff9cc7cc"
+      "sha256": "c5fe3b6c0a62b956a380b3d8ebf5ea18c5426aedbd0b40db0f2e4d4babf523bd"
     },
     {
       "path": "viktor-ignatov/index.html",
-      "sha256": "c4f723340bd50558533fd7ad75d82612e24d8d6dba7004b1c1d73d94065af953"
+      "sha256": "cc2d502990e7a73e2190b150c02e5cc96c021d102d0afbb776b02524f995a386"
     },
     {
       "path": "visiting-rules/index.html",
-      "sha256": "565647fd53dcd6cda3d6b068dcf281f5afe92bef5ebdfbe7583e20d241ee2917"
+      "sha256": "423788d20f322c84dd466309607ab67a09cd74fb3e09618df7c99b3ed0a808c5"
     },
     {
       "path": "vystavka-prolog/index.html",
-      "sha256": "d113fd400cb250783eb3b1f57b69b18eef6a634456d4b7d32d27853b6dc044d1"
+      "sha256": "d96a70d8c579a07cd04304c160be80219d3595799e0fec0d265cb6dcdb48304d"
     },
     {
       "path": "workshop-2026-09-12/index.html",
-      "sha256": "a205ff105515e77376092216bda4dd55b262cdd1c6ff56d620212decd7d67307"
+      "sha256": "3a669481df9529201c1ae42115e01c3345fb97b55f34fc44b52a4cd71575303f"
     },
     {
       "path": "workshop-2026-09-13/index.html",
-      "sha256": "0099bcb6d5d6d6f65289b64dac5591d64f5f22055e29ee92e23f982778650b29"
+      "sha256": "c632977db55da66177813f5bef073936421cecebd26998eb80f8370c46acf5e1"
     },
     {
       "path": "workshop-entrepreneurs/index.html",
-      "sha256": "58f4d63b49aff7d6825f2be20b37d09162e8463496cd83e79a38974f1cdf29dc"
+      "sha256": "a23e06fb36c535f9b473880bc7f8c5691019924b1ee87dcbb2dcd5ec693c863f"
     },
     {
       "path": "workshop-main/index.html",
-      "sha256": "c9e381be673436ff11ae385e7d48e33488369da56034c890bece95c6c99973a3"
+      "sha256": "b666962b2b3566f8a46fb435033f960a355ffb1e3db3cfe9d30a7122ac0c204b"
     },
     {
       "path": "yulia-bychkova/index.html",
-      "sha256": "2da1070ea6f871cd76ac02280fe0e0ecf790024c96b90ec0bd8f7ae19e8807a3"
+      "sha256": "7f08fe54d469c6436c3f9645c647b1a79fbe7bda089d4b741aba7a8bf662b9db"
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "a113d6f763b23b7ca3e3fe3f8d6e92c16b049c170bfb568b945cdf5f2d477894",
+  "changelog_sha256": "75e2b73f604f706607874e68b3839bbc968dce14bd918ba32feeca0121b85d17",
   "recent_versions": [
+    804,
+    803,
     802,
     801,
     800,
@@ -1399,8 +1377,6 @@
     798,
     797,
     796,
-    795,
-    794,
-    793
+    795
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "id": "/admin/team/",
+  "name": "Аэлита · Команда",
+  "short_name": "Команда",
+  "lang": "ru",
+  "description": "Админка и CRM Аэлиты Продакшен",
+  "start_url": "/admin/team/?app=team",
+  "scope": "/admin/",
+  "display": "standalone",
+  "theme_color": "#0b0b0d",
+  "background_color": "#0b0b0d",
+  "icons": [
+    { "src": "/admin/team/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/team/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Админка", "url": "/admin/", "icons": [{ "src": "/admin/team/icon-192.png", "sizes": "192x192" }] },
+    { "name": "CRM", "url": "/admin/crm/", "icons": [{ "src": "/admin/team/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

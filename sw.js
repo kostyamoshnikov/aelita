@@ -10,7 +10,7 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 200;
+const SITE_VERSION = 202;
 const MOBILE_ADDON_VERSION='mobile-m1-editor-e1-events-e2-bot-b1-crm-events-directory-r18b-v744r1b';
 const CACHE_NAME = `aelita-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
 const STATIC_CACHE = `aelita-static-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
@@ -51,7 +51,8 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key !== CACHE_NAME && key !== STATIC_CACHE)
+          .filter(key => /^aelita-(?:static-)?v\d+(?:-|$)/.test(key) &&
+            key !== CACHE_NAME && key !== STATIC_CACHE)
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
@@ -63,8 +64,12 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Только наш домен
-  if (url.origin !== location.origin) return;
+  // Рабочая область и запросы записи не обслуживаются публичным кэшем.
+  if (url.origin !== location.origin || request.method !== 'GET') return;
+  if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
+    event.respondWith(fetch(request, {cache: 'no-store'}));
+    return;
+  }
   // A stale public event catalog must never be used as current ticket data.
   if (url.pathname === '/content/events-v1.json' || url.pathname === '/content/directory-v1.json') {
     event.respondWith(fetch(request, {cache: 'no-store'}));

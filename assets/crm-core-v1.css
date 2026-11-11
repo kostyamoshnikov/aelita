@@ -272,3 +272,27 @@ body>header{padding:10px 28px;align-items:center;min-height:80px}
 .crm-mail-preview:not(:empty){padding:1rem;border:1px solid currentColor}
 .crm-mail-history summary{cursor:pointer;overflow-wrap:anywhere}
 .crm-mail-compose input[type=file]{max-width:100%}
+
+.crm-team-link{display:inline-flex;align-items:center;min-height:32px;color:var(--gold);font-size:.75rem;text-decoration:underline;text-underline-offset:.15em}
+
+/* Theatre production fields and organization history. */
+.production-panel{margin-block:1rem}
+.production-panel summary{cursor:pointer;color:var(--gold);font-size:1.05rem}
+.production-panel dl{margin-top:.8rem}
+.production-list{list-style:none;margin:.6rem 0;padding:0}
+.production-list li{padding:.7rem 0;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.production-entry{white-space:pre-wrap;overflow-wrap:anywhere}
+.production-editor{padding-block:.3rem}
+.production-editor fieldset{min-width:0;border:1px solid var(--line);padding:1rem;margin:0}
+.production-editor fieldset legend{padding:0 .4rem}
+.production-editor fieldset>button{margin-top:.7rem}
+.production-editor [hidden],.form-grid [data-commitment-hint][hidden]{display:none!important}
+.production-edit-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:end;gap:.55rem;margin:.65rem 0}
+.production-edit-row [data-production-remove]{justify-self:start}
+.production-edit-row[data-social-row]{grid-template-columns:minmax(0,1fr) auto}
+.production-edit-row[data-social-row="other"]{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+.production-edit-row .field{grid-column:auto;min-width:0}
+.production-picker{border:1px solid var(--line);padding:.7rem;margin-top:.5rem}
+.production-picker .field{margin-top:.65rem}
+.production-picker .actions{margin-block:.4rem}
+@media(max-width:560px){.production-edit-row,.production-edit-row[data-social-row],.production-edit-row[data-social-row="other"]{grid-template-columns:minmax(0,1fr)}}

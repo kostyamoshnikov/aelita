@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="apple-mobile-web-app-title" content="Аэлита · Команда">
+  <title>Аэлита · Команда</title>
+  <link rel="manifest" href="/admin/team/manifest.webmanifest">
+  <link rel="icon" href="/admin/team/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="/admin/team/icon-192.png">
+  <link rel="stylesheet" href="/assets/fonts.css?v=202">
+  <link rel="stylesheet" href="/assets/team-v1.css?v=202">
+  <script src="/assets/team-v1.js?v=202" defer></script>
+</head>
+<body>
+  <main class="team">
+    <header class="team-header">
+      <img src="/admin/team/icon-192.png" width="68" height="68" alt="">
+      <div><p class="team-brand">Аэлита Продакшен</p><h1>Команда</h1></div>
+    </header>
+    <nav aria-label="Рабочие разделы" class="team-sections">
+      <a href="/admin/" class="team-link">
+        <span><strong>Админка</strong><small>Сайт, события, билеты и заказы</small></span>
+        <span aria-hidden="true">→</span>
+      </a>
+      <a href="/admin/crm/" class="team-link">
+        <span><strong>CRM</strong><small>Контакты, проекты и задачи</small></span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+    <section class="team-install" aria-label="Установка">
+      <button id="team-install" type="button" hidden aria-controls="team-instructions" aria-expanded="false">Установить приложение</button>
+      <p id="team-installed" role="status" hidden>Приложение открыто</p>
+      <div id="team-instructions" hidden>
+        <p id="team-install-help"></p>
+      </div>
+      <noscript><p>Добавить на главный экран можно через меню браузера.</p></noscript>
+    </section>
+  </main>
+</body>
+</html>
