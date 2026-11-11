@@ -18,7 +18,7 @@
  try{state.token=window.AelitaStaffSession?.read()?.crmToken||localStorage.getItem(KEY)||'';}catch{}
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const rid=()=>crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):'r'+Date.now().toString(36)+Array.from(crypto.getRandomValues(new Uint8Array(12)),x=>x.toString(16).padStart(2,'0')).join('');
- const mutate=(action,data={})=>api({action,...data,request_id:rid()});
+ const mutate=(action,data={},requestId=rid())=>api({action,...data,request_id:requestId});
  const canRead=t=>!Object.hasOwn(labels,t)||!['contacts','organizations','tasks','deals','projects'].includes(t)||state.user?.access?.sections?.[t]!=='none';
  const canWrite=(type=state.tab,row=null)=>{if(!state.user||state.user.role==='viewer')return false;const a=state.user.access;if(a&&a.sections[type]&&a.sections[type]!=='write')return false;const x=row||(state.type===type?state.entity:null);return !x||!a||a.editScope==='all'||x.ownerId===state.user.id;};
  const isOwner=()=>state.user&&state.user.role==='owner';
@@ -65,11 +65,15 @@
    if(state.entriesReady&&/^c_[a-f0-9]{24}$/.test(mailContact)&&/^\d{13}-[a-f0-9]{24}$/.test(mailId)){
      state.focusMail={contactId:mailContact,id:mailId};await guarded(()=>detail('contacts',mailContact));
    }
+   const mailOrganization=url.get('organization')||'';
+   if(state.entriesReady&&/^o_[a-f0-9]{24}$/.test(mailOrganization)&&/^\d{13}-[a-f0-9]{24}$/.test(mailId)){
+     state.focusMail={organizationId:mailOrganization,id:mailId};await guarded(()=>detail('organizations',mailOrganization));
+   }
    if(state.inviteDraft)await showInviteDraft();
    if(state.find)await showFind(); // pack-v750: поиск из заказа — после входа
    if(state.taskDraft)await showTaskDraft(); // pack-v751: задача из заказа — после входа
  }
- async function showTab(tab){state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;state.offset=0;state.filters={};state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}return list();}
+ async function showTab(tab){state.listReturn=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;state.offset=0;state.filters={};state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}return list();}
  function calendarOpen(){
    const view=$('#view'),token=state.token;
    window.AelitaCrmCalendar.mount(view,{api,esc,lookups:state.lookups,filters:state.calendarFilters||window.AelitaCrmCalendar.defaults(),
@@ -110,6 +114,8 @@
    const title='<div class="row between"><h1>'+labels[t]+'</h1><div class="actions">'+(isOwner()?'<button data-export-csv '+(state.export?'disabled':'')+'>CSV · '+r.total+'</button>':'')+(isOwner()&&t==='contacts'?'<button data-csv-import>Импорт CSV</button>':'')+(isOwner()&&t==='contacts'&&state.importEnabled?'<button data-import>Из существующих данных</button>':'')+(t==='deals'?'<button data-followup-kind="attention">Следующие действия</button>':'')+(canWrite()?'<button class="primary" data-new>Добавить</button>':'')+'</div></div>';
    const body=t==='deals'&&r.items.length?'<div class="board" aria-label="Сделки по этапам">'+Object.entries(stages).map(([key,label])=>'<section class="column"><h2>'+label+'</h2>'+r.items.filter(x=>x.stage===key).map(x=>card(x,t)).join('')+'</section>').join('')+'</div>':'<div class="list">'+r.items.map(x=>card(x,t)).join('')+'</div>';
    $('#view').innerHTML=title+toolbar()+(r.items.length?body:'<p class="empty">'+(Object.values(state.filters).some(Boolean)?'По выбранным фильтрам записей нет.':(canWrite()?'Пока нет записей. Создайте первую карточку.':'Пока нет записей.'))+'</p>')+'<div class="pages"><span class="hint">Показано '+r.items.length+' из '+r.total+(state.offset?' · с '+(state.offset+1):'')+'</span>'+(state.offset?'<button data-prev>Назад</button>':'')+(r.next!==null?'<button data-next="'+r.next+'">Дальше</button>':'')+'<button data-refresh>Обновить</button></div>';
+   window.AelitaCrmUsability?.selectMenu($('#filters [name=organizationType]'),'Тип организации');
+   window.AelitaCrmUsability?.longMenus($('#filters'));
    $('#filters').onsubmit=async e=>{e.preventDefault();const d=new FormData(e.currentTarget);state.filters=Object.fromEntries(d);state.filters.archived=d.has('archived');state.filters.overdue=d.has('overdue');state.filters.openOnly=d.has('openOnly');state.offset=0;await guarded(list);};
  }
  async function exportCSV(){
@@ -136,7 +142,7 @@
    const panel=document.createElement('section');panel.className='panel production-panel';view.append(panel);
    window.AelitaCrmObligations.mount(panel,type,x,{state,api,esc,date,active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected});
  }
- function mountEntries(view,type,x,job){
+ function mountEntries(view,type,x,job,related={}){
    if(!state.entriesReady)return;
    const panel=document.createElement('div');
    view.append(panel);
@@ -144,11 +150,11 @@
    window.AelitaCrmEntries.mount(panel,type,x,{state,active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected,
     api,mutate,esc,input,select,options,date,openDialog,dialog,edit,notice,
     canWrite:canWrite(type,x)&&!x.archivedAt&&!x.mergedInto,canWriteTasks:canWrite('tasks'),focus});
-   if(state.mailEnabled&&state.externalAllowed&&canRead('contacts')&&window.AelitaCrmMail&&(['organizations','projects'].includes(type)||type==='deals'&&x.show)){
+   if(state.mailEnabled&&state.externalAllowed&&(type==='organizations'||canRead('contacts'))&&window.AelitaCrmMail&&(['organizations','projects'].includes(type)||type==='deals'&&x.show)){
      const mail=document.createElement('section');mail.className='panel production-panel';view.append(mail);
-     window.AelitaCrmEntries.contextMail(mail,type,x,{state,api,esc,date,
+     window.AelitaCrmEntries.contextMail(mail,type,x,{state,api,esc,date,related,
       active:()=>state.viewJob===job&&state.token===job.token&&mail.isConnected,
-      canWriteContact:entity=>canWrite('contacts',entity),canWriteTasks:canWrite('tasks'),edit,canSend:canWrite(type,x)&&canWrite('contacts')&&!x.archivedAt});
+      canWriteContact:entity=>canWrite('contacts',entity),canWriteTasks:canWrite('tasks'),edit,canSend:canWrite(type,x)&&(type==='organizations'||canWrite('contacts'))&&!x.archivedAt});
    }
  }
  Object.assign(eventKinds,{entry_edit:'Рабочая запись изменена',entry_delete:'Рабочая запись удалена',entry_restore:'Рабочая запись восстановлена',entry_erased:'Персональные данные записи удалены'});
@@ -225,7 +231,9 @@
      if(state.entriesReady&&r.taskSource)$('#view').insertAdjacentHTML('beforeend','<section class="panel production-panel"><h2>Источник задачи</h2>'+
       (r.taskSource.unavailable?'<p class="hint">Источник недоступен.</p>':'<p><a href="'+esc(window.AelitaCrmEntries.linkFor(r.taskSource))+'">Открыть запись общения ↗</a></p>')+'</section>');
    }
-   mountEntries($('#view'),type,x,job);mountObligations($('#view'),type,x,job);
+   mountEntries($('#view'),type,x,job,r.related);
+   if(type==='organizations'&&x.email&&$('#view [data-mail-choose]'))$('#view > .actions')?.insertAdjacentHTML('beforeend','<button type="button" data-write-organization>Написать организации</button>');
+   mountObligations($('#view'),type,x,job);
    if(state.settlementReady&&type==='deals'&&x.show&&(isOwner()||state.user.adminAccess&&x.showEvent)){
      const panel=document.createElement('section');panel.className='panel production-panel';$('#view').append(panel);
      window.AelitaCrmSettlement.mount(panel,x,{api,mutate,esc,date,money,input,openDialog,dialog,
@@ -451,13 +459,14 @@ function taskDraftBar(){$('#task-draft-bar')?.remove();if(!state.taskDraft||!$('
 async function checkTaskDraft(){const d=state.taskDraft;if(!d)return;const err=$('#td-error');let r;try{r=await api({action:'task_source_status',sourceRef:d.sourceRef});}catch(e){if(err)err.textContent='Проверить не удалось: '+e.message+' Попробуйте ещё раз.';return;}
  if(state.taskDraft!==d)return;if(r.items.length&&!d.again){state.taskDraft=null;return openDialog('Задача создана','<p>Задача сохранилась, повторять не нужно.</p><ul class="find-list">'+r.items.map(t=>'<li><button data-task-open="'+esc(t.id)+'">'+esc(t.title)+'</button></li>').join('')+'</ul>');}
  if(err)err.textContent='Задача не найдена — можно нажать «Создать задачу» ещё раз: повтор безопасен, вторая не появится.';}
-function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div class="row between"><h2 id="editor-title">'+title+'</h2><button type="button" data-dialog-close aria-label="Закрыть">×</button></div>'+body;if(!dialog.open)dialog.showModal();}
+function openDialog(title,body){dialog.dataset.forced='';dialog.crmDirty=null;dialog.innerHTML='<div class="row between"><h2 id="editor-title">'+title+'</h2><button type="button" data-dialog-close aria-label="Закрыть">×</button></div>'+body;if(!dialog.open)dialog.showModal();}
  async function edit(type,row={}){
    const job={token:state.token};state.editorJob=job;let catalog=null;if(type==='projects'){catalog=await api({action:'event_catalog'});if(state.editorJob!==job||state.token!==job.token)return;}
    const x={ownerId:state.user.id,...row},extra=state.productionReady?production.editor(type,x):{fields:''};let fields='';
    if(type==='contacts')fields=input('name','Имя',x.name,'text',true,true)+input('emails','Email — по одному на строке',(x.emails||[]).join('\n'),'textarea')+input('phones','Телефоны с кодом страны (+…) — по одному на строке',(x.phones||[]).join('\n'),'textarea')+input('city','Город',x.city)+input('tags','Метки через запятую',(x.tags||[]).join(', '))+'<div class="field full"><span>Тип контакта</span><div class="checkset">'+Object.entries(contactRoles).map(([k,v])=>'<label><input type="checkbox" name="roles" value="'+k+'" '+((x.roles||[]).includes(k)?'checked':'')+'>'+v+'</label>').join('')+'</div></div><label class="field full"><span>Организации — можно выбрать несколько</span><select multiple name="organizationIds">'+state.lookups.organizations.map(y=>'<option value="'+y.id+'" '+((x.organizationIds||[]).includes(y.id)?'selected':'')+'>'+esc(y.label)+'</option>').join('')+'</select></label>'+input('notes','Описание',x.notes,'textarea',true);
    if(type==='organizations')fields=input('name','Название',x.name,'text',true,true)+select('type','Тип',options(orgTypes,x.type||'other'))+input('city','Город',x.city)+input('website','Сайт https://',x.website,'url',true)+(state.organizationContactsReady?
      input('email','Электронная почта организации',x.email,'email')+input('phone','Телефон организации',x.phone,'tel'):'')+(extra.social||'')+input('notes','Описание',x.notes,'textarea',true);
+   if(type==='organizations'&&state.entriesReady)fields+='<section class="field full crm-inline-notes" aria-label="Заметки"></section>';
    if(type==='tasks')fields=input('title','Задача',x.title,'text',true,true)+select('status','Статус',options(statuses,x.status||'open'))+select('priority','Приоритет',options({normal:'Обычный',high:'Высокий'},x.priority||'normal'))+input('dueAt','Срок — Москва',moscowInput(x.dueAt),'datetime-local')+select('contactId','Контакт',lookup('contacts',x.contactId))+select('organizationId','Организация',lookup('organizations',x.organizationId))+select('dealId','Сделка',lookup('deals',x.dealId))+input('description','Описание',x.description,'textarea',true);
    if(type==='deals')fields=input('title','Название сделки',x.title,'text',true,true)+select('pipeline','Воронка',options(pipelines,x.pipeline||'partnerships'))+select('stage','Этап',options(state.productionReady&&x.show?production.stageNames:stages,x.stage||'new'))+input('amountRub','Плановая сумма, ₽',x.amountMinor==null?'':String(x.amountMinor/100))+input('closeDate','Плановая дата',x.closeDate,'date')+select('contactId','Контакт',lookup('contacts',x.contactId))+select('organizationId','Организация',lookup('organizations',x.organizationId))+input('lostReason','Причина закрытия без сделки',x.lostReason,'textarea',true)+input('description','Описание',x.description,'textarea',true)+input('documentLinks','Ссылки на документы https:// — по одной на строке',(x.documentLinks||[]).join('\n'),'textarea',true)+'<p class="hint full">Плановая сумма не является оплатой. CRM не выставляет счёт и не меняет билет.</p>';
    if(['tasks','deals'].includes(type))fields+=select('projectId','Проект или событие',lookup('projects',x.projectId,type==='tasks'?'Не задан — наследовать из сделки':'Без проекта'),true)+(type==='tasks'?'<p id="task-project-hint" class="hint full"></p>':'');
@@ -468,8 +477,21 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div 
    // Keep existing restricted relationships selected without disclosing their labels.
    for(const key of ['contactId','organizationId','dealId','projectId','venueOrganizationId','hostContactId','organizationIds','contactIds']){const el=$('#entity-form [name='+key+']');if(!el)continue;for(const id of (Array.isArray(x[key])?x[key]:x[key]?[x[key]]:[]))if(![...el.options].some(o=>o.value===id)){const option=document.createElement('option');option.value=id;option.textContent='Связь вне вашего доступа';option.selected=true;el.append(option);}}
    if(type==='tasks'){const form=$('#entity-form'),hint=()=>{const deal=state.lookups.deals.find(d=>d.id===form.dealId.value),p=(state.lookups.projects||[]).find(p=>p.id===deal?.projectId);$('#task-project-hint').textContent=p?'У сделки проект «'+p.label+'». Без отдельного проекта задача наследует эту связь.':'Без проекта и без сделки с проектом задача остаётся общей.';};form.dealId.onchange=hint;hint();}
-   if(state.productionReady)production.wireEditor($('#entity-form'),type);
-   if(obligation)window.AelitaCrmObligations.wire($('#entity-form'),x,state,obligation,esc);
+   const editor=$('#entity-form'),usability=window.AelitaCrmUsability;
+   if(type==='organizations')usability?.selectMenu(editor.elements.namedItem('type'),'Тип организации');
+   if(type==='organizations'){
+     const dirty=()=>{job.dirty=true;};
+     dialog.crmDirty=()=>job.dirty;
+     editor.addEventListener('input',dirty);
+     editor.addEventListener('change',dirty);
+     editor.addEventListener('click',e=>{if(e.target.closest('.crm-inline-notes button')?.textContent==='Отменить удаление')dirty();});
+   }
+   const noteRoot=editor.querySelector('.crm-inline-notes');
+   const collectNotes=noteRoot&&usability?.notes(noteRoot,x,api,state.user.id,date);
+   let savedPayload='',saveRequest;
+   if(state.productionReady)production.wireEditor(editor,type);
+   if(obligation)window.AelitaCrmObligations.wire(editor,x,state,obligation,esc);
+   usability?.longMenus(editor);
    $('#entity-form').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,btn=f.querySelector('button.primary');btn.disabled=true;try{
      const d=new FormData(f),data=Object.fromEntries(d);const split=v=>String(v||'').split(/[\n,;]+/).map(v=>v.trim()).filter(Boolean);
      if(type==='contacts'){data.emails=split(data.emails);data.phones=split(data.phones);data.tags=split(data.tags);data.roles=d.getAll('roles');data.organizationIds=d.getAll('organizationIds');}
@@ -479,9 +501,13 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div 
      if(state.productionReady)production.collect(f,type,data);
      if(obligation)window.AelitaCrmObligations.collect(f,data,x);
      if(state.showEventsReady&&type==='deals')window.AelitaCrmShowEvents.collect(data,!!data.show,state.calendarReady);
+     const notes=collectNotes?.();
+     const payload={type,id:row.id,base_revision:row.revision,data,allow_duplicate:!!f.querySelector('[name=allow_duplicate]:checked'),...(notes?.length?{notes}:{})};
+     const serialized=JSON.stringify(payload);
+     if(serialized!==savedPayload){savedPayload=serialized;saveRequest=rid();}
      const r=row.interactionSource?await mutate('task_from_interaction',{entryId:row.interactionSource.id,additional:row.interactionSource.additional,data}):
-       row.mailSource?await mutate('task_from_mail',{contactId:row.mailSource.contactId,messageId:row.mailSource.id,data}):
-       await mutate('save',{type,id:row.id,base_revision:row.revision,data,allow_duplicate:!!f.querySelector('[name=allow_duplicate]:checked')});
+       row.mailSource?await mutate('task_from_mail',{contactId:row.mailSource.contactId,organizationId:row.mailSource.organizationId,messageId:row.mailSource.id,data}):
+       await mutate('save',payload,saveRequest);
      if(r.restricted)throw Error('Из записи уже создана задача вне вашего доступа.');if(state.editorJob!==job||state.token!==job.token||!dialog.open||$('#entity-form')!==f)return;dialog.close();const lookups=await api({action:'lookups'});if(state.editorJob!==job||state.token!==job.token)return;state.lookups=lookups;await detail(type,r.id);notice('Карточка сохранена');
    }catch(err){f.querySelector('.form-error').textContent=err.message+(err.details?.ids?.length?' Откройте существующий контакт и при необходимости объедините карточки.':'');if(err.code==='duplicate_contact'&&isOwner()&&!f.querySelector('[name=allow_duplicate]'))f.querySelector('.form-error').insertAdjacentHTML('afterend','<label class="row" style="margin:14px 0"><input type="checkbox" name="allow_duplicate">Это разные люди — сохранить отдельный контакт</label>');}finally{btn.disabled=false;}};
  }
@@ -747,7 +773,11 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div 
  async function analyticsExport(v){if(!analyticsActive(v)||v.run?.status!=='ready'||v.exportJob)return;const job={id:v.run.id,tableId:v.tableId,generation:v.generation},parts=[];v.exportJob=job;const active=()=>analyticsActive(v)&&v.exportJob===job&&v.generation===job.generation&&v.tableId===job.tableId;const button=$('[data-analytics-export]');button.disabled=true;let offset=0,filename='report.csv';try{do{const r=await api({action:'analytics_export',runId:job.id,tableId:job.tableId,offset});if(!active())return;if(r.reportDigest!==v.run.report.digest)throw Error('Версия отчёта изменилась. Выгрузка отменена.');parts.push(r.csv);filename=r.filename;offset=r.next;$('#analytics-export-status').textContent='Подготовлено '+r.processed+' из '+r.total+' строк';}while(offset!==null);if(!active())return;deliverFile(new Blob(parts,{type:'text/csv;charset=utf-8'}),filename,$('#analytics-export-status'));$('#analytics-export-status').textContent='CSV готов: выгружена вся таблица.';}catch(err){if(active()){$('#analytics-export-status').textContent='Выгрузка не завершена: '+err.message;if(err.code==='analytics_changed'){v.run=null;$('#analytics-result').innerHTML='';v.error=err.message;analyticsRenderProgress(v);}}}finally{parts.length=0;if(v.exportJob===job)v.exportJob=null;if(button.isConnected)button.disabled=false;}}
 
  async function guarded(fn){try{await fn();}catch(err){notice(err.message,true);}}
- root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;guarded(async()=>{
+ root.addEventListener('click',e=>{
+   let b=e.target.closest('button');
+   if(!b&&!e.defaultPrevented&&!e.target.closest('a,input,select,textarea,label,summary,[role=button],[contenteditable]')&&!window.getSelection()?.toString())
+     b=e.target.closest('.record')?.querySelector(':scope > h3 > button[data-open]');
+   if(!b)return;guarded(async()=>{
    if(b.hasAttribute('data-index-check'))return indexCheck();
    if(b.hasAttribute('data-index-refresh'))return indexRefresh(false);
    if(b.hasAttribute('data-index-rebuild'))return indexRefresh(true);
@@ -809,10 +839,30 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div 
      ...(b.hasAttribute('data-new-commitment')?{commitment:'other'}:{})});
    }
    if(b.dataset.tab)return showTab(b.dataset.tab);
-   if(b.dataset.open)return detail(b.dataset.type,b.dataset.open);
+   if(b.dataset.open){
+     if($('#filters')&&b.closest('.record'))state.listReturn={tab:state.tab,filters:{...state.filters},offset:state.offset,scroll:window.scrollY,id:b.dataset.open};
+     return detail(b.dataset.type,b.dataset.open);
+   }
    if(b.hasAttribute('data-new'))return edit(state.tab);
    if(b.hasAttribute('data-edit'))return edit(state.type,state.entity);
-   if(b.hasAttribute('data-back-list')){state.tab=state.type;return list();}
+   if(b.hasAttribute('data-write-organization')){
+     const compose=$('#view [data-mail-choose]');
+     if(compose){compose.scrollIntoView({block:'center'});compose.querySelector('button.primary')?.focus({preventScroll:true});}
+     return;
+   }
+   if(b.hasAttribute('data-back-list')){
+     const previous=state.listReturn;
+     state.listReturn=null;
+     state.tab=previous?.tab||state.type;
+     state.entity=null;state.type=null;
+     if(previous){state.filters=previous.filters;state.offset=previous.offset;shell();}
+     await list();
+     if(previous){
+       root.querySelector('[data-open="'+CSS.escape(previous.id)+'"]')?.focus({preventScroll:true});
+       window.scrollTo({top:previous.scroll,behavior:'instant'});
+     }
+     return;
+   }
    if(b.hasAttribute('data-refresh')){state.lookups=await api({action:'lookups'});return list();}
    if(b.hasAttribute('data-prev')){state.offset=Math.max(0,state.offset-50);return list();}
    if(b.dataset.next){state.offset=Number(b.dataset.next);return list();}
@@ -831,8 +881,11 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.innerHTML='<div 
    if(b.dataset.staffReset)return staffForm(state.staff.find(x=>x.id===b.dataset.staffReset),true);
  });});
  $('#identity').addEventListener('click',e=>guarded(async()=>{if(e.target.closest('[data-logout]')){state.find=null;state.taskDraft=null;state.inviteDraft=null;$('#task-draft-bar')?.remove();await mutate('logout');clearSession();gate();notice('Вы вышли из CRM');}if(e.target.closest('[data-password]'))passwordForm(false);if(e.target.closest('[data-email]'))emailForm(false);}));
- dialog.addEventListener('click',e=>{if(e.target.closest('[data-invite-retry]')){guarded(showInviteDraft);return;}const tb=e.target.closest('[data-task-open],[data-task-again],[data-task-retry],[data-task-check]');if(tb){if(tb.dataset.taskOpen){const id=tb.dataset.taskOpen;dialog.close();state.tab='tasks';shell();guarded(()=>detail('tasks',id));}else if(tb.hasAttribute('data-task-again'))guarded(()=>showTaskDraft(true));else if(tb.hasAttribute('data-task-retry'))guarded(()=>showTaskDraft());else guarded(checkTaskDraft);return;}const hb=e.target.closest('[data-orders-email],[data-find-open]');if(hb){dialog.close();if(hb.dataset.findOpen){const id=hb.dataset.findOpen;state.tab='contacts';shell();guarded(()=>detail('contacts',id));}else openOrders(hb.dataset.ordersEmail);return;}if(e.target.closest('[data-dialog-close]')){if(dialog.dataset.forced==='1'){clearSession();gate();}else dialog.close();}if(e.target.closest('[data-import-preview]'))guarded(()=>importPreview());});
- dialog.addEventListener('cancel',e=>{if(dialog.dataset.forced==='1'){e.preventDefault();clearSession();gate();}});
+ dialog.addEventListener('click',e=>{if(e.target.closest('[data-invite-retry]')){guarded(showInviteDraft);return;}const tb=e.target.closest('[data-task-open],[data-task-again],[data-task-retry],[data-task-check]');if(tb){if(tb.dataset.taskOpen){const id=tb.dataset.taskOpen;dialog.close();state.tab='tasks';shell();guarded(()=>detail('tasks',id));}else if(tb.hasAttribute('data-task-again'))guarded(()=>showTaskDraft(true));else if(tb.hasAttribute('data-task-retry'))guarded(()=>showTaskDraft());else guarded(checkTaskDraft);return;}const hb=e.target.closest('[data-orders-email],[data-find-open]');if(hb){dialog.close();if(hb.dataset.findOpen){const id=hb.dataset.findOpen;state.tab='contacts';shell();guarded(()=>detail('contacts',id));}else openOrders(hb.dataset.ordersEmail);return;}if(e.target.closest('[data-dialog-close]')){if(dialog.dataset.forced==='1'){clearSession();gate();}else if(!dialog.crmDirty?.()||confirm('Закрыть форму без сохранения изменений?'))dialog.close();}if(e.target.closest('[data-import-preview]'))guarded(()=>importPreview());});
+ dialog.addEventListener('cancel',e=>{
+   if(dialog.dataset.forced==='1'){e.preventDefault();clearSession();gate();}
+   else if(dialog.crmDirty?.()&&!confirm('Закрыть форму без сохранения изменений?'))e.preventDefault();
+ });
  dialog.addEventListener('close',()=>{state.csvImport=null;state.assignment=null;state.directoryEditor=null;if(state.taskDraft&&!state.taskDraft.err)taskDraftBar();});
  // pack-v750: открыли кнопкой «Найти в CRM» из админки — адрес придёт сообщением; входа нет — поиск после входа.
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_invite',(data,err)=>{state.inviteDraft=data?{...data}:{err};if(state.user&&$('#view'))guarded(showInviteDraft);});
