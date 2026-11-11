@@ -266,3 +266,9 @@ body>header{padding:10px 28px;align-items:center;min-height:80px}
 .crm-scroll{position:absolute;top:0;bottom:12px;width:44px;min-width:44px;padding:0;z-index:2;background:var(--ink);border:0;font-size:1.5rem;letter-spacing:0}.crm-scroll.prev{left:0;background:linear-gradient(to left,transparent,var(--ink) 65%)}.crm-scroll.next{right:0;background:linear-gradient(to right,transparent,var(--ink) 65%)}.crm-scroll[hidden]{display:none!important}
 @media(max-width:600px){body>header{padding-inline:18px}.crm-brand-block .crm-person{font-size:.625rem}.crm-navbox .tabs button{white-space:nowrap}}
 
+
+.crm-mail-compose:not(:empty){margin:1rem 0}
+.crm-mail-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-block:.65rem}
+.crm-mail-preview:not(:empty){padding:1rem;border:1px solid currentColor}
+.crm-mail-history summary{cursor:pointer;overflow-wrap:anywhere}
+.crm-mail-compose input[type=file]{max-width:100%}

@@ -279,7 +279,7 @@ var AELITA_TG_OFF = [
   'contacts', 'team', 'festival-team', 'rezidents', 'press', 'mentions', 'partners',
   'alexandra-chubenko', 'alexandra-gubanova', 'alexey-tsymlov', 'anastasia-silantyeva', 'anton-vdovichenko',
   'ekaterina-ilyina', 'ivan-sachkov', 'katya-abdulova',
-  'konstantin-moshnikov', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
+  'konstantin-moshnikov', 'kseniya-ilina', 'ksenia-shamarina', 'maria-pavlova', 'mikhail-kazmiruk',
   'svetlana-nikiforova', 'valentina-bykova', 'vanya-dyba', 'viktor-ignatov', 'yulia-bychkova'
 ];
 var fwSlug = location.pathname.replace(/^\/en(?=\/|$)/, '').replace(/^\/+|\/+$/g, '').split('/')[0];

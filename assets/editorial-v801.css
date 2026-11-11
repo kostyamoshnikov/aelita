@@ -1,0 +1,21 @@
+.v801-hero{padding:clamp(104px,12vw,160px) 0 52px}
+.v801-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,620px);align-items:start;gap:clamp(26px,6vw,80px)}
+.v801-production{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:center}
+.v801-grid h1{margin:0 0 16px;font-size:clamp(32px,7vw,88px);line-height:1.05;letter-spacing:.05em}
+.v801-grid .eyebrow{margin-bottom:22px;letter-spacing:.17em}
+.v801-grid p,.v801-body p{margin:0 0 16px}
+.v801-grid h2,.v801-body h2{font-size:clamp(21px,3vw,30px);margin:20px 0 14px}
+.v801-grid ul{padding-left:1.3em}
+.v801-grid figure,.v801-body figure{margin:0}
+.v801-grid img,.v801-body img{display:block;width:100%;height:auto}
+.v801-grid figcaption,.v801-body figcaption{font-size:.82rem;color:var(--sand);margin-top:9px}
+.v801-grid a:not(.btn-gold),.v801-body a{text-decoration:underline;text-underline-offset:.21em;color:var(--gold)}
+.v801-body{padding:0 0 60px}
+.v801-body p{max-width:65ch}
+.v801-body .v801-interview-photo{max-width:440px}
+@media(max-width:760px){
+ .v801-grid{grid-template-columns:minmax(0,1fr)}
+ .v801-grid figure{max-width:320px}
+ .v801-production .v801-cover{order:-1}
+ .v801-production .v801-cover{max-height:47svh;object-fit:contain;object-position:center}
+}

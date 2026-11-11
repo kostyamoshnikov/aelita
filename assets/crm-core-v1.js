@@ -50,7 +50,7 @@
  window.addEventListener('storage',e=>{if(e.key===KEY&&!e.newValue){clearSession();gate();}});
 
  async function start(){
-   const r=await api({action:'me'});if(r.accessVersion!==1){clearSession();gate();notice('Раздел недоступен: его возможности отключены в настройках сервера.',true);return;}state.user=r.user;state.importEnabled=r.importEnabled;state.externalAllowed=r.user.access?.externalHistory!==false;state.activityEnabled=r.activityEnabled===true&&state.externalAllowed;state.historyEnabled=r.historyEnabled===true&&state.externalAllowed;state.segmentsEnabled=r.segmentsEnabled===true;state.analyticsEnabled=r.analyticsEnabled===true&&r.analyticsVersion===1;state.indexEnabled=r.indexEnabled===true&&r.indexVersion===1;state.publicDirectoryEnabled=r.publicDirectoryEnabled===true;
+   const r=await api({action:'me'});if(r.accessVersion!==1){clearSession();gate();notice('Раздел недоступен: его возможности отключены в настройках сервера.',true);return;}state.user=r.user;state.importEnabled=r.importEnabled;state.externalAllowed=r.user.access?.externalHistory!==false;state.activityEnabled=r.activityEnabled===true&&state.externalAllowed;state.historyEnabled=r.historyEnabled===true&&state.externalAllowed;state.segmentsEnabled=r.segmentsEnabled===true;state.analyticsEnabled=r.analyticsEnabled===true&&r.analyticsVersion===1;state.indexEnabled=r.indexEnabled===true&&r.indexVersion===1;state.publicDirectoryEnabled=r.publicDirectoryEnabled===true;state.mailEnabled=r.mailEnabled===true;
    if(r.user.mustChange){passwordForm(true);return;}
    if(r.identityVersion>=796&&!r.user.emailVerified){emailForm(true);return;}
    state.lookups=await api({action:'lookups'});if(location.hash==='#team'&&isOwner())state.tab='team';if(location.hash==='#segments'&&isOwner())state.tab='segments';if(location.hash==='#analytics')state.tab='analytics';shell();await showTab(state.tab);
@@ -155,6 +155,10 @@
    if(type==='tasks')$('#view').insertAdjacentHTML('afterbegin',taskActions(x));
    if(type==='contacts'&&!x.mergedInto&&isOwner()){ $('#view').insertAdjacentHTML('beforeend',promoLinksPanel(x)); guarded(()=>loadPromoLinks(id)); }
    if(type==='contacts'&&!x.mergedInto){$('#view').insertAdjacentHTML('beforeend',relationshipPanel()+activityPanel());guarded(()=>startRelationship(id));}else if(type==='contacts'&&$('#contact-context'))$('#contact-context').innerHTML='<p class="hint">Откройте основную карточку объединённого контакта.</p>';
+   if(type==='contacts'&&state.mailEnabled&&!x.mergedInto&&x.name!=='Удалённый контакт'&&window.AelitaCrmMail){
+     const mail=document.createElement('section');mail.className='panel';$('#view').append(mail);
+     window.AelitaCrmMail(mail,{api,contact:x,canSend:!x.archivedAt&&canWrite(type,x)});
+   }
    await timeline(0);if($('#note'))$('#note').onsubmit=async e=>{e.preventDefault();const text=e.currentTarget.text.value;await guarded(async()=>{await mutate('note_add',{type,id,text});await detail(type,id);notice('Заметка сохранена');});};
  }
  function promoLinksPanel(x){return '<section class="panel" id="crm-promo-links"><div class="row between"><h2>Выданные промокоды</h2><a href="/admin/promocodes/" target="_blank" rel="noopener noreferrer">Открыть промокоды ↗</a></div><p class="hint">Здесь фиксируется выдача: код можно передать вручную. Отметка не отправляет сообщение, не привязывает код к покупателю и не оформляет подписку.</p><div id="crm-promo-items" aria-live="polite"><p class="hint">Загружаем…</p></div>'+(!x.archivedAt?'<form id="crm-promo-form" class="inline-form"><label>Код из раздела промокодов<input class="ym-disable-keys" name="code" maxlength="32" required autocomplete="off" spellcheck="false"></label><button class="primary">Проверить код</button><div id="crm-promo-preview" aria-live="polite"></div></form>':'<p class="hint">Для изменения восстановите карточку из архива.</p>')+'<p id="crm-promo-status" role="status" aria-live="polite"></p></section>';}
