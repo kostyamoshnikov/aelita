@@ -73,7 +73,13 @@
    if(state.find)await showFind(); // pack-v750: поиск из заказа — после входа
    if(state.taskDraft)await showTaskDraft(); // pack-v751: задача из заказа — после входа
  }
- async function showTab(tab){state.listReturn=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;state.offset=0;state.filters={};state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}return list();}
+ async function leaveMail(){
+   for(const panel of root.querySelectorAll('[data-crm-mail-editor]')){
+     if(panel.crmMailBeforeLeave&&!await panel.crmMailBeforeLeave())return false;
+   }
+   return true;
+ }
+ async function showTab(tab){if(!await leaveMail())return;state.listReturn=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;state.offset=0;state.filters={};state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}return list();}
  function calendarOpen(){
    const view=$('#view'),token=state.token;
    window.AelitaCrmCalendar.mount(view,{api,esc,lookups:state.lookups,filters:state.calendarFilters||window.AelitaCrmCalendar.defaults(),
@@ -188,7 +194,7 @@
   finally{if(state.projectRefJob===job&&state.projectView===v)button.disabled=false;}
  }
 
- async function detail(type,id){state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;
+ async function detail(type,id){if(!await leaveMail())return;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;
    if(type==='projects')return projectDetail(id);
    state.projectView=null;state.projectRefJob=null;const job={token:state.token};state.viewJob=job;
    state.opsJob=null;
@@ -851,6 +857,7 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.crmDirty=null;di
      return;
    }
    if(b.hasAttribute('data-back-list')){
+     if(!await leaveMail())return;
      const previous=state.listReturn;
      state.listReturn=null;
      state.tab=previous?.tab||state.type;

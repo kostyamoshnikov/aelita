@@ -5,7 +5,9 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
   const request = (action, fields = {}) => api({action,[organization?'organizationId':'contactId']:contact.id,
     ...(currentContext?{context:currentContext}:{}),...fields});
   const active = () => root.isConnected;
-  const status = {accepted: 'Принято почтовым сервером', unknown: 'Исход неизвестен', rejected: 'Отклонено сервером', received: 'Получено'};
+  const status = {accepted:'Принято почтовым сервером', sending:'Отправка в работе', unknown:'Исход отправки неизвестен',
+    rejected:'Письмо отклонено сервером', failed:'Письмо не отправлено', received:'Получено'};
+  const msk = new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'medium',timeStyle:'short'});
   root.innerHTML = '<h2>'+(organization?'Почта организации':'Личная почта')+'</h2><div class="actions"></div><div class="crm-mail-compose"></div><p role="status" aria-live="polite"></p><div class="crm-mail-history"></div>';
   const actions = root.querySelector('.actions');
   const compose = root.querySelector('.crm-mail-compose');
@@ -39,7 +41,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     if (!active()) return;
     if (!cursor) history.replaceChildren();
     history.querySelector('[data-mail-more]')?.remove();
-    if (!result.items.length && !cursor) paragraph(history, 'Писем пока нет.');
+    if (!result.items.length && !cursor) paragraph(history,result.next?'На этой странице нет писем в выбранном контексте.':'Писем пока нет.');
     for(const item of result.items)renderItem(item);
     if (result.next) button(history, 'Ещё письма', () => load(result.next)).dataset.mailMore = '';
   }
@@ -49,12 +51,21 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
       const heading = document.createElement('summary');
       heading.textContent = item.subject || 'Без темы';
       details.append(heading);
-      paragraph(details, [item.at && new Date(item.at).toLocaleString('ru-RU'), status[item.status], item.actorName].filter(Boolean).join(' · '));
+      paragraph(details, [item.at && msk.format(new Date(item.at))+' МСК', status[item.status], item.actorName].filter(Boolean).join(' · '));
       paragraph(details, 'От: ' + item.from + ' · Кому: ' + item.to);
       const text = document.createElement('div');
       text.className = 'crm-mail-text';
       text.textContent = item.text;
       details.append(text);
+      if(item.direction==='out'&&item.messageId)paragraph(details,'Message-ID · '+item.messageId);
+      if(item.deliveryReason==='recipient')paragraph(details,'Проверьте адрес получателя в карточке.');
+      if(item.deliveryReason==='smtp_declined')paragraph(details,'Почтовый сервер вернул отказ. Текст письма можно использовать повторно.');
+      if(item.deliveryReason==='connection_before_send')paragraph(details,'Проверьте настройки и доступность рабочей почты.');
+      if(['sending','unknown'].includes(item.status))button(details,'Проверить статус письма',async()=>{
+        const {message}=await request('mail_read',{id:item.id});
+        notice.textContent=status[message.status];
+        await load();
+      });
       if (item.attachments?.length) paragraph(details, 'Вложения: ' + item.attachments.map(file => file.name).join(', '));
       if (item.hasAttachments) paragraph(details, 'Вложения доступны в рабочем почтовом ящике.');
       if(item.sentCopy)paragraph(details,copyStatus[item.sentCopy]);
@@ -66,6 +77,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
         });
       if(canSend&&item.status==='received'&&contact.emails.includes(item.from))
         button(details,'Ответить',async()=>{
+          if(root.crmMailBeforeLeave&&!await root.crmMailBeforeLeave())return;
           if(compose.firstChild&&!confirm('Открыть ответ вместо текущего письма?'))return;
           const result=await request('mail_read',{id:item.id});
           if(!active())return;
@@ -96,7 +108,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     let revision = saved.revision||draft?.revision||0;
     const form = document.createElement('form');
     form.className = 'inline-form';
-    form.innerHTML = '<label>Кому<select name="to" required></select></label><label>Тема<input name="subject" maxlength="200" required></label><label>Текст<textarea name="body" class="ym-disable-keys" maxlength="16000" rows="7" required></textarea></label><label>Подпись<select name="signatureMode"><option value="personal">От моего имени</option><option value="team">От команды Аэлита Продакшен</option></select></label><label>Вложения до 48 КБ<input name="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple></label><div class="actions"></div><div class="crm-mail-preview" aria-live="polite"></div>';
+    form.innerHTML = '<label>Кому<select name="to" required></select></label><label>Тема<input name="subject" maxlength="200" required></label><label>Текст<textarea name="body" class="ym-disable-keys" maxlength="16000" rows="7" required></textarea></label><label>Подпись<select name="signatureMode"><option value="team" selected>От команды Аэлита Продакшен</option><option value="personal">От моего имени</option></select></label><label>Вложения до 48 КБ<input name="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple></label><div class="actions"></div><div class="crm-mail-preview" aria-live="polite"></div>';
     if(currentContext&&contextLabel)paragraph(compose,'Контекст письма · '+contextLabel);
     if(recipientLabel)paragraph(compose,'Получатель · '+recipientLabel);
     compose.append(form);
@@ -108,13 +120,20 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     const fillDraft=(stored,answer=null)=>{
       subject.value=stored?.subject|| (answer?(/^Re:/i.test(answer.subject)?answer.subject:'Re: '+answer.subject).slice(0,200):'');
       body.value=stored?.text||'';
-      signatureMode.value=stored?.signatureMode||'personal';
+      signatureMode.value=stored?(stored.signatureMode||'personal'):'team';
     };
     fillDraft(draft,reply);
     const toolbar = form.querySelector('.actions');
     const previewBox = form.querySelector('.crm-mail-preview');
     const fields = () => ({to:selectedAddress,subject:subject.value,text:body.value,signatureMode:signatureMode.value});
     let baseline=JSON.stringify(fields()),timer=null,saving=Promise.resolve();
+    let sending=false,pending=null,repeatOf=null;
+    root.crmMailBeforeLeave=async()=>{
+      if(!form.isConnected)return true;
+      if(sending){notice.textContent='Подождите, пока CRM уточнит результат отправки.';return false;}
+      try{await flush();return true;}
+      catch(error){notice.textContent=error.message;return confirm('Черновик не сохранён. Закрыть форму?');}
+    };
     const flush=()=>{
       clearTimeout(timer);
       saving=saving.catch(()=>{}).then(async()=>{
@@ -137,6 +156,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
       const next=to.value;
       if(next===selectedAddress)return;
       if(files.files.length&&!confirm('При смене адреса прикреплённые файлы нужно выбрать заново. Продолжить?')){to.value=selectedAddress;return;}
+      if(pending||sending){to.value=selectedAddress;return;}
       to.disabled=true;
       try{
         await flush();
@@ -225,11 +245,12 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     };
     form.onsubmit = event => {
       event.preventDefault();
+      if(pending||sending||to.disabled&&!reply)return;
       operation(async () => {
         previewBox.replaceChildren();
         const sentFields = fields();
         const selected = Array.from(files.files);
-        const payload = {...sentFields,...(openReply?{replyId:openReply.id}:{}),attachments:await encodeFiles(selected)};
+        const payload = {...sentFields,...(openReply?{replyId:openReply.id}:{}),...(repeatOf?{repeatOf}:{}),attachments:await encodeFiles(selected)};
         const {preview, token} = await request('mail_preview', payload);
         if (!active() || JSON.stringify(sentFields) !== JSON.stringify(fields()) ||
             selected.length !== files.files.length || selected.some((file, index) => file !== files.files[index])) return;
@@ -242,32 +263,110 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
         previewBox.append(text);
         if (preview.attachments.length) paragraph(previewBox, 'Вложения: ' + preview.attachments.map(file=>file.name+' ('+(file.size/1024).toFixed(1)+' КБ)').join(', '));
         button(previewBox, 'Отправить письмо', async () => {
-          await flush();
-          notice.textContent = 'Отправляем…';
-          const {message} = await request('mail_send', {...payload, id: preview.id, token});
-          if (!active()) return;
-          notice.textContent = status[message.status]+(message.status==='unknown'?'. Проверьте историю и рабочий ящик.':'.')+
-            (message.sentCopy?' '+copyStatus[message.sentCopy]+'.':'');
-          previewBox.replaceChildren();
-          if(message.status==='unknown')submit.disabled=true;
-          if(message.status==='accepted'){
-            if(JSON.stringify(fields())===JSON.stringify(sentFields)){
-              try{
-                clearTimeout(timer);
-                await request('mail_draft_delete',{...scope(),revision});
-                compose.replaceChildren();
-              }catch{notice.textContent+=' Черновик можно удалить вручную.';}
-            }
-            onSent?.();
-          }
-          await load();
+          if(JSON.stringify(fields())!==JSON.stringify(sentFields)||selected.length!==files.files.length||
+            selected.some((file,index)=>file!==files.files[index]))return;
+          await transmit({id:preview.id,payload:{...payload,id:preview.id,token},sentFields});
         }).className = 'primary';
       });
     };
+    const receipt=document.createElement('div');
+    receipt.className='crm-mail-preview';
+    receipt.setAttribute('aria-live','polite');
+    form.after(receipt);
+
+    async function checkAttempt(attempt){
+      try{
+        const {message}=await request('mail_read',{id:attempt.id});
+        await showOutcome(attempt,message,attempt.repeated===true);
+      }catch(error){
+        if(error.code!=='not_found')throw error;
+        receipt.replaceChildren();
+        paragraph(receipt,'CRM пока не видит запись об этой отправке.');
+        button(receipt,'Проверить ещё раз',()=>checkAttempt(attempt));
+        button(receipt,'Продолжить ту же попытку',()=>transmit(attempt));
+      }
+    }
+
+    function requireResolution(attempt){
+      pending=attempt;
+      submit.disabled=true;
+      to.disabled=true;
+      receipt.replaceChildren();
+      button(receipt,'Проверить статус',()=>checkAttempt(attempt));
+    }
+
+    async function showOutcome(attempt,message,repeated=false){
+      if(!active()||!form.isConnected)return;
+      attempt.id=message.id;
+      attempt.repeated=repeated;
+      notice.textContent=status[message.status]+(message.sentCopy?' · '+copyStatus[message.sentCopy]:'');
+      if(repeated)notice.textContent+=' · CRM нашла письмо с тем же содержанием.';
+      previewBox.replaceChildren();
+      if(['sending','unknown'].includes(message.status)||repeated&&message.status==='accepted'){
+        requireResolution(attempt);
+        if(message.status!=='sending'){
+          paragraph(receipt,message.status==='unknown'?'Сверьте письмо с рабочим ящиком по Message-ID.':'Можно открыть запись предыдущего письма в истории.');
+          button(receipt,'Подготовить отдельную отправку',()=>{
+            if(!confirm('Подготовить ещё одну отправку этого письма? Получатель может получить его повторно.'))return;
+            repeatOf=message.id;
+            pending=null;
+            submit.disabled=false;
+            to.disabled=!!reply;
+            receipt.replaceChildren();
+            submit.focus();
+          });
+        }
+      }else{
+        pending=null;
+        repeatOf=null;
+        submit.disabled=false;
+        to.disabled=!!reply;
+        receipt.replaceChildren();
+        if(message.status==='accepted'&&JSON.stringify(fields())===JSON.stringify(attempt.sentFields)){
+          try{
+            clearTimeout(timer);
+            await request('mail_draft_delete',{...scope(),revision});
+            receipt.remove();
+            compose.replaceChildren();
+          }catch{notice.textContent+=' · Черновик можно удалить вручную.';}
+        }
+      }
+      onSent?.();
+      try{await load();}catch{if(active())notice.textContent+=' · Историю можно обновить отдельно.';}
+    }
+
+    async function transmit(attempt){
+      const controls=Array.from(form.elements).filter(control=>!control.disabled);
+      sending=true;
+      controls.forEach(control=>{control.disabled=true;});
+      try{
+        await flush();
+        requireResolution(attempt);
+        notice.textContent='Отправляем…';
+        let result;
+        try{result=await request('mail_send',attempt.payload);}
+        catch(error){
+          if(error.code&&!['storage_unavailable','mail_busy'].includes(error.code)){
+            pending=null;
+            receipt.replaceChildren();
+            previewBox.replaceChildren();
+            notice.textContent=error.message;
+          }else notice.textContent='Результат пока не получен. Проверьте статус письма.';
+          return;
+        }
+        await showOutcome(attempt,result.message,result.repeated===true);
+      }finally{
+        sending=false;
+        controls.forEach(control=>{control.disabled=false;});
+        submit.disabled=!!pending;
+        to.disabled=!!reply||!!pending;
+      }
+    }
     to.focus();
   }
   if (canSend && contact.emails.length && !autoOpen) button(actions, 'Написать письмо', open).className = 'primary';
-  if(!context)button(actions, 'Загрузить историю писем', () => load());
+  button(actions,'Обновить историю писем',()=>load());
+  root.dataset.crmMailEditor='';
   if(autoOpen&&canSend&&contact.emails.length)operation(open);
   if(focusMail)operation(async()=>{
     const {message}=await request('mail_read',{id:focusMail});

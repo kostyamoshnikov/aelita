@@ -168,7 +168,8 @@
   const history=root.querySelector('[data-context-mail-history]');
   const editMailTask=row=>edit('tasks',{...row.context,title:'Проверить ответ на письмо «'+row.subject.slice(0,130)+'»',
     mailSource:{...(row.organizationId?{organizationId:row.organizationId}:{contactId:row.contactId}),id:row.id}});
-  function readOrganizationMail(id){
+  async function readOrganizationMail(id){
+   if(compose.crmMailBeforeLeave&&!await compose.crmMailBeforeLeave())return;
    if(compose.querySelector('form')&&!confirm('Открыть историю вместо текущего письма?'))return;
    window.AelitaCrmMail(compose,{api,contact:{...x,emails:x.email?[x.email]:[]},organization:true,canSend:canSend&&!!x.email,focusMail:id,
      recipientLabel:x.name,
@@ -192,8 +193,9 @@
       open.onclick=()=>readOrganizationMail(row.id);
       p.append(open);
      }else p.append(a);
-     p.append(' · '+date(row.at)+' · '+(row.direction==='in'?'Ответ':'Отправлено')+(row.actorName?' · '+row.actorName:''));
-     if(canWriteTasks){
+     const status={sending:'Отправляется',accepted:'Принято почтовым сервером',unknown:'Исход неизвестен',rejected:'Отклонено',failed:'Не отправлено',received:'Ответ'};
+     p.append(' · '+date(row.at)+' · '+(status[row.status]||(row.direction==='in'?'Ответ':'Принято почтовым сервером'))+(row.actorName?' · '+row.actorName:''));
+     if(canWriteTasks&&(!row.status||['accepted','received'].includes(row.status))){
       const next=document.createElement('button');next.type='button';next.textContent='Поставить задачу';
       next.onclick=()=>editMailTask(row);
       p.append(' ',next);
@@ -224,6 +226,7 @@
    const selection=JSON.stringify([recipientId,context]);
    if(compose.querySelector('form')){
     if(selection===mountedSelection){compose.scrollIntoView({block:'start'});return;}
+    if(compose.crmMailBeforeLeave&&!await compose.crmMailBeforeLeave())return;
     if(!confirm('Открыть письмо для другого получателя или показа?'))return;
    }
    submit.disabled=true;compose.textContent='Открываем письмо…';
