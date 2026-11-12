@@ -213,12 +213,19 @@
    const recipient=form.elements.namedItem('recipientId');
    if(own)recipient.value=own.id;
    else if(recipients.length===1)recipient.value=recipients[0].id;
+   const resume=state.workResume?.type===type&&state.workResume.id===x.id?state.workResume:null;
+   const orgField=form.elements.namedItem('organizationId'),showField=form.elements.namedItem('dealId');
+   if(resume&&recipients.some(row=>row.id===resume.recipient)){
+    recipient.value=resume.recipient;
+    if(orgField&&Array.from(orgField.options).some(option=>option.value===resume.organization))orgField.value=resume.organization;
+    if(showField&&Array.from(showField.options).some(option=>option.value===resume.show))showField.value=resume.show;
+   }
    window.AelitaCrmUsability?.selectMenu(recipient,'Получатель письма');
    window.AelitaCrmUsability?.longMenus(form);
   }
   let mountedSelection='';
   if(form)form.onsubmit=async e=>{
-   e.preventDefault();const submit=form.querySelector('button'),fields=Object.fromEntries(new FormData(form));
+   e.preventDefault();const submit=form.querySelector('button.primary'),fields=Object.fromEntries(new FormData(form));
    const {recipientId,...links}=fields;
    if(!recipientId){compose.textContent='Выберите получателя письма.';return;}
    const organization=!!own&&recipientId===own.id;
@@ -250,13 +257,20 @@
      venue:state.lookups.organizations.find(row=>row.id===show.show?.venueOrganizationId)?.label||'',greeting:'Здравствуйте!'};
     const obligations=materials[1].value?.items||[];
     mountedSelection=selection;
+    const resume=state.workResume?.type===type&&state.workResume.id===x.id&&state.workResume.recipient===entity.id?state.workResume:null;
+    if(resume)state.workResume=null;
     window.AelitaCrmMail(compose,{api,contact:entity,organization,canSend:true,context,contextLabel:label,draftDelete:true,autoOpen:true,onSent:()=>load(),
+     resume,workOrigin:{type,id:x.id,actor:state.user.id},
      recipientLabel:entity.name,templateData,documentLinks:[...documents,...obligations.flatMap(row=>(row.documents||[]).map(d=>d.url))],
      onTask:canWriteTasks?item=>editMailTask({...item,context,...(organization?{organizationId:entity.id}:{contactId:entity.id})}):null});
    }catch(err){if(active())compose.textContent=err.message;}
    finally{submit.disabled=false;}
   };
   load();
+  const resume=state.workResume;
+  if(form&&resume?.type===type&&resume.id===x.id&&form.elements.namedItem('recipientId').value===resume.recipient){
+   queueMicrotask(()=>{if(form.isConnected&&active())form.requestSubmit();});
+  }
   if(type==='organizations'&&state.focusMail?.organizationId===x.id)readOrganizationMail(state.focusMail.id);
  }
  window.AelitaCrmEntries={mount,linkFor,contextMail};

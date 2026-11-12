@@ -14,6 +14,7 @@
  const statuses={open:'Открыта',in_progress:'В работе',done:'Выполнена',cancelled:'Отменена'};
  const eventKinds={promo_issued:'Отмечена выдача промокода',promo_unlinked:'Связь с промокодом снята',created:'Создана карточка',updated:'Изменена карточка',archived:'В архив',restored:'Восстановлена',erased:'Персональные данные удалены',buyer_contact_removed:'Контакты покупателя удалены',backup_purged:'Копия удалена по сроку (30 дней)',note:'Заметка',merged:'Объединение контактов',created_from_source:'Создано из источника',created_from_csv:'Создано из CSV',source_linked:'Связан источник',source_phone_filled:'Телефон заполнен из источника',reassigned:'Сменён ответственный',bulk_reassigned:'Массовое переназначение',backup_created:'Создана резервная копия',backup_checked:'Проверено восстановление',login:'Вход в CRM',logout:'Выход из CRM',password_changed:'Изменён пароль',password_reset:'Сброшен пароль',bootstrap:'Создан первый владелец',schema_upgraded:'Включены проекты и мероприятия',task_started:'Задача взята в работу',task_completed:'Задача выполнена',task_reopened:'Задача возвращена',task_cancelled:'Задача отменена'};
  const fieldNames={name:'имя',emails:'email',phones:'телефон',roles:'тип контакта',city:'город',tags:'метки',organizationIds:'организации',notes:'описание',ownerId:'ответственный',title:'название',description:'описание',status:'статус',priority:'приоритет',dueAt:'срок',contactId:'контакт',organizationId:'организация',dealId:'сделка',pipeline:'воронка',stage:'этап',amountMinor:'плановая сумма',closeDate:'дата',lostReason:'причина отказа',documentLinks:'документы',type:'тип',website:'сайт',projectId:'проект',kind:'тип проекта',startsAt:'начало',endsAt:'окончание',contactIds:'участники',hostContactId:'ведущий',venueOrganizationId:'площадка',sourceRef:'событие каталога',pageUrl:'публичная страница',publicDirectoryId:'связь с публичной карточкой',access:'права доступа'};
+ const work=window.AelitaWork;
  const state={token:'',user:null,tab:'dashboard',offset:0,items:[],lookups:{contacts:[],organizations:[],deals:[],projects:[],staff:[]},filters:{},entity:null,type:null,importItems:[],importCursor:null};
  try{state.token=window.AelitaStaffSession?.read()?.crmToken||localStorage.getItem(KEY)||'';}catch{}
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -45,7 +46,7 @@
    $('#login').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,btn=f.querySelector('button');btn.disabled=true;$('#login-error').textContent='';try{const r=await api({action:'login',login:f.elements.namedItem('login').value,password:f.elements.namedItem('password').value});state.token=r.token;if(window.AelitaStaffSession)window.AelitaStaffSession.set(r);else try{localStorage.setItem(KEY,r.token);}catch{}state.user=r.user;await start();}catch(err){$('#login-error')&&($('#login-error').textContent=err.message);}finally{btn.disabled=false;}};
  }
  function tabs(){const names=['dashboard',...(state.calendarReady&&['deals','tasks'].some(canRead)?['calendar']:[]),'projects','contacts','organizations','tasks','deals','journal',...((state.analyticsEnabled||isOwner())?['analytics']:[]),...(isOwner()?['segments','management','team']:[])];return '<div class="crm-navbox"><button type="button" class="crm-scroll prev" data-crm-scroll="-1" aria-label="Разделы левее" hidden>‹</button><nav class="tabs" aria-label="Разделы CRM">'+names.filter(canRead).map(t=>'<button data-tab="'+t+'" aria-current="'+(state.tab===t)+'">'+labels[t]+'</button>').join('')+'</nav><button type="button" class="crm-scroll next" data-crm-scroll="1" aria-label="Разделы правее" hidden>›</button></div>';}
- function shell(){root.innerHTML=tabs()+'<div id="view"></div>';$('#crm-person').textContent=(/^(аэлита\s*продакшен|aelita\s*production)$/i.test(String(state.user.name||'').trim())?'':state.user.name+' · ')+roles[state.user.role];$('#identity').innerHTML='<button class="crm-password-wide" data-email>Почта</button><button class="crm-password-wide" data-password>Пароль</button><details class="crm-header-more"><summary aria-label="Другие действия">…</summary><button data-email>Почта</button><button data-password>Пароль</button></details><button data-logout>Выйти</button>';const cur=root.querySelector('.tabs [aria-current=true]');try{cur&&cur.scrollIntoView({block:'nearest',inline:'nearest'});}catch{}initTabScroll();}
+ function shell(){root.innerHTML=tabs()+'<div id="view"></div>';$('#crm-person').textContent=(/^(аэлита\s*продакшен|aelita\s*production)$/i.test(String(state.user.name||'').trim())?'':state.user.name+' · ')+roles[state.user.role];$('#identity').innerHTML='<button class="crm-password-wide" data-email>Почта</button><button class="crm-password-wide" data-password>Пароль</button><details class="crm-header-more"><summary aria-label="Другие действия">…</summary><button data-email>Почта</button><button data-password>Пароль</button></details><button data-logout>Выйти</button>';const cur=root.querySelector('.tabs [aria-current=true]');try{cur&&cur.scrollIntoView({block:'nearest',inline:'nearest'});}catch{}initTabScroll();mountWorkSearch();}
  function initTabScroll(){const box=root.querySelector('.crm-navbox'),nav=box?.querySelector('.tabs');if(!nav)return;const update=()=>{box.querySelector('.prev').hidden=nav.scrollLeft<=1;box.querySelector('.next').hidden=nav.scrollLeft+nav.clientWidth>=nav.scrollWidth-2;};nav.addEventListener('scroll',update,{passive:true});box.querySelectorAll('[data-crm-scroll]').forEach(b=>b.onclick=()=>nav.scrollBy({left:Number(b.dataset.crmScroll)*nav.clientWidth*.7,behavior:'smooth'}));if(state.navObserver)state.navObserver.disconnect();if(window.ResizeObserver){state.navObserver=new ResizeObserver(update);state.navObserver.observe(nav);}requestAnimationFrame(update);}
  window.addEventListener('storage',e=>{if(e.key===KEY&&!e.newValue){clearSession();gate();}});
 
@@ -53,7 +54,19 @@
    const r=await api({action:'me'});if(r.accessVersion!==1){clearSession();gate();notice('Раздел недоступен: его возможности отключены в настройках сервера.',true);return;}state.user=r.user;state.importEnabled=r.importEnabled;state.externalAllowed=r.user.access?.externalHistory!==false;state.activityEnabled=r.activityEnabled===true&&state.externalAllowed;state.historyEnabled=r.historyEnabled===true&&state.externalAllowed;state.segmentsEnabled=r.segmentsEnabled===true;state.analyticsEnabled=r.analyticsEnabled===true&&r.analyticsVersion===1;state.indexEnabled=r.indexEnabled===true&&r.indexVersion===1;state.publicDirectoryEnabled=r.publicDirectoryEnabled===true;state.mailEnabled=r.mailEnabled===true;state.productionReady=r.productionVersion===804&&!!production;state.showEventsReady=r.showEventVersion===1&&!!window.AelitaCrmShowEvents;state.entriesReady=r.entryVersion===1&&!!window.AelitaCrmEntries;state.obligationsReady=r.obligationVersion===1&&!!window.AelitaCrmObligations;state.settlementReady=r.settlementVersion===1&&!!window.AelitaCrmSettlement;state.calendarReady=r.calendarVersion===1&&!!window.AelitaCrmCalendar;state.organizationContactsReady=r.organizationContactVersion===1;if(state.productionReady)orgTypes=production.orgTypes;
    if(r.user.mustChange){passwordForm(true);return;}
    if(r.identityVersion>=796&&!r.user.emailVerified){emailForm(true);return;}
-   state.lookups=await api({action:'lookups'});if(location.hash==='#team'&&isOwner())state.tab='team';if(location.hash==='#segments'&&isOwner())state.tab='segments';if(location.hash==='#analytics')state.tab='analytics';if(location.hash==='#calendar'&&state.calendarReady)state.tab='calendar';shell();await showTab(state.tab);
+   state.lookups=await api({action:'lookups'});
+   const incoming=new URLSearchParams(location.search), initialTab=incoming.get('workTab')||location.hash.slice(1);
+   state.workInitial=true;
+   state.tab=work.tabValid('crm',initialTab)&&canOpenTab(initialTab)?initialTab:'dashboard';
+   shell();await showTab(state.tab);
+   if(work.recordValid(incoming.get('workType'),incoming.get('workRecord'))){
+     const type=incoming.get('workType'),id=incoming.get('workRecord');
+     if(canRead(type)){
+       const draft=incoming.get('workDraft');
+       if(work.recordValid('contacts',draft)||work.recordValid('organizations',draft))state.workResume={type,id,recipient:draft,show:incoming.get('workDraftShow'),organization:incoming.get('workDraftOrg'),reply:incoming.get('workDraftReply'),address:incoming.has('workDraftAddress')?Number(incoming.get('workDraftAddress')):null};
+       await guarded(()=>detail(type,id));
+     }
+   }
    const showId=new URLSearchParams(location.search).get('show')||'';
    if(state.showEventsReady&&window.AelitaCrmShowEvents.showPattern.test(showId))await guarded(()=>detail('deals',showId));
    const url=new URLSearchParams(location.search),entryId=url.get('entry')||'',entryType=url.get('entryType')||'',entryEntity=url.get('entryEntity')||'';
@@ -69,6 +82,9 @@
    if(state.entriesReady&&/^o_[a-f0-9]{24}$/.test(mailOrganization)&&/^\d{13}-[a-f0-9]{24}$/.test(mailId)){
      state.focusMail={organizationId:mailOrganization,id:mailId};await guarded(()=>detail('organizations',mailOrganization));
    }
+   state.workInitial=false;
+   if(state.entity&&work.recordValid(state.type,state.entity.id))markWorkRoute(state.type,state.entity.id,true);
+   else markWorkRoute(state.tab,null,true);
    if(state.inviteDraft)await showInviteDraft();
    if(state.find)await showFind(); // pack-v750: поиск из заказа — после входа
    if(state.taskDraft)await showTaskDraft(); // pack-v751: задача из заказа — после входа
@@ -79,7 +95,86 @@
    }
    return true;
  }
- async function showTab(tab){if(!await leaveMail())return;state.listReturn=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;state.offset=0;state.filters={};state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}return list();}
+ function canOpenTab(tab){
+   return canRead(tab)&&(!['team','segments','management'].includes(tab)||isOwner())&&
+     (tab!=='calendar'||state.calendarReady&&['deals','tasks'].some(canRead))&&
+     (tab!=='analytics'||state.analyticsEnabled||isOwner());
+ }
+ function markWorkRoute(type,id,replace=false){
+   if(state.workInitial||state.workBack||!work.tabValid('crm',type))return;
+   const route={type,id:id||null};
+   const old=history.state?.aelitaCrm;
+   if(!replace&&old?.type===route.type&&old?.id===route.id)return;
+   const href=replace?location.pathname+location.search+location.hash:
+     id?work.recordUrl(type,id):work.tabUrl('crm',type);
+   if(href)history[replace||!old?'replaceState':'pushState']({aelitaCrm:route},'',href);
+ }
+ function rememberList(){
+   if(!state.user||!work.recordSection(state.tab)||!$('#filters'))return;
+   work.write('crm:list:'+state.tab,{filters:work.filters(state.tab,state.filters,true),offset:state.offset,scroll:window.scrollY},{actor:state.user.id});
+ }
+ function recallList(tab){
+   const previous=work.read('crm:list:'+tab,{actor:state.user?.id});
+   return {filters:work.filters(tab,previous?.filters,true),offset:Number.isInteger(previous?.offset)&&previous.offset>=0?previous.offset:0,
+     scroll:Number.isFinite(previous?.scroll)&&previous.scroll>=0?previous.scroll:0};
+ }
+ document.addEventListener('click',event=>{
+   const link=event.target.closest('a[href]');
+   if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||
+      link.target&&link.target!=='_self'||link.hasAttribute('download')||!root.querySelector('[data-crm-mail-editor]'))return;
+   const target=new URL(link.href,location.href);
+   if(target.origin!==location.origin||!target.pathname.startsWith('/admin/')||
+      target.pathname===location.pathname&&target.search===location.search)return;
+   event.preventDefault();
+   guarded(async()=>{if(await leaveMail()){rememberList();location.assign(target.href);}});
+ });
+ window.addEventListener('pagehide',rememberList);
+ window.addEventListener('popstate',event=>guarded(async()=>{
+   if(!state.user||state.workInitial)return;
+   const route=event.state?.aelitaCrm;
+   if(!route||!work.tabValid('crm',route.type)||!canOpenTab(route.type))return;
+   const from={type:state.tab,id:state.entity?.id||null};
+   if(!await leaveMail()){
+     const href=work.recordValid(from.type,from.id)?work.recordUrl(from.type,from.id):work.tabUrl('crm',from.type);
+     if(href)history.pushState({aelitaCrm:from},'',href);
+     return;
+   }
+   state.workBack=true;
+   try{
+     if(work.recordValid(route.type,route.id))await detail(route.type,route.id);
+     else await showTab(route.type);
+   }finally{state.workBack=false;}
+ }));
+ async function showTab(tab){if(!await leaveMail())return;rememberList();if(!canOpenTab(tab))tab='dashboard';state.workResume=null;state.listReturn=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.followupJob=null;state.tab=tab;const saved=recallList(tab);state.offset=saved.offset;state.filters=saved.filters;state.entity=null;state.type=null;state.activity=null;if(!canRead(tab)){state.tab='dashboard';tab='dashboard';}shell();markWorkRoute(tab);if(tab==='dashboard')return dashboard();if(tab==='analytics')return analyticsOpen();if(tab==='calendar')return calendarOpen();if(tab==='segments')return segmentList();if(tab==='team')return team();if(tab==='journal'){state.journalView={filters:{},cursors:[''],page:0};return renderJournal();}if(tab==='management'){state.backupView={cursors:[''],page:0};return management();}state.workRestore=saved.scroll;return list();}
+ function mountWorkSearch(){
+   const host=document.createElement('details');
+   host.className='work-search';
+   host.innerHTML='<summary>Поиск по CRM</summary><form><input type="search" maxlength="160" aria-label="Поиск по CRM" placeholder="Название, имя, email или телефон"><button>Найти</button></form><div class="work-results" role="status"></div>';
+   root.querySelector('.crm-navbox')?.after(host);
+   const form=host.querySelector('form'),results=host.querySelector('.work-results');
+   let sequence=0;
+   form.onsubmit=async e=>{
+     e.preventDefault();
+     const search=form.querySelector('input').value.trim(),current=++sequence;
+     if(search.length<2){results.textContent='Введите хотя бы два символа.';return;}
+     results.textContent='Ищем…';
+     try{
+       const response=await api({action:'work_search',search});
+       if(!host.isConnected||sequence!==current)return;
+       results.replaceChildren();
+       if(!response.groups.length){results.textContent='Совпадений нет.';return;}
+       for(const group of response.groups){
+         const title=document.createElement('h3');title.textContent=labels[group.type]+(group.total>group.items.length?' · '+group.items.length+' из '+group.total:'');results.append(title);
+         for(const item of group.items){
+           const button=document.createElement('button'),meta=document.createElement('small');
+           button.type='button';button.dataset.open=item.id;button.dataset.type=item.type;button.textContent=item.title;
+           meta.textContent=[item.city,statuses[item.status]||stages[item.status]||projectStatuses[item.status],item.at?date(item.at)+' · МСК':''].filter(Boolean).join(' · ');
+           button.append(meta);results.append(button);
+         }
+       }
+     }catch(error){if(host.isConnected&&sequence===current)results.textContent=error.message;}
+   };
+ }
  function calendarOpen(){
    const view=$('#view'),token=state.token;
    window.AelitaCrmCalendar.mount(view,{api,esc,lookups:state.lookups,filters:state.calendarFilters||window.AelitaCrmCalendar.defaults(),
@@ -110,19 +205,41 @@
    if(t==='contacts')extra='<label>Город<input class="ym-disable-keys" name="city" list="crm-city-options" placeholder="Выберите или введите свой город" maxlength="120" value="'+esc(f.city)+'"></label><label>Метка целиком<input class="ym-disable-keys" name="tag" maxlength="40" value="'+esc(f.tag)+'"></label><label>Тип контакта<select name="contactRole"><option value="">Все</option>'+options(contactRoles,f.contactRole)+'</select></label><label>Источник<select name="source"><option value="">Все</option>'+options({leads:'Заявки сайта',subscribers:'Подписчики',accounts:'Личные кабинеты',invitations:'Пригласительные',csv:'Импорт CSV'},f.source)+'</select></label>';
    if(t==='organizations')extra='<label>Город<input class="ym-disable-keys" name="city" list="crm-city-options" placeholder="Выберите или введите свой город" maxlength="120" value="'+esc(f.city)+'"></label><label>Тип организации<select name="organizationType"><option value="">Все</option>'+options(orgTypes,f.organizationType)+'</select></label>';
    if(t==='projects')extra='<label>Тип<select name="projectKind"><option value="">Все</option>'+options(projectKinds,f.projectKind)+'</select></label><label>Статус<select name="projectStatus"><option value="">Все</option>'+options(projectStatuses,f.projectStatus)+'</select></label><label>Город<input class="ym-disable-keys" name="city" list="crm-city-options" placeholder="Выберите или введите свой город" maxlength="120" value="'+esc(f.city)+'"></label>';
+   if(t==='deals')extra+='<label><input type="checkbox" name="venueMissing" '+(f.venueMissing?'checked':'')+'> Показы без привязанной площадки</label>';
    if(t!=='projects')extra+='<label>Проект или событие<select name="projectId">'+lookup('projects',f.projectId,'Все проекты')+'</select></label>';
-   const active=['projectId','projectKind','projectStatus','city','tag','contactRole','source','organizationType','archived'].filter(k=>f[k]).length;
+   const active=['projectId','projectKind','projectStatus','city','tag','contactRole','source','organizationType','archived','venueMissing'].filter(k=>f[k]).length;
    return '<form id="filters" class="toolbar"><label class="search">Поиск<input class="ym-disable-keys" name="search" value="'+esc(f.search)+'" placeholder="Имя, название, email или метка"></label><label>Ответственный<select name="ownerId">'+filterStaff(f.ownerId)+'</select></label>'+citySort(t,f)+(t==='tasks'?'<label>Статус<select name="status"><option value="">Все</option>'+options(statuses,f.status)+'</select></label><label>Срок (Москва)<select name="dueWindow"><option value="">Любой</option>'+options({today:'Сегодня',overdue:'Просрочено',week:'На 7 дней',none:'Без срока'},f.dueWindow||(f.overdue?'overdue':''))+'</select></label><label class="check"><input name="openOnly" type="checkbox" '+(f.openOnly?'checked':'')+'> Только незавершённые</label>':'')+(t==='deals'?'<label>Воронка<select name="pipeline"><option value="">Все</option>'+options(pipelines,f.pipeline)+'</select></label><label>Этап<select name="stage"><option value="">Все</option>'+options(stages,f.stage)+'</select></label>':'')+'<button>Найти</button><button type="button" data-clear-filters>Сбросить</button><details class="extra-filters" '+(active?'open':'')+'><summary>Дополнительные фильтры'+(active?' ('+active+')':'')+'</summary><div class="filter-fields">'+extra+'<label class="check"><input name="archived" type="checkbox" '+(f.archived?'checked':'')+'> Архив</label></div></details></form>';
  }
  function card(x,t){return '<article class="record"><h3><button data-open="'+x.id+'" data-type="'+t+'">'+esc(x.name||x.title)+'</button></h3>'+(state.productionReady?production.badges(t,x):'')+(t==='projects'?'<p class="eyebrow">'+projectKinds[x.kind]+' · '+projectStatuses[x.status]+'</p><p>'+esc(x.startsAt?date(x.startsAt)+' · МСК':'Дата не назначена')+'</p>'+(x.city?'<p class="muted">'+esc(x.city)+'</p>':''):'')+(t==='contacts'?'<p>'+esc(x.city||'Город не указан')+'</p><p>'+esc([(x.emails||[]).join(', '),(x.phones||[]).join(', ')].filter(Boolean).join(' · '))+'</p><div>'+x.roles.map(r=>'<span class="badge">'+contactRoles[r]+'</span>').join('')+'</div>':'')+(t==='organizations'?'<p>'+orgTypes[x.type]+(x.city?' · '+esc(x.city):'')+'</p>':'')+(t==='tasks'?'<p>'+statuses[x.status]+'</p><p class="'+(x.dueAt&&Date.parse(x.dueAt)<Date.now()&&!['done','cancelled'].includes(x.status)?'bad':'muted')+'">'+date(x.dueAt)+' · МСК</p>':'')+(t==='deals'?'<p>'+stages[x.stage]+' · '+pipelines[x.pipeline]+'</p><p>'+money(x.amountMinor)+' <span class="hint">план</span></p>':'')+(['tasks','deals'].includes(t)&&(x.effectiveProjectId||x.projectId)?'<p class="hint">Проект: '+esc((state.lookups.projects||[]).find(p=>p.id===(x.effectiveProjectId||x.projectId))?.label||'Связанный проект')+'</p>':'')+'<p class="meta">'+esc(who(x.ownerId))+(x.archivedAt?' · В архиве':'')+'</p>'+(t==='tasks'&&canWrite('tasks',x)&&!x.archivedAt&&!['done','cancelled'].includes(x.status)?'<div class="actions"><button data-complete="'+x.id+'">Выполнить</button></div>':'')+'</article>';}
  async function list(){state.relationship=null;
-   const job={token:state.token},t=state.tab;state.viewJob=job;state.projectView=null;const r=await api({action:'list',type:t,offset:state.offset,...state.filters});if(state.viewJob!==job||state.token!==job.token||state.tab!==t)return;state.items=r.items;
+   const job={token:state.token},t=state.tab;state.viewJob=job;state.projectView=null;let r;
+   try{r=await api({action:'list',type:t,offset:state.offset,...state.filters});}
+   catch(error){
+     if(state.viewJob!==job||state.token!==job.token||state.tab!==t)return;
+     if(error.code==='not_found'&&state.filters.projectId){
+       delete state.filters.projectId;state.offset=0;notice('Сохранённый проект больше недоступен.',true);return list();
+     }
+     throw error;
+   }
+   if(state.viewJob!==job||state.token!==job.token||state.tab!==t)return;
+   if(!r.items.length&&r.total>0&&state.offset){state.offset=Math.max(0,Math.floor((r.total-1)/50)*50);return list();}
+   state.items=r.items;
    const title='<div class="row between"><h1>'+labels[t]+'</h1><div class="actions">'+(isOwner()?'<button data-export-csv '+(state.export?'disabled':'')+'>CSV · '+r.total+'</button>':'')+(isOwner()&&t==='contacts'?'<button data-csv-import>Импорт CSV</button>':'')+(isOwner()&&t==='contacts'&&state.importEnabled?'<button data-import>Из существующих данных</button>':'')+(t==='deals'?'<button data-followup-kind="attention">Следующие действия</button>':'')+(canWrite()?'<button class="primary" data-new>Добавить</button>':'')+'</div></div>';
    const body=t==='deals'&&r.items.length?'<div class="board" aria-label="Сделки по этапам">'+Object.entries(stages).map(([key,label])=>'<section class="column"><h2>'+label+'</h2>'+r.items.filter(x=>x.stage===key).map(x=>card(x,t)).join('')+'</section>').join('')+'</div>':'<div class="list">'+r.items.map(x=>card(x,t)).join('')+'</div>';
    $('#view').innerHTML=title+toolbar()+(r.items.length?body:'<p class="empty">'+(Object.values(state.filters).some(Boolean)?'По выбранным фильтрам записей нет.':(canWrite()?'Пока нет записей. Создайте первую карточку.':'Пока нет записей.'))+'</p>')+'<div class="pages"><span class="hint">Показано '+r.items.length+' из '+r.total+(state.offset?' · с '+(state.offset+1):'')+'</span>'+(state.offset?'<button data-prev>Назад</button>':'')+(r.next!==null?'<button data-next="'+r.next+'">Дальше</button>':'')+'<button data-refresh>Обновить</button></div>';
+   markWorkRoute(t);
+   const restore=state.workRestore;
+   state.workRestore=null;
+   const tools=document.createElement('div');
+   $('#filters').before(tools);
+   work.mountPresets(tools,{area:'crm',type:t,actor:state.user.id,get:()=>state.filters,
+     apply:filters=>guarded(async()=>{state.filters=filters;state.offset=0;await list();}),
+     reset:()=>guarded(async()=>{state.filters={};state.offset=0;await list();})});
    window.AelitaCrmUsability?.selectMenu($('#filters [name=organizationType]'),'Тип организации');
    window.AelitaCrmUsability?.longMenus($('#filters'));
-   $('#filters').onsubmit=async e=>{e.preventDefault();const d=new FormData(e.currentTarget);state.filters=Object.fromEntries(d);state.filters.archived=d.has('archived');state.filters.overdue=d.has('overdue');state.filters.openOnly=d.has('openOnly');state.offset=0;await guarded(list);};
+   if(Number.isFinite(restore))window.scrollTo({top:restore,behavior:'instant'});
+   rememberList();
+   $('#filters').onsubmit=async e=>{e.preventDefault();const d=new FormData(e.currentTarget);state.filters=Object.fromEntries(d);state.filters.archived=d.has('archived');state.filters.overdue=d.has('overdue');state.filters.openOnly=d.has('openOnly');state.filters.venueMissing=d.has('venueMissing');state.offset=0;await guarded(list);};
  }
  async function exportCSV(){
    if(!isOwner()||state.export)return;
@@ -157,7 +274,7 @@
     api,mutate,esc,input,select,options,date,openDialog,dialog,edit,notice,
     canWrite:canWrite(type,x)&&!x.archivedAt&&!x.mergedInto,canWriteTasks:canWrite('tasks'),focus});
    if(state.mailEnabled&&state.externalAllowed&&(type==='organizations'||canRead('contacts'))&&window.AelitaCrmMail&&(['organizations','projects'].includes(type)||type==='deals'&&x.show)){
-     const mail=document.createElement('section');mail.className='panel production-panel';view.append(mail);
+     const mail=document.createElement('section');mail.className='panel production-panel';mail.id='crm-work-mail';view.append(mail);
      window.AelitaCrmEntries.contextMail(mail,type,x,{state,api,esc,date,related,
       active:()=>state.viewJob===job&&state.token===job.token&&mail.isConnected,
       canWriteContact:entity=>canWrite('contacts',entity),canWriteTasks:canWrite('tasks'),edit,canSend:canWrite(type,x)&&(type==='organizations'||canWrite('contacts'))&&!x.archivedAt});
@@ -168,7 +285,7 @@
   const job={token:state.token};state.viewJob=job;state.projectView=null;state.projectRefJob=null;state.opsJob=null;state.followupJob=null;state.activity=null;
   const r=await api({action:'get',type:'projects',id});if(state.viewJob!==job||state.token!==job.token)return;
   if(state.tab!=='projects'){state.tab='projects';state.offset=0;state.filters={};shell();}
-  const x=r.entity;state.entity=x;state.type='projects';const v={id:x.id,type:['tasks','deals','contacts','organizations'].find(canRead)||'tasks',offset:0,search:'',archived:false,token:state.token,request:0};state.projectView=v;
+  const x=r.entity;state.entity=x;state.type='projects';markWorkRoute('projects',x.id);const v={id:x.id,type:['tasks','deals','contacts','organizations'].find(canRead)||'tasks',offset:0,search:'',archived:false,token:state.token,request:0};state.projectView=v;
   $('#view').innerHTML='<div class="actions"><button data-back-list>← Проекты и события</button>'+(canWrite()?'<button data-edit>Редактировать</button><button data-archive>'+(x.archivedAt?'Восстановить':'В архив')+'</button>':'')+'<button data-project-refresh>Обновить карточку</button></div><header class="project-heading"><p class="eyebrow">'+projectKinds[x.kind]+' · '+projectStatuses[x.status]+(x.archivedAt?' · В архиве':'')+'</p><h1>'+esc(x.title)+'</h1><p class="muted">'+esc(x.startsAt?date(x.startsAt)+' · МСК':'Дата не назначена')+(x.endsAt?' — '+esc(date(x.endsAt))+' · МСК':'')+(x.city?' · '+esc(x.city):'')+'</p><p class="hint">Ответственный: '+esc(who(x.ownerId))+'</p></header><section class="panel project-info">'+(x.description?'<p class="project-description">'+esc(x.description)+'</p>':'')+'<dl>'+(x.venueOrganizationId?'<dt>Площадка</dt><dd>'+link('organizations',x.venueOrganizationId)+'</dd>':'')+(x.hostContactId?'<dt>Ведущий / куратор</dt><dd>'+link('contacts',x.hostContactId)+'</dd>':'')+'</dl>'+(x.pageUrl?'<p><a href="'+esc(x.pageUrl)+'" target="_blank" rel="noopener noreferrer">Открыть страницу события на сайте ↗</a></p>':'')+(x.sourceRef?'<details class="project-extra"><summary>Событие сайта</summary><p class="hint">Связь сохранена. Дату, площадку, перенос и отмену можно проверить ниже; внутренний план CRM не меняется автоматически.</p><button data-project-reference>Проверить сведения</button><div id="project-reference" role="status" aria-live="polite"></div></details>':'')+'</section>'+(state.productionReady?production.rolesPanel('projects',x):'')+'<div id="project-summary" aria-live="polite"></div><section class="project-work"><div class="row between"><h2>Работа по проекту</h2>'+(!x.archivedAt?'<div class="actions">'+(canWrite('tasks')?'<button class="primary" data-project-create="tasks">Добавить задачу</button>':'')+(canWrite('deals')?'<button data-project-create="deals">Добавить сделку</button>':'')+(state.productionReady?(canWrite('deals')?'<button data-project-create="deals" data-new-show>Добавить показ</button>':'')+(canWrite('tasks')?'<button data-project-create="tasks" data-new-commitment>Добавить обязательство</button>':''):'')+'</div>':'')+'</div><div class="actions project-sections" aria-label="Связанные записи">'+['tasks','deals','contacts','organizations'].filter(canRead).map(t=>'<button data-project-section="'+t+'" aria-pressed="'+(t===v.type)+'">'+labels[t]+'</button>').join('')+'</div><div id="project-workspace"></div></section><details class="panel project-history"><summary>История и заметки проекта</summary>'+(canWrite()&&!state.entriesReady?'<form id="note" class="inline-form"><label for="note-text">Добавить заметку</label><textarea class="ym-disable-keys" id="note-text" name="text" maxlength="4000" required></textarea><button>Сохранить заметку</button></form>':'')+'<div id="history"></div></details>';
   if($('#note'))$('#note').onsubmit=e=>{e.preventDefault();const f=e.currentTarget,button=f.querySelector('button'),text=f.text.value;button.disabled=true;guarded(async()=>{try{await mutate('note_add',{type:'projects',id,text});if(state.projectView!==v||state.token!==v.token)return;f.reset();await timeline(0);notice('Заметка сохранена');}finally{button.disabled=false;}});};
   mountEntries($('#view'),'projects',x,job);mountObligations($('#view'),'projects',x,job);
@@ -194,13 +311,49 @@
   finally{if(state.projectRefJob===job&&state.projectView===v)button.disabled=false;}
  }
 
- async function detail(type,id){if(!await leaveMail())return;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;
+ function showWorkPanel(host,x,showWork){
+   const panel=document.createElement('section');
+   panel.className='panel work-show';
+   const canAdmin=state.user.adminAccess===true&&state.user.emailVerified===true;
+   const showDate=value=>value&&Number.isFinite(Date.parse(value))?date(value)+' · МСК':'';
+   const venue=state.lookups.organizations.find(o=>o.id===x.show.venueOrganizationId)?.label;
+   const status={published:'Опубликовано',on_sale:'В продаже',closed:'Продажи закрыты',open:'Регистрация открыта',postponed:'Перенесён',canceled:'Отменён',draft:'Черновик'};
+   const adminLink=(tab,key,value,label)=>'<a href="/admin/?'+key+'='+encodeURIComponent(value)+'#'+tab+'">'+label+'</a>';
+   const render=view=>{
+     const current=view?.current,ref=/^(tickets|events):([a-zA-Z0-9_-]{1,120})$/.exec(current?.sourceRef||x.showEvent?.sourceRef||'');
+     const when=showDate(current?.datetime||x.showPlan?.confirmedAt||x.showPlan?.plannedAt)||[x.show.dateFrom,x.show.dateTo].filter(Boolean).join(' — ');
+     const where=[current?.venueName||venue||x.showPlan?.hall,current?.city||x.show.city].filter(Boolean).join(' · ');
+     const needs=[...(!where?['Указать площадку']:[]),...(!when?['Уточнить дату']:[]),
+       ...(view?.differences&&Object.values(view.differences).some(Boolean)?['Сверить данные с источником']:[]),
+       ...(view?.conflicts?.length?['Проверить пересечения по площадке']:[]),
+       ...(showWork?.overdue?['Просроченные задачи: '+showWork.overdue]:[])];
+     let links='';
+     if(canAdmin&&ref?.[1]==='tickets'){
+       links+=adminLink('orders','crmOrders',ref[2],'Заказы по показу');
+       links+=adminLink('refunds','crmRefunds',ref[2],'Возвраты по показу');
+     }
+     if(canAdmin&&ref?.[1]==='events')links+=adminLink('events','crmRegistration',ref[2],'Регистрации по показу');
+     if(host.querySelector('#crm-work-documents'))links+='<button type="button" data-work-jump="crm-work-documents">Документы</button>';
+     if(host.querySelector('#crm-work-mail'))links+='<button type="button" data-work-jump="crm-work-mail">Письма по показу</button>';
+     const next=showWork?.next;
+     const line=(label,value)=>'<dt>'+label+'</dt><dd>'+value+'</dd>';
+     panel.innerHTML='<h2>Показ</h2><dl>'+line('Дата',esc(when||'Уточняется'))+line('Площадка',esc(where||'Уточняется'))+
+      line('Статус',esc(status[current?.status||x.showEvent?.status]||stages[x.stage]||'Уточняется'))+
+      (showWork?line('Ближайшая задача',next?'<button type="button" data-open="'+esc(next.id)+'" data-type="tasks">'+esc(next.title)+'</button>'+ (next.dueAt?' · '+esc(showDate(next.dueAt)):''):'Открытых задач нет'):'')+
+      '</dl>'+(needs.length?'<p class="hint">'+esc(needs.join(' · '))+'</p>':'')+
+      (links?'<div class="work-links">'+links+'</div>':'');
+   };
+   host.querySelector('h1').after(panel);
+   return render;
+ }
+ async function detail(type,id){if(!await leaveMail())return;rememberList();state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;
    if(type==='projects')return projectDetail(id);
    state.projectView=null;state.projectRefJob=null;const job={token:state.token};state.viewJob=job;
    state.opsJob=null;
    state.followupJob=null;
    state.activity=null;
-   const r=await api({action:'get',type,id});if(state.viewJob!==job||state.token!==job.token)return;if(state.tab!==type){state.tab=type;state.offset=0;state.filters={};shell();}state.entity=r.entity;state.type=type;const x=r.entity;
+   const r=await api({action:'get',type,id});if(state.viewJob!==job||state.token!==job.token)return;if(state.tab!==type){state.tab=type;state.offset=0;state.filters={};shell();}state.entity=r.entity;state.type=type;const x=r.entity;markWorkRoute(type,id);
+   if(type==='deals'&&x.show)work.write('recent:show',{id},{actor:state.user.id,durable:true});
    let rows=[];
    if(type==='contacts')rows=[['Email',x.emails.join('\n')],['Телефон',x.phones.join('\n')],['Город',x.city],['Тип контакта',x.roles.map(k=>contactRoles[k]).join(', ')],['Метки',x.tags.join(', ')],['Описание',x.notes]];
    if(type==='organizations')rows=[['Тип',orgTypes[x.type]],['Город',x.city],['Сайт',x.website],['Описание',x.notes]];
@@ -212,6 +365,12 @@
    const fields='<dl>'+rows.map(([k,v])=>'<dt>'+k+'</dt><dd>'+esc(v||'—')+'</dd>').join('')+organizationContacts+'<dt>Ответственный</dt><dd>'+esc(who(x.ownerId))+'</dd></dl>';
    const relations=(x.effectiveProjectId||x.projectId?link('projects',x.effectiveProjectId||x.projectId):'')+(x.organizationIds||[]).map(id=>link('organizations',id)).join('')+(x.contactId?link('contacts',x.contactId):'')+(x.organizationId?link('organizations',x.organizationId):'')+(x.dealId?link('deals',x.dealId):'')+Object.entries(r.related).filter(([t])=>t!=='projects'||!['tasks','deals'].includes(type)).map(([t,items])=>items.length?'<p class="hint">'+labels[t]+'</p>'+items.map(y=>'<button class="name-link" data-open="'+esc(y.id)+'" data-type="'+t+'">'+esc(y.label)+'</button>').join(''):'').join('');
    $('#view').innerHTML='<div class="actions"><button data-back-list>← '+labels[type]+'</button>'+(canWrite()&&!x.mergedInto?'<button data-edit>Редактировать</button><button data-archive>'+(x.archivedAt?'Восстановить':'В архив')+'</button>':'')+(isOwner()&&type==='contacts'&&!x.archivedAt?'<button data-merge>Объединить контакт</button>':'')+(type==='contacts'&&!x.mergedInto?'<button data-orders-admin>Заказы в админке</button>':'')+(isOwner()&&type==='contacts'&&!x.mergedInto&&x.name!=='Удалённый контакт'?'<button class="danger" data-erase>Удалить персональные данные</button>':'')+(canWrite('tasks')&&!x.mergedInto?'<button data-context-task>Добавить задачу</button>':'')+'</div><h1>'+esc(x.name||x.title)+'</h1>'+(x.mergedInto?'<p class="password-note">Карточка объединена. '+link('contacts',x.mergedInto)+'</p>':'')+(type==='contacts'?'<section class="panel contact-summary-panel" id="contact-context" aria-live="polite"><p class="hint">Загружаем сводку…</p></section>':'')+'<div class="detail"><section class="panel">'+fields+'<h2>Связи</h2>'+(relations||'<p class="muted">Пока нет связей.</p>')+(x.documentLinks?.length?'<h2>Документы</h2>'+x.documentLinks.map(u=>'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(u)+'</a></p>').join(''):'')+(x.externalRefs?.length?'<h2>Источники</h2>'+x.externalRefs.map(s=>'<p class="source">'+esc({leads:'Заявка сайта',subscribers:'Подписчик',accounts:'Личный кабинет',invitations:'Пригласительный'}[s.source]||s.source)+' · '+esc(s.label||s.key)+'</p>').join('')+'<p class="hint">Связь с источником не создаёт разрешение на рассылку. Это копия контактных полей на момент переноса.</p>':'')+'</section><section class="panel"><h2>'+(type==='contacts'?'Заметки и история карточки':'История')+'</h2>'+(canWrite()&&!x.mergedInto&&!(type==='organizations'&&state.productionReady)&&!state.entriesReady?'<form id="note" class="inline-form"><label for="note-text">Добавить заметку</label><textarea class="ym-disable-keys" id="note-text" name="text" maxlength="4000" required></textarea><button>Сохранить заметку</button></form>':'')+(type==='contacts'?'<details class="history-extra"><summary>История только этой карточки</summary>':'')+'<div id="history"></div>'+(type==='contacts'?'</details>':'')+'</section></div>';
+   let refreshShow=null,showView=null;
+   if(type==='deals'&&x.show){
+     const docs=$('#view .detail .panel h2:last-of-type');
+     if(x.documentLinks?.length&&docs?.textContent==='Документы')docs.id='crm-work-documents';
+     refreshShow=showWorkPanel($('#view'),x,r.showWork);
+   }
    if(state.calendarBack)$('#view').querySelector('.actions').insertAdjacentHTML('afterbegin','<button type="button" data-tab="calendar">← Календарь</button>');
    if(state.productionReady){
      const view=$('#view');
@@ -226,7 +385,7 @@
          const panel=document.createElement('section');panel.className='panel production-panel';panel.setAttribute('aria-live','polite');view.append(panel);
          window.AelitaCrmShowEvents.mount(panel,x,{api,mutate,openDialog,dialog,esc,input,canWrite:canWrite(type,x)&&!x.archivedAt,
            canAdmin:state.user.adminAccess&&state.user.emailVerified,isOwner:isOwner(),active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected,
-           refresh:()=>detail(type,id),notice,venues:state.lookups.organizations.filter(o=>!o.archived&&(o.venueEligible||o.type==='venue'||o.type==='theatre')),relatedOrg:state.lookups.organizations.find(y=>y.id===x.show.venueOrganizationId)?.label||''});
+           refresh:()=>detail(type,id),onSummary:value=>{showView=value;refreshShow?.(value);},notice,venues:state.lookups.organizations.filter(o=>!o.archived&&(o.venueEligible||o.type==='venue'||o.type==='theatre')),relatedOrg:state.lookups.organizations.find(y=>y.id===x.show.venueOrganizationId)?.label||''});
        }
      }
      if(type==='tasks')view.insertAdjacentHTML('afterbegin',production.badges(type,x));
@@ -240,6 +399,7 @@
    mountEntries($('#view'),type,x,job,r.related);
    if(type==='organizations'&&x.email&&$('#view [data-mail-choose]'))$('#view > .actions')?.insertAdjacentHTML('beforeend','<button type="button" data-write-organization>Написать организации</button>');
    mountObligations($('#view'),type,x,job);
+   refreshShow?.(showView);
    if(state.settlementReady&&type==='deals'&&x.show&&(isOwner()||state.user.adminAccess&&x.showEvent)){
      const panel=document.createElement('section');panel.className='panel production-panel';$('#view').append(panel);
      window.AelitaCrmSettlement.mount(panel,x,{api,mutate,esc,date,money,input,openDialog,dialog,
@@ -250,7 +410,9 @@
    if(type==='contacts'&&!x.mergedInto){$('#view').insertAdjacentHTML('beforeend',relationshipPanel()+activityPanel());guarded(()=>startRelationship(id));}else if(type==='contacts'&&$('#contact-context'))$('#contact-context').innerHTML='<p class="hint">Откройте основную карточку объединённого контакта.</p>';
    if(type==='contacts'&&state.mailEnabled&&!x.mergedInto&&x.name!=='Удалённый контакт'&&window.AelitaCrmMail){
      const mail=document.createElement('section');mail.className='panel';$('#view').append(mail);
+     const resume=state.workResume?.type==='contacts'&&state.workResume.id===id&&state.workResume.recipient===id?state.workResume:null;
      window.AelitaCrmMail(mail,{api,contact:x,canSend:!x.archivedAt&&canWrite(type,x),draftDelete:state.entriesReady,
+      autoOpen:!!resume,resume,workOrigin:{type,id,actor:state.user.id},
       focusMail:state.focusMail?.contactId===x.id?state.focusMail.id:'',
       onTask:state.entriesReady&&canWrite('tasks')?item=>edit('tasks',{contactId:x.id,mailSource:{contactId:x.id,id:item.id}}):null});
    }
@@ -844,6 +1006,11 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.crmDirty=null;di
      ...(show?{title:x.title.slice(0,172)+' · показ',pipeline:'touring',show:{city:x.city,venueOrganizationId:x.venueOrganizationId}}:{}),
      ...(b.hasAttribute('data-new-commitment')?{commitment:'other'}:{})});
    }
+   if(b.dataset.workJump){
+     const target=document.getElementById(b.dataset.workJump);
+     if(target){target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start'});}
+     return;
+   }
    if(b.dataset.tab)return showTab(b.dataset.tab);
    if(b.dataset.open){
      if($('#filters')&&b.closest('.record'))state.listReturn={tab:state.tab,filters:{...state.filters},offset:state.offset,scroll:window.scrollY,id:b.dataset.open};
@@ -862,7 +1029,8 @@ function openDialog(title,body){dialog.dataset.forced='';dialog.crmDirty=null;di
      state.listReturn=null;
      state.tab=previous?.tab||state.type;
      state.entity=null;state.type=null;
-     if(previous){state.filters=previous.filters;state.offset=previous.offset;shell();}
+     const saved=previous||recallList(state.tab);
+     state.filters=saved.filters;state.offset=saved.offset;state.workRestore=saved.scroll;shell();
      await list();
      if(previous){
        root.querySelector('[data-open="'+CSS.escape(previous.id)+'"]')?.focus({preventScroll:true});

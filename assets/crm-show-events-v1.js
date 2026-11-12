@@ -84,7 +84,7 @@
   data.showConflictReason=data.sh_reason||'';
   for(const key of Object.keys(data))if(key.startsWith('sh_'))delete data[key];
  }
- function mount(root,x,{api,mutate,openDialog,dialog,esc,input,canWrite,canAdmin,isOwner,active,refresh,notice,relatedOrg,venues}){
+ function mount(root,x,{api,mutate,openDialog,dialog,esc,input,canWrite,canAdmin,isOwner,active,refresh,notice,relatedOrg,venues,onSummary}){
   let seq=0,view;
   const button=(act,label)=>'<button type="button" data-show-action="'+act+'">'+label+'</button>';
   const row=(title,value)=>'<dt>'+title+'</dt><dd>'+esc(value||'—')+'</dd>';
@@ -119,7 +119,7 @@
   async function load(){
    const job=++seq;
    root.setAttribute('aria-busy','true');
-   try{const result=await api({action:'show_event_view',id:x.id});if(active()&&job===seq){view=result;render();}}
+   try{const result=await api({action:'show_event_view',id:x.id});if(active()&&job===seq){view=result;render();onSummary?.(view);}}
    catch(err){if(active()&&job===seq)root.innerHTML='<h2>Событие и билеты</h2><p class="error">'+esc(err.message)+'</p>'+button('reload','Повторить');}
    finally{if(active()&&job===seq)root.removeAttribute('aria-busy');}
   }

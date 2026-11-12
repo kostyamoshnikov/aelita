@@ -1,6 +1,6 @@
 'use strict';
 
-window.AelitaCrmMail = function mountMail(root, {api, contact, organization=false, recipientLabel='', templateData={}, documentLinks=[], canSend, context=null, contextLabel='', draftDelete=false, autoOpen=false, onSent=null, focusMail='', onTask=null}) {
+window.AelitaCrmMail = function mountMail(root, {api, contact, organization=false, recipientLabel='', templateData={}, documentLinks=[], canSend, context=null, contextLabel='', draftDelete=false, autoOpen=false, onSent=null, focusMail='', onTask=null, workOrigin=null, resume=null}) {
   let currentContext=context;
   const request = (action, fields = {}) => api({action,[organization?'organizationId':'contactId']:contact.id,
     ...(currentContext?{context:currentContext}:{}),...fields});
@@ -101,7 +101,9 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     if (compose.firstChild) { compose.querySelector('select')?.focus(); return; }
     openReply=reply;
     const legacy=contact.emails.length>1&&!reply?await request('mail_draft_get'):null;
-    let selectedAddress=reply?.from||(contact.emails.includes(legacy?.draft?.to)?legacy.draft.to:contact.emails[0]);
+    const selected=Number.isInteger(resume?.address)?contact.emails[resume.address]:null;
+    let selectedAddress=reply?.from||selected||(contact.emails.includes(legacy?.draft?.to)?legacy.draft.to:contact.emails[0]);
+    resume=null;
     const scope=()=>({draftTo:selectedAddress,...(reply?{draftReplyId:reply.id}:{})});
     const saved=await request('mail_draft_get',scope()),draft=saved.draft;
     if (!active()) return;
@@ -134,6 +136,21 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
       try{await flush();return true;}
       catch(error){notice.textContent=error.message;return confirm('Черновик не сохранён. Закрыть форму?');}
     };
+    const saveRecent=()=>{
+      if(!workOrigin)return;
+      const {type,id,actor}=workOrigin;
+      window.AelitaWork?.write('recent:draft',{type,id,recipient:contact.id,address:contact.emails.indexOf(selectedAddress),
+        show:currentContext?.dealId,organization:currentContext?.organizationId,reply:reply?.id},{actor,durable:true});
+    };
+    const clearRecent=()=>{
+      if(!workOrigin)return;
+      const {type,id,actor}=workOrigin;
+      const old=window.AelitaWork?.read('recent:draft',{actor,durable:true});
+      if(old?.type===type&&old.id===id&&old.recipient===contact.id&&old.reply===reply?.id&&
+        old.show===currentContext?.dealId&&old.organization===currentContext?.organizationId&&old.address===contact.emails.indexOf(selectedAddress))
+        window.AelitaWork.write('recent:draft',null,{actor,durable:true});
+    };
+    if(draft?.subject||draft?.text)saveRecent();
     const flush=()=>{
       clearTimeout(timer);
       saving=saving.catch(()=>{}).then(async()=>{
@@ -143,6 +160,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
         const result=await request('mail_draft_save',{...current,...scope(),revision});
         revision=result.revision;
         baseline=key;
+        if(current.subject.trim()||current.text.trim())saveRecent();else clearRecent();
         notice.textContent=files.files.length?'Черновик сохранён. Файлы нужно заново выбрать после закрытия формы.':'Черновик сохранён.';
       });
       return saving;
@@ -222,6 +240,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
       clearTimeout(timer);
       await saving.catch(()=>{});
       await request('mail_draft_delete',{...scope(),revision});
+      clearRecent();
       if(active()){compose.replaceChildren();notice.textContent='Черновик удалён.';}
     });
     const fileInfo=document.createElement('p');
@@ -326,6 +345,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
           try{
             clearTimeout(timer);
             await request('mail_draft_delete',{...scope(),revision});
+            clearRecent();
             receipt.remove();
             compose.replaceChildren();
           }catch{notice.textContent+=' · Черновик можно удалить вручную.';}
@@ -367,7 +387,14 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
   if (canSend && contact.emails.length && !autoOpen) button(actions, 'Написать письмо', open).className = 'primary';
   button(actions,'Обновить историю писем',()=>load());
   root.dataset.crmMailEditor='';
-  if(autoOpen&&canSend&&contact.emails.length)operation(open);
+  if(autoOpen&&canSend&&contact.emails.length)operation(async()=>{
+    if(/^\d{13}-[a-f0-9]{24}$/.test(resume?.reply||'')){
+      const result=await request('mail_read',{id:resume.reply});
+      if(result.message.status!=='received'||!contact.emails.includes(result.message.from))throw Error('Письмо для ответа недоступно.');
+      currentContext=result.mailContext||null;
+      await open(result.message);
+    }else await open();
+  });
   if(focusMail)operation(async()=>{
     const {message}=await request('mail_read',{id:focusMail});
     if(active()){history.replaceChildren();renderItem(message,true);history.scrollIntoView({block:'nearest'});}

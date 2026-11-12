@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=209">
+<link rel="stylesheet" href="/assets/fonts.css?v=210">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,13 +484,15 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=209">
-<script src="/assets/staff-handoff-v1.js?v=209"></script>
-<script src="/assets/mobile-files-m1.js?v=209"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=209"><script defer src="/assets/delivery-admin-v1.js?v=209"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=209"></script><script src="/assets/staff-session-v796.js?v=209"></script><script defer src="/assets/crm-show-events-v1.js?v=209"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=209">
-<script src="/assets/section-navigation.js?v=209" defer></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=210">
+<script src="/assets/staff-handoff-v1.js?v=210"></script>
+<script src="/assets/mobile-files-m1.js?v=210"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=210"><script defer src="/assets/delivery-admin-v1.js?v=210"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=210"></script><script src="/assets/staff-session-v796.js?v=210"></script><script defer src="/assets/crm-show-events-v1.js?v=210"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=210">
+<script src="/assets/work-navigation-v812.js?v=210"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=210">
+<script src="/assets/section-navigation.js?v=210" defer></script>
 </head>
 <body>
 
@@ -534,6 +536,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <h1>Админка</h1>
     </div>
     <div class="data-actions">
+      <a id="workAdminTeam" class="btn-small" href="/admin/team/">Команда</a>
       <span class="adm-who" id="adminWho"></span>
       <span class="loaded-at" id="loadedAt"></span>
       <button class="btn-small" id="refreshBtn">Обновить</button>
@@ -628,6 +631,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       </select>
     </div>
     <div class="ord-email-chip" id="ordEmailChip" hidden></div>
+    <div id="workOrderScope" class="work-tools" hidden></div>
+    <div id="workOrderPresets"></div>
     <div id="ordersBlock"><div class="empty-state">Загружаем…</div></div>
 
     <!-- pack-v370. Дозавершение заказов, по которым вебхук не
@@ -1115,6 +1120,15 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     </div>
 
     <p class="sec-title" style="margin-top:56px">Заявления на возврат (<span id="rf-open">0</span> ждут решения или выплаты)</p>
+    <div class="work-tools">
+      <label>Статус возврата <select id="workRefundStatus">
+        <option value="">Все заявления</option><option value="new">Ждут решения</option>
+        <option value="approved">Ждут выплаты</option><option value="paid">Выплачены</option>
+        <option value="rejected">Отклонены</option>
+      </select></label>
+      <span id="workRefundScope" hidden></span>
+    </div>
+    <div id="workRefundPresets"></div>
     <div id="refundsBlock"><div class="empty-state">Загружаем…</div></div>
 
     <p class="sec-title sec-gap">Текущий образ сайта</p>
@@ -2214,6 +2228,39 @@ async function loadEvents() {
 // Тот же принцип, что у loadEvents() чуть выше: отдельный запрос,
 // отдельные ошибки, падение этого раздела не должно ронять список
 // клиентов.
+var WORK_REFUND_PERF = workParam('crmRefunds');
+function workParam(key) {
+  var value = new URLSearchParams(location.search).get(key) || '';
+  return /^[a-zA-Z0-9_-]{1,120}$/.test(value) ? value : '';
+}
+function workClearParam(key) {
+  var url = new URL(location.href);
+  if (url.searchParams.has(key)) {
+    url.searchParams.delete(key);
+    history.replaceState(history.state,'',url.pathname+url.search+url.hash);
+  }
+}
+function workRefundFilters() {
+  return {status: document.getElementById('workRefundStatus').value, perf: WORK_REFUND_PERF};
+}
+function applyWorkRefundFilters() {
+  var f = workRefundFilters();
+  var scope = document.getElementById('workRefundScope');
+  scope.hidden = !f.perf;
+  scope.replaceChildren();
+  if (f.perf) {
+    var clear = document.createElement('button');
+    clear.type = 'button'; clear.className = 'mini-btn'; clear.textContent = 'Все показы';
+    clear.onclick = function () { WORK_REFUND_PERF='';workClearParam('crmRefunds');applyWorkRefundFilters(); };
+    scope.append('Только связанный показ ',clear);
+  }
+  if (REFUNDS_LOADED !== true) return;
+  renderRefunds(allRefunds.filter(function (r) {
+    return (!f.status || r.status === f.status) && (!f.perf || r.performanceId === f.perf);
+  }));
+  AelitaWork.write('admin:refundFilters', f);
+}
+document.getElementById('workRefundStatus').addEventListener('change', applyWorkRefundFilters);
 var allRefunds = [];
 var REFUND_REASON_LABELS = {
   refusal: 'Отказ от посещения',
@@ -2319,7 +2366,7 @@ function renderAttention() {
 }
 // pack-v696: «Ждут подтверждения покупателя» — возвраты, оформленные командой.
 function proposalsHtml() {
-  var open = PROPOSALS.filter(function (p) { return p.status === 'pending' || p.status === 'expired'; });
+  var open = PROPOSALS.filter(function (p) { return (!WORK_REFUND_PERF||p.performanceId===WORK_REFUND_PERF)&&(p.status === 'pending'||p.status === 'expired'); });
   if (!open.length) return '';
   return '<p class="rf-prop-h">Ждут подтверждения покупателя (' + open.length + ')</p>' + open.map(function (p) {
     var late = p.status === 'expired';
@@ -2372,10 +2419,11 @@ function renderRefunds(refunds) {
   decorateOrderRefunds();
   stuck += proposalsHtml();
   if (!refunds.length) {
-    el.innerHTML = stuck + '<div class="empty-state">Заявлений на возврат пока нет.</div>';
+    el.innerHTML = stuck + '<div class="empty-state">По выбранным условиям заявлений нет.</div>';
     return;
   }
-  el.innerHTML = stuck + refunds.map(function (r, idx) {
+  el.innerHTML = stuck + refunds.map(function (r) {
+    var idx = allRefunds.indexOf(r);
     var ticketsLines = (r.estimate && r.estimate.perTicket ? r.estimate.perTicket : []).map(function (t) {
       return '<div class="ev-person"><span class="who">Билет № ' + admCopy(t.ticket_number) +
         '<small>' + fmtMoney(t.price) + ' → ' + fmtMoney(t.amount) + ' (' + t.percent + '%)</small></span></div>';
@@ -3067,7 +3115,12 @@ async function loadRefunds() {
     REFUNDS_LOADED = true;
     REFUNDS_API_ENABLED = data.api_enabled === true;
     REFUNDS_ALERTS_STUCK = data.alerts_stuck || null;
-    renderRefunds(allRefunds);
+    var saved=AelitaWork.read('admin:refundFilters');
+    if(!WORK_REFUNDS_RESTORED&&saved&&!workParam('crmRefunds')){
+      document.getElementById('workRefundStatus').value=saved.status||'';
+      WORK_REFUND_PERF=/^[a-zA-Z0-9_-]{1,120}$/.test(saved.perf||'')?saved.perf:'';
+    }
+    WORK_REFUNDS_RESTORED=true;applyWorkRefundFilters();
   } catch (e) {
     el.innerHTML = '<div class="empty-state">Не получилось загрузить заявления. Попробуйте «Обновить».</div>';
     REFUNDS_LOADED = 'error'; renderAttention();
@@ -3075,6 +3128,45 @@ async function loadRefunds() {
 }
 
 // ── Заказы билетов (ADMIN_TODO.md, п.1.1) ─────────────────────────
+var WORK_ORDER=workParam('workOrder');
+var WORK_OPEN_ORDER='';
+var WORK_ORDERS_LOADED=false;
+var WORK_REFUNDS_RESTORED=false;
+var WORK_ORDERS_RESTORED=false;
+function openWorkOrder(id){
+  if(!/^[a-zA-Z0-9_-]{1,120}$/.test(id||''))return;
+  if(!WORK_ORDER&&admCurrentTab()==='orders')AelitaWork.write('admin:orderBack',{scroll:window.scrollY});
+  WORK_ORDER=id;WORK_OPEN_ORDER=id;
+  var url=new URL('/admin/',location.origin);url.searchParams.set('workOrder',id);url.hash='orders';
+  if(window.AELITA_adminTab)window.AELITA_adminTab('orders',true);
+  if(location.pathname+location.search+location.hash!==url.pathname+url.search+url.hash)
+    history.pushState({aelitaAdmin:'orders'},'',url.pathname+url.search+url.hash);
+  applyOrderFilters();
+}
+function workOrderControls(rows){
+  var scope=document.getElementById('workOrderScope');
+  scope.hidden=!WORK_ORDER;
+  scope.replaceChildren();
+  if(!WORK_ORDER)return;
+  var clear=document.createElement('button');
+  clear.type='button';clear.className='mini-btn';clear.textContent='Вернуться к заказам';
+  clear.onclick=function(){
+    WORK_ORDER='';WORK_OPEN_ORDER='';workClearParam('workOrder');applyOrderFilters();
+    var previous=AelitaWork.read('admin:orderBack');
+    if(Number.isFinite(previous?.scroll))requestAnimationFrame(function(){window.scrollTo(0,previous.scroll);});
+  };
+  scope.append(WORK_ORDERS_LOADED&&!rows.length?'Заказ недоступен. ':'Открыт выбранный заказ. ',clear);
+  if(rows.length&&WORK_OPEN_ORDER===WORK_ORDER){
+    WORK_OPEN_ORDER='';
+    var card=document.querySelector('[data-ord-card="'+CSS.escape(WORK_ORDER)+'"]');
+    if(card){
+      card.classList.add('work-admin-highlight');
+      card.tabIndex=-1;card.focus({preventScroll:true});card.scrollIntoView({block:'center'});
+      AelitaWork.write('recent:order',{id:WORK_ORDER},{durable:true});
+    }
+  }
+}
+if(WORK_ORDER)WORK_OPEN_ORDER=WORK_ORDER;
 var allOrders = [];
 var ORDER_STATUS_LABELS = {
   paid: 'оплачен', pending_payment: 'ожидает оплаты', cancelled: 'отменён', expired: 'истёк',
@@ -3162,7 +3254,7 @@ function renderOrders(orders) {
         admHistory([{at:o.createdAt,what:'Заказ создан'}].concat(o.paidAt?[{at:o.paidAt,what:'Заказ оплачен'}]:[]).concat((o.emailFixes||[]).map(function(x){return {at:x.at,what:'Почта исправлена: '+(x.from||'—')+' → '+x.to+(x.by&&x.by!=='admin'?' · '+x.by:'')};}))) + '</div>' +
         '<div class="ev-count">' + fmtMoney(o.totalAmount) + '<br><span style="font-size:0.6875rem;color:var(--sand)">' + o.redeemedCount + ' из ' + o.ticketsCount + ' погашено</span></div>' +
       '</div>' +
-      '<div class="ev-actions"><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' + crmFindBtn(o.buyerEmail) +
+      '<div class="ev-actions"><button type="button" class="mini-btn" data-work-order="'+escapeHtml(o.orderId||'')+'">Открыть заказ</button><button class="mini-btn" data-ord-action="toggle" data-ord-idx="' + idx + '">Показать билеты</button>' + crmFindBtn(o.buyerEmail) +
         (o.status === 'paid'
           // pack-v592 (В7): шлём orderId — номер у тестовых и настоящих заказов может совпадать.
           ? '<button class="mini-btn" data-ord-action="resend" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-ord-num="' + escapeHtml(o.orderNumber || '') + '" data-ord-test="' + (o.isTest ? '1' : '') + '">Выслать билеты повторно</button>' +
@@ -3422,6 +3514,8 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
     return;
   }
 
+  var openWork=e.target.closest('[data-work-order]');
+  if(openWork){openWorkOrder(openWork.dataset.workOrder);return;}
   var btn = e.target.closest('button[data-ord-action="toggle"]');
   if (!btn) return;
   var box = document.getElementById('ord-tickets-' + btn.dataset.ordIdx);
@@ -3450,6 +3544,7 @@ function populatePerfFilter(orders) {
 // .toLowerCase() падал на первом же заказе с номером, и поиск не работал
 // вовсе. Всё приводится к строке; одна функция — для списка и для CSV.
 function orderMatches(o, q, perf) {
+  if(typeof WORK_ORDER==='string'&&WORK_ORDER)return o.orderId===WORK_ORDER;
   if (perf && o.performanceId !== perf) return false;
   var oe = typeof ORDER_EMAIL === 'string' ? ORDER_EMAIL : ''; // pack-v750: из CRM — точный адрес (функция самодостаточна: её проверяют отдельно)
   if (oe && String(o.buyerEmail || '').trim().toLowerCase() !== oe) return false;
@@ -3462,8 +3557,10 @@ function orderMatches(o, q, perf) {
 function applyOrderFilters() {
   var q = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
   var perf = document.getElementById('ordPerfFilter').value;
-  var filtered = allOrders.filter(function (o) { return orderMatches(o, q, perf); });
-  renderOrders(filtered);
+  var filtered = allOrders.filter(function (o) { return WORK_ORDER ? o.orderId===WORK_ORDER : orderMatches(o,q,perf); });
+  renderOrders(filtered);workOrderControls(filtered);
+  if(!WORK_ORDER&&WORK_ORDERS_LOADED)AelitaWork.write('admin:orderFilters',{search:q,perf:perf});
+
 }
 document.getElementById('ordSearch').addEventListener('input', applyOrderFilters);
 document.getElementById('ordPerfFilter').addEventListener('change', applyOrderFilters);
@@ -3838,14 +3935,22 @@ async function loadOrders() {
     var data = await res.json();
     if (!res.ok) { el.innerHTML = '<div class="empty-state">' + escapeHtml(errorMessage(data)) + '</div>'; allCheckouts = null; renderCheckouts(); return; }
     allOrders = data.orders || [];
+    WORK_ORDERS_LOADED=true;
     populatePerfFilter(allOrders);
+    var savedWorkOrders=AelitaWork.read('admin:orderFilters');
+    if(!WORK_ORDERS_RESTORED&&savedWorkOrders&&!workParam('crmOrders')){
+      var pick=document.getElementById('ordPerfFilter');
+      if(Array.from(pick.options).some(function(o){return o.value===savedWorkOrders.perf;}))pick.value=savedWorkOrders.perf;
+      document.getElementById('ordSearch').value=typeof savedWorkOrders.search==='string'?savedWorkOrders.search.slice(0,160):'';
+    }
     var eventFocus=new URLSearchParams(location.search).get('crmOrders')||'';
-    if(/^[a-zA-Z0-9_-]{1,120}$/.test(eventFocus)){
+    if(!WORK_ORDERS_RESTORED&&/^[a-zA-Z0-9_-]{1,120}$/.test(eventFocus)){
       var filter=document.getElementById('ordPerfFilter');
       if(!Array.from(filter.options).some(function(o){return o.value===eventFocus;}))filter.add(new Option('Связанный показ',eventFocus));
       filter.value=eventFocus;
+      document.getElementById('ordSearch').value='';
     }
-    applyOrderFilters();
+    WORK_ORDERS_RESTORED=true;applyOrderFilters();
     // pack-v539: незавершённые заказы приходят тем же ответом.
     allCheckouts = Array.isArray(data.checkouts) ? data.checkouts : null;
     renderCheckouts();
@@ -5045,9 +5150,27 @@ async function nl2Load() {
   document.querySelectorAll('[data-nl2-tab="drafts"],[data-nl2-tab="segments"]').forEach(function (b) { b.hidden = !nl2Write(); });
   nl2ShowTab(NL2.tab);
   nl2Poll();
-  if(nl2Write())await nl2ImportCRMSegment();
+  if(nl2Write()){
+    await nl2ImportCRMSegment();
+    var resumeDraft=workParam('workNewsletter');
+    if(/^dr-[0-9a-z]{6,40}$/.test(resumeDraft)&&NL2.draft?.id!==resumeDraft){
+      try{
+        var opened=await nl2Call({action:'nl_draft_get',id:resumeDraft});
+        if(admCurrentTab()==='news'&&!NL2.dirty)await nl2OpenDraft(opened);
+      }catch(e){
+        var recent=AelitaWork.read('recent:newsletter',{durable:true});
+        if(recent?.id===resumeDraft)AelitaWork.write('recent:newsletter',null,{durable:true});
+      }
+    }
+  }
   if (nl2Write()) { renderNlList(); renderNlCampaigns(); } // кнопки «Профиль» и «В черновик v2»
 }
+document.getElementById('workAdminTeam').addEventListener('click',async function(event){
+  if(!NL2.dirty||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();
+  var href=event.currentTarget.href;
+  if(await nl2Flush()||confirm('Черновик рассылки не сохранён. Перейти в «Команду»?'))location.assign(href);
+});
 function nl2ShowTab(tab) {
   NL2.tab = tab;
   document.querySelectorAll('[data-nl2-tab]').forEach(function (b) {
@@ -5258,6 +5381,7 @@ function nl2RenderDrafts() {
     }).join('') : '<div class="empty-state">Черновиков нет.</div>');
 }
 async function nl2OpenDraft(view) {
+  if(/^dr-[0-9a-z]{6,40}$/.test(view.draft?.id||''))AelitaWork.write('recent:newsletter',{id:view.draft.id},{durable:true});
   NL2.draft = view.draft; NL2.local = nl2Clone(view.draft); NL2.state = view.state || {}; NL2.dirty = false; NL2.conflict = null; NL2.offline = false;
   NL2.audience = null; NL2.review = null; NL2.reqId = null; NL2.step = 'content'; NL2.variant = null; NL2.lastSavedAt = Date.parse(view.draft.updatedAt) || Date.now();
   if (NL2.tab !== 'drafts') nl2ShowTab('drafts'); else nl2RenderEditor();
@@ -5501,7 +5625,7 @@ function nl2FilterHtml(prefix, f) {
 }
 function nl2AudienceHtml() {
   var d = NL2.local, f = d.audience.filter, a = NL2.audience;
-  var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/#segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
+  var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/?workTab=segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
   var segs = NL2.segments || [];
   var html = crmNotice+'<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
     (segs.length ? '<div class="nl2-row"><label class="nl2-meta" for="nl2-seg">Сегмент</label><select id="nl2-seg"><option value="">—</option>' + segs.map(function (s) { return '<option value="' + nl2E(s.id) + '"' + (d.audience.segmentId === s.id ? ' selected' : '') + '>' + nl2E(s.name) + '</option>'; }).join('') + '</select><button type="button" class="mini-btn" data-nl2="seg-apply">Применить фильтр сегмента</button></div>' : '') +
@@ -6843,6 +6967,27 @@ async function loadData(opts) {
     markLoadedNow();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
+    var worker=AelitaStaffSession.read()?.user;
+    if(worker&&worker.emailVerified&&!worker.mustChange){
+      var op=document.getElementById('workOrderPresets'),rp=document.getElementById('workRefundPresets');
+      var applyOrders=function(f){
+        WORK_ORDER='';WORK_OPEN_ORDER='';workClearParam('workOrder');workClearParam('crmOrders');
+        document.getElementById('ordSearch').value='';setOrderEmail('');
+        var pick=document.getElementById('ordPerfFilter');
+        if(f.perf&&!Array.from(pick.options).some(function(o){return o.value===f.perf;}))pick.add(new Option('Сохранённый показ',f.perf));
+        pick.value=f.perf||'';applyOrderFilters();
+      };
+      var applyRefunds=function(f){
+        WORK_REFUND_PERF=f.perf||'';workClearParam('crmRefunds');
+        document.getElementById('workRefundStatus').value=f.status||'';applyWorkRefundFilters();
+      };
+      op.replaceChildren();rp.replaceChildren();
+      AelitaWork.mountPresets(op,{area:'admin',type:'orders',actor:worker.id,
+        get:function(){return {perf:document.getElementById('ordPerfFilter').value};},
+        apply:applyOrders,reset:function(){applyOrders({});}});
+      AelitaWork.mountPresets(rp,{area:'admin',type:'refunds',actor:worker.id,
+        get:workRefundFilters,apply:applyRefunds,reset:function(){applyRefunds({});}});
+    }
     // Регистрации грузим отдельно и не ждём их — список клиентов уже
     // можно показывать, а раздел встреч дорисуется, когда придёт ответ
     // (см. loadEvents: свои ошибки показывает у себя, не роняя эту).
@@ -7169,13 +7314,29 @@ startStaffAdmin();
     new MutationObserver(function(){var active=nav.querySelector('.on');if(active&&nav.clientWidth)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();}).observe(c, { attributes: true, attributeFilter: ['style'] });
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('[data-adm-tab-btn]');
-      if (b) { show(b.getAttribute('data-adm-tab-btn'), true); b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }
+      if (b) { show(b.getAttribute('data-adm-tab-btn'), true); }
     });
     var start = (location.hash || '').replace('#', '');
     if (!GROUPS.some(function (g) { return g[0] === start; })) {
       try { start = localStorage.getItem('aelita_admin_tab') || 'overview'; } catch (e) { start = 'overview'; }
     }
     show(start, false);
+    history.replaceState({aelitaAdmin:start},'',location.pathname+location.search+location.hash);
+    window.addEventListener('pagehide',function(){AelitaWork.write('admin:view:'+admCurrentTab(),{scroll:window.scrollY});});
+    window.addEventListener('popstate',function(event){
+      if(!getToken()||!event.state?.aelitaAdmin)return;
+      WORK_ORDER=workParam('workOrder');WORK_OPEN_ORDER=WORK_ORDER;
+      show(event.state.aelitaAdmin,false,true);
+      if(event.state.aelitaAdmin==='orders'&&WORK_ORDERS_LOADED){
+        var perf=workParam('crmOrders'),pick=document.getElementById('ordPerfFilter');
+        if(perf&&Array.from(pick.options).some(function(o){return o.value===perf;}))pick.value=perf;
+        applyOrderFilters();
+      }
+      if(event.state.aelitaAdmin==='refunds'&&REFUNDS_LOADED===true){
+        WORK_REFUND_PERF=workParam('crmRefunds')||AelitaWork.read('admin:refundFilters')?.perf||'';
+        applyWorkRefundFilters();
+      }
+    });
     requestAnimationFrame(function(){var active=nav.querySelector('.on');if(active)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();});
     // Счётчик «Входящих»: новые заявки сайта и бота + отзывы на модерации.
     ['ld-new', 'ap-new', 'rv-pending'].forEach(function (id) {
@@ -7248,33 +7409,85 @@ startStaffAdmin();
     var label = {};
     GROUPS.forEach(function (g) { label[g[0]] = g[1]; });
     function esc(x) { return String(x).replace(/[&<>"']/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]; }); }
+    var query='',crmHits=[],searchAbort=null,crmNote='';
+    var groups={orders:'Заказы',refunds:'Возвраты',shows:'Показы',contacts:'Контакты',tasks:'Задачи',organizations:'Организации',projects:'Проекты',deals:'Сделки'};
     function run() {
-      var q = inp.value.trim().toLowerCase();
-      hits = [];
-      if (q.length < 2) { res.hidden = true; res.innerHTML = ''; return; }
-      Array.prototype.forEach.call(c.querySelectorAll('.ev-card, .cust-item'), function (el) {
-        if (hits.length >= 40) return;
-        var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
-        var i = txt.toLowerCase().indexOf(q);
-        if (i < 0) return;
-        var top = el;
-        while (top.parentNode && top.parentNode !== c) top = top.parentNode;
-        var tab = top.getAttribute && top.getAttribute('data-adm-tab');
-        if (!tab || tab === '*') return;
-        var head = el.querySelector('.ev-title, .cust-name, .cust-email');
-        hits.push({ el: el, tab: tab, head: (head ? head.textContent : txt).replace(/\s+/g, ' ').trim().slice(0, 90), ctx: (i > 30 ? '…' : '') + txt.slice(Math.max(0, i - 30), i + q.length + 50) + '…' });
+      var raw=inp.value.trim(),q=AelitaWork.norm(raw);
+      hits=[];
+      if(q.length<2){res.hidden=true;res.replaceChildren();return;}
+      function add(item,exact,description) {
+        var score=AelitaWork.score(raw,exact,item.head,description);
+        if(score)hits.push(Object.assign(item,{score:score}));
+      }
+      allOrders.forEach(function(o){
+        var head='№ '+(o.orderNumber||o.orderId)+' · '+(o.productionTitle||'Заказ');
+        var ctx=[o.eventDatetime?fmtEventWhen(o.eventDatetime):'',o.status,o.buyerName].filter(Boolean).join(' · ');
+        add({tab:'orders',head:head,ctx:ctx,orderId:o.orderId},[o.orderId,o.orderNumber,o.buyerEmail,o.buyerPhone],ctx);
       });
-      res.hidden = false;
-      res.innerHTML = hits.length
-        ? hits.map(function (h, k) { return '<button type="button" data-hit="' + k + '">' + esc(label[h.tab] || h.tab) + ' · ' + esc(h.head) + '<small>' + esc(h.ctx) + '</small></button>'; }).join('')
-        : '<div class="none">Ничего не нашлось в загруженных разделах.</div>';
+      PERF_LIST.forEach(function(p){
+        var head=perfLabel(p);
+        add({tab:'shows',head:head,ctx:[p.status,p.city].filter(Boolean).join(' · '),performance:p.id},[p.id],head);
+      });
+      Array.prototype.forEach.call(c.querySelectorAll('.ev-card:not([data-ord-card]), .cust-item'),function(el){
+        var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+        var top=el;
+        while(top.parentNode&&top.parentNode!==c)top=top.parentNode;
+        var tab=top.getAttribute&&top.getAttribute('data-adm-tab');
+        if(!tab||tab==='*')return;
+        var title=el.querySelector('.ev-title,.cust-name,.cust-email');
+        var ctx=el.querySelector('.ev-when,.adm-status,.cust-email');
+        var identifiers=Array.from(el.querySelectorAll('.cust-email,[data-copy],a[href^="tel:"]')).map(function(node){
+          return node.getAttribute('data-copy')||node.getAttribute('href')?.replace(/^tel:/,'')||node.textContent;
+        });
+        identifiers.push(el.dataset.rfCard);
+        if(el.dataset.rfCard){
+          var refund=allRefunds.find(function(x){return x.refundId===el.dataset.rfCard;});
+          if(refund)identifiers.push(refund.refundNumber,refund.orderId,refund.buyerEmail,refund.buyerPhone);
+        }
+        add({el:el,tab:tab,head:(title?.textContent||txt).trim().slice(0,100),
+          ctx:(ctx?.textContent||txt).trim().slice(0,150)},identifiers,txt);
+      });
+      if(query===raw)hits.push.apply(hits,crmHits);
+      hits.sort(function(a,b){return b.score-a.score||a.head.localeCompare(b.head,'ru');});
+      var grouped=new Map();
+      hits.slice(0,40).forEach(function(h,k){
+        if(!grouped.has(h.tab))grouped.set(h.tab,[]);
+        grouped.get(h.tab).push('<button type="button" data-hit="'+k+'">'+esc(h.head)+'<small>'+esc(h.ctx)+'</small></button>');
+      });
+      res.hidden=false;
+      res.innerHTML=Array.from(grouped,function(pair){
+        return '<div class="work-search-group"><h3>'+esc(groups[pair[0]]||label[pair[0]]||pair[0])+'</h3>'+pair[1].join('')+'</div>';
+      }).join('')+(query===raw&&crmNote?'<p class="none">'+esc(crmNote)+'</p>':'')+
+        (!hits.length?'<div class="none">Совпадений в доступных разделах пока нет.</div>':'');
+    }
+    async function loadCrm() {
+      var raw=inp.value.trim(),session=AelitaStaffSession.read();
+      if(query===raw){run();return;}
+      query=raw;crmHits=[];crmNote='';
+      if(searchAbort)searchAbort.abort();
+      if(raw.length<2||!session?.crmToken){run();return;}
+      var controller=new AbortController();searchAbort=controller;
+      crmNote='Ищем в CRM…';run();
+      try{
+        var r=await fetch('https://api.aelita-production.ru/crm',{method:'POST',cache:'no-store',signal:controller.signal,
+          headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.crmToken},
+          body:JSON.stringify({action:'work_search',search:raw.slice(0,160)})});
+        if(!r.ok)throw new Error('CRM недоступна');
+        var data=await r.json();
+        if(query!==raw||searchAbort!==controller||AelitaStaffSession.read()?.crmToken!==session.crmToken)return;
+        crmHits=(data.groups||[]).flatMap(function(g){return g.items.map(function(x){
+          return {tab:g.type,head:x.title,ctx:[x.city,x.at?fmtEventWhen(x.at):''].filter(Boolean).join(' · '),score:x.score,url:AelitaWork.recordUrl(g.type,x.id)};
+        });}).filter(function(x){return x.url;});
+        crmNote='';
+      }catch(e){if(controller.signal.aborted||query!==raw)return;crmNote='Поиск CRM временно недоступен.';}
+      if(document.activeElement===inp||!res.hidden)run();
     }
     var timer;
-    inp.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(run, 150); });
+    inp.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(loadCrm, 220); });
     inp.addEventListener('focus', function () {
       // pack-v695: разделы грузятся по открытию — для поиска догружаем все
       if (window.AELITA_adminEnsureAll) window.AELITA_adminEnsureAll();
-      if (inp.value.trim().length >= 2) run();
+      if (inp.value.trim().length >= 2) loadCrm();
     });
     // карточки дорисовались (догрузился раздел) — обновить открытый список результатов
     var rerun;
@@ -7295,9 +7508,20 @@ startStaffAdmin();
     document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) res.hidden = true; });
     function go(h) {
       if (!h) return;
-      // список успел перерисоваться (Обновить, правка заказа) — ищем ту же карточку заново
-      if (!c.contains(h.el)) { var head = h.head; run(); h = hits.filter(function (x) { return x.head === head; })[0] || hits[0]; if (!h) return; }
       res.hidden = true;
+      if(h.url){location.assign(h.url);return;}
+      if(h.orderId){openWorkOrder(h.orderId);return;}
+      if(h.performance){
+        show('shows',true);
+        var sel=document.getElementById('pa-perf');
+        if(Array.from(sel.options).some(function(x){return x.value===h.performance;})){
+          sel.value=h.performance;
+          sel.dispatchEvent(new Event('change'));
+          sel.focus({preventScroll:true});sel.scrollIntoView({block:'center'});
+        }
+        return;
+      }
+      if(!h.el||!c.contains(h.el)){run();return;}
       show(h.tab, true);
       var det = h.el.closest('details');
       if (det) det.open = true;
@@ -7338,7 +7562,9 @@ startStaffAdmin();
     index.hidden = !rail.children.length;
     if(index._sectionController)index._sectionController.refresh(); else if(window.AelitaSectionNavigation)index._sectionController=AelitaSectionNavigation.init(index);
   }
-  function show(tab, user) {
+  function show(tab, user, fromBack) {
+    var previous=admCurrentTab();
+    if(getToken()&&previous!==tab)AelitaWork.write('admin:view:'+previous,{scroll:window.scrollY});
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
     var c = document.getElementById('content');
     Array.prototype.slice.call(c.children).forEach(function (el) {
@@ -7351,10 +7577,15 @@ startStaffAdmin();
     sectionIndex(tab, c);
     try { localStorage.setItem('aelita_admin_tab', tab); } catch (e) {}
     if (window.AELITA_adminEnsureTab) window.AELITA_adminEnsureTab(tab); // pack-v695: раздел грузится при открытии
-    if (user) {
-      try { history.replaceState(null, '', '#' + tab); } catch (e) {}
-      var nb = document.querySelector('.adm-navbox');
-      if (nb && nb.getBoundingClientRect().top < 0) nb.scrollIntoView();
+    if(user&&previous!==tab){
+      var href=AelitaWork.tabUrl('admin',tab);
+      if(tab==='orders'&&WORK_ORDER)href='/admin/?workOrder='+encodeURIComponent(WORK_ORDER)+'#orders';
+      if(tab==='refunds'&&WORK_REFUND_PERF)href='/admin/?crmRefunds='+encodeURIComponent(WORK_REFUND_PERF)+'#refunds';
+      history.pushState({aelitaAdmin:tab},'',href);
+    }
+    if((user&&previous!==tab)||fromBack){
+      var saved=AelitaWork.read('admin:view:'+tab);
+      requestAnimationFrame(function(){window.scrollTo(0,Number.isFinite(saved?.scroll)?saved.scroll:0);});
     }
   }
   window.AELITA_adminTab = show;
@@ -7364,11 +7595,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=209"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=209">
-<script src="/assets/ai-pilot-v741.js?v=209"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=209"></script>
-<script src="/assets/subscription-materials-admin.js?v=209"></script>
+<script src="/assets/admin-snapshot.js?v=210"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=210">
+<script src="/assets/ai-pilot-v741.js?v=210"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=210"></script>
+<script src="/assets/subscription-materials-admin.js?v=210"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
