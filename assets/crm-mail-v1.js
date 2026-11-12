@@ -101,7 +101,10 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     if (compose.firstChild) { compose.querySelector('select')?.focus(); return; }
     openReply=reply;
     const legacy=contact.emails.length>1&&!reply?await request('mail_draft_get'):null;
-    const selected=Number.isInteger(resume?.address)?contact.emails[resume.address]:null;
+    const fingerprints=new Map(await Promise.all(contact.emails.map(async email=>[email,[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(email)))].map(n=>n.toString(16).padStart(2,'0')).join('')])));
+    const resumeKey=resume?.addressKey;
+    const selected=resumeKey?(contact.channels||[]).find(x=>x.id===resumeKey&&x.kind==='email')?.value:resume?.addressHash?contact.emails.find(email=>fingerprints.get(email)===resume.addressHash):!organization&&Number.isInteger(resume?.address)?contact.emails[resume.address]:null;
+    if((resumeKey||resume?.addressHash)&&(!selected||resume?.addressHash&&resume.addressHash!==fingerprints.get(selected))){notice.textContent='Адрес сохранённого черновика изменился или удалён. Выберите адрес заново.';resume=null;button(notice,'Открыть выбор адреса',()=>open());return;}
     let selectedAddress=reply?.from||selected||(contact.emails.includes(legacy?.draft?.to)?legacy.draft.to:contact.emails[0]);
     resume=null;
     const scope=()=>({draftTo:selectedAddress,...(reply?{draftReplyId:reply.id}:{})});
@@ -110,7 +113,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     let revision = saved.revision||draft?.revision||0;
     const form = document.createElement('form');
     form.className = 'inline-form';
-    form.innerHTML = '<label>Кому<select name="to" required></select></label><label>Тема<input name="subject" maxlength="200" required></label><label>Текст<textarea name="body" class="ym-disable-keys" maxlength="16000" rows="7" required></textarea></label><label>Подпись<select name="signatureMode"><option value="team" selected>От команды Аэлита Продакшен</option><option value="personal">От моего имени</option></select></label><label>Вложения до 48 КБ<input name="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple></label><div class="actions"></div><div class="crm-mail-preview" aria-live="polite"></div>';
+    form.innerHTML = '<label>Кому<select name="to" required></select></label><label>Тема<input class="ym-disable-keys" name="subject" maxlength="200" required></label><label>Текст<textarea name="body" class="ym-disable-keys" maxlength="16000" rows="7" required></textarea></label><label>Подпись<select name="signatureMode"><option value="team" selected>От команды Аэлита Продакшен</option><option value="personal">От моего имени</option></select></label><label>Вложения до 48 КБ<input name="files" type="file" accept=".pdf,.jpg,.jpeg,.png,.txt" multiple></label><div class="actions"></div><div class="crm-mail-preview" aria-live="polite"></div>';
     if(currentContext&&contextLabel)paragraph(compose,'Контекст письма · '+contextLabel);
     if(recipientLabel)paragraph(compose,'Получатель · '+recipientLabel);
     compose.append(form);
@@ -139,7 +142,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     const saveRecent=()=>{
       if(!workOrigin)return;
       const {type,id,actor}=workOrigin;
-      window.AelitaWork?.write('recent:draft',{type,id,recipient:contact.id,address:contact.emails.indexOf(selectedAddress),
+      window.AelitaWork?.write('recent:draft',{type,id,recipient:contact.id,addressHash:fingerprints.get(selectedAddress),addressKey:(contact.channels||[]).find(x=>x.kind==='email'&&x.value===selectedAddress)?.id,address:contact.emails.indexOf(selectedAddress),
         show:currentContext?.dealId,organization:currentContext?.organizationId,reply:reply?.id},{actor,durable:true});
     };
     const clearRecent=()=>{
@@ -284,6 +287,10 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
         button(previewBox, 'Отправить письмо', async () => {
           if(JSON.stringify(fields())!==JSON.stringify(sentFields)||selected.length!==files.files.length||
             selected.some((file,index)=>file!==files.files[index]))return;
+          if(!window.AelitaConfirmMail){notice.textContent='Проверка отправки не загрузилась. Обновите страницу.';return;}
+          const valid=()=>active()&&JSON.stringify(fields())===JSON.stringify(sentFields)&&selected.length===files.files.length&&selected.every((file,index)=>file===files.files[index]);
+          const confirmed=await window.AelitaConfirmMail({facts:[['Кому',(recipientLabel?recipientLabel+' · ':'')+preview.to],['Отправитель',preview.from],['Ответы на',preview.from],['Тема',preview.subject]],previews:[preview],valid});
+          if(!confirmed||!valid())return;
           await transmit({id:preview.id,payload:{...payload,id:preview.id,token},sentFields});
         }).className = 'primary';
       });

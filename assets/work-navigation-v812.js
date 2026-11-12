@@ -2,7 +2,7 @@
   'use strict';
   const types = {contacts:'c', organizations:'o', projects:'p', tasks:'t', deals:'d'};
   const tabs = {
-    crm: {dashboard:'CRM · Обзор',calendar:'Календарь',projects:'Проекты и события',contacts:'Контакты',organizations:'Организации',tasks:'Задачи',deals:'Сделки',journal:'Журнал CRM',analytics:'Отчёты CRM',segments:'Сегменты',management:'Управление CRM',team:'Сотрудники'},
+    crm: {workbench:'Порядок в базе',dashboard:'CRM · Обзор',calendar:'Календарь',projects:'Проекты и события',contacts:'Контакты',organizations:'Организации',tasks:'Задачи',deals:'Сделки',journal:'Журнал CRM',analytics:'Отчёты CRM',segments:'Сегменты',management:'Управление CRM',team:'Сотрудники'},
     admin: {overview:'Обзор админки',statistics:'Статистика',orders:'Заказы',refunds:'Возвраты',shows:'Показы',invites:'Пригласительные',staff:'Контролёры',inbox:'Входящие',ai:'ИИ · Тест',news:'Рассылка',events:'Регистрации',clients:'Клиенты',money:'Подписки и карты',site:'Сайт'},
     bot: {home:'Админка бота'},
   };
@@ -64,7 +64,9 @@
       const q=new URLSearchParams({workDraft:recipient});
       if(recordValid('deals',value.show))q.set('workDraftShow',value.show);
       if(recordValid('organizations',value.organization))q.set('workDraftOrg',value.organization);
-      if(Number.isInteger(value.address)&&value.address>=0&&value.address<5)q.set('workDraftAddress',String(value.address));
+      if(/^ch_[a-f0-9]{24}$/.test(value.addressKey||''))q.set('workDraftChannel',value.addressKey);
+      if(/^[a-f0-9]{64}$/.test(value.addressHash||''))q.set('workDraftHash',value.addressHash);
+      if(!value.addressKey&&Number.isInteger(value.address)&&value.address>=0&&value.address<5)q.set('workDraftAddress',String(value.address));
       if(/^\d{13}-[a-f0-9]{24}$/.test(value.reply||''))q.set('workDraftReply',value.reply);
       return {url:url+'&'+q.toString(),label:'Продолжить черновик письма'};
     }
@@ -73,7 +75,7 @@
   function canPin(area,tab,user){
     if(!tabValid(area,tab)||!user||user.mustChange||!user.emailVerified)return false;
     if(area!=='crm')return user.adminAccess===true;
-    if(['segments','management','team'].includes(tab)&&user.role!=='owner')return false;
+    if(['workbench','segments','management','team'].includes(tab)&&user.role!=='owner')return false;
     if(tab==='calendar')return ['tasks','deals'].some(t=>user.access?.sections?.[t]!=='none');
     return !recordSection(tab)||user.access?.sections?.[tab]!=='none';
   }

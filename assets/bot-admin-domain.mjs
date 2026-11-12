@@ -216,6 +216,7 @@ export function normalizeEventCatalog(value){
   if(e.canceled&&e.salesOpen||e.datetime===null&&e.salesOpen)problem('event_source_invalid',502);
   for(const key of ['datetime','endsAt'])if(e[key]!==null&&(typeof e[key]!=='string'||!Number.isFinite(Date.parse(e[key]))))problem('event_source_invalid',502);
   const next={id,datetime:e.datetime,endsAt:e.endsAt,timeZone:e.timeZone,canceled:e.canceled,salesOpen:e.salesOpen,ru:{},en:{}};
+  if(e.rescheduled!==undefined){if(typeof e.rescheduled!=='boolean'||e.rescheduled&&e.canceled)problem('event_source_invalid',502);next.rescheduled=e.rescheduled;}
   if(Object.hasOwn(e,'salesOpenAt')){if(e.salesOpenAt!==null&&(typeof e.salesOpenAt!=='string'||!Number.isFinite(Date.parse(e.salesOpenAt))))problem('event_source_invalid',502);next.salesOpenAt=e.salesOpenAt;}
   if(Object.hasOwn(e,'salesCloseAt')){if(e.salesCloseAt!==null&&(typeof e.salesCloseAt!=='string'||!Number.isFinite(Date.parse(e.salesCloseAt))))problem('event_source_invalid',502);next.salesCloseAt=e.salesCloseAt;}
   for(const lang of ['ru','en']){
@@ -229,9 +230,10 @@ export function normalizeEventCatalog(value){
 }
 export function currentEvent(event,now=Date.now()){
  const copyEvent=clone(event),end=Date.parse(Object.hasOwn(event,'salesCloseAt')?event.salesCloseAt:event.endsAt),start=Date.parse(event.datetime);
+ const localizedStatus=(lang,text)=>event.rescheduled?(lang==='en'?'Rescheduled · ':'Перенесено · ')+text:text;
  if(event.canceled){copyEvent.salesOpen=false;copyEvent.ru.buyURL='';copyEvent.en.buyURL='';}
- else if(event.salesOpen&&event.salesOpenAt&&now<Date.parse(event.salesOpenAt)){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=lang==='en'?'Booking not yet open':'Продажа ещё не началась';}}
- else if(!Number.isFinite(start)||event.salesOpen&&Number.isFinite(end)&&now>=end){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=Number.isFinite(start)?(lang==='en'?'Booking closed':'Продажа закрыта'):(lang==='en'?'Date to be announced':'Дата будет объявлена');}}
+ else if(event.salesOpen&&event.salesOpenAt&&now<Date.parse(event.salesOpenAt)){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=localizedStatus(lang,lang==='en'?'Booking not yet open':'Продажа ещё не началась');}}
+ else if(!Number.isFinite(start)||event.salesOpen&&Number.isFinite(end)&&now>=end){copyEvent.salesOpen=false;for(const lang of ['ru','en']){copyEvent[lang].buyURL='';copyEvent[lang].status=localizedStatus(lang,Number.isFinite(start)?(lang==='en'?'Booking closed':'Продажа закрыта'):(lang==='en'?'Date to be announced':'Дата будет объявлена'));}}
  return copyEvent;
 }
 export function renderTemplate(text,event,lang='ru'){

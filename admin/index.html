@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=210">
+<link rel="stylesheet" href="/assets/fonts.css?v=212">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=210">
-<script src="/assets/staff-handoff-v1.js?v=210"></script>
-<script src="/assets/mobile-files-m1.js?v=210"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=210"><script defer src="/assets/delivery-admin-v1.js?v=210"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=210"></script><script src="/assets/staff-session-v796.js?v=210"></script><script defer src="/assets/crm-show-events-v1.js?v=210"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=210">
-<script src="/assets/work-navigation-v812.js?v=210"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=210">
-<script src="/assets/section-navigation.js?v=210" defer></script>
-</head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=212">
+<script src="/assets/staff-handoff-v1.js?v=212"></script>
+<script src="/assets/mobile-files-m1.js?v=212"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=212"><script defer src="/assets/delivery-admin-v1.js?v=212"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=212"></script><script src="/assets/staff-session-v796.js?v=212"></script><script defer src="/assets/crm-show-events-v1.js?v=212"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=212">
+<script src="/assets/work-navigation-v812.js?v=212"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=212">
+<script src="/assets/section-navigation.js?v=212" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=212"><script defer src="/assets/mail-confirm-v813.js?v=212"></script><script defer src="/assets/festival-audience-v814.js?v=212"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=212"><script defer src="/assets/admin-calm-v814.js?v=212"></script></head>
 <body>
 
 <nav>
@@ -569,7 +569,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <div class="statistics-controls"><label for="overviewDays">Период <select id="overviewDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="overviewReload">Обновить</button></div><p id="overviewPeriod" class="statistics-period" aria-live="polite"></p>
     <div id="overviewStatistics" class="statistics-tiles"></div>
     <p class="statistics-fees" id="overviewFees" hidden></p>
-    <div class="byproduct" id="byProduct"></div>
+    <details class="metric-explanation"><summary>Что считается в обзоре</summary><dl><dt>Заказы и оплаты</dt><dd>Только оплаченные нетестовые заказы за выбранный период. Дата оплаты, у старых записей без неё — дата создания.</dd><dt>Деньги</dt><dd>Денежная часть исходной оплаты, до комиссии и возвратов. Подарочная часть не включена.</dd><dt>Посещения</dt><dd>Приблизительные входы на сайт, не число уникальных людей.</dd><dt>Подписчики</dt><dd>Подтверждение подписки в выбранном периоде.</dd></dl></details><div class="byproduct" id="byProduct"></div>
 
     <div class="links-row" id="adminLinks"></div>
 
@@ -790,7 +790,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       </div>
       <div class="inv-tools"><button type="button" class="mini-btn" id="invMoveUp" aria-label="Переместить событие выше">↑ Выше</button><button type="button" class="mini-btn" id="invMoveDown" aria-label="Переместить событие ниже">↓ Ниже</button><button type="button" class="mini-btn" id="invCreateEvent">Создать событие</button><button type="button" class="mini-btn" id="invPartnerEvent">Подключить партнёрский показ</button></div>
       <p class="editor-note">Ближайшие события сверху, прошедшие — в архиве. Порядок внутри группы сохраняется для всех сотрудников.</p>
-      <dialog id="invEventDialog" class="editor-box"><form id="invEventForm"><h2>Событие только по пригласительным</h2><p>Не создаёт продажу билетов. Без нумерованных мест; количество гостей согласуйте с площадкой.</p><div class="field"><label>Название RU<input name="title" maxlength="180" required></label></div><div class="field"><label>Название EN<input name="titleEn" maxlength="180" required></label></div><div class="field"><label>Начало · МСК<input name="datetime" type="datetime-local" required></label></div><div class="field"><label>Площадка RU<input name="venueName" maxlength="180" required></label></div><div class="field"><label>Площадка EN<input name="venueNameEn" maxlength="180" required></label></div><div class="field"><label>Адрес RU<input name="venueAddress" maxlength="220" required></label></div><div class="field"><label>Адрес EN<input name="venueAddressEn" maxlength="220" required></label></div><p role="alert" id="invEventError"></p><button class="mini-btn" type="submit">Создать</button><button class="mini-btn" type="button" id="invEventClose">Закрыть</button></form></dialog>
+      <dialog id="invEventDialog" class="editor-box"><form id="invEventForm"><h2>Событие только по пригласительным</h2><p>Не создаёт продажу билетов. Без нумерованных мест; количество гостей согласуйте с площадкой.</p><div class="field"><label>Название RU<input class="ym-disable-keys" name="title" maxlength="180" required></label></div><div class="field"><label>Название EN<input class="ym-disable-keys" name="titleEn" maxlength="180" required></label></div><div class="field"><label>Начало · МСК<input class="ym-disable-keys" name="datetime" type="datetime-local" required></label></div><div class="field"><label>Площадка RU<input class="ym-disable-keys" name="venueName" maxlength="180" required></label></div><div class="field"><label>Площадка EN<input class="ym-disable-keys" name="venueNameEn" maxlength="180" required></label></div><div class="field"><label>Адрес RU<input class="ym-disable-keys" name="venueAddress" maxlength="220" required></label></div><div class="field"><label>Адрес EN<input class="ym-disable-keys" name="venueAddressEn" maxlength="220" required></label></div><p role="alert" id="invEventError"></p><button class="mini-btn" type="submit">Создать</button><button class="mini-btn" type="button" id="invEventClose">Закрыть</button></form></dialog>
       <dialog id="invPartnerDialog" class="editor-box"><form id="invPartnerForm"><h2>Наши пригласительные на партнёрский показ</h2><label>Показ<select id="invPartnerSelect" required></select></label><p>Билеты продаёт партнёр. Наши QR проверяются нашим сканером. Квоту и размещение гостей согласуйте с партнёром; остаток его билетов здесь недоступен.</p><p role="alert" id="invPartnerError"></p><button class="mini-btn" type="submit">Подключить</button><button class="mini-btn" type="button" id="invPartnerClose">Закрыть</button></form></dialog>
       <p class="editor-note" id="inv-summary"></p>
       <div class="inv-tools">
@@ -1104,7 +1104,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <p class="lead" id="paPostponeLead">Билеты остаются в силе, покупателям уйдёт письмо с новой датой.</p>
         <div class="field">
           <label for="pa-date">Новая дата и время (по Москве)</label>
-          <input type="datetime-local" id="pa-date">
+          <input class="ym-disable-keys" type="datetime-local" id="pa-date">
         </div>
         <details class="adm-more"><summary>Подробнее</summary><p id="paPostponeDetail">Билеты и QR-коды остаются действительными, места сохраняются. В письме — ссылка на возврат 100%: заявления принимаются до начала показа в новую дату, деньги — в течение 10 дней. Повторное нажатие с той же датой дошлёт только несостоявшиеся письма.</p></details>
         <button class="btn-small" id="paPostponeBtn">Перенести и разослать письма</button>
@@ -1579,11 +1579,11 @@ function renderStats(stats) {
   if (!entries.length) {
     byProductEl.innerHTML = '';
   } else {
-    byProductEl.innerHTML = entries.map(function (key) {
+    byProductEl.innerHTML = '<section class="purchase-history-summary"><h3>История покупок · весь период</h3><p class="scope-label">Записи в кабинетах клиентов · фильтр периода обзора не применяется</p><div class="wb-counts">'+entries.map(function (key) {
       var p = stats.byProduct[key];
       var label = escapeHtml(p.label || PRODUCT_NAMES[key] || key);
-      return '<div class="chip"><strong>' + label + '</strong> — ' + p.count + ' · ' + fmtMoney(p.revenue) + '</div>';
-    }).join('');
+      return '<div class="chip"><strong>'+label+'</strong><span>Записей покупок: '+p.count+'</span><span>Сумма в истории: '+fmtMoney(p.revenue)+'</span></div>';
+    }).join('')+'</div><details><summary>Как читать эти числа</summary><dl><dt>Количество</dt><dd>Записи покупок, а не число билетов в заказах.</dd><dt>Сумма</dt><dd>Сохранённые суммы истории, не сверка кассы и возвратов.</dd></dl></details></section>';
   }
 }
 
@@ -3604,14 +3604,14 @@ function actualFees(fees){
   if(!fees||!(fees.known+fees.missing))return '';
   if(!fees.known)return 'Комиссия ЮKassa · нет данных по '+fees.missing+' оплатам билетов.';
   return 'Комиссия ЮKassa '+fmtMoney(fees.feeKop/100)+' · после комиссии '+fmtMoney(fees.incomeKop/100)+
-    ' · '+fees.known+' из '+(fees.known+fees.missing)+' оплат билетов, до учёта возвратов.';
+    ' · '+fees.known+' из '+(fees.known+fees.missing)+' оплат билетов, до учёта возвратов.'+(fees.missing?' Суммы комиссии и остатка — только по оплатам с известной комиссией.':'');
 }
 async function loadStatistics(){
   if(!getToken()||!ADMIN_ORDERS_URL)return;var token=getToken(),seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsFees','overviewFees'].forEach(function(id){document.getElementById(id).hidden=true;});['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
   try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob||token!==getToken())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
     var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
     document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
-    var tiles=[['visits','Посещения'],['orders','Заказы'],['revenue','Выручка'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
+    var tiles=[['visits','Посещения'],['orders','Оплаченных заказов'],['revenue','Оплачено деньгами'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><span class="scope-label">'+escapeHtml(v.from)+' — '+escapeHtml(v.to)+' · '+({visits:'по времени входа',orders:'по оплате',revenue:'по оплате, до возвратов',newSubscribers:'по подтверждению подписки'}[x[0]])+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
     document.getElementById('statisticsTiles').innerHTML=tiles;document.getElementById('overviewStatistics').innerHTML=tiles;
     ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;});
     var daysData=(v.visitsByDay||[]).slice().reverse(),max=Math.max.apply(null,daysData.map(function(x){return x.entries;}).concat([1]));
@@ -3640,7 +3640,7 @@ function salesCard(s) {
     '<div class="ev-head"><div><div class="ev-title">' + escapeHtml(s.title) + status + '</div>' +
     '<div class="ev-when">' + salesWhen(s.datetime) + ' · заказов ' + s.orders + '</div></div>' +
     '<div class="ev-count">' + (s.tickets.online !== undefined ? 'онлайн ' + s.tickets.online + ' · в зале ' + s.tickets.offline + (s.seats ? ' из ' + s.seats.capacity : '') : s.tickets.sold + (s.seats ? ' <span class="cap">из ' + s.seats.capacity + '</span>' : ' <span class="cap">билетов</span>')) + '</div></div>' +
-    '<div class="sales-line">Выручка: ' + fmtMoney(s.revenue.moneyRub) + ' деньгами' + (s.revenue.giftRub ? ' + ' + fmtMoney(s.revenue.giftRub) + ' подарочными картами' : '') +
+    '<p class="scope-label">Все оплаты этого показа · без фильтра периода обзора</p><div class="sales-line">По действующим билетам: ' + fmtMoney(s.revenue.moneyRub) + ' деньгами' + (s.revenue.giftRub ? ' + ' + fmtMoney(s.revenue.giftRub) + ' подарочными картами' : '') +
     '.</div>' + (actualFees(s.yookassa) ? '<p class="sales-line">'+escapeHtml(actualFees(s.yookassa))+'</p>' : '') + '<details class="sales-extra"><summary>Подробнее</summary><div class="sales-line">Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
     '. Вошли по QR: ' + s.tickets.redeemed + '.</div>' +
     '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
@@ -3737,19 +3737,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // pack-v581 (после случая Say Agency, п. 1): обязательства перед зрителями —
 // сколько может понадобиться на возвраты, если показы отменят.
 function obligationsHtml(ob) {
-  if (!ob) return '';
-  var shows = (ob.shows || []).map(function (s) {
-    return escapeHtml(s.title) + ' (' + salesWhen(s.datetime) + (s.canceled ? ', отменён' : '') + ') — ' + fmtMoney(s.moneyRub) + ', ' + s.tickets + ' бил.';
-  }).join('; ');
-  return '<div class="ev-card ob-card">' +
-    '<div class="ob-summary">Обязательства: <b>' + fmtMoney(ob.moneyRub) + '</b></div>' +
-    '<details class="sales-extra"><summary>Подробнее</summary><div class="sales-line">Оплачено деньгами за ' + ob.tickets.count + ' бил. на ещё не прошедшие и отменённые показы: ' + fmtMoney(ob.tickets.moneyRub) + '.' +
-    (ob.approvedUnpaid.count ? ' Одобренные, но не выплаченные заявления: ' + ob.approvedUnpaid.count + ' — ' + fmtMoney(ob.approvedUnpaid.moneyRub) + '.' : '') +
-    (ob.newRequests ? ' Заявлений на рассмотрении: ' + ob.newRequests + '.' : '') +
-    (ob.refundsUnread ? ' ⚠️ Заявления не прочитались — сумма без них.' : '') + '</div>' +
-    (shows ? '<div class="sales-line">' + shows + '</div>' : '') +
-    '<div class="sales-line">Правило (заказчик 07.10): держим резерв на всю эту сумму — деньги за будущие показы до показа не тратим. ЮKassa возвращает из принятых, но ещё не переведённых на счёт платежей; не хватает — списывает с баланса обеспечения возвратов. Подарочная часть не входит — при отмене она возвращается на карту. Продажи системы фестиваля сюда не входят: их заказов у нас нет, хотя деньги приходят в нашу ЮKassa.</div>' +
-    '</details></div>';
+  if(!ob)return '';
+  var shows=(ob.shows||[]).map(function(s){return '<li><strong>'+escapeHtml(s.title)+'</strong><span>'+salesWhen(s.datetime)+(s.canceled?' · отменён':'')+'</span><span>'+fmtMoney(s.moneyRub)+' · '+s.tickets+' бил.</span></li>';}).join('');
+  return '<section class="ev-card ob-card"><div class="ob-summary">Резерв обязательств <b>'+fmtMoney(ob.moneyRub)+'</b></div><p class="scope-label">На текущий момент · все оплаты · фильтр периода обзора не применяется</p><details class="sales-extra"><summary>Состав резерва и правила</summary><div class="finance-sections"><section><h3>Из чего складывается</h3><dl><dt>Будущие и отменённые показы</dt><dd>'+fmtMoney(ob.tickets.moneyRub)+'</dd><dt>Действующих билетов в этих показах</dt><dd>'+ob.tickets.count+'</dd><dt>Одобрено, ещё не выплачено</dt><dd>'+fmtMoney(ob.approvedUnpaid.moneyRub)+' · заявлений '+ob.approvedUnpaid.count+'</dd><dt>На рассмотрении</dt><dd>'+ob.newRequests+' заявлений</dd></dl>'+(ob.refundsUnread?'<p class="error">Заявления не прочитались. Резерв может быть неполным.</p>':'')+'</section>'+(shows?'<section><h3>Показы в резерве</h3><ul class="finance-shows">'+shows+'</ul></section>':'')+'<section><h3>Как использовать резерв</h3><ul><li>Деньги за будущие показы сохраняем до проведения. Это резерв, а не доступная прибыль.</li><li>Возвраты идут из принятых, ещё не перечисленных платежей; при нехватке — с баланса обеспечения возвратов ЮKassa.</li></ul></section><section><h3>Что не входит</h3><ul><li>Подарочная часть оплаты: при отмене возвращается на подарочную карту.</li><li>Продажи внешней фестивальной системы без наших заказов, даже если платёж поступил в нашу ЮKassa.</li></ul></section></div></details></section>';
 }
 async function loadSales() {
   var el = document.getElementById('salesBlock');
@@ -5000,7 +4990,14 @@ function nlRequestId() {
     btn.disabled = true;
     var testVersion = nlContentKey();
     try {
-      var r = await inboxCall({ action: 'nl_test', subject: subject, text: text, lang: $('nl-lang').value === 'en' ? 'en' : 'ru', to: $('nl-test-to').value.trim(), image: nlFormContent().image });
+      if(!window.AelitaConfirmMail)throw Error('Обновите страницу для проверки отправки.');
+      var testTarget=$('nl-test-to').value.trim()||(NL.ov&&NL.ov.mail&&NL.ov.mail.testTo)||'';
+      var legacyTestRequest={subject:subject,text:text,lang:$('nl-lang').value==='en'?'en':'ru',to:testTarget,image:nlFormContent().image};
+      var testCheck=await inboxCall(Object.assign({action:'nl_legacy_prepare',operation:'nl_test'},legacyTestRequest));
+      var testPreview=testCheck.summary;testTarget=testPreview.to;
+      if(!await window.AelitaConfirmMail({title:'Подтверждение тестового письма',facts:[['Кому',testTarget],['Тема',subject]],previews:[testPreview],label:'Отправить тест',valid:function(){return nlContentKey()===testVersion;}})){btn.disabled=false;return;}
+      var r = await inboxCall(Object.assign({action:'nl_test',approvalToken:testCheck.approvalToken,confirm:true},legacyTestRequest));
+      if(r.outcome==='unknown'){invShow(formRes,r.message||'Результат теста уточняется. Повторной отправки не будет.',false);return;}
       NL.testKey = testVersion; nlUpdateComposer();
       invShow(formRes, 'Тест ушёл на ' + r.to + ' — загляните и во «Входящие», и в «Спам».', true);
     } catch (e) { invShow(formRes, e.message, false); }
@@ -5015,12 +5012,25 @@ function nlRequestId() {
     if (f.telegram && (f.subject + '\n\n' + f.text).length > 4000) { invShow(formRes, 'Telegram: сократите тему и текст до 4000 знаков или снимите канал.', false); return; }
     if (NL.image && !f.email) { invShow(formRes, 'Для картинки выберите канал «На почту» или уберите её.', false); return; }
     if (!f.email && !f.telegram) { invShow(formRes, 'Отметьте почту, Telegram или оба.', false); return; }
+    if(f.telegram){
+      btn.disabled=true;
+      try{
+        var langs=f.lang==='all'?['ru','en']:[f.lang],variants={email:{},telegram:{}};
+        langs.forEach(function(lg){if(f.email){var blocks=[{type:'paragraph',text:f.text}];if(f.image)blocks.push({type:'image',assetId:f.image.id,alt:f.image.alt||''});variants.email[lg]={subject:f.subject,preheader:'',blocks:blocks};}variants.telegram[lg]={text:f.subject+'\n\n'+f.text};});
+        var moved=await nl2Call({action:'nl_draft_save',draft:{title:f.subject,channels:{email:f.email,telegram:true},audience:{filter:{langs:langs},legacyUnconfirmed:f.includeUnconfirmed},variants:variants}});
+        await nl2OpenDraft(moved);invShow(formRes,'Текст перенесён в новый редактор. Проверьте варианты, подготовьте фиксированный снимок аудитории и подтвердите отправку.',true);
+      }catch(error){invShow(formRes,error.message,false);}finally{btn.disabled=false;}
+      return;
+    }
     var nMail = nlRecipientCount(f.lang, f.includeUnconfirmed);
     var who = [f.email ? 'на почту — ' + nMail : '', f.telegram ? 'в Telegram — ' + (typeof NL.tg === 'number' ? (f.lang === 'all' ? NL.tg : 'до ' + NL.tg) : 'подписчикам бота') : ''].filter(Boolean).join(', ');
-    if (!confirm('Разослать «' + f.subject + '» ' + NL_LANG[f.lang] + ' (' + who + ')?\n\nОтправленное не вернуть. Тест себе смотрели?')) return;
+    if(!window.AelitaConfirmMail){invShow(formRes,'Обновите страницу для проверки отправки.',false);return;}
+    var legacyVersion=JSON.stringify(f),legacyRequest=Object.assign({request_id: nlRequestId()},f),legacyCheck;
+    try{legacyCheck=await inboxCall(Object.assign({action:'nl_legacy_prepare',operation:'nl_create'},legacyRequest));}catch(error){invShow(formRes,error.message,false);return;}
+    if(!await window.AelitaConfirmMail({title:'Подтверждение рассылки старого формата',facts:[['Тема',f.subject],['Email в снимке',legacyCheck.summary.count],['Отправитель',legacyCheck.summary.from],['Ответы на',legacyCheck.summary.replyTo||legacyCheck.summary.from],['Telegram',f.telegram?'Действующие подписчики бота · старый поток':'Не используется'],['Язык',NL_LANG[f.lang]]],previews:[legacyCheck.summary],warnings:['Зафиксирован показанный снимок email. Новые адреса в эту кампанию не добавляются.'],label:'Отправить рассылку',valid:function(){return JSON.stringify(nlFormContent())===legacyVersion;}}))return;
     btn.disabled = true; invShow(formRes, '', true);
     try {
-      var r = await inboxCall({ action: 'nl_create', subject: f.subject, text: f.text, lang: f.lang, email: f.email, telegram: f.telegram, includeUnconfirmed: f.includeUnconfirmed, confirm: true, request_id: nlRequestId(), image: f.image });
+      var r = await inboxCall(Object.assign({action:'nl_create',confirm:true,approvalToken:legacyCheck.approvalToken},legacyRequest));
       nlPutCampaign(r.campaign);
       $('nl-subject').value = ''; $('nl-text').value = ''; $('nl-include-legacy').checked = false; NL.requestKey = null; NL.requestId = null; nlClearImage(); nlUpdateComposer(); $('nlPreviewPanel').hidden = true;
       await nlRun(r.campaign);
@@ -5047,7 +5057,8 @@ function nlRequestId() {
       if (!NL.running) renderNlCampaigns();
       return;
     }
-    // «Продолжить»: снять паузу после ошибки почты (если была) и отправлять отсюда.
+    // Resume keeps the already approved audience and content.
+    if(!await AelitaConfirmMail({title:'Продолжить рассылку',facts:[['Тема',c.subject||''],['Осталось',String(Math.max(0,(c.email?.total||0)-(c.email?.sent||0)-(c.email?.skipped||0)-(c.email?.failed||0)-(c.email?.unknown||0)))+' адресов']],warnings:['Сохранённые письмо и аудитория остаются прежними. Уже принятые письма не повторяются.'],label:'Продолжить отправку'}))return;
     b.disabled = true;
     try { c = (await inboxCall({ action: 'nl_resume', id: id })).campaign; nlPutCampaign(c); } catch (err) { alert(err.message); b.disabled = false; return; }
     nlRun(c);
@@ -5269,7 +5280,7 @@ async function nl2CampaignAct(btn) {
     if (!confirm('Остановить «' + (c.title || 'рассылку') + '» окончательно?\n\nСейчас: ' + done + '.\nПродолжить потом будет нельзя. Начатые отправки допишут результат.')) return;
   }
   if (act === 'cancel' && !confirm('Отменить запуск «' + (c.title || 'рассылки') + '»? Ничего не будет отправлено. Изменить и запланировать заново — через новый черновик.')) return;
-  if (act === 'resume' && c.overdue && !confirm('Рассылка опоздала больше чем на ' + (NL2.cap ? NL2.cap.overdueMinutes : 15) + ' минут. Отправить её сейчас?')) return;
+  if (act === 'resume') { var remaining=Object.keys(c.channels||{}).map(function(ch){var x=c.channels[ch];return NL2_CH[ch]+': '+Math.max(0,(x.total||0)-(x.accepted||0)-(x.skipped||0)-(x.failed||0)-(x.unknown||0));}).join(' · ');if(!await AelitaConfirmMail({title:'Продолжить рассылку',facts:[['Кампания',c.title||c.id],['Осталось',remaining]],warnings:[c.overdue?'Запланированное время прошло. Отправка продолжится сейчас.':'Продолжится сохранённая кампания с прежним письмом и аудиторией.','Принятые письма не повторяются. Отписки проверяются перед доставкой.'],label:'Продолжить отправку'}))return; }
   btn.disabled = true;
   var map = { pause: 'nl_pause', resume: 'nl_v2_resume', stop: 'nl_v2_stop', cancel: 'nl_schedule_cancel', hold: 'nl_hold_clear' };
   var r = await nl2Api({ action: map[act], id: id, channel: btn.getAttribute('data-ch') || undefined, expected_revision: c.revision });
@@ -5425,6 +5436,7 @@ function nl2MarkInvalid() {
   });
 }
 function nl2AfterRender() {
+  var festival=document.getElementById('festival-audience-v814');if(festival&&window.AelitaFestivalAudience)window.AelitaFestivalAudience(festival,{getDraft:function(){return NL2.draft;},flush:nl2Flush,importAudience:async function(exportId){await nl2OpenDraft(await nl2Call({action:'nl_crm_draft_import',exportId:exportId}));}});
   nl2MarkInvalid();
   document.querySelectorAll('#nl2-step img[data-asset]').forEach(function (img) {
     var id = img.getAttribute('data-asset');
@@ -5625,9 +5637,9 @@ function nl2FilterHtml(prefix, f) {
 }
 function nl2AudienceHtml() {
   var d = NL2.local, f = d.audience.filter, a = NL2.audience;
-  var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/?workTab=segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
+  var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта',event_registrants:'Зрители из регистраций'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/?workTab=segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
   var segs = NL2.segments || [];
-  var html = crmNotice+'<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
+  var html = '<div id="festival-audience-v814"></div>'+crmNotice+'<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
     (segs.length ? '<div class="nl2-row"><label class="nl2-meta" for="nl2-seg">Сегмент</label><select id="nl2-seg"><option value="">—</option>' + segs.map(function (s) { return '<option value="' + nl2E(s.id) + '"' + (d.audience.segmentId === s.id ? ' selected' : '') + '>' + nl2E(s.name) + '</option>'; }).join('') + '</select><button type="button" class="mini-btn" data-nl2="seg-apply">Применить фильтр сегмента</button></div>' : '') +
     '<div data-nl2-filter="draft">' + nl2FilterHtml('nl2a', f) + '</div>' +
     '<div class="inv-row"><div class="field inv-w2"><label for="nl2-excl">Исключить по почте</label><input class="ym-disable-keys" id="nl2-excl" type="email" maxlength="254"></div></div><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="exclude">Исключить</button>' + ((f.excludeIds || []).length ? '<button type="button" class="mini-btn" data-nl2="exclude-clear">Очистить исключения</button>' : '') + '</div>' +
@@ -5691,7 +5703,7 @@ function nl2ReviewHtml() {
   var html = '<fieldset class="nl2-card"><legend class="nl2-meta">Когда отправить</legend>' +
     '<label class="nl-check"><input type="radio" name="nl2-when" id="nl2-when-now"' + (later ? '' : ' checked') + '> Сейчас</label>' +
     '<label class="nl-check"><input type="radio" name="nl2-when" id="nl2-when-later"' + (later ? ' checked' : '') + (NL2.cap && NL2.cap.flags.schedule ? '' : ' disabled') + '> По расписанию</label>' +
-    '<div class="field"><label for="nl2-runat">Дата и время, Москва (UTC+3)</label><input type="datetime-local" id="nl2-runat" value="' + nl2E(NL2.runAtInput || '') + '"' + (later ? '' : ' disabled') + '></div>' +
+    '<div class="field"><label for="nl2-runat">Дата и время, Москва (UTC+3)</label><input class="ym-disable-keys" type="datetime-local" id="nl2-runat" value="' + nl2E(NL2.runAtInput || '') + '"' + (later ? '' : ' disabled') + '></div>' +
     (NL2.cap && NL2.cap.flags.schedule ? '<p class="nl2-meta">Если фон простоит дольше ' + NL2.cap.overdueMinutes + ' минут после этого времени, рассылка не уйдёт сама — встанет на паузу и подождёт вашего решения.</p>' : '<p class="nl2-meta">Отложенная отправка выключена (NEWSLETTER_V2_SCHEDULE).</p>') + '</fieldset>' +
     '<label class="nl-check"><input type="checkbox" id="nl2-checked"' + (NL2.checked ? ' checked' : '') + '> Проверил тест текущей версии и состав аудитории</label>' +
     '<div class="nl2-row"><button type="button" class="btn-small" data-nl2="review">Проверить рассылку</button></div><p class="nl2-status" id="nl2-rres" role="status" aria-live="polite"></p>';
@@ -5743,8 +5755,26 @@ async function nl2Launch(btn) {
   var warnings = (r.warnings || []).filter(function (w) {
     return ['email_budget_partial', 'email_worker_unavailable'].includes(w.code);
   }).map(function (w) { return w.message; });
-  if (!confirm(r.summary.buttonLabel + '?\n\n«' + (r.summary.title || 'Рассылка') + '».' +
-    (warnings.length ? '\n\n' + warnings.join('\n') : ''))) return;
+  if(btn.disabled)return;
+  if(!window.AelitaConfirmMail){nl2Status(nl2$('nl2-rres'),'Проверка отправки не загрузилась. Обновите страницу.','err');return;}
+  btn.disabled=true;
+  var accepted=false;
+  try{
+    var previews=[];
+    for(var pair of r.summary.pairs||[]){
+      var preview=await nl2Call({action:'nl_v2_preview',channel:pair.channel,locale:pair.locale,variant:NL2.draft.variants[pair.channel][pair.locale]});
+      previews.push(pair.channel==='email'?{title:pair.label+' · '+preview.subject,html:preview.html}:{title:pair.label,text:preview.telegram.text,link:preview.telegram.cta&&preview.telegram.cta.url});
+    }
+    var counts=r.summary.counts||{},filter=r.summary.audienceFilter||{};
+    var filters=[['Языки',(filter.langs||[]).join(', ')],['Города',(filter.cityIds||[]).join(', ')||'Все'],['Интересы',((filter.interests||{}).values||[]).join(', ')||'Все'],['Метки',((filter.tags||{}).values||[]).join(', ')||'Все'],['Источники',(filter.sources||[]).map(function(x){return x.form||x.via;}).join(', ')||'Все']];
+    if(filter.crm&&filter.crm.kind==='event_registrants'){filters.push(['Фестиваль / подборка',filter.crm.label||'Выбранные события'],['События',filter.crm.eventIds.join(', ')],['Период регистраций',(filter.crm.from||'С начала')+' — '+(filter.crm.to||'Без верхней границы')+' · Москва'],['Статус регистрации',filter.crm.registrationStatus],['Посещение',filter.crm.attendance==='attended'?'Есть отметка прохода':'Достаточно регистрации'],['Объединение событий',filter.crm.match==='all'?'Все выбранные':'Хотя бы одно']);}
+    if(filter.crm)filters.push(['Подборка CRM',({all_subscribers:'Подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок',project_contacts:'Контакты проекта',event_registrants:'Зрители из регистраций'})[filter.crm.kind]||'Сохранённый сегмент']);
+    var excluded=Object.values(r.summary.exclusions||{}).reduce(function(n,x){return n+(x.total||0);},0);
+    for(var entry of Object.entries(r.summary.exclusions||{}))for(var reason of Object.entries(entry[1].reasons||{}))if(reason[1])filters.push(['Исключено · '+NL2_CH[entry[0]]+' · '+(NL2_REASON[reason[0]]||reason[0]),reason[1]]);
+    if(r.summary.emailBudget){var budget=r.summary.emailBudget;filters.push(['Доступно сейчас',budget.available+' писем'],['Ожидают бюджета',budget.waiting],['Темп',budget.perSecond+' писем/с'],['Фоновая очередь',budget.workerReady?'Работает':'Недоступна или давно не отвечала']);}
+    accepted=await window.AelitaConfirmMail({title:'Подтверждение массовой рассылки',facts:[['Кампания',r.summary.title],['Отправитель',r.summary.sender.from],['Ответы на',r.summary.sender.replyTo||r.summary.sender.from],['Получатели email',(counts.email||{}).total||0],['Сообщения Telegram',(counts.telegram||{}).total||0],['Исключено',excluded],['Аудитория рассчитана',r.summary.audienceTakenAt?nl2Msk(Date.parse(r.summary.audienceTakenAt)):'—'],['Запуск',r.summary.runAtLabel||'Сейчас']].concat(filters),previews:previews,warnings:warnings,label:r.summary.buttonLabel,valid:function(){return NL2.review===r&&!NL2.dirty&&Date.now()<r.expiresAt;}});
+  }catch(error){nl2Status(nl2$('nl2-rres'),error.message||'Не удалось подготовить проверку письма.','err');}
+  if(!accepted){btn.disabled=false;return;}
   if (!NL2.reqId) NL2.reqId = nl2NewRequestId();
   btn.disabled = true;
   var out = await nl2Api({ action: 'nl_v2_create', approvalToken: r.approvalToken, request_id: NL2.reqId });
@@ -5962,11 +5992,19 @@ function nl2SetFilter(f, path, val) {
         if (pr.errors && pr.errors.length) nl2Status(vres, 'Отправить пока нельзя: ' + pr.errors.map(function (x) { return x.message; }).join('; '), 'err');
       }
       if (act === 'test') {
+        b.disabled=true;
         var tp = NL2.variant.split('.');
         nl2Status(vres, 'Сохраняем…');
-        if (!await nl2Flush()) { nl2Status(vres, 'Тест — только сохранённой версии. Дождитесь «Сохранено».', 'err'); return; }
+        if (!await nl2Flush()) { b.disabled=false; nl2Status(vres, 'Тест — только сохранённой версии. Дождитесь «Сохранено».', 'err'); return; }
         b.disabled = true;
-        var tr = await nl2Api({ action: 'nl_v2_test', draftId: NL2.draft.id, revision: NL2.draft.revision, channel: tp[0], locale: tp[1], to: nl2$('nl2-test-to') ? nl2$('nl2-test-to').value.trim() : undefined });
+        var testRequest={draftId:NL2.draft.id,revision:NL2.draft.revision,channel:tp[0],locale:tp[1],to:nl2$('nl2-test-to')?nl2$('nl2-test-to').value.trim():undefined};
+        var prepared=await nl2Api(Object.assign({action:'nl_prepare_test'},testRequest));
+        if(!prepared.ok){b.disabled=false;nl2Status(vres,prepared.data.message||'Проверка теста не готова','err');return;}
+        if(!window.AelitaConfirmMail){b.disabled=false;nl2Status(vres,'Обновите страницу для проверки отправки.','err');return;}
+        var ts=prepared.data.summary;
+        var confirmed=await window.AelitaConfirmMail({title:'Подтверждение тестовой отправки',facts:[['Кому',ts.to],['Отправитель',ts.from],['Ответы на',ts.replyTo||ts.from],['Тема',ts.subject||'Тест Telegram']],previews:[ts],warnings:['Будет отправлено одно тестовое сообщение. Массовая рассылка не запускается.'],label:'Отправить тест',valid:function(){return NL2.draft&&NL2.draft.id===testRequest.draftId&&NL2.draft.revision===testRequest.revision&&!NL2.dirty&&Date.now()<prepared.data.expiresAt;}});
+        if(!confirmed){b.disabled=false;nl2Status(vres,'Тест не отправлен.');return;}
+        var tr = await nl2Api(Object.assign({action:'nl_v2_test',approvalToken:prepared.data.approvalToken},testRequest));
         b.disabled = false;
         if (!tr.ok) { nl2Status(vres, tr.data.message || 'Тест не отправлен', 'err'); return; }
         nl2Status(vres, (tr.data.to ? 'Тест ушёл на ' + tr.data.to + '. ' : '') + tr.data.note, 'ok');
@@ -6028,7 +6066,7 @@ function nl2SetFilter(f, path, val) {
         if (act === 'tg-unlink') { if (!confirm('Отвязать Telegram для тестов?')) return; await nl2Call({ action: 'nl_tg_unlink' }); }
         NL2.cap = await nl2Call({ action: 'nl_capabilities' }); nl2RenderState();
       }
-    } catch (err) { nl2Status(vres || nl2$('nl2-ares') || nl2$('nl2-rres'), err.message, 'err'); if (!vres && !nl2$('nl2-ares') && !nl2$('nl2-rres')) alert(err.message); }
+    } catch (err) { b.disabled=false; nl2Status(vres || nl2$('nl2-ares') || nl2$('nl2-rres'), err.message, 'err'); if (!vres && !nl2$('nl2-ares') && !nl2$('nl2-rres')) alert(err.message); }
   });
   window.addEventListener('beforeunload', function (e) { if (NL2.dirty || NL2.saving) { e.preventDefault(); e.returnValue = ''; } });
   window.addEventListener('online', function () { if (NL2.offline) { NL2.offline = false; nl2Save(); } });
@@ -7595,11 +7633,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=210"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=210">
-<script src="/assets/ai-pilot-v741.js?v=210"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=210"></script>
-<script src="/assets/subscription-materials-admin.js?v=210"></script>
+<script src="/assets/admin-snapshot.js?v=212"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=212">
+<script src="/assets/ai-pilot-v741.js?v=212"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=212"></script>
+<script src="/assets/subscription-materials-admin.js?v=212"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

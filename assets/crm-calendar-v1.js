@@ -40,9 +40,9 @@
     '<div class="actions" aria-label="Режим календаря">'+Object.entries(modes).map(([k,v])=>'<button type="button" data-cal-mode="'+k+'" aria-pressed="'+(query.mode===k)+'">'+v+'</button>').join('')+'</div>'+
     '<div class="row between crm-calendar-range">'+btn('prev','‹ Предыдущий')+'<strong>'+esc(pretty(query.from))+' — '+esc(pretty(query.to))+'</strong>'+btn('next','Следующий ›')+'</div>'+
     '<details class="panel crm-calendar-filters" '+(query.filtersOpen?'open':'')+'><summary>Период и фильтры</summary><form class="form-grid">'+
-    '<label><span>С даты</span><input name="from" type="date" value="'+esc(query.from)+'" required></label><label><span>По дату</span><input name="to" type="date" value="'+esc(query.to)+'" required></label>'+
+    '<label><span>С даты</span><input class="ym-disable-keys" name="from" type="date" value="'+esc(query.from)+'" required></label><label><span>По дату</span><input class="ym-disable-keys" name="to" type="date" value="'+esc(query.to)+'" required></label>'+
     sel('projectId','Проект',lookups.projects.filter(x=>!x.archived))+sel('dealId','Показ',selectedDeals())+sel('venueId','Площадка',places())+
-    '<label><span>Город</span><input name="city" maxlength="120" value="'+esc(query.city||'')+'"></label>'+
+    '<label><span>Город</span><input class="ym-disable-keys" name="city" maxlength="120" value="'+esc(query.city||'')+'"></label>'+
     sel('ownerId','Ответственный',lookups.staffLabels||lookups.staff)+sel('kind','Тип записи',enumeration(kinds))+sel('status','Статус',enumeration(statuses))+
     '<label class="row"><input name="overdue" type="checkbox" '+(query.overdue?'checked':'')+'>Только просроченные</label>'+
     '<label class="row"><input name="conflict" type="checkbox" '+(query.conflict?'checked':'')+'>Только пересечения</label>'+

@@ -152,7 +152,7 @@
   const primaryKey=primary[type];
   if(!primaryKey||!['organizations','projects','deals'].includes(type)||type==='deals'&&!x.show)return;
   const option=(items,empty)=>'<option value="">'+empty+'</option>'+items.map(o=>'<option value="'+esc(o.id)+'">'+esc(o.label)+'</option>').join('');
-  const own=type==='organizations'&&x.email?{id:x.id,label:'Почта организации · '+x.email}:null;
+  const own=type==='organizations'&&window.AelitaOrgChannels.values(x,'email').length?{id:x.id,label:'Почта организации · '+x.email}:null;
   const people=type==='organizations'?(related.contacts||[]):(state.lookups.contacts||[]).filter(y=>!y.archived);
   const recipients=own?[own,...people]:people;
   const orgs=(state.lookups.organizations||[]).filter(y=>!y.archived);
@@ -171,7 +171,7 @@
   async function readOrganizationMail(id){
    if(compose.crmMailBeforeLeave&&!await compose.crmMailBeforeLeave())return;
    if(compose.querySelector('form')&&!confirm('Открыть историю вместо текущего письма?'))return;
-   window.AelitaCrmMail(compose,{api,contact:{...x,emails:x.email?[x.email]:[]},organization:true,canSend:canSend&&!!x.email,focusMail:id,
+   window.AelitaCrmMail(compose,{api,contact:{...x,emails:window.AelitaOrgChannels.values(x,'email')},organization:true,canSend:canSend&&window.AelitaOrgChannels.values(x,'email').length>0,focusMail:id,
      recipientLabel:x.name,
      context:{organizationId:x.id},onTask:canWriteTasks?item=>editMailTask({...item,organizationId:x.id,context:{organizationId:x.id}}):null});
    compose.scrollIntoView({block:'start'});
@@ -238,7 +238,7 @@
    }
    submit.disabled=true;compose.textContent='Открываем письмо…';
    try{
-    const entity=organization?{...x,emails:[x.email]}:(await api({action:'get',type:'contacts',id:recipientId})).entity;
+    const entity=organization?{...x,emails:window.AelitaOrgChannels.values(x,'email')}:(await api({action:'get',type:'contacts',id:recipientId})).entity;
     if(!active())return;
     if(!organization&&!canWriteContact(entity)||entity.archivedAt||!entity.emails?.length){compose.textContent='У этого контакта нет доступного адреса для отправки.';return;}
     const label=Object.entries(context).filter(([k])=>k!=='contactId').map(([k,id])=>state.lookups[refs[k][0]].find(y=>y.id===id)?.label).filter(Boolean).join(' · ');
