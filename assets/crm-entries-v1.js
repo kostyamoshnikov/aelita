@@ -165,13 +165,14 @@
    (type!=='organizations'?'<label class="field"><span>Организация</span><select name="organizationId">'+option(orgs,'Не выбрана')+'</select></label>':'')+
    (shows.length?'<label class="field"><span>Показ</span><select name="dealId">'+option(shows,type==='organizations'?'Без привязки к показу':'Весь проект')+'</select></label>':'')+
    '<button class="primary">Написать письмо</button></form>':'')+'<div data-context-mail-compose></div>';
-  const history=root.querySelector('[data-context-mail-history]');
+  const history=root.querySelector('[data-context-mail-history]');let historyFilters={};if(type==='organizations'){const filters=document.createElement('div');filters.className='actions';filters.innerHTML='<label>Письма человека<select data-mail-person>'+option(people,'Все люди')+'</select></label><label>Проект<select data-mail-project>'+option((state.lookups.projects||[]).filter(p=>!p.archived),'Все проекты')+'</select></label><label>Показ<select data-mail-show>'+option(shows,'Все показы')+'</select></label>';history.before(filters);filters.onchange=()=>{historyFilters={contactId:filters.querySelector('[data-mail-person]').value,projectId:filters.querySelector('[data-mail-project]').value,dealId:filters.querySelector('[data-mail-show]').value};load();};}
   const editMailTask=row=>edit('tasks',{...row.context,title:'Проверить ответ на письмо «'+row.subject.slice(0,130)+'»',
     mailSource:{...(row.organizationId?{organizationId:row.organizationId}:{contactId:row.contactId}),id:row.id}});
-  async function readOrganizationMail(id){
+  async function readOrganizationMail(id,organizationId=x.id){
    if(compose.crmMailBeforeLeave&&!await compose.crmMailBeforeLeave())return;
    if(compose.querySelector('form')&&!confirm('Открыть историю вместо текущего письма?'))return;
-   window.AelitaCrmMail(compose,{api,contact:{...x,emails:window.AelitaOrgChannels.values(x,'email')},organization:true,canSend:canSend&&window.AelitaOrgChannels.values(x,'email').length>0,focusMail:id,
+   const original=organizationId===x.id?x:(await api({action:'get',type:'organizations',id:organizationId})).entity;
+   window.AelitaCrmMail(compose,{api,contact:{...original,emails:window.AelitaOrgChannels.values(original,'email')},organization:true,canSend:organizationId===x.id&&canSend&&window.AelitaOrgChannels.values(x,'email').length>0,focusMail:id,
      recipientLabel:x.name,
      context:{organizationId:x.id},onTask:canWriteTasks?item=>editMailTask({...item,organizationId:x.id,context:{organizationId:x.id}}):null});
    compose.scrollIntoView({block:'start'});
@@ -181,7 +182,7 @@
    const job=++seq;
    if(!cursor)history.textContent='Загружаем письма…';
    try{
-    const r=await api({action:'mail_context_history',type,id:x.id,cursor});
+    const r=await api({action:'mail_context_history',type,id:x.id,cursor,filters:historyFilters});
     if(!active()||job!==seq)return;
     if(!cursor)history.replaceChildren();
     history.querySelector('[data-mail-next]')?.remove();
@@ -190,7 +191,7 @@
      a.href=mailLink(row.contactId||'',row.id);a.textContent=row.subject||'Без темы';
      if(row.organizationId){
       const open=document.createElement('button');open.type='button';open.className='name-link';open.textContent=a.textContent;
-      open.onclick=()=>readOrganizationMail(row.id);
+      open.onclick=()=>readOrganizationMail(row.id,row.organizationId);
       p.append(open);
      }else p.append(a);
      const status={sending:'Отправляется',accepted:'Принято почтовым сервером',unknown:'Исход неизвестен',rejected:'Отклонено',failed:'Не отправлено',received:'Ответ'};
@@ -223,14 +224,18 @@
    window.AelitaCrmUsability?.selectMenu(recipient,'Получатель письма');
    window.AelitaCrmUsability?.longMenus(form);
   }
+  if(form&&type==='organizations'){
+   const purpose=document.createElement('label');purpose.className='field';purpose.innerHTML='<span>По какому вопросу</span><select name="purpose"><option value="">Все подходящие контакты</option><option value="programming">Сотрудничество / программа</option><option value="technical">Технические вопросы</option><option value="ticketing">Билеты</option><option value="finance">Финансовые вопросы</option><option value="press">Пресса</option><option value="production">Организация показа</option></select>';form.prepend(purpose);const address=document.createElement('label');address.className='field';address.innerHTML='<span>Точный адрес</span><select name="contactAddress"><option value="">Выберите адрес после получателя</option></select>';form.querySelector('button.primary').before(address);
+   api({action:'organization_recipients',id:x.id}).then(data=>{if(!active()||!form.isConnected)return;const pick=form.elements.recipientId,mail=form.elements.contactAddress,role=form.elements.purpose;const updateAddresses=()=>{const list=pick.value===x.id?data.organization.channels.filter(c=>c.kind==='email'&&!['inactive','bounced'].includes(c.status)).map(c=>({value:c.value,label:c.label})):data.people.find(p=>p.id===pick.value)?.emails.map(value=>({value,label:'Личный адрес'}))||[];mail.replaceChildren(new Option('Выберите точный адрес',''));for(const c of list)mail.add(new Option(c.label+' · '+c.value,c.value));if(list.length===1)mail.value=list[0].value;};const update=()=>{const selected=pick.value;pick.replaceChildren(new Option('Выберите получателя',''));pick.add(new Option('Общие контакты · '+data.organization.name,x.id));const sorted=[...data.people].sort((a,b)=>Number(b.roles.some(r=>r.id===role.value))-Number(a.roles.some(r=>r.id===role.value)));for(const p of sorted)pick.add(new Option(p.name+(p.roles.length?' · '+p.roles.map(r=>r.label).join(', '):''),p.id));if([...pick.options].some(o=>o.value===selected))pick.value=selected;updateAddresses();};role.onchange=update;pick.addEventListener('change',updateAddresses);update();}).catch(()=>{});
+  }
   let mountedSelection='';
   if(form)form.onsubmit=async e=>{
    e.preventDefault();const submit=form.querySelector('button.primary'),fields=Object.fromEntries(new FormData(form));
-   const {recipientId,...links}=fields;
+   const {recipientId,contactAddress,purpose,...links}=fields;
    if(!recipientId){compose.textContent='Выберите получателя письма.';return;}
    const organization=!!own&&recipientId===own.id;
    const context=Object.fromEntries(Object.entries({...links,...(organization?{}:{contactId:recipientId}),[primaryKey]:x.id,...(type==='deals'?{projectId:x.projectId}:{})}).filter(([,v])=>v));
-   const selection=JSON.stringify([recipientId,context]);
+   const selection=JSON.stringify([recipientId,contactAddress||'',context]);
    if(compose.querySelector('form')){
     if(selection===mountedSelection){compose.scrollIntoView({block:'start'});return;}
     if(compose.crmMailBeforeLeave&&!await compose.crmMailBeforeLeave())return;
@@ -260,7 +265,7 @@
     const resume=state.workResume?.type===type&&state.workResume.id===x.id&&state.workResume.recipient===entity.id?state.workResume:null;
     if(resume)state.workResume=null;
     window.AelitaCrmMail(compose,{api,contact:entity,organization,canSend:true,context,contextLabel:label,draftDelete:true,autoOpen:true,onSent:()=>load(),
-     resume,workOrigin:{type,id:x.id,actor:state.user.id},
+     preferredAddress:contactAddress||'',resume,workOrigin:{type,id:x.id,actor:state.user.id},
      recipientLabel:entity.name,templateData,documentLinks:[...documents,...obligations.flatMap(row=>(row.documents||[]).map(d=>d.url))],
      onTask:canWriteTasks?item=>editMailTask({...item,context,...(organization?{organizationId:entity.id}:{contactId:entity.id})}):null});
    }catch(err){if(active())compose.textContent=err.message;}

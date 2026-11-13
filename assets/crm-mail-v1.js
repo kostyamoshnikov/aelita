@@ -1,6 +1,6 @@
 'use strict';
 
-window.AelitaCrmMail = function mountMail(root, {api, contact, organization=false, recipientLabel='', templateData={}, documentLinks=[], canSend, context=null, contextLabel='', draftDelete=false, autoOpen=false, onSent=null, focusMail='', onTask=null, workOrigin=null, resume=null}) {
+window.AelitaCrmMail = function mountMail(root, {api, contact, organization=false, recipientLabel='', templateData={}, documentLinks=[], canSend, context=null, contextLabel='', draftDelete=false, autoOpen=false, onSent=null, focusMail='', onTask=null, workOrigin=null, resume=null, preferredAddress=''}) {
   let currentContext=context;
   const request = (action, fields = {}) => api({action,[organization?'organizationId':'contactId']:contact.id,
     ...(currentContext?{context:currentContext}:{}),...fields});
@@ -105,7 +105,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     const resumeKey=resume?.addressKey;
     const selected=resumeKey?(contact.channels||[]).find(x=>x.id===resumeKey&&x.kind==='email')?.value:resume?.addressHash?contact.emails.find(email=>fingerprints.get(email)===resume.addressHash):!organization&&Number.isInteger(resume?.address)?contact.emails[resume.address]:null;
     if((resumeKey||resume?.addressHash)&&(!selected||resume?.addressHash&&resume.addressHash!==fingerprints.get(selected))){notice.textContent='Адрес сохранённого черновика изменился или удалён. Выберите адрес заново.';resume=null;button(notice,'Открыть выбор адреса',()=>open());return;}
-    let selectedAddress=reply?.from||selected||(contact.emails.includes(legacy?.draft?.to)?legacy.draft.to:contact.emails[0]);
+    let selectedAddress=reply?.from||selected||(contact.emails.includes(preferredAddress)?preferredAddress:null)||(contact.emails.includes(legacy?.draft?.to)?legacy.draft.to:contact.emails[0]);
     resume=null;
     const scope=()=>({draftTo:selectedAddress,...(reply?{draftReplyId:reply.id}:{})});
     const saved=await request('mail_draft_get',scope()),draft=saved.draft;
@@ -118,7 +118,7 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     if(recipientLabel)paragraph(compose,'Получатель · '+recipientLabel);
     compose.append(form);
     const {to, subject, body, files} = form.elements;
-    contact.emails.forEach(email => to.add(new Option(email, email)));
+    contact.emails.forEach(email => to.add(new Option(((contact.channels||[]).find(c=>c.kind==='email'&&c.value===email)?.label?((contact.channels||[]).find(c=>c.kind==='email'&&c.value===email).label+' · '):'')+email, email)));
     to.value=selectedAddress;
     if(reply)to.disabled=true;
     const signatureMode=form.elements.namedItem('signatureMode');

@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=212">
+<link rel="stylesheet" href="/assets/fonts.css?v=213">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=212">
-<script src="/assets/staff-handoff-v1.js?v=212"></script>
-<script src="/assets/mobile-files-m1.js?v=212"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=212"><script defer src="/assets/delivery-admin-v1.js?v=212"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=212"></script><script src="/assets/staff-session-v796.js?v=212"></script><script defer src="/assets/crm-show-events-v1.js?v=212"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=212">
-<script src="/assets/work-navigation-v812.js?v=212"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=212">
-<script src="/assets/section-navigation.js?v=212" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=212"><script defer src="/assets/mail-confirm-v813.js?v=212"></script><script defer src="/assets/festival-audience-v814.js?v=212"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=212"><script defer src="/assets/admin-calm-v814.js?v=212"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=213">
+<script src="/assets/staff-handoff-v1.js?v=213"></script>
+<script src="/assets/mobile-files-m1.js?v=213"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=213"><script defer src="/assets/delivery-admin-v1.js?v=213"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=213"></script><script src="/assets/staff-session-v796.js?v=213"></script><script defer src="/assets/crm-show-events-v1.js?v=213"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=213">
+<script src="/assets/work-navigation-v812.js?v=213"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=213">
+<script src="/assets/section-navigation.js?v=213" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=213"><script defer src="/assets/mail-confirm-v813.js?v=213"></script><script defer src="/assets/festival-audience-v814.js?v=213"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=213"><script defer src="/assets/admin-calm-v814.js?v=213"></script></head>
 <body>
 
 <nav>
@@ -3606,14 +3606,18 @@ function actualFees(fees){
   return 'Комиссия ЮKassa '+fmtMoney(fees.feeKop/100)+' · после комиссии '+fmtMoney(fees.incomeKop/100)+
     ' · '+fees.known+' из '+(fees.known+fees.missing)+' оплат билетов, до учёта возвратов.'+(fees.missing?' Суммы комиссии и остатка — только по оплатам с известной комиссией.':'');
 }
+var statisticsDetailJob=0;
+async function statisticsDetailsOpen(el,offset){var job=++statisticsDetailJob,from=el.dataset.from,to=el.dataset.to,token=getToken(),host=document.getElementById('statistics-details-v815');if(!host){host=document.createElement('section');host.id='statistics-details-v815';host.className='statistics-section';el.closest('.statistics-tiles').after(host);}host.textContent='Загружаем состав суммы…';try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics_details&from='+from+'&to='+to+'&offset='+(offset||0),{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(job!==statisticsDetailJob||token!==getToken())return;if(!res.ok)throw Error('Список оплат недоступен');host.innerHTML='<h3>Оплаты: '+escapeHtml(from)+' — '+escapeHtml(to)+'</h3><p>'+escapeHtml(d.basis)+'</p><p>'+d.total+' заказов · '+fmtMoney(d.revenue)+'</p>'+statisticsTable('Состав суммы',d.items.map(function(x){return Object.assign({},x,{paidAt:new Date(x.paidAt).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'}),fee:x.fee==null?'Нет данных':fmtMoney(x.fee),income:x.income==null?'Нет данных':fmtMoney(x.income),amount:fmtMoney(x.amount)});}),[['id','Заказ'],['paidAt','Время оплаты'],['performanceTitle','Показ'],['amount','Деньгами'],['fee','Комиссия'],['income','После комиссии']])+'<p class="hint">Состав получен заново: если статус заказа изменился после обзора, обновите показатели.</p><div class="actions"><button data-detail-close>Закрыть состав</button>'+(offset?'<button data-detail-prev>Предыдущие</button>':'')+(d.next!==null?'<button data-detail-next>Следующие</button>':'')+'</div>';host.querySelector('[data-detail-close]').onclick=function(){statisticsDetailJob++;host.remove();};if(offset)host.querySelector('[data-detail-prev]').onclick=function(){statisticsDetailsOpen(el,Math.max(0,offset-50));};if(d.next!==null)host.querySelector('[data-detail-next]').onclick=function(){statisticsDetailsOpen(el,d.next);};host.scrollIntoView({block:'start'});}catch(e){if(job===statisticsDetailJob&&host.isConnected)host.textContent=e.message;}}
+document.addEventListener('click',function(e){var el=e.target.closest('[data-stat-details]');if(el)statisticsDetailsOpen(el,0);});
 async function loadStatistics(){
+  statisticsDetailJob++;document.getElementById('statistics-details-v815')?.remove();
   if(!getToken()||!ADMIN_ORDERS_URL)return;var token=getToken(),seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsFees','overviewFees'].forEach(function(id){document.getElementById(id).hidden=true;});['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
   try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob||token!==getToken())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
     var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
     document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
-    var tiles=[['visits','Посещения'],['orders','Оплаченных заказов'],['revenue','Оплачено деньгами'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><span class="scope-label">'+escapeHtml(v.from)+' — '+escapeHtml(v.to)+' · '+({visits:'по времени входа',orders:'по оплате',revenue:'по оплате, до возвратов',newSubscribers:'по подтверждению подписки'}[x[0]])+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong><small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
+    var tiles=[['visits','Посещения'],['orders','Оплаченных заказов'],['revenue','Оплачено деньгами'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><span class="scope-label">'+escapeHtml(v.from)+' — '+escapeHtml(v.to)+' · '+({visits:'по времени входа',orders:'по оплате',revenue:'по оплате, до возвратов',newSubscribers:'по подтверждению подписки'}[x[0]])+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong>'+(['orders','revenue'].includes(x[0])?'<button data-stat-details data-from="'+escapeHtml(v.from)+'" data-to="'+escapeHtml(v.to)+'">Из каких оплат</button>':'')+'<small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
     document.getElementById('statisticsTiles').innerHTML=tiles;document.getElementById('overviewStatistics').innerHTML=tiles;
-    ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;});
+    ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;if(v.yookassa?.known){var details=document.createElement('button');details.textContent='Из чего сложилась комиссия';details.dataset.statDetails='';details.dataset.from=v.from;details.dataset.to=v.to;el.append(' ',details);}});
     var daysData=(v.visitsByDay||[]).slice().reverse(),max=Math.max.apply(null,daysData.map(function(x){return x.entries;}).concat([1]));
     var graph=v.visits?'<section class="statistics-section"><h2 data-adm-index="Посещения по дням">Посещения по дням</h2>'+('<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div></section>'):'<p class="statistics-period">За период нет посещений.</p>';
     document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment','Оплата'],['paid','Оплачено']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs&&v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
@@ -5077,7 +5081,7 @@ var NL2 = { cap: null, tab: 'campaigns', campaigns: [], drafts: [], segments: []
   dirty: false, saving: false, again: false, saveTimer: null, editSeq: 0, conflict: null, offline: false, lastSavedAt: null, audience: null, review: null,
   reqId: null, thumbs: {}, segEdit: null, poll: null, nudgedAt: 0, audPoll: null, pages: {} };
 var NL2_STATUS = { scheduled: 'запланирована', sending: 'идёт', pausing: 'ставим на паузу', paused: 'пауза', stopped: 'остановлена', done: 'обработка завершена', cancelled: 'отменена' };
-var NL2_REASON = {consent_missing:'нет отдельного согласия',crm_outside_segment:'вне расчёта CRM',invalid_subscriber:'некорректная запись подписчика', unsubscribed: 'отписались', complained: 'пожаловались', unconfirmed: 'не подтвердили адрес', undeliverable: 'адрес недоступен', deleted: 'контакт удалён',
+var NL2_REASON = {recent_campaign:'Письмо в выбранной кампании уже принято',consent_missing:'нет отдельного согласия',crm_outside_segment:'вне расчёта CRM',invalid_subscriber:'некорректная запись подписчика', unsubscribed: 'отписались', complained: 'пожаловались', unconfirmed: 'не подтвердили адрес', undeliverable: 'адрес недоступен', deleted: 'контакт удалён',
   manual_exclusion: 'исключены вручную', filter_mismatch: 'не подходят под фильтр', locale_unavailable: 'нет варианта на их языке', not_subscribed: 'отписались в боте',
   blocked: 'заблокировали бота', chat_not_found: 'чат недоступен', response_lost: 'ответ не получен', smtp_unknown: 'почта не ответила', smtp_rejected: 'почта отказала',
   smtp_temporary: 'временный отказ', provider_error: 'ошибка отправителя', tg_rate_limited: 'Telegram просил паузу', tg_bad_request: 'Telegram отклонил',
@@ -5635,13 +5639,16 @@ function nl2FilterHtml(prefix, f) {
     }).join('') + '</fieldset>' : '') +
     '<p class="nl2-meta">Между полями — «и»; пустые атрибуты не угадываются: при фильтре по городу подписчики без города исключаются. Исключено вручную: ' + (f.excludeIds || []).length + '.</p>';
 }
+document.addEventListener('change',function(e){var el=e.target;if(!el.matches('[data-nl2-exclude-campaign]')||!NL2.local)return;var ids=new Set(NL2.local.audience.filter.excludeCampaignIds||[]);if(el.checked)ids.add(el.dataset.nl2ExcludeCampaign);else ids.delete(el.dataset.nl2ExcludeCampaign);if(ids.size>10){el.checked=false;return;}NL2.local.audience.filter.excludeCampaignIds=Array.from(ids);NL2.review=null;nl2Touch();});
 function nl2AudienceHtml() {
   var d = NL2.local, f = d.audience.filter, a = NL2.audience;
   var crmNotice=f.crm?'<div class="nl2-card"><p>Аудитория из CRM: '+nl2E(({all_subscribers:'Подтверждённые подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок в сохранённой истории',project_contacts:'Контакты проекта',event_registrants:'Зрители из регистраций'})[f.crm.kind]||'Сегмент CRM')+'</p><p class="nl2-meta">Выборка рассчитана отдельно. Для новой рассылки или обновления аудитории пересчитайте сегмент в CRM. Telegram и неподтверждённые адреса не включаются.</p><a href="/admin/crm/?workTab=segments" target="_blank" rel="noopener">Открыть сегменты CRM</a></div>':'';
   var segs = NL2.segments || [];
+  var recent=NL2.campaigns||[];
+  var recentHtml='<details class="nl2-card"><summary>Кому уже писали</summary><p class="nl2-meta">Исключить из email тех, чьё письмо в выбранной кампании принято почтовым сервером. После изменения пересоберите аудиторию и подтвердите её заново. Telegram не меняется; неизвестный результат не считается принятой отправкой.</p>'+recent.slice(0,30).map(function(c){return '<label><input type="checkbox" data-nl2-exclude-campaign="'+nl2E(c.id)+'" '+((f.excludeCampaignIds||[]).includes(c.id)?'checked':'')+'> '+nl2E(c.title)+' · '+nl2E(nl2Msk(Date.parse(c.createdAt)))+'</label>';}).join('')+(!recent.length?'<p>Откройте «Кампании», чтобы загрузить историю.</p>':'')+'</details>';
   var html = '<div id="festival-audience-v814"></div>'+crmNotice+'<p class="nl2-meta">Только подписанные с подтверждённым адресом (почта) и подписчики бота (Telegram). Сегмент — фильтр среди них, а не новое согласие. Языки: ' + f.langs.map(function (l) { return NL2_LG[l]; }).join(', ') + ' (меняются на шаге «Содержание»).</p>' +
     (segs.length ? '<div class="nl2-row"><label class="nl2-meta" for="nl2-seg">Сегмент</label><select id="nl2-seg"><option value="">—</option>' + segs.map(function (s) { return '<option value="' + nl2E(s.id) + '"' + (d.audience.segmentId === s.id ? ' selected' : '') + '>' + nl2E(s.name) + '</option>'; }).join('') + '</select><button type="button" class="mini-btn" data-nl2="seg-apply">Применить фильтр сегмента</button></div>' : '') +
-    '<div data-nl2-filter="draft">' + nl2FilterHtml('nl2a', f) + '</div>' +
+    '<div data-nl2-filter="draft">' + nl2FilterHtml('nl2a', f) + '</div>' +recentHtml+
     '<div class="inv-row"><div class="field inv-w2"><label for="nl2-excl">Исключить по почте</label><input class="ym-disable-keys" id="nl2-excl" type="email" maxlength="254"></div></div><div class="nl2-row"><button type="button" class="mini-btn" data-nl2="exclude">Исключить</button>' + ((f.excludeIds || []).length ? '<button type="button" class="mini-btn" data-nl2="exclude-clear">Очистить исключения</button>' : '') + '</div>' +
     '<div class="nl2-legacy"'+(f.crm?' hidden':'')+'>' + nl2Check('audience.legacyUnconfirmed', 'Включить подписчиков до 28.10, не подтвердивших адрес (по умолчанию — нет)', d.audience.legacyUnconfirmed) +
     '<p class="nl2-meta">Старый режим совместимости. Будет виден при утверждении. Яндекс просит слать только подтверждённым адресам.</p></div>' +
@@ -5751,9 +5758,9 @@ async function nl2DoReview() {
   if (b) b.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 async function nl2Launch(btn) {
-  var r = NL2.review; if (!r || !r.approvalToken) return;
+  var r = NL2.review; if (!r || !r.approvalToken) return;if(NL2.cap?.permissions?.send===false){nl2Status(nl2$('nl2-rres'),'У вас подготовка без запуска. Черновик сохранён; передайте его сотруднику с правом отправки.','err');return;}
   var warnings = (r.warnings || []).filter(function (w) {
-    return ['email_budget_partial', 'email_worker_unavailable'].includes(w.code);
+    return ['email_budget_partial','email_worker_unavailable','recent_overlap','recent_unknown','overlap_incomplete'].includes(w.code);
   }).map(function (w) { return w.message; });
   if(btn.disabled)return;
   if(!window.AelitaConfirmMail){nl2Status(nl2$('nl2-rres'),'Проверка отправки не загрузилась. Обновите страницу.','err');return;}
@@ -5769,6 +5776,7 @@ async function nl2Launch(btn) {
     var filters=[['Языки',(filter.langs||[]).join(', ')],['Города',(filter.cityIds||[]).join(', ')||'Все'],['Интересы',((filter.interests||{}).values||[]).join(', ')||'Все'],['Метки',((filter.tags||{}).values||[]).join(', ')||'Все'],['Источники',(filter.sources||[]).map(function(x){return x.form||x.via;}).join(', ')||'Все']];
     if(filter.crm&&filter.crm.kind==='event_registrants'){filters.push(['Фестиваль / подборка',filter.crm.label||'Выбранные события'],['События',filter.crm.eventIds.join(', ')],['Период регистраций',(filter.crm.from||'С начала')+' — '+(filter.crm.to||'Без верхней границы')+' · Москва'],['Статус регистрации',filter.crm.registrationStatus],['Посещение',filter.crm.attendance==='attended'?'Есть отметка прохода':'Достаточно регистрации'],['Объединение событий',filter.crm.match==='all'?'Все выбранные':'Хотя бы одно']);}
     if(filter.crm)filters.push(['Подборка CRM',({all_subscribers:'Подписчики',event_buyers:'Покупатели события',repeat_buyers:'Повторные покупатели',no_purchases:'Без покупок',project_contacts:'Контакты проекта',event_registrants:'Зрители из регистраций'})[filter.crm.kind]||'Сохранённый сегмент']);
+    if(r.summary.recentOverlap){var overlap=r.summary.recentOverlap;filters.push(['Уже получали за 30 дней',overlap.uniqueRecipients],['Получали две и более кампании',overlap.repeatedRecipients],['Охват проверки',overlap.coverage+(overlap.incomplete?' Проверка неполная.':'')]);}
     var excluded=Object.values(r.summary.exclusions||{}).reduce(function(n,x){return n+(x.total||0);},0);
     for(var entry of Object.entries(r.summary.exclusions||{}))for(var reason of Object.entries(entry[1].reasons||{}))if(reason[1])filters.push(['Исключено · '+NL2_CH[entry[0]]+' · '+(NL2_REASON[reason[0]]||reason[0]),reason[1]]);
     if(r.summary.emailBudget){var budget=r.summary.emailBudget;filters.push(['Доступно сейчас',budget.available+' писем'],['Ожидают бюджета',budget.waiting],['Темп',budget.perSecond+' писем/с'],['Фоновая очередь',budget.workerReady?'Работает':'Недоступна или давно не отвечала']);}
@@ -7633,11 +7641,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=212"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=212">
-<script src="/assets/ai-pilot-v741.js?v=212"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=212"></script>
-<script src="/assets/subscription-materials-admin.js?v=212"></script>
+<script src="/assets/admin-snapshot.js?v=213"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=213">
+<script src="/assets/ai-pilot-v741.js?v=213"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=213"></script>
+<script src="/assets/subscription-materials-admin.js?v=213"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
