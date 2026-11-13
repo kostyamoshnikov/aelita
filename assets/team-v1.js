@@ -3,6 +3,9 @@
   const installed = document.getElementById('team-installed');
   const instructions = document.getElementById('team-instructions');
   const help = document.getElementById('team-install-help');
+  const nativeCrew = / AelitaCrew\//.test(navigator.userAgent);
+  const apk = document.getElementById('team-apk');
+  if (nativeCrew && apk) apk.hidden = true;
   let deferredPrompt;
 
   function showInstalled() {
@@ -44,7 +47,7 @@
   });
 
   const fromLauncher = new URLSearchParams(location.search).get('app') === 'team';
-  if (fromLauncher && (matchMedia('(display-mode: standalone)').matches || navigator.standalone === true)) {
+  if (nativeCrew || (fromLauncher && (matchMedia('(display-mode: standalone)').matches || navigator.standalone === true))) {
     showInstalled();
   } else {
     button.hidden = false;
