@@ -133,6 +133,8 @@ window.AelitaCrmMail = function mountMail(root, {api, contact, organization=fals
     const fields = () => ({to:selectedAddress,subject:subject.value,text:body.value,signatureMode:signatureMode.value});
     let baseline=JSON.stringify(fields()),timer=null,saving=Promise.resolve();
     let sending=false,pending=null,repeatOf=null;
+    root.crmMailDirty=()=>form.isConnected&&JSON.stringify(fields())!==baseline;
+    root.crmMailBusy=()=>sending;
     root.crmMailBeforeLeave=async()=>{
       if(!form.isConnected)return true;
       if(sending){notice.textContent='Подождите, пока CRM уточнит результат отправки.';return false;}

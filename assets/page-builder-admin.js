@@ -62,6 +62,8 @@
     row.querySelector('[data-remove]').onclick = () => { row.remove(); changed(); };
     $('pb-links').appendChild(row);
   }
+  let cleanPage='';
+  function pageDirty(){if(!S.page)return false;try{return JSON.stringify(collect())!==cleanPage;}catch{return true;}}
   function fill(p) {
     S.epoch++;S.edit++;S.uploading=0;S.preview=null;S.blocks=null;S.heroView=null;S.media.clear();S.images.clear();S.heroOriginal=null;S.social=null;for(const a of S.restoreMedia?.assets||[])if(/^[a-f0-9]{64}$/.test(a?.hash||'')&&typeof a.data==='string'&&a.data.length<710000)S.images.set(a.hash,a);S.media.restore(S.restoreMedia?.captions);S.restoreMedia=null;
 
@@ -71,7 +73,7 @@
     $('pb-kind').disabled = S.existing; $('pb-slug').readOnly = S.existing;
     $('pb-form-title').textContent = S.existing ? 'Правка: ' + (p.ru.title || p.slug) : 'Новая страница';
     $('pb-history').hidden = !S.existing; $('pb-unpublish').hidden = !S.existing;
-    kindChanged(); showImage(); mountExtras(p); counts();
+    kindChanged(); showImage(); mountExtras(p); counts();cleanPage=JSON.stringify(collect());
   }
   function kindChanged() {
     const k = $('pb-kind').value;
@@ -86,8 +88,8 @@
 
   // ── черновик (sessionStorage вкладки) и файл
   function saveDraft() {
-    if(!S.page)return;try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, revision: S.revision, asset: S.asset,assets:usedImages(collect()),captions:S.media.snapshot(collect()), savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU'); }
-    catch { $('pb-draft-state').textContent = 'Черновик не сохраняется во вкладке (мало места или приватный режим) — скачайте его файлом.'; }
+    if(!S.page)return true;try { sessionStorage.setItem(DRAFT, JSON.stringify({ page: collect(), existing: S.existing, revision: S.revision, asset: S.asset,assets:usedImages(collect()),captions:S.media.snapshot(collect()), savedAt: Date.now() })); $('pb-draft-state').textContent = 'Черновик сохранён в этой вкладке · ' + new Date().toLocaleTimeString('ru-RU');return true; }
+    catch { $('pb-draft-state').textContent = 'Черновик не сохраняется во вкладке (мало места или приватный режим) — скачайте его файлом.';return false; }
   }
   let timer = null;
   function changed() { S.edit++;S.preview = null; clearTimeout(timer); timer = setTimeout(saveDraft, 600); counts(); }
@@ -269,7 +271,7 @@ function imageSource(value){const a=S.images?.get(String(value).replace(/^asset:
   function start() {
     if (!token()) return gate();
     $('pb-new').onclick = () => { S.existing = false; S.page = blank(); S.asset = null; openForm(); saveDraft(); };
-    $('pb-cancel').onclick = () => {S.epoch++;S.uploading=0;S.media.clear(); $('pb-form').hidden = true; load().catch((e) => status(msg(e), true)); };
+    $('pb-cancel').onclick = () => {if(S.busy||S.uploading){status('Дождитесь завершения операции.',true);return;}if(!saveDraft())return;S.epoch++;S.uploading=0;S.media.clear(); $('pb-form').hidden = true; load().catch((e) => status(msg(e), true)); };
     $('pb-result-back').onclick = () => { $('pb-result').hidden = true; load().catch((e) => status(msg(e), true)); };
     $('pb-kind').onchange = () => { kindChanged(); changed(); };
     $('pb-ru-title').addEventListener('blur', () => { if (!S.existing && !$('pb-slug').value.trim()) { $('pb-slug').value = translit($('pb-ru-title').value); changed(); } });
@@ -298,4 +300,5 @@ function imageSource(value){const a=S.images?.get(String(value).replace(/^asset:
   }
   window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token'){S.epoch++;S.uploading=0;S.preview=null;S.media.clear();gate();}});
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  function registerWorkGuard(){window.AelitaWorkForms?.register('page-builder',{dirty:pageDirty,busy:()=>S.busy||S.uploading>0,visible:()=>!!S.page&&!$('pb-form').hidden});}if(window.AelitaWorkForms)registerWorkGuard();else window.addEventListener('aelita-work-forms-ready',registerWorkGuard,{once:true});
 }());

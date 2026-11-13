@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=215">
+<link rel="stylesheet" href="/assets/fonts.css?v=216">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=215">
-<script src="/assets/staff-handoff-v1.js?v=215"></script>
-<script src="/assets/mobile-files-m1.js?v=215"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=215"><script defer src="/assets/delivery-admin-v1.js?v=215"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=215"></script><script src="/assets/staff-session-v796.js?v=215"></script><script defer src="/assets/crm-show-events-v1.js?v=215"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=215">
-<script src="/assets/work-navigation-v812.js?v=215"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=215">
-<script src="/assets/section-navigation.js?v=215" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=215"><script defer src="/assets/mail-confirm-v813.js?v=215"></script><script defer src="/assets/festival-audience-v814.js?v=215"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=215"><script defer src="/assets/admin-calm-v814.js?v=215"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=216">
+<script src="/assets/staff-handoff-v1.js?v=216"></script>
+<script src="/assets/mobile-files-m1.js?v=216"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=216"><script defer src="/assets/delivery-admin-v1.js?v=216"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=216"></script><script src="/assets/staff-session-v796.js?v=216"></script><script defer src="/assets/crm-show-events-v1.js?v=216"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=216">
+<script src="/assets/work-navigation-v812.js?v=216"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=216">
+<script src="/assets/section-navigation.js?v=216" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=216"><script defer src="/assets/mail-confirm-v813.js?v=216"></script><script defer src="/assets/festival-audience-v814.js?v=216"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=216"><script defer src="/assets/work-forms-v818.js?v=216"></script><script defer src="/assets/admin-calm-v814.js?v=216"></script></head>
 <body>
 
 <nav>
@@ -3615,9 +3615,9 @@ async function loadStatistics(){
   try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob||token!==getToken())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
     var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
     document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
-    var tiles=[['visits','Посещения'],['orders','Оплаченных заказов'],['revenue','Оплачено деньгами'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><span class="scope-label">'+escapeHtml(v.from)+' — '+escapeHtml(v.to)+' · '+({visits:'по времени входа',orders:'по оплате',revenue:'по оплате, до возвратов',newSubscribers:'по подтверждению подписки'}[x[0]])+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong>'+(['orders','revenue'].includes(x[0])?'<button data-stat-details data-from="'+escapeHtml(v.from)+'" data-to="'+escapeHtml(v.to)+'">Из каких оплат</button>':'')+'<small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
+    var tiles=[['visits','Посещения'],['orders','Оплаченных заказов'],['revenue','Оплачено деньгами'],['newSubscribers','Новые подписчики']].map(function(x){var change=d.delta[x[0]],text=change.percent===null?'нет базы для сравнения':(change.percent>0?'+':'')+change.percent+'%';return '<div class="stat-box"><span>'+x[1]+'</span><span class="scope-label">'+({visits:'по времени входа',orders:'по оплате',revenue:'по оплате, до возвратов',newSubscribers:'по подтверждению подписки'}[x[0]])+'</span><strong>'+(v[x[0]]==null?'Нет данных за период':x[0]==='revenue'?fmtMoney(v[x[0]]):v[x[0]])+'</strong>'+(['orders','revenue'].includes(x[0])?'<button class="mini-btn" data-stat-details data-from="'+escapeHtml(v.from)+'" data-to="'+escapeHtml(v.to)+'">Из каких оплат</button>':'')+'<small>'+(change.absolute==null?'Нет данных для сравнения':(change.absolute>0?'+':'')+change.absolute+' · '+text+' к прошлому периоду')+'</small></div>';}).join('');
     document.getElementById('statisticsTiles').innerHTML=tiles;document.getElementById('overviewStatistics').innerHTML=tiles;
-    ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;if(v.yookassa?.known){var details=document.createElement('button');details.textContent='Из чего сложилась комиссия';details.dataset.statDetails='';details.dataset.from=v.from;details.dataset.to=v.to;el.append(' ',details);}});
+    ['statisticsFees','overviewFees'].forEach(function(id){var el=document.getElementById(id);el.textContent=actualFees(v.yookassa);el.hidden=!el.textContent;if(v.yookassa?.known){var details=document.createElement('button');details.textContent='Из чего сложилась комиссия';details.className='mini-btn';details.dataset.statDetails='';details.dataset.from=v.from;details.dataset.to=v.to;el.append(' ',details);}});
     var daysData=(v.visitsByDay||[]).slice().reverse(),max=Math.max.apply(null,daysData.map(function(x){return x.entries;}).concat([1]));
     var graph=v.visits?'<section class="statistics-section"><h2 data-adm-index="Посещения по дням">Посещения по дням</h2>'+('<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div></section>'):'<p class="statistics-period">За период нет посещений.</p>';
     document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment','Оплата'],['paid','Оплачено']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs&&v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
@@ -6209,7 +6209,7 @@ async function loadInviteEvents() {
     var keep = sel.value;
     sel.innerHTML = [false,true].map(function(archived){var group=INV_EVENTS.filter(function(e){return !!e.archived===archived;});return group.length?'<optgroup label="'+(archived?'Архив':'Предстоящие события')+'">'+group.map(function (e) { return '<option value="' + escapeHtml(e.id) + '">' + (e.archived?'Архив · ':'') + escapeHtml(e.title) + ' — ' + escapeHtml(e.dateLabel) + (e.canceled ? ' · ПОКАЗ ОТМЕНЁН' : '') + (e.counts && e.counts.invites ? ' · ' + e.counts.invites + ' пригл.' : '') + '</option>'; }).join('')+'</optgroup>':'';}).join('');
     if (keep && INV_EVENTS.some(function (e) { return e.id === keep; })) sel.value = keep;
-    invFillSeatOptions();
+    sel.dataset.workAcceptedValue=sel.value;invFillSeatOptions();
     loadInvites();
   } catch (e) {
     sel.innerHTML = '<option value="">Не загрузилось</option>';
@@ -6392,6 +6392,7 @@ function renderInvites() {
   }).join('');
 }
 function invOpenForm(inv) {
+  var previousForm=document.getElementById('inv-form');if(previousForm.classList.contains('open')&&window.AelitaWorkForms&&!AelitaWorkForms.canClose(previousForm))return;
   var mapBox = document.getElementById('inv-seat-map'); mapBox.innerHTML = ''; mapBox.removeAttribute('data-open'); // pack-v598
   INV_EDIT_ID = inv ? inv.id : null;
   INV_EDIT_INV = inv || null; // pack-v595: каким пригласительный был, когда открыли правку
@@ -6417,7 +6418,7 @@ function invOpenForm(inv) {
   invAttendanceUi();
   document.getElementById('invSaveBtn').textContent = inv ? 'Сохранить' : 'Выпустить';
   invShow(document.getElementById('invFormResult'), '', true);
-  document.getElementById('inv-name').focus();
+  window.AelitaWorkForms?.clean(document.getElementById('inv-form'));document.getElementById('inv-name').focus();
 }
 function invDownload(data) {
   var bin = atob(data.pdf_base64), arr = new Uint8Array(bin.length);
@@ -6432,6 +6433,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var sel = document.getElementById('inv-event');
   if (!sel) return;
   sel.addEventListener('change', function () {
+    var activeForm=document.getElementById('inv-form');if(activeForm.classList.contains('open')&&window.AelitaWorkForms&&!AelitaWorkForms.canClose(activeForm)){sel.value=sel.dataset.workAcceptedValue||'';return;}sel.dataset.workAcceptedValue=sel.value;
     // Другое событие — открытая правка относится к прежнему: закрыть.
     INV_EDIT_ID = null;
     document.getElementById('inv-form').classList.remove('open');
@@ -6455,13 +6457,14 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   document.getElementById('inv-search').addEventListener('input', renderInvites);
   document.getElementById('invNewBtn').addEventListener('click', function () { invOpenForm(null); });
-  document.getElementById('invFormCancel').addEventListener('click', function () { document.getElementById('inv-form').classList.remove('open'); });
+  document.getElementById('invFormCancel').addEventListener('click', function () {var form=document.getElementById('inv-form');if(window.AelitaWorkForms&&!AelitaWorkForms.canClose(form))return;form.classList.remove('open');window.AelitaWorkForms?.clean(form); });
   document.getElementById('invImportBtn').addEventListener('click', function () {
+    if(window.AelitaWorkForms&&!AelitaWorkForms.canClose(document.getElementById('inv-form')))return;
     document.getElementById('inv-form').classList.remove('open');
-    document.getElementById('inv-import').classList.add('open');
+    document.getElementById('inv-import').classList.add('open');window.AelitaWorkForms?.clean(document.getElementById('inv-import'));
     invShow(document.getElementById('invImportResult'), '', true);
   });
-  document.getElementById('invImportCancel').addEventListener('click', function () { document.getElementById('inv-import').classList.remove('open'); });
+  document.getElementById('invImportCancel').addEventListener('click', function () {var form=document.getElementById('inv-import');if(window.AelitaWorkForms&&!AelitaWorkForms.canClose(form))return;form.classList.remove('open');window.AelitaWorkForms?.clean(form); });
   document.getElementById('invSaveBtn').addEventListener('click', async function () {
     var btn = this, out = document.getElementById('invFormResult'), ev = invEvent();
     if (!ev) return;
@@ -6495,6 +6498,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!seatsTouched) { delete body.seats; delete body.seats_later; delete body.entry; }
       else body.if_seats = JSON.stringify(was.seats || null); // места, от которых правили
     }
+    if(btn.disabled)return;var form=document.getElementById('inv-form'),locked=Array.from(form.querySelectorAll('input,select,textarea,button')).map(function(el){return {el:el,disabled:el.disabled};}),beforeLabel=btn.textContent;form.dataset.workBusy='1';btn.textContent='Сохраняем…';locked.forEach(function(x){x.el.disabled=true;});
     btn.disabled = true;
     try {
       var data = await invCall(body);
@@ -6509,13 +6513,13 @@ document.addEventListener('DOMContentLoaded', function () {
       else document.getElementById('inv-form').classList.remove('open');
       var mapAfter = document.getElementById('inv-seat-map'); mapAfter.innerHTML = ''; mapAfter.removeAttribute('data-open'); INV_MAP_SEL = []; // pack-v598
       INV_EDIT_ID = null; document.getElementById('invSaveBtn').textContent = 'Выпустить';
-      await loadInviteEvents(); // pack-v592: и свободные места
+      window.AelitaWorkForms?.clean(form);await loadInviteEvents(); // pack-v592: и свободные места
     } catch (e) {
       invShow(out, e.message, false);
       // pack-v595: пригласительный изменили с другой стороны — обновить список, правку открыть заново.
       if (/изменили/.test(e.message)) { await loadInviteEvents(); }
     }
-    btn.disabled = false;
+    locked.forEach(function(x){x.el.disabled=x.disabled;});delete form.dataset.workBusy;btn.disabled=false;if(btn.textContent==='Сохраняем…')btn.textContent=beforeLabel;window.AelitaWorkForms?.refresh();
   });
   document.getElementById('invImportSave').addEventListener('click', async function () {
     var btn = this, out = document.getElementById('invImportResult'), ev = invEvent();
@@ -7594,6 +7598,7 @@ startStaffAdmin();
   }
   function show(tab, user, fromBack) {
     var previous=admCurrentTab();
+    if(previous!==tab&&window.AelitaWorkForms){for(var openForm of document.querySelectorAll('#inv-form.open,#inv-import.open')){if(!AelitaWorkForms.canClose(openForm)){if(fromBack)history.pushState({aelitaAdmin:previous},'',AelitaWork.tabUrl('admin',previous));return;}openForm.classList.remove('open');AelitaWorkForms.clean(openForm);}}
     if(getToken()&&previous!==tab)AelitaWork.write('admin:view:'+previous,{scroll:window.scrollY});
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
     var c = document.getElementById('content');
@@ -7625,11 +7630,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=215"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=215">
-<script src="/assets/ai-pilot-v741.js?v=215"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=215"></script>
-<script src="/assets/subscription-materials-admin.js?v=215"></script>
+<script src="/assets/admin-snapshot.js?v=216"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=216">
+<script src="/assets/ai-pilot-v741.js?v=216"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=216"></script>
+<script src="/assets/subscription-materials-admin.js?v=216"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

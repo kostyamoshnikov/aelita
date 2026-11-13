@@ -16,11 +16,12 @@
   function selectMenu(select, label) {
     if (!select || select.multiple || select.required || select.dataset.crmPicker) return;
     select.dataset.crmPicker = 'true';
+    let activeDialog=null;
     const current = () => select.selectedOptions[0]?.textContent || 'Выберите';
     const trigger = button(current(), () => {
-      if(select.disabled)return;
+      if(select.disabled||select.closest('fieldset:disabled'))return;
       const dialog = element('dialog');
-      dialog.className = 'crm-picker';
+      activeDialog=dialog;dialog.className = 'crm-picker';
       dialog.setAttribute('aria-label', label);
       dialog.setAttribute('closedby', 'closerequest');
       const header = element('div');
@@ -36,12 +37,13 @@
       filter.hidden = options.length < 12;
       const rows = options.map(option => {
         const choice = button(option.textContent, () => {
+          if(select.disabled||select.closest('fieldset:disabled')||!select.isConnected||option.disabled||option.parentElement?.disabled===true||!select.contains(option)){dialog.close();return;}
           select.value = option.value;
           trigger.textContent = current();
           dialog.close();
           select.dispatchEvent(new Event('change', {bubbles: true}));
         });
-        choice.disabled = option.disabled || option.parentElement?.disabled === true;
+        choice.disabled = select.disabled || option.disabled || option.parentElement?.disabled === true;
         choice.className = 'crm-picker-choice';
         choice.setAttribute('aria-pressed', String(option.selected));
         choices.append(choice);
@@ -58,7 +60,7 @@
       dialog.append(header, filter, choices);
       document.body.append(dialog);
       dialog.addEventListener('close', () => {
-        dialog.remove();
+        if(activeDialog===dialog)activeDialog=null;dialog.remove();
         if (trigger.isConnected) trigger.focus({preventScroll:true});
       }, {once:true});
       dialog.showModal();
@@ -71,9 +73,11 @@
     trigger.className = 'crm-picker-trigger';
     trigger.setAttribute('aria-haspopup', 'dialog');
     trigger.setAttribute('aria-label', label + ' · ' + current());
-    const sync=()=>{trigger.textContent=current();trigger.disabled=select.disabled;trigger.setAttribute('aria-label',label+' · '+current());};
+    const sync=()=>{trigger.textContent=current();trigger.disabled=select.disabled||!!select.closest('fieldset:disabled');trigger.setAttribute('aria-label',label+' · '+current());};
     select.addEventListener('change',sync);select.form?.addEventListener('reset',()=>setTimeout(sync,0));
-    const observer=new MutationObserver(()=>{if(!select.isConnected){observer.disconnect();return;}sync();});observer.observe(select,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['disabled','selected','label','value']});sync();
+    const observer=new MutationObserver(()=>{if(!select.isConnected){observer.disconnect();return;}sync();if(activeDialog?.open)activeDialog.close();});observer.observe(select,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['disabled','selected','label','value']});sync();
+    const parentFieldset=select.closest('fieldset');if(parentFieldset)observer.observe(parentFieldset,{attributes:true,attributeFilter:['disabled']});
+    for(const key of ['value','selectedIndex']){let proto=Object.getPrototypeOf(select),desc;while(proto&&!desc){desc=Object.getOwnPropertyDescriptor(proto,key);proto=Object.getPrototypeOf(proto);}if(desc?.get&&desc?.set)Object.defineProperty(select,key,{configurable:true,get(){return desc.get.call(this);},set(value){desc.set.call(this,value);sync();if(activeDialog?.open)activeDialog.close();}});}
     select.hidden = true;
     select.after(trigger);
   }
@@ -98,7 +102,7 @@
 
     function append(item) {
       const block = element('div');
-      block.className = 'crm-inline-note';
+      block.className = 'crm-inline-note';block.setAttribute('data-work-state','active');
       const label = element('label', item.id ? [item.actorName,formatDate(item.at)].filter(Boolean).join(' · ') : 'Новая заметка');
       const text = element('textarea');
       text.maxLength = 4000;
@@ -125,7 +129,7 @@
             add.focus();
             return;
           }
-          state.deleted = !state.deleted;root.dispatchEvent(new Event('input',{bubbles:true}));
+          state.deleted = !state.deleted;block.setAttribute('data-work-state',state.deleted?'deleted':'active');root.dispatchEvent(new Event('input',{bubbles:true}));
           marker.hidden = !state.deleted;
           label.hidden = state.deleted;
           reasonLabel.hidden = !state.deleted || item.actorId === actorId;
@@ -144,7 +148,7 @@
         const result = await api({action:'entry_list',type:'organizations',id:organization.id,kind:'notes',offset:cursor});
         if (!root.isConnected) return;
         for (const item of result.items) {
-          if (!items.some(existing => existing.id === item.id)) append(item);
+          if (!items.some(existing => existing.id === item.id)){const text=append(item);window.AelitaWorkForms?.adopt(root.closest('form'),text.closest('.crm-inline-note'));}
         }
         cursor = result.next;
         more.textContent = 'Ещё заметки';
@@ -181,5 +185,28 @@
     }
   }
 
-  window.AelitaCrmUsability = {selectMenu, longMenus, notes};
+  function groupEditor(form,type){
+    const groups={
+      contacts:[['Контакт',['name','emails','phones','city','tags']],['Связи',['organizationIds']],['Описание',['notes']]],
+      organizations:[['Организация',['name','type','city','website']],['Описание',['notes']]],
+      tasks:[['Задача',['title','status','priority','description']],['Срок и связи',['dueAt','contactId','organizationId','dealId','projectId']]],
+      deals:[['Договорённость',['title','pipeline','stage','amountRub','closeDate','lostReason','description']],['Связи',['contactId','organizationId','projectId']],['Документы',['documentLinks']]],
+      projects:[['Проект или событие',['title','kind','status','city']],['Даты и место',['startsAt','endsAt','venueOrganizationId']],['Описание',['description']]]
+    };
+    const grid=form.querySelector(':scope > .form-grid');if(!grid||form.dataset.grouped)return;form.dataset.grouped='true';
+    for(const [label,names] of groups[type]||[]){
+      const fields=names.map(name=>form.elements.namedItem(name)?.closest?.('.field')).filter(el=>el?.parentElement===grid);
+      if(!fields.length)continue;const group=element('fieldset');group.className='crm-editor-group full';const legend=element('legend',label),body=element('div');body.className='form-grid';fields[0].before(group);group.append(legend,body);fields.forEach(el=>body.append(el));
+    }
+    const footer=form.querySelector(':scope > .actions');if(footer){footer.classList.add('crm-editor-actions');footer.id='crm-editor-actions';if(form.querySelectorAll('input,select,textarea').length>8){const jump=element('button','К сохранению');jump.type='button';jump.className='crm-editor-jump';jump.onclick=()=>{footer.scrollIntoView({block:'end'});footer.querySelector('.primary')?.focus({preventScroll:true});};form.prepend(jump);}}
+  }
+  function filterSummary(form,filters,remove){
+    form.parentElement.querySelector('.crm-active-filters')?.remove();
+    const entries=Object.entries(filters).filter(([key,value])=>value!==false&&value!=null&&value!==''&&!(key==='sort'&&value==='updated')&&!(key==='overdue'&&filters.dueWindow));
+    if(!entries.length)return;const box=element('section');box.className='crm-active-filters';box.setAttribute('aria-label','Применённые фильтры');box.append(element('span','Применены:'));
+    const fallback={overdue:'Просроченные задачи',followupKind:'Следующее действие',projectId:'Проект',ownerId:'Ответственный'};
+    for(const [key,value] of entries){const field=form.elements.namedItem(key),label=field?.closest('label')?.textContent.trim().split('\n')[0]||fallback[key]||key;let shown=field?.tagName==='SELECT'?field.selectedOptions[0]?.textContent:typeof value==='boolean'?'':String(value);if(field?.type==='checkbox')shown='';const caption=field?.tagName==='SELECT'?(fallback[key]||field.closest('label')?.childNodes[0]?.textContent.trim()||key):label;const b=button(caption+(shown?' · '+shown:'')+' ×',()=>remove(key));b.setAttribute('aria-label','Убрать фильтр: '+caption+(shown?' · '+shown:''));box.append(b);}form.before(box);
+  }
+
+  window.AelitaCrmUsability = {selectMenu, longMenus, notes, groupEditor, filterSummary};
 })();

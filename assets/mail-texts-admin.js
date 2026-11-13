@@ -12,7 +12,7 @@
     invalid_mail_texts_file: 'Файл текстов в хранилище повреждён — нужна сверка.', test_mail_unavailable: 'Почта команды (MAIL_TO) не настроена у функции — пример отправить некуда.',
     github_unreachable: 'Нет связи с сервером. Проверьте интернет и повторите.', item_not_in_revision: 'Эта версия не найдена.',
   };
-  const S = { doc: null, catalog: null, id: null, lang: 'ru', dirty: false, busy: false };
+  const S = { doc: null, catalog: null, id: null, lang: 'ru', dirty: false, busy: false, edit:0 };
   const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('mt-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
   function gate() { $('mt-gate').hidden = false; $('mt-app').hidden = true; }
@@ -36,7 +36,7 @@
     if (v.trim()) L[S.id][S.lang][f] = v; else delete L[S.id][S.lang][f];
     if (!Object.keys(L[S.id][S.lang]).length) delete L[S.id][S.lang];
     if (!Object.keys(L[S.id]).length) delete L[S.id];
-    S.dirty = true; $('mt-save').disabled = false; $('mt-state').textContent = 'Есть несохранённые изменения'; $('mt-sample').hidden = true;
+    S.edit++;S.dirty = true; $('mt-save').disabled = false; $('mt-state').textContent = 'Есть несохранённые изменения'; $('mt-sample').hidden = true;
   }
   function render() {
     const c = S.catalog[S.id];
@@ -78,17 +78,18 @@
     $('mt-gate').hidden = true; $('mt-app').hidden = false; S.dirty = false; $('mt-save').disabled = true; $('mt-state').textContent = 'Изменений нет'; render(); status('');
   }
   async function preview(test) {
-    if (S.busy) return; S.busy = true; mark(null);
+    if (S.busy) return;const current={id:S.id,lang:S.lang,edit:S.edit}; S.busy = true; mark(null);
     try {
       const d = await api({ action: test ? 'mail_texts_test' : 'mail_texts_preview', doc: S.doc, id: S.id, lang: S.lang });
+      if(current.id!==S.id||current.lang!==S.lang||current.edit!==S.edit)return;
       if(test)status(d.state==='accepted'?'SMTP принял тест на один адрес почты команды. Доставка не подтверждена.':'Исход теста неизвестен. Не повторяйте вслепую.',d.state!=='accepted');
       else { $('mt-sample').hidden = false; $('mt-sample').querySelector('.mt-subj').textContent = 'Тема: ' + d.subject; $('mt-sample').querySelector('pre').textContent = d.text; status(''); }
     } catch (e) { status(msg(e), true); mark(e.field); } finally { S.busy = false; }
   }
   async function save() {
-    if (S.busy) return; S.busy = true; $('mt-save').disabled = true; mark(null); status('Сохраняем…');
-    try { const d = await api({ action: 'mail_texts_save', doc: S.doc }); S.doc.revision = d.revision; S.dirty = false; $('mt-state').textContent = 'Сохранено · ревизия ' + d.revision; status('Сохранено. Письма начнут уходить с новым текстом в течение минуты.'); }
-    catch (e) { status(msg(e), true); mark(e.field); $('mt-save').disabled = false; } finally { S.busy = false; }
+    if (S.busy) return;const edit=S.edit,ownDoc=S.doc,locked=[...document.querySelectorAll('#mt-app input,#mt-app textarea,#mt-app select,#mt-app button')].map(el=>({el,disabled:el.disabled})); S.busy = true;locked.forEach(({el})=>el.disabled=true); $('mt-save').disabled = true; mark(null); status('Сохраняем…');
+    try { const d = await api({ action: 'mail_texts_save', doc: S.doc }); if(S.doc!==ownDoc)return;S.doc.revision = d.revision; S.dirty = S.edit!==edit; $('mt-state').textContent = S.dirty?'Предыдущие изменения сохранены; новые ещё не сохранены':'Сохранено · ревизия ' + d.revision; status('Сохранено. Письма начнут уходить с новым текстом в течение минуты.'); }
+    catch (e) { status(msg(e), true); mark(e.field); $('mt-save').disabled = false; } finally { S.busy = false;locked.forEach(({el,disabled})=>el.disabled=disabled);$('mt-save').disabled=!S.dirty; }
   }
   async function history() {
     $('mt-history-list').innerHTML = ''; $('mt-history-status').textContent = 'Загружаем…'; $('mt-history-dialog').showModal();
@@ -96,9 +97,10 @@
       const d = await api({ action: 'mail_texts_history' });
       $('mt-history-status').textContent = d.history.length ? '' : 'Истории пока нет.';
       for (const h of d.history) {
-        const li = document.createElement('li'); li.innerHTML = '<div><b></b></div><button type="button" class="ed-quiet">Открыть эту версию</button>';
+        const li = document.createElement('li'); li.innerHTML = '<div><b></b></div><button type="button" class="ed-quiet">Взять в черновик</button>';
         li.querySelector('b').textContent = h.label;
         li.querySelector('button').onclick = async () => {
+          if(S.busy)return;if(S.dirty&&!confirm('Заменить текущие несохранённые тексты выбранной версией?'))return;
           try { const r = await api({ action: 'mail_texts_revision', key: h.key }); const rev = S.doc.revision; S.doc = { ...r.doc, revision: rev }; S.dirty = true; $('mt-save').disabled = false; $('mt-state').textContent = 'Загружена прежняя версия — сохраните, чтобы вернуть её'; render(); $('mt-history-dialog').close(); }
           catch (e) { $('mt-history-status').textContent = msg(e); }
         };
@@ -116,4 +118,6 @@
     load().catch((e) => status(msg(e), true));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+
+function registerWorkGuard(){window.AelitaWorkForms?.register('mail-texts-admin.js',{dirty:()=>!!(S.dirty),busy:()=>!!(S.busy),visible:()=>!!(!!S.doc)});}if(window.AelitaWorkForms)registerWorkGuard();else window.addEventListener('aelita-work-forms-ready',registerWorkGuard,{once:true});
 }());

@@ -493,4 +493,6 @@
     load().catch((e) => status(msg(e), true));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+
+function registerWorkGuard(){window.AelitaWorkForms?.register('site-nav-admin.js',{dirty:()=>!!(dirty),busy:()=>!!(S.busy),visible:()=>!!(!!S.nav)});}if(window.AelitaWorkForms)registerWorkGuard();else window.addEventListener('aelita-work-forms-ready',registerWorkGuard,{once:true});
 }());

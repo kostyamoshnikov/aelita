@@ -64,3 +64,30 @@ html.a11y.admin-calm{--work-field:var(--a11y-bg);--work-text:var(--a11y-fg)}
 .admin-calm :is(.adm-hs.prev,.crm-scroll.prev){grid-column:1}.admin-calm :is(.adm-hs.next,.crm-scroll.next){grid-column:3}
 .admin-calm .adm-hs{display:flex;visibility:hidden}.admin-calm .adm-navbox.can-next .adm-hs.next,.admin-calm .adm-navbox.can-prev .adm-hs.prev{visibility:visible}
 .admin-calm .adm-navbox:before,.admin-calm .adm-navbox:after{display:none}
+/* v818: clear form groups, applied conditions and reachable actions. */
+.admin-calm .crm-editor-group{min-width:0;margin:0;padding:14px;border:1px solid var(--work-line);border-radius:8px;background:transparent}
+.admin-calm .crm-editor-group>legend{padding:0 7px;font-size:1rem;font-weight:600;letter-spacing:normal;text-transform:none;color:var(--bone,#e8e6e1)}
+.admin-calm .crm-editor-group>.form-grid{margin:0}
+.admin-calm #editor{scroll-padding-top:86px}
+.admin-calm #editor>.row{position:sticky;top:-24px;z-index:6;background:var(--ink,#0b0b0d);padding-block:12px;border-bottom:1px solid var(--work-line);display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:start}
+.admin-calm #editor>.row h2{font-size:1.2rem;line-height:1.4;flex:1 1 160px;margin:0;min-width:0}
+.admin-calm #editor>.row [data-dialog-close]{flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;font-size:1.3rem;line-height:1;align-self:start}
+.admin-calm .crm-editor-actions{position:sticky;bottom:-24px;z-index:5;background:var(--ink,#0b0b0d);border-top:1px solid var(--work-line);padding:12px 0;display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.admin-calm .crm-editor-actions>.primary{flex:1 1 150px}.admin-calm .crm-editor-actions>[data-dialog-close]{flex:0 1 auto}
+.admin-calm .crm-editor-jump{margin:0 0 14px;font-size:.9rem}
+.admin-calm .work-dirty-hint,.admin-calm .work-form-status{font-size:.9rem;line-height:1.55;padding:8px 12px;margin:8px 0;color:var(--bone,#e8e6e1);border-left:2px solid var(--gold,#d6b57a);background:rgba(214,181,122,.07)}
+.admin-calm .work-dirty-hint[hidden]{display:none}
+.admin-calm .work-field-error{text-transform:none;letter-spacing:normal}
+.admin-calm .crm-active-filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0;padding:12px;border:1px solid var(--work-line);border-radius:8px;font-size:.9rem}
+.admin-calm .crm-active-filters>span{flex:0 0 100%;color:var(--sand,#c9b8a3)}
+.admin-calm .crm-active-filters button{font-size:.875rem;padding:8px 12px;border-radius:7px;overflow-wrap:anywhere}
+.admin-calm .crm-navbox{position:sticky;top:0;z-index:30;background:var(--ink,#0b0b0d);padding-block:8px;border-bottom:1px solid var(--work-line)}
+.admin-calm .board{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity}
+.admin-calm .board>.column{scroll-snap-align:start}
+.admin-calm .detail dt{text-transform:none;letter-spacing:normal;font-size:.9rem}
+.admin-calm .ed-wrap button{white-space:normal;overflow-wrap:break-word}
+.admin-calm .ed-wrap button:not([aria-pressed=true]):not(.primary){background:transparent;color:var(--bone,#e8e6e1);border-color:var(--work-line)}
+.admin-calm .ed-wrap :is(button.primary,button[type=submit],#ed-preview,#ed-publish,#em-check,#em-publish,#di-check,#di-publish,#pb-check,#pb-publish,#sn-check,#sn-publish,#mt-save,#ba-save,#ba-publish){background:var(--gold,#d6b57a);color:var(--ink,#0b0b0d);border-color:var(--gold,#d6b57a)}
+.admin-calm :is(#ed-reset,#ed-delete-draft,#pb-unpublish,#di-delete-draft){border-color:#b46e63;color:#ffc2b5}
+@media(max-width:600px){.admin-calm #editor>.row{top:-16px}.admin-calm .crm-editor-actions{bottom:-16px}.admin-calm .crm-editor-group{padding:12px}.admin-calm .crm-editor-group>.form-grid{grid-template-columns:minmax(0,1fr)}.admin-calm .ed-header{flex-wrap:wrap;gap:12px}.admin-calm .ed-header .ed-brand{max-width:100%;white-space:normal}.admin-calm .ed-header .ed-back{white-space:normal}.admin-calm .crm-editor-actions>button{min-height:44px}}
+.admin-calm.work-keyboard .ed-bottom{position:static}.admin-calm.work-keyboard .crm-navbox{position:relative}
