@@ -14,10 +14,11 @@
   };
 
   function selectMenu(select, label) {
-    if (!select || select.multiple || select.dataset.crmPicker) return;
+    if (!select || select.multiple || select.required || select.dataset.crmPicker) return;
     select.dataset.crmPicker = 'true';
     const current = () => select.selectedOptions[0]?.textContent || 'Выберите';
     const trigger = button(current(), () => {
+      if(select.disabled)return;
       const dialog = element('dialog');
       dialog.className = 'crm-picker';
       dialog.setAttribute('aria-label', label);
@@ -40,7 +41,7 @@
           dialog.close();
           select.dispatchEvent(new Event('change', {bubbles: true}));
         });
-        choice.disabled = option.disabled;
+        choice.disabled = option.disabled || option.parentElement?.disabled === true;
         choice.className = 'crm-picker-choice';
         choice.setAttribute('aria-pressed', String(option.selected));
         choices.append(choice);
@@ -70,10 +71,9 @@
     trigger.className = 'crm-picker-trigger';
     trigger.setAttribute('aria-haspopup', 'dialog');
     trigger.setAttribute('aria-label', label + ' · ' + current());
-    select.addEventListener('change', () => {
-      trigger.textContent = current();
-      trigger.setAttribute('aria-label', label + ' · ' + current());
-    });
+    const sync=()=>{trigger.textContent=current();trigger.disabled=select.disabled;trigger.setAttribute('aria-label',label+' · '+current());};
+    select.addEventListener('change',sync);select.form?.addEventListener('reset',()=>setTimeout(sync,0));
+    const observer=new MutationObserver(()=>{if(!select.isConnected){observer.disconnect();return;}sync();});observer.observe(select,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['disabled','selected','label','value']});sync();
     select.hidden = true;
     select.after(trigger);
   }
@@ -121,11 +121,11 @@
         const remove = button('Удалить заметку', () => {
           if (!item.id) {
             items.splice(items.indexOf(state), 1);
-            block.remove();
+            block.remove();root.dispatchEvent(new Event('input',{bubbles:true}));
             add.focus();
             return;
           }
-          state.deleted = !state.deleted;
+          state.deleted = !state.deleted;root.dispatchEvent(new Event('input',{bubbles:true}));
           marker.hidden = !state.deleted;
           label.hidden = state.deleted;
           reasonLabel.hidden = !state.deleted || item.actorId === actorId;

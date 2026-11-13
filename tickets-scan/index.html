@@ -112,7 +112,7 @@ button.action:disabled{opacity:.5}
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=214">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=215">
 </head>
 <body>
 <div id="gate">
@@ -166,7 +166,7 @@ button.action:disabled{opacity:.5}
      может не открыться (Cloudflare в РФ замедляют). Где есть встроенный
      BarcodeDetector (Chrome на Android) — сначала он, jsQR — запасной. -->
 <script src="/assets/jsQR-1.4.0.js"></script>
-<script src="/assets/analytics-events.js?v=214"></script>
+<script src="/assets/analytics-events.js?v=215"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -607,11 +607,13 @@ const cameraCanvas = document.getElementById('camera-canvas');
 const CAMERA_KEY = 'aelita-tickets-camera';
 // Не выбирали ни разу — на телефоне (сенсорный экран) включаем, на ноутбуке со сканером-пистолетом — нет.
 function cameraWanted(){
+  if(/AelitaCrew\//.test(navigator.userAgent)&&!window.crewCameraChosen)return false;
   const v = lsGet(CAMERA_KEY);
   if(v !== null) return v === '1';
   try{ return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); }catch(e){ return false; }
 }
 cameraToggleBtn.addEventListener('click', () => {
+  window.crewCameraChosen=true;
   // Во время запроса разрешения нажатие — «не надо камеру» (проверится после ответа).
   if(cameraStream || cameraStarting){ lsSet(CAMERA_KEY, '0'); stopCamera(); }
   else { lsSet(CAMERA_KEY, '1'); startCamera(); }
@@ -625,13 +627,13 @@ function resumeCamera(){
 }
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') setTimeout(resumeCamera, 300); });
 
-let cameraStarting = false;
+let cameraStarting = false,cameraRequestId=0;
 async function startCamera(silent){
   if(cameraStarting) return;
   cameraStarting = true;
-  try{ await startCameraInner(silent); } finally { cameraStarting = false; }
+  try{ await startCameraInner(silent,++cameraRequestId); } finally { cameraStarting = false; }
 }
-async function startCameraInner(silent){
+async function startCameraInner(silent,request){
   if(typeof jsQR !== 'function' && !('BarcodeDetector' in window)){
     // файл jsQR не загрузился (нет сети на площадке в момент загрузки страницы
     // и т.п.) — сканер-пистолет и ручной ввод продолжают работать как
@@ -654,7 +656,7 @@ async function startCameraInner(silent){
   // pack-v626: пока ждали разрешения, могли выйти на экран кода (неверный код)
   // или выключить камеру — тогда не сканируем: каждый QR под экраном кода
   // уходил бы на сервер без кода и засчитывался как перебор (блок IP площадки).
-  if(!appVisible() || !getStaffCode() || !cameraWanted()){
+  if(request!==cameraRequestId || document.visibilityState==='hidden' || !appVisible() || !getStaffCode() || !cameraWanted()){
     cameraStream.getTracks().forEach((t) => t.stop());
     cameraStream = null;
     return;
@@ -666,6 +668,7 @@ async function startCameraInner(silent){
       if(fmts.indexOf('qr_code') >= 0) barcodeDetector = new BarcodeDetector({formats: ['qr_code']});
     }catch(e){ barcodeDetector = null; }
   }
+  if(request!==cameraRequestId||!cameraStream||document.visibilityState==='hidden')return;
   cameraVideo.srcObject = cameraStream;
   cameraVideo.style.display = 'block';
   try{ await cameraVideo.play(); }catch(e){ /* показ кадров браузер начнёт сам; распознавание идёт и так */ }
@@ -696,13 +699,18 @@ document.getElementById('torch-toggle').addEventListener('click', async () => {
   try{ await t.applyConstraints({advanced: [{torch: !torchOn}]}); torchOn = !torchOn; }catch(e){}
   renderTorch(); refocus();
 });
+window.addEventListener('pagehide',stopCamera);
+window.addEventListener('aelita-crew-suspend',stopCamera);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')stopCamera();});
 function stopCamera(){
+  cameraRequestId++;
   cameraSession++;
   torchOn = false;
   if(cameraLoopId) cancelAnimationFrame(cameraLoopId);
   cameraLoopId = null;
   if(cameraStream){ cameraStream.getTracks().forEach((t) => t.stop()); }
   cameraStream = null;
+  cameraVideo.srcObject=null;
   cameraVideo.style.display = 'none';
   cameraToggleBtn.textContent = '📷 Включить камеру';
   renderTorch();

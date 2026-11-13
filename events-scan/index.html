@@ -64,7 +64,7 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=214">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=215">
 </head>
 <body>
 <div id="gate">
@@ -87,8 +87,8 @@ button.secondary{background:transparent;border:1px solid var(--sand);color:var(-
 
 <a class="help-fab" href="tel:+79605151690">🆘 Позвать помощь</a>
 
-<script src="/assets/jsQR-1.4.0.js?v=214"></script>
-<script src="/assets/analytics-events.js?v=214"></script>
+<script src="/assets/jsQR-1.4.0.js?v=215"></script>
+<script src="/assets/analytics-events.js?v=215"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/events
@@ -209,6 +209,7 @@ input.addEventListener('keydown', (e) => {
 
 // ─── Камера-сканер — дословно та же логика, что в tickets-scan ──────
 let cameraStream = null;
+let cameraGeneration=0,cameraStarting=false;
 let cameraLoopId = null;
 let cameraLastCode = null;
 let cameraLastAt = 0;
@@ -217,15 +218,20 @@ const CAMERA_COOLDOWN_MS = 2500;
 const cameraToggleBtn = document.getElementById('camera-toggle');
 const cameraVideo = document.getElementById('camera-video');
 const cameraCanvas = document.getElementById('camera-canvas');
-cameraToggleBtn.addEventListener('click', () => { cameraStream ? stopCamera() : startCamera(); });
+cameraToggleBtn.addEventListener('click', () => { cameraStream||cameraStarting ? stopCamera() : startCamera(); });
 
 async function startCamera(){
+  if(cameraStarting)return;cameraStarting=true;const generation=++cameraGeneration;
+  try {await startCameraInner(generation);}finally{cameraStarting=false;}
+}
+async function startCameraInner(generation){
   if(typeof jsQR !== 'function'){
     document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Библиотека камеры не загрузилась (нет сети?) — используйте сканер или ручной ввод.</div></div>';
     return;
   }
   try{
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    if(generation!==cameraGeneration||document.visibilityState==='hidden'){stream.getTracks().forEach(t=>t.stop());return;}cameraStream=stream;
   }catch(e){
     document.getElementById('result').innerHTML = '<div class="card warn"><div class="status warn">Камера недоступна (нет разрешения или устройства) — используйте сканер или ручной ввод.</div></div>';
     cameraStream = null;
@@ -233,16 +239,22 @@ async function startCamera(){
   }
   cameraVideo.srcObject = cameraStream;
   cameraVideo.style.display = 'block';
-  await cameraVideo.play();
+  try{await cameraVideo.play();}catch(e){stopCamera();document.getElementById('result').textContent='Видео недоступно. Повторите запуск камеры или введите код вручную.';return;}
+  if(generation!==cameraGeneration||!cameraStream)return;
   cameraToggleBtn.textContent = '📷 Выключить камеру';
   cameraLoopId = requestAnimationFrame(cameraTick);
 }
 
+window.addEventListener('pagehide',stopCamera);
+window.addEventListener('aelita-crew-suspend',stopCamera);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')stopCamera();});
 function stopCamera(){
+  cameraGeneration++;
   if(cameraLoopId) cancelAnimationFrame(cameraLoopId);
   cameraLoopId = null;
   if(cameraStream){ cameraStream.getTracks().forEach((t) => t.stop()); }
   cameraStream = null;
+  cameraVideo.srcObject=null;
   cameraVideo.style.display = 'none';
   cameraToggleBtn.textContent = '📷 Включить камеру';
 }

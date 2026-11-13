@@ -15,7 +15,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=214">
+<link rel="stylesheet" href="/assets/fonts.css?v=215">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -299,10 +299,10 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 .gift-owned select{max-width:100%;min-height:42px;background:var(--coal);color:var(--bone);border:1px solid rgba(201,184,163,.35);padding:6px 10px}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js и style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=214">
-<script src="/assets/a11y.js?v=214"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=215">
+<script src="/assets/a11y.js?v=215"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=214">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=215">
 </head>
 <body>
 <!-- pack-v750 (заказчик 04.11): шапка как на остальных страницах — название, значок
@@ -548,7 +548,7 @@ function initMetrika(){
 }
 initMetrika();
 </script>
-<script src="/assets/analytics-events.js?v=214"></script>
+<script src="/assets/analytics-events.js?v=215"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
@@ -558,7 +558,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=214"></script>
+<script src="/assets/payments.js?v=215"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -2673,8 +2673,8 @@ function acceptCookies() {
   if (accepted && b) b.classList.add('hidden');
 })();
 </script>
-<script src="/assets/phone-prefix.js?v=214"></script>
-<script src="/assets/outage.js?v=214" defer></script>
+<script src="/assets/phone-prefix.js?v=215"></script>
+<script src="/assets/outage.js?v=215" defer></script>
 <script>
 (function(){var dock=document.getElementById('help-dock'),bar=document.querySelector('.bar');if(!dock)return;var anchor=dock.parentNode,next=dock.nextSibling;
 function layout(){dock.classList.toggle('compact',window.scrollY>60);if(bar){document.documentElement.style.setProperty('--checkout-bar-height',bar.getBoundingClientRect().height+'px');var fit=window.innerWidth>=1050&&bar.clientWidth>700;dock.classList.toggle('in-paybar',fit);if(fit&&dock.parentNode!==bar)bar.insertBefore(dock,bar.firstChild);else if(!fit&&dock.parentNode!==anchor)anchor.insertBefore(dock,next);}}window.addEventListener('scroll',layout,{passive:true});window.addEventListener('resize',layout);if(bar&&window.ResizeObserver)new ResizeObserver(layout).observe(bar);layout();
