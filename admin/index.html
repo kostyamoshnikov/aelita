@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=216">
+<link rel="stylesheet" href="/assets/fonts.css?v=217">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=216">
-<script src="/assets/staff-handoff-v1.js?v=216"></script>
-<script src="/assets/mobile-files-m1.js?v=216"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=216"><script defer src="/assets/delivery-admin-v1.js?v=216"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=216"></script><script src="/assets/staff-session-v796.js?v=216"></script><script defer src="/assets/crm-show-events-v1.js?v=216"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=216">
-<script src="/assets/work-navigation-v812.js?v=216"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=216">
-<script src="/assets/section-navigation.js?v=216" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=216"><script defer src="/assets/mail-confirm-v813.js?v=216"></script><script defer src="/assets/festival-audience-v814.js?v=216"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=216"><script defer src="/assets/work-forms-v818.js?v=216"></script><script defer src="/assets/admin-calm-v814.js?v=216"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=217">
+<script src="/assets/staff-handoff-v1.js?v=217"></script>
+<script src="/assets/mobile-files-m1.js?v=217"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=217"><script defer src="/assets/delivery-admin-v1.js?v=217"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=217"></script><script src="/assets/staff-session-v796.js?v=217"></script><script defer src="/assets/crm-show-events-v1.js?v=217"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=217">
+<script src="/assets/work-navigation-v812.js?v=217"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=217">
+<script src="/assets/section-navigation.js?v=217" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=217"><script defer src="/assets/mail-confirm-v813.js?v=217"></script><script defer src="/assets/festival-audience-v814.js?v=217"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=217"><script defer src="/assets/work-forms-v818.js?v=217"></script><script defer src="/assets/admin-calm-v814.js?v=217"></script></head>
 <body>
 
 <nav>
@@ -560,6 +560,21 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <div class="stat-box"><div class="label">Выручка за 30 дней</div><div class="value" id="s-rev-30d">—</div></div>
     </div>
 
+    <p class="sec-title">Участники события</p>
+    <section id="eventParticipants" aria-label="Единый список участников">
+      <div class="participants-controls"><label>Событие: участники<select id="participants-event" class="search"></select></label></div>
+      <p id="participants-context" class="hint"></p><p id="participants-message" role="status" aria-live="polite">Выберите событие, чтобы увидеть всех участников.</p>
+      <button type="button" class="mini-btn" id="participants-reload">Обновить участников</button>
+      <div id="participants-totals" class="participant-totals" aria-label="Количество участников"></div>
+      <p id="participants-attendance" class="hint"></p>
+      <p id="participants-warnings" class="participants-warning" hidden></p>
+      <p class="hint">Ожидаемые участники — люди с действующими основаниями. Приглашение или билет сами по себе не подтверждают намерение прийти. Вход по QR относится к залу; фактическое подключение онлайн не отслеживается.</p>
+      <div class="participants-controls"><label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label><label>Какие записи<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label><label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label><label>Порядок списка<select id="participants-sort" class="search"><option value="name">А—Я</option><option value="mode">По формату участия</option></select></label></div>
+      <p id="participants-scope" role="status"></p>
+      <div class="participants-actions"><button type="button" class="mini-btn" id="participants-copy" disabled>Скопировать список</button><button type="button" class="mini-btn" id="participants-csv" disabled>Скачать CSV для Excel</button><button type="button" class="mini-btn" id="participants-pdf" disabled>Скачать список PDF</button><a id="participants-download" hidden></a></div>
+      <details class="participants-decisions"><summary>Совпадения, команда и уточнение формата</summary><p class="hint">Выберите строки ниже. Решения меняют только этот сводный список; билеты, оплаты и пригласительные сохраняются. Совпадение имён не объединяется автоматически.</p><p id="participants-selected" role="status">Выбрано для решения: 0</p><div class="participants-actions"><button type="button" class="mini-btn" data-participant-operation="merge" disabled>Один человек</button><button type="button" class="mini-btn" data-participant-operation="distinct" disabled>Разные люди</button><button type="button" class="mini-btn" data-participant-operation="exclude" disabled>Ведущий / команда</button><button type="button" class="mini-btn" data-participant-operation="include" disabled>Вернуть в зрители</button><button type="button" class="mini-btn" data-participant-operation="reset" disabled>Сбросить решения</button></div><label>Уточнённый формат<select id="participants-resolve-mode" class="search"><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Ещё не определён</option></select></label><button type="button" class="mini-btn" data-participant-operation="mode" disabled>Уточнить формат в списке</button></details>
+      <div id="participants-list"></div><button type="button" class="mini-btn" id="participants-more" hidden>Показать ещё 200</button>
+    </section>
     <p class="sec-title">Статистика</p>
     <div class="statistics-controls"><label>Период <select id="statisticsDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="statisticsReload">Обновить</button></div>
     <p id="statisticsPeriod" class="statistics-period" aria-live="polite"></p><div id="statisticsTiles" class="statistics-tiles"><p>Загружаем статистику…</p></div>
@@ -6963,6 +6978,7 @@ function hideError() {
 // pack-v695: раздел — какие загрузчики ему нужны. Загружается один раз
 // после входа или «Обновить»; поиск по админке догружает все разделы.
 var ADM_TAB_LOADERS = {
+  participants:[function(){return window.AelitaEventParticipants.load();}],
   statistics: [function(){loadStatistics();}],
   overview: [function () { loadSales(); }], // pack-v571
   orders: [function () { loadOrders(); }],
@@ -7065,6 +7081,7 @@ function showData() {
   document.getElementById('gateScreen').style.display = 'none';
   document.getElementById('dataScreen').style.display = 'block';
   loadData();
+  window.dispatchEvent(new Event('aelita-admin-ready'));
 }
 
 document.getElementById('refreshBtn').addEventListener('click', function () { loadData({ refresh: true }); });
@@ -7286,6 +7303,9 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=217">
+<script src="/assets/participants-view-v819.js?v=217"></script>
+<script src="/assets/event-participants-v819.js?v=217"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
@@ -7293,6 +7313,7 @@ startStaffAdmin();
 (function () {
   var GROUPS = [
     ['overview', 'Обзор', ['Обзор']],
+    ['participants', 'Участники', ['Участники события']],
     ['statistics', 'Статистика', ['Статистика']],
     ['orders', 'Заказы', ['Промокоды', 'Заказы билетов', 'Незавершённые заказы']],
     // pack-v694: возвраты — своим разделом со счётчиком «ждут решения или выплаты».
@@ -7308,6 +7329,7 @@ startStaffAdmin();
     ['money', 'Подписки и карты', ['Подписки', 'Счета компаний', 'Подарочные карты']],
     ['site', 'Сайт', ['Текущий образ сайта', 'Правки сайта']]
   ];
+  GROUPS = AelitaWork.orderTabs('admin', GROUPS.map(function(g){return g[0];})).map(function(key){return GROUPS.find(function(g){return g[0]===key;});});
   var OVERVIEW_TITLES = ['Продажи по показам', 'Скорость покупки', 'Посещаемость сайта'];
   function groupOf(title) {
     if (OVERVIEW_TITLES.some(function (t) { return title.indexOf(t) === 0; })) return 'overview';
@@ -7328,6 +7350,12 @@ startStaffAdmin();
       }
       el.setAttribute('data-adm-tab', cur);
     });
+    AelitaWork.prioritizeSections(c, {
+      overview:['Продажи по показам','Обзор','Посещаемость сайта','Скорость покупки'],
+      orders:['Заказы билетов','Незавершённые заказы','Промокоды']
+    });
+    var customerExport=c.querySelector('.customer-export'),exportResult=document.getElementById('exportEmailResult'),customerList=document.getElementById('custList');
+    if(customerList&&customerExport&&exportResult)customerList.after(customerExport,exportResult);
     var nav = document.createElement('nav');
     nav.className = 'adm-nav'; nav.id = 'admNav'; nav.setAttribute('aria-label', 'Разделы админки');
     nav.innerHTML = GROUPS.map(function (g) {
@@ -7358,6 +7386,9 @@ startStaffAdmin();
     index.setAttribute('aria-label', 'В этом разделе');
     index.setAttribute('data-adm-tab', '*');
     box.after(index);
+    var settings=document.createElement('details');settings.setAttribute('data-adm-tab','*');index.after(settings);
+    var pins=AelitaWork.mountNavPins(settings,{area:'admin',available:GROUPS.map(function(g){return g[0];}),labels:Object.fromEntries(GROUPS.map(function(g){return[g[0],g[1]];})),apply:function(keys){var nodes=new Map(Array.from(nav.children).map(function(b){return[b.dataset.admTabBtn,b];}));keys.forEach(function(k){if(nodes.has(k))nav.append(nodes.get(k));});requestAnimationFrame(upd);}});
+    window.addEventListener('aelita-admin-ready',pins.refresh);
     search(box, c);
     setTimeout(upd, 0);
     new MutationObserver(function(){var active=nav.querySelector('.on');if(active&&nav.clientWidth)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();}).observe(c, { attributes: true, attributeFilter: ['style'] });
@@ -7630,11 +7661,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=216"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=216">
-<script src="/assets/ai-pilot-v741.js?v=216"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=216"></script>
-<script src="/assets/subscription-materials-admin.js?v=216"></script>
+<script src="/assets/admin-snapshot.js?v=217"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=217">
+<script src="/assets/ai-pilot-v741.js?v=217"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=217"></script>
+<script src="/assets/subscription-materials-admin.js?v=217"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

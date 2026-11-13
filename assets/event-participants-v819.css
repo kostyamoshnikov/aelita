@@ -1,0 +1,23 @@
+.participants-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;margin-block:14px}
+.participants-controls label{display:flex;flex-direction:column;gap:7px;min-width:0}
+.participants-controls :is(input,select){width:100%;max-width:100%;min-width:0}
+.participant-totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:10px;margin:18px 0}
+.participant-totals button{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;white-space:normal;padding:16px;border:1px solid rgba(214,181,122,.3);border-radius:8px;background:transparent;color:inherit;cursor:pointer}
+.participant-totals strong{font-size:1.75rem;line-height:1.2}
+.participants-warning{padding:12px;border-left:3px solid var(--gold,#d6b57a);line-height:1.6;background:rgba(214,181,122,.08)}
+.participants-actions{display:flex;flex-wrap:wrap;gap:10px;margin-block:14px}
+.participant-card{border:1px solid rgba(214,181,122,.22);border-radius:8px;padding:14px;margin:10px 0;overflow-wrap:anywhere}
+.participant-card p{margin:8px 0;line-height:1.5}
+.participant-pick{display:flex;gap:12px;align-items:center;font-size:1.1rem!important;letter-spacing:normal!important;text-transform:none!important}
+.participant-pick input{flex:none;width:20px!important;height:20px;min-height:20px!important;margin:0}
+.participant-issue{color:var(--gold,#d6b57a)}
+.participant-card summary{min-height:44px;cursor:pointer;padding:10px 0}
+.participants-decisions{margin-block:16px;border:1px solid rgba(214,181,122,.22);border-radius:8px;padding:12px}
+.participants-decisions>summary{min-height:44px;cursor:pointer}
+#participants-copy-dialog{width:min(680px,calc(100vw - 32px));max-height:calc(var(--work-vh,100vh) - 32px);overflow:auto}
+#participants-copy-dialog textarea{width:100%;min-height:250px;resize:vertical}
+
+.participants-stale :is(#participants-totals,#participants-list,#participants-context){opacity:.55}
+
+.participant-totals button[aria-pressed="true"]{border-color:var(--gold,#d6b57a);background:rgba(214,181,122,.1)}
+.participant-totals button:focus-visible{outline:2px solid var(--gold,#d6b57a);outline-offset:3px}

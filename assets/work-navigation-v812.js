@@ -3,10 +3,47 @@
   const types = {contacts:'c', organizations:'o', projects:'p', tasks:'t', deals:'d'};
   const tabs = {
     crm: {workbench:'Порядок в базе',dashboard:'CRM · Обзор',calendar:'Календарь',projects:'Проекты и события',contacts:'Контакты',organizations:'Организации',tasks:'Задачи',deals:'Сделки',journal:'Журнал CRM',analytics:'Отчёты CRM',segments:'Сегменты',management:'Управление CRM',team:'Сотрудники'},
-    admin: {overview:'Обзор админки',statistics:'Статистика',orders:'Заказы',refunds:'Возвраты',shows:'Показы',invites:'Пригласительные',staff:'Контролёры',inbox:'Входящие',ai:'ИИ · Тест',news:'Рассылка',events:'Регистрации',clients:'Клиенты',money:'Подписки и карты',site:'Сайт'},
+    admin: {participants:'Участники события',overview:'Обзор админки',statistics:'Статистика',orders:'Заказы',refunds:'Возвраты',shows:'Показы',invites:'Пригласительные',staff:'Контролёры',inbox:'Входящие',ai:'ИИ · Тест',news:'Рассылка',events:'Регистрации',clients:'Клиенты',money:'Подписки и карты',site:'Сайт'},
     bot: {home:'Админка бота'},
   };
   const paths={crm:'/admin/crm/',admin:'/admin/',bot:'/admin/bot/'};
+  // Stable workflow order. Personal pins take precedence, never click tracking.
+  const priority={
+    admin:['overview','participants','shows','orders','invites','events','refunds','inbox','clients','news','statistics','money','staff','site','ai'],
+    crm:['dashboard','tasks','contacts','organizations','deals','projects','calendar','segments','analytics','workbench','journal','management','team'],
+  };
+  function orderTabs(area,available,pins=[]){
+    const allowed=[...new Set(available.filter(k=>tabValid(area,k)))],home=area==='crm'?'dashboard':'overview';
+    const saved=[...new Set(pins)].filter(k=>k!==home&&allowed.includes(k)).slice(0,4);
+    return [...new Set([home,...saved,...(priority[area]||[]),...allowed])].filter(k=>allowed.includes(k));
+  }
+  function prioritizeSections(container,spec){
+    const chunks=[];let chunk;
+    for(const node of [...container.children]){
+      if(node.matches('p.sec-title')){chunk={title:node.textContent.trim(),tab:node.dataset.admTab,nodes:[]};chunks.push(chunk);}
+      if(chunk)chunk.nodes.push(node);
+    }
+    for(const [tab,prefixes]of Object.entries(spec)){
+      const blocks=chunks.filter(x=>x.tab===tab);if(blocks.length<2)continue;
+      const rank=x=>{const n=prefixes.findIndex(p=>x.title.startsWith(p));return n<0?prefixes.length:n;};
+      const marker=container.ownerDocument.createComment('working section order');blocks[0].nodes[0].before(marker);
+      for(const block of [...blocks].sort((a,b)=>rank(a)-rank(b)))for(const node of block.nodes)marker.before(node);
+      marker.remove();
+    }
+  }
+  function mountNavPins(host,{area,available,labels,apply}){
+    const home=area==='crm'?'dashboard':'overview',base=orderTabs(area,available),key='nav-pins:'+area;
+    const choices=base.filter(k=>k!==home);let actor=null,pins=[];
+    const doc=host.ownerDocument,summary=doc.createElement('summary'),intro=doc.createElement('p'),list=doc.createElement('div'),status=doc.createElement('p'),reset=doc.createElement('button');
+    summary.textContent='Закрепить разделы';intro.textContent='До 4 разделов сразу после обзора. Порядок сохраняется для вашей учётной записи на этом устройстве.';intro.className='hint';list.className='work-nav-pin-options';status.setAttribute('role','status');reset.type='button';reset.textContent='Стандартный порядок';
+    host.classList.add('work-nav-settings');host.append(summary,intro,list,reset,status);
+    for(const k of choices){const label=doc.createElement('label'),input=doc.createElement('input');input.type='checkbox';input.dataset.navPin=k;label.append(input,doc.createTextNode(' '+labels[k]));list.append(label);}
+    const paint=()=>{for(const x of list.querySelectorAll('input'))x.checked=pins.includes(x.dataset.navPin);apply(orderTabs(area,base,pins));};
+    function refresh(){const next=staff();if(next===actor)return;actor=next;const saved=read(key,{actor,durable:true});pins=Array.isArray(saved)?orderTabs(area,saved,saved).filter(k=>k!==home&&choices.includes(k)).slice(0,4):[];paint();status.textContent='';}
+    function save(){const ok=write(key,pins,{actor,durable:true});paint();status.textContent=ok?'Порядок сохранён.':'Порядок применён в этой вкладке. Сохранение на устройстве недоступно.';}
+    list.onchange=e=>{const k=e.target.dataset.navPin;if(!k)return;if(e.target.checked&&!pins.includes(k)){if(pins.length>=4){e.target.checked=false;status.textContent='Можно закрепить до 4 разделов.';return;}pins.push(k);}else pins=pins.filter(x=>x!==k);save();};
+    reset.onclick=()=>{pins=[];save();};refresh();return{refresh};
+  }
   const extraFilters={
     contacts:['city','sort','projectId','tag','contactRole','source'],
     organizations:['city','sort','projectId','organizationType'],
@@ -138,7 +175,7 @@
     el.append(select,button('Сбросить фильтры',()=>{select.value='';reset();}),details,feedback);
     render();
   }
-  const api={read,write,filters,tabs,tabValid,tabUrl,recordValid,recordUrl,recordSection,parseRecent,canPin,score,norm,phone,escape,mountPresets};
+  const api={read,write,filters,tabs,tabValid,tabUrl,recordValid,recordUrl,recordSection,parseRecent,canPin,score,norm,phone,escape,mountPresets,orderTabs,prioritizeSections,mountNavPins};
   if(typeof module==='object'&&module.exports)module.exports=api;
   else root.AelitaWork=api;
 })(typeof window==='object'?window:globalThis);

@@ -26,3 +26,11 @@
 .work-search-group h3{font-size:.95rem;margin:.35rem .55rem;color:var(--sand,#c7b9a6)}
 .work-search-group button{width:100%;min-height:44px}
 .work-tools[hidden]{display:none}
+
+/* v819: personal priorities without moving the current working form. */
+.admin-calm .work-nav-settings{margin:8px 0 18px;border:1px solid var(--work-line,rgba(214,181,122,.2));border-radius:8px;padding:10px 12px}
+.admin-calm .work-nav-settings summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:.9rem;letter-spacing:normal;text-transform:none}
+.admin-calm .work-nav-pin-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:4px 16px;margin-block:12px}
+.admin-calm .work-nav-pin-options label{display:flex;align-items:center;gap:8px;min-height:44px;margin:0;font-size:.9rem;letter-spacing:normal;text-transform:none}
+.admin-calm .work-nav-pin-options input{flex:none;width:20px;height:20px;min-height:20px;padding:0}
+.admin-calm .work-nav-settings [role=status]:empty{display:none}
