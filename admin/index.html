@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=217">
+<link rel="stylesheet" href="/assets/fonts.css?v=218">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=217">
-<script src="/assets/staff-handoff-v1.js?v=217"></script>
-<script src="/assets/mobile-files-m1.js?v=217"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=217"><script defer src="/assets/delivery-admin-v1.js?v=217"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=217"></script><script src="/assets/staff-session-v796.js?v=217"></script><script defer src="/assets/crm-show-events-v1.js?v=217"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=217">
-<script src="/assets/work-navigation-v812.js?v=217"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=217">
-<script src="/assets/section-navigation.js?v=217" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=217"><script defer src="/assets/mail-confirm-v813.js?v=217"></script><script defer src="/assets/festival-audience-v814.js?v=217"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=217"><script defer src="/assets/work-forms-v818.js?v=217"></script><script defer src="/assets/admin-calm-v814.js?v=217"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=218">
+<script src="/assets/staff-handoff-v1.js?v=218"></script>
+<script src="/assets/mobile-files-m1.js?v=218"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=218"><script defer src="/assets/delivery-admin-v1.js?v=218"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=218"></script><script src="/assets/staff-session-v796.js?v=218"></script><script defer src="/assets/crm-show-events-v1.js?v=218"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=218">
+<script src="/assets/work-navigation-v812.js?v=218"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=218">
+<script src="/assets/section-navigation.js?v=218" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=218"><script defer src="/assets/mail-confirm-v813.js?v=218"></script><script defer src="/assets/festival-audience-v814.js?v=218"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=218"><script defer src="/assets/work-forms-v818.js?v=218"></script><script defer src="/assets/admin-calm-v814.js?v=218"></script></head>
 <body>
 
 <nav>
@@ -569,7 +569,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <p id="participants-attendance" class="hint"></p>
       <p id="participants-warnings" class="participants-warning" hidden></p>
       <p class="hint">Ожидаемые участники — люди с действующими основаниями. Приглашение или билет сами по себе не подтверждают намерение прийти. Вход по QR относится к залу; фактическое подключение онлайн не отслеживается.</p>
-      <div class="participants-controls"><label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label><label>Какие записи<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label><label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label><label>Порядок списка<select id="participants-sort" class="search"><option value="name">А—Я</option><option value="mode">По формату участия</option></select></label></div>
+      <div class="participants-controls"><label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label><label>Какие записи<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="declined">Отказались</option><option value="unconfirmed">Пока не подтвердили</option><option value="review">Требует сверки</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label><label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label><label>Порядок списка<select id="participants-sort" class="search"><option value="name">А—Я по записи</option><option value="family">По фамилии</option><option value="mode">По формату участия</option></select></label></div>
       <p id="participants-scope" role="status"></p>
       <div class="participants-actions"><button type="button" class="mini-btn" id="participants-copy" disabled>Скопировать список</button><button type="button" class="mini-btn" id="participants-csv" disabled>Скачать CSV для Excel</button><button type="button" class="mini-btn" id="participants-pdf" disabled>Скачать список PDF</button><a id="participants-download" hidden></a></div>
       <details class="participants-decisions"><summary>Совпадения, команда и уточнение формата</summary><p class="hint">Выберите строки ниже. Решения меняют только этот сводный список; билеты, оплаты и пригласительные сохраняются. Совпадение имён не объединяется автоматически.</p><p id="participants-selected" role="status">Выбрано для решения: 0</p><div class="participants-actions"><button type="button" class="mini-btn" data-participant-operation="merge" disabled>Один человек</button><button type="button" class="mini-btn" data-participant-operation="distinct" disabled>Разные люди</button><button type="button" class="mini-btn" data-participant-operation="exclude" disabled>Ведущий / команда</button><button type="button" class="mini-btn" data-participant-operation="include" disabled>Вернуть в зрители</button><button type="button" class="mini-btn" data-participant-operation="reset" disabled>Сбросить решения</button></div><label>Уточнённый формат<select id="participants-resolve-mode" class="search"><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Ещё не определён</option></select></label><button type="button" class="mini-btn" data-participant-operation="mode" disabled>Уточнить формат в списке</button></details>
@@ -3151,9 +3151,9 @@ var WORK_ORDERS_RESTORED=false;
 function openWorkOrder(id){
   if(!/^[a-zA-Z0-9_-]{1,120}$/.test(id||''))return;
   if(!WORK_ORDER&&admCurrentTab()==='orders')AelitaWork.write('admin:orderBack',{scroll:window.scrollY});
-  WORK_ORDER=id;WORK_OPEN_ORDER=id;
+  var previousOrder=WORK_ORDER,previousOpen=WORK_OPEN_ORDER;WORK_ORDER=id;WORK_OPEN_ORDER=id;
   var url=new URL('/admin/',location.origin);url.searchParams.set('workOrder',id);url.hash='orders';
-  if(window.AELITA_adminTab)window.AELITA_adminTab('orders',true);
+  if(window.AELITA_adminTab&&window.AELITA_adminTab('orders',true)===false){WORK_ORDER=previousOrder;WORK_OPEN_ORDER=previousOpen;return;}
   if(location.pathname+location.search+location.hash!==url.pathname+url.search+url.hash)
     history.pushState({aelitaAdmin:'orders'},'',url.pathname+url.search+url.hash);
   applyOrderFilters();
@@ -3176,6 +3176,7 @@ function workOrderControls(rows){
     var card=document.querySelector('[data-ord-card="'+CSS.escape(WORK_ORDER)+'"]');
     if(card){
       card.classList.add('work-admin-highlight');
+      var ticketsBox=card.querySelector('.ev-people'),toggle=card.querySelector('[data-ord-action=toggle]');if(ticketsBox)ticketsBox.classList.add('open');if(toggle){toggle.textContent='Скрыть билеты';toggle.setAttribute('aria-expanded','true');}
       card.tabIndex=-1;card.focus({preventScroll:true});card.scrollIntoView({block:'center'});
       AelitaWork.write('recent:order',{id:WORK_ORDER},{durable:true});
     }
@@ -3244,6 +3245,12 @@ document.addEventListener('click', function (e) {
 });
 
 var ORDERS_SHOWN = []; // pack-v696: заказы на экране — для формы «Возврат за покупателя»
+function orderAttendanceLabel(order) {
+  var tickets=order.tickets||[],modes=tickets.length?tickets.map(function(t){return t.attendanceMode||'unknown';}):[order.attendanceMode||'unknown'];
+  var online=modes.filter(function(x){return x==='online';}).length,offline=modes.filter(function(x){return x==='offline';}).length,unknown=modes.length-online-offline;
+  var labels=[];if(online)labels.push('Онлайн'+(modes.length>1?' · '+online+' бил.':''));if(offline)labels.push('В зале (офлайн)'+(modes.length>1?' · '+offline+' бил.':''));if(unknown)labels.push('Формат не указан'+(modes.length>1?' · '+unknown+' бил.':''));
+  return labels.join(' / ');
+}
 function renderOrders(orders) {
   ORDERS_SHOWN = orders;
   var el = document.getElementById('ordersBlock');
@@ -3254,7 +3261,8 @@ function renderOrders(orders) {
   }
   el.innerHTML = orders.map(function (o, idx) {
     var ticketsLines = (o.tickets || []).map(function (t) {
-      var where = t.seatKey ? 'место ' + t.seatKey : '№ ' + t.ticketNumber;
+      var format=t.attendanceMode==='online'?'Онлайн':t.attendanceMode==='offline'?'В зале':'Формат не указан';
+      var where = format+(t.seatKey?' · место '+t.seatKey:' · № '+t.ticketNumber);
       var mark = t.refundedAt ? ' · возвращён' : (t.redeemedAt ? ' · прошёл' : '');
       // pack-v611: билет — кнопка, открывает PDF билета (тот же, что в письме).
       return '<div class="ev-person">' + admCopy(t.ticketNumber,'№ '+t.ticketNumber) + '<button type="button" class="tk-open" data-ord-action="view" data-ord-id="' + escapeHtml(o.orderId || '') + '" data-tk="' + escapeHtml(String(t.ticketNumber || '')) + '" title="Открыть билет (PDF)">' +
@@ -3263,7 +3271,7 @@ function renderOrders(orders) {
     return '<div class="ev-card' + (o.isTest ? ' admin-test' : '') + '" data-ord-card="' + escapeHtml(o.orderId || '') + '">' +
       '<div class="ev-head">' +
         '<div><div class="ev-title">' + (o.isTest ? '[ТЕСТ] ' : '') + '№ ' + admCopy(o.orderNumber || '') + ' · ' + escapeHtml(o.productionTitle || 'Спектакль неизвестен') + '</div>' +
-        '<div class="ev-when">' + escapeHtml(o.buyerName || '—') + '</div>' + admContacts(o.buyerEmail,o.buyerContact) +
+        '<p class="order-attendance">'+escapeHtml(orderAttendanceLabel(o))+'</p><div class="ev-when">' + escapeHtml(o.buyerName || '—') + '</div>' + admContacts(o.buyerEmail,o.buyerContact) +
         '<div class="ev-when"><span class="adm-status status-' + escapeHtml(o.status) + '">' + escapeHtml(ORDER_STATUS_LABELS[o.status] || o.status) + '</span></div>' +
         // pack-v695: кто и когда исправлял почту заказа
         admHistory([{at:o.createdAt,what:'Заказ создан'}].concat(o.paidAt?[{at:o.paidAt,what:'Заказ оплачен'}]:[]).concat((o.emailFixes||[]).map(function(x){return {at:x.at,what:'Почта исправлена: '+(x.from||'—')+' → '+x.to+(x.by&&x.by!=='admin'?' · '+x.by:'')};}))) + '</div>' +
@@ -3530,7 +3538,7 @@ document.getElementById('ordersBlock').addEventListener('click', async function 
   }
 
   var openWork=e.target.closest('[data-work-order]');
-  if(openWork){openWorkOrder(openWork.dataset.workOrder);return;}
+  if(openWork){if(openWork.tagName==='A'&&(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey))return;e.preventDefault();openWorkOrder(openWork.dataset.workOrder);return;}
   var btn = e.target.closest('button[data-ord-action="toggle"]');
   if (!btn) return;
   var box = document.getElementById('ord-tickets-' + btn.dataset.ordIdx);
@@ -3650,22 +3658,23 @@ function salesWhen(iso) {
   return isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
 }
 function salesCard(s) {
+  var participantsRef='tickets:'+s.id,participantsHref='/admin/?workEvent='+encodeURIComponent(participantsRef)+'#participants';
   var seatsLine = s.seats
     ? 'Мест ' + s.seats.capacity + ': занято ' + s.seats.sold + (s.seats.invites ? ' (из них по нашим пригласительным ' + s.seats.invites + ')' : '') + ', в брони ' + s.seats.held + (s.seats.guests != null ? ', гостей GuestSystem ' + s.seats.guests : '') + ', свободно ' + s.seats.free + '.'
     : (s.salesChannel === 'in_house' ? 'Свободная рассадка — вместимость в каталоге не задана.' : 'Продажа через ticketscloud/cuire-fest — здесь только наши заказы.');
   var promos = (s.promos || []).map(function (p) { return p.code + ' — ' + p.orders + ' зак., скидка ' + fmtMoney(p.discountRub); }).join('; ');
   var status = s.status === 'canceled' ? ' · ОТМЕНЁН' : s.status === 'closed' ? ' · продажа закрыта' : '';
   return '<div class="ev-card' + (s.isTest ? ' admin-test' : '') + '" data-sales-id="' + escapeHtml(s.id) + '">' +
-    '<div class="ev-head"><div><div class="ev-title">' + escapeHtml(s.title) + status + '</div>' +
+    '<div class="ev-head"><div><div class="ev-title"><a class="sales-show-link" data-open-participants="'+escapeHtml(participantsRef)+'" href="'+escapeHtml(participantsHref)+'">' + escapeHtml(s.title) + status + '</a></div>' +
     '<div class="ev-when">' + salesWhen(s.datetime) + ' · заказов ' + s.orders + '</div></div>' +
-    '<div class="ev-count">' + (s.tickets.online !== undefined ? 'онлайн ' + s.tickets.online + ' · в зале ' + s.tickets.offline + (s.seats ? ' из ' + s.seats.capacity : '') : s.tickets.sold + (s.seats ? ' <span class="cap">из ' + s.seats.capacity + '</span>' : ' <span class="cap">билетов</span>')) + '</div></div>' +
+    '<div class="ev-count">По билетам: ' + (s.tickets.online !== undefined ? 'онлайн ' + s.tickets.online + ' · в зале ' + s.tickets.offline + (s.seats ? ' из ' + s.seats.capacity : '') : s.tickets.sold + (s.seats ? ' <span class="cap">из ' + s.seats.capacity + '</span>' : ' <span class="cap">билетов</span>')) + '</div></div>' +
     '<p class="scope-label">Все оплаты этого показа · без фильтра периода обзора</p><div class="sales-line">По действующим билетам: ' + fmtMoney(s.revenue.moneyRub) + ' деньгами' + (s.revenue.giftRub ? ' + ' + fmtMoney(s.revenue.giftRub) + ' подарочными картами' : '') +
     '.</div>' + (actualFees(s.yookassa) ? '<p class="sales-line">'+escapeHtml(actualFees(s.yookassa))+'</p>' : '') + '<details class="sales-extra"><summary>Подробнее</summary><div class="sales-line">Возвраты: ' + s.tickets.refunded + ' бил.' + (s.tickets.refunded ? ' (было оплачено ' + fmtMoney(s.revenue.refundedMoneyRub) + ')' : '') +
     '. Вошли по QR: ' + s.tickets.redeemed + '.</div>' +
     '<div class="sales-line">' + escapeHtml(seatsLine) + '</div>' +
     (!s.isTest && s.status === 'on_sale' && !s.venueConfirmed ? '<div class="sales-line">⚠️ Площадка не подтверждена — впишите в каталог (venueConfirmed), чем подтверждена: договор, письмо площадки.</div>' : '') +
     (promos ? '<div class="sales-line">Промокоды: ' + escapeHtml(promos) + '</div>' : '') +
-    '</details><div class="sales-actions"><button class="mini-btn" data-sales-act="full">Деньги и вход</button><details class="adm-menu"><summary class="mini-btn" aria-label="Другие действия">…</summary><div class="adm-menu-list">' +
+    '</details><div class="sales-actions"><a class="mini-btn" data-open-participants="'+escapeHtml(participantsRef)+'" href="'+escapeHtml(participantsHref)+'">Все участники</a><button class="mini-btn" data-sales-act="full">Деньги и вход</button><details class="adm-menu"><summary class="mini-btn" aria-label="Другие действия">…</summary><div class="adm-menu-list">' +
     '<button class="mini-btn" data-sales-act="salespdf">Продажи — PDF</button>' +
     '<button class="mini-btn" data-sales-act="days">По дням</button>' +
     '<button class="mini-btn" data-sales-act="csv">Зрители — Excel</button>' +
@@ -3798,7 +3807,7 @@ function sfRub(n) { return fmtMoney(Math.round(Number(n || 0) * 100) / 100); }
 function sfTable(head, rows, opts) {
   opts = opts || {};
   return '<div class="table-wrap"><table class="perf-table sf-table"><thead><tr>' + head.map(function (h, i) { return '<th' + ((opts.right || []).indexOf(i) >= 0 ? ' class="sf-r"' : '') + '>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-    rows.map(function (r, ri) { return '<tr' + ((opts.bold || []).indexOf(ri) >= 0 ? ' class="sf-b"' : '') + '>' + r.map(function (c, i) { return '<td' + ((opts.right || []).indexOf(i) >= 0 ? ' class="sf-r"' : '') + '>' + escapeHtml(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+    rows.map(function (r, ri) { return '<tr' + ((opts.bold || []).indexOf(ri) >= 0 ? ' class="sf-b"' : '') + '>' + r.map(function (c, i) { return '<td' + ((opts.right || []).indexOf(i) >= 0 ? ' class="sf-r"' : '') + '>' + (i===2&&/^[a-zA-Z0-9_-]{1,120}$/.test(opts.orderIds?.[ri]||'')?'<a class="sales-order-link" data-work-order="'+escapeHtml(opts.orderIds[ri])+'" href="/admin/?workOrder='+encodeURIComponent(opts.orderIds[ri])+'#orders">'+escapeHtml(c||'Открыть заказ')+'</a>':escapeHtml(c)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
 }
 function salesFullHtml(d) {
   if (!d) return 'Нет данных.';
@@ -3839,7 +3848,7 @@ function salesFullHtml(d) {
     (d.rows || []).map(function (r) {
       return [r.number, r.at ? new Date(r.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—', r.name, r.refunded ? (r.tickets - r.refunded) + '+' + r.refunded + 'в' : r.tickets, r.promo || '',
         sfRub(r.moneyRub), r.fee === null ? '—' : sfRub(r.fee) + (r.feeKind === 'est' ? '≈' : ''), r.fee === null ? '—' : sfRub(r.moneyRub - r.fee)];
-    }), { right: [3, 5, 6, 7] });
+    }), { right: [3, 5, 6, 7],orderIds:(d.rows||[]).map(function(r){return r.orderId;}) });
   return h;
 }
 async function salesAction(card, act) {
@@ -3925,9 +3934,15 @@ var url = URL.createObjectURL(blob);
 document.addEventListener('DOMContentLoaded', function () {
   var blk = document.getElementById('salesBlock');
   if (blk) blk.addEventListener('click', function (ev) {
+    var orderLink=ev.target.closest('[data-work-order]');
+    if(orderLink){if(ev.ctrlKey||ev.metaKey||ev.shiftKey||ev.altKey)return;ev.preventDefault();openWorkOrder(orderLink.dataset.workOrder);return;}
+    var link=ev.target.closest('[data-open-participants]');
+    if(link){if(ev.ctrlKey||ev.metaKey||ev.shiftKey||ev.altKey)return;ev.preventDefault();window.AelitaEventParticipants.open(link.dataset.openParticipants);return;}
     var b = ev.target.closest('[data-sales-act]');
-    if (!b) return;
-    salesAction(b.closest('[data-sales-id]'), b.getAttribute('data-sales-act'));
+    if(b){salesAction(b.closest('[data-sales-id]'), b.getAttribute('data-sales-act'));return;}
+    if(ev.target.closest('a,button,input,select,textarea,label,summary,details,[contenteditable]'))return;
+    if(window.getSelection()?.toString())return;
+    var card=ev.target.closest('[data-sales-id]');if(card)window.AelitaEventParticipants.open('tickets:'+card.dataset.salesId);
   });
   var rb = document.getElementById('salesReloadBtn');
   if (rb) rb.addEventListener('click', loadSales);
@@ -7303,9 +7318,10 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
-<link rel="stylesheet" href="/assets/event-participants-v819.css?v=217">
-<script src="/assets/participants-view-v819.js?v=217"></script>
-<script src="/assets/event-participants-v819.js?v=217"></script>
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=218">
+<script src="/assets/participants-view-v819.js?v=218"></script>
+<script src="/assets/participant-person-v820.js?v=218"></script>
+<script src="/assets/event-participants-v819.js?v=218"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
@@ -7629,7 +7645,7 @@ startStaffAdmin();
   }
   function show(tab, user, fromBack) {
     var previous=admCurrentTab();
-    if(previous!==tab&&window.AelitaWorkForms){for(var openForm of document.querySelectorAll('#inv-form.open,#inv-import.open')){if(!AelitaWorkForms.canClose(openForm)){if(fromBack)history.pushState({aelitaAdmin:previous},'',AelitaWork.tabUrl('admin',previous));return;}openForm.classList.remove('open');AelitaWorkForms.clean(openForm);}}
+    if(previous!==tab&&window.AelitaWorkForms){if(!AelitaWorkForms.canLeave()){if(fromBack)history.pushState({aelitaAdmin:previous},'',AelitaWork.tabUrl('admin',previous));return false;}for(var openForm of document.querySelectorAll('#inv-form.open,#inv-import.open')){openForm.classList.remove('open');AelitaWorkForms.clean(openForm);}}
     if(getToken()&&previous!==tab)AelitaWork.write('admin:view:'+previous,{scroll:window.scrollY});
     if (!GROUPS.some(function (g) { return g[0] === tab; })) tab = 'overview';
     var c = document.getElementById('content');
@@ -7653,6 +7669,7 @@ startStaffAdmin();
       var saved=AelitaWork.read('admin:view:'+tab);
       requestAnimationFrame(function(){window.scrollTo(0,Number.isFinite(saved?.scroll)?saved.scroll:0);});
     }
+    return true;
   }
   window.AELITA_adminTab = show;
   window.AELITA_adminSectionIndex = function () { sectionIndex(admCurrentTab(), document.getElementById('content')); };
@@ -7661,11 +7678,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=217"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=217">
-<script src="/assets/ai-pilot-v741.js?v=217"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=217"></script>
-<script src="/assets/subscription-materials-admin.js?v=217"></script>
+<script src="/assets/admin-snapshot.js?v=218"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=218">
+<script src="/assets/ai-pilot-v741.js?v=218"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=218"></script>
+<script src="/assets/subscription-materials-admin.js?v=218"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

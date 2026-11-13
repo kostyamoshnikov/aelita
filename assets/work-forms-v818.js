@@ -34,8 +34,8 @@
  function paint(root){
   if(!visible(root))return;const changed=dirty(root);root.toggleAttribute('data-work-dirty',changed);
   const dialog=root.closest('dialog');if(!dialog||dialog.id==='crm-reauth')return;
-  let hint=dialog.querySelector(':scope > .work-dirty-hint');if(!hint){hint=document.createElement('p');hint.className='work-dirty-hint';hint.setAttribute('role','status');const head=dialog.querySelector(':scope > .row,:scope > .ed-dialog-head,h2');head?head.after(hint):dialog.prepend(hint);}
-  const text=changed?'Есть несохранённые изменения':'';if(hint.textContent!==text)hint.textContent=text;hint.hidden=!changed;
+  let hint=dialog.querySelector(':scope > .work-dirty-hint');if(!hint){hint=document.createElement('p');hint.className='work-dirty-hint';hint.setAttribute('role','status');const title=dialog.querySelector(':scope > .row,:scope > .ed-dialog-head,h2');const head=title&&[...dialog.children].find(el=>el===title||el.contains(title));head?head.after(hint):dialog.prepend(hint);}
+  const text=inScope(dialog).some(dirty)?'Есть несохранённые изменения':'';if(hint.textContent!==text)hint.textContent=text;hint.hidden=!text;
  }
  function update(){scheduled=false;for(const root of [...roots])if(!root.isConnected)roots.delete(root);document.querySelectorAll(selector).forEach(root=>{watch(root);paint(root);});}
  function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(update);}}
@@ -49,7 +49,7 @@
   if(!d||d.id==='editor')return;
   if(!canClose(d)){e.preventDefault();e.stopImmediatePropagation();}
  },true);
- document.addEventListener('cancel',e=>{if(e.target.id==='editor')return;if(!canClose(e.target)){e.preventDefault();e.stopImmediatePropagation();}},true);
+ document.addEventListener('cancel',e=>{if(e.target.id==='editor'||e.target.hasAttribute('data-work-managed-close'))return;if(!canClose(e.target)){e.preventDefault();e.stopImmediatePropagation();}},true);
  window.addEventListener('beforeunload',e=>{if(hasChanges()||busy()){e.preventDefault();e.returnValue='';}});
  window.AelitaWorkForms={watch,clean,adopt,dirty,hasChanges,busy,canClose,canLeave,feedback,refresh:schedule,register:(key,guard)=>{guards.set(key,guard);return()=>guards.delete(key);}};
  function start(){update();new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});window.dispatchEvent(new Event('aelita-work-forms-ready'));}

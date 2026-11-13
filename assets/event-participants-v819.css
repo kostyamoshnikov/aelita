@@ -21,3 +21,13 @@
 
 .participant-totals button[aria-pressed="true"]{border-color:var(--gold,#d6b57a);background:rgba(214,181,122,.1)}
 .participant-totals button:focus-visible{outline:2px solid var(--gold,#d6b57a);outline-offset:3px}
+
+[data-sales-id]{cursor:pointer}
+.sales-show-link{color:inherit!important;text-decoration:none}.sales-show-link:hover,.sales-order-link:hover{text-decoration:underline}.sales-show-link:focus-visible,.sales-order-link:focus-visible{outline:2px solid var(--gold,#d6b57a);outline-offset:4px}
+
+.participant-row-head{display:flex;gap:12px;align-items:flex-start;min-width:0}.participant-name{background:none;border:0;color:var(--gold,#d6b57a);text-align:left;text-decoration:underline;text-underline-offset:4px;white-space:normal;overflow-wrap:anywhere;font:inherit;min-height:44px;cursor:pointer;padding:4px;min-width:0}.participant-name:focus-visible{outline:2px solid var(--gold,#d6b57a)}
+#participants-person-dialog{width:min(720px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(var(--work-vh,100vh) - 24px);overflow:auto;overflow-wrap:anywhere;padding:20px;box-sizing:border-box;background:var(--bg,#101013);color:var(--text,#e5e0d5);border:1px solid rgba(214,181,122,.4);border-radius:10px}#participants-person-dialog::backdrop{background:rgba(0,0,0,.75)}.participant-person-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.participant-person-head h2{margin:0;min-width:0}.participant-person-head button{flex:0 0 44px;width:44px;height:44px;padding:0;font-size:24px;min-width:44px}#participants-person-dialog form{border-top:1px solid rgba(214,181,122,.25);margin-top:20px;padding-top:12px}#participants-person-dialog label{display:flex;flex-direction:column;gap:6px;margin:12px 0}#participants-person-dialog :is(input,select){box-sizing:border-box;max-width:100%;min-width:0;width:100%;font:inherit}#participants-person-dialog li{margin:10px 0;line-height:1.6}#participants-person-dialog [data-person-source] button{display:block;margin-top:8px}#participants-person-dialog summary{cursor:pointer;padding:12px 0;min-height:44px}
+
+.order-attendance{font-size:1rem;line-height:1.5;color:var(--gold,#d6b57a);margin:10px 0}
+
+#participants-person-dialog .participants-actions>button{max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere}
