@@ -32,7 +32,7 @@
   // An old flag contains neither the current policy nor the date: ask again.
   mirror();
   function hasConsent() { return !!(choice && choice.analytics && Date.now() - Date.parse(choice.at) < TTL); }
-  function canTrack() { return hasConsent() && !/^\/(en\/)?(account|admin|ticket|tickets-scan|events-scan|matrix-online|online-invitation)(\/|$)/.test(location.pathname || '/'); }
+  function canTrack() { return hasConsent() && !/^\/(en\/)?(account|admin|ticket|tickets-scan|events-scan|matrix-online|online-invitation|sale-notice)(\/|$)/.test(location.pathname || '/'); }
   function banner() { return document.getElementById('cookie-banner'); }
   function show(on) {
     var b = banner();

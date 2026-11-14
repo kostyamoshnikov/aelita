@@ -579,7 +579,7 @@ window.AELITA_sendLead = async function (formName, fields, opts) {
   for (var attempt = 0; attempt < 2; attempt++) {
     try {
       var res = await fetch(AELITA_LEAD_URL, { method: 'POST', body: body });
-      if (res.ok) return true;
+      if(res.ok){if(opts&&typeof opts.onSuccess==='function')opts.onSuccess(await res.json());return true;}
       if (res.status < 500) { console.warn('Заявка не принята', { form: formName, status: res.status }); return false; }
     } catch (e) { /* сеть — пробуем ещё раз */ }
   }

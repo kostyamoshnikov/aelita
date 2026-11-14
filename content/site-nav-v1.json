@@ -1,6 +1,6 @@
 {
   "schema": "aelita.site-nav/v1",
-  "revision": 0,
+  "revision": 1,
   "menu": [
     {
       "href": "/tickets",
@@ -8,39 +8,14 @@
       "en": "Schedule"
     },
     {
-      "href": "/projects",
-      "ru": "Проекты",
-      "en": "Productions"
-    },
-    {
-      "href": "/tochkacuire",
-      "ru": "Точка Кюри",
-      "en": "“Tochka Cuire”"
-    },
-    {
-      "href": "/shop",
-      "ru": "Магазин",
-      "en": "Shop"
-    },
-    {
-      "href": "/about",
-      "ru": "О компании",
-      "en": "About"
-    },
-    {
-      "href": "/collaboration",
-      "ru": "Сотрудничество",
-      "en": "Collaborate"
-    },
-    {
       "href": "/community",
       "ru": "Community",
       "en": "Community"
     },
     {
-      "href": "/contacts",
-      "ru": "Контакты",
-      "en": "Contact"
+      "href": "/faq",
+      "ru": "Помощь",
+      "en": "Help"
     }
   ],
   "mobile": [
@@ -50,6 +25,16 @@
       "en": "Schedule"
     },
     {
+      "href": "/account",
+      "ru": "Мои события и билеты",
+      "en": "My events and tickets"
+    },
+    {
+      "href": "/faq",
+      "ru": "Помощь",
+      "en": "Help"
+    },
+    {
       "href": "/projects",
       "ru": "Проекты",
       "en": "Productions"
@@ -80,25 +65,15 @@
       "en": "Community"
     },
     {
-      "href": "/faq",
-      "ru": "Частые вопросы",
-      "en": "FAQ"
-    },
-    {
       "href": "/contacts",
       "ru": "Контакты",
       "en": "Contact"
-    },
-    {
-      "href": "/account",
-      "ru": "Личный кабинет",
-      "en": "Account"
     }
   ],
   "account": {
     "href": "/account",
-    "ru": "КАБИНЕТ",
-    "en": "ACCOUNT"
+    "ru": "Мои события",
+    "en": "My events"
   },
   "contacts": {
     "phone": "+7 960 515-16-90",

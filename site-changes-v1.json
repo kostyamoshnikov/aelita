@@ -9,21 +9,219 @@
         "/katya-abdulova",
         "/konstantin-moshnikov"
       ]
+    },
+    {
+      "id": "v825-7b4808a0baafdace8adb",
+      "file": "content/site-nav-v1.json",
+      "kind": "set",
+      "field": "account",
+      "before_exists": true,
+      "after_exists": true,
+      "before": {
+        "href": "/account",
+        "ru": "КАБИНЕТ",
+        "en": "ACCOUNT"
+      },
+      "after": {
+        "href": "/account",
+        "ru": "Мои события",
+        "en": "My events"
+      }
+    },
+    {
+      "id": "v825-ccf795d021fdda4669c9",
+      "file": "content/site-nav-v1.json",
+      "kind": "set",
+      "field": "menu",
+      "before_exists": true,
+      "after_exists": true,
+      "before": [
+        {
+          "href": "/tickets",
+          "ru": "Афиша",
+          "en": "Schedule"
+        },
+        {
+          "href": "/projects",
+          "ru": "Проекты",
+          "en": "Productions"
+        },
+        {
+          "href": "/tochkacuire",
+          "ru": "Точка Кюри",
+          "en": "“Tochka Cuire”"
+        },
+        {
+          "href": "/shop",
+          "ru": "Магазин",
+          "en": "Shop"
+        },
+        {
+          "href": "/about",
+          "ru": "О компании",
+          "en": "About"
+        },
+        {
+          "href": "/collaboration",
+          "ru": "Сотрудничество",
+          "en": "Collaborate"
+        },
+        {
+          "href": "/community",
+          "ru": "Community",
+          "en": "Community"
+        },
+        {
+          "href": "/contacts",
+          "ru": "Контакты",
+          "en": "Contact"
+        }
+      ],
+      "after": [
+        {
+          "href": "/tickets",
+          "ru": "Афиша",
+          "en": "Schedule"
+        },
+        {
+          "href": "/community",
+          "ru": "Community",
+          "en": "Community"
+        },
+        {
+          "href": "/faq",
+          "ru": "Помощь",
+          "en": "Help"
+        }
+      ]
+    },
+    {
+      "id": "v825-826a1b278c7db20500fa",
+      "file": "content/site-nav-v1.json",
+      "kind": "set",
+      "field": "mobile",
+      "before_exists": true,
+      "after_exists": true,
+      "before": [
+        {
+          "href": "/tickets",
+          "ru": "Афиша",
+          "en": "Schedule"
+        },
+        {
+          "href": "/projects",
+          "ru": "Проекты",
+          "en": "Productions"
+        },
+        {
+          "href": "/tochkacuire",
+          "ru": "Точка Кюри",
+          "en": "“Tochka Cuire”"
+        },
+        {
+          "href": "/shop",
+          "ru": "Магазин",
+          "en": "Shop"
+        },
+        {
+          "href": "/about",
+          "ru": "О компании",
+          "en": "About"
+        },
+        {
+          "href": "/collaboration",
+          "ru": "Сотрудничество",
+          "en": "Collaborate"
+        },
+        {
+          "href": "/community",
+          "ru": "Community",
+          "en": "Community"
+        },
+        {
+          "href": "/faq",
+          "ru": "Частые вопросы",
+          "en": "FAQ"
+        },
+        {
+          "href": "/contacts",
+          "ru": "Контакты",
+          "en": "Contact"
+        },
+        {
+          "href": "/account",
+          "ru": "Личный кабинет",
+          "en": "Account"
+        }
+      ],
+      "after": [
+        {
+          "href": "/tickets",
+          "ru": "Афиша",
+          "en": "Schedule"
+        },
+        {
+          "href": "/account",
+          "ru": "Мои события и билеты",
+          "en": "My events and tickets"
+        },
+        {
+          "href": "/faq",
+          "ru": "Помощь",
+          "en": "Help"
+        },
+        {
+          "href": "/projects",
+          "ru": "Проекты",
+          "en": "Productions"
+        },
+        {
+          "href": "/tochkacuire",
+          "ru": "Точка Кюри",
+          "en": "“Tochka Cuire”"
+        },
+        {
+          "href": "/shop",
+          "ru": "Магазин",
+          "en": "Shop"
+        },
+        {
+          "href": "/about",
+          "ru": "О компании",
+          "en": "About"
+        },
+        {
+          "href": "/collaboration",
+          "ru": "Сотрудничество",
+          "en": "Collaborate"
+        },
+        {
+          "href": "/community",
+          "ru": "Community",
+          "en": "Community"
+        },
+        {
+          "href": "/contacts",
+          "ru": "Контакты",
+          "en": "Contact"
+        }
+      ]
     }
   ],
-  "release": 824,
+  "release": 825,
   "removed_files": [
     "images/tarusa-theatre-tour-illustration-v795.png"
   ],
   "changed_files": [
     {
-      "path": "en/account/dashboard/index.html",
-      "sha256": "01e303bc599eb309d1efaf2c899cbbe479066d5ebd4557eb30920e3168638552"
+      "path": "en/index.html",
+      "sha256": "0f20c168ccc2af1dad86d02215b6dcc44afd01d2ed84728fd6e33b689aee175e"
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "56039a07b5e44dd848a4670503538e1155a0c404fc4c79655d40f2dd18fdf88a",
+  "changelog_sha256": "7f5a330176b5df553a0f9a489aa53e3d71ff85bb5dcc07e29619ec37c6c9fdce",
   "recent_versions": [
+    825,
     824,
     823,
     822,
@@ -32,7 +230,6 @@
     819,
     818,
     817,
-    816,
-    815
+    816
   ]
 }

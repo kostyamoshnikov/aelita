@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="АЭЛИТА">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/assets/fonts.css?v=221">
+<link rel="stylesheet" href="/assets/fonts.css?v=222">
 <title>AELITA COMMUNITY — основной поток — оформить подписку</title>
 <meta name="description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
 <link rel="canonical" href="https://aelita-production.ru/book-space/main/pay/">
@@ -31,7 +31,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — основной поток — оформить подписку">
 <meta name="twitter:description" content="AELITA COMMUNITY — основной поток: подписка 5 000 ₽ в месяц с автосписанием, отмена в личном кабинете в любой момент.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=221">
+<link rel="stylesheet" href="/assets/style.css?v=222">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:144px 0 80px}
@@ -83,9 +83,11 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=221">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=222">
+<link rel="stylesheet" href="/assets/customer-journey.css?v=222">
+<script src="/assets/customer-journey.js?v=222"></script>
 </head>
-<body>
+<body class="customer-journey-page">
 <a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <nav>
@@ -93,15 +95,10 @@
     <a class="logo" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a>
     <div class="nav-links">
       <a href="/tickets">Афиша</a>
-      <a href="/projects">Проекты</a>
-      <a href="/tochkacuire">Точка Кюри</a>
-      <a href="/shop">Магазин</a>
-      <a href="/about">О компании</a>
-      <a href="/collaboration">Сотрудничество</a>
       <a href="/community">Community</a>
-      <a href="/contacts">Контакты</a>
+      <a href="/faq">Помощь</a>
     </div>
-    <a class="nav-account" href="/account">КАБИНЕТ</a>
+    <a class="nav-account" href="/account">Мои события</a>
     <a class="lang-switch" href="/en/book-space/main/pay/" title="English version">EN</a>
     <button class="burger" aria-label="Меню" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -165,7 +162,10 @@
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent">обработку персональных данных</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>Соглашаюсь на ежемесячное автоматическое списание 5 000 ₽ с сохранённого способа оплаты до отмены подписки в личном кабинете — по условиям <a href="/oferta#subscription">раздела 14 оферты</a> <span class="req-mark">*</span></span></label>
       <p class="sp-note" id="spAutopaySoon" hidden>Сейчас оплачивается только первый месяц — за 3 дня до его конца напомним письмом, как продлить. Автосписание подключим позже.</p>
-      <button type="button" class="btn-gold" id="spPayBtn">Оформить подписку — 5 000 ₽/мес</button>
+      <!-- customer:community:BEGIN -->
+<section class="journey-info own-pad"><h2>Перед подключением к Community</h2><p>Конкретные даты ближайших встреч пока не опубликованы. До оплаты уточните дату, время по Москве и порядок подключения у организатора.</p><details><summary>Книга, участие в месяце и подключение</summary><dl><dt>Программа</dt><dd>В ноябрьской программе основного потока — «Русская семья XI–XIX веков» Василия Лещенко. Это программа сезона, а не подтверждение даты ближайшего обсуждения. Текущую книгу уточните до оплаты.</dd><dt>Неполный месяц</dt><dd>Состав доступных встреч, записей и материалов для нового участника в оставшейся части месяца заранее не указан. Уточните его до оформления подписки.</dd><dt>После оплаты</dt><dd>Письмо подтвердит оплату. Организатор свяжется с вами в течение дня; материалы и состояние подписки проверяйте в кабинете. Если приглашения в чат нет, напишите нам — автоматический статус добавления в чат пока не передаётся.</dd></dl></details><div class="journey-actions"><a href="mailto:aelita.production@yandex.ru?subject=Community">Уточнить до оплаты</a><a href="/account/dashboard/#subscriptions">Моя подписка и материалы</a></div></section>
+<!-- customer:community:END -->
+<button type="button" class="btn-gold" id="spPayBtn">Оформить подписку — 5 000 ₽/мес</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Оплата — на защищённой странице ЮKassa: карта или СБП. Вопросы: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
@@ -220,15 +220,15 @@
 <div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Навигация" onclick="handleOverlayClick(event)">
   <nav class="m-menu-links">
     <a href="/tickets" onclick="toggleMenu()">Афиша</a>
+    <a href="/account" onclick="toggleMenu()">Мои события и билеты</a>
+    <a href="/faq" onclick="toggleMenu()">Помощь</a>
     <a href="/projects" onclick="toggleMenu()">Проекты</a>
     <a href="/tochkacuire" onclick="toggleMenu()">Точка Кюри</a>
     <a href="/shop" onclick="toggleMenu()">Магазин</a>
     <a href="/about" onclick="toggleMenu()">О компании</a>
     <a href="/collaboration" onclick="toggleMenu()">Сотрудничество</a>
     <a href="/community" onclick="toggleMenu()">Community</a>
-    <a href="/faq" onclick="toggleMenu()">Частые вопросы</a>
     <a href="/contacts" onclick="toggleMenu()">Контакты</a>
-    <a href="/account" onclick="toggleMenu()">Личный кабинет</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
@@ -246,10 +246,10 @@
 <!-- /Cookie Banner -->
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Закрыть меню">✕</button>
-<script src="/assets/analytics-events.js?v=221"></script>
-<script src="/assets/payments.js?v=221"></script>
-<script src="/assets/main.js?v=221"></script>
-<script src="/assets/subscription.js?v=221"></script>
-<script src="/assets/phone-prefix.js?v=221"></script>
+<script src="/assets/analytics-events.js?v=222"></script>
+<script src="/assets/payments.js?v=222"></script>
+<script src="/assets/main.js?v=222"></script>
+<script src="/assets/subscription.js?v=222"></script>
+<script src="/assets/phone-prefix.js?v=222"></script>
 </body>
 </html>

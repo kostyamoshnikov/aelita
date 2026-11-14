@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/assets/fonts.css?v=221">
+<link rel="stylesheet" href="/assets/fonts.css?v=222">
 <title>AELITA COMMUNITY — main stream — subscribe</title>
 <meta name="description" content="AELITA COMMUNITY — main stream: a 5,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <link rel="canonical" href="https://aelita-production.ru/en/book-space/main/pay/">
@@ -31,7 +31,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — main stream — subscribe">
 <meta name="twitter:description" content="AELITA COMMUNITY — main stream: a 5,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=221">
+<link rel="stylesheet" href="/assets/style.css?v=222">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:144px 0 80px}
@@ -91,9 +91,11 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=221">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=222">
+<link rel="stylesheet" href="/assets/customer-journey.css?v=222">
+<script src="/assets/customer-journey.js?v=222"></script>
 </head>
-<body>
+<body class="customer-journey-page">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
@@ -101,15 +103,10 @@
     <a class="logo" href="/en/">AELITA<small>PRODUCTION</small></a>
     <div class="nav-links">
       <a href="/en/tickets">Schedule</a>
-      <a href="/en/projects">Productions</a>
-      <a href="/en/tochkacuire">“Tochka Cuire”</a>
-      <a href="/en/shop">Shop</a>
-      <a href="/en/about">About</a>
-      <a href="/en/collaboration">Collaborate</a>
       <a href="/en/community">Community</a>
-      <a href="/en/contacts">Contact</a>
+      <a href="/en/faq">Help</a>
     </div>
-    <a class="nav-account" href="/en/account">ACCOUNT</a>
+    <a class="nav-account" href="/en/account">My events</a>
     <a class="lang-switch" href="https://aelita-production.ru/book-space/main/pay/" title="Русская версия">RU</a>
     <button class="burger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -173,7 +170,10 @@
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent">processing of my personal data</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>I agree to an automatic monthly charge of 5,000 ₽ from the saved payment method until I cancel the subscription in my account — under the terms of <a href="/en/oferta#subscription">section 14 of the public offer</a> <span class="req-mark">*</span></span></label>
       <p class="sp-note" id="spAutopaySoon" hidden>Right now you pay for the first month only — 3 days before it ends we will email you how to continue. Automatic payments will be switched on later.</p>
-      <button type="button" class="btn-gold" id="spPayBtn">Subscribe — 5,000 ₽/month</button>
+      <!-- customer:community:BEGIN -->
+<section class="journey-info own-pad"><h2>Before joining Community</h2><p>The next meeting dates have not been published. Before paying, ask the organiser for the date, Moscow time and joining instructions.</p><details><summary>Book, joining mid-month and onboarding</summary><dl><dt>Programme</dt><dd>The main stream season programme lists Vasily Leshchenko’s Russian Family in the 11th–19th Centuries for November. This does not confirm the next discussion date. Ask which book the group is currently reading before paying.</dd><dt>Joining during a month</dt><dd>The meetings, recordings and materials available to someone joining mid-month have not been specified. Ask before subscribing.</dd><dt>After payment</dt><dd>The email confirms payment. The organiser will contact you within a day; check materials and subscription status in your account. If you have not received a chat invitation, contact us; chat membership is not tracked automatically.</dd></dl></details><div class="journey-actions"><a href="mailto:aelita.production@yandex.ru?subject=Community">Ask before paying</a><a href="/en/account/dashboard/#subscriptions">My subscription and materials</a></div></section>
+<!-- customer:community:END -->
+<button type="button" class="btn-gold" id="spPayBtn">Subscribe — 5,000 ₽/month</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Payment is on the secure YooKassa page: card or SBP. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
@@ -228,15 +228,15 @@
 <div class="m-menu" id="mMenu" role="dialog" aria-modal="true" aria-label="Navigation" onclick="handleOverlayClick(event)">
   <nav class="m-menu-links">
     <a href="/en/tickets" onclick="toggleMenu()">Schedule</a>
+    <a href="/en/account" onclick="toggleMenu()">My events and tickets</a>
+    <a href="/en/faq" onclick="toggleMenu()">Help</a>
     <a href="/en/projects" onclick="toggleMenu()">Productions</a>
     <a href="/en/tochkacuire" onclick="toggleMenu()">“Tochka Cuire”</a>
     <a href="/en/shop" onclick="toggleMenu()">Shop</a>
     <a href="/en/about" onclick="toggleMenu()">About</a>
     <a href="/en/collaboration" onclick="toggleMenu()">Collaborate</a>
     <a href="/en/community" onclick="toggleMenu()">Community</a>
-    <a href="/en/faq" onclick="toggleMenu()">FAQ</a>
     <a href="/en/contacts" onclick="toggleMenu()">Contact</a>
-    <a href="/en/account" onclick="toggleMenu()">Account</a>
   </nav>
   <div class="m-menu-contacts">aelita.production@yandex.ru</div>
   <div class="m-menu-footer">AELITA PRODUCTION © 2026</div>
@@ -254,10 +254,10 @@
 <!-- /Cookie Banner -->
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
-<script src="/assets/analytics-events.js?v=221"></script>
-<script src="/assets/payments.js?v=221"></script>
-<script src="/assets/main.js?v=221"></script>
-<script src="/assets/subscription.js?v=221"></script>
-<script src="/assets/phone-prefix.js?v=221"></script>
+<script src="/assets/analytics-events.js?v=222"></script>
+<script src="/assets/payments.js?v=222"></script>
+<script src="/assets/main.js?v=222"></script>
+<script src="/assets/subscription.js?v=222"></script>
+<script src="/assets/phone-prefix.js?v=222"></script>
 </body>
 </html>

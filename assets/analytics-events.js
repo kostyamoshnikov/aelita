@@ -114,8 +114,8 @@
   function track(goal, params) {
     if (!ownConsent()) return;
     params = params || {};
-    var stages={ticket_event_view:'page',ticket_step_selection:'selection',ticket_step_contacts:'contacts',ticket_payment_start:'payment'};
-    if(stages[goal]&&/^[a-z0-9-]{1,100}$/.test(String(params.performance||''))){try{var data={p:location.pathname,l:pageLang(),f:params.performance,g:stages[goal]};navigator.sendBeacon('https://api.aelita-production.ru/tickets/availability?hit=1',new Blob([JSON.stringify(data)],{type:'text/plain'}));}catch(_){}}
+    var stages={ticket_event_view:'page',ticket_step_selection:'selection',ticket_step_contacts:'contacts',ticket_payment_click:'payment_click',ticket_code_sent:'code_sent',ticket_code_verified:'code_verified',ticket_payment_provider:'provider',ticket_payment_confirmed:'confirmed'};
+    if(stages[goal]&&/^[a-z0-9-]{1,100}$/.test(String(params.performance||''))){try{var data={p:location.pathname,l:pageLang(),d:deviceType()==='mobile'?'m':'d',a:['online','offline'].includes(params.attendance)?params.attendance:undefined,f:params.performance,g:stages[goal]};navigator.sendBeacon('https://api.aelita-production.ru/tickets/availability?hit=1',new Blob([JSON.stringify(data)],{type:'text/plain'}));}catch(_){}}
     if (window.ym) {
       try { window.ym(104681911, 'reachGoal', goal, params); } catch (e) {}
     }
