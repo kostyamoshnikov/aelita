@@ -5,7 +5,7 @@
  const parts=['lastName','firstName','middleName'];
  const when=value=>new Intl.DateTimeFormat('ru-RU',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Moscow'}).format(new Date(value))+' МСК';
  function create(hooks){
-  let dialog,current=null,contexts={},baselines={},saving=false,returnFocus,focusError=false;
+  let dialog,current=null,contexts={},baselines={},saving=false,returnFocus,focusError=false,generation=0;
   const form=kind=>dialog.querySelector('[data-person-form='+kind+']'),forms=()=>dialog.querySelectorAll('form');
   function clean(el){window.AelitaWorkForms?.clean(el);}
   function message(text,bad=false){const el=dialog.querySelector('[data-person-message]');el.textContent=text;el.classList.toggle('error',bad);}
@@ -17,7 +17,7 @@
    dialog.querySelector('[data-person-source]').innerHTML=row.sources.map(s=>'<li>'+esc(s.label)+(s.mode?' · '+esc(window.AelitaParticipantsView.modeLabel[s.mode]||'Формат не указан'):'')+(s.seatKey?' · место '+esc(s.seatKey):'')+(s.price!==undefined?' · '+esc(s.price)+' ₽':'')+(s.orderId?'<button type="button" class="mini-btn" data-person-order="'+esc(s.orderId)+'">Открыть заказ и билеты</button>':'')+'</li>').join('');
    dialog.querySelector('[data-person-history]').innerHTML=row.history.length?row.history.slice().reverse().map(h=>'<li>'+esc(when(h.at))+' · '+esc(h.actor)+' · '+esc(h.action)+(h.value?' — '+esc(h.value):'')+'</li>').join(''):'<li>Ручных изменений пока нет.</li>';
   }
-  function close(){if(saving||window.AelitaWorkForms&&!AelitaWorkForms.canClose(dialog))return false;forms().forEach(clean);dialog.close();const focus=returnFocus?.isConnected?returnFocus:document.querySelector('[data-participant-person="'+current?.id+'"]')||document.getElementById('participants-status');focus?.focus?.({preventScroll:true});return true;}
+  function close(){if(!dialog?.open)return true;if(saving||window.AelitaWorkForms&&!AelitaWorkForms.canClose(dialog))return false;forms().forEach(clean);dialog.close();const focus=returnFocus?.isConnected?returnFocus:document.querySelector('[data-participant-person="'+current?.id+'"]')||document.getElementById('participants-status');focus?.focus?.({preventScroll:true});return true;}
   function setup(){
    if(dialog)return;
    dialog=document.createElement('dialog');dialog.id='participants-person-dialog';dialog.setAttribute('data-work-managed-close','');dialog.setAttribute('aria-labelledby','participants-person-title');
@@ -30,7 +30,7 @@
    dialog.addEventListener('click',e=>{const b=e.target.closest('[data-person-order]');if(b&&close())window.openWorkOrder?.(b.dataset.personOrder);});
   }
   async function save(kind,reset){
-   if(saving||!current||!hooks.canEdit())return;const f=form(kind),id=current.id;
+   if(saving||!current||!hooks.canEdit())return;const f=form(kind),id=current.id,epoch=generation;
    const input=kind==='identity'?{identity:Object.fromEntries(parts.map(p=>[p,f.elements.namedItem(p).value]))}:{response:f.elements.namedItem('response').value};
    if(!reset&&kind==='identity'&&!input.identity.lastName.trim()&&!input.identity.firstName.trim()){message('Укажите известное имя или фамилию.',true);f.elements.namedItem('firstName').focus();return;}
    if(!reset&&kind==='response'&&input.response==='conflict'){message('Уточните ответ и выберите один из вариантов.',true);return;}
@@ -38,19 +38,21 @@
    saving=true;forms().forEach(x=>x.dataset.workBusy='1');dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=true);message('Сохраняем…');
    try{
     const next=await hooks.save(kind+(reset?'_reset':''),input,id,contexts[kind]);
+    if(epoch!==generation)return;
     const row=next.rows.find(x=>x.id===id);if(!row)throw Error('Состав изменился. Обновите список участников.');
     const other=kind==='identity'?'response':'identity',ctx={ref:next.event.ref,snapshot:next.snapshot,revision:next.revision};
     contexts[kind]=ctx;if(rowValue(row,other)===baselines[other])contexts[other]=ctx;
     current=row;heading(row);fill(row,kind);message(kind==='identity'?'Имя сохранено. Документы остались прежними.':'Ответ сохранён. Список и количество обновлены.');
-   }catch(e){message(e.message,true);if(e.code==='participants_bad_identity')focusError=true;}
-   finally{saving=false;forms().forEach(x=>delete x.dataset.workBusy);dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=false);dialog.querySelector('option[value=conflict]').disabled=true;window.AelitaWorkForms?.refresh();if(focusError){focusError=false;form('identity').elements.namedItem('lastName').focus();}}
+   }catch(e){if(epoch!==generation)return;message(e.message,true);if(e.code==='participants_bad_identity')focusError=true;}
+   finally{if(epoch!==generation)return;saving=false;forms().forEach(x=>delete x.dataset.workBusy);dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=false);dialog.querySelector('option[value=conflict]').disabled=true;window.AelitaWorkForms?.refresh();if(focusError){focusError=false;form('identity').elements.namedItem('lastName').focus();}}
   }
   function open(id,trigger){
    setup();if(dialog.open&&!close())return false;
    const row=hooks.row(id);if(!row)return false;current=row;returnFocus=trigger;
    const ctx=hooks.context();contexts={identity:ctx,response:ctx};heading(row);fill(row,'identity');fill(row,'response');message(hooks.canEdit()?'Изменения относятся только к списку этого события.':'Источники загружены не полностью. Просмотр доступен; для правки обновите участников.');dialog.querySelectorAll('form input,form select,form button').forEach(x=>x.disabled=!hooks.canEdit());dialog.showModal();dialog.querySelector('[data-person-close]').focus();return true;
   }
-  return{open,close,active:()=>!!dialog?.open};
+  function reset(){++generation;current=null;contexts={};baselines={};returnFocus=null;saving=false;focusError=false;if(dialog){forms().forEach(clean);dialog.querySelectorAll('input,select').forEach(x=>x.value='');if(dialog.open)dialog.close();dialog.remove();dialog=null;}}
+  return{open,close,reset,active:()=>!!dialog?.open};
  }
  window.AelitaParticipantPerson={create};
 })();
