@@ -11,27 +11,20 @@
       ]
     }
   ],
-  "release": 823,
+  "release": 824,
   "removed_files": [
     "images/tarusa-theatre-tour-illustration-v795.png"
   ],
   "changed_files": [
     {
-      "path": "assets/analytics-events.js",
-      "sha256": "fe22272e4dfd563f6468c3f9172a9984f04f687ba01a793b6be3a4a6f612425e"
-    },
-    {
-      "path": "assets/cookie-consent.js",
-      "sha256": "5a79887e40cf5402d0d26ac3b8405d3b638bc27dd7b3b12dab2a2f5043669dca"
-    },
-    {
-      "path": "assets/main.js",
-      "sha256": "7680489ca78c2a7b2faf889b40b24cae2b9ea3c012ab81ddb1be5645cecd0c9f"
+      "path": "en/account/dashboard/index.html",
+      "sha256": "01e303bc599eb309d1efaf2c899cbbe479066d5ebd4557eb30920e3168638552"
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "7cf7c670657166ed1d4ec9982a626f45c69d7f38b2eed66c9f6806297e607f16",
+  "changelog_sha256": "56039a07b5e44dd848a4670503538e1155a0c404fc4c79655d40f2dd18fdf88a",
   "recent_versions": [
+    824,
     823,
     822,
     821,
@@ -40,7 +33,6 @@
     818,
     817,
     816,
-    815,
-    814
+    815
   ]
 }

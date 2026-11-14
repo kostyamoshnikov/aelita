@@ -1766,3 +1766,6 @@ html.a11y .a11y-keep:not(#a11y-none){outline:2px solid var(--a11y-fg);outline-of
 picture[data-editor-picture=true]{display:contents}
 .ed-media-img{--ed-active-fit:var(--ed-fit,cover);--ed-active-position:var(--ed-position,50% 50%)}
 @media(max-width:600px){.ed-media-img{--ed-active-fit:var(--ed-mobile-fit,var(--ed-fit,cover));--ed-active-position:var(--ed-mobile-position,var(--ed-position,50% 50%))}}
+
+/* v824: automatic event status, shared by pages and programme cards. */
+.event-clock{position:relative;z-index:2;display:block;width:fit-content;max-width:100%;padding:10px 14px;margin:12px 0;border:1px solid var(--gold);background:var(--coal);color:var(--gold);font:500 14px/1.6 Inter,sans-serif;letter-spacing:normal;text-transform:none;box-sizing:border-box;overflow-wrap:anywhere}.event-clock a{color:inherit;text-decoration:underline;text-underline-offset:4px}.event-clock-time{white-space:normal}.up-card>.event-clock{margin:12px 18px 0}.event-clock[data-clock-state^="live"]{background:var(--gold);color:var(--ink)}.online-access-recovery{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.online-access-recovery>*{max-width:100%;white-space:normal!important;min-height:44px}

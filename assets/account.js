@@ -22,6 +22,9 @@
       changingPassword: 'Сохраняем новый пароль…',
       errors: {
         bad_name: 'Укажите имя и фамилию.',
+        invitation_not_found: 'Приглашение не найдено среди документов вашей подтверждённой почты.',
+        invitation_inactive: 'Приглашение изменилось или больше не действует. Обновите события.',
+        invitation_temporarily_unavailable: 'Приглашения временно недоступны. Повторите позже.',
         email_change_unavailable: 'Смена почты пока недоступна. Попробуйте позже.',
         bad_email: 'Проверьте адрес почты — похоже, в нём опечатка.',
         password_too_short: 'Пароль должен быть не короче 8 символов.',
@@ -98,6 +101,9 @@
       changingPassword: 'Saving new password…',
       errors: {
         bad_name: 'Please enter your first and last name.',
+        invitation_not_found: 'This invitation was not found for your verified email.',
+        invitation_inactive: 'The invitation changed or is no longer active. Refresh your events.',
+        invitation_temporarily_unavailable: 'Invitations are temporarily unavailable. Retry later.',
         email_change_unavailable: 'Email changes are currently unavailable. Try again later.',
         bad_email: 'Check your email address — looks like there might be a typo.',
         password_too_short: 'Password must be at least 8 characters.',
@@ -863,7 +869,7 @@ var url = URL.createObjectURL(blob);
       if (!token) return null;
       if (!EVENTS_MY_URL) { if (opts.onError) opts.onError(errorMessage({ error: 'server_misconfigured' })); return null; }
       try {
-        var res = await fetch(EVENTS_MY_URL, { headers: { Authorization: 'Bearer ' + token } });
+        var res = await fetch(EVENTS_MY_URL, { headers: { Authorization: 'Bearer ' + token },signal:opts.signal,cache:'no-store' });
         // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
         // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
         // человека молча — показываем ошибку раздела (так и нашли 02.10).
@@ -895,7 +901,7 @@ var url = URL.createObjectURL(blob);
       var token = getToken();
       if (!token) return null;
       try {
-        var res = await fetch(TICKETS_MY_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token } });
+        var res = await fetch(TICKETS_MY_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token },signal:opts.signal,cache:'no-store' });
         // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
         // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
         // человека молча — показываем ошибку раздела (так и нашли 02.10).
@@ -908,6 +914,25 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }
+    },
+
+    listInvitations: async function (opts) {
+      opts=opts||{};var token=getToken();if(!token)return null;
+      try{
+        var response=await fetch(TICKETS_MY_ORDERS_URL+'?invitations=1',{headers:{Authorization:'Bearer '+token},signal:opts.signal,cache:'no-store'});
+        var data=await response.json();if(getToken()!==token)return null;
+        if(response.ok)return data;
+        if(opts.onError)opts.onError(t.errors.section_auth&&response.status===401?t.errors.section_auth:errorMessage(data));
+      }catch(_){if(getToken()===token&&opts.onError)opts.onError(errorMessage(null));}
+      return null;
+    },
+    downloadInvitation: async function(ref){
+      var token=getToken();if(!token)return {ok:false,status:401};
+      try{
+        var response=await fetch(TICKETS_MY_ORDERS_URL,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify({action:'invitation_pdf',ref:ref})});
+        var data=await response.json();if(getToken()!==token)return {ok:false,status:401};
+        return {ok:response.ok,status:response.status,data:data};
+      }catch(_){return {ok:false,status:0};}
     },
 
     // pack-v573 (ТЗ С7): реквизиты чека своего платежа (заказ билетов,

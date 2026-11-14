@@ -15,7 +15,7 @@
 <title>Билет — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<link rel="stylesheet" href="/assets/style.css?v=220">
+<link rel="stylesheet" href="/assets/style.css?v=221">
 <!-- ТЗ С5: билет на экране телефона. Данные — по подписанной ссылке из
      письма или кабинета (GET /tickets/resend-ticket?t=…); после первого
      открытия страница работает без сети: данные — в localStorage, сама
@@ -39,8 +39,8 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
 .tk-hide{display:none}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<script src="/assets/a11y.js?v=220"></script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=220">
+<script src="/assets/a11y.js?v=221"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=221">
 </head>
 <body>
 <main class="tk">
@@ -64,7 +64,7 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
     reissued: 'This ticket has been passed to someone else — this link and the previous QR code no longer work.', // pack-v592
     refunded: 'This ticket is no longer valid: it was returned.', canceled: 'The performance has been cancelled. The refund is processed automatically — see the email.',
     past: 'The performance has already taken place. Thank you for coming!', row: 'Row', seat: 'Seat', general: 'General admission',
-    moved: 'Postponed from', order: 'Order No.', ticket: 'Ticket', offline: 'No connection — showing the saved ticket.', saved: 'The ticket is saved on this phone and opens without internet.',
+    moved: 'Postponed from', order: 'Order No.', ticket: 'Ticket', offline: 'Could not recheck the ticket — showing a saved copy. Its status may have changed.', saved: 'The ticket is saved on this phone and opens without internet.',
     install: 'Add to home screen', iosHint: 'To keep the ticket on your home screen: Share → “Add to Home Screen”.', test: 'TEST TICKET — not valid',
     showAtEntrance: 'Show this QR code at the entrance. The PDF ticket from the email works too.', error: 'Could not load the ticket. Check your connection and try again.',
   } : {
@@ -72,7 +72,7 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
     reissued: 'Билет передан другому человеку — эта ссылка и прежний QR больше не действуют.', // pack-v592
     refunded: 'Билет больше не действует: по нему оформлен возврат.', canceled: 'Показ отменён. Деньги возвращаются автоматически — подробности в письме.',
     past: 'Показ уже прошёл. Спасибо, что были с нами!', row: 'Ряд', seat: 'место', general: 'Свободная рассадка',
-    moved: 'Перенесён с', order: 'Заказ №', ticket: 'Билет', offline: 'Нет связи — показываем сохранённый билет.', saved: 'Билет сохранён на этом телефоне и откроется без интернета.',
+    moved: 'Перенесён с', order: 'Заказ №', ticket: 'Билет', offline: 'Не удалось перепроверить билет — показываем сохранённую копию. Статус мог измениться.', saved: 'Билет сохранён на этом телефоне и откроется без интернета.',
     install: 'Добавить на экран «Домой»', iosHint: 'Чтобы билет был на экране «Домой»: «Поделиться» → «На экран „Домой“».', test: 'ТЕСТОВЫЙ БИЛЕТ — недействителен',
     showAtEntrance: 'Покажите этот QR-код на входе. Билет PDF из письма тоже подходит.', error: 'Не получилось загрузить билет. Проверьте связь и попробуйте ещё раз.',
   };
@@ -82,16 +82,16 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function when(iso) {
-    try { return new Date(iso).toLocaleString(EN ? 'en-GB' : 'ru-RU', { timeZone: 'Europe/Moscow', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso || ''; }
+    try { return new Date(iso).toLocaleString(EN ? 'en-GB' : 'ru-RU', { timeZone: 'Europe/Moscow', year: 'numeric', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso || ''; }
   }
   function render(d) {
     var h = '';
     if (d.isTest) h += '<p class="tk-bad">' + esc(T.test) + '</p>';
-    h += '<h1 class="tk-title">' + esc(EN ? d.titleEn : d.title) + '</h1>';
+    h += '<h1 class="tk-title">' + esc(EN ? d.titleEn || d.title : d.title) + '</h1>';
     if (d.datetime) h += '<div class="tk-when">' + esc(when(d.datetime)) + '</div>';
     if (d.postponedFrom) h += '<div class="tk-moved">' + esc(T.moved) + ' ' + esc(when(d.postponedFrom)) + '</div>';
     h += '<div class="tk-where">' + esc(d.attendanceMode === 'online' ? (EN ? 'Online · Yandex Telemost' : 'Онлайн · Яндекс Телемост') : EN ? d.venueEn : d.venue) + '</div>';
-    h += '<div class="tk-seat">' + (d.row ? esc(T.row) + ' ' + d.row + ', ' + esc(T.seat) + ' ' + d.seat : esc(d.attendanceMode === 'online' ? (EN ? 'Online ticket' : 'Онлайн-билет') : T.general)) + '</div>';
+    h += '<div class="tk-seat">' + (d.row ? esc(T.row) + ' ' + esc(d.row) + ', ' + esc(T.seat) + ' ' + esc(d.seat) : esc(d.attendanceMode === 'online' ? (EN ? 'Online ticket' : 'Онлайн-билет') : T.general)) + '</div>';
     if (d.status === 'online' && /^https:\/\/aelita-production\.ru\/(en\/)?matrix-online\/#access=/.test(d.accessUrl || '')) {
       h += '<p><a href="' + esc(d.accessUrl) + '">' + (EN ? 'Open your online stream' : 'Открыть онлайн-трансляцию') + '</a></p>';
     } else if (d.status === 'valid' && d.qrToken && typeof qrcode === 'function') {
@@ -106,21 +106,22 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
     h += '<p class="tk-meta">' + esc(d.holderName) + (d.orderNumber ? ' · ' + esc(T.order) + ' ' + esc(d.orderNumber) : '') + ' · ' + esc(T.ticket) + ' ' + esc((d.ticketSeries ? d.ticketSeries + ' ' : '') + d.ticketNumber) + '</p>';
     $('tkBody').innerHTML = h;
   }
+  function checkedLabel(at) { return (EN ? 'Last checked: ' : 'Последняя проверка: ') + (at && Number.isFinite(Date.parse(at)) ? when(at) + (EN ? ' MSK' : ' МСК') : (EN ? 'unknown' : 'неизвестно')); }
   function fromCache() { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (e) { return null; } }
-  function toCache(d) { try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); $('tkOffline').textContent = T.saved; } catch (e) { /* приватный режим */ } }
+  function toCache(d) { try { localStorage.setItem(CACHE_KEY, JSON.stringify(Object.assign({}, d, { cachedAt: new Date().toISOString() }))); $('tkOffline').textContent = T.saved + ' ' + checkedLabel(new Date().toISOString()); } catch (e) { /* приватный режим */ } }
 
   if (!/^[A-Za-z0-9_.-]{20,400}$/.test(TOKEN)) { $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.notFound) + '</p>'; return; }
   var cached = fromCache();
-  if (cached) render(cached);
+  if (cached && cached.status === 'valid') { render(cached); $('tkOffline').textContent = T.offline + ' ' + checkedLabel(cached.cachedAt); } else cached = null;
   fetch(API + encodeURIComponent(TOKEN), { cache: 'no-store' }).then(function (r) {
-    if (r.status === 404) { localStorage.removeItem(CACHE_KEY); $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.notFound) + '</p>'; return null; }
+    if (r.status === 404) { try { localStorage.removeItem(CACHE_KEY); } catch (_) {} $('tkOffline').textContent = ''; $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.notFound) + '</p>'; return null; }
     return r.ok ? r.json() : Promise.reject(new Error('http'));
   }).then(function (d) {
     if (!d) return;
-    render(d);
+    render(d); $('tkOffline').textContent = checkedLabel(new Date().toISOString());
     if (d.status === 'valid') toCache(d); else { try { localStorage.removeItem(CACHE_KEY); } catch (e) {} }
   }).catch(function () {
-    if (cached) $('tkOffline').textContent = T.offline;
+    if (cached) $('tkOffline').textContent = T.offline + ' ' + checkedLabel(cached.cachedAt);
     else $('tkBody').innerHTML = '<p class="tk-bad">' + esc(T.error) + '</p>';
   });
 
@@ -135,6 +136,6 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});
 })();
 </script>
-<script src="/assets/outage.js?v=220" defer></script>
+<script src="/assets/outage.js?v=221" defer></script>
 </body>
 </html>

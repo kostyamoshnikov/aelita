@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="Purchase history in your AELITA PRODUCTION account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=220">
-<link rel="stylesheet" href="/assets/style.css?v=220">
+<link rel="stylesheet" href="/assets/fonts.css?v=221">
+<link rel="stylesheet" href="/assets/style.css?v=221">
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <style>
 body{max-width:100vw}
@@ -180,10 +180,13 @@ body{max-width:100vw}
 .pw-form input.pf-need{border-color:var(--gold)}
 .tk-other-form{margin-top:12px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=220">
-<link rel="stylesheet" href="/assets/section-navigation.css?v=220">
-<script src="/assets/mobile-files-m1.js?v=220"></script>
-<link rel="stylesheet" href="/assets/account-tools.css?v=220">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=221">
+<link rel="stylesheet" href="/assets/section-navigation.css?v=221">
+<script src="/assets/mobile-files-m1.js?v=221"></script>
+<link rel="stylesheet" href="/assets/account-tools.css?v=221">
+<link rel="stylesheet" href="/assets/customer-events.css?v=221">
+<script src="/assets/customer-events-model.js?v=221"></script>
+<script src="/assets/customer-events.js?v=221"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -243,6 +246,7 @@ body{max-width:100vw}
       <div class="acc-sticky section-nav-bar" id="accountSectionBar" data-section-nav>
         <button class="acc-nav-arrow section-nav-arrow" type="button" aria-controls="accountSections" data-scroll="-1" aria-label="Scroll left" hidden>‹</button>
         <div class="acc-nav section-nav-rail" id="accountSections" data-section-rail role="navigation" aria-label="Account sections">
+          <a href="#my-events">My events</a>
           <a href="#tickets">Tickets</a>
           <a href="#regs">Registrations</a>
           <a href="#subscriptions">Subscriptions</a>
@@ -257,6 +261,11 @@ body{max-width:100vw}
       </div>
       <!-- pack-v694: ближайшее событие — карточкой сверху (билет или регистрация) -->
       <div class="acc-next" id="nextEvent" hidden></div>
+
+      <div class="acc-section" id="my-events">
+        <h2>My events</h2>
+        <div id="customer-events" class="customer-events"><p class="acc-hint">Loading…</p></div>
+      </div>
 
       <div class="acc-section" id="tickets">
         <h2>My tickets</h2>
@@ -412,12 +421,12 @@ body{max-width:100vw}
   </div>
 </div>
 
-<script src="/assets/analytics-events.js?v=220"></script>
+<script src="/assets/analytics-events.js?v=221"></script>
 <script src="/assets/qrcode.js"></script>
-<script src="/assets/account.js?v=220"></script>
-<script src="/assets/section-navigation.js?v=220"></script>
-<script src="/assets/account-preferences.js?v=220"></script>
-<script src="/assets/main.js?v=220"></script>
+<script src="/assets/account.js?v=221"></script>
+<script src="/assets/section-navigation.js?v=221"></script>
+<script src="/assets/account-preferences.js?v=221"></script>
+<script src="/assets/main.js?v=221"></script>
 <script>
   // pack-v246: словарь по языку страницы. Переводческий пайплайн
   // (_tools/DesignSystem/i18n/) в <script> не заходит — переводит
@@ -680,7 +689,8 @@ body{max-width:100vw}
   }
   function mapUrl(addr) { return 'https://yandex.ru/maps/?text=' + encodeURIComponent(addr); }
   function calUrl(title, iso, place, minutes) {
-    var st = new Date(iso), en = new Date(st.getTime() + (minutes || 120) * 60000);
+    if (!Number.isFinite(Number(minutes)) || Number(minutes) <= 0) return '#my-events';
+    var st = new Date(iso), en = new Date(st.getTime() + Number(minutes) * 60000);
     var f = function (d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); };
     return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + f(st) + '/' + f(en) + (place ? '&location=' + encodeURIComponent(place) : '');
   }
@@ -906,7 +916,7 @@ body{max-width:100vw}
         (canRefund(o) ? '<a class="contract-btn" href="' + (document.documentElement.lang === 'en' ? '/en' : '') + '/ticket-refund/?order=' + encodeURIComponent(o.orderId) + '">' + t.refundBtn + '</a>' : '');
     // pack-v694: второстепенное — строкой ссылок, чтобы кнопок у заказа было меньше.
     var links = [
-      !past && o.datetime ? '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, 120)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' : '',
+      !past && o.datetime ? '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, o.durationMinutes)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' : '',
       !past && o.venueAddress ? '<a class="tk-link" href="' + escapeHtml(mapUrl(o.venueAddress)) + '" target="_blank" rel="noopener">' + t.howToGet + '</a>' : '',
       !past && o.paymentId ? '<button type="button" class="tk-link" data-payment-id="' + escapeHtml(o.paymentId) + '" onclick="onReceipt(this)">' + t.receiptBtn + '</button>' : '',
       // pack-v739: копия билетов на другую почту
@@ -1020,7 +1030,7 @@ body{max-width:100vw}
         '<div class="reg-actions">' + onlinePages.map(function (x) { return '<a class="btn-gold" href="' + escapeHtml(x.accessUrl) + '">' + (LANG === 'en' ? 'Open stream' : 'К трансляции') + (onlinePages.length > 1 ? ' · ' + escapeHtml(x.ticketNumber) : '') + '</a>'; }).join('') + (o.ticketPages || []).map(function (u, i) { return /^https:\/\/aelita-production\.ru\/ticket\/\?t=/.test(u) ? '<a class="btn-gold" href="' + escapeHtml(u) + '">' + t.ticketPageBtn(o.ticketPages.length, i) + '</a>' : ''; }).join('') +
         (o.role === 'holder' ? '' : '<button class="contract-btn" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendTickets(this)">' + t.resendTickets + '</button>') + '</div>' +
         '<div class="tk-links">' + (o.venueAddress ? '<a class="tk-link" href="' + escapeHtml(mapUrl(o.venueAddress)) + '" target="_blank" rel="noopener">' + t.howToGet + '</a>' : '') +
-        '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, 120)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' +
+        '<a class="tk-link" href="' + escapeHtml(calUrl(o.title, o.datetime, place, o.durationMinutes)) + '" target="_blank" rel="noopener">' + t.toCalendar + '</a>' +
         (o.role !== 'holder' && o.orderId ? '<button type="button" class="tk-link" data-order-id="' + escapeHtml(o.orderId) + '" onclick="onResendOther(this)">' + escapeHtml(t.otherMailBtn) + '</button>' : '') + '</div>';
     } else {
       var r = n.r, venue = [r.venueName, r.venueAddress].filter(Boolean).join(', ');
@@ -1140,21 +1150,20 @@ body{max-width:100vw}
     });
   }
 
-  function loadTicketOrders() {
-    window.AELITA_account.listTicketOrders({
-      onError: function (msg) {
-        document.getElementById('ticketOrders').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
-      },
-    }).then(function (data) {
-      // pack-v695: билеты не пришли — «Ближайшее» всё равно соберётся из регистраций
-      if (!data) { NEXT.orders = []; renderNext(); return; }
-      // pack-v592 (ревизия 07.10, Б4): почта кабинета не подтверждена —
-      // сервер билетов не отдаёт, предлагаем подтвердить кодом.
-      if (data.emailUnverified && (!data.orders || !data.orders.length)) { NEXT.orders = []; renderNext(); renderVerifyEmail(); return; }
-      renderTicketOrders(data.orders);
-      renderGiftCards(data.giftCards);
-    });
+  var customerEvents=null;
+  function currentSession(){try{return localStorage.getItem('aelita_account_token')||'';}catch(_){return '';}}
+  function handleOwnSource(name,data){
+    if(name==='orders'){
+      if(data.emailUnverified&&(!data.orders||!data.orders.length)){NEXT.orders=[];renderNext();renderVerifyEmail();return;}
+      renderTicketOrders(data.orders);renderGiftCards(data.giftCards);
+    }else if(name==='regs'){
+      if(data.emailUnverified&&(!data.registrations||!data.registrations.length)){
+        NEXT.regs=[];renderNext();document.getElementById('eventRegistrations').textContent=t.verifyRegsHint;return;
+      }
+      renderEventRegistrations(data.registrations);
+    }
   }
+  function loadTicketOrders(){return customerEvents?customerEvents.load('orders'):Promise.resolve(false);}
 
   // pack-v592 (ревизия 07.10, Б4): подтверждение почты кабинета, заведённого
   // до pack-v592 без проверки, — код на текущий адрес (Account/update-profile.js,
@@ -1193,21 +1202,7 @@ body{max-width:100vw}
   window.onVerifySend = onVerifySend;
   window.onVerifyConfirm = onVerifyConfirm;
 
-  function loadEventRegistrations() {
-    window.AELITA_account.listEventRegistrations({
-      onError: function (msg) {
-        document.getElementById('eventRegistrations').innerHTML = '<p style="color:#C98B6B">' + escapeHtml(msg) + '</p>';
-      },
-    }).then(function (data) {
-      if (data && data.emailUnverified && (!data.registrations || !data.registrations.length)) { // pack-v595
-        NEXT.regs = []; renderNext();
-        document.getElementById('eventRegistrations').innerHTML = '<div class="empty-state">' + escapeHtml(t.verifyRegsHint) + '</div>';
-        return;
-      }
-      if (data) renderEventRegistrations(data.registrations);
-      else { NEXT.regs = []; renderNext(); } // pack-v695: см. loadTicketOrders
-    });
-  }
+  function loadEventRegistrations(){return customerEvents?customerEvents.load('regs'):Promise.resolve(false);}
 
   function onCancelRegistration(buttonEl) {
     var eventId = buttonEl.getAttribute('data-event-id');
@@ -1507,6 +1502,7 @@ body{max-width:100vw}
       location.href = '/en/account';
       return;
     }
+    var entrySession=currentSession();
     var data = await window.AELITA_account.me({
       onError: function (msg) {
         document.getElementById('loadingState').textContent = msg || t.loadFailed;
@@ -1524,6 +1520,7 @@ body{max-width:100vw}
       if (!window.AELITA_account.isLoggedIn()) location.href = '/en/account';
       return;
     }
+    if(currentSession()!==entrySession){location.reload();return;}
     lastAccountData = data;
     currentEmail = data.email;
     document.getElementById('pf-name').value = data.name || '';
@@ -1549,8 +1546,16 @@ body{max-width:100vw}
     if (window.AELITA_account.mailPrefsEnabled && window.AELITA_account.mailPrefsEnabled()) renderMailPrefs(data.mailPrefs || { reminders: true });
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
-    loadTicketOrders();
-    loadEventRegistrations();
+    customerEvents=window.AelitaCustomerEvents.create({
+      root:document.getElementById('customer-events'),lang:LANG,getToken:currentSession,
+      loaders:{orders:function(opts){return window.AELITA_account.listTicketOrders(opts);},regs:function(opts){return window.AELITA_account.listEventRegistrations(opts);},invitations:function(opts){return window.AELITA_account.listInvitations(opts);}},
+      downloadInvitation:function(ref){return window.AELITA_account.downloadInvitation(ref);},
+      onData:handleOwnSource,
+      onError:function(name,message){var id=name==='orders'?'ticketOrders':name==='regs'?'eventRegistrations':null;if(id)document.getElementById(id).textContent=message;},
+      onSessionReset:function(){document.getElementById('content').style.display='none';var box=document.getElementById('loadingState');box.style.display='block';box.replaceChildren();var a=document.createElement('a');a.href=(LANG==='en'?'/en':'')+'/account/';a.textContent=LANG==='en'?'Sign in again':'Войти заново';box.append(a);},
+      onResume:function(){location.reload();}
+    });
+    customerEvents.loadAll();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('content').style.display = 'block';
     window.AelitaPreferences.sticky();
@@ -1591,8 +1596,8 @@ body{max-width:100vw}
   var navTick = false;
   window.addEventListener('scroll', function () { if (navTick) return; navTick = true; requestAnimationFrame(function () { navTick = false; markNav(); }); }, { passive: true });
 </script>
-<script src="/assets/subscription.js?v=220"></script>
-<script src="/assets/phone-prefix.js?v=220"></script>
+<script src="/assets/subscription.js?v=221"></script>
+<script src="/assets/phone-prefix.js?v=221"></script>
 <button class="m-menu-close" id="close-btn" type="button" onclick="toggleMenu()" aria-label="Close menu">✕</button>
 </body>
 </html>

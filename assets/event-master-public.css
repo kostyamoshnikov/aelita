@@ -1,1 +1,51 @@
 :root{color-scheme:dark;--ink:#0b0b0d;--bone:#e8e6e1;--sand:#c9b8a3;--gold:#d6b57a}*{box-sizing:border-box}.em-event{margin:0;background:var(--ink);color:var(--bone);font:16px/1.75 Inter,system-ui,sans-serif}.em-event a{color:var(--gold)}.em-public-nav{max-width:1240px;padding:25px 32px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid #39332a}.em-logo{font:300 19px Montserrat,sans-serif;letter-spacing:.32em;text-decoration:none;color:var(--bone)!important}.em-logo small{display:block;font-size:9px;margin-top:6px;letter-spacing:.43em;color:var(--sand)}.em-public-nav nav{display:flex;gap:24px;flex-wrap:wrap}.em-public-nav nav a{display:flex;align-items:center;min-height:44px;text-decoration:none;font-size:14px}.em-public-main{max-width:1240px;margin:auto;padding:56px 32px 80px}.em-eyebrow{font:11px Montserrat,sans-serif;letter-spacing:.25em;color:var(--gold);margin:0 0 32px}.em-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:54px;align-items:start}.em-event h1{font:300 clamp(30px,4.3vw,60px)/1.16 Montserrat,sans-serif;letter-spacing:-.035em;margin:20px 0 28px;overflow-wrap:anywhere}.em-meta{color:var(--gold);font-size:13px}.em-lead{font-size:18px;color:var(--sand)}.em-cover{display:block;width:100%;height:auto;max-height:620px;object-fit:cover;aspect-ratio:9/11;object-position:center}.em-price{font-size:26px;color:var(--bone)}.em-price small{font-size:13px;color:var(--sand)}.em-public-button{display:inline-flex;min-height:48px;padding:12px 24px;background:var(--gold);color:var(--ink)!important;text-decoration:none;align-items:center;justify-content:center}.em-public-button[aria-disabled=true]{opacity:.5;pointer-events:none}.em-description{max-width:760px;margin-top:62px}.em-description h2{font:300 29px Montserrat,sans-serif;margin-bottom:24px}.em-description p{color:var(--sand);overflow-wrap:anywhere}.em-public-footer{border-top:1px solid #39332a;max-width:1240px;margin:auto;padding:26px 32px;display:flex;gap:24px;flex-wrap:wrap;font-size:12px}.em-public-footer a{overflow-wrap:anywhere;max-width:100%}.em-catalog-card{overflow-wrap:anywhere;min-width:0}.em-catalog-card .up-body{padding:0}.em-catalog-card img{object-fit:cover}.em-grid:empty{display:none}.em-grid{margin-top:24px}.em-catalog-card[hidden]{display:none!important}.em-event a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}@media(max-width:700px){.em-public-nav{padding:18px 16px;gap:12px;align-items:flex-start}.em-logo{font-size:15px}.em-public-nav nav{gap:5px 12px;justify-content:flex-end}.em-public-nav nav a{font-size:12px}.em-public-main{padding:30px 16px 50px}.em-hero{display:flex;flex-direction:column;gap:26px}.em-hero>div{width:100%}.em-event h1{font-size:34px}.em-cover{max-height:440px;aspect-ratio:4/3}.em-eyebrow{font-size:10px;margin-bottom:22px}.em-description{margin-top:38px}.em-lead{font-size:16px}.em-public-footer{padding:22px 16px;gap:16px}.em-public-button{width:100%}.em-meta{font-size:12px}}
+
+/* v824: shared event clock and native reviews on newly published event pages. */
+.event-clock{width:fit-content;max-width:100%;padding:10px 14px;border:1px solid var(--gold);background:var(--ink);color:var(--gold);font:500 14px/1.6 Inter,sans-serif;overflow-wrap:anywhere}.event-clock[data-clock-state^="live"]{background:var(--gold);color:var(--ink)}.event-clock a{color:inherit}.fest-gone{display:none!important}.fest-reviews{margin-top:50px;padding:24px 0}.fest-reviews .wrap{max-width:100%}#em-buy[hidden]{display:none!important}
+.aud-reviews-empty{color:var(--sand);font-size:0.875rem}
+.aud-reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:56px}
+.aud-review-card{background:var(--coal);padding:28px 26px;border:1px solid rgba(232,230,225,.06)}
+.aud-review-text{color:var(--bone);font-size:0.90625rem;line-height:1.7;margin:12px 0 16px}
+.aud-review-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.08em;color:var(--sand);display:flex;justify-content:space-between;align-items:baseline}
+.aud-review-date{color:rgba(201,184,163,.7);font-size:0.75rem}
+/* Запрет, установленный автором отзыва (ст. 10.1 152-ФЗ), — тише
+   текста отзыва, но читаемо: это юридически значимая надпись, а не
+   служебная пометка. */
+/* Предупреждение об особенностях показа на странице спектакля
+   (pack-v362). Заметно, но не кричит: это информация для зрителя,
+   который решает, идти ли ему, а не рекламный баннер. */
+.show-warning{border-left:2px solid var(--gold);padding:10px 0 10px 14px;margin:18px 0 0;color:rgba(201,184,163,.85);font-size:0.875rem;line-height:1.6;max-width:640px}
+.show-warning a{color:var(--gold);border-bottom:1px solid rgba(201,184,163,.3)}
+.aud-review-limit{color:rgba(201,184,163,.7);font-size:0.75rem;margin:8px 0 0;font-style:italic}
+/* Условия публикации отзыва — дополнительный параметр, а не третье
+   согласие: рамку и заголовок-легенду убрали (pack-v365), они делали
+   блок таким же весомым, как сами согласия. Осталась одна строка со
+   списком и одна необязательная галочка. */
+.aud-scope{margin:2px 0 18px}
+.aud-scope-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--sand);font-size:0.8125rem;margin-bottom:12px;cursor:pointer}
+.aud-select{background:rgba(255,255,255,.04);color:var(--bone,#f5f0e8);border:1px solid rgba(201,184,163,.25);border-radius:4px;padding:7px 10px;font-size:0.8125rem;font-family:inherit;max-width:100%}
+.aud-select:focus{outline:1px solid var(--gold);outline-offset:2px}
+.aud-scope-check{margin-bottom:0}
+.aud-stars{letter-spacing:2px}
+.aud-star{color:rgba(232,230,225,.45);font-size:0.9375rem}
+.aud-star.on{color:var(--gold)}
+
+.aud-review-form{max-width:520px}
+.aud-review-form h3{font-size:1.0625rem;font-weight:400;letter-spacing:.02em;color:var(--bone);margin-bottom:18px}
+.aud-stars-input{margin-bottom:16px}
+.aud-star-btn{font-size:2.125rem;color:rgba(232,230,225,.45);cursor:pointer;transition:color .15s;margin-right:8px;display:inline-block;background:none;border:0;padding:0;font-family:inherit;line-height:1.2}
+.aud-star-btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.aud-star-btn.on{color:var(--gold)}
+.aud-input,.aud-textarea{width:100%;background:var(--coal);border:1px solid rgba(232,230,225,.12);color:var(--bone);font-family:'Inter',sans-serif;font-size:0.875rem;padding:13px 16px;margin-bottom:14px;resize:vertical}
+.aud-input:focus,.aud-textarea:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.aud-consent{display:flex;align-items:flex-start;gap:10px;color:var(--sand);font-size:0.8125rem;margin-bottom:18px;cursor:pointer;line-height:1.5}
+.aud-consent input{margin-top:3px;flex-shrink:0}
+.aud-error{color:#C98B6B;font-size:0.8125rem;margin-bottom:14px}
+.aud-thanks{color:var(--bone);font-size:0.875rem;line-height:1.7;background:rgba(214,181,122,.07);border-left:2px solid var(--gold);padding:18px 22px}
+.aud-thanks strong{color:var(--gold)}
+
+@media(max-width:760px){
+  .aud-reviews-grid{grid-template-columns:1fr}
+}
+
+/* Сообщения у форм заявок вместо alert() — ТЗ клиентских текстов, З-6 */
