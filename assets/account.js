@@ -83,6 +83,7 @@
       deletingAccount: 'Удаляем аккаунт…',
       sendingReset: 'Отправляем письмо…',
       sendingCode: 'Отправляем код…',
+      codeRequestUncertain: 'Не удалось получить ответ. Проверьте почту и «Спам»: код мог уже прийти. Если письма нет, повторите запрос.',
       savingPassword: 'Сохраняем пароль…',
       registering: 'Регистрируем…',
       cancelling: 'Отменяем регистрацию…',
@@ -160,6 +161,7 @@
       deletingAccount: 'Deleting the account…',
       sendingReset: 'Sending the email…',
       sendingCode: 'Sending the code…',
+      codeRequestUncertain: 'No response received. Check your inbox and Spam: the code may have arrived. If there is no email, retry.',
       savingPassword: 'Saving the password…',
       registering: 'Registering…',
       cancelling: 'Cancelling registration…',
@@ -236,6 +238,10 @@
     return d.innerHTML;
   }
 
+  async function authCodeRequest(url,body){
+    var controller=new AbortController(),timer=setTimeout(function(){controller.abort();},15000);
+    try{var res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8'},body:JSON.stringify(body),signal:controller.signal});var data=null;try{data=await res.json();}catch(_){}return{res:res,data:data};}finally{clearTimeout(timer);}
+  }
   window.AELITA_account = {
     isLoggedIn: function () { return !!getToken(); },
     logout: function () { clearToken(); },
@@ -547,17 +553,11 @@ var url = URL.createObjectURL(blob);
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.sendingCode; }
       try {
-        var res = await fetch(REQUEST_LOGIN_CODE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          body: JSON.stringify({ email: email, lang: LANG }),
-        });
-        var data = null;
-        try { data = await res.json(); } catch (e) {}
+        var response=await authCodeRequest(REQUEST_LOGIN_CODE_URL,{email:email,lang:LANG}),res=response.res,data=response.data;
         if (res.ok && data && data.ok) { if (opts.onSuccess) opts.onSuccess(); return true; }
-        if (opts.onError) opts.onError(errorMessage(data));
+        if(opts.onError)opts.onError(res.ok&&!data?t.codeRequestUncertain:errorMessage(data),res.ok&&!data?{error:'code_request_uncertain'}:data);
       } catch (e) {
-        if (opts.onError) opts.onError(errorMessage(null));
+        if(opts.onError)opts.onError(t.codeRequestUncertain,{error:'code_request_uncertain'});
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
       }
@@ -566,23 +566,19 @@ var url = URL.createObjectURL(blob);
     // onNeedRegistration — кабинета на этот адрес нет: показать «Имя» и
     // согласие и прислать тот же код ещё раз уже с ними.
     loginWithCode: async function (fields, opts) {
-      opts = opts || {};
+      opts=opts||{};var owner=getToken();
+      function current(){return owner===getToken()&&(!opts.isCurrent||opts.isCurrent());}
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
       if (buttonEl) { buttonEl.disabled = true; buttonEl.textContent = t.signingIn; }
       try {
-        var res = await fetch(LOGIN_WITH_CODE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          body: JSON.stringify(fields),
-        });
-        var data = null;
-        try { data = await res.json(); } catch (e) {}
+        var response=await authCodeRequest(LOGIN_WITH_CODE_URL,fields),res=response.res,data=response.data;
+        if(!current())return null;
         if (res.ok && data && data.token) { setToken(data.token); if (opts.onSuccess) opts.onSuccess(data); return data; }
         if (res.ok && data && data.need_registration) { if (opts.onNeedRegistration) opts.onNeedRegistration(); return null; }
         if (opts.onError) opts.onError(errorMessage(data));
       } catch (e) {
-        if (opts.onError) opts.onError(errorMessage(null));
+        if(current()&&opts.onError)opts.onError(errorMessage(null));
       } finally {
         // Подпись кнопки страница могла сменить сама (onNeedRegistration —
         // «Создать кабинет») — тогда не затираем её прежней.

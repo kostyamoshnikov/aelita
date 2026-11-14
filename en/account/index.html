@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="Sign in or create an account with AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=223">
-<link rel="stylesheet" href="/assets/style.css?v=223">
+<link rel="stylesheet" href="/assets/fonts.css?v=224">
+<link rel="stylesheet" href="/assets/style.css?v=224">
 <style>
 body{max-width:100vw}
 .page-header .account-benefit-note{max-width:40rem;margin:18px 0 0;color:var(--sand);font-family:'Inter',system-ui,sans-serif;font-size:1rem;font-weight:300;line-height:1.65;letter-spacing:normal;text-transform:none}
@@ -52,8 +52,9 @@ body{max-width:100vw}
 .forgot-link{color:var(--sand);font-size:0.8125rem;text-decoration:underline;align-self:flex-start;margin-top:4px}
 .forgot-ok{color:var(--gold);font-size:0.8125rem;line-height:1.5;margin:0}
 /* pack-v510: кнопка действия — на первом экране телефона */
-@media(max-width:600px){.page-header{padding:122px 0 22px}.page-header h1{font-size:1.375rem}.acc-grid{margin-top:20px}.form-box{padding:28px 22px}.form-box p.sub{margin-bottom:16px}}
-  #code-entry,#code-box,#code-step2,#code-new{display:none}
+@media(max-width:600px){.page-header .eyebrow{display:none}.page-header{padding:122px 0 16px}.page-header h1{font-size:1.375rem}.acc-grid{margin-top:20px}.form-box{padding:28px 22px}.form-box p.sub{margin-bottom:16px}}
+  #code-step2,#code-new{display:none}
+  #code-box{display:block}
   #codeSentOk{display:block}
   .code-sub{margin:6px 0 10px}
   .reg-code-box{display:none} /* pack-v592: шаг кода регистрации — показывается из JS */
@@ -65,11 +66,12 @@ body{max-width:100vw}
   #code-box .btn-gold{display:block;margin:12px 0 0}
   #code-box .forgot-link{display:inline-block;margin-top:12px}
   #code-box .forgot-ok{margin-top:10px}
+.acc-grid.account-entry{grid-template-columns:minmax(0,1fr);max-width:560px;margin:28px auto 0}.account-password-method>summary,.account-password-create>summary{cursor:pointer;min-height:44px;padding:12px 0;color:var(--gold);font:400 1rem/1.5 Inter,sans-serif;letter-spacing:normal;text-transform:none}.account-password-method>.form-box{margin-top:12px}.account-password-create{margin-top:18px}.account-password-create>.form-box{margin-top:12px}.account-entry [hidden]{display:none!important}.account-entry .form-col{gap:14px}.account-entry .form-box>h3{letter-spacing:normal;text-transform:none;font-size:1.2rem}.account-entry .field label{letter-spacing:normal;text-transform:none;font-size:1rem}.account-entry .form-box p.sub{font-size:1rem;line-height:1.6}.account-entry .code-sub{margin:16px 0 0}.account-entry input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=223">
-<script src="/assets/mobile-files-m1.js?v=223"></script>
-<link rel="stylesheet" href="/assets/customer-journey.css?v=223">
-<script src="/assets/customer-journey.js?v=223"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=224">
+<script src="/assets/mobile-files-m1.js?v=224"></script>
+<link rel="stylesheet" href="/assets/customer-journey.css?v=224">
+<script src="/assets/customer-journey.js?v=224"></script>
 </head>
 <body class="customer-journey-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -111,20 +113,37 @@ body{max-width:100vw}
 <div class="page-header">
   <div class="wrap">
     <p class="eyebrow">Account</p>
-    <h1>Sign in or register</h1>
-    <p class="account-benefit-note">Add your date of birth in your profile and opt in to receive a personal 20% birthday discount.</p>
-    <p id="next-hint" style="display:none;color:var(--sand);margin-top:10px">To continue with payment, sign in or register — we'll bring you right back here.</p>
+    <h1>Sign in to your account</h1>
+    <p class="account-benefit-note">Tickets, invitations and subscriptions in one place.</p>
+    <p id="next-hint" style="display:none;color:var(--sand);margin-top:10px">Confirm your email, then return to what you were doing.</p>
   </div>
 </div>
 
 <section class="pad-20-100 own-pad">
   <div class="acc-wrap">
-    <div class="acc-grid">
-
-      <div class="form-box">
-        <h3>Already have an account</h3>
-        <p class="sub">Sign in — and everything you've gotten from us will be right there.</p>
-        <div class="form-col">
+    <div class="acc-grid account-entry">
+      <div class="form-box account-code-box" id="account-code-method">
+        <h3>With an email code</h3><p class="sub">Enter your email and we will send a 6-digit code.</p>
+          <div id="code-box">
+            <div class="field"><label for="code-email">Email</label><input class="ym-disable-keys" type="email" id="code-email" required maxlength="254" placeholder="email@example.com" autocomplete="email"></div>
+            <button class="btn-gold" id="codeSendBtn" onclick="doSendCode()">Send code →</button>
+            <p class="sub code-sub">On your first visit, we will create an account after you confirm your email, provide your name and accept the terms.</p>
+            <div id="code-step2">
+              <p class="forgot-ok" id="codeSentOk" role="status" aria-live="polite">Code sent. Check your Spam folder too. The code works for 10 minutes.</p>
+              <div class="field"><label for="code-value">Code from the email</label><input class="ym-disable-keys code-input" type="text" id="code-value" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></div>
+              <div id="code-new">
+                <p class="sub code-sub">There's no account for this address yet — we'll create one. What's your name?</p>
+                <div class="field"><label for="code-name">Full name</label><input class="ym-disable-keys" type="text" id="code-name" placeholder="John Smith" autocomplete="name"></div>
+                <label class="cb-item code-cb"><input type="checkbox" id="code-consent"><span>I agree to the <a class="tl c-gold" href="/en/oferta">public offer</a> and <a class="tl c-gold" href="/en/privacy">processing of my personal data</a></span></label>
+              </div>
+              <button class="btn-gold" id="codeLoginBtn" onclick="doCodeLogin()">Sign in →</button>
+              <a href="#" class="forgot-link" onclick="doSendCode();return false">Send the code again</a>
+            </div>
+            <p class="form-err" id="codeErr" role="alert"></p>
+          </div>
+      </div>
+      <details class="account-password-method" id="password-method"><summary>Sign in with a password</summary>
+        <div class="form-box"><div class="form-col">
           <div class="field"><label for="login-email">Email</label><input class="ym-disable-keys" type="email" id="login-email" placeholder="email@example.com" autocomplete="email"></div>
           <div class="field"><label for="login-password">Password</label><input class="ym-disable-keys" type="password" id="login-password" placeholder="Password" autocomplete="current-password"></div>
           <button class="btn-gold" id="loginBtn" onclick="doLogin()">Sign in →</button>
@@ -137,35 +156,12 @@ body{max-width:100vw}
             <p class="form-err" id="forgotErr"></p>
             <p class="forgot-ok" id="forgotOk" style="display:none">If this address is registered, the email with the link is on its way. Check your spam folder too.</p>
           </div>
-          <!-- pack-v566 — вход по коду из письма (ТЗ С3). Показывается, только
-               когда в account.js включён LOGIN_BY_CODE. -->
-          <div id="code-entry">
-            <p class="code-or">or</p>
-            <button type="button" class="btn-outline" id="codeOpenBtn" onclick="openCode()">Sign in with a code from the email</button>
-          </div>
-          <div id="code-box">
-            <p class="sub code-sub">We'll email you a 6-digit code — no password needed. If you don't have an account yet, we'll create one.</p>
-            <div class="field"><label for="code-email">Email</label><input class="ym-disable-keys" type="email" id="code-email" placeholder="email@example.com" autocomplete="email"></div>
-            <button class="btn-gold" id="codeSendBtn" onclick="doSendCode()">Send code →</button>
-            <div id="code-step2">
-              <p class="forgot-ok" id="codeSentOk">Code sent. Check your Spam folder too. The code works for 10 minutes.</p>
-              <div class="field"><label for="code-value">Code from the email</label><input class="ym-disable-keys code-input" type="text" id="code-value" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></div>
-              <div id="code-new">
-                <p class="sub code-sub">There's no account for this address yet — we'll create one. What's your name?</p>
-                <div class="field"><label for="code-name">Full name</label><input class="ym-disable-keys" type="text" id="code-name" placeholder="John Smith" autocomplete="name"></div>
-                <label class="cb-item code-cb"><input type="checkbox" id="code-consent"><span>I agree to the <a class="tl c-gold" href="/en/oferta">public offer</a> and <a class="tl c-gold" href="/en/privacy">processing of my personal data</a></span></label>
-              </div>
-              <button class="btn-gold" id="codeLoginBtn" onclick="doCodeLogin()">Sign in →</button>
-              <a href="#" class="forgot-link" onclick="doSendCode();return false">Send the code again</a>
-            </div>
-            <p class="form-err" id="codeErr"></p>
-          </div>
-        </div>
-      </div>
 
+        </div></div>
+        <details class="account-password-create" id="password-create"><summary>Create an account with a password</summary>
       <div class="form-box">
-        <h3>First time here</h3>
-        <p class="sub">Registration takes a minute, tops. Any email works.</p>
+        <h3>Create an account with a password</h3>
+        <p class="sub">To create an account, confirm your email using the code in the message.</p>
         <div class="form-col">
           <div class="field"><label for="reg-name">Full name</label><input class="ym-disable-keys" type="text" id="reg-name" placeholder="John Smith" autocomplete="name"></div>
           <div class="field"><label for="reg-email">Email</label><input class="ym-disable-keys" type="email" id="reg-email" placeholder="email@example.com" autocomplete="email"></div>
@@ -183,6 +179,8 @@ body{max-width:100vw}
         </div>
       </div>
 
+        </details>
+      </details>
     </div>
   </div>
 </section>
@@ -234,9 +232,9 @@ body{max-width:100vw}
   </div>
 </div>
 
-<script src="/assets/analytics-events.js?v=223"></script>
-<script src="/assets/account.js?v=223"></script>
-<script src="/assets/main.js?v=223"></script>
+<script src="/assets/analytics-events.js?v=224"></script>
+<script src="/assets/account.js?v=224"></script>
+<script src="/assets/main.js?v=224"></script>
 <script>
   // ?next=/tickets — куда вернуться после входа (например, сюда привёл
   // клик «Оплатить» на странице без авторизации, см. assets/payments.js).
@@ -280,7 +278,7 @@ body{max-width:100vw}
   // Уже залогинен — незачем показывать форму входа, сразу в кабинет
   // (или туда, откуда пришли, если есть NEXT_PATH).
   if (window.AELITA_account && window.AELITA_account.isLoggedIn()) {
-    location.href = NEXT_PATH || '/en/account/dashboard';
+    location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/');
   }
 
   function showErr(id, message) {
@@ -302,7 +300,8 @@ body{max-width:100vw}
   function readCodeDraft() {
     try {
       var d = JSON.parse(localStorage.getItem(CODE_DRAFT_KEY) || 'null');
-      if (d && d.email && Date.now() - (d.at || 0) < 10 * 60 * 1000) return d;
+      var age=d&&Date.now()-Number(d.at);
+      if(d&&typeof d.email==='string'&&/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(d.email)&&['login','register'].indexOf(d.kind)>=0&&age>=0&&age<10*60*1000)return d;
       localStorage.removeItem(CODE_DRAFT_KEY);
     } catch (e) {}
     return null;
@@ -316,7 +315,7 @@ body{max-width:100vw}
     if (!email || !password) { showErr('loginErr', (EN ? "Enter your email and password." : 'Укажите email и пароль.')); return; }
     window.AELITA_account.login(email, password, {
       buttonEl: document.getElementById('loginBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
+      onSuccess: function () { location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
       onError: function (msg) { showErr('loginErr', msg); },
     });
   }
@@ -335,7 +334,7 @@ body{max-width:100vw}
     if (!document.getElementById('reg-consent').checked) { showErr('regErr', (EN ? "Please accept the offer and the personal data processing terms." : 'Отметьте согласие с офертой и обработкой персональных данных.')); return; }
     window.AELITA_account.register(name, email, password, {
       buttonEl: document.getElementById('registerBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || '/en/account/dashboard'; },
+      onSuccess: function () { location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
       // pack-v592: кабинет ещё не создан — ждём код из письма.
       onNeedCode: function (data) {
         REG_PENDING = { email: data.email || email, pendingId: data.pending_id };
@@ -360,7 +359,7 @@ body{max-width:100vw}
     if (!/^\d{6}$/.test(code)) { showErr('regErr', (EN ? "Enter the 6-digit code from the email." : 'Введите 6 цифр из письма.')); return; }
     window.AELITA_account.confirmRegistration(REG_PENDING.email, code, REG_PENDING.pendingId, {
       buttonEl: document.getElementById('regConfirmBtn'),
-      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || '/en/account/dashboard'; },
+      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
       onError: function (msg, data) {
         if (data && data.error === 'registration_expired') { REG_PENDING = null; saveCodeDraft(null); document.getElementById('reg-code-box').style.display = 'none'; }
         showErr('regErr', msg);
@@ -373,53 +372,71 @@ body{max-width:100vw}
   // зарегистрироваться нельзя («email уже знаком»), войти — тоже.
   // pack-v566 — вход по коду (ТЗ С3).
   if (window.AELITA_account && window.AELITA_account.loginByCodeEnabled && window.AELITA_account.loginByCodeEnabled()) {
-    document.getElementById('code-entry').style.display = 'block';
+    document.getElementById('account-code-method').hidden = false;
+  } else {
+    document.getElementById('account-code-method').hidden = true;
+    document.getElementById('password-method').open = true;
+    document.getElementById('password-create').open = true;
   }
   function openCode() {
-    document.getElementById('code-entry').style.display = 'none';
+    document.getElementById('account-code-method').hidden = false;
     document.getElementById('code-box').style.display = 'block';
     var le = document.getElementById('login-email').value.trim();
     if (le) document.getElementById('code-email').value = le;
     document.getElementById('code-email').focus();
   }
-  function doSendCode() {
-    hideErr('codeErr');
-    var email = document.getElementById('code-email').value.trim();
-    if (!email) { showErr('codeErr', (EN ? "Enter your email." : 'Укажите email.')); return; }
-    window.AELITA_account.requestLoginCode(email, {
-      buttonEl: document.getElementById('codeSendBtn'),
-      onSuccess: function () {
-        document.getElementById('code-step2').style.display = 'block';
-        document.getElementById('code-value').focus();
-        saveCodeDraft({ kind: 'login', email: email });
-      },
-      onError: function (msg) { showErr('codeErr', msg); },
-    });
+  var CODE_SEQUENCE=0, CODE_EMAIL='', CODE_SENDING=false;
+  function codeEmail(){return document.getElementById('code-email').value.trim().toLowerCase();}
+  function resetCodeStep(){
+    CODE_SEQUENCE++;CODE_EMAIL='';saveCodeDraft(null);
+    document.getElementById('code-step2').style.display='none';document.getElementById('code-new').style.display='none';
+    document.getElementById('code-value').value='';document.getElementById('code-name').value='';document.getElementById('code-consent').checked=false;
+    document.getElementById('codeLoginBtn').textContent=EN?'Sign in →':'Войти →';hideErr('codeErr');
   }
-  function doCodeLogin() {
-    hideErr('codeErr');
-    var email = document.getElementById('code-email').value.trim();
-    var code = document.getElementById('code-value').value.replace(/\s+/g, '');
-    if (!/^\d{6}$/.test(code)) { showErr('codeErr', (EN ? "Enter the 6-digit code from the email." : 'Введите 6 цифр из письма.')); return; }
-    var fields = { email: email, code: code };
-    var isNew = document.getElementById('code-new').style.display === 'block';
-    if (isNew) {
-      var name = document.getElementById('code-name').value.trim();
-      if (!fullNameOk(name)) { showErr('codeErr', (EN ? "Enter your first and last name." : 'Укажите имя и фамилию.')); return; }
-      if (!document.getElementById('code-consent').checked) { showErr('codeErr', (EN ? "Please accept the offer and the personal data processing terms." : 'Отметьте согласие с офертой и обработкой персональных данных.')); return; }
-      fields.name = name;
-      fields.pd_consent = true;
-    }
-    window.AELITA_account.loginWithCode(fields, {
-      buttonEl: document.getElementById('codeLoginBtn'),
-      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || '/en/account/dashboard'; },
-      onNeedRegistration: function () {
-        var cd = readCodeDraft(); if (cd && cd.kind === 'login') { cd.isNew = true; saveCodeDraft(cd); }
-        document.getElementById('code-new').style.display = 'block';
-        document.getElementById('codeLoginBtn').textContent = (EN ? 'Create account →' : 'Создать кабинет →');
-        document.getElementById('code-name').focus();
+  document.getElementById('code-email').addEventListener('input',function(){if(CODE_EMAIL&&codeEmail()===CODE_EMAIL)return;resetCodeStep();});
+  document.getElementById('code-email').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doSendCode();}});
+  function doSendCode(){
+    if(CODE_SENDING||document.getElementById('codeLoginBtn').disabled)return;
+    hideErr('codeErr');var email=codeEmail(),input=document.getElementById('code-email');
+    if(!email||!input.validity.valid){showErr('codeErr',EN?'Enter a valid email address.':'Укажите корректный адрес почты.');input.focus();return;}
+    var sequence=++CODE_SEQUENCE;CODE_SENDING=true;
+    window.AELITA_account.requestLoginCode(email,{
+      buttonEl:document.getElementById('codeSendBtn'),
+      onSuccess:function(){
+        if(sequence!==CODE_SEQUENCE||codeEmail()!==email)return;
+        CODE_EMAIL=email;document.getElementById('code-step2').style.display='block';document.getElementById('code-new').style.display='none';document.getElementById('code-value').value='';
+        document.getElementById('codeLoginBtn').textContent=EN?'Sign in →':'Войти →';
+        document.getElementById('codeSentOk').textContent=EN?'Code sent to '+email+'. Check Spam too. It is valid for 10 minutes.':'Код отправлен на '+email+'. Проверьте и папку «Спам». Он действует 10 минут.';
+        document.getElementById('code-value').focus();saveCodeDraft({kind:'login',email:email});
       },
-      onError: function (msg) { showErr('codeErr', msg); },
+      onError:function(msg,data){
+        if(sequence!==CODE_SEQUENCE||codeEmail()!==email)return;
+        if(data&&data.error==='code_request_uncertain'){
+          CODE_EMAIL=email;document.getElementById('code-step2').style.display='block';
+          document.getElementById('codeSentOk').textContent=EN?'If the code has arrived, enter it below. Otherwise retry the request.':'Если код пришёл, введите его ниже. Если письма нет, повторите запрос.';
+          saveCodeDraft({kind:'login',email:email,uncertain:true});
+        }
+        showErr('codeErr',msg);
+      }
+    }).finally(function(){CODE_SENDING=false;});
+  }
+  function doCodeLogin(){
+    if(CODE_SENDING||document.getElementById('codeLoginBtn').disabled)return;
+    hideErr('codeErr');var email=codeEmail(),sequence=CODE_SEQUENCE;
+    if(!CODE_EMAIL||email!==CODE_EMAIL){showErr('codeErr',EN?'Request a code for this email address first.':'Сначала запросите код для этого адреса.');return;}
+    var code=document.getElementById('code-value').value.replace(/\s+/g,'');
+    if(!/^\d{6}$/.test(code)){showErr('codeErr',EN?'Enter the 6-digit code from the email.':'Введите 6 цифр из письма.');return;}
+    var fields={email:email,code:code},isNew=document.getElementById('code-new').style.display==='block';
+    if(isNew){var name=document.getElementById('code-name').value.trim();
+      if(!fullNameOk(name)){showErr('codeErr',EN?'Enter your first and last name.':'Укажите имя и фамилию.');return;}
+      if(!document.getElementById('code-consent').checked){showErr('codeErr',EN?'Please accept the offer and the personal data processing terms.':'Отметьте согласие с офертой и обработкой персональных данных.');return;}
+      fields.name=name;fields.pd_consent=true;
+    }
+    window.AELITA_account.loginWithCode(fields,{
+      buttonEl:document.getElementById('codeLoginBtn'),isCurrent:function(){return sequence===CODE_SEQUENCE&&email===codeEmail();},
+      onSuccess:function(){saveCodeDraft(null);location.href=NEXT_PATH||(EN?'/en/account/dashboard/':'/account/dashboard/');},
+      onNeedRegistration:function(){var cd=readCodeDraft();if(cd&&cd.kind==='login'){cd.isNew=true;saveCodeDraft(cd);}document.getElementById('code-new').style.display='block';document.getElementById('codeLoginBtn').textContent=EN?'Create account →':'Создать кабинет →';document.getElementById('code-name').focus();},
+      onError:function(msg){showErr('codeErr',msg);}
     });
   }
 
@@ -467,6 +484,7 @@ body{max-width:100vw}
     var d = readCodeDraft();
     if (!d) return;
     if (d.kind === 'register' && d.pendingId) {
+      document.getElementById('password-method').open=true;document.getElementById('password-create').open=true;
       REG_PENDING = { email: d.email, pendingId: d.pendingId };
       if (d.name && !document.getElementById('reg-name').value) document.getElementById('reg-name').value = d.name;
       document.getElementById('reg-email').value = d.email;
@@ -477,11 +495,11 @@ body{max-width:100vw}
       rc.scrollIntoView({ block: 'center' }); rc.focus();
       return;
     }
-    if (d.kind === 'login') {
+    if (d.kind === 'login' && window.AELITA_account.loginByCodeEnabled()) {
       openCode();
-      document.getElementById('code-email').value = d.email;
+      document.getElementById('code-email').value = d.email;CODE_EMAIL=d.email.toLowerCase();
       document.getElementById('code-step2').style.display = 'block';
-      document.getElementById('codeSentOk').textContent = CODE_ALREADY(d.email);
+      document.getElementById('codeSentOk').textContent=d.uncertain?(EN?'If the code has arrived, enter it below. Otherwise retry the request.':'Если код пришёл, введите его ниже. Если письма нет, повторите запрос.'):CODE_ALREADY(d.email);
       if (d.isNew) {
         document.getElementById('code-new').style.display = 'block';
         document.getElementById('codeLoginBtn').textContent = (EN ? 'Create account →' : 'Создать кабинет →');
