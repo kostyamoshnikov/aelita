@@ -27,7 +27,7 @@
   let ownFlushTimer = null;
 
   function ownConsent() {
-    try { return !!localStorage.getItem('cookies_accepted'); } catch (e) { return false; }
+    return !!(window.AelitaCookies && window.AelitaCookies.canTrack());
   }
 
   function sessionId() {
@@ -54,6 +54,7 @@
   }
 
   function ownFlush(useBeacon) {
+    if (!ownConsent()) { ownBuffer = []; return; }
     if (!ownBuffer.length || !OWN_ANALYTICS_URL) { ownBuffer = []; return; }
     const payload = JSON.stringify({ events: ownBuffer });
     ownBuffer = [];
@@ -111,6 +112,7 @@
 
   document.addEventListener('DOMContentLoaded',function(){var all=Array.from(document.querySelectorAll('[data-performance-id]')),link=all[0];if(link&&new Set(all.map(function(x){return x.dataset.performanceId;})).size===1&&!/^\/(?:en\/)?(?:tickets\/?)?$/.test(location.pathname)&&!/tickets-buy/.test(location.pathname))track('ticket_event_view',{performance:link.dataset.performanceId});});
   function track(goal, params) {
+    if (!ownConsent()) return;
     params = params || {};
     var stages={ticket_event_view:'page',ticket_step_selection:'selection',ticket_step_contacts:'contacts',ticket_payment_start:'payment'};
     if(stages[goal]&&/^[a-z0-9-]{1,100}$/.test(String(params.performance||''))){try{var data={p:location.pathname,l:pageLang(),f:params.performance,g:stages[goal]};navigator.sendBeacon('https://api.aelita-production.ru/tickets/availability?hit=1',new Blob([JSON.stringify(data)],{type:'text/plain'}));}catch(_){}}
@@ -143,6 +145,7 @@
   // заказ: повторный показ экрана успеха (обновили страницу) второй
   // покупки не создаёт.
   window.AELITA_ecomPurchase = function (order) {
+    if (!ownConsent()) return;
     try {
       if (!order || !order.id) return;
       var key = 'aelita_ecom_' + order.id;

@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=219">
+<link rel="stylesheet" href="/assets/fonts.css?v=220">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -304,12 +304,18 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 .gift-owned{display:grid;gap:5px;color:var(--sand);margin-top:10px;font-size:.82rem}
 .gift-owned[hidden]{display:none}
 .gift-owned select{max-width:100%;min-height:42px;background:var(--coal);color:var(--bone);border:1px solid rgba(201,184,163,.35);padding:6px 10px}
+
+body.checkout-complete #steps,body.checkout-complete #step2-sum{display:none!important}
+.paid-details{text-align:left;margin:20px 0;padding:18px;border:1px solid rgba(214,181,122,.3)}.paid-details:empty{display:none}.paid-details dl{display:grid;grid-template-columns:minmax(90px,1fr) minmax(0,2fr);gap:8px;margin:14px 0}.paid-details dd{margin:0;overflow-wrap:anywhere}.paid-ticket-links{display:flex;flex-wrap:wrap;gap:8px}.paid-ticket-links a{margin:0!important}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js and style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=219">
-<script src="/assets/a11y.js?v=219"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=220">
+<script src="/assets/a11y.js?v=220"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=219">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=220">
+<script src="/assets/checkout-result.js?v=220"></script>
+<link rel="stylesheet" href="/assets/cookie-consent.css?v=220">
+<script src="/assets/cookie-consent.js?v=220"></script>
 </head>
 <body>
 <!-- pack-v750 (заказчик 04.11): шапка как на остальных страницах — название, значок
@@ -343,11 +349,12 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
   </div>
 
   <div id="success-block" style="display:none" class="success-box">
-    <h2>Thank you! Payment received</h2>
-    <p id="success-text">Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!</p>
+    <h2 id="success-title">Thank you! Payment received</h2>
+    <p id="success-text">Your order is confirmed. Open your tickets below or in your account.</p>
     <!-- pack-v581 (ТЗ Н7): что будет дальше and когда — and что сделать, если не пришло. -->
     <div id="after-pay" class="after-pay">
-      <p class="after-note">The email with your tickets arrives within 5 minutes. Not there? Check the Spam folder or send the tickets again.</p>
+      <div id="paid-details" class="paid-details ym-hide-content" role="region" aria-label="Your order" aria-live="polite"></div>
+      <p class="after-note">We also send tickets by email. If no email arrives within 5 minutes, check Spam or request another copy.</p>
       <button type="button" class="retry-btn" id="resend-btn" onclick="resendTickets()">Send the tickets again</button>
       <a class="retry-btn" href="/en/account/dashboard/">My tickets in the account</a>
       <p id="resend-msg" class="after-msg" role="status" aria-live="polite"></p>
@@ -434,8 +441,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <input class="ym-disable-keys" id="f-name" placeholder="John Smith" autocomplete="name" required>
     <div class="field-hint" id="f-name-hint" hidden>Add your last name — we’ll save it to your account</div>
     <label class="f-label" for="f-email">Email *</label>
-    <input class="ym-disable-keys" id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="ivan@example.ru" required>
-    <div class="field-hint">Your tickets will be sent there</div>
+    <input class="ym-disable-keys" id="f-email" aria-describedby="email-help" type="email" inputmode="email" autocomplete="email" placeholder="ivan@example.ru" required>
+    <div class="field-hint" id="email-help">Your tickets will arrive here. Before payment, confirm your email with a code — no password needed.</div>
     <label class="f-label" for="f-contact">Phone * <button type="button" class="q-btn" onclick="openSheet('phone')" aria-label="Why we need your phone number">?</button></label>
     <input class="ym-disable-keys" id="f-contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required>
     <!-- pack-v607/v740: код из письма — подтверждение почты при оплате или вход. -->
@@ -445,7 +452,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
       <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Send the code again</a><span id="acct-code-cancel" hidden> · <a href="#" onclick="cancelLogin();return false">Cancel</a></span></div>
     </div>
-    <div class="checkout-consents"><label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/en/consent/" style="color:var(--gold)">processing of personal data</a></span></label><label class="cb-item" id="checkout-news-row"><input type="checkbox" id="newsletterConsent"><span>Send me news and event announcements from AELITA PRODUCTION (<a href="/consent#rassylka">newsletter rules</a>)</span></label></div>
+    <div class="checkout-consents"><label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>I consent to the <a href="/en/consent/" style="color:var(--gold)">processing of personal data</a></span></label><label class="cb-item" id="checkout-news-row"><input type="checkbox" id="newsletterConsent"><span>Send me news and event announcements from AELITA PRODUCTION (<a href="/en/consent/#rassylka">newsletter rules</a>)</span></label></div>
   </div>
   <div class="msg" id="msg"></div>
 </div>
@@ -535,7 +542,8 @@ var YM_ID = 104681911;
 // pack-v460 (WP-1 R1.9): инициализация вынесена в функцию — её зовёт и
 // проверка согласия при загрузке, and кнопка «Accept» в баннере ниже.
 function initMetrika(){
-  try { if (!localStorage.getItem('cookies_accepted')) return; } catch (e) { return; }
+  if (!window.AelitaCookies || !window.AelitaCookies.hasConsent() || window.__checkoutMetrikaLoaded) return;
+  window.__checkoutMetrikaLoaded = true;
   // pack-v540: контейнер электронной торговли — до инициализации счётчика.
   window.dataLayer = window.dataLayer || [];
   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -544,10 +552,10 @@ function initMetrika(){
   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
   ym(YM_ID, "init", {
-       clickmap:true,
-       trackLinks:true,
+       clickmap:false,
+       trackLinks:false,
        accurateTrackBounce:true,
-       webvisor:true,
+       webvisor:false,
        ecommerce:"dataLayer",
        referrer: document.referrer,
        url: location.href
@@ -555,7 +563,7 @@ function initMetrika(){
 }
 initMetrika();
 </script>
-<script src="/assets/analytics-events.js?v=219"></script>
+<script src="/assets/analytics-events.js?v=220"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
@@ -565,7 +573,7 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=219"></script>
+<script src="/assets/payments.js?v=220"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -1229,6 +1237,8 @@ function showAuthExpired(){
 }
 
 function showError(text){
+  document.body.classList.remove('checkout-complete');
+  if(window.AelitaCheckoutResult) window.AelitaCheckoutResult.reset();
   document.getElementById('title').textContent = 'Something went wrong';
   document.getElementById('error-text').textContent = text;
   document.getElementById('error-block').style.display = 'block';
@@ -1247,6 +1257,7 @@ function showAfterPay(orderId){
   paidOrderId = orderId || null;
   const box = document.getElementById('after-pay');
   box.style.display = 'block';
+  if(window.AelitaCheckoutResult) window.AelitaCheckoutResult.render({orderId: paidOrderId, getToken: accountToken, apiBase: API_BASE, request: apiFetch});
   document.getElementById('resend-btn').style.display = paidOrderId ? '' : 'none';
 }
 async function resendTickets(){
@@ -1282,11 +1293,15 @@ function holdUntilText(stored){
 // «Try again» должна открыть схему зала, а не снова опрашивать
 // оплату: init() смотрит на aelita_paid в адресе.
 function leavePaidMode(){
+  document.body.classList.remove('checkout-complete');
   params.delete('aelita_paid');
   try{ history.replaceState(null, '', location.pathname + '?' + params.toString()); }catch(e){}
 }
 
-function showSuccess(text){
+function showSuccess(text, title){
+  document.body.classList.add('checkout-complete');
+  document.getElementById('success-title').textContent = title || 'Thank you! Payment received';
+  if(window.AelitaCheckoutResult) window.AelitaCheckoutResult.reset();
   clearDraft(); // pack-v639: заказ оплачен — черновик больше не нужен
   renderTitle(data, 'AELITA PRODUCTION');
   if(text) document.getElementById('success-text').textContent = text;
@@ -1302,6 +1317,7 @@ function showSuccess(text){
 }
 
 async function init(){
+  document.body.classList.remove('checkout-complete');
   document.getElementById('error-block').style.display = 'none';
   document.getElementById('title').textContent = 'Loading…';
   document.querySelector('.bar').style.display = 'flex';
@@ -2443,9 +2459,9 @@ async function submitOrder(){
         // автоматически, но покупателю уже отдельно ушло письмо с
         // объяснением. Тот же текст, что показывает pollOrderStatus()
         // для платного пути в том же случае.
-        showSuccess('Thank you! No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.');
+        showSuccess('Thank you! No payment was needed — the discount covered the full amount. A rare technical issue occurred with the seat; we already know and will contact you shortly.', 'Order confirmed');
       } else {
-        showSuccess('Thank you! No payment was needed — the discount covered the full amount. Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!');
+        showSuccess('Thank you! No payment was needed — the discount covered the full amount. Open your tickets below or in your account.', 'Order confirmed');
         showAfterPay(out.order_id);
       }
       return;
@@ -2617,7 +2633,7 @@ async function pollOrderStatus(){
       // _tools/Payments она есть), поэтому хотя бы так.
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
-      showSuccess('Your tickets are on their way by email — if they do not arrive within a couple of minutes, check your spam folder. See you soon!');
+      showSuccess('Your order is confirmed. Open your tickets below or in your account.');
       showAfterPay(stored.orderId);
       return;
     }
@@ -2667,21 +2683,11 @@ init();
      страницы. Метрика поднимается ровно в момент нажатия «Accept» —
      иначе первый (и часто единственный) просмотр терялся бы. -->
 <script>
-function acceptCookies() {
-  try { localStorage.setItem('cookies_accepted', '1'); } catch (e) { /* приватный режим — просто не запомним */ }
-  var b = document.getElementById('cookie-banner');
-  if (b) b.classList.add('hidden');
-  initMetrika();
-}
-(function () {
-  var accepted = false;
-  try { accepted = Boolean(localStorage.getItem('cookies_accepted')); } catch (e) { accepted = false; }
-  var b = document.getElementById('cookie-banner');
-  if (accepted && b) b.classList.add('hidden');
-})();
+function acceptCookies() { if (window.AelitaCookies) window.AelitaCookies.accept(); }
+window.addEventListener('aelita:cookie-choice', function(){ initMetrika(); });
 </script>
-<script src="/assets/phone-prefix.js?v=219"></script>
-<script src="/assets/outage.js?v=219" defer></script>
+<script src="/assets/phone-prefix.js?v=220"></script>
+<script src="/assets/outage.js?v=220" defer></script>
 <script>
 (function(){var dock=document.getElementById('help-dock'),bar=document.querySelector('.bar');if(!dock)return;var anchor=dock.parentNode,next=dock.nextSibling;
 function layout(){dock.classList.toggle('compact',window.scrollY>60);if(bar){document.documentElement.style.setProperty('--checkout-bar-height',bar.getBoundingClientRect().height+'px');var fit=window.innerWidth>=1050&&bar.clientWidth>700;dock.classList.toggle('in-paybar',fit);if(fit&&dock.parentNode!==bar)bar.insertBefore(dock,bar.firstChild);else if(!fit&&dock.parentNode!==anchor)anchor.insertBefore(dock,next);}}window.addEventListener('scroll',layout,{passive:true});window.addEventListener('resize',layout);if(bar&&window.ResizeObserver)new ResizeObserver(layout).observe(bar);layout();

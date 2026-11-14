@@ -131,7 +131,9 @@
    на сервере только суммы за день (_tools/Tickets/lib/site-hits.js),
    в админке — «Посещаемость сайта». Не считаем: служебные страницы,
    роботов (navigator.webdriver), предпросмотр/пререндер. */
-(function () {
+function sendSiteHit() {
+  if (!window.AelitaCookies || !window.AelitaCookies.canTrack() || window.__aelitaSiteHitSent) return;
+  window.__aelitaSiteHitSent = true;
   try {
     if (navigator.webdriver) return;
     if (document.visibilityState === 'prerender') return;
@@ -157,6 +159,15 @@
     if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }))) return;
     fetch(url, { method: 'POST', body: body, mode: 'no-cors', credentials: 'omit', keepalive: true }).catch(function () {});
   } catch (e) { /* счётчик никогда не должен ломать сайт */ }
+}
+
+// The common asset is also inherited by pages created by native generators.
+(function(){
+  if(window.AelitaCookies || !document.head) return;
+  var script=document.currentScript, search='';
+  try{ search=new URL(script.src).search; }catch(_){}
+  var css=document.createElement('link');css.rel='stylesheet';css.href='/assets/cookie-consent.css'+search;document.head.appendChild(css);
+  var js=document.createElement('script');js.src='/assets/cookie-consent.js'+search;js.async=false;document.head.appendChild(js);
 })();
 
 // Cookie-баннер
@@ -178,6 +189,7 @@ var VK_PIXEL_ID = 0;
 var vkPixelLoaded = false;
 
 function loadMetrika(){
+  if (!window.AelitaCookies || !window.AelitaCookies.canTrack()) return;
   if(ymLoaded) return;
   ymLoaded = true;
   // pack-v540 (перепроверка): контейнер электронной торговли объявляется
@@ -206,6 +218,9 @@ function loadMetrika(){
 }
 
 function loadVkPixel(){
+  // Advertising requires its own declared purpose and separate consent.
+  return;
+
   if (vkPixelLoaded) return;
   if (!VK_PIXEL_ID) return; // id ещё не заполнен — см. комментарий выше
   vkPixelLoaded = true;
@@ -222,15 +237,16 @@ function loadVkPixel(){
   // вообще, поэтому отдельного <noscript>-пикселя тоже намеренно нет.
 }
 
-(function(){
-  if(localStorage.getItem('cookies_accepted')){
-    var b=document.getElementById('cookie-banner');
-    if(b) b.style.display='none';
-    loadMetrika();
-    loadVkPixel();
-    if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
-  }
-})();
+function startCookieAnalytics(){
+  if (!window.AelitaCookies || !window.AelitaCookies.canTrack()) return;
+  sendSiteHit();
+  loadMetrika();
+  if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
+}
+window.addEventListener('aelita:cookie-choice', function(){
+  startCookieAnalytics(); updateFixedWidgets(); updateCtaBar();
+});
+startCookieAnalytics();
 
 // Пока баннер cookies не принят, он занимает нижнюю часть экрана и визуально
 // перекрывает Telegram-виджет и кнопку «наверх» — не даём им появляться поверх
@@ -241,14 +257,7 @@ function isCookieBannerOpen(){
 }
 
 function acceptCookies(){
-  localStorage.setItem('cookies_accepted','1');
-  var b=document.getElementById('cookie-banner');
-  if(b){b.classList.add('hidden');setTimeout(function(){b.style.display='none'},400);}
-  loadMetrika();
-  loadVkPixel();
-  if (window.AELITA_initOwnStats) window.AELITA_initOwnStats();
-  updateFixedWidgets();
-  updateCtaBar();
+  if(window.AelitaCookies) window.AelitaCookies.accept();
 }
 
 // pack-v654: «↑» и «Написать нам» — только там и тогда, где они нужны
@@ -449,7 +458,7 @@ let ctaNearOwn = false;
 function updateCtaBar(){
   const bar = document.getElementById('mob-cta');
   if(!bar) return;
-  const cookiesAccepted = !!localStorage.getItem('cookies_accepted');
+  const cookiesAccepted = !isCookieBannerOpen();
   bar.classList.toggle('hidden', !cookiesAccepted || isCookieBannerOpen() || ctaNearOwn);
   if(typeof updateFixedWidgets === 'function') updateFixedWidgets();
 }
@@ -914,3 +923,19 @@ window.AELITA_isEn = function () { return (document.documentElement.lang || '').
     });
   });
 })();
+
+// Public format-switch notice follows the same start-minus-24-hours deadline.
+(function(){
+  function refresh(){
+    document.querySelectorAll('[data-format-switch-until]').forEach(function(el){
+      var deadline=Date.parse(el.getAttribute('data-format-switch-until'));
+      if(isFinite(deadline)&&Date.now()>=deadline) el.textContent=/^en/i.test(document.documentElement.lang||'')
+        ? 'The deadline to change an offline ticket to online has passed. Choose the format you need when buying.'
+        : 'Срок перевода офлайн-билета в онлайн завершён. При покупке выберите нужный формат.';
+    });
+  }
+  function initFormatNotices(){refresh();if(document.querySelectorAll('[data-format-switch-until]').length) setInterval(refresh,60000);}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initFormatNotices);else initFormatNotices();
+  document.addEventListener('visibilitychange',refresh);window.addEventListener('pageshow',refresh);
+})();
+

@@ -4,16 +4,27 @@
   var text = en ? {
     legend: 'How would you like to join?', offline: 'Offline · Kaluga', online: 'Online · Telemost',
     closed: 'The room is sold out. Online tickets are available.',
+    expired: 'Both options cost 1,000 ₽. The deadline to change an offline ticket to online has passed.',
+    unknown: 'Both options cost 1,000 ₽. Check whether a format change is available in your account.',
     hint: 'Both options cost 1,000 ₽. You can change an offline ticket to online in your account until ',
     onlineNote: 'Online stream · 1,000 ₽ per ticket', offlineNote: 'Offline · 1,000 ₽ per ticket',
   } : {
     legend: 'Как будете участвовать?', offline: 'Офлайн · Калуга', online: 'Онлайн · Телемост',
     closed: 'Места в зале закончились. Доступны онлайн-билеты.',
+    expired: 'Оба формата — 1 000 ₽. Срок перевода офлайн-билета в онлайн завершён.',
+    unknown: 'Оба формата — 1 000 ₽. Возможность смены формата проверьте в кабинете.',
     hint: 'Оба формата — 1 000 ₽. Перевести офлайн-билет в онлайн можно в кабинете до ',
     onlineNote: 'Онлайн-трансляция · 1 000 ₽ за билет', offlineNote: 'Офлайн · 1 000 ₽ за билет',
   };
   function date(iso) { return new Date(iso).toLocaleString(en ? 'en-GB' : 'ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) + (en ? ' MSK' : ' МСК'); }
   function supported(d) { return !!(d && d.attendance && d.attendance.enabled && d.seating === 'general'); }
+  function refreshHint() {
+    var hint = document.querySelector('#attendance-choice .att-hint');
+    if (!hint || !active) return;
+    var deadline = Date.parse(active.attendance.switchUntil);
+    var policy = !isFinite(deadline) ? text.unknown : Date.now() >= deadline ? text.expired : text.hint + date(active.attendance.switchUntil) + '.';
+    hint.textContent = (active._offlineLeft === 0 ? text.closed + ' ' : '') + policy;
+  }
   function set(d, mode) {
     if (!supported(d)) return;
     current = mode === 'online' || d._offlineLeft === 0 ? 'online' : 'offline';
@@ -48,8 +59,10 @@
     });
     fs.appendChild(options);
     var hint = document.createElement('p'); hint.className = 'att-hint';
-    hint.textContent = d._offlineLeft === 0 ? text.closed : text.hint + date(d.attendance.switchUntil) + '.';
-    fs.appendChild(hint); host.prepend(fs); set(d, desired);
+    fs.appendChild(hint); host.prepend(fs); set(d, desired); refreshHint();
   }
   window.AelitaAttendance = { mount: mount, set: set, supported: supported, note: note, mode: function () { return active ? current : 'offline'; }, meta: function (d) { if (supported(d)) { d._attendanceMeta = document.getElementById('meta').textContent; note(d); } } };
+  window.addEventListener('pageshow', refreshHint);
+  document.addEventListener('visibilitychange', refreshHint);
+  setInterval(refreshHint, 60000);
 }());
