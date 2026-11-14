@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AELITA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/assets/fonts.css?v=222">
+<link rel="stylesheet" href="/assets/fonts.css?v=223">
 <title>AELITA COMMUNITY — main stream — subscribe</title>
 <meta name="description" content="AELITA COMMUNITY — main stream: a 5,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <link rel="canonical" href="https://aelita-production.ru/en/book-space/main/pay/">
@@ -31,7 +31,7 @@
 <meta name="twitter:title" content="AELITA COMMUNITY — main stream — subscribe">
 <meta name="twitter:description" content="AELITA COMMUNITY — main stream: a 5,000 ₽ monthly subscription with automatic payment, cancel at any time in your account.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default-en.jpg">
-<link rel="stylesheet" href="/assets/style.css?v=222">
+<link rel="stylesheet" href="/assets/style.css?v=223">
 <!-- Сгенерировано _tools/Payments/build_subscription_pages.py — правки вносить там. -->
 <style>
 .sp{padding:144px 0 80px}
@@ -91,9 +91,9 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=222">
-<link rel="stylesheet" href="/assets/customer-journey.css?v=222">
-<script src="/assets/customer-journey.js?v=222"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=223">
+<link rel="stylesheet" href="/assets/customer-journey.css?v=223">
+<script src="/assets/customer-journey.js?v=223"></script>
 </head>
 <body class="customer-journey-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -154,7 +154,10 @@
       <p>Card details are kept by YooKassa. <a href="/en/oferta#subscription">All terms — section 14 of the public offer</a>.</p>
     </section>
 
-    <div class="sp-form join-form" id="spForm">
+    <!-- customer:community:BEGIN -->
+<div class="journey-info"><h2>Before subscribing</h2><p>The next meeting dates have not been published. Before paying, ask for the Moscow-time schedule, current book and meetings available this month.</p><details><summary>What happens after payment</summary><p>The organiser will contact you within a day. Check materials and subscription status in your account. If you have not received a chat invitation, contact us.</p></details><div class="journey-actions"><a href="mailto:aelita.production@yandex.ru?subject=Community">Ask before paying</a><a href="/en/account/dashboard/#subscriptions">My subscription and materials</a></div></div>
+<!-- customer:community:END -->
+<div class="sp-form join-form" id="spForm">
       <div class="join-field"><label for="j-name">Full name <span class="req-mark">*</span></label><input class="ym-disable-keys" type="text" id="j-name" autocomplete="name" placeholder="John Smith" required></div>
       <div class="join-field"><label for="j-email">Email <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="email" id="j-email" inputmode="email" autocomplete="email" placeholder="email@example.com" required></div>
       <div class="join-field"><label for="j-phone">Phone <span class="req-mark">*</span></label><input class="input-clear ym-disable-keys" type="tel" id="j-phone" inputmode="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required></div>
@@ -170,10 +173,7 @@
       <label class="cb-item"><input type="checkbox" id="pdConsent"><span>I agree to the <a href="/en/consent">processing of my personal data</a> <span class="req-mark">*</span></span></label>
       <label class="cb-item"><input type="checkbox" id="autopayConsent"><span>I agree to an automatic monthly charge of 5,000 ₽ from the saved payment method until I cancel the subscription in my account — under the terms of <a href="/en/oferta#subscription">section 14 of the public offer</a> <span class="req-mark">*</span></span></label>
       <p class="sp-note" id="spAutopaySoon" hidden>Right now you pay for the first month only — 3 days before it ends we will email you how to continue. Automatic payments will be switched on later.</p>
-      <!-- customer:community:BEGIN -->
-<section class="journey-info own-pad"><h2>Before joining Community</h2><p>The next meeting dates have not been published. Before paying, ask the organiser for the date, Moscow time and joining instructions.</p><details><summary>Book, joining mid-month and onboarding</summary><dl><dt>Programme</dt><dd>The main stream season programme lists Vasily Leshchenko’s Russian Family in the 11th–19th Centuries for November. This does not confirm the next discussion date. Ask which book the group is currently reading before paying.</dd><dt>Joining during a month</dt><dd>The meetings, recordings and materials available to someone joining mid-month have not been specified. Ask before subscribing.</dd><dt>After payment</dt><dd>The email confirms payment. The organiser will contact you within a day; check materials and subscription status in your account. If you have not received a chat invitation, contact us; chat membership is not tracked automatically.</dd></dl></details><div class="journey-actions"><a href="mailto:aelita.production@yandex.ru?subject=Community">Ask before paying</a><a href="/en/account/dashboard/#subscriptions">My subscription and materials</a></div></section>
-<!-- customer:community:END -->
-<button type="button" class="btn-gold" id="spPayBtn">Subscribe — 5,000 ₽/month</button>
+      <button type="button" class="btn-gold" id="spPayBtn">Subscribe — 5,000 ₽/month</button>
       <p class="sp-msg" id="spMsg" role="status" aria-live="polite"></p>
       <p class="sp-small">Payment is on the secure YooKassa page: card or SBP. Questions: <a href="mailto:aelita.production@yandex.ru">aelita.production@yandex.ru</a></p>
     </div>
@@ -254,10 +254,10 @@
 <!-- /Cookie Banner -->
 
 <button class="m-menu-close" id="close-btn" onclick="toggleMenu()" aria-label="Close menu">✕</button>
-<script src="/assets/analytics-events.js?v=222"></script>
-<script src="/assets/payments.js?v=222"></script>
-<script src="/assets/main.js?v=222"></script>
-<script src="/assets/subscription.js?v=222"></script>
-<script src="/assets/phone-prefix.js?v=222"></script>
+<script src="/assets/analytics-events.js?v=223"></script>
+<script src="/assets/payments.js?v=223"></script>
+<script src="/assets/main.js?v=223"></script>
+<script src="/assets/subscription.js?v=223"></script>
+<script src="/assets/phone-prefix.js?v=223"></script>
 </body>
 </html>

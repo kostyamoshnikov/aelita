@@ -242,6 +242,7 @@
     var hero = main && (main.querySelector(':scope > section, :scope > header, :scope > div') || main.firstElementChild);
     var target = function () { return document.getElementById('audience-reviews') || document.getElementById('fest-reviews'); };
     if (!target()) ensureReviews(slug, L('Отзывы зрителей', 'Audience reviews'), null);
+    if (document.querySelector('[data-event-review-cta]')) return;
     if (!heroReview(target)) {
       askReview(slug, L('Были ' + dayLabel(last.start) + '? Оставьте отзыв — он поможет нам и тем, кто выбирает, куда пойти.',
         'Were you there on ' + dayLabel(last.start) + '? Leave a review — it helps us and people choosing what to see.'), target, hero);
@@ -347,36 +348,66 @@
     var end = event.end ? ms(event.end) : ms(day(ms(event.start))+'T23:59:59+03:00')+1;
     return {event:event,state:now>=end?'past':event.end&&now>=ms(event.start)?'live':day(now)===day(ms(event.start))?'today':'upcoming'};
   }
+  // Page status belongs to normal text flow, never to the heading's cover.
+  function pageClockHost() {
+    var main=document.querySelector('main');if(!main)return null;
+    var slot=main.querySelector('[data-event-status-host]');if(slot)return slot;
+    var heading=main.querySelector('h1');if(!heading)return null;
+    var hero=heading;while(hero.parentNode&&hero.parentNode!==main)hero=hero.parentNode;
+    slot=document.createElement('div');slot.className='event-page-status';
+    var wrap=document.createElement('div');wrap.className='wrap';wrap.setAttribute('data-event-status-host','');slot.appendChild(wrap);
+    main.insertBefore(slot,hero.nextSibling);return wrap;
+  }
+  function pagePrimaryReview(past,eventSlug) {
+    var a=document.querySelector('[data-event-review-cta]');if(!a)return;
+    if(!a.__eventBuy)a.__eventBuy={href:a.getAttribute('href'),pid:a.getAttribute('data-performance-id'),text:a.textContent};
+    if(past){a.href=DATA.reviewsAnchor[eventSlug]||'#fest-reviews';a.textContent=L('Оставить отзыв','Leave a review');a.removeAttribute('data-performance-id');a.classList.remove('fest-gone');}
+    else{a.setAttribute('href',a.__eventBuy.href);a.textContent=a.__eventBuy.text;if(a.__eventBuy.pid)a.setAttribute('data-performance-id',a.__eventBuy.pid);}
+  }
+  function pageFollowup(past) {
+    var main=document.querySelector('main');if(!main)return;
+    var box=main.querySelector('.event-followup');
+    if(!box&&past){
+      box=el('section','event-followup own-pad');box.setAttribute('aria-label',L('Другие события','More events'));
+      var wrap=el('div','wrap'),title=el('h2','',L('Другие события','More events')),links=el('div','event-after');
+      [['Ближайшие события','Upcoming events','/tickets/'],['Мои прошедшие события','My past events','/account/dashboard/?events=past#my-events']].forEach(function(x){var a=document.createElement('a');a.textContent=L(x[0],x[1]);a.href=PREFIX+x[2];links.appendChild(a);});
+      wrap.appendChild(title);wrap.appendChild(links);box.appendChild(wrap);main.appendChild(box);
+    }
+    if(box){box.hidden=!past;if(past&&main.lastElementChild!==box)main.appendChild(box);}
+    Array.prototype.forEach.call(main.querySelectorAll('[data-event-before]'),function(node){node.hidden=past;});
+  }
   function eventClocks(t) {
     var timeline = DATA.lifecycle || DATA.events;
     function render(host, records, eventSlug, page) {
-      var current = clockState(records,t); if(!current)return;
-      var node = host.querySelector(':scope > .event-clock');
+      var current=clockState(records,t);if(!current||!host)return;
+      var node=host.querySelector(':scope > .event-clock');
       if(!node){node=document.createElement('p');node.className='event-clock';node.setAttribute('role','status');node.setAttribute('aria-live','polite');host.prepend(node);}
-      var after=host.querySelector(':scope > .event-after');if(page&&current.state==='past'&&!after){after=document.createElement('p');after.className='event-after';[['Ближайшие события','Upcoming events','/tickets/'],['Мои прошедшие события','My past events','/account/dashboard/?events=past#my-events']].forEach(function(x){var a=document.createElement('a');a.textContent=L(x[0],x[1]);a.href=(EN?'/en':'')+x[2];after.appendChild(a);});host.appendChild(after);}if(after&&current.state!=='past')after.remove();
       var signature=current.state+':'+current.event.start;
-      if(node.getAttribute('data-clock-state')===signature)return;
-      node.setAttribute('data-clock-state',signature);node.replaceChildren();
-      node.appendChild(document.createTextNode(current.state==='today'?L('Сегодня','Today'):current.state==='live'?L('Идёт прямо сейчас','Happening now'):current.state==='past'?L('Событие состоялось','The event has taken place'):L('Ближайшее событие: ','Next event: ')+dayLabel(current.event.start)));
-      if(current.state==='live'){
-        var time=document.createElement('span');time.className='event-clock-time';
-        var fmt=function(value){return new Date(ms(value)).toLocaleTimeString(EN?'en-GB':'ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'});};
-        time.textContent=' · '+fmt(current.event.start)+'–'+fmt(current.event.end)+L(' МСК',' MSK');node.appendChild(time);
+      if(node.getAttribute('data-clock-state')!==signature){
+        node.setAttribute('data-clock-state',signature);node.replaceChildren();
+        node.appendChild(document.createTextNode(current.state==='today'?L('Сегодня','Today'):current.state==='live'?L('Идёт прямо сейчас','Happening now'):current.state==='past'?L('Событие состоялось','The event has taken place'):L('Ближайшее событие: ','Next event: ')+dayLabel(current.event.start)));
+        if(current.state==='live'){
+          var time=document.createElement('span');time.className='event-clock-time';
+          var fmt=function(value){return new Date(ms(value)).toLocaleTimeString(EN?'en-GB':'ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'});};
+          time.textContent=' · '+fmt(current.event.start)+'–'+fmt(current.event.end)+L(' МСК',' MSK');node.appendChild(time);
+        }
+        if(current.state==='past'){
+          var anchor=DATA.reviewsAnchor[eventSlug]||'#fest-reviews';
+          if(page&&!document.querySelector(anchor))ensureReviews(eventSlug,L('Отзывы зрителей','Audience reviews'),null);
+          // Matrix already has a primary review button; don't duplicate it in the badge.
+          if(!page||!document.querySelector('[data-event-review-cta]')){
+            var review=document.createElement('a');review.href=(page?'':PREFIX+'/'+eventSlug+'/')+anchor;review.textContent=L('Оставить отзыв','Leave a review');node.appendChild(document.createTextNode(' · '));node.appendChild(review);
+          }
+        }
       }
-      if(current.state==='past'){
-        var anchor=DATA.reviewsAnchor[eventSlug]||'#fest-reviews';
-        if(page&&!document.querySelector(anchor))ensureReviews(eventSlug,L('Отзывы зрителей','Audience reviews'),null);
-        var review=document.createElement('a');review.href=(page?'':(EN?'/en':'')+'/'+eventSlug+'/')+anchor;review.textContent=L('Оставить отзыв','Leave a review');node.appendChild(document.createTextNode(' · '));node.appendChild(review);
-      }
+      if(page){var reopened=records.some(function(e){return e.pid&&REOPENED[e.pid];});pagePrimaryReview(current.state==='past'&&!reopened,eventSlug);pageFollowup(current.state==='past');}
     }
-    if(timeline[slug]){var h=document.querySelector('main h1');if(h)render(h.parentNode,timeline[slug],slug,true);}
+    if(timeline[slug])render(pageClockHost(),timeline[slug],slug,true);
     Array.prototype.forEach.call(document.querySelectorAll('[data-event-clock-start]'),function(node){
       var start=node.getAttribute('data-event-clock-start'),end=node.getAttribute('data-event-clock-end'),key=node.getAttribute('data-event-clock-slug');
       if(!/^[a-z0-9][a-z0-9-]{0,100}$/.test(key||''))return;
-      var isPage=node===document.body,target=isPage?document.querySelector('main h1'):node;
-      if(isPage&&target)target=target.parentNode;if(!target)return;
-      var records=[{start:start,end:end}],state=clockState(records,t);
-      render(target,records,key,isPage);
+      var isPage=node===document.body,target=isPage?pageClockHost():node;if(!target)return;
+      var records=[{start:start,end:end}],state=clockState(records,t);render(target,records,key,isPage);
       if(isPage){var purchase=document.getElementById('em-buy');if(purchase)purchase.hidden=!!state&&state.state==='past';}
     });
     Array.prototype.forEach.call(document.querySelectorAll('[data-cover-slot^="performance:"]'),function(card){

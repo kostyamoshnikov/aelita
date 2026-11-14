@@ -890,7 +890,7 @@
       section.hidden = !sub;
       output.replaceChildren();
       if (!sub) return;
-      var empty = EN ? 'Materials have not been published yet. If you are waiting for a chat invitation, contact the organiser; chat membership is not tracked automatically.' : 'Материалы пока не опубликованы. Если вы ждёте приглашение в чат, напишите организатору: статус добавления в чат автоматически не передаётся.';
+      var empty = EN ? 'Materials have not been published yet. Contact the organiser if you are waiting for a chat invitation.' : 'Материалы пока не опубликованы. Если вы ждёте приглашение в чат, напишите организатору.';
       output.textContent = empty;
       if (sub.isTest || DEMO) return;
       try {
@@ -916,7 +916,7 @@
           row.append(link);
           links.append(row);
         });
-        if(links.children.length){var note=document.createElement('p');note.textContent=EN?'Materials are available below. Chat membership is not tracked automatically.':'Материалы доступны ниже. Статус добавления в чат автоматически не передаётся.';output.replaceChildren(note,links);}
+        if(links.children.length){var note=document.createElement('p');note.textContent=EN?'Materials are available below. Contact the organiser if you need help joining the chat.':'Материалы доступны ниже. По вопросам подключения к чату напишите организатору.';output.replaceChildren(note,links);}
       } catch (_) {
         if (sequence === loadSequence && authToken === token()) output.textContent = T.error;
       }
