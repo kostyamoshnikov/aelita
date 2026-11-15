@@ -2,8 +2,8 @@
 const $=id=>document.getElementById(id),API='https://api.aelita-production.ru/admin/site-edit';
 const crmBridge=window.AelitaCrmShowEvents,params=new URLSearchParams(location.search);
 const crmEntry={id:params.get('crmShow')||'',event:params.get('event')||'',opened:false};
-const S={events:[],revision:0,announcementRevision:0,announcementPublishing:false,announcementScheduling:false,announcementTermsVersion:0,publishedAnnouncement:false,scheduling:false,id:null,step:0,asset:null,socialAsset:null,social:null,epoch:0,edit:0,review:null,locked:false,busy:false,publishing:false,dirty:false,freeEnabled:false};
-const errors={announcement_transition_required:'Это анонс из мастера. Дату можно назначить в карточке анонса. Продажи и регистрация закрыты.',announcement_not_found:'Выберите опубликованный анонс для назначения даты.',announcement_schedule_required:'Для изменения даты, формата или площадки откройте «Изменить расписание».',schedule_confirmation_required:'Подтвердите расписание и условия участия.',online_quota_confirmation_required:'Подтвердите, что платформа и правила допускают онлайн без ограничения.',editor_reload_required:'Обновите страницу мастера и проверьте условия публикации заново.',invalid_nav_file:'Не удалось прочитать текущее меню сайта. Публикация остановлена.',event_exists:'Этот идентификатор или адрес уже используется событием.',item_not_in_revision:'В этой версии события ещё нет.',invalid_revision:'Не удалось открыть эту версию.',event_master_disabled:'Мастер событий ещё не включён на сервере.',editor_not_configured:'Не настроено подключение редактора к репозиторию.',not_authenticated:'Войдите в админку снова.',invalid_field:'Проверьте указанное поле.',invalid_catalog:'Каталог событий изменён вне мастера. Нужна сверка текущего файла.',slug_taken:'Этот адрес страницы уже занят. Выберите другой.',image_missing:'Выберите доступную обложку или загрузите фотографию заново.',linked_page_missing:'Проверьте страницы ведущего, площадки, фильма и цикла: нужны версии RU и EN.',next_event_not_ready:'Этот тип события пока доступен только как черновик. Публикация и регистрация ещё не подключены.',unsupported_mode:'Публикация этого формата ещё не подключена.',operational_fields_locked:'Название, дата, площадка, цена и вместимость опубликованного события зафиксированы. Для переноса и отмены откройте «Показы».',event_in_past:'Укажите будущую дату и время события.',event_exists:'Такое событие уже существует.',catalog_too_large:'Каталог достиг ограничения по объёму. Сократите длинные описания перед публикацией.',content_conflict:'Сайт изменился после загрузки. Черновик сохранён. Обновите каталог, восстановите черновик и снова проверьте макет.',preview_required:'Сначала проверьте свежий макет.',preview_expired:'Проверка устарела. Проверьте макет ещё раз.',publication_unknown:'Ответ на публикацию потерян. Повторите эту же публикацию: мастер проверит, успела ли она сохраниться.',github_unreachable:'Нет ответа от сервера публикации. Проверьте связь и повторите.',github_rejected:'Сервис публикации отклонил запрос. Проверьте настройки репозитория.',github_limited:'Доступ к сервису публикации временно ограничен.',layout_changed:'Структура афиши изменилась. Обновление остановлено, чтобы сохранить текущие правки.',no_change:'Изменений для публикации нет.',bad_image:'Подойдёт изображение JPG, PNG или WebP размером до 20 МБ.',image_too_large:'Не удалось уменьшить изображение. Выберите другой файл.',draft_unavailable:'Не получилось сохранить черновик в этой вкладке. Скачайте его файлом.'};
+const S={events:[],revision:0,announcementRevision:0,announcementPublishing:false,announcementScheduling:false,announcementTermsVersion:0,announcementTickets:false,connectedAnnouncements:[],publishedAnnouncement:false,scheduling:false,id:null,step:0,asset:null,socialAsset:null,social:null,epoch:0,edit:0,review:null,locked:false,busy:false,publishing:false,dirty:false,freeEnabled:false};
+const errors={announcement_transition_required:'Это анонс из мастера. Дату можно назначить в карточке анонса. Продажи и регистрация закрыты.',announcement_not_found:'Выберите опубликованный анонс.',ticket_date_required:'Сначала назначьте дату анонса.',paid_ticket_program_required:'Эта команда подключает платные билеты.',ticket_terms_incomplete:'Укажите цену и квоту каждого формата в анонсе и опубликуйте его.',ticket_program_exists:'Билеты уже подключены. Откройте «Показы».',ticket_site_not_ready:'Обновите сайт и страницы доступа из этой версии, затем повторите подключение.',ticket_program_operational_locked:'Цены и квоты закреплены за форматом. Для переноса и отмены откройте «Показы».',announcement_schedule_required:'Для изменения даты, формата или площадки откройте «Изменить расписание».',schedule_confirmation_required:'Подтвердите расписание и условия участия.',online_quota_confirmation_required:'Подтвердите, что платформа и правила допускают онлайн без ограничения.',editor_reload_required:'Обновите страницу мастера и проверьте условия публикации заново.',invalid_nav_file:'Не удалось прочитать текущее меню сайта. Публикация остановлена.',event_exists:'Этот идентификатор или адрес уже используется событием.',item_not_in_revision:'В этой версии события ещё нет.',invalid_revision:'Не удалось открыть эту версию.',event_master_disabled:'Мастер событий ещё не включён на сервере.',editor_not_configured:'Не настроено подключение редактора к репозиторию.',not_authenticated:'Войдите в админку снова.',invalid_field:'Проверьте указанное поле.',invalid_catalog:'Каталог событий изменён вне мастера. Нужна сверка текущего файла.',slug_taken:'Этот адрес страницы уже занят. Выберите другой.',image_missing:'Выберите доступную обложку или загрузите фотографию заново.',linked_page_missing:'Проверьте страницы ведущего, площадки, фильма и цикла: нужны версии RU и EN.',next_event_not_ready:'Этот тип события пока доступен только как черновик. Публикация и регистрация ещё не подключены.',unsupported_mode:'Публикация этого формата ещё не подключена.',operational_fields_locked:'Название, дата, площадка, цена и вместимость опубликованного события зафиксированы. Для переноса и отмены откройте «Показы».',event_in_past:'Укажите будущую дату и время события.',event_exists:'Такое событие уже существует.',catalog_too_large:'Каталог достиг ограничения по объёму. Сократите длинные описания перед публикацией.',content_conflict:'Сайт изменился после загрузки. Черновик сохранён. Обновите каталог, восстановите черновик и снова проверьте макет.',preview_required:'Сначала проверьте свежий макет.',preview_expired:'Проверка устарела. Проверьте макет ещё раз.',publication_unknown:'Ответ на публикацию потерян. Повторите эту же публикацию: мастер проверит, успела ли она сохраниться.',github_unreachable:'Нет ответа от сервера публикации. Проверьте связь и повторите.',github_rejected:'Сервис публикации отклонил запрос. Проверьте настройки репозитория.',github_limited:'Доступ к сервису публикации временно ограничен.',layout_changed:'Структура афиши изменилась. Обновление остановлено, чтобы сохранить текущие правки.',no_change:'Изменений для публикации нет.',bad_image:'Подойдёт изображение JPG, PNG или WebP размером до 20 МБ.',image_too_large:'Не удалось уменьшить изображение. Выберите другой файл.',draft_unavailable:'Не получилось сохранить черновик в этой вкладке. Скачайте его файлом.'};
 const fields={title:'em-title',slug:'em-slug',titleEn:'em-title-en',datetime:'em-datetime',durationMinutes:'em-duration',price:'em-price',capacity:'em-capacity',onlineCapacity:'em-online-capacity',accessKind:'em-access-kind',mode:'em-mode',seating:'em-seating',hall:'em-hall',priceTable:'em-price-table',kind:'em-kind',ageRating:'em-age',onlinePrice:'em-online-price',filmPage:'em-film-page',seriesPage:'em-series-page',summary:'em-summary',summaryEn:'em-summary-en',description:'em-description',descriptionEn:'em-description-en',image:'em-image',imageAlt:'em-alt','venue.name':'em-venue','venue.address':'em-address','venue.city':'em-city','venue.confirmed':'em-confirmed','venue.page':'em-venue-page'};
 function staffScope(){return window.AelitaStaffSession?.adminScope ? window.AelitaStaffSession.adminScope() : 'legacy';}
 const editorScope=staffScope();
@@ -69,7 +69,8 @@ function updateDraftMode(){
  const mode=$('em-mode').value,free=$('em-access-kind').value==='free',online=mode==='online',hybrid=mode==='hybrid';
  const announcement=!S.locked&&$('em-stage').value==='announcement';
  const published=currentAnnouncement(), scheduled=!!published?.datetime;
- const canSchedule=announcement&&!!published&&S.announcementScheduling;
+ const connected=S.connectedAnnouncements.includes(S.id);
+ const canSchedule=announcement&&!!published&&S.announcementScheduling&&!connected;
  const scheduling=canSchedule&&S.scheduling;
  const standaloneOnline=online&&S.announcementTermsVersion===1;
  const separateOnline=hybrid||standaloneOnline;
@@ -78,12 +79,15 @@ function updateDraftMode(){
  $('em-stage').disabled=S.locked||S.publishedAnnouncement;
  $('em-stage-wrap').hidden=!!published;
  $('em-slug').disabled=S.locked||S.publishedAnnouncement;
- $('em-announcement-status').textContent=!announcement?'':scheduling
+ $('em-announcement-status').textContent=!announcement?'':connected
+  ?'Билеты подключены. Продажей и переносом каждого формата можно управлять в разделе «Показы».':scheduling
   ?'Укажите расписание и подтвердите условия на шаге «Место и билеты». Продажи и регистрация останутся закрытыми.'
   :scheduled?'Дата назначена. Продажи и регистрация закрыты.'
   :S.announcementPublishing?'Дата уточняется. Продажи и регистрация закрыты.':'Для анонса доступен черновой макет.';
  $('em-schedule-start').hidden=!canSchedule;
  $('em-schedule-start').textContent=scheduling?'Отложить работу с датой':scheduled?'Изменить расписание':'Назначить дату';
+ $('em-connect-tickets').hidden=!S.announcementTickets||!scheduled||connected||scheduling||published.accessKind!=='paid';
+ $('em-connected-shows').hidden=!connected;
  ['em-title-en','em-summary-en','em-description-en'].forEach(id=>$(id).required=announcement&&S.announcementPublishing);
  $('em-english-label').textContent=announcement&&S.announcementPublishing?'English · нужен для публикации анонса':'English · необязательно';
  $('em-english-note').textContent=announcement&&S.announcementPublishing?'Для публикации анонса заполните название и оба описания на английском. Перед публикацией проверьте обе версии.':'Если перевод не заполнен, английская страница покажет исходный текст. Автоматического перевода нет.';
@@ -103,24 +107,25 @@ function updateDraftMode(){
  $('em-price-wrap').hidden=standaloneOnline;
  $('em-capacity-wrap').hidden=standaloneOnline;
  $('em-price-label').textContent=hybrid?'Цена очного билета, ₽':'Цена одного билета, ₽';
- $('em-price').disabled=S.locked||free||standaloneOnline;
+ $('em-price').disabled=S.locked||connected||free||standaloneOnline;
  $('em-price').required=!free&&!announcement&&!standaloneOnline;
- $('em-capacity').disabled=S.locked||standaloneOnline;
+ $('em-capacity').disabled=S.locked||connected||standaloneOnline;
  $('em-capacity').required=!announcement&&!standaloneOnline;
  $('em-online-quota-wrap').hidden=!quotaPolicy;
- $('em-online-quota').disabled=!quotaPolicy;
+ $('em-online-quota').disabled=!quotaPolicy||connected;
  const showOnlineCapacity=separateOnline&&(!quotaPolicy||quota==='limited');
  $('em-online-capacity-wrap').hidden=!showOnlineCapacity;
- $('em-online-capacity').disabled=S.locked||!showOnlineCapacity;
+ $('em-online-capacity').disabled=S.locked||connected||!showOnlineCapacity;
  $('em-online-capacity').required=showOnlineCapacity&&(!announcement||quotaPolicy);
  $('em-online-price-wrap').hidden=!separateOnline||free;
- $('em-online-price').disabled=S.locked||!separateOnline||free;
+ $('em-online-price').disabled=S.locked||connected||!separateOnline||free;
  $('em-online-price').required=separateOnline&&!free&&!announcement;
  const confirmUnlimited=quotaPolicy&&quota==='unlimited'&&savedOnlineQuota(published)!=='unlimited';
  $('em-online-confirmation').hidden=!confirmUnlimited;
  $('em-online-confirmed').disabled=!confirmUnlimited;
  $('em-online-confirmed').required=confirmUnlimited;
  if(!confirmUnlimited)$('em-online-confirmed').checked=false;
+ ['em-title','em-title-en','em-access-kind','em-kind','em-age'].forEach(id=>$(id).disabled=S.locked||connected);
  $('em-announcement-links').hidden=!announcement;
  $('em-capacity-label').textContent=online?'Лимит онлайн-участников':hybrid?'Лимит очных участников':'Общая вместимость';
  $('em-check').textContent=scheduling?'Проверить дату к публикации':announcement&&S.announcementPublishing?'Проверить анонс к публикации':announcement||mode!=='offline'||(free&&!S.freeEnabled)?'Проверить черновой макет':'Проверить и опубликовать';
@@ -129,10 +134,14 @@ function fill(e,asset=null,socialAsset=null,scheduleEditing=false){
  S.epoch++;S.uploading=0;S.busy=false;S.id=e.id||freshId();S.asset=asset;S.socialAsset=socialAsset;S.social=null;S.review=null;S.dirty=false;
  const published=currentAnnouncement();
  S.publishedAnnouncement=!!published;
- S.scheduling=!!published&&S.announcementScheduling&&scheduleEditing;
+ const connected=S.connectedAnnouncements.includes(S.id);
+ S.scheduling=!!published&&S.announcementScheduling&&scheduleEditing&&!connected;
  S.locked=S.events.some(x=>x.id===S.id&&x.stage!=='announcement');
  if(published){
   e={...e,stage:'announcement',slug:published.slug};
+  if(connected){
+   for(const key of ['title','titleEn','kind','ageRating','accessKind','price','capacity','onlinePrice','onlineCapacity'])e[key]=published[key];
+  }
   if(!S.scheduling)e.datetime=published.datetime;
   if(published.datetime&&!S.scheduling){
    if(e.mode!==published.mode){
@@ -140,7 +149,7 @@ function fill(e,asset=null,socialAsset=null,scheduleEditing=false){
     e.onlinePrice=published.onlinePrice;e.onlineCapacity=published.onlineCapacity;
    }
    e.mode=published.mode;e.durationMinutes=published.durationMinutes;
-   e.venue={...published.venue,page:e.venue?.page??published.venue.page};
+   e.venue={...published.venue,page:e.venue?.page??published.venue?.page};
   }
  }
  if(e.stage==='announcement'&&e.mode==='online')e={...e,venue:{}};
@@ -157,7 +166,7 @@ function fill(e,asset=null,socialAsset=null,scheduleEditing=false){
  }
  $('em-summary-en').value=e.summaryEn||'';$('em-description-en').value=e.descriptionEn||'';$('em-host').value=e.host?.name||'';ensureOption('em-host-page',e.host?.page);$('em-host-page').value=e.host?.page||'';$('em-duration').value=e.durationMinutes||90;$('em-kind').value=e.kind||'talk';$('em-age').value=e.ageRating||'18+';$('em-access-kind').value=e.accessKind||'paid';$('em-mode').value=e.mode||'offline';$('em-stage').value=e.stage==='announcement'?'announcement':'dated';$('em-seating').value=e.seating||'general';$('em-hall').value=e.hall||'Синий зал';$('em-price-table').value=e.priceTable||'drama';
  $('em-directory-link').href='/admin/directory/'+(S.locked?'?event='+encodeURIComponent(S.id):'');document.querySelectorAll('[data-lock]').forEach(el=>el.disabled=S.locked);updateDraftMode();$('em-locked').hidden=!S.locked;$('em-form').hidden=false;$('em-result').hidden=true;$('em-publish').disabled=true;$('em-select').value=S.locked||S.publishedAnnouncement?S.id:'';imagePreview();mountSocial(e.social);showStep(0);$('em-save-state').textContent='Сохранённые данные. Изменения не внесены.';listDrafts();showCrmLink();}
-async function load(){saveDraft();S.epoch++;const epoch=S.epoch;status('Загружаем каталог…');try{const d=await api({action:'event_list'},epoch);S.events=[...d.events,...(d.announcements||[])];S.announcementRevision=d.announcementRevision||0;S.announcementPublishing=d.announcementPublishing===true;S.announcementScheduling=d.announcementScheduling===true;S.announcementTermsVersion=d.announcementTermsVersion===1?1:0;S.scheduling=S.scheduling&&S.announcementScheduling;S.freeEnabled=d.freeAvailable===true;$('em-free-status').textContent=S.freeEnabled?'Бесплатная очная регистрация включена. Публикация анонса оставит запись закрытой.':'Бесплатная регистрация пока выключена: доступны черновик и макет.';if(S.id)updateDraftMode();S.revision=d.revision;$('em-select').replaceChildren(new Option('Выберите событие',''));S.events.forEach(e=>$('em-select').add(new Option((e.stage==='announcement'?(e.datetime?'Дата назначена · ':'Анонс · '):'')+e.title,e.id)));$('em-legacy').replaceChildren();d.legacy.forEach(e=>{const li=document.createElement('li');li.textContent=e.title;$('em-legacy').append(li);});const pages=d.pages||[];for(const [id,kind] of [['em-host-page','person'],['em-venue-page','venue']]){const old=$(id).value;$(id).replaceChildren(new Option('Без ссылки',''));pages.filter(x=>x.kind===kind).forEach(p=>$(id).add(new Option(p.title,'/'+p.page+'/')));ensureOption(id,old);$(id).value=old;}
+async function load(){saveDraft();S.epoch++;const epoch=S.epoch;status('Загружаем каталог…');try{const d=await api({action:'event_list'},epoch);S.events=[...d.events,...(d.announcements||[])];S.announcementRevision=d.announcementRevision||0;S.announcementPublishing=d.announcementPublishing===true;S.announcementScheduling=d.announcementScheduling===true;S.announcementTermsVersion=d.announcementTermsVersion===1?1:0;S.announcementTickets=d.announcementTickets===true;S.connectedAnnouncements=d.connectedAnnouncements||[];S.scheduling=S.scheduling&&S.announcementScheduling&&!S.connectedAnnouncements.includes(S.id);S.freeEnabled=d.freeAvailable===true;$('em-free-status').textContent=S.freeEnabled?'Бесплатная очная регистрация включена. Публикация анонса оставит запись закрытой.':'Бесплатная регистрация пока выключена: доступны черновик и макет.';if(S.id)updateDraftMode();S.revision=d.revision;$('em-select').replaceChildren(new Option('Выберите событие',''));S.events.forEach(e=>$('em-select').add(new Option((e.stage==='announcement'?(e.datetime?'Дата назначена · ':'Анонс · '):'')+e.title,e.id)));$('em-legacy').replaceChildren();d.legacy.forEach(e=>{const li=document.createElement('li');li.textContent=e.title;$('em-legacy').append(li);});const pages=d.pages||[];for(const [id,kind] of [['em-host-page','person'],['em-venue-page','venue']]){const old=$(id).value;$(id).replaceChildren(new Option('Без ссылки',''));pages.filter(x=>x.kind===kind).forEach(p=>$(id).add(new Option(p.title,'/'+p.page+'/')));ensureOption(id,old);$(id).value=old;}
  $('em-venues').replaceChildren();(d.venues||[]).forEach(v=>$('em-venues').append(new Option(v.name,v.name)));S.venues=d.venues||[];listDrafts();status('Каталог загружен. Создайте событие или выберите опубликованное.');if(S.id&&S.events.some(e=>e.id===S.id))$('em-select').value=S.id;await openCrmEntry();
  }catch(e){if(e.code!=='superseded')status(message(e),true);}}
 function showCrmLink(){
@@ -211,8 +220,11 @@ async function openCrmEntry(){
 }
 function mountSocial(value){const holder=$('em-social-editor');holder.replaceChildren();const epoch=S.epoch;S.social=window.AelitaContentMedia.mountSocial(holder,value,{api,progress:status,isCurrent:()=>epoch===S.epoch&&!!token(),imageSource:value=>{const a=S.socialAsset;return value?.startsWith('asset:')&&a?'data:'+a.type+';base64,'+a.data:value;},onChange:invalidate,busy:delta=>{if(epoch!==S.epoch)return;S.uploading=Math.max(0,(S.uploading||0)+delta);S.busy=S.uploading>0;$('em-check').disabled=S.busy;},onPhoto:async(file,current)=>{const asset=await compress(file);if(!current())throw{code:'superseded'};asset.hash=await window.AelitaMediaOriginals.digest(Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0)));await window.AelitaMediaOriginals.save(file,asset,api,status,current);if(!current())throw{code:'superseded'};S.socialAsset=asset;return'asset:'+asset.hash;},onError:e=>status(message(e),true)});}
 function validate(){for(const el of $('em-form').querySelectorAll('[required]')){if(!el.disabled&&!el.checkValidity()){const panel=el.closest('[data-panel]');if(panel)showStep(Number(panel.dataset.panel));const details=el.closest('details');if(details)details.open=true;el.focus();el.reportValidity();return false;}}if(!$('em-image').value){showStep(2);$('em-image').focus();status('Выберите обложку события.',true);return false;}return true;}
-async function review(){
- if(S.busy||!validate())return;
+async function review(kind){
+ const ticketing=kind==='tickets';
+ if(S.busy||S.publishing)return;
+ if(ticketing&&S.dirty){status('Сначала опубликуйте изменения анонса. Касса возьмёт условия из сохранённой версии.',true);return;}
+ if(!ticketing&&!validate())return;
  S.busy=true;$('em-check').disabled=true;saveDraft();status('Собираем макет…');
  const item=collect(),announcement=item.stage==='announcement',publishAnnouncement=announcement&&S.announcementPublishing;
  const scheduling=publishAnnouncement&&S.announcementScheduling&&S.scheduling;
@@ -220,20 +232,23 @@ async function review(){
  const action=scheduling?'event_announcement_schedule_preview':publishAnnouncement?'event_announcement_preview':next?'event_next_preview':'event_preview';
  const terms=publishAnnouncement&&S.announcementTermsVersion===1
   ?{termsVersion:1,unlimitedOnlineConfirmed:$('em-online-confirmed').checked}: {};
- const payload={action,revision:publishAnnouncement?S.announcementRevision:S.revision,event:item,mediaReviewVersion:1,...terms,
+ const payload=ticketing?{action:'event_ticket_preview',id:S.id,revision:S.announcementRevision}
+  :{action,revision:publishAnnouncement?S.announcementRevision:S.revision,event:item,mediaReviewVersion:1,...terms,
   assets:[...new Map([S.asset,item.social?.image?.startsWith('asset:')?S.socialAsset:null].filter(Boolean).map(a=>[a.hash||a.data,a])).values()]};
  const edit=S.edit,epoch=S.epoch;
  try{
   const d=await api(payload,epoch);if(edit!==S.edit)throw{code:'superseded'};
   S.review={data:d,payload,epoch,edit};
   $('em-review-note').textContent=d.previewOnly?'Черновой макет можно сохранить в этой вкладке или скачать файлом.'
+   :d.ticketing?'Касса получит отдельный показ для каждого формата. Продажи открываются в разделе «Показы».'
    :d.schedule?'Расписание обновится на страницах RU/EN, на главной и в афише. Продажи и регистрация останутся закрытыми.'
+   :d.connected?'Текст и обложка обновятся на страницах RU/EN. Продажей управляет раздел «Показы».'
    :d.announcement?'Обновляются страницы RU/EN, карточки главной и афиши и карта сайта. Продажи и регистрация закрыты.'
    :d.isNew?(item.accessKind==='free'?'Новая страница и карточки афиши. После публикации регистрация останется закрытой.':'Новая страница и карточки афиши. После публикации продажа останется закрытой.'):'Обновление описания и обложки. Действующее состояние продаж сохраняется.';
   $('em-review-schedule').hidden=!d.schedule;
   $('em-review-schedule').textContent=d.schedule?'Было — '+(d.schedule.previousLabel||'дата уточняется')+'. Будет — '+d.schedule.label+'.':'';
   renderParticipation(d.participation);
-  $('em-publish').textContent=d.schedule?'Подтвердить и опубликовать дату':'Опубликовать анонс';
+  $('em-publish').textContent=d.ticketing?'Подключить билеты':d.schedule?'Подтвердить и опубликовать дату':'Опубликовать анонс';
   $('em-before').disabled=!d.before;$('em-after-en').hidden=!d.afterEn;$('em-frame').srcdoc=d.after;$('em-affected').replaceChildren();
   (d.affected||[]).forEach(p=>{const li=document.createElement('li');li.textContent=p;$('em-affected').append(li);});
   if(d.previewOnly){const li=document.createElement('li');li.textContent='Изменения на сайте пока не вносятся.';$('em-affected').append(li);}
@@ -254,10 +269,11 @@ async function publish(){
  const r=S.review;if(!r||r.data.previewOnly||r.epoch!==S.epoch||r.edit!==S.edit||S.publishing)return;
  S.publishing=true;$('em-publish').disabled=true;$('em-close-review').disabled=true;$('em-publish-status').textContent='Сохраняем событие и связанные материалы…';
  const scheduling=r.payload.action==='event_announcement_schedule_preview';
- const action=scheduling?'event_announcement_schedule_publish':r.data.announcement?'event_announcement_publish':'event_publish';
+ const action=r.data.ticketing?'event_ticket_publish':scheduling?'event_announcement_schedule_publish':r.data.announcement?'event_announcement_publish':'event_publish';
  try{
   const d=await api({...r.payload,action,previewToken:r.data.previewToken},r.epoch);
   S.review=null;if(d.announcement)S.announcementRevision=d.revision;else S.revision=d.revision;
+  if(d.ticketing&&!S.connectedAnnouncements.includes(d.event.id))S.connectedAnnouncements.push(d.event.id);
   const local={...d.event},i=S.events.findIndex(x=>x.id===local.id);if(i===-1)S.events.push(local);else S.events[i]=local;
   const label=(d.announcement?(local.datetime?'Дата назначена · ':'Анонс · '):'')+local.title;
   const option=Array.from($('em-select').options).find(o=>o.value===local.id);
@@ -266,8 +282,8 @@ async function publish(){
   try{const items=readDrafts();delete items[local.id];sessionStorage.setItem(KEY,JSON.stringify(items));listDrafts();}catch{}
   $('em-save-state').textContent='Опубликованная версия сохранена';$('em-result-page').href=d.pageURL;
   $('em-directory-link').href='/admin/directory/'+(d.announcement?'':'?event='+encodeURIComponent(local.id));
-  $('em-result-next').textContent=d.announcement?(local.datetime?'Дата назначена. Продажи и регистрация закрыты.':'Анонс опубликован отдельно от билетов. Когда согласуете расписание, нажмите «Назначить дату».'):'Затем перейдите в «Показы», выберите событие и откройте продажу или регистрацию. Название нужно подтвердить отдельно.';
-  $('em-result-shows').hidden=!!d.announcement;$('em-result').hidden=false;$('em-review').close();
+  $('em-result-next').textContent=d.ticketing?'Откройте «Показы» после сборки сайта. У онлайн-варианта можно сохранить закрытую ссылку Телемоста, затем отдельно открыть продажу.':d.connected?'Продажей можно управлять в разделе «Показы».':d.announcement?(local.datetime?'Дата назначена. Продажи и регистрация закрыты.':'Анонс опубликован отдельно от билетов. Когда согласуете расписание, нажмите «Назначить дату».'):'Затем перейдите в «Показы», выберите событие и откройте продажу или регистрацию. Название нужно подтвердить отдельно.';
+  $('em-result-shows').hidden=!!d.announcement&&!d.ticketing&&!d.connected;$('em-result').hidden=false;$('em-review').close();
   status(d.alreadyPublished?'Публикация уже была сохранена. Дождитесь сборки сайта.':scheduling?'Расписание сохранено. Проверьте обе версии страницы и афишу после сборки сайта.':d.announcement?'Анонс сохранён. Проверьте обе версии страницы и афишу после сборки сайта.':'Событие сохранено. Проверьте страницу после сборки сайта.');
   $('em-result').scrollIntoView({block:'start',behavior:'smooth'});if(!d.announcement)void reconcileCrmDraft(local.id);
  }catch(e){if(e.code!=='superseded'){$('em-publish-status').textContent=message(e);if(['content_conflict','preview_required','preview_expired','event_in_past'].includes(e.code)){S.review=null;}else if(S.review===r)$('em-publish').disabled=false;}}
@@ -302,7 +318,7 @@ function resetOnlineConfirmation(){
  updateDraftMode();
 }
 
-$('em-new').onclick=()=>{if(S.busy||!saveDraft())return;fill({id:freshId(),kind:'talk',ageRating:'18+',durationMinutes:90});status('Новое событие. Начните с названия и даты.');};$('em-select').onchange=()=>{if(!S.busy){if(!saveDraft()){$('em-select').value=S.id||'';return;}const e=S.events.find(x=>x.id===$('em-select').value);if(e)fill(e);}};$('em-refresh').onclick=load;$('em-prev').onclick=()=>showStep(S.step-1);$('em-next').onclick=()=>showStep(S.step+1);document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>showStep(Number(b.dataset.step)));$('em-form').onsubmit=e=>e.preventDefault();$('em-form').addEventListener('input',invalidate);$('em-form').addEventListener('change',invalidate);$('em-access-kind').addEventListener('change',updateDraftMode);$('em-mode').addEventListener('change',resetOnlineConfirmation);$('em-online-quota').addEventListener('change',resetOnlineConfirmation);$('em-stage').addEventListener('change',updateDraftMode);['em-seating','em-hall','em-price-table'].forEach(id=>$(id).addEventListener('change',updateDraftMode));$('em-check').onclick=review;$('em-publish').onclick=publish;
+$('em-new').onclick=()=>{if(S.busy||!saveDraft())return;fill({id:freshId(),kind:'talk',ageRating:'18+',durationMinutes:90});status('Новое событие. Начните с названия и даты.');};$('em-select').onchange=()=>{if(!S.busy){if(!saveDraft()){$('em-select').value=S.id||'';return;}const e=S.events.find(x=>x.id===$('em-select').value);if(e)fill(e);}};$('em-refresh').onclick=load;$('em-prev').onclick=()=>showStep(S.step-1);$('em-next').onclick=()=>showStep(S.step+1);document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>showStep(Number(b.dataset.step)));$('em-form').onsubmit=e=>e.preventDefault();$('em-form').addEventListener('input',invalidate);$('em-form').addEventListener('change',invalidate);$('em-access-kind').addEventListener('change',updateDraftMode);$('em-mode').addEventListener('change',resetOnlineConfirmation);$('em-online-quota').addEventListener('change',resetOnlineConfirmation);$('em-stage').addEventListener('change',updateDraftMode);['em-seating','em-hall','em-price-table'].forEach(id=>$(id).addEventListener('change',updateDraftMode));$('em-check').onclick=review;$('em-connect-tickets').onclick=()=>review('tickets');$('em-publish').onclick=publish;
 $('em-schedule-start').onclick=()=>{
  if(S.busy||S.publishing||!S.announcementScheduling||!currentAnnouncement())return;
  if(S.scheduling){

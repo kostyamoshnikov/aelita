@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=232">
+<link rel="stylesheet" href="/assets/fonts.css?v=234">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -491,17 +491,17 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=232">
-<script src="/assets/staff-handoff-v1.js?v=232"></script>
-<script src="/assets/mobile-files-m1.js?v=232"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=232"><script defer src="/assets/delivery-admin-v1.js?v=232"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=232"></script><script src="/assets/staff-session-v796.js?v=232"></script><script defer src="/assets/crm-show-events-v1.js?v=232"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=232">
-<script src="/assets/work-navigation-v812.js?v=232"></script>
-<script src="/assets/work-event-time-v829.js?v=232"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=232">
-<script src="/assets/section-navigation.js?v=232" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=232"><script defer src="/assets/mail-confirm-v813.js?v=232"></script><script defer src="/assets/festival-audience-v814.js?v=232"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=232"><script defer src="/assets/work-forms-v818.js?v=232"></script><script defer src="/assets/admin-calm-v814.js?v=232"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=234">
+<script src="/assets/staff-handoff-v1.js?v=234"></script>
+<script src="/assets/mobile-files-m1.js?v=234"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=234"><script defer src="/assets/delivery-admin-v1.js?v=234"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=234"></script><script src="/assets/staff-session-v796.js?v=234"></script><script defer src="/assets/crm-show-events-v1.js?v=234"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=234">
+<script src="/assets/work-navigation-v812.js?v=234"></script>
+<script src="/assets/work-event-time-v829.js?v=234"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=234">
+<script src="/assets/section-navigation.js?v=234" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=234"><script defer src="/assets/mail-confirm-v813.js?v=234"></script><script defer src="/assets/festival-audience-v814.js?v=234"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=234"><script defer src="/assets/work-forms-v818.js?v=234"></script><script defer src="/assets/admin-calm-v814.js?v=234"></script></head>
 <body>
 
 <nav>
@@ -952,6 +952,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <div class="field inv-w2"><label for="ld-search">Поиск</label><input class="ym-disable-keys" type="text" id="ld-search" autocomplete="off"></div>
       </div>
       <div class="inv-tools"><button class="mini-btn" id="ldReloadBtn">Обновить</button><button class="mini-btn" id="ldXlsxBtn">Таблица (Excel)</button></div>
+      <button type="button" class="mini-btn" id="ldSourceClear" hidden>Показать все заявки</button>
       <button type="button" class="mini-btn" id="ldSubscribeAll">Добавить все в подписчики</button><p class="editor-result" id="ldSubscribeStatus" role="status"></p><div id="ldList"><div class="empty-state">Загружаем…</div></div>
       <p class="editor-note inv-mt14">Заявки со всех форм сайта; о каждой — уведомление в чат команды и на почту.</p>
       <details class="adm-more"><summary>Подробнее</summary><p>Формы: «Для бизнеса», «Для организаторов», «Площадкам», «Партнёры», «Сотрудничество», «Для творческих», Книжный консьерж, подписки на показы и старт продаж.</p></details>
@@ -1106,10 +1107,10 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
       <p class="editor-note" id="pa-preview"></p><button type="button" class="mini-btn" id="pa-commercial">Цена и вместимость</button>
       <div class="adm-card att-admin" id="matrix-online-admin" hidden>
         <h3>Онлайн-трансляция</h3>
-        <p class="lead">Доступ по онлайн-пригласительному открывается за сутки до начала. Вход в зал в него не входит.</p>
+        <p class="lead" id="online-admin-lead">Доступ по онлайн-пригласительному открывается за сутки до начала. Вход в зал в него не входит.</p>
         <div class="field"><label for="online-telemost-url">Ссылка встречи в Яндекс Телемосте</label>
           <input type="url" id="online-telemost-url" placeholder="https://telemost.yandex.ru/j/…" autocomplete="off" class="ym-disable-keys"></div>
-        <p class="editor-note">Сохраните ссылку до первой рассылки. Зрителям приходят персональные ссылки на закрытую страницу. В публичный образ сайта адрес встречи не входит.</p>
+        <p class="editor-note" id="online-admin-note">Сохраните ссылку до первой рассылки. Зрителям приходят персональные ссылки на закрытую страницу. В публичный образ сайта адрес встречи не входит.</p>
         <ol id="online-mail-schedule"></ol>
         <button type="button" class="btn-small" id="online-admin-save" disabled>Сохранить ссылку</button>
         <button type="button" class="btn-small btn-ghost" id="online-admin-reload">Обновить</button>
@@ -4506,30 +4507,87 @@ function renderAppsAdmin() {
 
 // ── pack-v601: заявки с форм сайта ──
 var LD_LIST = [];
+var LD_LIST_TOKEN = '';
+var LD_CORPORATE_FORM = 'Рождественский салон · корпоративный';
+var LD_SOURCE = /^[0-9a-z-]{8,64}$/.test(workParam('lead')) ? workParam('lead') : '';
+var LD_SOURCE_FOCUS = !!LD_SOURCE;
+var LD_HANDOFF = new Map();
+var LD_HANDOFF_SESSION = '';
+function leadHandoffStatus(id) {
+  var session = staffSessionToken() + ':' + getToken();
+  if (session !== LD_HANDOFF_SESSION) {
+    LD_HANDOFF.clear();
+    LD_HANDOFF_SESSION = session;
+  }
+  return LD_HANDOFF.get(id);
+}
+function renderLeadHandoff(lead) {
+  if (lead.form !== LD_CORPORATE_FORM) return '';
+  var result = leadHandoffStatus(lead.id);
+  if (result && result.id) {
+    var href = '/admin/crm/?workTab=tasks&workType=tasks&workRecord=' + encodeURIComponent(result.id);
+    return '<a class="mini-btn" href="' + escapeHtml(href) + '">Открыть задачу в CRM</a>';
+  }
+  if (result && result.transferred) return '<span class="adm-status">Задача в CRM уже создана. Доступ к ней ограничен.</span>';
+  return '<button type="button" class="mini-btn" data-ld="crm" data-id="' + escapeHtml(lead.id) + '"' +
+    (result && result.pending ? ' disabled>Передаём…' : '>Передать в CRM') + '</button>' +
+    (result && result.error ? '<span class="crm-msg" role="alert">' + escapeHtml(result.error) + '</span>' : '');
+}
+async function transferCorporateLead(id) {
+  if (leadHandoffStatus(id)?.pending) return;
+  var token = staffSessionToken(), admin = getToken();
+  if (!token) {
+    LD_HANDOFF.set(id, { error: 'Войдите в админку через свой рабочий аккаунт, чтобы передать заявку в CRM.' });
+    renderLeadsAdmin();
+    return;
+  }
+  LD_HANDOFF.set(id, { pending: true });
+  renderLeadsAdmin();
+  try {
+    var result = await staffCall({ action: 'corporate_lead_handoff', lead_id: id }, token);
+    if (token !== staffSessionToken() || admin !== getToken()) return;
+    if (result.id && !/^t_[a-f0-9]{24}$/.test(result.id)) throw new Error('Не удалось открыть задачу. Повторите передачу.');
+    LD_HANDOFF.set(id, { transferred: true, id: result.id });
+  } catch (err) {
+    if (token !== staffSessionToken() || admin !== getToken()) return;
+    LD_HANDOFF.set(id, { error: err.message });
+  }
+  renderLeadsAdmin();
+}
 async function loadLeadsAdmin() {
   var el = document.getElementById('ldList');
   if (!el || !ADMIN_INBOX_URL || !getToken()) return;
+  var token = getToken();
   try {
-    LD_LIST = (await inboxCall({ action: 'leads_list' })).leads || [];
+    var response = await inboxCall({ action: 'leads_list' });
+    if (token !== getToken()) return;
+    LD_LIST = response.leads || [];
+    LD_LIST_TOKEN = token;
     var sel = document.getElementById('ld-form'), keep = sel.value;
     var forms = []; LD_LIST.forEach(function (a) { if (forms.indexOf(a.form) < 0) forms.push(a.form); });
     sel.innerHTML = '<option value="">Все формы</option>' + forms.sort().map(function (x) { return '<option value="' + escapeHtml(x) + '">' + escapeHtml(x) + '</option>'; }).join('');
     if (forms.indexOf(keep) >= 0) sel.value = keep;
     renderLeadsAdmin();
-  } catch (e) { el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>'; }
+  } catch (e) { if (token === getToken()) el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>'; }
 }
 function renderLeadsAdmin() {
   var el = document.getElementById('ldList');
+  if (LD_LIST_TOKEN !== getToken()) {
+    LD_LIST = [];
+    LD_LIST_TOKEN = '';
+  }
   document.getElementById('ld-total').textContent = LD_LIST.length;
   document.getElementById('ld-new').textContent = LD_LIST.filter(function (a) { return !a.done; }).length;
   var f = document.getElementById('ld-filter').value, fm = document.getElementById('ld-form').value, q = document.getElementById('ld-search').value.trim().toLowerCase();
+  document.getElementById('ldSourceClear').hidden = !LD_SOURCE;
   var list = LD_LIST.filter(function (a) {
+    if (LD_SOURCE) return a.id === LD_SOURCE && a.form === LD_CORPORATE_FORM;
     if (f === 'new' && a.done) return false;
     if (f === 'done' && !a.done) return false;
     if (fm && a.form !== fm) return false;
     return !q || [a.form].concat((a.fields || []).map(function (x) { return x.value; })).join(' ').toLowerCase().indexOf(q) >= 0;
   });
-  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (LD_LIST.length ? 'Здесь пусто.' : 'Заявок пока нет.') + '</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (LD_SOURCE ? 'Исходная заявка недоступна.' : LD_LIST.length ? 'Здесь пусто.' : 'Заявок пока нет.') + '</div>'; return; }
   el.innerHTML = list.map(function (a) {
     return '<div class="ev-card' + (a.done ? ' inv-off' : '') + '">' +
       '<div class="ev-head"><div>' +
@@ -4537,8 +4595,15 @@ function renderLeadsAdmin() {
         '<div class="ev-when">' + fmtGcDate(a.receivedAt) + (a.page && a.page!=='/' ? ' · ' + escapeHtml(a.page) : '') + (a.lang === 'en' ? ' · EN' : '') + (a.consent && a.consent.newsletter ? ' · согласие на рассылку' : '') + '</div>' +
       '</div></div>' +
       admFields((a.fields||[]).filter(function(x){return !/e-?mail|почт|телефон|phone/i.test(x.label);})) + admContacts(((a.fields||[]).find(function(x){return /e-?mail|почт/i.test(x.label);})||{}).value,((a.fields||[]).find(function(x){return /телефон|phone/i.test(x.label);})||{}).value) + admHistory(a.history) +
-      '<div class="ev-actions">' + (a.newsletterStatus ? '<span class="adm-status">'+({confirmed:'Подтвердил',sent:'Письмо отправлено',queued:'Письмо в очереди',unsubscribed:'Отписался',none:'Подписка не запущена'}[a.newsletterStatus]||'')+'</span>'+(a.newsletterStatus==='none'?'<button type="button" class="mini-btn" data-lead-subscribe="'+escapeHtml(a.id)+'">Добавить в подписчики</button>':'') : '') + '<button class="mini-btn" data-ld="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ld="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
+      '<div class="ev-actions">' + renderLeadHandoff(a) + (a.newsletterStatus ? '<span class="adm-status">'+({confirmed:'Подтвердил',sent:'Письмо отправлено',queued:'Письмо в очереди',unsubscribed:'Отписался',none:'Подписка не запущена'}[a.newsletterStatus]||'')+'</span>'+(a.newsletterStatus==='none'?'<button type="button" class="mini-btn" data-lead-subscribe="'+escapeHtml(a.id)+'">Добавить в подписчики</button>':'') : '') + '<button class="mini-btn" data-ld="' + (a.done ? 'undone' : 'done') + '" data-id="' + escapeHtml(a.id) + '">' + (a.done ? 'Вернуть в новые' : 'Обработана') + '</button> <button class="mini-btn" data-ld="delete" data-id="' + escapeHtml(a.id) + '">Удалить</button></div></div>';
   }).join('');
+  if (LD_SOURCE_FOCUS) {
+    LD_SOURCE_FOCUS = false;
+    var card = el.firstElementChild;
+    card.tabIndex = -1;
+    card.focus({ preventScroll: true });
+    card.scrollIntoView({ block: 'center' });
+  }
 }
 async function subscribeLeads(leadId){
   var out=document.getElementById('ldSubscribeStatus');
@@ -4551,10 +4616,17 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-lead
   if (!list) return;
   ['ld-filter', 'ld-form'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderLeadsAdmin); });
   document.getElementById('ld-search').addEventListener('input', renderLeadsAdmin);
+  document.getElementById('ldSourceClear').addEventListener('click', function () {
+    LD_SOURCE = '';
+    LD_SOURCE_FOCUS = false;
+    workClearParam('lead');
+    renderLeadsAdmin();
+  });
   document.getElementById('ldReloadBtn').addEventListener('click', loadLeadsAdmin);
   list.addEventListener('click', async function (e) {
     var b = e.target.closest('[data-ld]'); if (!b) return;
     var act = b.getAttribute('data-ld'), id = b.getAttribute('data-id');
+    if (act === 'crm') return transferCorporateLead(id);
     if (act === 'delete' && !confirm('Удалить заявку совсем?')) return;
     b.disabled = true;
     try {
@@ -7469,10 +7541,10 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
-<link rel="stylesheet" href="/assets/event-participants-v819.css?v=232">
-<script src="/assets/participants-view-v819.js?v=232"></script>
-<script src="/assets/participant-person-v820.js?v=232"></script>
-<script src="/assets/event-participants-v819.js?v=232"></script>
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=234">
+<script src="/assets/participants-view-v819.js?v=234"></script>
+<script src="/assets/participant-person-v820.js?v=234"></script>
+<script src="/assets/event-participants-v819.js?v=234"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
@@ -7829,12 +7901,12 @@ startStaffAdmin();
 })();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
-<script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=232"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=232">
-<script src="/assets/ai-pilot-v741.js?v=232"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=232"></script>
-<script src="/assets/subscription-materials-admin.js?v=232"></script>
+<script src="/assets/matrix-online-admin.js?v=234"></script>
+<script src="/assets/admin-snapshot.js?v=234"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=234">
+<script src="/assets/ai-pilot-v741.js?v=234"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=234"></script>
+<script src="/assets/subscription-materials-admin.js?v=234"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);

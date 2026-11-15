@@ -571,7 +571,8 @@ function aelitaLeadId() {
 window.AELITA_sendLead = async function (formName, fields, opts) {
   var clean = {};
   Object.keys(fields || {}).forEach(function (k) { var v = String(fields[k] || '').trim(); if (v) clean[k] = v; });
-  var payload = { form: formName, fields: clean, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', page: location.pathname, client_id: aelitaLeadId(), pd_consent: true };
+  var payload = { form: formName, fields: clean, lang: document.documentElement.lang === 'en' ? 'en' : 'ru', page: location.pathname, client_id: opts && opts.clientId || aelitaLeadId(), pd_consent: true };
+  if (opts && opts.website) payload.website = opts.website;
   if (opts && opts.newsletter === true) payload.newsletter_consent = true;
   if (opts && opts.combined === true) payload.newsletter_combined = true;
   var body = JSON.stringify(payload);

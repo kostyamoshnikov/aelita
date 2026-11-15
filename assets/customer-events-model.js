@@ -5,7 +5,7 @@
   function privateUrl(raw,kind){
     try{var u=new URL(raw);if(u.protocol!=='https:'||u.hostname!=='aelita-production.ru'||u.port||u.username||u.password)return null;
       if(kind==='ticket')return u.pathname==='/ticket/'&&/^[A-Za-z0-9_.-]{20,400}$/.test(u.searchParams.get('t')||'')?u.href:null;
-      var path=kind==='invitation'?/^\/(en\/)?online-invitation\/$/:/^\/(en\/)?matrix-online\/$/;
+      var path=kind==='invitation'?/^\/(en\/)?online-invitation\/$/:/^\/(en\/)?(?:matrix-online|event-online)\/$/;
       return path.test(u.pathname)&&/^#access=[A-Za-z0-9_-]{10,600}\.[A-Za-z0-9_-]{43}$/.test(u.hash)?u.href:null;
     }catch(_){return null;}
   }

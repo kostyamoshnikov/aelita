@@ -4,6 +4,8 @@
   if (!panel) return;
   var cfg = null, pid = '', request = 0, sel = document.getElementById('pa-perf');
   var field = document.getElementById('online-telemost-url'), msg = document.getElementById('online-admin-msg'), save = document.getElementById('online-admin-save');
+  var lead = document.getElementById('online-admin-lead'), note = document.getElementById('online-admin-note');
+  var baseLead = lead && lead.textContent, baseNote = note && note.textContent;
   function fmt(iso) { return new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' МСК'; }
   async function call(body) {
     var token = typeof getToken === 'function' ? getToken() : null;
@@ -33,8 +35,10 @@
   function selected() {
     request++; cfg = null; save.disabled = true; field.value = '';
     var p = typeof PERF_LIST !== 'undefined' && PERF_LIST.find(function (p) { return p.id === sel.value; });
-    pid = p && (p.onlineInvites || p.id === 'matritsa-2026-11-14') ? p.id : '';
+    pid = p && (p.onlineInvites || p.onlineTicketSetup || p.id === 'matritsa-2026-11-14') ? p.id : '';
     panel.hidden = !pid;
+    if (lead) lead.textContent = p && p.onlineTicketSetup ? 'Персональная ссылка Телемоста откроется в момент начала показа.' : baseLead;
+    if (note) note.textContent = p && p.onlineTicketSetup ? 'Сохраните ссылку встречи перед открытием продаж. Покупатели получат страницу доступа с билетом.' : baseNote;
     if (pid) load();
   }
   sel.addEventListener('change', selected);

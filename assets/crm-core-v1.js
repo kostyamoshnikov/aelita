@@ -431,6 +431,9 @@
    if(['contacts','organizations'].includes(type))$('#view').insertAdjacentHTML('beforeend',publicDirectoryPanel(type,x));
    if(type==='tasks'){
      $('#view').insertAdjacentHTML('afterbegin',taskActions(x));
+     const salonLead = /^lead:([0-9a-z-]{8,64})$/.exec(x.sourceRef || '');
+     if(salonLead&&state.user.adminAccess&&state.user.emailVerified)$('#view').insertAdjacentHTML('beforeend',
+       '<section class="panel production-panel"><h2>Источник задачи</h2><p><a href="/admin/?lead='+encodeURIComponent(salonLead[1])+'#inbox">Открыть заявку с сайта ↗</a></p></section>');
      if(state.entriesReady&&r.taskSource)$('#view').insertAdjacentHTML('beforeend','<section class="panel production-panel"><h2>Источник задачи</h2>'+
       (r.taskSource.unavailable?'<p class="hint">Источник недоступен.</p>':'<p><a href="'+esc(window.AelitaCrmEntries.linkFor(r.taskSource))+'">Открыть запись общения ↗</a></p>')+'</section>');
    }

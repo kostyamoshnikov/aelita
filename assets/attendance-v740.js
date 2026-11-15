@@ -27,6 +27,7 @@
   }
   function set(d, mode) {
     if (!supported(d)) return;
+    if (d.attendance.dedicated) { current = 'online'; note(d); return; }
     current = mode === 'online' || d._offlineLeft === 0 ? 'online' : 'offline';
     d.left = current === 'online' ? null : d._offlineLeft;
     document.querySelectorAll('input[name="attendance-mode"]').forEach(function (r) { r.checked = r.value === current; });
@@ -35,6 +36,15 @@
   function note(d) {
     if (!supported(d)) return;
     var n = document.getElementById('qty-note');
+    if (d.attendance.dedicated) {
+      var price = new Intl.NumberFormat(en ? 'en-GB' : 'ru-RU').format(d.price);
+      var left = typeof d.left === 'number' && d.left <= 10 ? (en ? ' · remaining ' : ' · осталось ') + d.left : '';
+      if (n) n.textContent = (en ? 'Online stream · ' : 'Онлайн-трансляция · ') + price + (en ? ' ₽ per ticket' : ' ₽ за билет') + left;
+      var meta = document.getElementById('meta');
+      if (meta && Number.isFinite(Date.parse(d.datetime))) meta.textContent = date(d.datetime) +
+        (en ? ' · Online · Yandex Telemost' : ' · Онлайн · Яндекс Телемост') + (d.ageRating ? ' · ' + d.ageRating : '');
+      return;
+    }
     if (n) n.textContent = current === 'online' ? text.onlineNote : text.offlineNote;
     var m = document.getElementById('meta');
     if (m && d._attendanceMeta) m.textContent = current === 'online' ? date(d.datetime) + ' · ' + (en ? 'Online · Yandex Telemost' : 'Онлайн · Яндекс Телемост') + ' · ' + d.ageRating : d._attendanceMeta;
@@ -46,6 +56,7 @@
   function mount(d, desired, changed) {
     if (!supported(d)) return;
     active = d; d._offlineLeft = d.left;
+    if (d.attendance.dedicated) { set(d, 'online'); return; }
     // pack-v750: строка бренда над названием убрана — на странице покупки теперь шапка сайта.
     var host = document.getElementById('general-block'), fs = document.createElement('fieldset');
     fs.className = 'att-choice'; fs.id = 'attendance-choice';

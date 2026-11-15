@@ -1,0 +1,67 @@
+.corporate-salon .salon-offer {
+  margin: 26px 0 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cinema-rule);
+}
+.corporate-salon .salon-price { color: var(--gold); font-size: clamp(1.45rem, 3vw, 2.15rem); font-weight: 400; }
+.corporate-salon .salon-details { margin-top: 5px; }
+.corporate-salon .salon-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  max-width: 100%;
+  padding: 10px 20px;
+  border: 1px solid var(--gold);
+  background: var(--gold);
+  color: #14100b;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.corporate-salon .salon-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.corporate-salon .salon-cta:disabled { opacity: .65; cursor: wait; }
+.corporate-salon .salon-form-area {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: clamp(24px, 5vw, 72px);
+  padding: clamp(22px, 5vw, 56px);
+  border: 1px solid var(--cinema-rule);
+  background: var(--coal, #171619);
+  scroll-margin-top: calc(var(--nav-h, 68px) + 12px);
+}
+.corporate-salon .salon-form-area p { color: var(--cinema-quiet); overflow-wrap: anywhere; }
+.corporate-salon fieldset { border: 0; min-width: 0; padding: 0; margin: 0; }
+.corporate-salon .salon-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+.corporate-salon .salon-field { display: grid; gap: 5px; align-content: start; min-width: 0; font-size: .93rem; }
+.corporate-salon .salon-wide { grid-column: 1 / -1; }
+.corporate-salon .salon-field input, .corporate-salon .salon-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid rgba(214, 181, 122, .58);
+  border-radius: 0;
+  color: var(--bone, #eee4d6);
+  background: #100f11;
+  font: inherit;
+  font-size: 1rem;
+}
+.corporate-salon textarea { resize: vertical; }
+.corporate-salon .salon-fields :is(input, textarea):focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.corporate-salon .salon-consent { display: flex; align-items: flex-start; gap: 10px; font-size: .94rem; line-height: 1.6; cursor: pointer; }
+.corporate-salon .salon-consent input { margin: .2em 0 0; width: 1.1rem; height: 1.1rem; flex: none; accent-color: var(--gold); }
+.corporate-salon .salon-help { color: var(--cinema-quiet); font-size: .85rem; }
+.corporate-salon .salon-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.corporate-salon .salon-form-area .form-msg { margin: 0; }
+.corporate-salon .salon-form-area .salon-cta { justify-self: start; }
+.corporate-salon [hidden] { display: none; }
+@media (max-width: 780px) {
+  .corporate-salon .salon-form-area { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 540px) {
+  .corporate-salon .salon-fields { grid-template-columns: minmax(0, 1fr); }
+}

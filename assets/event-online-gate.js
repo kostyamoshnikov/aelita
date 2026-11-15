@@ -1,0 +1,1 @@
+window.AelitaOnlineGate.start('program');

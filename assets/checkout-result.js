@@ -6,7 +6,7 @@
     try {
       var u = new URL(raw);
       if (u.protocol !== 'https:' || u.hostname !== 'aelita-production.ru' || u.port || u.username || u.password) return null;
-      if (online) return /^\/(en\/)?matrix-online\/$/.test(u.pathname) && /^#access=[A-Za-z0-9_.-]+$/.test(u.hash) ? u.href : null;
+      if (online) return /^\/(en\/)?(?:matrix-online|event-online)\/$/.test(u.pathname) && /^#access=[A-Za-z0-9_.-]+$/.test(u.hash) ? u.href : null;
       return u.pathname === '/ticket/' && /^[A-Za-z0-9_.-]+$/.test(u.searchParams.get('t') || '') ? u.href : null;
     } catch (_) { return null; }
   }

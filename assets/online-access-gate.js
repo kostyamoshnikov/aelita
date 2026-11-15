@@ -10,7 +10,7 @@
   }
   function accessToken(raw, kind) {
     try {
-      var u = new URL(raw), path = kind === 'invitation' ? /^\/(en\/)?online-invitation\/$/ : /^\/(en\/)?matrix-online\/$/;
+      var u = new URL(raw), path = kind === 'invitation' ? /^\/(en\/)?online-invitation\/$/ : kind === 'program' ? /^\/(en\/)?event-online\/$/ : /^\/(en\/)?matrix-online\/$/;
       if (u.protocol !== 'https:' || u.hostname !== 'aelita-production.ru' || u.port || u.username || u.password || u.search || !path.test(u.pathname)) return null;
       var token = new URLSearchParams(u.hash.slice(1)).get('access');
       return tokenPattern.test(token || '') ? token : null;
@@ -35,6 +35,9 @@
       recover:'Восстановить доступ через кабинет', recovered:'Выберите свой билет или приглашение:', none:'Подходящий онлайн-доступ не найден. Проверьте почту в кабинете или откройте последнее письмо с приглашением.',
       login:'Войти для восстановления доступа', refresh:'Проверить ещё раз', start:'Начало', release:'Ссылка откроется', item:invitation?'Пригласительный №':'Билет '
     };
+    if (kind === 'program') T.scheduled = en
+      ? 'Your access is confirmed. The meeting link will open at the start.'
+      : 'Доступ подтверждён. Ссылка на встречу появится в момент начала.';
     var status = document.getElementById('stream-status'), when = document.getElementById('stream-when');
     var link = document.getElementById('stream-join'), refresh = document.getElementById('stream-refresh'), title = document.getElementById('stream-title');
     var controls = document.createElement('div'); controls.id = 'stream-recovery'; controls.className = 'online-access-recovery ym-hide-content'; refresh.after(controls);
