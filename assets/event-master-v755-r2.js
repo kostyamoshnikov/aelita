@@ -2,8 +2,8 @@
 const $=id=>document.getElementById(id),API='https://api.aelita-production.ru/admin/site-edit';
 const crmBridge=window.AelitaCrmShowEvents,params=new URLSearchParams(location.search);
 const crmEntry={id:params.get('crmShow')||'',event:params.get('event')||'',opened:false};
-const S={events:[],revision:0,announcementRevision:0,announcementPublishing:false,announcementScheduling:false,publishedAnnouncement:false,scheduling:false,id:null,step:0,asset:null,socialAsset:null,social:null,epoch:0,edit:0,review:null,locked:false,busy:false,publishing:false,dirty:false,freeEnabled:false};
-const errors={announcement_transition_required:'Это анонс из мастера. Дату можно назначить в карточке анонса. Продажи и регистрация закрыты.',announcement_not_found:'Выберите опубликованный анонс для назначения даты.',announcement_schedule_required:'Для изменения даты, формата или площадки откройте «Изменить расписание».',schedule_confirmation_required:'Подтвердите расписание и условия участия.',invalid_nav_file:'Не удалось прочитать текущее меню сайта. Публикация остановлена.',event_exists:'Этот идентификатор или адрес уже используется событием.',item_not_in_revision:'В этой версии события ещё нет.',invalid_revision:'Не удалось открыть эту версию.',event_master_disabled:'Мастер событий ещё не включён на сервере.',editor_not_configured:'Не настроено подключение редактора к репозиторию.',not_authenticated:'Войдите в админку снова.',invalid_field:'Проверьте указанное поле.',invalid_catalog:'Каталог событий изменён вне мастера. Нужна сверка текущего файла.',slug_taken:'Этот адрес страницы уже занят. Выберите другой.',image_missing:'Выберите доступную обложку или загрузите фотографию заново.',linked_page_missing:'Проверьте страницы ведущего, площадки, фильма и цикла: нужны версии RU и EN.',next_event_not_ready:'Этот тип события пока доступен только как черновик. Публикация и регистрация ещё не подключены.',unsupported_mode:'Публикация этого формата ещё не подключена.',operational_fields_locked:'Название, дата, площадка, цена и вместимость опубликованного события зафиксированы. Для переноса и отмены откройте «Показы».',event_in_past:'Укажите будущую дату и время события.',event_exists:'Такое событие уже существует.',catalog_too_large:'Каталог достиг ограничения по объёму. Сократите длинные описания перед публикацией.',content_conflict:'Сайт изменился после загрузки. Черновик сохранён. Обновите каталог, восстановите черновик и снова проверьте макет.',preview_required:'Сначала проверьте свежий макет.',preview_expired:'Проверка устарела. Проверьте макет ещё раз.',publication_unknown:'Ответ на публикацию потерян. Повторите эту же публикацию: мастер проверит, успела ли она сохраниться.',github_unreachable:'Нет ответа от сервера публикации. Проверьте связь и повторите.',github_rejected:'Сервис публикации отклонил запрос. Проверьте настройки репозитория.',github_limited:'Доступ к сервису публикации временно ограничен.',layout_changed:'Структура афиши изменилась. Обновление остановлено, чтобы сохранить текущие правки.',no_change:'Изменений для публикации нет.',bad_image:'Подойдёт изображение JPG, PNG или WebP размером до 20 МБ.',image_too_large:'Не удалось уменьшить изображение. Выберите другой файл.',draft_unavailable:'Не получилось сохранить черновик в этой вкладке. Скачайте его файлом.'};
+const S={events:[],revision:0,announcementRevision:0,announcementPublishing:false,announcementScheduling:false,announcementTermsVersion:0,publishedAnnouncement:false,scheduling:false,id:null,step:0,asset:null,socialAsset:null,social:null,epoch:0,edit:0,review:null,locked:false,busy:false,publishing:false,dirty:false,freeEnabled:false};
+const errors={announcement_transition_required:'Это анонс из мастера. Дату можно назначить в карточке анонса. Продажи и регистрация закрыты.',announcement_not_found:'Выберите опубликованный анонс для назначения даты.',announcement_schedule_required:'Для изменения даты, формата или площадки откройте «Изменить расписание».',schedule_confirmation_required:'Подтвердите расписание и условия участия.',online_quota_confirmation_required:'Подтвердите, что платформа и правила допускают онлайн без ограничения.',editor_reload_required:'Обновите страницу мастера и проверьте условия публикации заново.',invalid_nav_file:'Не удалось прочитать текущее меню сайта. Публикация остановлена.',event_exists:'Этот идентификатор или адрес уже используется событием.',item_not_in_revision:'В этой версии события ещё нет.',invalid_revision:'Не удалось открыть эту версию.',event_master_disabled:'Мастер событий ещё не включён на сервере.',editor_not_configured:'Не настроено подключение редактора к репозиторию.',not_authenticated:'Войдите в админку снова.',invalid_field:'Проверьте указанное поле.',invalid_catalog:'Каталог событий изменён вне мастера. Нужна сверка текущего файла.',slug_taken:'Этот адрес страницы уже занят. Выберите другой.',image_missing:'Выберите доступную обложку или загрузите фотографию заново.',linked_page_missing:'Проверьте страницы ведущего, площадки, фильма и цикла: нужны версии RU и EN.',next_event_not_ready:'Этот тип события пока доступен только как черновик. Публикация и регистрация ещё не подключены.',unsupported_mode:'Публикация этого формата ещё не подключена.',operational_fields_locked:'Название, дата, площадка, цена и вместимость опубликованного события зафиксированы. Для переноса и отмены откройте «Показы».',event_in_past:'Укажите будущую дату и время события.',event_exists:'Такое событие уже существует.',catalog_too_large:'Каталог достиг ограничения по объёму. Сократите длинные описания перед публикацией.',content_conflict:'Сайт изменился после загрузки. Черновик сохранён. Обновите каталог, восстановите черновик и снова проверьте макет.',preview_required:'Сначала проверьте свежий макет.',preview_expired:'Проверка устарела. Проверьте макет ещё раз.',publication_unknown:'Ответ на публикацию потерян. Повторите эту же публикацию: мастер проверит, успела ли она сохраниться.',github_unreachable:'Нет ответа от сервера публикации. Проверьте связь и повторите.',github_rejected:'Сервис публикации отклонил запрос. Проверьте настройки репозитория.',github_limited:'Доступ к сервису публикации временно ограничен.',layout_changed:'Структура афиши изменилась. Обновление остановлено, чтобы сохранить текущие правки.',no_change:'Изменений для публикации нет.',bad_image:'Подойдёт изображение JPG, PNG или WebP размером до 20 МБ.',image_too_large:'Не удалось уменьшить изображение. Выберите другой файл.',draft_unavailable:'Не получилось сохранить черновик в этой вкладке. Скачайте его файлом.'};
 const fields={title:'em-title',slug:'em-slug',titleEn:'em-title-en',datetime:'em-datetime',durationMinutes:'em-duration',price:'em-price',capacity:'em-capacity',onlineCapacity:'em-online-capacity',accessKind:'em-access-kind',mode:'em-mode',seating:'em-seating',hall:'em-hall',priceTable:'em-price-table',kind:'em-kind',ageRating:'em-age',onlinePrice:'em-online-price',filmPage:'em-film-page',seriesPage:'em-series-page',summary:'em-summary',summaryEn:'em-summary-en',description:'em-description',descriptionEn:'em-description-en',image:'em-image',imageAlt:'em-alt','venue.name':'em-venue','venue.address':'em-address','venue.city':'em-city','venue.confirmed':'em-confirmed','venue.page':'em-venue-page'};
 function staffScope(){return window.AelitaStaffSession?.adminScope ? window.AelitaStaffSession.adminScope() : 'legacy';}
 const editorScope=staffScope();
@@ -16,9 +16,20 @@ async function api(body,epoch=S.epoch){const t=token();if(!t){gate();throw{code:
 function freshId(){return 'evt-'+Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');}
 function optionalNumber(id){const value=$(id).value;return value===''?null:Number(value);}
 function currentAnnouncement(){return S.events.find(x=>x.id===S.id&&x.stage==='announcement');}
+function savedOnlineQuota(event){
+ if(event?.mode==='online')return event.capacity;
+ return event?.mode==='hybrid'?event.onlineCapacity:null;
+}
 const scheduleFields=['em-datetime','em-duration','em-mode','em-venue','em-address','em-city'];
 function collect(){
- const announcement=$('em-stage').value==='announcement', hybrid=$('em-mode').value==='hybrid', free=$('em-access-kind').value==='free';
+ const mode=$('em-mode').value,hybrid=mode==='hybrid',free=$('em-access-kind').value==='free';
+ const announcement=$('em-stage').value==='announcement',standaloneOnline=mode==='online'&&S.announcementTermsVersion===1;
+ let onlineCapacity=optionalNumber('em-online-capacity');
+ if(announcement&&S.announcementTermsVersion===1&&(hybrid||standaloneOnline)){
+  const quota=$('em-online-quota').value;
+  if(quota!=='limited')onlineCapacity=quota==='unlimited'?'unlimited':null;
+ }
+ const onlinePrice=free?null:optionalNumber('em-online-price');
  const date=$('em-datetime').value;
  const datetime=announcement&&!S.scheduling?currentAnnouncement()?.datetime??null:date?date.slice(0,16)+':00+03:00':null;
  return {
@@ -26,10 +37,11 @@ function collect(){
   summary:$('em-summary').value,summaryEn:$('em-summary-en').value,description:$('em-description').value,descriptionEn:$('em-description-en').value,datetime,
   ...(announcement?{stage:'announcement',filmPage:$('em-film-page').value.trim(),seriesPage:$('em-series-page').value.trim(),
    ...(datetime?{scheduleConfirmed:!S.scheduling||$('em-schedule-confirmed').checked}:{})}:{}),
-  durationMinutes:Number($('em-duration').value),price:free?0:optionalNumber('em-price'),capacity:optionalNumber('em-capacity'),
-  onlineCapacity:hybrid?optionalNumber('em-online-capacity'):null,onlinePrice:hybrid&&!free?optionalNumber('em-online-price'):null,
-  accessKind:$('em-access-kind').value,kind:$('em-kind').value,ageRating:$('em-age').value,mode:$('em-mode').value,
-  ...($('em-seating').value==='assigned'&&!free&&$('em-mode').value==='offline'?{seating:'assigned',hall:$('em-hall').value,priceTable:$('em-price-table').value}:{}),
+  durationMinutes:Number($('em-duration').value),price:free?0:standaloneOnline?onlinePrice:optionalNumber('em-price'),
+  capacity:standaloneOnline?onlineCapacity:optionalNumber('em-capacity'),
+  onlineCapacity:hybrid?onlineCapacity:null,onlinePrice:hybrid?onlinePrice:null,
+  accessKind:$('em-access-kind').value,kind:$('em-kind').value,ageRating:$('em-age').value,mode,
+  ...($('em-seating').value==='assigned'&&!free&&mode==='offline'?{seating:'assigned',hall:$('em-hall').value,priceTable:$('em-price-table').value}:{}),
   venue:{name:$('em-venue').value,address:$('em-address').value,city:$('em-city').value,confirmed:$('em-confirmed').value,page:$('em-venue-page').value},
   host:{name:$('em-host').value,page:$('em-host-page').value},
   image:$('em-image').value,imageAlt:$('em-alt').value,...(S.social?.get()?{social:S.social.get()}:{})
@@ -41,7 +53,8 @@ function draft(){
  const event=collect();
  if(S.scheduling)delete event.scheduleConfirmed;
  return {schema:'aelita.event-draft/v1',revision:event.stage==='announcement'?S.announcementRevision:S.revision,event,
-  assets:S.asset?[S.asset]:[],socialAsset:S.socialAsset,...(S.scheduling?{scheduleEditing:true}:{})};
+  assets:S.asset?[S.asset]:[],socialAsset:S.socialAsset,...(S.scheduling?{scheduleEditing:true}:{}),
+  ...(event.stage==='announcement'&&S.announcementTermsVersion===1?{termsVersion:1}:{})};
 }
 function saveDraft(){if(!S.id||!S.dirty||!token())return true;try{const items=readDrafts();items[S.id]={...draft(),at:new Date().toISOString()};sessionStorage.setItem(KEY,JSON.stringify(items));$('em-save-state').textContent='Черновик сохранён в этой вкладке · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});listDrafts();return true;}catch{status(errors.draft_unavailable,true);return false;}}
 function backupCurrentDraft(){if(!S.dirty)return true;if(!saveDraft())return false;try{const items=readDrafts();if(items[S.id])items[S.id+':backup:'+Date.now()+':'+Math.random().toString(36).slice(2)]=items[S.id];sessionStorage.setItem(KEY,JSON.stringify(items));listDrafts();return true;}catch{status(errors.draft_unavailable,true);return false;}}
@@ -58,6 +71,10 @@ function updateDraftMode(){
  const published=currentAnnouncement(), scheduled=!!published?.datetime;
  const canSchedule=announcement&&!!published&&S.announcementScheduling;
  const scheduling=canSchedule&&S.scheduling;
+ const standaloneOnline=online&&S.announcementTermsVersion===1;
+ const separateOnline=hybrid||standaloneOnline;
+ const quotaPolicy=announcement&&S.announcementTermsVersion===1&&separateOnline;
+ const quota=$('em-online-quota').value;
  $('em-stage').disabled=S.locked||S.publishedAnnouncement;
  $('em-stage-wrap').hidden=!!published;
  $('em-slug').disabled=S.locked||S.publishedAnnouncement;
@@ -83,14 +100,27 @@ function updateDraftMode(){
  $('em-schedule-confirmed').required=scheduling;
  $('em-schedule-confirmed').disabled=!scheduling;
  $('em-schedule-confirmation-text').textContent=online?'Дата, время и онлайн-формат подтверждены':'Дата, время, формат и площадка подтверждены';
- $('em-price').disabled=S.locked||free;
- $('em-price').required=!free&&!announcement;
- $('em-capacity').required=!announcement;
- $('em-online-capacity-wrap').hidden=!hybrid;
- $('em-online-capacity').required=hybrid&&!announcement;
- $('em-online-price-wrap').hidden=!hybrid||free;
- $('em-online-price').disabled=S.locked||!hybrid||free;
- $('em-online-price').required=hybrid&&!free&&!announcement;
+ $('em-price-wrap').hidden=standaloneOnline;
+ $('em-capacity-wrap').hidden=standaloneOnline;
+ $('em-price-label').textContent=hybrid?'Цена очного билета, ₽':'Цена одного билета, ₽';
+ $('em-price').disabled=S.locked||free||standaloneOnline;
+ $('em-price').required=!free&&!announcement&&!standaloneOnline;
+ $('em-capacity').disabled=S.locked||standaloneOnline;
+ $('em-capacity').required=!announcement&&!standaloneOnline;
+ $('em-online-quota-wrap').hidden=!quotaPolicy;
+ $('em-online-quota').disabled=!quotaPolicy;
+ const showOnlineCapacity=separateOnline&&(!quotaPolicy||quota==='limited');
+ $('em-online-capacity-wrap').hidden=!showOnlineCapacity;
+ $('em-online-capacity').disabled=S.locked||!showOnlineCapacity;
+ $('em-online-capacity').required=showOnlineCapacity&&(!announcement||quotaPolicy);
+ $('em-online-price-wrap').hidden=!separateOnline||free;
+ $('em-online-price').disabled=S.locked||!separateOnline||free;
+ $('em-online-price').required=separateOnline&&!free&&!announcement;
+ const confirmUnlimited=quotaPolicy&&quota==='unlimited'&&savedOnlineQuota(published)!=='unlimited';
+ $('em-online-confirmation').hidden=!confirmUnlimited;
+ $('em-online-confirmed').disabled=!confirmUnlimited;
+ $('em-online-confirmed').required=confirmUnlimited;
+ if(!confirmUnlimited)$('em-online-confirmed').checked=false;
  $('em-announcement-links').hidden=!announcement;
  $('em-capacity-label').textContent=online?'Лимит онлайн-участников':hybrid?'Лимит очных участников':'Общая вместимость';
  $('em-check').textContent=scheduling?'Проверить дату к публикации':announcement&&S.announcementPublishing?'Проверить анонс к публикации':announcement||mode!=='offline'||(free&&!S.freeEnabled)?'Проверить черновой макет':'Проверить и опубликовать';
@@ -105,16 +135,29 @@ function fill(e,asset=null,socialAsset=null,scheduleEditing=false){
   e={...e,stage:'announcement',slug:published.slug};
   if(!S.scheduling)e.datetime=published.datetime;
   if(published.datetime&&!S.scheduling){
+   if(e.mode!==published.mode){
+    e.price=published.price;e.capacity=published.capacity;
+    e.onlinePrice=published.onlinePrice;e.onlineCapacity=published.onlineCapacity;
+   }
    e.mode=published.mode;e.durationMinutes=published.durationMinutes;
    e.venue={...published.venue,page:e.venue?.page??published.venue.page};
   }
  }
  if(e.stage==='announcement'&&e.mode==='online')e={...e,venue:{}};
- $('em-form').reset();$('em-schedule-confirmed').checked=false;
+ $('em-form').reset();$('em-schedule-confirmed').checked=false;$('em-online-confirmed').checked=false;
  for(const [key,id] of Object.entries(fields)){const value=key.split('.').reduce((v,k)=>v?.[k],e);if(id==='em-image'||id==='em-venue-page')ensureOption(id,value);$(id).value=key==='datetime'?String(value||'').slice(0,16):value??'';}
+ const quota=savedOnlineQuota(e);
+ $('em-online-quota').value=quota==='unlimited'?'unlimited':quota==null?'pending':'limited';
+ if(quota==='unlimited')$('em-online-capacity').value='';
+ if(S.announcementTermsVersion===1&&e.mode==='online'){
+  $('em-online-price').value=e.accessKind==='free'?'':e.price??'';
+  $('em-online-capacity').value=Number.isInteger(quota)?quota:'';
+  $('em-price').value='';
+  $('em-capacity').value='';
+ }
  $('em-summary-en').value=e.summaryEn||'';$('em-description-en').value=e.descriptionEn||'';$('em-host').value=e.host?.name||'';ensureOption('em-host-page',e.host?.page);$('em-host-page').value=e.host?.page||'';$('em-duration').value=e.durationMinutes||90;$('em-kind').value=e.kind||'talk';$('em-age').value=e.ageRating||'18+';$('em-access-kind').value=e.accessKind||'paid';$('em-mode').value=e.mode||'offline';$('em-stage').value=e.stage==='announcement'?'announcement':'dated';$('em-seating').value=e.seating||'general';$('em-hall').value=e.hall||'Синий зал';$('em-price-table').value=e.priceTable||'drama';
  $('em-directory-link').href='/admin/directory/'+(S.locked?'?event='+encodeURIComponent(S.id):'');document.querySelectorAll('[data-lock]').forEach(el=>el.disabled=S.locked);updateDraftMode();$('em-locked').hidden=!S.locked;$('em-form').hidden=false;$('em-result').hidden=true;$('em-publish').disabled=true;$('em-select').value=S.locked||S.publishedAnnouncement?S.id:'';imagePreview();mountSocial(e.social);showStep(0);$('em-save-state').textContent='Сохранённые данные. Изменения не внесены.';listDrafts();showCrmLink();}
-async function load(){saveDraft();S.epoch++;const epoch=S.epoch;status('Загружаем каталог…');try{const d=await api({action:'event_list'},epoch);S.events=[...d.events,...(d.announcements||[])];S.announcementRevision=d.announcementRevision||0;S.announcementPublishing=d.announcementPublishing===true;S.announcementScheduling=d.announcementScheduling===true;S.scheduling=S.scheduling&&S.announcementScheduling;S.freeEnabled=d.freeAvailable===true;$('em-free-status').textContent=S.freeEnabled?'Бесплатная очная регистрация включена. Публикация анонса оставит запись закрытой.':'Бесплатная регистрация пока выключена: доступны черновик и макет.';if(S.id)updateDraftMode();S.revision=d.revision;$('em-select').replaceChildren(new Option('Выберите событие',''));S.events.forEach(e=>$('em-select').add(new Option((e.stage==='announcement'?(e.datetime?'Дата назначена · ':'Анонс · '):'')+e.title,e.id)));$('em-legacy').replaceChildren();d.legacy.forEach(e=>{const li=document.createElement('li');li.textContent=e.title;$('em-legacy').append(li);});const pages=d.pages||[];for(const [id,kind] of [['em-host-page','person'],['em-venue-page','venue']]){const old=$(id).value;$(id).replaceChildren(new Option('Без ссылки',''));pages.filter(x=>x.kind===kind).forEach(p=>$(id).add(new Option(p.title,'/'+p.page+'/')));ensureOption(id,old);$(id).value=old;}
+async function load(){saveDraft();S.epoch++;const epoch=S.epoch;status('Загружаем каталог…');try{const d=await api({action:'event_list'},epoch);S.events=[...d.events,...(d.announcements||[])];S.announcementRevision=d.announcementRevision||0;S.announcementPublishing=d.announcementPublishing===true;S.announcementScheduling=d.announcementScheduling===true;S.announcementTermsVersion=d.announcementTermsVersion===1?1:0;S.scheduling=S.scheduling&&S.announcementScheduling;S.freeEnabled=d.freeAvailable===true;$('em-free-status').textContent=S.freeEnabled?'Бесплатная очная регистрация включена. Публикация анонса оставит запись закрытой.':'Бесплатная регистрация пока выключена: доступны черновик и макет.';if(S.id)updateDraftMode();S.revision=d.revision;$('em-select').replaceChildren(new Option('Выберите событие',''));S.events.forEach(e=>$('em-select').add(new Option((e.stage==='announcement'?(e.datetime?'Дата назначена · ':'Анонс · '):'')+e.title,e.id)));$('em-legacy').replaceChildren();d.legacy.forEach(e=>{const li=document.createElement('li');li.textContent=e.title;$('em-legacy').append(li);});const pages=d.pages||[];for(const [id,kind] of [['em-host-page','person'],['em-venue-page','venue']]){const old=$(id).value;$(id).replaceChildren(new Option('Без ссылки',''));pages.filter(x=>x.kind===kind).forEach(p=>$(id).add(new Option(p.title,'/'+p.page+'/')));ensureOption(id,old);$(id).value=old;}
  $('em-venues').replaceChildren();(d.venues||[]).forEach(v=>$('em-venues').append(new Option(v.name,v.name)));S.venues=d.venues||[];listDrafts();status('Каталог загружен. Создайте событие или выберите опубликованное.');if(S.id&&S.events.some(e=>e.id===S.id))$('em-select').value=S.id;await openCrmEntry();
  }catch(e){if(e.code!=='superseded')status(message(e),true);}}
 function showCrmLink(){
@@ -175,7 +218,10 @@ async function review(){
  const scheduling=publishAnnouncement&&S.announcementScheduling&&S.scheduling;
  const next=!publishAnnouncement&&(announcement||item.mode!=='offline'||(item.accessKind==='free'&&!S.freeEnabled));
  const action=scheduling?'event_announcement_schedule_preview':publishAnnouncement?'event_announcement_preview':next?'event_next_preview':'event_preview';
- const payload={action,revision:publishAnnouncement?S.announcementRevision:S.revision,event:item,mediaReviewVersion:1,assets:[...new Map([S.asset,item.social?.image?.startsWith('asset:')?S.socialAsset:null].filter(Boolean).map(a=>[a.hash||a.data,a])).values()]};
+ const terms=publishAnnouncement&&S.announcementTermsVersion===1
+  ?{termsVersion:1,unlimitedOnlineConfirmed:$('em-online-confirmed').checked}: {};
+ const payload={action,revision:publishAnnouncement?S.announcementRevision:S.revision,event:item,mediaReviewVersion:1,...terms,
+  assets:[...new Map([S.asset,item.social?.image?.startsWith('asset:')?S.socialAsset:null].filter(Boolean).map(a=>[a.hash||a.data,a])).values()]};
  const edit=S.edit,epoch=S.epoch;
  try{
   const d=await api(payload,epoch);if(edit!==S.edit)throw{code:'superseded'};
@@ -186,13 +232,22 @@ async function review(){
    :d.isNew?(item.accessKind==='free'?'Новая страница и карточки афиши. После публикации регистрация останется закрытой.':'Новая страница и карточки афиши. После публикации продажа останется закрытой.'):'Обновление описания и обложки. Действующее состояние продаж сохраняется.';
   $('em-review-schedule').hidden=!d.schedule;
   $('em-review-schedule').textContent=d.schedule?'Было — '+(d.schedule.previousLabel||'дата уточняется')+'. Будет — '+d.schedule.label+'.':'';
+  renderParticipation(d.participation);
   $('em-publish').textContent=d.schedule?'Подтвердить и опубликовать дату':'Опубликовать анонс';
   $('em-before').disabled=!d.before;$('em-after-en').hidden=!d.afterEn;$('em-frame').srcdoc=d.after;$('em-affected').replaceChildren();
   (d.affected||[]).forEach(p=>{const li=document.createElement('li');li.textContent=p;$('em-affected').append(li);});
   if(d.previewOnly){const li=document.createElement('li');li.textContent='Изменения на сайте пока не вносятся.';$('em-affected').append(li);}
   $('em-publish-status').textContent='';$('em-publish').hidden=!!d.previewOnly;$('em-publish').disabled=!!d.previewOnly;
   $('em-review').showModal();status(d.previewOnly?'Черновой макет готов.':'Макет готов к проверке.');
- }catch(e){if(e.code!=='superseded'){status(message(e),true);const el=$(e.field==='scheduleConfirmed'?'em-schedule-confirmed':fields[e.field]);if(el){const panel=el.closest('[data-panel]');if(panel)showStep(Number(panel.dataset.panel));el.focus();}}}
+ }catch(e){
+  if(e.code!=='superseded'){
+   status(message(e),true);
+   const confirmations={scheduleConfirmed:'em-schedule-confirmed',unlimitedOnlineConfirmed:'em-online-confirmed'};
+   const onlineFields=item.mode==='online'&&S.announcementTermsVersion===1?{capacity:'em-online-capacity',price:'em-online-price'}:{};
+   const el=$(confirmations[e.field]||onlineFields[e.field]||fields[e.field]);
+   if(el){const panel=el.closest('[data-panel]');if(panel)showStep(Number(panel.dataset.panel));el.focus();}
+  }
+ }
  finally{S.busy=false;$('em-check').disabled=false;}
 }
 async function publish(){
@@ -219,8 +274,35 @@ async function publish(){
  finally{S.publishing=false;$('em-close-review').disabled=false;}
 }
 
+function renderParticipation(plan){
+ const list=$('em-review-terms');
+ list.replaceChildren();
+ list.hidden=!plan;
+ if(!plan)return;
+ function describe(row){
+  if(!row)return 'формат отсутствует';
+  const price=row.price.kind==='fixed'?row.price.amount.toLocaleString('ru-RU')+' ₽'
+   :row.price.kind==='free'?'бесплатно':'цена уточняется';
+  const quota=row.quota.kind==='limited'?'квота '+row.quota.limit.toLocaleString('ru-RU')
+   :row.quota.kind==='unlimited'?'квота без ограничения':'квота уточняется';
+  return price+' · '+quota;
+ }
+ for(const [format,label] of [['offline','Очно'],['online','Онлайн']]){
+  const previous=plan.before.find(row=>row.format===format),next=plan.after.find(row=>row.format===format);
+  if(!previous&&!next)continue;
+  const row=document.createElement('li'),before=describe(previous),after=describe(next);
+  row.textContent=label+' · '+(plan.before.length&&before!==after?before+' → '+after:after);
+  list.append(row);
+ }
+}
+
 async function compress(file){if(!file||file.size>20*1024*1024||!['image/jpeg','image/png','image/webp'].includes(file.type))throw{code:'bad_image'};const url=URL.createObjectURL(file);try{const img=await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>rej({code:'bad_image'});im.src=url;});if(img.width*img.height>80000000)throw{code:'bad_image'};let side=1800,q=.86,blob;for(let j=0;j<8;j++){const c=document.createElement('canvas'),k=Math.min(1,side/Math.max(img.width,img.height));c.width=Math.max(1,Math.round(img.width*k));c.height=Math.max(1,Math.round(img.height*k));c.getContext('2d').drawImage(img,0,0,c.width,c.height);blob=await new Promise(r=>c.toBlob(r,'image/jpeg',q));if(blob&&blob.size<=512*1024)break;side=Math.floor(side*.78);q=Math.max(.55,q-.08);}if(!blob||blob.size>512*1024)throw{code:'image_too_large'};const bytes=new Uint8Array(await blob.arrayBuffer());let raw='';for(let i=0;i<bytes.length;i+=16384)raw+=String.fromCharCode(...bytes.subarray(i,i+16384));return{type:blob.type,data:btoa(raw)};}finally{URL.revokeObjectURL(url);}}
-$('em-new').onclick=()=>{if(S.busy||!saveDraft())return;fill({id:freshId(),kind:'talk',ageRating:'18+',durationMinutes:90});status('Новое событие. Начните с названия и даты.');};$('em-select').onchange=()=>{if(!S.busy){if(!saveDraft()){$('em-select').value=S.id||'';return;}const e=S.events.find(x=>x.id===$('em-select').value);if(e)fill(e);}};$('em-refresh').onclick=load;$('em-prev').onclick=()=>showStep(S.step-1);$('em-next').onclick=()=>showStep(S.step+1);document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>showStep(Number(b.dataset.step)));$('em-form').onsubmit=e=>e.preventDefault();$('em-form').addEventListener('input',invalidate);$('em-form').addEventListener('change',invalidate);$('em-access-kind').addEventListener('change',updateDraftMode);$('em-mode').addEventListener('change',updateDraftMode);$('em-stage').addEventListener('change',updateDraftMode);['em-seating','em-hall','em-price-table'].forEach(id=>$(id).addEventListener('change',updateDraftMode));$('em-check').onclick=review;$('em-publish').onclick=publish;
+function resetOnlineConfirmation(){
+ $('em-online-confirmed').checked=false;
+ updateDraftMode();
+}
+
+$('em-new').onclick=()=>{if(S.busy||!saveDraft())return;fill({id:freshId(),kind:'talk',ageRating:'18+',durationMinutes:90});status('Новое событие. Начните с названия и даты.');};$('em-select').onchange=()=>{if(!S.busy){if(!saveDraft()){$('em-select').value=S.id||'';return;}const e=S.events.find(x=>x.id===$('em-select').value);if(e)fill(e);}};$('em-refresh').onclick=load;$('em-prev').onclick=()=>showStep(S.step-1);$('em-next').onclick=()=>showStep(S.step+1);document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>showStep(Number(b.dataset.step)));$('em-form').onsubmit=e=>e.preventDefault();$('em-form').addEventListener('input',invalidate);$('em-form').addEventListener('change',invalidate);$('em-access-kind').addEventListener('change',updateDraftMode);$('em-mode').addEventListener('change',resetOnlineConfirmation);$('em-online-quota').addEventListener('change',resetOnlineConfirmation);$('em-stage').addEventListener('change',updateDraftMode);['em-seating','em-hall','em-price-table'].forEach(id=>$(id).addEventListener('change',updateDraftMode));$('em-check').onclick=review;$('em-publish').onclick=publish;
 $('em-schedule-start').onclick=()=>{
  if(S.busy||S.publishing||!S.announcementScheduling||!currentAnnouncement())return;
  if(S.scheduling){
@@ -235,6 +317,9 @@ $('em-schedule-start').onclick=()=>{
  $('em-schedule-confirmed').checked=false;
  invalidate();
 };
+$('em-online-capacity').addEventListener('input',()=>{
+ if($('em-online-quota-wrap').hidden&&$('em-online-capacity').value)$('em-online-quota').value='limited';
+});
 scheduleFields.forEach(id=>{
  const clearConfirmation=()=>{if(S.scheduling)$('em-schedule-confirmed').checked=false;};
  $(id).addEventListener('input',clearConfirmation);
@@ -256,7 +341,18 @@ $('em-upload').onchange=async()=>{const file=$('em-upload').files[0];$('em-uploa
 $('em-venue').addEventListener('change',()=>{if(S.locked)return;const v=S.venues?.find(x=>x.name===$('em-venue').value);if(v){$('em-address').value=v.address||'';saveDraft();}});$('em-host-page').onchange=()=>{if(!$('em-host').value&&$('em-host-page').value)$('em-host').value=$('em-host-page').selectedOptions[0].textContent.split(' — ')[0];saveDraft();};
 $('em-close-review').onclick=()=>{if(!S.publishing)$('em-review').close();};$('em-review').addEventListener('cancel',e=>{if(S.publishing)e.preventDefault();});$('em-width').onchange=()=>{$('em-frame').style.width=$('em-width').value+'px';};$('em-before').onclick=()=>{if(S.review?.data.before)$('em-frame').srcdoc=S.review.data.before;};$('em-after').onclick=()=>{if(S.review)$('em-frame').srcdoc=S.review.data.after;};$('em-after-en').onclick=()=>{if(S.review?.data.afterEn)$('em-frame').srcdoc=S.review.data.afterEn;};
 $('em-export').onclick=()=>{saveDraft();const data=draft();window.AelitaMobileFiles?.save(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),'AELITA_event_'+S.id+'.json',{guardToken:token()});};
-function restore(d){if(!d||d.schema!=='aelita.event-draft/v1'||!d.event||!/^evt-[a-f0-9]{32}$/.test(d.event.id)||!Array.isArray(d.assets)||d.assets.length>1)throw{code:'invalid_field'};if(!backupCurrentDraft())return;fill(d.event,d.assets[0]||null,d.socialAsset||null,d.scheduleEditing===true);S.dirty=true;saveDraft();status(d.revision===($('em-stage').value==='announcement'?S.announcementRevision:S.revision)?'Черновик восстановлен. Проверьте макет перед публикацией.':'Черновик восстановлен на текущем каталоге. Изменения проверьте заново.');}
+function restore(d){
+ if(!d||d.schema!=='aelita.event-draft/v1'||!d.event||!/^evt-[a-f0-9]{32}$/.test(d.event.id)||!Array.isArray(d.assets)||d.assets.length>1)throw{code:'invalid_field'};
+ if(!backupCurrentDraft())return;
+ const event={...d.event},published=S.events.find(e=>e.id===event.id);
+ if(S.announcementTermsVersion===1&&d.termsVersion!==1&&savedOnlineQuota(published)==='unlimited'){
+  if(event.mode==='online')event.capacity='unlimited';
+  if(event.mode==='hybrid')event.onlineCapacity='unlimited';
+ }
+ fill(event,d.assets[0]||null,d.socialAsset||null,d.scheduleEditing===true);S.dirty=true;saveDraft();
+ const revision=$('em-stage').value==='announcement'?S.announcementRevision:S.revision;
+ status(d.revision===revision?'Черновик восстановлен. Проверьте макет перед публикацией.':'Черновик восстановлен на текущем каталоге. Изменения проверьте заново.');
+}
 $('em-restore').onclick=()=>{try{restore(readDrafts()[$('em-drafts').value]);}catch(e){status(message(e),true);}};$('em-delete-draft').onclick=()=>{try{const d=readDrafts();delete d[$('em-drafts').value];sessionStorage.setItem(KEY,JSON.stringify(d));listDrafts();}catch{status(errors.draft_unavailable,true);}};$('em-import').onchange=async()=>{try{const file=$('em-import').files[0];if(!file||file.size>2*1024*1024)throw{code:'invalid_field'};restore(JSON.parse(await file.text()));}catch(e){status(message(e),true);}finally{$('em-import').value='';}};
 $('em-history').onclick=async()=>{$('em-history-list').textContent='Загружаем…';$('em-history-dialog').showModal();try{const d=await api({action:'event_history',announcement:S.events.some(e=>e.id===S.id&&e.stage==='announcement')}),root=$('em-history-list');root.replaceChildren();const note=document.createElement('p');note.textContent='Выберите опубликованное событие, чтобы открыть прежние описание и обложку как черновик. Дата, цена и данные кассы останутся текущими.';root.append(note);d.history.forEach(h=>{const row=document.createElement('p'),label=document.createElement('span');label.textContent=(h.date?new Date(h.date).toLocaleString('ru-RU')+' · ':'')+h.message;row.append(label);if(h.sha&&S.id&&S.events.some(e=>e.id===S.id)){const button=document.createElement('button');button.type='button';button.className='ed-quiet';button.textContent='Открыть описание этой версии';button.onclick=async()=>{$('em-history-status').textContent='';button.disabled=true;const epoch=S.epoch,id=S.id;try{const old=await api({action:'event_revision',id,commit:h.sha,announcement:S.events.some(e=>e.id===id&&e.stage==='announcement')},epoch);if(epoch!==S.epoch)return;const current=S.events.find(e=>e.id===id);if(!current)throw{code:'item_not_in_revision'};if(!backupCurrentDraft())return;const restored={...current,summary:old.event.summary,summaryEn:old.event.summaryEn,description:old.event.description,descriptionEn:old.event.descriptionEn,image:old.event.image,imageAlt:old.event.imageAlt,social:old.event.social,host:old.event.host};fill(restored,null);S.dirty=true;saveDraft();$('em-history-dialog').close();status('Прежние описание и обложка открыты как черновик. Дата, цена и касса не изменены; проверьте макет.');}catch(e){if(e.code!=='superseded')$('em-history-status').textContent=message(e);}finally{button.disabled=false;}};row.append(document.createTextNode(' '),button);}root.append(row);});if(!d.history.length){const p=document.createElement('p');p.textContent='Публикаций пока нет.';root.append(p);}}catch(e){$('em-history-list').textContent=message(e);}};$('em-history-close').onclick=()=>$('em-history-dialog').close();
 window.addEventListener('pagehide',saveDraft);window.addEventListener('focus',()=>{if(!token())gate();});window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token'&&!token())gate();});
