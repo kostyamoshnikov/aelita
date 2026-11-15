@@ -11,6 +11,7 @@
     var header = headerIn && headerIn.closest('nav');
     var stackSelector=bar.getAttribute?.('data-section-stack'),stack=stackSelector?document.querySelector(stackSelector):null;
     var track = bar.hasAttribute('data-section-track'), scheduled = false;
+    var selected = null, selectedAt = 0;
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function reveal(link) {
       var r = rail.getBoundingClientRect(), a = link.getBoundingClientRect();
@@ -26,6 +27,14 @@
       if (!links.length) return;
       var current = links[0], line = bar.getBoundingClientRect().bottom + 24;
       links.forEach(function (a) { if (document.getElementById(a.getAttribute('href').slice(1)).getBoundingClientRect().top <= line) current = a; });
+      if (selected && (!links.includes(selected) || Math.abs(window.scrollY - selectedAt) > 4)) selected = null;
+      if (selected) current = selected;
+      else if (stack && document.scrollingElement) {
+        var scroller = document.scrollingElement;
+        if (scroller.scrollHeight > scroller.clientHeight && scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop < 5) {
+          current = links[links.length - 1];
+        }
+      }
       links.forEach(function (a) {
         var active = a === current, changed = a.classList.contains('is-active') !== active;
         a.classList.toggle('is-active', active);
@@ -62,7 +71,13 @@
       resize.observe(bar); resize.observe(rail);
     }
     if (window.MutationObserver) new MutationObserver(schedule).observe(rail, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
-    var controller = { refresh: measure, updateActive: updateActive };
+    function select(link) {
+      selected = link;
+      selectedAt = window.scrollY;
+      if (link.classList.contains('is-active')) reveal(link);
+      updateActive();
+    }
+    var controller = { refresh: measure, updateActive: updateActive, select: select };
     mounted.set(bar, controller);
     measure();
     return controller;

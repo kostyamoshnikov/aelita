@@ -91,3 +91,7 @@ html.a11y.admin-calm{--work-field:var(--a11y-bg);--work-text:var(--a11y-fg)}
 .admin-calm :is(#ed-reset,#ed-delete-draft,#pb-unpublish,#di-delete-draft){border-color:#b46e63;color:#ffc2b5}
 @media(max-width:600px){.admin-calm #editor>.row{top:-16px}.admin-calm .crm-editor-actions{bottom:-16px}.admin-calm .crm-editor-group{padding:12px}.admin-calm .crm-editor-group>.form-grid{grid-template-columns:minmax(0,1fr)}.admin-calm .ed-header{flex-wrap:wrap;gap:12px}.admin-calm .ed-header .ed-brand{max-width:100%;white-space:normal}.admin-calm .ed-header .ed-back{white-space:normal}.admin-calm .crm-editor-actions>button{min-height:44px}}
 .admin-calm.work-keyboard .ed-bottom{position:static}.admin-calm.work-keyboard .crm-navbox{position:relative}
+
+.admin-calm [data-sales-id] > .sales-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;align-items:stretch}
+.admin-calm [data-sales-id] > .sales-actions > .mini-btn{min-width:0;max-width:none;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center}
+.admin-calm [data-sales-id] > .sales-actions > .adm-menu > summary{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
