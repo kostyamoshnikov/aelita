@@ -1,9 +1,9 @@
 (function(){'use strict';
-  var en=document.documentElement.lang==='en',cards=Array.from(document.querySelectorAll('[data-master-event]')),id=document.body.dataset.eventId;
+  var en=document.documentElement.lang==='en',cards=Array.from(document.querySelectorAll('[data-master-event]')),cityCards=Array.from(document.querySelectorAll('[data-master-event],[data-announcement-event]')),id=document.body.dataset.eventId;
   var filters=document.querySelector('.filters');
   if(filters&&typeof window.filterCity==='function'){
     var keys=new Set(['kaluga','spb']);
-    cards.forEach(function(card){var key=card.dataset.city;if(!keys.has(key)){keys.add(key);var b=document.createElement('button');b.className='filter-btn';b.textContent=card.dataset.masterCity;b.onclick=function(){window.filterCity(key,b);};filters.append(b);}});
+    cityCards.forEach(function(card){var key=card.dataset.city;if(!keys.has(key)){keys.add(key);var b=document.createElement('button');b.className='filter-btn';b.textContent=card.dataset.masterCity;b.onclick=function(){window.filterCity(key,b);};filters.append(b);}});
   }
   if(!id&&!cards.length)return;
   if(id){var css=document.createElement('link');css.rel='stylesheet';css.href='/assets/directory-public.css?v=182';document.head.append(css);var directory=document.createElement('script');directory.src='/assets/directory-public.js?v=182';document.head.append(directory);}
