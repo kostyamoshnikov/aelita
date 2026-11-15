@@ -2,7 +2,7 @@
  'use strict';
  const V=window.AelitaParticipantsView,root=document.getElementById('eventParticipants');if(!root||!V)return;
  const $=s=>root.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- let data=null,job=0,busy=false,ready=false,selected=new Set(),limit=200,url=null,wantedRef=null,controller=null,loading=null,dataToken='';
+ let data=null,job=0,busy=false,ready=false,selected=new Set(),limit=200,url=null,wantedRef=null,controller=null,loading=null,dataToken='',retryWrite=null;
  const validRef=ref=>/^(tickets|events|invites):[A-Za-z0-9_-]{1,120}$/.test(ref||'');
  const modes=V.modeLabel,filters=()=>({mode:$('#participants-mode').value,status:$('#participants-status').value,search:$('#participants-search').value.trim().slice(0,200),sort:$('#participants-sort').value});
  const errors={participants_changed:'Данные изменились у другого сотрудника или в источнике. Обновите список.',participants_source_unavailable:'Один из источников недоступен. Решение не сохранено.',not_authenticated:'Сеанс завершён. Войдите в админку снова.',participants_bad_selection:'Проверьте выбранные строки.',participants_bad_identity:'Проверьте имя и фамилию: до 80 символов в каждом поле, без ссылок и служебных знаков.',participants_bad_response:'Выберите ответ участника.'};
@@ -13,6 +13,7 @@
   return true;
  }
  function ensure(ctx){if(!current(ctx))throw stale();}
+ function retryable(){return !!(retryWrite&&data&&dataToken&&dataToken===getToken()&&retryWrite.job===job&&retryWrite.token===dataToken&&!busy&&data.canEdit===true);}
  function usable(){if(dataToken&&dataToken!==getToken())reset('Сеанс изменился. Обновите участников.');return !!(data&&ready&&!busy&&dataToken);}
  async function request(endpoint,options={},ctx){
   ensure(ctx);
@@ -33,7 +34,7 @@
  }
  function reset(message=''){
   ++job;if(controller)controller.abort();controller=null;ready=false;dataToken='';busy=false;wantedRef=null;loading=null;
-  person?.reset();clearArtifacts();$('#participants-event').replaceChildren();clearView('Обновите участников выбранного показа.');lock(false);status(message,!!message);
+  retryWrite=null;person?.reset();clearArtifacts();$('#participants-event').replaceChildren();clearView('Обновите участников выбранного показа.');lock(false);status(message,!!message);
  }
  function status(message,bad=false){$('#participants-message').textContent=message;$('#participants-message').classList.toggle('error',bad);}
  function lock(value){busy=value;root.classList.toggle('participants-stale',!ready);for(const b of root.querySelectorAll('[data-participant-operation],#participants-reload,#participants-event,#participants-list input,#participants-list button,#participants-mode,#participants-status,#participants-search,#participants-sort,#participants-more,[data-participant-mode]'))b.disabled=value;renderActions();}
@@ -59,7 +60,7 @@
   if(person?.active()&&!person.close())return Promise.resolve(false);
   const owner=getToken();if(!owner){reset('Войдите в админку.');return Promise.resolve(false);}
   const explicit=typeof preferred==='string'?preferred:wantedRef||new URLSearchParams(location.search).get('workEvent'),prior=$('#participants-event').value;
-  if(controller)controller.abort();controller=new AbortController();const signal=controller.signal,n=++job,ctx={job:n,token:owner};ready=false;clearArtifacts();lock(true);status('Собираем участников…');if(explicit&&data?.event.ref!==explicit)clearView('Загружаем участников выбранного показа…');
+  retryWrite=null;if(controller)controller.abort();controller=new AbortController();const signal=controller.signal,n=++job,ctx={job:n,token:owner};ready=false;clearArtifacts();lock(true);status('Собираем участников…');if(explicit&&data?.event.ref!==explicit)clearView('Загружаем участников выбранного показа…');
   const timer=setTimeout(()=>{if(n===job)controller.abort();},20000);
   loading=(async()=>{try{
    const catalog=await json(ADMIN_ORDERS_URL+'?view=participant_events',{signal},ctx);if(n!==job)return false;
@@ -77,15 +78,16 @@
   finally{clearTimeout(timer);if(current(ctx))lock(false);}})();return loading;
  }
  async function write(op,extra,ids,context){
-  if(!usable())throw Error('Сначала обновите список участников.');
+  if(context.ref!==data?.event.ref)throw stale();
+  if(!usable()&&!(retryable()&&retryWrite.op===op&&JSON.stringify(retryWrite.ids)===JSON.stringify(ids)&&retryWrite.ref===context.ref&&retryWrite.snapshot===context.snapshot&&retryWrite.revision===context.revision))throw Error('Сначала обновите список участников.');
   const ctx={job,token:dataToken};lock(true);clearArtifacts();status('Сохраняем решение…');
   try{
    const next=await json(ADMIN_INVITES_URL,{method:'POST',body:JSON.stringify({action:'participants_decide',...context,op,ids,...extra,request_id:crypto.randomUUID().replace(/-/g,'')})},ctx);
    if(next.protocol!=='aelita.participants/v1'||next.event?.ref!==context.ref)throw Error('Получен несовместимый ответ сервера. Обновите сайт и функции.');
-   data=next;ready=true;selected.clear();render();status('Решение сохранено. Список и количество обновлены.');return next;
-  }catch(e){failed(e,ctx);throw e;}finally{if(current(ctx))lock(false);}
+   retryWrite=null;data=next;ready=true;selected.clear();render();status('Решение сохранено. Список и количество обновлены.');return next;
+  }catch(e){failed(e,ctx);retryWrite=current(ctx)&&(e.status>=500||e.name==='TypeError'||e.name==='AbortError'||['participants_bad_identity','participants_bad_response','participants_bad_selection'].includes(e.code))?{...ctx,...context,op,ids:[...ids]}:null;throw e;}finally{if(current(ctx))lock(false);}
  }
- const person=window.AelitaParticipantPerson?.create({row:id=>usable()?data.rows.find(r=>r.id===id):null,canEdit:()=>usable()&&data?.canEdit===true,context:()=>({ref:data.event.ref,snapshot:data.snapshot,revision:data.revision}),save:(op,input,id,ctx)=>write(op,input,[id],ctx)});
+ const person=window.AelitaParticipantPerson?.create({row:id=>usable()?data.rows.find(r=>r.id===id):null,canEdit:()=>usable()&&data?.canEdit===true||retryable(),context:()=>({ref:data.event.ref,snapshot:data.snapshot,revision:data.revision}),save:(op,input,id,ctx)=>write(op,input,[id],ctx)});
  async function decide(op){
   if(!usable())return;const rows=data.rows.filter(r=>selected.has(r.id)),labels=rows.map(r=>r.name).join('\n');
   const title={merge:'Считать одним человеком и объединить основания?',distinct:'Подтвердить, что это разные люди?',exclude:'Убрать из ожидаемых зрителей в группу «Ведущий / команда»?',include:'Вернуть в ожидаемых зрителей?',mode:'Уточнить формат участия только в этом списке?',reset:'Сбросить все решения, уточнённые имена и ответы по выбранным строкам?'}[op];

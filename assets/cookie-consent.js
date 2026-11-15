@@ -80,7 +80,10 @@
   }
   function init() {
     var b = banner();
-    if (!b) return;
+    if (!b) {
+      window.dispatchEvent(new CustomEvent('aelita:cookie-choice', {detail: {analytics: hasConsent()}}));
+      return;
+    }
     b.classList.add('cookie-choice'); b.setAttribute('role', 'region'); b.setAttribute('aria-label', T.label);
     var p = b.querySelector('p');
     if (p) {

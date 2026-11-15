@@ -19,3 +19,6 @@
  .v801-production .v801-cover{order:-1}
  .v801-production .v801-cover{max-height:47svh;object-fit:contain;object-position:center}
 }
+
+/* Keep the profile and programme action ahead of long portraits on phones. */
+@media(max-width:760px){.v801-profile .v801-grid>figure{grid-row:2}.v801-production--action .v801-cover{order:1}}
