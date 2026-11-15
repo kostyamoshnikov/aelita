@@ -23,16 +23,16 @@
       scheduled:'Your access is confirmed. The meeting link will open here one day before the event.',
       preparing:'Your access is confirmed. We are preparing the meeting link. Please check again later.',
       ready:'Your access is confirmed. Open Telemost to join the event.',
-      error:'Could not verify access. Check your connection and retry.', checking:'Checking your access…',
-      recover:'Recover from my account', recovered:'Choose your ticket or invitation:', none:'No matching online access was found. Check the email address in your account or open your latest invitation email.',
+      error:'Could not verify access. Check your connection and select Check again.', checking:'Checking your access…',
+      recover:'Restore access from my account', recovered:'Choose your ticket or invitation:', none:'No matching online access was found. Check the email address in your account or open your latest invitation email.',
       login:'Sign in to recover access', refresh:'Check again', start:'Start', release:'Link opens', item:invitation?'Invitation No. ':'Ticket '
     } : {
       invalid:'Ссылка недействительна или больше не активна. Откройте последнее письмо или восстановите доступ через кабинет.',
       scheduled:'Доступ подтверждён. Ссылка на встречу появится здесь за сутки до начала.',
       preparing:'Доступ подтверждён. Мы готовим ссылку на встречу. Загляните сюда чуть позже.',
-      ready:'Доступ подтверждён. Откройте Телемост, чтобы присоединиться к событию.',
-      error:'Не получилось проверить доступ. Проверьте соединение и повторите.', checking:'Проверяем ваш доступ…',
-      recover:'Восстановить через мой кабинет', recovered:'Выберите свой билет или приглашение:', none:'Подходящий онлайн-доступ не найден. Проверьте почту в кабинете или откройте последнее письмо с приглашением.',
+      ready:'Доступ подтверждён. Откройте Телемост, чтобы подключиться к встрече.',
+      error:'Не удалось проверить доступ. Проверьте подключение и нажмите «Проверить ещё раз».', checking:'Проверяем ваш доступ…',
+      recover:'Восстановить доступ через кабинет', recovered:'Выберите свой билет или приглашение:', none:'Подходящий онлайн-доступ не найден. Проверьте почту в кабинете или откройте последнее письмо с приглашением.',
       login:'Войти для восстановления доступа', refresh:'Проверить ещё раз', start:'Начало', release:'Ссылка откроется', item:invitation?'Пригласительный №':'Билет '
     };
     var status = document.getElementById('stream-status'), when = document.getElementById('stream-when');

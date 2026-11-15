@@ -16,7 +16,7 @@
   try { history.replaceState(null, '', location.pathname + location.search + '#orders'); } catch (_) {}
 }());
 </script>
-<link rel="stylesheet" href="/assets/fonts.css?v=225">
+<link rel="stylesheet" href="/assets/fonts.css?v=226">
 <style>
 /* pack-v644: карточка показа «Подробно» — как письмо «После показа» */
 .sf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
@@ -484,16 +484,17 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 #paDeadlineFields p{overflow-wrap:anywhere}#paDeadlineFields .editor-note{margin-top:12px}#paDeadlineSaveBtn{margin-top:10px}#paDeadlineFields:disabled{opacity:.65}
 #invEventDialog,#invPartnerDialog{position:fixed;max-width:min(92vw,640px);max-height:85dvh;overflow:auto;color:var(--bone);background:var(--ink);box-sizing:border-box}#invEventDialog::backdrop,#invPartnerDialog::backdrop{background:#000a}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=225">
-<script src="/assets/staff-handoff-v1.js?v=225"></script>
-<script src="/assets/mobile-files-m1.js?v=225"></script>
-<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=225"><script defer src="/assets/delivery-admin-v1.js?v=225"></script>
-<script defer src="/assets/commercial-admin-v1.js?v=225"></script><script src="/assets/staff-session-v796.js?v=225"></script><script defer src="/assets/crm-show-events-v1.js?v=225"></script>
-<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=225">
-<script src="/assets/work-navigation-v812.js?v=225"></script>
-<link rel="stylesheet" href="/assets/section-navigation.css?v=225">
-<script src="/assets/section-navigation.js?v=225" defer></script>
-<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=225"><script defer src="/assets/mail-confirm-v813.js?v=225"></script><script defer src="/assets/festival-audience-v814.js?v=225"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=225"><script defer src="/assets/work-forms-v818.js?v=225"></script><script defer src="/assets/admin-calm-v814.js?v=225"></script></head>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=226">
+<script src="/assets/staff-handoff-v1.js?v=226"></script>
+<script src="/assets/mobile-files-m1.js?v=226"></script>
+<link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=226"><script defer src="/assets/delivery-admin-v1.js?v=226"></script>
+<script defer src="/assets/commercial-admin-v1.js?v=226"></script><script src="/assets/staff-session-v796.js?v=226"></script><script defer src="/assets/crm-show-events-v1.js?v=226"></script>
+<link rel="stylesheet" href="/assets/work-navigation-v812.css?v=226">
+<script src="/assets/work-navigation-v812.js?v=226"></script>
+<script src="/assets/work-event-time-v829.js?v=226"></script>
+<link rel="stylesheet" href="/assets/section-navigation.css?v=226">
+<script src="/assets/section-navigation.js?v=226" defer></script>
+<link rel="stylesheet" href="/assets/mail-confirm-v813.css?v=226"><script defer src="/assets/mail-confirm-v813.js?v=226"></script><script defer src="/assets/festival-audience-v814.js?v=226"></script><link rel="stylesheet" href="/assets/admin-calm-v814.css?v=226"><script defer src="/assets/work-forms-v818.js?v=226"></script><script defer src="/assets/admin-calm-v814.js?v=226"></script></head>
 <body>
 
 <nav>
@@ -562,14 +563,39 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 
     <p class="sec-title">Участники события</p>
     <section id="eventParticipants" aria-label="Единый список участников">
-      <div class="participants-controls"><label>Событие: участники<select id="participants-event" class="search"></select></label></div>
-      <p id="participants-context" class="hint"></p><p id="participants-message" role="status" aria-live="polite">Выберите событие, чтобы увидеть всех участников.</p>
-      <button type="button" class="mini-btn" id="participants-reload">Обновить участников</button>
+      <div id="participants-event-groups" class="work-event-groups" role="group" aria-label="Период события">
+        <button type="button" class="mini-btn" data-event-group="current" aria-pressed="true">Актуальные</button>
+        <button type="button" class="mini-btn" data-event-group="past" aria-pressed="false">Прошедшие</button>
+      </div>
+      <div class="participants-controls participant-event-picker"><label>Событие<select id="participants-event" class="search"></select></label></div>
+      <p id="participants-timing" class="hint" hidden></p>
+      <div id="participants-event-details" class="participant-event-details" hidden>
+        <p id="participants-event-state" class="participant-event-state"></p>
+        <h2 id="participants-context"></h2>
+        <p id="participants-date"></p>
+        <p id="participants-venue"></p>
+        <p id="participants-updated" class="hint"></p>
+        <p id="participants-ended" class="hint" hidden>Событие завершилось. Вы продолжаете работать с его участниками.</p>
+      </div>
+      <div class="participant-refresh"><button type="button" class="mini-btn" id="participants-reload">Обновить участников</button>
+        <p id="participants-message" role="status" aria-live="polite">Выберите событие, чтобы увидеть участников.</p></div>
       <div id="participants-totals" class="participant-totals" aria-label="Количество участников"></div>
-      <p id="participants-attendance" class="hint"></p>
-      <p id="participants-warnings" class="participants-warning" hidden></p>
-      <p class="hint">Ожидаемые участники — люди с действующими основаниями. Приглашение или билет сами по себе не подтверждают намерение прийти. Вход по QR относится к залу; фактическое подключение онлайн не отслеживается.</p>
-      <div class="participants-controls"><label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label><label>Какие записи<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="declined">Отказались</option><option value="unconfirmed">Пока не подтвердили</option><option value="review">Требует сверки</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label><label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label><label>Порядок списка<select id="participants-sort" class="search"><option value="name">А—Я по записи</option><option value="family">По фамилии</option><option value="mode">По формату участия</option></select></label></div>
+      <dl id="participants-attendance" class="participant-attendance"></dl>
+      <div id="participants-warnings" class="participants-warning" hidden></div>
+      <details class="participant-help"><summary>Как считаются участники</summary>
+        <ul><li>Ожидаемые — люди с действующим основанием, кроме отказавшихся и команды.</li>
+        <li>Билет и пригласительный учитываются отдельно от ответа об участии.</li>
+        <li>Один человек может попасть в несколько фильтров по основаниям. В общем списке он учитывается один раз.</li>
+        <li>Отметка входа по QR относится к залу. Подключение онлайн не отслеживается.</li>
+        <li>Совпадения имён требуют сверки. Участники без имени учитываются отдельно.</li></ul>
+      </details>
+      <div class="participants-controls">
+        <label>Основание участия<select id="participants-basis" class="search" disabled><option value="all">Все основания</option><option value="ticket">По билетам</option><option value="invite">По пригласительным</option><option value="registration">По регистрациям</option></select></label>
+        <label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label>
+        <label>Статус участников<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="declined">Отказались</option><option value="unconfirmed">Пока не подтвердили</option><option value="review">Требуют сверки</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label>
+        <label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label>
+        <label>Сортировка<select id="participants-sort" class="search"><option value="name">По имени в списке (А–Я)</option><option value="family">По фамилии</option><option value="mode">По формату участия</option></select></label>
+      </div>
       <p id="participants-scope" role="status"></p>
       <div class="participants-actions"><button type="button" class="mini-btn" id="participants-copy" disabled>Скопировать список</button><button type="button" class="mini-btn" id="participants-csv" disabled>Скачать CSV для Excel</button><button type="button" class="mini-btn" id="participants-pdf" disabled>Скачать список PDF</button><a id="participants-download" hidden></a></div>
       <details class="participants-decisions"><summary>Совпадения, команда и уточнение формата</summary><p class="hint">Выберите строки ниже. Решения меняют только этот сводный список; билеты, оплаты и пригласительные сохраняются. Совпадение имён не объединяется автоматически.</p><p id="participants-selected" role="status">Выбрано для решения: 0</p><div class="participants-actions"><button type="button" class="mini-btn" data-participant-operation="merge" disabled>Один человек</button><button type="button" class="mini-btn" data-participant-operation="distinct" disabled>Разные люди</button><button type="button" class="mini-btn" data-participant-operation="exclude" disabled>Ведущий / команда</button><button type="button" class="mini-btn" data-participant-operation="include" disabled>Вернуть в зрители</button><button type="button" class="mini-btn" data-participant-operation="reset" disabled>Сбросить решения</button></div><label>Уточнённый формат<select id="participants-resolve-mode" class="search"><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Ещё не определён</option></select></label><button type="button" class="mini-btn" data-participant-operation="mode" disabled>Уточнить формат в списке</button></details>
@@ -755,12 +781,12 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
          было узнать только тем же способом, что и покупатель (ввести
          код на tickets-buy), то есть уже ЗНАЯ код заранее. Сценарий
          «покупатель потерял карту, не помнит остаток» был закрыть
-         нечем. Кнопка «+ Засыпать карту» — пункт 5 того же документа
+         нечем. Кнопка «+ Выпустить карту» — пункт 5 того же документа
          (обратная засыпка карт, проданных до автоматической системы):
          тот же паттерн, что у «Заказы билетов» с кнопкой CSV чуть выше
          и у «Клиенты» с кнопкой «+ Клиент» — действие в конце
          заголовочной строки раздела, а не отдельный второй раздел. -->
-    <p class="sec-title" style="margin-top:56px">Подарочные карты (<span id="gc-count">0</span>) <button class="mini-btn" id="openAddGiftcardBtn" style="margin-left:12px;vertical-align:middle">+ Засыпать карту</button></p>
+    <p class="sec-title" style="margin-top:56px">Подарочные карты (<span id="gc-count">0</span>) <button class="mini-btn" id="openAddGiftcardBtn" style="margin-left:12px;vertical-align:middle">+ Выпустить карту</button></p>
     <div class="filter-row">
       <input type="text" class="search ym-disable-keys" id="gcSearch" placeholder="Поиск по коду, имени или email…">
     </div>
@@ -799,12 +825,18 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 
     <p class="sec-title sec-gap">Пригласительные (<span id="inv-total">0</span>)</p>
     <div class="editor-box" id="invBlock">
+      <div class="work-event-groups" id="inv-event-groups" role="group" aria-label="Период события">
+        <button type="button" class="mini-btn" data-inv-group="current" aria-pressed="true">Актуальные</button>
+        <button type="button" class="mini-btn" data-inv-group="past" aria-pressed="false">Прошедшие</button>
+      </div>
       <div class="field">
         <label for="inv-event">Событие</label>
         <select id="inv-event"><option value="">Загружаем…</option></select>
       </div>
+      <div id="inv-event-detail" class="work-event-details" hidden></div>
+      <p id="inv-event-status" class="editor-note" role="status" hidden></p>
       <details class="inv-order-tools"><summary>Порядок событий</summary><div class="inv-tools"><button type="button" class="mini-btn" id="invMoveUp" aria-label="Переместить событие выше">↑ Выше</button><button type="button" class="mini-btn" id="invMoveDown" aria-label="Переместить событие ниже">↓ Ниже</button></div></details><div class="inv-tools"><button type="button" class="mini-btn" id="invCreateEvent">Создать событие</button><button type="button" class="mini-btn" id="invPartnerEvent">Подключить партнёрский показ</button></div>
-      <p class="editor-note">Ближайшие события сверху, прошедшие — в архиве. Порядок внутри группы сохраняется для всех сотрудников.</p>
+      <p class="editor-note">Ближайшие события выше. Порядок событий с одинаковым статусом сохраняется для всех сотрудников.</p>
       <dialog id="invEventDialog" class="editor-box"><form id="invEventForm"><h2>Событие только по пригласительным</h2><p>Не создаёт продажу билетов. Без нумерованных мест; количество гостей согласуйте с площадкой.</p><div class="field"><label>Название RU<input class="ym-disable-keys" name="title" maxlength="180" required></label></div><div class="field"><label>Название EN<input class="ym-disable-keys" name="titleEn" maxlength="180" required></label></div><div class="field"><label>Начало · МСК<input class="ym-disable-keys" name="datetime" type="datetime-local" required></label></div><div class="field"><label>Площадка RU<input class="ym-disable-keys" name="venueName" maxlength="180" required></label></div><div class="field"><label>Площадка EN<input class="ym-disable-keys" name="venueNameEn" maxlength="180" required></label></div><div class="field"><label>Адрес RU<input class="ym-disable-keys" name="venueAddress" maxlength="220" required></label></div><div class="field"><label>Адрес EN<input class="ym-disable-keys" name="venueAddressEn" maxlength="220" required></label></div><p role="alert" id="invEventError"></p><button class="mini-btn" type="submit">Создать</button><button class="mini-btn" type="button" id="invEventClose">Закрыть</button></form></dialog>
       <dialog id="invPartnerDialog" class="editor-box"><form id="invPartnerForm"><h2>Наши пригласительные на партнёрский показ</h2><label>Показ<select id="invPartnerSelect" required></select></label><p>Билеты продаёт партнёр. Наши QR проверяются нашим сканером. Квоту и размещение гостей согласуйте с партнёром; остаток его билетов здесь недоступен.</p><p role="alert" id="invPartnerError"></p><button class="mini-btn" type="submit">Подключить</button><button class="mini-btn" type="button" id="invPartnerClose">Закрыть</button></form></dialog>
       <div id="inv-summary" aria-label="Сводка пригласительных"></div>
@@ -871,6 +903,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <label for="st-show">Показ</label>
         <select id="st-show"><option value="">Загружаем…</option></select>
       </div>
+      <div id="st-show-detail" class="work-event-details" hidden></div>
       <p class="editor-note" id="st-summary"></p>
       <div class="inv-row">
         <div class="field inv-w2"><label for="st-name">Имя контролёра</label><input class="ym-disable-keys" type="text" id="st-name" autocomplete="off" maxlength="60" placeholder="Мария Иванова"></div>
@@ -1060,6 +1093,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <label for="pa-perf">Показ</label>
         <select id="pa-perf"><option value="">Загружаем…</option></select>
       </div>
+      <div id="pa-perf-detail" class="work-event-details" hidden></div>
       <div class="editor-note" id="pa-crm-show" aria-live="polite"></div>
       <p class="editor-note" id="pa-preview"></p><button type="button" class="mini-btn" id="pa-commercial">Цена и вместимость</button>
       <div class="adm-card att-admin" id="matrix-online-admin" hidden>
@@ -1700,7 +1734,7 @@ var url = URL.createObjectURL(blob);
     }
     return false;
   } catch (e) {
-    if (outEl) outEl.textContent = 'Не получилось связаться с сервером.';
+    if (outEl) outEl.textContent = 'Нет связи с сервером. Проверьте подключение.';
     return true;
   }
 }
@@ -1755,7 +1789,7 @@ document.getElementById('deleteConfirmBtn').addEventListener('click', async func
     closeDeleteModal();
     loadData({ refresh: true });
   } catch (e) {
-    showModalErr('deleteModalErr', 'Не получилось связаться с сервером.');
+    showModalErr('deleteModalErr', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -1806,7 +1840,7 @@ document.getElementById('addCustomerConfirmBtn').addEventListener('click', async
     }
     loadData({ refresh: true });
   } catch (e) {
-    showModalErr('addCustomerErr', 'Не получилось связаться с сервером.');
+    showModalErr('addCustomerErr', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -1884,7 +1918,7 @@ document.getElementById('addGiftcardConfirmBtn').addEventListener('click', async
     // появился позже этой модалки — раньше обновлять было нечего.
     loadGiftCards();
   } catch (e) {
-    showModalErr('addGiftcardErr', 'Не получилось связаться с сервером.');
+    showModalErr('addGiftcardErr', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -1951,7 +1985,7 @@ document.getElementById('addRegistrationConfirmBtn').addEventListener('click', a
     }
     loadEvents();
   } catch (e) {
-    showModalErr('addRegistrationErr', 'Не получилось связаться с сервером.');
+    showModalErr('addRegistrationErr', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -1978,7 +2012,7 @@ async function adminCancelRegistration(eventId, email, btn) {
     if (data.mailSent === false) alert('Регистрация отменена, но письмо об отмене не отправилось.');
     loadEvents();
   } catch (e) {
-    alert('Не получилось связаться с сервером.');
+    alert('Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -2026,7 +2060,7 @@ document.getElementById('addPurchaseConfirmBtn').addEventListener('click', async
     closeAddPurchaseModal();
     loadData({ refresh: true });
   } catch (e) {
-    showModalErr('addPurchaseErr', 'Не получилось связаться с сервером.');
+    showModalErr('addPurchaseErr', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -2221,7 +2255,7 @@ function exportEventCsv(ev) {
 
 async function loadEvents() {
   var el = document.getElementById('eventsBlock');
-  if (!ADMIN_EVENTS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  if (!ADMIN_EVENTS_URL) { el.innerHTML = '<div class="empty-state">Раздел регистраций пока недоступен. Обратитесь к администратору сайта.</div>'; return; }
   var token = getToken();
   if (!token) return;
   try {
@@ -2235,7 +2269,7 @@ async function loadEvents() {
     allEvents = data.events || [];
     renderEvents(allEvents);
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить регистрации. Попробуйте «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить регистрации. Нажмите «Обновить».</div>';
   }
 }
 
@@ -2608,11 +2642,11 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
     var data = await res.json();
     if (!res.ok) { alert(errorMessage(data)); return; }
     // pack-v692: итог возврата через ЮKassa — сразу словами.
-    if (data.api && data.api.ok) alert('Готово: деньги отправлены через ЮKassa, покупателю ушло письмо.');
+    if (data.api && data.api.ok) alert('ЮKassa приняла запрос на возврат. Статус выплаты указан в заявлении.');
     else if (data.api && !data.api.ok) alert('Заявление одобрено, но деньги через ЮKassa не ушли: ' + (data.api.message || data.api.kind) + '.');
     loadRefunds();
   } catch (e) {
-    alert('Не получилось связаться с сервером.');
+    alert('Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -2620,13 +2654,11 @@ async function submitRefundAction(refundId, action, rejectionReason, btn) {
 
 // ── Показы: перенос и отмена (pack-v568–v569, ТЗ С1) ──────────────
 var PERF_LIST = [];
-function perfLabel(p) {
-  var d = new Date(p.datetime);
-  var when = isNaN(d) ? '—' : d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
-  var tag = p.status === 'canceled' ? ' · ОТМЕНЁН' : p.postponed ? ' · перенесён' : p.isTest ? ' · тест' : '';
+function perfLabel(p, suffixOnly) {
+  var tag = p.postponed ? ' · перенесён' : p.isTest ? ' · тестовый показ' : '';
   if (p.freeEvent) tag += ' · бесплатная регистрация';
   if (p.salesClosed && p.status !== 'canceled') tag += p.freeEvent ? ' · запись закрыта' : ' · продажа закрыта'; // pack-v592
-  return when + ' · ' + p.title + tag;
+  return suffixOnly?tag:workEvents.label(p)+tag;
 }
 // ── Баннер о сбое покупки (ТЗ «покупка без зависаний», Н10) ───────────
 async function noticeCall(body) {
@@ -2644,7 +2676,7 @@ async function noticeCall(body) {
       ? 'Включён до ' + new Date(n.until).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (сайт покажет в течение минуты).'
       : 'Выключен.';
   } catch (e) {
-    out.textContent = 'Не получилось связаться с сервером.';
+    out.textContent = 'Нет связи с сервером. Проверьте подключение.';
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
@@ -2667,14 +2699,14 @@ async function loadPerfActions() {
     if (res.status === 401) return;
     var data = await res.json();
     if (!res.ok) throw new Error(errorMessage(data));
+    if (token!==getToken()) return;
     PERF_LIST = data.performances || [];
-    sel.innerHTML = '<option value="">— выберите показ —</option>' + PERF_LIST.map(function (p) {
-      return '<option value="' + escapeHtml(p.id) + '">' + escapeHtml(perfLabel(p)) + '</option>';
-    }).join('');
+    sel.innerHTML = '<option value="">Выберите показ</option>' + workShowGroups(PERF_LIST,perfLabel);
     if (preferred && PERF_LIST.some(function (p) { return p.id === preferred; })) sel.value = preferred;
     sel.dispatchEvent(new Event('change'));
   } catch (e) {
-    sel.innerHTML = '<option value="">Раздел заработает, когда функция aelita-admin-performance-action создана</option>';
+    sel.innerHTML = '<option value="">Не удалось загрузить показы</option>';
+    document.getElementById('pa-preview').textContent='Откройте раздел снова, чтобы повторить загрузку.';
   }
 }
 async function perfPreview() {
@@ -2779,7 +2811,7 @@ async function perfPostpone() {
     out.textContent = 'Готово: писем отправлено ' + data.sent + (data.alreadySent ? ', уже были отправлены ' + data.alreadySent : '') + (data.failed ? ', не ушло ' + data.failed + ' — нажмите ещё раз с той же датой' : '') + '.';
     loadPerfActions(); perfPreview();
   } catch (e) {
-    out.textContent = 'Не получилось связаться с сервером.';
+    out.textContent = 'Нет связи с сервером. Проверьте подключение.';
   } finally {
     btn.disabled = false;
   }
@@ -2808,7 +2840,7 @@ async function perfCancel() {
       }
       out.textContent='Событие отменено. Получателей: '+no.total+', отправлено: '+no.sent+', ждут: '+no.pending+', отправляются: '+no.sending+', ошибка: '+no.failed+'.'+(no.pending || no.failed || no.sending ? ' Нажмите ещё раз, чтобы продолжить; если отправка зависла, подождите до 10 минут.' : '');
       await loadPerfActions();document.getElementById('pa-perf').value=id;perfSalesBtnState();await perfPreview();
-    } catch(e) {out.textContent='Не получилось связаться с сервером. Проверьте статус и повторите.';}
+    } catch(e) {out.textContent='Нет связи с сервером. Проверьте подключение. Проверьте статус и повторите.';}
     finally {freeBtn.disabled=false;}
     return;
   }
@@ -2842,7 +2874,7 @@ async function perfCancel() {
     out.textContent = parts.join(', ') + '.';
     loadPerfActions(); perfPreview();
   } catch (e) {
-    out.textContent = 'Не получилось связаться с сервером. Нажмите ещё раз — повтор безопасен.';
+    out.textContent = 'Нет связи с сервером. Проверьте подключение. После восстановления связи можно повторить запрос.';
   } finally {
     btn.disabled = false;
   }
@@ -2853,12 +2885,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var v = document.getElementById('exportEmail').value.trim().toLowerCase();
     var out = document.getElementById('exportEmailResult');
     if (!v) { out.textContent = 'Введите адрес почты.'; return; }
-    exportByEmail(v, out).then(function (handled) { if (!handled) out.textContent = 'Сервер ещё не обновлён — функция aelita-admin-data из v572.'; });
+    exportByEmail(v, out).then(function (handled) { if (!handled) out.textContent = 'Выгрузка пока недоступна. Обновите серверные функции.'; });
   });
 });
 document.addEventListener('DOMContentLoaded', function () {
   var sel = document.getElementById('pa-perf');
-  if (sel) sel.addEventListener('change', perfPreview);
+  if (sel) sel.addEventListener('change', function(){paintWorkEvent('pa-perf-detail',PERF_LIST.find(p=>p.id===sel.value));perfPreview();});
   var b = document.getElementById('paPostponeBtn');
   if (b) b.addEventListener('click', perfPostpone);
   var c = document.getElementById('paCancelBtn');
@@ -3116,7 +3148,7 @@ async function perfSalesToggle() {
 
 async function loadRefunds() {
   var el = document.getElementById('refundsBlock');
-  if (!ADMIN_REFUNDS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  if (!ADMIN_REFUNDS_URL) { el.innerHTML = '<div class="empty-state">Раздел возвратов пока недоступен. Обратитесь к администратору сайта.</div>'; return; }
   var token = getToken();
   if (!token) return;
   try {
@@ -3137,7 +3169,7 @@ async function loadRefunds() {
     }
     WORK_REFUNDS_RESTORED=true;applyWorkRefundFilters();
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить заявления. Попробуйте «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить заявления на возврат. Нажмите «Обновить».</div>';
     REFUNDS_LOADED = 'error'; renderAttention();
   }
 }
@@ -3710,7 +3742,7 @@ async function loadPerf() {
       }).join('') + '</tbody></table></div>' +
       '<div class="sales-line">Медиана и 90% — приблизительно, по корзинам времени. Красным — шаги, где без ответа больше 2% или дольше 5 секунд больше 10% запросов.</div>';
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить сводку. Нажмите «Обновить».</div>';
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
@@ -3752,7 +3784,7 @@ async function loadHits() {
       hitsTable('Старые адреса, переведённые на новые', d.oldLinks, 'Старый адрес') +
       '<div class="sales-line">«Вход» — просмотр, пришедший не с нашего сайта: это примерное число визитов. Считаются все посетители, без cookie и без данных о людях; боты отсекаются. Поведение и Вебвизор — в Метрике, у тех, кто нажал «Принять».</div>';
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить сводку. Нажмите «Обновить».</div>';
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
@@ -3782,7 +3814,7 @@ async function loadSales() {
     var list = data.performances || [];
     el.innerHTML = obligationsHtml(data.obligations) + (list.length ? list.map(salesCard).join('') : '<div class="empty-state">Показов с нашей продажей пока нет.</div>');
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить сводку. Нажмите «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить сводку. Нажмите «Обновить».</div>';
   }
 }
 /** График продаж по дням — SVG без библиотек: столбик = билеты за день. */
@@ -3928,7 +3960,7 @@ var url = URL.createObjectURL(blob);
     invSave(xlsxBlob([{ name: 'Зрители', title: 'Зрители: ' + ((d3.performance && d3.performance.title) || id), rows: rows, widths: [7, 8, 34, 10, 12, 18] }]), 'aelita-zriteli-' + id + '.xlsx');
     box.textContent = 'Зрителей: ' + (d3.rows || []).length + '.';
   } catch (e) {
-    box.textContent = 'Не получилось связаться с сервером.';
+    box.textContent = 'Нет связи с сервером. Проверьте подключение.';
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
@@ -3950,7 +3982,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function loadOrders() {
   var el = document.getElementById('ordersBlock');
-  if (!ADMIN_ORDERS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  if (!ADMIN_ORDERS_URL) { el.innerHTML = '<div class="empty-state">Раздел заказов пока недоступен. Обратитесь к администратору сайта.</div>'; return; }
   var token = getToken();
   if (!token) return;
   try {
@@ -3979,7 +4011,7 @@ async function loadOrders() {
     allCheckouts = Array.isArray(data.checkouts) ? data.checkouts : null;
     renderCheckouts();
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить заказы. Попробуйте «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить заказы. Нажмите «Обновить».</div>';
     allCheckouts = null; renderCheckouts();
   }
 }
@@ -4151,7 +4183,7 @@ function renderCheckouts() {
         '<div class="ev-count">' + (c.amount != null ? fmtMoney(c.amount) : '') + '</div>' +
       '</div>' +
       '<div class="ev-actions"><button class="mini-btn" data-co-idx="' + idx + '">История</button>' + crmFindBtn(c.email || c.accountEmail) + crmTaskBtn(c, idx) + '</div>' +
-      '<div class="ev-people" id="co-hist-' + idx + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
+      '<div class="ev-people" id="co-hist-' + idx + '">' + (hist || '<div class="ev-empty">Записей в истории пока нет.</div>') + '</div>' +
     '</div>';
   }).join('');
   if (CO_MAIL_FOCUS && !CO_MAIL_SCROLLED) {
@@ -4181,7 +4213,26 @@ document.getElementById('checkoutsCsvBtn').addEventListener('click', function ()
 });
 
 // ── Пригласительные (pack-v587) ─────────────────────────────────
-var INV_REVISION=0, INV_PARTNERS=[];
+var INV_REVISION=0, INV_PARTNERS=[], INV_GROUP='current', INV_CATALOG_JOB=0, INV_ROWS_JOB=0, INV_TIMING=false;
+var workEvents=window.AelitaWorkEventTime;
+function workShowGroups(shows,fallback){
+  var now=Date.now(),ordered=workEvents.sorted(shows,now);
+  return Object.entries(workEvents.groups).map(function([group,label]){
+    var options=ordered.filter(p=>workEvents.status(p,now).group===group).map(function(p){
+      var title=workEvents.label(p,now)+(fallback?fallback(p,true):'');
+      return '<option value=+escapeHtml(p.id)+>'+escapeHtml(title)+'</option>';
+    }).join('');
+    return options?'<optgroup label=+label+>'+options+'</optgroup>':'';
+  }).join('');
+}
+function paintWorkEvent(id,event){
+  var out=document.getElementById(id);if(!out)return;
+  out.hidden=!event;out.replaceChildren();if(!event)return;
+  var title=document.createElement('strong');title.textContent=event.title;out.append(title);
+  for(var value of [workEvents.when(event)||event.dateLabel,event.venueName,workEvents.status(event).label]){
+    if(!value)continue;var row=document.createElement('p');row.textContent=value;out.append(row);
+  }
+}
 var INV_EVENTS = [], INV_LIST = [], INV_EDIT_ID = null, INV_EDIT_INV = null;
 async function invCall(body) {
   var res = await fetch(ADMIN_INVITES_URL, {
@@ -4195,23 +4246,24 @@ async function invCall(body) {
   return data;
 }
 // ── pack-v621: контролёры на входе — код на показ каждому ─────────────────
-var ST_SHOWS = [], ST_DATA = null;
+var ST_SHOWS = [], ST_DATA = null, ST_SHOWS_JOB=0, ST_CODES_JOB=0;
 function stWhen(iso) { return iso ? new Date(iso).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' }) : ''; }
 async function loadStaffShows() {
   var sel = document.getElementById('st-show');
   if (!sel || !ADMIN_INVITES_URL || !getToken()) return;
+  var owner=getToken(),request=++ST_SHOWS_JOB;
   try {
-    ST_SHOWS = (await invCall({ action: 'staff_shows' })).shows || [];
-    var keep = sel.value;
-    sel.innerHTML = ST_SHOWS.length ? ST_SHOWS.map(function (x) { return '<option value="' + escapeHtml(x.id) + '">' + escapeHtml(x.title) + ' — ' + escapeHtml(stWhen(x.datetime)) + (x.canceled ? ' · ОТМЕНЁН' : '') + '</option>'; }).join('') : '<option value="">Показов нет</option>';
-    if (keep && ST_SHOWS.some(function (x) { return x.id === keep; })) sel.value = keep;
-    else {
-      var now = Date.now(), next = ST_SHOWS.find(function (x) { return Date.parse(x.datetime) + 6 * 3600e3 > now; });
-      if (next) sel.value = next.id;
-    }
+    var result=await invCall({ action: 'staff_shows' });
+    if(owner!==getToken()||request!==ST_SHOWS_JOB)return;
+    ST_SHOWS=result.shows||[];
+    var keep=sel.value,next=workEvents.sorted(ST_SHOWS).find(p=>workEvents.status(p).group==='current');
+    sel.innerHTML='<option value="">'+(ST_SHOWS.length?'Выберите показ':'Показов пока нет')+'</option>'+workShowGroups(ST_SHOWS);
+    sel.value=ST_SHOWS.some(p=>p.id===keep)?keep:next?.id||'';
     loadStaffCodes();
   } catch (e) {
-    sel.innerHTML = '<option value="">Не загрузилось</option>';
+    if(owner!==getToken()||request!==ST_SHOWS_JOB)return;
+    sel.innerHTML = '<option value="">Не удалось загрузить показы</option>';
+    paintWorkEvent('st-show-detail',null);
     document.getElementById('stList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') + '</div>';
   }
 }
@@ -4234,10 +4286,15 @@ function renderStaffCodes() {
   }).join('');
 }
 async function loadStaffCodes() {
-  var pid = document.getElementById('st-show').value;
-  if (!pid) { ST_DATA = null; renderStaffCodes(); return; }
-  try { ST_DATA = await invCall({ action: 'staff_codes_list', performance_id: pid }); renderStaffCodes(); }
-  catch (e) { document.getElementById('stList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') + '</div>'; }
+  var select=document.getElementById('st-show'),pid=select.value,owner=getToken(),request=++ST_CODES_JOB;
+  paintWorkEvent('st-show-detail',ST_SHOWS.find(p=>p.id===pid));
+  ST_DATA=null;document.getElementById('st-summary').textContent='';
+  document.getElementById('stAddBtn').disabled=!pid;
+  if (!pid) { document.getElementById('stList').textContent='Выберите показ, чтобы увидеть коды.'; return; }
+  document.getElementById('stList').textContent='Загружаем коды…';
+  var current=()=>owner===getToken()&&request===ST_CODES_JOB&&pid===select.value;
+  try {var result=await invCall({action:'staff_codes_list',performance_id:pid});if(current()){ST_DATA=result;renderStaffCodes();}}
+  catch (e) {if(current())document.getElementById('stList').innerHTML='<div class="empty-state">'+escapeHtml(e.message||'Нет связи')+'</div>';}
 }
 async function stCopy(text) {
   try { await navigator.clipboard.writeText(text); return true; } catch (e) { window.prompt('Скопируйте сообщение:', text); return false; }
@@ -6230,31 +6287,63 @@ function invSeatsText(inv, evArg) {
   return (opt ? opt.hall + ': ' : '') + inv.seats.keys.map(function (k) { var p = k.split('-'); return 'ряд ' + p[0] + ' место ' + p[1]; }).join(', ');
 }
 function invShow(el, text, ok) { el.textContent = text; el.className = 'editor-result ' + (ok ? 'ok' : 'err'); el.style.display = text ? 'block' : 'none'; }
-async function loadInviteEvents() {
-  var sel = document.getElementById('inv-event');
-  if (!sel || !ADMIN_INVITES_URL || !getToken()) return;
-  try {
-    var data = await invCall({ action: 'events' });
-    INV_EVENTS = data.events || []; INV_REVISION=data.revision||0; INV_PARTNERS=data.partners||[];
-    var keep = sel.value;
-    sel.innerHTML = [false,true].map(function(archived){var group=INV_EVENTS.filter(function(e){return !!e.archived===archived;});return group.length?'<optgroup label="'+(archived?'Архив':'Предстоящие события')+'">'+group.map(function (e) { return '<option value="' + escapeHtml(e.id) + '">' + (e.archived?'Архив · ':'') + escapeHtml(e.title) + ' — ' + escapeHtml(e.dateLabel) + (e.canceled ? ' · ПОКАЗ ОТМЕНЁН' : '') + (e.counts && e.counts.invites ? ' · ' + e.counts.invites + ' пригл.' : '') + '</option>'; }).join('')+'</optgroup>':'';}).join('');
-    if (keep && INV_EVENTS.some(function (e) { return e.id === keep; })) sel.value = keep;
-    sel.dataset.workAcceptedValue=sel.value;invFillSeatOptions();
-    loadInvites();
-  } catch (e) {
-    sel.innerHTML = '<option value="">Не загрузилось</option>';
-    document.getElementById('invList').innerHTML = '<div class="empty-state">' + escapeHtml(e.message || 'Нет связи') +
-      ' · Если раздел открывается впервые — функция aelita-admin-invites ещё не создана (выкладка).</div>';
+function invPaintPicker(keep){
+  var sel=document.getElementById('inv-event'),now=Date.now();
+  var visible=INV_EVENTS.filter(e=>workEvents.status(e,now).group===INV_GROUP||e.id===keep);
+  var selected=visible.find(e=>e.id===keep)||visible[0];
+  sel.innerHTML=visible.map(function(e){
+    var count=e.counts?.invites?' · пригласительных: '+e.counts.invites:'';
+    return '<option value="'+escapeHtml(e.id)+'">'+escapeHtml(workEvents.label(e,now)+count)+'</option>';
+  }).join('')||'<option value="">'+(INV_GROUP==='past'?'Прошедших событий пока нет':'Актуальных событий пока нет')+'</option>';
+  sel.value=selected?.id||'';sel.dataset.workAcceptedValue=sel.value;
+  for(var button of document.querySelectorAll('[data-inv-group]'))button.setAttribute('aria-pressed',String(button.dataset.invGroup===INV_GROUP));
+  paintWorkEvent('inv-event-detail',selected);
+  var hint=document.getElementById('inv-event-status');
+  hint.textContent=!INV_TIMING?'На старом сервере время окончания может быть недоступно.':INV_GROUP==='current'&&selected&&workEvents.status(selected,now).label==='Состоялось'?'Событие завершилось. Вы продолжаете работать с его пригласительными.':'';
+  hint.hidden=!hint.textContent;
+  var index=INV_EVENTS.indexOf(selected),state=selected&&workEvents.status(selected,now);
+  for(var [i,id] of [[-1,'invMoveUp'],[1,'invMoveDown']]){
+    var other=INV_EVENTS[index+i],next=other&&workEvents.status(other,now);
+    document.getElementById(id).disabled=!state||!next||next.group!==state.group||next.priority!==state.priority;
+  }
+}
+function invCanChange(){
+  var forms=window.AelitaWorkForms;
+  return !forms||['inv-form','inv-import'].every(id=>!document.getElementById(id).classList.contains('open')||forms.canClose(document.getElementById(id)));
+}
+function invAfterChange(){
+  INV_EDIT_ID=null;INV_EDIT_INV=null;
+  document.getElementById('inv-form').classList.remove('open');
+  document.getElementById('inv-import').classList.remove('open');
+  document.getElementById('invSaveBtn').textContent='Выпустить';
+  invFillSeatOptions();return loadInvites();
+}
+async function loadInviteEvents(preferred){
+  var sel=document.getElementById('inv-event'),owner=getToken();
+  if(!sel||!ADMIN_INVITES_URL||!owner)return;
+  var request=++INV_CATALOG_JOB;
+  try{
+    var data=await invCall({action:'events'});
+    if(request!==INV_CATALOG_JOB||owner!==getToken())return;
+    INV_EVENTS=data.events||[];INV_REVISION=data.revision||0;INV_PARTNERS=data.partners||[];INV_TIMING=data.timingVersion===1;
+    var keep=preferred||sel.value;
+    if(preferred){var explicit=INV_EVENTS.find(e=>e.id===preferred);if(explicit)INV_GROUP=workEvents.status(explicit).group;}
+    invPaintPicker(keep);invFillSeatOptions();return loadInvites();
+  }catch(e){
+    if(request!==INV_CATALOG_JOB||owner!==getToken())return;
+    sel.innerHTML='<option value="">Не удалось загрузить события</option>';
+    paintWorkEvent('inv-event-detail',null);
+    document.getElementById('invList').textContent=e.message||'Не удалось загрузить события. Откройте раздел снова.';
   }
 }
 document.addEventListener('DOMContentLoaded',function(){
- ['invMoveUp','invMoveDown'].forEach(function(id,i){document.getElementById(id).onclick=async function(){this.disabled=true;try{await invCall({action:'event_move',event_id:document.getElementById('inv-event').value,direction:i?1:-1,revision:INV_REVISION,usedIds:INV_EVENTS.map(function(e){return e.id;})});await loadInviteEvents();}catch(e){alert(e.message);}finally{this.disabled=false;}};});
+ ['invMoveUp','invMoveDown'].forEach(function(id,i){document.getElementById(id).onclick=async function(){this.disabled=true;try{await invCall({action:'event_move',event_id:document.getElementById('inv-event').value,direction:i?1:-1,revision:INV_REVISION,usedIds:INV_EVENTS.map(function(e){return e.id;})});await loadInviteEvents();}catch(e){alert(e.message);invPaintPicker(document.getElementById('inv-event').value);}};});
  document.getElementById('invCreateEvent').onclick=function(){document.getElementById('invEventDialog').showModal();};
  document.getElementById('invEventClose').onclick=function(){document.getElementById('invEventDialog').close();};
- document.getElementById('invEventForm').onsubmit=async function(e){e.preventDefault();var form=this,button=form.querySelector('[type=submit]'),event=Object.fromEntries(new FormData(form));event.datetime=event.datetime.slice(0,16)+':00+03:00';button.disabled=true;try{var result=await invCall({action:'event_create',revision:INV_REVISION,event:event});await loadInviteEvents();document.getElementById('inv-event').value=result.id;invFillSeatOptions();await loadInvites();document.getElementById('invEventDialog').close();form.reset();}catch(err){document.getElementById('invEventError').textContent=err.message;}finally{button.disabled=false;}};
+ document.getElementById('invEventForm').onsubmit=async function(e){e.preventDefault();var form=this,button=form.querySelector('[type=submit]'),event=Object.fromEntries(new FormData(form));event.datetime=event.datetime.slice(0,16)+':00+03:00';button.disabled=true;try{var result=await invCall({action:'event_create',revision:INV_REVISION,event:event});await loadInviteEvents(result.id);document.getElementById('invEventDialog').close();form.reset();}catch(err){document.getElementById('invEventError').textContent=err.message;}finally{button.disabled=false;}};
  document.getElementById('invPartnerEvent').onclick=function(){document.getElementById('invPartnerSelect').innerHTML=INV_PARTNERS.map(function(p){return '<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.title)+' · '+escapeHtml(stWhen(p.datetime))+'</option>';}).join('');document.getElementById('invPartnerDialog').showModal();};
  document.getElementById('invPartnerClose').onclick=function(){document.getElementById('invPartnerDialog').close();};
- document.getElementById('invPartnerForm').onsubmit=async function(e){e.preventDefault();var button=this.querySelector('[type=submit]'),id=document.getElementById('invPartnerSelect').value;button.disabled=true;try{await invCall({action:'partner_enable',revision:INV_REVISION,performance_id:id});await loadInviteEvents();document.getElementById('inv-event').value='show-'+id;invFillSeatOptions();await loadInvites();document.getElementById('invPartnerDialog').close();}catch(err){document.getElementById('invPartnerError').textContent=err.message;}finally{button.disabled=false;}};
+ document.getElementById('invPartnerForm').onsubmit=async function(e){e.preventDefault();var button=this.querySelector('[type=submit]'),id=document.getElementById('invPartnerSelect').value;button.disabled=true;try{await invCall({action:'partner_enable',revision:INV_REVISION,performance_id:id});await loadInviteEvents('show-'+id);document.getElementById('invPartnerDialog').close();}catch(err){document.getElementById('invPartnerError').textContent=err.message;}finally{button.disabled=false;}};
 });
 function invAttendanceUi() {
   var ev = invEvent(), online = document.getElementById('inv-attendance').value === 'online';
@@ -6331,24 +6420,32 @@ function invFillSeatOptions() {
   document.getElementById('inv-seats-row').style.display = opts.length ? '' : 'none';
   if (!opts.length) document.getElementById('inv-seat-mode').value = 'none'; // свободная рассадка — мест нет
   invSeatModeUi();
-  var off = !!(ev && ev.canceled);
+  var off = !ev || !!ev.canceled;
   ['invNewBtn', 'invImportBtn'].forEach(function (id) { document.getElementById(id).disabled = off; });
   document.getElementById('inv-seat-perf').innerHTML = opts.map(function (o) {
     return '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.title) + '</option>';
   }).join('');
   invAttendanceUi();
 }
-async function loadInvites() {
-  var ev = invEvent();
-  var el = document.getElementById('invList');
-  if (!ev) { el.innerHTML = '<div class="empty-state">Событий для пригласительных нет.</div>'; return; }
-  try {
-    var data = await invCall({ action: 'list', event_id: ev.id });
-    INV_LIST = data.invites || [];
-    renderInvites();
-  } catch (e) {
-    el.innerHTML = '<div class="empty-state">' + escapeHtml(e.message) + '</div>';
+async function loadInvites(){
+  var ev=invEvent(),el=document.getElementById('invList'),owner=getToken(),request=++INV_ROWS_JOB;
+  INV_LIST=[];
+  document.getElementById('inv-summary').replaceChildren();
+  document.getElementById('inv-total').textContent='—';
+  invRenderRecount(null);
+  if(!ev){
+    el.textContent=INV_GROUP==='past'?'Прошедших событий пока нет.':'Актуальных событий пока нет.';
+    if(INV_GROUP==='current'&&INV_EVENTS.some(e=>workEvents.status(e).group==='past')){
+      var button=document.createElement('button');button.type='button';button.className='mini-btn';button.textContent='Показать прошедшие';button.onclick=()=>document.querySelector('[data-inv-group="past"]').click();el.append(document.createElement('br'),button);
+    }
+    return;
   }
+  el.textContent='Загружаем пригласительные…';
+  var current=()=>owner===getToken()&&request===INV_ROWS_JOB&&invEvent()?.id===ev.id;
+  try{
+    var data=await invCall({action:'list',event_id:ev.id});
+    if(current()){INV_LIST=data.invites||[];renderInvites();}
+  }catch(e){if(current())el.textContent=e.message||'Не удалось загрузить пригласительные.';}
 }
 // pack-v610: пересчёт мест по оплаченным заказам. Билеты, проданные до
 // выкладки вместимости (09.10), места не занимали — счётчик показывал
@@ -6382,13 +6479,13 @@ function renderInvites() {
   var arrived = active.filter(function (i) { return i.visits; });
   document.getElementById('inv-total').textContent = active.length;
   var evc = invEvent();
-  var metrics=[['Пригласительных',active.length],['Гостей в зале',persons-onlinePersons],['Гостей онлайн',onlinePersons],['Прошли на вход · приглашений',arrived.length],['Ждут назначения мест',active.filter(function(i){return i.seatsLater;}).length],['Отозвано',INV_LIST.length-active.length]];
+  var metrics=[['Пригласительных',active.length],['Гостей в зале',persons-onlinePersons],['Гостей онлайн',onlinePersons],['Пригласительные с отметкой входа',arrived.length],['Ждут назначения мест',active.filter(function(i){return i.seatsLater;}).length],['Отозвано',INV_LIST.length-active.length]];
   if(evc&&evc.capacity){metrics.unshift(['Мест в зале · всего',evc.capacity.total],['Свободно · билеты и приглашения',evc.capacity.left===null?'Неизвестно':evc.capacity.left]);}
-  document.getElementById('inv-summary').innerHTML='<dl class="work-metrics">'+metrics.map(function(m){return '<div><dt>'+escapeHtml(m[0])+'</dt><dd>'+escapeHtml(m[1])+'</dd></div>';}).join('')+'</dl>'+(evc&&evc.partnerSales?'<p class="editor-note">Продажи у партнёра. Здесь учитываются наши приглашения; квоту и места согласуйте с площадкой.</p>':'')+'<p class="editor-note">Онлайн не занимает места в зале. Прошедшие на вход — число приглашений, по которым был вход.</p>';
+  document.getElementById('inv-summary').innerHTML='<dl class="work-metrics">'+metrics.map(function(m){return '<div><dt>'+escapeHtml(m[0])+'</dt><dd>'+escapeHtml(m[1])+'</dd></div>';}).join('')+'</dl>'+(evc&&evc.partnerSales?'<p class="editor-note">Продажи у партнёра. Здесь учитываются наши приглашения; квоту и места согласуйте с площадкой.</p>':'')+'<p class="editor-note">Онлайн не занимает места в зале. Отметки входа считаются по пригласительным.</p>';
   invRenderRecount(evc);
   var q = document.getElementById('inv-search').value.trim().toLowerCase();
   var list = INV_LIST.filter(function (i) { return !q || (q === 'места' && i.seatsLater) || (q === 'входной' && i.entry) || i.name.toLowerCase().indexOf(q) >= 0 || String(i.number) === q.replace(/^№\s*/, ''); });
-  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (INV_LIST.length ? 'Никого не нашли.' : 'Пока нет.') + '</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div class="empty-state">' + (INV_LIST.length ? 'По этому запросу пригласительных нет.' : 'Пригласительных пока нет.') + '</div>'; return; }
   el.innerHTML = list.map(function (i) {
     var off = i.status !== 'active';
     var seats = invSeatsText(i);
@@ -6417,7 +6514,7 @@ function renderInvites() {
         (i.email ? '<div class="ev-when inv-mail">✉ ' + escapeHtml(i.email) + (i.mailedAt ? ' · <span class="ok">отправлен ' + fmtGcDate(i.mailedAt) + '</span>' : ' · ещё не отправлен') + '</div>' : '') +
       '</div><div class="ev-count">' + (i.visits ? i.visits + ' прох.' : '') + '</div></div>' +
       '<div class="ev-actions">' + acts + more + '</div>' +
-      '<div class="ev-people" id="inv-hist-' + i.id + '">' + (hist || '<div class="ev-empty">Пусто.</div>') + '</div>' +
+      '<div class="ev-people" id="inv-hist-' + i.id + '">' + (hist || '<div class="ev-empty">Записей в истории пока нет.</div>') + '</div>' +
     '</div>';
   }).join('');
 }
@@ -6463,13 +6560,18 @@ document.addEventListener('DOMContentLoaded', function () {
   var sel = document.getElementById('inv-event');
   if (!sel) return;
   sel.addEventListener('change', function () {
-    var activeForm=document.getElementById('inv-form');if(activeForm.classList.contains('open')&&window.AelitaWorkForms&&!AelitaWorkForms.canClose(activeForm)){sel.value=sel.dataset.workAcceptedValue||'';return;}sel.dataset.workAcceptedValue=sel.value;
-    // Другое событие — открытая правка относится к прежнему: закрыть.
-    INV_EDIT_ID = null;
-    document.getElementById('inv-form').classList.remove('open');
-    document.getElementById('inv-import').classList.remove('open');
-    document.getElementById('invSaveBtn').textContent = 'Выпустить';
-    invFillSeatOptions(); loadInvites();
+    if(!invCanChange()){sel.value=sel.dataset.workAcceptedValue||'';return;}
+    invPaintPicker(sel.value);invAfterChange();
+  });
+  for(var button of document.querySelectorAll('[data-inv-group]'))button.addEventListener('click',function(){
+    if(INV_GROUP===this.dataset.invGroup||!invCanChange())return;
+    INV_GROUP=this.dataset.invGroup;invPaintPicker('');invAfterChange();
+  });
+  window.addEventListener('aelita-staff-session-changed',function(){
+    ++INV_CATALOG_JOB;++INV_ROWS_JOB;++ST_SHOWS_JOB;++ST_CODES_JOB;INV_GROUP='current';INV_EVENTS=[];INV_LIST=[];INV_EDIT_INV=null;INV_EDIT_ID=null;ST_SHOWS=[];ST_DATA=null;
+    sel.replaceChildren();document.getElementById('inv-summary').replaceChildren();document.getElementById('invList').replaceChildren();paintWorkEvent('inv-event-detail',null);
+    document.getElementById('st-show').replaceChildren();document.getElementById('stList').replaceChildren();document.getElementById('st-summary').textContent='';paintWorkEvent('st-show-detail',null);
+    document.getElementById('inv-form').classList.remove('open');document.getElementById('inv-import').classList.remove('open');
   });
   document.getElementById('inv-attendance').addEventListener('change', invAttendanceUi);
   document.getElementById('inv-seat-mode').addEventListener('change', invSeatModeUi);
@@ -6679,7 +6781,7 @@ async function loadSubscriptions() {
     renderSubscriptions();
   } catch (e) {
     subsData = null;
-    el.innerHTML = '<div class="empty-state">Раздел подписок не загрузился (функция aelita-admin-subscriptions ещё не развёрнута?). Попробуйте «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить подписки. Нажмите «Обновить».</div>';
   }
 }
 function filteredSubs() {
@@ -6966,7 +7068,7 @@ document.getElementById('gcSearch').addEventListener('input', function () {
 
 async function loadGiftCards() {
   var el = document.getElementById('giftCardsBlock');
-  if (!ADMIN_GIFT_CARDS_URL) { el.innerHTML = '<div class="empty-state">Раздел ещё не подключён — заполните API_BASE.</div>'; return; }
+  if (!ADMIN_GIFT_CARDS_URL) { el.innerHTML = '<div class="empty-state">Раздел подарочных карт пока недоступен. Обратитесь к администратору сайта.</div>'; return; }
   var token = getToken();
   if (!token) return;
   try {
@@ -6977,7 +7079,7 @@ async function loadGiftCards() {
     allGiftCards = data.cards || [];
     renderGiftCards(allGiftCards);
   } catch (e) {
-    el.innerHTML = '<div class="empty-state">Не получилось загрузить карты. Попробуйте «Обновить».</div>';
+    el.innerHTML = '<div class="empty-state">Не удалось загрузить карты. Нажмите «Обновить».</div>';
   }
 }
 
@@ -7081,7 +7183,7 @@ async function loadData(opts) {
     loadReviewsAdmin(); loadAppsAdmin(); loadLeadsAdmin(); // pack-v600, v601
     admEnsureTab(admCurrentTab());
   } catch (e) {
-    showError('Не получилось связаться с сервером. Попробуйте ещё раз.');
+    showError('Нет связи с сервером. Проверьте подключение. Попробуйте ещё раз.');
   } finally {
     if (isRefresh) { refreshBtn.disabled = false; refreshBtn.textContent = 'Обновить'; }
   }
@@ -7158,7 +7260,7 @@ async function doLegacyLogin() {
     }
     showErr(errorMessage(data));
   } catch (e) {
-    showErr('Не получилось связаться с сервером. Попробуйте ещё раз.');
+    showErr('Нет связи с сервером. Проверьте подключение. Попробуйте ещё раз.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -7249,7 +7351,7 @@ document.getElementById('editPreviewBtn').addEventListener('click', async functi
       lastPreviewedBody = reqBody;
     }
   } catch (e) {
-    showEditorResult('err', 'Не получилось связаться с сервером.');
+    showEditorResult('err', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -7282,7 +7384,7 @@ document.getElementById('editConfirmBtn').addEventListener('click', async functi
     document.getElementById('edit-old').value = '';
     document.getElementById('edit-new').value = '';
   } catch (e) {
-    showEditorResult('err', 'Не получилось связаться с сервером.');
+    showEditorResult('err', 'Нет связи с сервером. Проверьте подключение.');
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
@@ -7318,10 +7420,10 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
-<link rel="stylesheet" href="/assets/event-participants-v819.css?v=225">
-<script src="/assets/participants-view-v819.js?v=225"></script>
-<script src="/assets/participant-person-v820.js?v=225"></script>
-<script src="/assets/event-participants-v819.js?v=225"></script>
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=226">
+<script src="/assets/participants-view-v819.js?v=226"></script>
+<script src="/assets/participant-person-v820.js?v=226"></script>
+<script src="/assets/event-participants-v819.js?v=226"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
@@ -7678,11 +7780,11 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js"></script>
-<script src="/assets/admin-snapshot.js?v=225"></script>
-<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=225">
-<script src="/assets/ai-pilot-v741.js?v=225"></script>
-<script src="/assets/ai-pilot-admin-v741.js?v=225"></script>
-<script src="/assets/subscription-materials-admin.js?v=225"></script>
+<script src="/assets/admin-snapshot.js?v=226"></script>
+<link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=226">
+<script src="/assets/ai-pilot-v741.js?v=226"></script>
+<script src="/assets/ai-pilot-admin-v741.js?v=226"></script>
+<script src="/assets/subscription-materials-admin.js?v=226"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
   document.getElementById('subscription-materials-editor'), getToken, ADMIN_SUBS_URL);
