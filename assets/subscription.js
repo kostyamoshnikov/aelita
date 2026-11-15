@@ -113,6 +113,7 @@
       resultOkActive: function (s) { return 'Следующее списание — ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '. Отменить можно в личном кабинете.'; },
       resultOkAwaiting: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + '. За 3 дня до конца месяца напомним письмом, как оплатить следующий.'; },
       resultOkNoAutopay: function (s) { return 'Участие оплачено до ' + d(s.paidThrough) + ', но платёжный сервис не сохранил карту для автосписаний. Чтобы продолжить после этой даты, оформите подписку снова.'; },
+      resultUnbound: 'Статус оплаты доступен в личном кабинете. Если деньги списались, подтверждение придёт на почту.',
       resultSlowTitle: 'Оплата обрабатывается',
       resultSlow: 'Если деньги списались, письмо с подтверждением придёт в течение нескольких минут. Если оплата не прошла — деньги не списаны, попробуйте ещё раз ниже.',
       resultFailTitle: 'Оплата не прошла — попробуйте ещё раз',
@@ -246,6 +247,7 @@
       resultOkActive: function (s) { return 'Next payment: ' + d(s.nextChargeAt) + ', ' + rub(s.amount) + '. You can cancel in your account.'; },
       resultOkAwaiting: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + '. 3 days before the month ends we will email you how to pay for the next one.'; },
       resultOkNoAutopay: function (s) { return 'Participation is paid until ' + d(s.paidThrough) + ', but the payment service did not save your card for automatic payments. To continue after that date, subscribe again.'; },
+      resultUnbound: 'Check the payment status in your account. If you were charged, a confirmation email will arrive.',
       resultSlowTitle: 'Your payment is being processed',
       resultSlow: 'If you were charged, a confirmation email will arrive within a few minutes. If the payment did not go through, no money was taken — try again below.',
       resultFailTitle: 'The payment did not go through — please try again',
@@ -353,6 +355,10 @@
     for (var i = 0; i < list.length; i++) if (list[i].plan === plan && Boolean(list[i].isTest) === IS_TEST) return list[i];
     return null;
   }
+  function confirmedReturn(sub, record) {
+    return Boolean(sub && sub.live && record && typeof record.paymentId === 'string' && record.paymentId &&
+      (sub.payments || []).some(function (p) { return p.id === record.paymentId && p.ok === true && !p.refunded; }));
+  }
 
   // Шторка подтверждения (отмена, возврат) — вместо confirm(): на телефоне
   // системный диалог показывает адрес сайта и выглядит как ошибка.
@@ -386,6 +392,37 @@
     var btn = $('spPayBtn');
     var acctMode = 'register';
     var signedIn = false;
+    var drafts = window.AelitaCustomerDrafts;
+    var payOwner = drafts.owner(token());
+    var draftKey = 'subscription-code:' + PLAN;
+    var returnKey = 'subscription-payment:' + PLAN + ':' + IS_TEST;
+    try { localStorage.removeItem('aelita_sub_draft:' + PLAN); } catch (e) {}
+
+    function keepCurrent() { return payOwner === drafts.owner(token()); }
+    function signIn(v) {
+      setToken(v);
+      payOwner = drafts.owner(token());
+      return v === token();
+    }
+    function signOut() {
+      clearToken();
+      payOwner = drafts.owner(token());
+    }
+    function resetOnAccountChange() {
+      if (keepCurrent()) return;
+      form.querySelectorAll('input').forEach(function (el) {
+        if (el.type === 'checkbox') el.checked = false;
+        else if (el.type !== 'hidden') el.value = '';
+      });
+      drafts.remove(draftKey);
+      drafts.remove(returnKey);
+      form.hidden = true;
+      $('spAlready').hidden = true;
+      $('spResult').hidden = true;
+      location.reload();
+    }
+    window.addEventListener('storage', function (e) { if (e.key === TOKEN_KEY || e.key === null) resetOnAccountChange(); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) resetOnAccountChange(); });
 
     // «5 000 ₽ сегодня, дальше 15-го числа каждого месяца».
     // День списания — по Москве (как на сервере), а не по часам браузера.
@@ -454,11 +491,13 @@
       $('spCta').hidden = true;
     }
     $('spResumeBtn').addEventListener('click', async function () {
-      var b = this;
+      var b = this, tk = token();
       if (lastAlready && !(await sheet(T.sheetResume(lastAlready), T.btn.resume))) return;
+      if (!tk || tk !== token() || !keepCurrent()) return;
       b.disabled = true;
       try {
         var r = await api(SUBS_API, { method: 'POST', body: { action: 'resume', plan: PLAN, test: IS_TEST } });
+        if (tk !== token() || !keepCurrent()) return;
         if (r.ok) { $('spAlreadyMsg').textContent = T.resumed; showAlready(r.data.subscription); }
         else $('spAlreadyMsg').textContent = T.error;
       } catch (e) { $('spAlreadyMsg').textContent = T.error; }
@@ -467,17 +506,22 @@
 
     // Кто вошёл — подставляем профиль, проверяем, нет ли уже подписки.
     async function loadAccount() {
-      if (!token()) return;
+      var tk = token();
+      if (!tk) return;
       try {
-        var r = await fetch(ACCOUNT_API + '/me', { headers: { Authorization: 'Bearer ' + token() } });
-        if (r.status === 401) { clearToken(); return; }
+        var r = await fetch(ACCOUNT_API + '/me', { headers: { Authorization: 'Bearer ' + tk } });
+        if (tk !== token() || !keepCurrent()) return;
+        if (r.status === 401) { signOut(); return; }
         if (!r.ok) return;
         var me = await r.json();
+        if (tk !== token() || !keepCurrent()) return;
         if (me.name && !$('j-name').value) $('j-name').value = me.name;
         if (me.phone && !$('j-phone').value) $('j-phone').value = me.phone;
         showSignedIn(me.email);
       } catch (e) { return; }
       var data = await listSubs();
+      if (!keepCurrent()) { resetOnAccountChange(); return; }
+      if (tk !== token()) return;
       var s = pickSub(data, PLAN);
       // pack-v546: последние 3 дня оплаченного месяца без автосписания —
       // страница принимает оплату следующего месяца (продление от paidThrough).
@@ -499,12 +543,21 @@
       $('spResultTitle').textContent = T.resultChecking;
       $('spResultText').textContent = '';
       $('spWhatNext').hidden = true;
-      var started = Date.now();
+      var started = Date.now(), returnToken = token();
+      var returnRecord = returnToken && drafts.read(returnKey, payOwner, 30 * 60 * 1000);
+      var hasReturn = returnRecord && typeof returnRecord.paymentId === 'string' && returnRecord.paymentId;
       var poll = async function () {
+        if (returnToken !== token() || !keepCurrent()) return;
         var data = await listSubs();
+        if (returnToken !== token() || !keepCurrent()) {
+          $('spResultTitle').textContent = T.resultSlowTitle;
+          $('spResultText').textContent = T.resultUnbound;
+          return;
+        }
         var s = pickSub(data, PLAN);
-        var fresh = s && s.live && s.payments && s.payments.length && (Date.now() - new Date(s.payments[s.payments.length - 1].at).getTime() < 30 * 60 * 1000);
+        var fresh = confirmedReturn(s, returnRecord);
         if (fresh) {
+          drafts.remove(returnKey);
           $('spResultTitle').textContent = s.status === 'active' ? (EN ? 'Subscription confirmed' : 'Подписка оформлена') : T.resultPaidTitle;
           $('spResultText').textContent = s.status === 'active' ? T.resultOkActive(s) : s.status === 'no_autopay' ? T.resultOkNoAutopay(s) : T.resultOkAwaiting(s);
           $('spWhatNext').hidden = false;
@@ -519,7 +572,11 @@
         }
         setTimeout(poll, 2500);
       };
-      poll();
+      if (hasReturn) poll();
+      else {
+        $('spResultTitle').textContent = T.resultSlowTitle;
+        $('spResultText').textContent = T.resultUnbound;
+      }
       QS.delete('aelita_paid');
       var rest = QS.toString();
       history.replaceState(null, '', location.pathname + (rest ? '?' + rest : ''));
@@ -548,27 +605,18 @@
       });
       return el;
     }
-    // pack-v639: телефон выгружает вкладку, пока человек в почте за кодом, —
-    // при возврате страница грузилась с пустой формой, и код приходилось
-    // запрашивать заново (по кругу). Ожидание кода и поля формы (без
-    // пароля) — в localStorage на 10 минут, столько действует код.
-    var DRAFT_KEY = 'aelita_sub_draft:' + PLAN;
+    // Keep the pending email step in this tab while the customer checks email.
     function saveCodeDraft() {
-      try {
-        if (!codeStep) { localStorage.removeItem(DRAFT_KEY); return; }
-        localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: codeStep.at || Date.now(), step: codeStep,
-          name: $('j-name').value, email: $('j-email').value, phone: $('j-phone').value,
-          pd: !!($('pdConsent') && $('pdConsent').checked), autopay: !!($('autopayConsent') && $('autopayConsent').checked) }));
-      } catch (e) {}
+      if (!codeStep || token()) { drafts.remove(draftKey); return; }
+      drafts.write(draftKey, 'guest', {
+        step: codeStep, name: $('j-name').value, email: $('j-email').value, phone: $('j-phone').value,
+      }, codeStep.at);
     }
     function restoreCodeDraft() {
       if (token()) return;
-      var d = null;
-      try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) {}
-      if (!d || !d.step || !d.step.email || Date.now() - (d.at || 0) > 10 * 60 * 1000) { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} return; }
+      var d = drafts.read(draftKey, 'guest', 10 * 60 * 1000);
+      if (!d?.step?.email || String(d.email || '').trim().toLowerCase() !== d.step.email) return;
       [['j-name', d.name], ['j-email', d.email], ['j-phone', d.phone]].forEach(function (p) { var el = $(p[0]); if (el && !el.value && p[1]) el.value = p[1]; });
-      if (d.pd && $('pdConsent')) $('pdConsent').checked = true;
-      if (d.autopay && $('autopayConsent')) $('autopayConsent').checked = true;
       if (!d.step.pendingId) acctMode = 'login', applyAcctMode();
       showCode(d.step, T.codeAlready(d.step.email));
       var f = $('j-name'); if (f && f.scrollIntoView) codeEl().scrollIntoView({ block: 'center' });
@@ -587,18 +635,21 @@
       var el = codeEl();
       var code = el.value.replace(/\D+/g, '');
       if (!/^\d{6}$/.test(code)) { fieldErr(el, T.codeNeed); return null; }
+      var step = codeStep, tk = token();
+      var current = function () { return tk === token() && keepCurrent() && codeStep === step && $('j-email').value.trim().toLowerCase() === step.email; };
       say(T.registering);
       var r;
       try {
-        r = codeStep.pendingId
-          ? await api(ACCOUNT_API + '/register', { method: 'POST', auth: false, body: { email: codeStep.email, code: code, pending_id: codeStep.pendingId } })
-          : await api(ACCOUNT_API + '/login-with-code', { method: 'POST', auth: false, body: { email: codeStep.email, code: code, name: name, pd_consent: true } });
-      } catch (e) { say(T.network); return null; }
+        r = step.pendingId
+          ? await api(ACCOUNT_API + '/register', { method: 'POST', auth: false, body: { email: step.email, code: code, pending_id: step.pendingId } })
+          : await api(ACCOUNT_API + '/login-with-code', { method: 'POST', auth: false, body: { email: step.email, code: code, name: name, pd_consent: true } });
+      } catch (e) { if (current()) say(T.network); return null; }
+      if (!current()) return null;
       if (r.ok && r.data.token) {
         codeStep = null;
         saveCodeDraft();
         $('spCodeWrap').hidden = true;
-        setToken(r.data.token);
+        if (!signIn(r.data.token)) return null;
         $('j-password').value = '';
         showSignedIn(r.data.email || email);
         return r.data.token;
@@ -615,6 +666,7 @@
     }
 
     async function ensureAccount(name, email) {
+      if (!keepCurrent()) return null;
       if (token()) return token();
       if (codeStep && codeStep.email === email.toLowerCase()) return confirmCode(name, email);
       codeStep = null;
@@ -625,16 +677,19 @@
       if (acctMode === 'register' && password.length < 8) { fieldErr(pwEl, T.needPassword); return null; }
       if (acctMode === 'login' && !password) { fieldErr(pwEl, T.needLoginPassword); return null; }
       if (window.AELITA_clearFieldError) window.AELITA_clearFieldError(pwEl);
-      say(acctMode === 'login' ? T.signingIn : T.registering);
+      var mode = acctMode;
+      var current = function () { return !token() && keepCurrent() && acctMode === mode && $('j-email').value.trim() === email; };
+      say(mode === 'login' ? T.signingIn : T.registering);
       var r;
       try {
         r = await api(ACCOUNT_API + '/' + (acctMode === 'login' ? 'login' : 'register'), {
           method: 'POST', auth: false,
           body: acctMode === 'login' ? { email: email, password: password } : { name: name, email: email, password: password, pd_consent: true },
         });
-      } catch (e) { say(T.network); return null; }
+      } catch (e) { if (current()) say(T.network); return null; }
+      if (!current()) return null;
       if (r.ok && r.data.token) {
-        setToken(r.data.token);
+        if (!signIn(r.data.token)) return null;
         pwEl.value = '';
         showSignedIn(r.data.email || email);
         return r.data.token;
@@ -681,8 +736,7 @@
       track('product_pay_click', { product: PLAN });
       btn.disabled = true;
       var tk = await ensureAccount(name, email);
-      if (!tk) { btn.disabled = false; return; }
-      if (window.AELITA_savePhone) window.AELITA_savePhone(phone);
+      if (!tk || tk !== token() || !keepCurrent()) { btn.disabled = false; return; }
       say(T.processing);
       var giftEl = $('j-gift');
       var gift = window.AELITA_GIFT_ON_PRODUCTS && giftEl ? giftEl.value.trim().toUpperCase() : '';
@@ -699,18 +753,25 @@
             gift_code: gift || undefined, pd_consent: true, autopay_consent: true,
           },
         });
-      } catch (e) { say(T.network); btn.disabled = false; return; }
+      } catch (e) { if (tk === token()) say(T.network); btn.disabled = false; return; }
+      if (tk !== token() || !keepCurrent()) { btn.disabled = false; return; }
       var data = r.data || {};
       if (r.status === 401) {
-        clearToken(); signedIn = false;
+        signOut(); signedIn = false;
         $('spAcctBlock').hidden = false; $('spSignedIn').hidden = true; $('j-email').readOnly = false;
         say(T.signedOut); btn.disabled = false; return;
       }
-      if (data.zero_amount && data.redirect_url) { location.href = data.redirect_url; return; }
-      if (data.confirmation_url) { location.href = data.confirmation_url; return; }
+      var redirect = (data.zero_amount && data.redirect_url) || data.confirmation_url;
+      if (r.ok && redirect) {
+        if (drafts.emailOwner(email) === payOwner) window.AELITA_savePhone?.(phone, tk);
+        drafts.write(returnKey, payOwner, {paymentId: data.payment_id || (data.zero_amount && data.order_id ? 'gift-' + data.order_id : null)});
+        location.href = redirect;
+        return;
+      }
       btn.disabled = false;
       if (r.status === 409 && data.error === 'already_subscribed') {
         var full = pickSub(await listSubs(), PLAN);
+        if (tk !== token() || !keepCurrent()) return;
         showAlready(full || { status: data.status, nextChargeAt: data.next_charge_at, paidThrough: data.paid_through, amount: main.getAttribute('data-price').replace(/\D/g, '') });
         return;
       }
@@ -956,6 +1017,7 @@
         el.disabled = true;
         try {
           var r = await api(SUBS_API, { method: 'POST', body: { action: act, plan: s.plan, test: Boolean(s.isTest), detail: Boolean(detail) } });
+          if (actionToken !== token()) return;
           if (r.data && r.data.confirmation_url) { location.href = r.data.confirmation_url; return; }
           if (r.ok) { note.textContent = act === 'unlink_card' ? T.unlinked : T.done; await load(); return; }
           note.textContent = (r.data.error === 'refund_window_closed' || r.data.error === 'nothing_to_refund') ? T.refundClosed : r.data.error === 'autopay_not_enabled' ? T.notEnabled : (T.actErr[r.data.error] || T.error);

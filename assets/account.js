@@ -218,10 +218,17 @@
   }
   function setToken(token) {
     try { localStorage.setItem(STORAGE_KEY, token); } catch (e) { /* приватный режим и т.п. — просто не сохранится */ }
+    window.dispatchEvent(new Event('aelita:account-changed'));
   }
-  function clearToken() {
+  function clearToken(expected = getToken()) {
+    if (expected !== getToken()) return;
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    try {
+      sessionStorage.removeItem('aelita_guest_phone_v830');
+      sessionStorage.removeItem('aelita_me_cache');
+    } catch (e) {}
     if(window.AelitaMobileFiles)window.AelitaMobileFiles.clear();
+    window.dispatchEvent(new Event('aelita:account-changed'));
   }
 
   function notConfigured() {
@@ -252,6 +259,8 @@
     // confirmRegistration() ниже. Сессия появляется только после кода.
     register: async function (name, email, password, opts) {
       opts = opts || {};
+      var initialToken = getToken();
+      var current = function () { return initialToken === getToken() && (!opts.isCurrent || opts.isCurrent()); };
       if (!REGISTER_URL) { notConfigured(); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
@@ -263,6 +272,7 @@
           body: JSON.stringify({ name: name, email: email, password: password, lang: LANG }),
         });
         var data = await res.json();
+        if (!current()) return null;
         if (res.ok && data.need_email_code) {
           if (opts.onNeedCode) opts.onNeedCode(data);
           return data;
@@ -275,6 +285,7 @@
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (!current()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -286,6 +297,8 @@
     // ответа первого шага. Успех — сессия, как раньше у register().
     confirmRegistration: async function (email, code, pendingId, opts) {
       opts = opts || {};
+      var initialToken = getToken();
+      var current = function () { return initialToken === getToken() && (!opts.isCurrent || opts.isCurrent()); };
       if (!REGISTER_URL) { notConfigured(); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
@@ -298,6 +311,7 @@
         });
         var data = null;
         try { data = await res.json(); } catch (e) {}
+        if (!current()) return null;
         if (res.ok && data && data.token) {
           setToken(data.token);
           if (opts.onSuccess) opts.onSuccess(data);
@@ -305,6 +319,7 @@
         }
         if (opts.onError) opts.onError(errorMessage(data), data);
       } catch (e) {
+        if (!current()) return null;
         if (opts.onError) opts.onError(errorMessage(null), null);
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
@@ -313,6 +328,8 @@
 
     login: async function (email, password, opts) {
       opts = opts || {};
+      var initialToken = getToken();
+      var current = function () { return initialToken === getToken() && (!opts.isCurrent || opts.isCurrent()); };
       if (!LOGIN_URL) { notConfigured(); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
@@ -324,6 +341,7 @@
           body: JSON.stringify({ email: email, password: password }),
         });
         var data = await res.json();
+        if (!current()) return null;
         if (res.ok && data.token) {
           setToken(data.token);
           if (opts.onSuccess) opts.onSuccess(data);
@@ -332,6 +350,7 @@
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (!current()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -355,13 +374,15 @@
       if (!ME_URL) { if (opts.onError) opts.onError(errorMessage({ error: 'server_misconfigured' })); return null; }
       try {
         var res = await fetch(ME_URL, { headers: { Authorization: 'Bearer ' + token } });
-        if (res.status === 401) { clearToken(); return null; } // токен истёк/недействителен — это ЕДИНСТВЕННЫЙ случай, где можно смело уводить со страницы
+        if (token !== getToken()) return null;
+        if (res.status === 401) { clearToken(token); return null; } // токен истёк/недействителен — это ЕДИНСТВЕННЫЙ случай, где можно смело уводить со страницы
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));
         return null;
       } catch (e) {
-        if (opts.onError) opts.onError(errorMessage(null));
+        if (token === getToken() && opts.onError) opts.onError(errorMessage(null));
         return null;
       }
     },
@@ -382,15 +403,18 @@
         var res = await fetch(CONTRACT_URL + '?paymentId=' + encodeURIComponent(paymentId) + '&lang=' + LANG, { // З-11 этап 5, ч. 5 (pack-v480)
           headers: { Authorization: 'Bearer ' + token },
         });
-        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+        if (token !== getToken()) return null;
+        if (res.status === 401) { clearToken(token); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
         if (!res.ok) {
           var data = null;
           try { data = await res.json(); } catch (e) {}
+          if (token !== getToken()) return null;
           if (opts.onError) opts.onError(errorMessage(data));
           else alert(errorMessage(data));
           return;
         }
         var blob = await res.blob();
+        if (token !== getToken()) return null;
         if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'AELITA-dogovor-' + paymentId + '.pdf',{guardToken:token,after:opts.buttonEl});}else{
 var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
@@ -403,6 +427,7 @@ var url = URL.createObjectURL(blob);
 }
         if (opts.onSuccess) opts.onSuccess();
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -427,9 +452,11 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify(opts.loginCode ? { loginCode: opts.loginCode, newPassword: newPassword } : { currentPassword: currentPassword, newPassword: newPassword }),
         });
+        if (token !== getToken()) return null;
         if (res.status === 401) {
           var data401 = null;
           try { data401 = await res.json(); } catch (e) {}
+          if (token !== getToken()) return null;
           // 401 здесь чаще всего значит «текущий пароль не совпал», не
           // «токен истёк» (токен уже проверен раньше в этом же ответе
           // сервера, см. change-password.js) — поэтому, в отличие от
@@ -440,6 +467,7 @@ var url = URL.createObjectURL(blob);
           return;
         }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok && data.ok) {
           if (opts.onSuccess) opts.onSuccess();
           else alert(t.passwordChanged);
@@ -448,6 +476,7 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -483,8 +512,10 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify(Object.assign({ lang: LANG }, fields)), // pack-v592: язык письма с кодом
         });
+        if (token !== getToken()) return null;
         var data = null;
         try { data = await res.json(); } catch (e) {}
+        if (token !== getToken()) return null;
         // pack-v592: ответ {ok, need_new_email_code} — код ушёл на новый
         // адрес, смена ещё не состоялась; страница спрашивает код и
         // присылает {newEmail, newEmailCode} (Account/update-profile.js).
@@ -500,6 +531,7 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -525,16 +557,19 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify(opts.loginCode ? { loginCode: opts.loginCode } : { currentPassword: currentPassword }),
         });
+        if (token !== getToken()) return null;
         var data = null;
         try { data = await res.json(); } catch (e) {}
+        if (token !== getToken()) return null;
         if (res.ok && data && data.deleted) {
-          clearToken();
+          clearToken(token);
           if (opts.onSuccess) opts.onSuccess(data);
           return data;
         }
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -618,6 +653,8 @@ var url = URL.createObjectURL(blob);
 
     resetPassword: async function (token, newPassword, opts) {
       opts = opts || {};
+      var initialToken = getToken();
+      var current = function () { return initialToken === getToken() && (!opts.isCurrent || opts.isCurrent()); };
       if (!RESET_PASSWORD_URL) { notConfigured(); return; }
       var buttonEl = opts.buttonEl || null;
       var original = buttonEl ? buttonEl.textContent : '';
@@ -630,6 +667,7 @@ var url = URL.createObjectURL(blob);
         });
         var data = null;
         try { data = await res.json(); } catch (e) {}
+        if (!current()) return null;
         if (res.ok && data && data.ok) {
           // Сразу входим: сервер выдал сессию. Без токена (редкий сбой
           // подписи) — просто без автоматического входа.
@@ -639,6 +677,7 @@ var url = URL.createObjectURL(blob);
         }
         if (opts.onError) opts.onError(errorMessage(data));
       } catch (e) {
+        if (!current()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
       } finally {
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
@@ -773,8 +812,10 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId, quantity: opts.quantity || 1, lang: LANG, phone: opts.phone || '' }), // pack-v535: телефон обязателен // З-11 этап 5, ч. 3 (pack-v478): язык письма и первой страницы PDF
         });
-        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
+        if (token !== getToken()) return null;
+        if (res.status === 401 && token === getToken()) { clearToken(token); location.href = (LANG === 'en' ? '/en' : '') + '/account?next=' + encodeURIComponent(location.pathname + '?auto_register=1#join'); return; }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);
           return data;
@@ -782,6 +823,7 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -803,8 +845,10 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
-        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+        if (token !== getToken()) return null;
+        if (res.status === 401 && token === getToken()) { clearToken(token); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);
           return data;
@@ -812,6 +856,7 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -839,8 +884,10 @@ var url = URL.createObjectURL(blob);
           headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ event_id: eventId }),
         });
-        if (res.status === 401) { clearToken(); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
+        if (token !== getToken()) return null;
+        if (res.status === 401 && token === getToken()) { clearToken(token); location.href = (LANG === 'en' ? '/en' : '') + '/account'; return; }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) {
           if (opts.onSuccess) opts.onSuccess(data);
           return data;
@@ -848,6 +895,7 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data));
         else alert(errorMessage(data));
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         else alert(errorMessage(null));
       } finally {
@@ -866,15 +914,18 @@ var url = URL.createObjectURL(blob);
       if (!EVENTS_MY_URL) { if (opts.onError) opts.onError(errorMessage({ error: 'server_misconfigured' })); return null; }
       try {
         var res = await fetch(EVENTS_MY_URL, { headers: { Authorization: 'Bearer ' + token },signal:opts.signal,cache:'no-store' });
+        if (token !== getToken()) return null;
         // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
         // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
         // человека молча — показываем ошибку раздела (так и нашли 02.10).
         if (res.status === 401) { if (opts.onError) opts.onError(t.errors.section_auth); return null; }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));
         return null;
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }
@@ -888,8 +939,8 @@ var url = URL.createObjectURL(blob);
       if (!token) return { ok: false, error: 'auth_required' };
       try {
         var r = await fetch(TICKETS_MY_ORDERS_URL, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'switch_online', ref: ref }), cache: 'no-store' });
-        var d = await r.json(); return { ok: r.ok && d.ok, error: d.error };
-      } catch (_) { return { ok: false, error: 'network' }; }
+        var d = await r.json(); if (token !== getToken()) return {ok: false, error: 'superseded'}; return { ok: r.ok && d.ok, error: d.error };
+      } catch (_) { return { ok: false, error: token === getToken() ? 'network' : 'superseded' }; }
     },
 
     listTicketOrders: async function (opts) {
@@ -898,15 +949,18 @@ var url = URL.createObjectURL(blob);
       if (!token) return null;
       try {
         var res = await fetch(TICKETS_MY_ORDERS_URL, { headers: { Authorization: 'Bearer ' + token },signal:opts.signal,cache:'no-store' });
+        if (token !== getToken()) return null;
         // pack-v549: кабинет уже открыт (me() прошёл), значит 401 здесь — не
         // истёкший вход, а функция с другим SESSION_SECRET. Не выкидываем
         // человека молча — показываем ошибку раздела (так и нашли 02.10).
         if (res.status === 401) { if (opts.onError) opts.onError(t.errors.section_auth); return null; }
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));
         return null;
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }
@@ -940,11 +994,14 @@ var url = URL.createObjectURL(blob);
       if (!token) { if (opts.onError) opts.onError(errorMessage({ error: 'auth_required' })); return null; }
       try {
         var res = await fetch(TICKETS_MY_ORDERS_URL + '?receipt=' + encodeURIComponent(paymentId), { headers: { Authorization: 'Bearer ' + token } });
+        if (token !== getToken()) return null;
         var data = await res.json();
+        if (token !== getToken()) return null;
         if (res.ok) return data;
         if (opts.onError) opts.onError(errorMessage(data));
         return null;
       } catch (e) {
+        if (token !== getToken()) return null;
         if (opts.onError) opts.onError(errorMessage(null));
         return null;
       }
@@ -961,9 +1018,10 @@ var url = URL.createObjectURL(blob);
           method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify(payload),
         });
         var data = await res.json().catch(function () { return {}; });
+        if (token !== getToken()) return {ok: false, status: 0, data: {error: 'superseded'}};
         return { ok: res.ok, status: res.status, data: data };
       } catch (e) {
-        return { ok: false, status: 0, data: { error: 'network' } };
+        return { ok: false, status: 0, data: { error: token === getToken() ? 'network' : 'superseded' } };
       }
     },
 
@@ -983,7 +1041,9 @@ var url = URL.createObjectURL(blob);
           // pack-v739: opts.toEmail — копия на другую почту (Tickets/resend-ticket.js)
           body: JSON.stringify(opts.toEmail ? { order_id: orderId, to_email: opts.toEmail } : { order_id: orderId }),
         });
+        if (token !== getToken()) return null;
         var data = await res.json().catch(function () { return null; });
+        if (token !== getToken()) return null;
         if (res.ok && data && data.ok) {
           if (buttonEl) {
             if (opts.toEmail) { buttonEl.disabled = false; buttonEl.textContent = original; }
@@ -996,21 +1056,18 @@ var url = URL.createObjectURL(blob);
         if (opts.onError) opts.onError(errorMessage(data), data);
         return null;
       } catch (e) {
+        if (token !== getToken()) return null;
         if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = original; }
         if (opts.onError) opts.onError(errorMessage(null), null);
         return null;
       }
     },
 
-    // Экспорт данных заказчика (152-ФЗ) — из уже загруженных me()
-    // данных, БЕЗ отдельного запроса к серверу: всё, что сервер вообще
-    // отдаёт про аккаунт (email, дата регистрации, покупки), уже есть
-    // на странице к моменту, когда кабинет отрисован. Отдельная Cloud
-    // Function для этого не нужна.
     // pack-v572 (ТЗ С9): полный архив с сервера — заказы, регистрации,
     // подписки, карты, согласия, заявления (data.json + data.pdf). Если
     // сервер ещё старый и отвечает обычным JSON — как раньше, локальный
-    // файл из ответа /account/me.
+    // файл из ответа /account/me. Ответ и файл относятся к сеансу,
+    // который начал выгрузку; после смены аккаунта их не показываем.
     exportData: async function (accountData, opts) {
       opts = opts || {};
       var token = getToken();
@@ -1018,9 +1075,11 @@ var url = URL.createObjectURL(blob);
         if (opts.onStatus) opts.onStatus(t.preparingExport, 'busy');
         try {
           var res = await fetch(ME_URL + '?export=1&lang=' + LANG, { headers: { Authorization: 'Bearer ' + token } });
+          if (token !== getToken()) return null;
           var type = (res.headers.get('Content-Type') || '').toLowerCase();
           if (res.ok && type.indexOf('application/zip') === 0) {
             var zip = await res.blob();
+            if (token !== getToken()) return null;
             if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(zip,'aelita-my-data.zip',{guardToken:token});}else{
 var zurl = URL.createObjectURL(zip);
             var za = document.createElement('a');
@@ -1038,10 +1097,12 @@ var zurl = URL.createObjectURL(zip);
           if (!res.ok) { if (opts.onStatus) opts.onStatus(t.exportFailed, 'error'); else alert(t.exportFailed); return; }
           if (opts.onStatus) opts.onStatus('', 'done');
         } catch (e) {
+          if (token !== getToken()) return null;
           if (opts.onStatus) opts.onStatus(t.exportFailed, 'error'); else alert(t.exportFailed);
           return;
         }
       }
+      if (!token || token !== getToken()) return null;
       var blob = new Blob([JSON.stringify(accountData, null, 2)], { type: 'application/json' });
       if(window.AelitaMobileFiles){window.AelitaMobileFiles.save(blob,'aelita-account-data.json',{guardToken:token});}else{
 var url = URL.createObjectURL(blob);

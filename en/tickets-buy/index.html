@@ -22,7 +22,7 @@
   API_BASE ниже — заполнить после деплоя Gateway (см.
   _tools/Gateway/README.md), сейчас плейсхолдер.
 -->
-<link rel="stylesheet" href="/assets/fonts.css?v=226">
+<link rel="stylesheet" href="/assets/fonts.css?v=228">
 <style>
 :root{--ink:#0B0B0D;--coal:#1A1A1F;--bone:#E8E6E1;--sand:#C9B8A3;--gold:#D6B57A;color-scheme:dark}
 *{box-sizing:border-box}
@@ -309,15 +309,15 @@ body.checkout-complete #steps,body.checkout-complete #step2-sum{display:none!imp
 .paid-details{text-align:left;margin:20px 0;padding:18px;border:1px solid rgba(214,181,122,.3)}.paid-details:empty{display:none}.paid-details dl{display:grid;grid-template-columns:minmax(90px,1fr) minmax(0,2fr);gap:8px;margin:14px 0}.paid-details dd{margin:0;overflow-wrap:anywhere}.paid-ticket-links{display:flex;flex-wrap:wrap;gap:8px}.paid-ticket-links a{margin:0!important}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js and style.css; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<link rel="stylesheet" href="/assets/a11y.css?v=226">
-<script src="/assets/a11y.js?v=226"></script>
+<link rel="stylesheet" href="/assets/a11y.css?v=228">
+<script src="/assets/a11y.js?v=228"></script>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=226">
-<script src="/assets/checkout-result.js?v=226"></script>
-<link rel="stylesheet" href="/assets/cookie-consent.css?v=226">
-<script src="/assets/cookie-consent.js?v=226"></script>
-<link rel="stylesheet" href="/assets/customer-journey.css?v=226">
-<script src="/assets/customer-journey.js?v=226"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=228">
+<script src="/assets/checkout-result.js?v=228"></script>
+<link rel="stylesheet" href="/assets/cookie-consent.css?v=228">
+<script src="/assets/cookie-consent.js?v=228"></script>
+<link rel="stylesheet" href="/assets/customer-journey.css?v=228">
+<script src="/assets/customer-journey.js?v=228"></script>
 </head>
 <body class="customer-journey-page">
 <!-- pack-v750 (заказчик 04.11): шапка как на остальных страницах — название, значок
@@ -566,7 +566,7 @@ function initMetrika(){
 }
 initMetrika();
 </script>
-<script src="/assets/analytics-events.js?v=226"></script>
+<script src="/assets/analytics-events.js?v=228"></script>
 <!-- payments.js подключён здесь НЕ ради AELITA_pay (эта страница ходит
      в _tools/Tickets/, не в _tools/Payments/, у неё свой submitOrder()
      ниже) — а ради общих helper'ов валидации (pack-v235):
@@ -576,7 +576,8 @@ initMetrika();
      дублировать регулярки по каждому файлу отдельно. -->
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/attendance-v740.js"></script>
-<script src="/assets/payments.js?v=226"></script>
+<script src="/assets/customer-drafts-v830.js?v=228"></script>
+<script src="/assets/payments.js?v=228"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -761,9 +762,12 @@ function seatKey(r,s){ return r + '-' + s; }
 // pack-v419. Токен кабинета — тот же ключ, что у Site/assets/payments.js.
 // Читаем через try: в приватном режиме and при запрещённых cookies
 // localStorage бросает, and падать из-за этого страница не должна.
-function accountToken(){
-  try { return localStorage.getItem('aelita_account_token') || null; }
-  catch (e) { return null; }
+const customerDrafts = window.AelitaCustomerDrafts;
+const accountToken = customerDrafts.token;
+let checkoutOwner = customerDrafts.owner(accountToken());
+let checkoutInvalidated = false;
+function checkoutActive(token = accountToken()){
+  return !checkoutInvalidated && token === accountToken() && checkoutOwner === customerDrafts.owner(token);
 }
 
 // ⚠️ Ворота, а не просьба. Схема зала не рисуется вовсе, пока нет
@@ -812,13 +816,13 @@ function syncBuyButtonLabel(){
 //    подойдёт для «Pay».
 
 const ACCOUNT_API = 'https://api.aelita-production.ru/account';
-const PHONE_KEY = 'aelita_last_phone';
 // Профиль {email, name} — после /me или входа кодом.
 let acctProfile = null;
 
 function setToken(tok){
-  try{ tok ? localStorage.setItem('aelita_account_token', tok)
-           : localStorage.removeItem('aelita_account_token'); }catch(e){}
+  try{ tok ? localStorage.setItem(customerDrafts.TOKEN_KEY, tok)
+           : localStorage.removeItem(customerDrafts.TOKEN_KEY); }catch(e){}
+  checkoutOwner = customerDrafts.owner(accountToken());
 }
 
 function fillIfEmpty(id, value){
@@ -830,10 +834,11 @@ function fillIfEmpty(id, value){
 function showSignedIn(profile){
   acctProfile = profile;
   document.getElementById("checkout-news-row").hidden = profile.newsletterSubscribed === true;
-  if(profile.newsletterSubscribed === undefined && profile.email && accountToken()){
-    apiFetch(`${ACCOUNT_API}/me`,{headers:{Authorization:'Bearer '+accountToken()}}).then(async response=>{
-      if(!response.ok)return;const me=await response.json();
-      if(acctProfile!==profile || String(me.email||'').toLowerCase()!==String(profile.email).toLowerCase())return;
+  const token = accountToken();
+  if(profile.newsletterSubscribed === undefined && profile.email && token){
+    apiFetch(`${ACCOUNT_API}/me`,{headers:{Authorization:'Bearer '+token}}).then(async response=>{
+      if(!response.ok || !checkoutActive(token))return;const me=await response.json();
+      if(!checkoutActive(token) || acctProfile!==profile || String(me.email||'').toLowerCase()!==String(profile.email).toLowerCase())return;
       profile.newsletterSubscribed=me.newsletterSubscribed===true;
       document.getElementById('checkout-news-row').hidden=profile.newsletterSubscribed;
     }).catch(()=>{});
@@ -859,7 +864,7 @@ function showSignedIn(profile){
 // владельца кабинета.
 function saveNameToProfile(name, email, token){
   const p = acctProfile;
-  if(!p || !p.email || !token) return;
+  if(!p || !p.email || !token || !checkoutActive(token)) return;
   if(String(email).trim().toLowerCase() !== String(p.email).trim().toLowerCase()) return;
   if(AELITA_fullNameOk(p.name) || !AELITA_fullNameOk(name)) return;
   const first = String(p.name || '').trim().toLowerCase().split(/\s+/)[0];
@@ -883,29 +888,60 @@ function showGuest(){
   syncBuyButtonLabel();
 }
 
-function acctSignOut(){
-  setToken(null);
+function resetCheckoutSession(){
+  checkoutInvalidated = true;
+  clearDraft();
+  customerDrafts.remove(orderKey);
+  try{
+    sessionStorage.removeItem('aelita-order-' + performanceId);
+    sessionStorage.removeItem('aelita_guest_phone_v830');
+    sessionStorage.removeItem('aelita_me_cache');
+  }catch(e){}
+  for(const id of ['f-name', 'f-email', 'f-contact', 'f-code']){
+    document.getElementById(id).value = '';
+  }
+  document.getElementById('pdConsent').checked = false;
   showCodeBox(false);
   showGuest();
+  window.AelitaCheckoutResult?.reset();
+  document.body.classList.remove('checkout-complete');
+  document.getElementById('after-pay').style.display = 'none';
+  location.reload();
 }
+function acctSignOut(){
+  const token = accountToken();
+  if(!checkoutActive(token))return;
+  releaseCheckoutSeats(token);
+  setToken(null);
+  resetCheckoutSession();
+}
+window.addEventListener('storage', event => {
+  if((event.key === customerDrafts.TOKEN_KEY || event.key === null) && !checkoutActive()) resetCheckoutSession();
+});
+window.addEventListener('pageshow', event => {
+  if(event.persisted && !checkoutActive()) resetCheckoutSession();
+});
 
 // Кто на странице. Токен в localStorage ещё не значит «вошёл»: сессия
 // могла истечь, аккаунт — быть удалён. Спрашиваем /me. Если сеть
 // недоступна — токену доверяем: заказ всё равно проверит его сам, и
 // ошибка 401 вернёт человека к коду прямо здесь же.
 async function detectAccount(){
-  fillIfEmpty('f-contact', (()=>{ try{ return localStorage.getItem(PHONE_KEY); }catch(e){ return null; } })());
   const token = accountToken();
+  if(!checkoutActive(token))return;
   if(!token){ showGuest(); return; }
   try{
     const res = await apiFetch(`${ACCOUNT_API}/me`, {headers:{'Authorization':'Bearer ' + token}});
-    if(res.status === 401){ setToken(null); showGuest(); return; }
+    if(!checkoutActive(token))return;
+    if(res.status === 401){ clearDraft(); setToken(null); showGuest(); return; }
     if(res.ok){
       const me = await res.json();
+      if(!checkoutActive(token))return;
       showSignedIn({email: me.email, name: me.name || '', phone: me.phone || '', newsletterSubscribed:me.newsletterSubscribed===true});
       return;
     }
   }catch(e){ /* сеть — см. комментарий выше */ }
+  if(!checkoutActive(token))return;
   showSignedIn({email: '', name: ''});
   document.getElementById('acct-in').style.display = 'none';
 }
@@ -918,6 +954,12 @@ let codeSentTo = '';
 let codeSentAt = 0;
 let codeBusy = false;
 let codePurpose = 'pay';
+let codeRequest = 0;
+
+function currentCodeStep(request, purpose, email, token) {
+  return request === codeRequest && codeMode && purpose === codePurpose &&
+    email === document.getElementById('f-email').value.trim().toLowerCase() && checkoutActive(token);
+}
 
 function showCodeBox(on){
   codeMode = on;
@@ -948,6 +990,7 @@ async function startLogin(){
 }
 
 function cancelLogin(){
+  codeRequest++;
   showCodeBox(false);
   codePurpose = 'pay';
   codeSentTo = '';
@@ -966,6 +1009,9 @@ async function sendLoginCode(resend){
     emailEl.focus({preventScroll:true});
     return false;
   }
+  const token = accountToken(), purpose = codePurpose;
+  if(!checkoutActive(token))return false;
+  const request = ++codeRequest;
   showCodeBox(true);
   msgEl.textContent = 'Sending the code to your email…';
   let res, out = {};
@@ -976,6 +1022,7 @@ async function sendLoginCode(resend){
     });
     try{ out = await res.json(); }catch(e){}
   }catch(e){ res = null; }
+  if(!currentCodeStep(request, purpose, email, token))return false;
   if(res && res.ok && out.ok){
     if(codePurpose==='pay')trackCheckoutStage('ticket_code_sent');
     codeSentTo = email;
@@ -1020,6 +1067,8 @@ async function loginWithCode(name, email, withProfile){
     codeEl.focus();
     return null;
   }
+  const token = accountToken(), purpose = codePurpose, request = ++codeRequest;
+  if(!currentCodeStep(request, purpose, email.toLowerCase(), token))return null;
   AELITA_clearFieldError(codeEl);
   msgEl.textContent = withProfile ? 'Checking the code…' : 'Signing in…';
   let res, out = {};
@@ -1030,12 +1079,16 @@ async function loginWithCode(name, email, withProfile){
     });
     try{ out = await res.json(); }catch(e){}
   }catch(e){
-    msgEl.textContent = 'Could not reach the server — check your connection and press again.';
+    if(currentCodeStep(request, purpose, email.toLowerCase(), token)){
+      msgEl.textContent = 'Could not reach the server — check your connection and press again.';
+    }
     return null;
   }
+  if(!currentCodeStep(request, purpose, email.toLowerCase(), token))return null;
   if(res.ok && out.token){
     if(codePurpose==='pay')trackCheckoutStage('ticket_code_verified');
     setToken(out.token);
+    if(!checkoutActive(out.token))return null;
     codeEl.value = '';
     codePurpose = 'pay';
     showCodeBox(false);
@@ -1065,7 +1118,7 @@ async function loginOnly(){
     msgEl.textContent = '';
     return;
   }
-  if(r){
+  if(r && checkoutActive(r)){
     msgEl.textContent = 'You are signed in — your details are filled in.';
     // телефон and полное имя — из кабинета
     detectAccount();
@@ -1115,8 +1168,10 @@ async function ensureAccount(name, email){
 // создания заказа, чтобы конфликт всплыл здесь, а не на оплате.
 async function holdGuestSelection(){
   if(!data || data.seating !== 'assigned' || !selectedSeats.length) return true;
+  const token = accountToken();
   const r = await holdRequest('hold', selectedSeats.map(s=>({row:s.row, seat:s.seat})))
     .catch(()=>({ok:false}));
+  if(!checkoutActive(token))return false;
   if(r.ok) return true;
   const msgEl = document.getElementById('msg');
   if(r.taken && r.taken.length){
@@ -1133,44 +1188,37 @@ async function holdGuestSelection(){
   return false;
 }
 
-// pack-v639: черновик покупки. На телефоне человек уходит в почту за
-// кодом, браузер выгружает вкладку, and при возврате страница грузится
-// заново: раньше пропадали количество/места, поля формы and — главное —
-// отправленный код (приходилось слать новый, and так по кругу). Теперь
-// всё, кроме пароля, лежит в localStorage до 30 минут (код — 10 минут,
-// столько он действует) and подставляется при загрузке. Пароль не
-// сохраняется никогда. Черновик стирается при уходе на оплату.
-// Прежние rememberSelection/restoreSelection (места после входа) —
-// частный случай этого же.
-const DRAFT_KEY = 'aelita_checkout_draft';
+// Mobile email and payment returns keep a draft in this tab for this show and account.
+const draftKey = 'tickets:' + performanceId;
+const orderKey = 'ticket-payment:' + performanceId;
 const DRAFT_TTL = 30*60*1000, CODE_TTL = 10*60*1000;
-let draftReady = false; // до восстановления не пишем — иначе затрём черновик пустой формой
+let draftReady = false;
+try{
+  localStorage.removeItem('aelita_checkout_draft');
+  localStorage.removeItem('aelita_pending_selection');
+}catch(e){}
 
 function saveDraft(){
-  if(!draftReady || !performanceId) return;
-  try{
-    const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
-    const c = document.getElementById('pdConsent');
-    localStorage.setItem(DRAFT_KEY, JSON.stringify({
-      performance: performanceId, ts: Date.now(), step: currentStep,
-      attendanceMode: window.AelitaAttendance.mode(),
-      quantity: quantity, seats: selectedSeats.map(x => ({row: x.row, seat: x.seat})),
-      name: v('f-name'), email: v('f-email'), contact: v('f-contact'), consent: !!(c && c.checked),
-      code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, purpose: codePurpose, at: codeSentAt || Date.now()} : null,
-    }));
-  }catch(e){}
+  if(!draftReady || !performanceId || !checkoutActive()) return;
+  const v = id => document.getElementById(id)?.value || '';
+  customerDrafts.write(draftKey, checkoutOwner, {
+    step: currentStep, attendanceMode: window.AelitaAttendance.mode(),
+    quantity, seats: selectedSeats.map(({row, seat}) => ({row, seat})),
+    name: v('f-name'), email: v('f-email'), contact: v('f-contact'),
+    code: (codeMode && codeSentTo) ? {sentTo: codeSentTo, purpose: codePurpose, at: codeSentAt} : null,
+  });
 }
-function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); localStorage.removeItem('aelita_pending_selection'); }catch(e){} }
+function clearDraft(){ customerDrafts.remove(draftKey); }
 function readDraft(){
-  try{
-    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
-    if(!d || d.performance !== performanceId || !d.ts || Date.now() - d.ts > DRAFT_TTL) return null;
-    return d;
-  }catch(e){ return null; }
+  return checkoutActive() ? customerDrafts.read(draftKey, checkoutOwner, DRAFT_TTL) : null;
 }
 ['input', 'change'].forEach(t => document.addEventListener(t, e => {
   const id = e.target && e.target.id;
-  if(id === 'f-name' || id === 'f-email' || id === 'f-contact' || id === 'pdConsent') saveDraft();
+  if(id === 'f-email' && codeMode && e.target.value.trim().toLowerCase() !== codeSentTo){
+    cancelLogin();
+    document.getElementById('f-code').value = '';
+  }
+  if(id === 'f-name' || id === 'f-email' || id === 'f-contact') saveDraft();
 }));
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') saveDraft(); });
 
@@ -1178,9 +1226,8 @@ async function restoreSelection(){
   const d = readDraft();
   draftReady = true;
   if(!d) return;
+  const token = accountToken();
   const msgEl = document.getElementById('msg');
-  const put = (id, val) => { const el = document.getElementById(id); if(el && !el.value.trim() && val) el.value = val; };
-  put('f-name', d.name); put('f-email', d.email); put('f-contact', d.contact);
   // v759: consent is never restored automatically from an earlier draft.
   if(data.seating !== 'assigned'){
     if(d.quantity > 1){
@@ -1195,6 +1242,7 @@ async function restoreSelection(){
       // Места снова держим на сервере (пока вкладка была выгружена, их
       // могли отпустить — pagehide или истёк холд выбора).
       const r = await holdRequest('hold', want).catch(() => ({ok:false}));
+      if(!checkoutActive(token))return;
       if(r.ok){
         want.forEach(({row, seat}) => {
           const el = document.querySelector(`.seat[data-row="${row}"][data-seat="${seat}"]`);
@@ -1212,7 +1260,8 @@ async function restoreSelection(){
   const canStep2 = data.seating !== 'assigned' || selectedSeats.length > 0;
   if(d.step === 2 && canStep2) goStep(2, {silent: true});
   // Код уже отправлен — показываем поле для него, а не просим новый.
-  if(d.code && d.code.sentTo && Date.now() - (d.code.at || 0) < CODE_TTL && !accountToken()){
+  if(d.code && d.code.sentTo === document.getElementById('f-email').value.trim().toLowerCase() &&
+    Date.now() - (d.code.at || 0) < CODE_TTL && !accountToken()){
     codeSentTo = d.code.sentTo;
     codeSentAt = d.code.at;
     codePurpose = d.code.purpose === 'login' ? 'login' : 'pay';
@@ -1227,11 +1276,9 @@ async function restoreSelection(){
 // Сессия протухла посреди покупки — это не то же самое, что «не
 // входил»: человек уже что-то выбрал, and текст должен объяснить, что
 // произошло, а не выглядеть как будто он всё сделал не так.
-function showAuthExpired(){
-  // pack-v442: раньше показывали блок со ссылкой на /account/. Теперь
-  // вход есть прямо в форме — переключаем её на ввод пароля, почта уже
-  // стоит в поле. Выбранные места никуда не деваются: страница та же.
-  // pack-v740: пароля в покупке нет — заново подтверждаем почту кодом.
+function showAuthExpired(token){
+  if(!checkoutActive(token))return;
+  clearDraft();
   setToken(null);
   codePurpose = 'pay';
   showGuest();
@@ -1249,6 +1296,7 @@ function showError(text){
   document.getElementById('error-block').style.display = 'block';
   if(typeof helpAlert === 'function') helpAlert();
   document.getElementById('err-cabinet').style.display = 'none';
+  document.querySelector('#error-block button').hidden = false;
   document.getElementById('form-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
 }
@@ -1277,6 +1325,7 @@ async function resendTickets(){
     res = await apiFetch(`${API_BASE}/resend-ticket`, {method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + token}, body: JSON.stringify({order_id: paidOrderId})});
     out = await res.json().catch(() => ({}));
   }catch(e){ res = null; }
+  if(!checkoutActive(token))return;
   if(res && res.ok){
     msg.textContent = 'Sent again to the email in the order. If this one does not arrive within 5 minutes either, write to us and we will send it by hand.';
     // Повторно — не раньше чем через минуту: почтовый ящик не любит пачки одинаковых писем.
@@ -1337,11 +1386,18 @@ async function init(){
     window.__aelitaContactWired = true;
   }
 
+  if(!checkoutActive())return;
   if(!performanceId){ showError('The link does not specify a performance — go back to the listings and choose again.'); return; }
 
   // pack-v441: гостя пускаем смотреть. pack-v442: а кто он — узнаём
   // сами, не дожидаясь нажатия «Pay» (см. detectAccount).
   document.getElementById('auth-block').style.display = 'none';
+  const draft = readDraft();
+  if(draft){
+    fillIfEmpty('f-name', draft.name);
+    fillIfEmpty('f-email', draft.email);
+    fillIfEmpty('f-contact', draft.contact);
+  }
   detectAccount();
 
   // Возврат с оплаты (return_url из create-order.js).
@@ -1735,6 +1791,7 @@ function renderZoneLegend(){
 async function holdRequest(action, seats){
   if(!seats.length) return {ok:true};
   const token = accountToken();
+  if(!checkoutActive(token))return {ok:false};
   // pack-v441: гость не удерживает места на сервере — hold-seat требует
   // авторизации. Выбор у него живёт только в браузере, and подсказка
   // места закрепляются сразу после кода из письма (holdGuestSelection). Возвращаем ok, иначе
@@ -1752,11 +1809,12 @@ async function holdRequest(action, seats){
   });
   let out = {};
   try{ out = await res.json(); }catch(e){}
+  if(!checkoutActive(token))return {ok:false};
   if(res.ok && out.ok){
     if(out.hold_expires_at) startHoldCountdown(out.hold_expires_at);
     return {ok:true};
   }
-  if(res.status === 401){ showAuthExpired(); return {ok:false}; }
+  if(res.status === 401){ showAuthExpired(token); return {ok:false}; }
   if(res.status === 409 && out.error === 'seats_taken') return {ok:false, taken: out.seats || []};
   // pack-v419: потолок считается по всему, что аккаунт держит на этом
   // показе, — сообщение должно называть число, иначе «не получилось»
@@ -1934,13 +1992,10 @@ function tickHold(){
 // они возвращаются в продажу мгновенно. Обычный fetch браузер на этом
 // этапе может оборвать, поэтому нужен keepalive — он переживает
 // выгрузку вкладки так же, как это делал sendBeacon до pack-v419.
-window.addEventListener('pagehide', () => {
-  if(!selectedSeats.length) return;
-  // Не освобождаем, если человек ушёл ОПЛАЧИВАТЬ: места должны
-  // остаться за ним на странице ЮKassa (там уже действует холд заказа).
-  if(window.__aelitaGoingToPayment) return;
-  const token = accountToken();
-  if(!token) return;
+function releaseCheckoutSeats(token){
+  if(!selectedSeats.length || !token || !checkoutActive(token))return;
+  // Заказ уже перенял места, если открыта оплата.
+  if(window.__aelitaGoingToPayment)return;
   // ⚠️ pack-v419: здесь был navigator.sendBeacon, and он перестал
   // годиться — beacon не умеет слать заголовки, а hold-seat теперь
   // требует Authorization and без него ответит 401. Освобождение просто
@@ -1960,7 +2015,8 @@ window.addEventListener('pagehide', () => {
       }),
     });
   }catch(e){}
-});
+}
+window.addEventListener('pagehide', () => releaseCheckoutSeats(accountToken()));
 
 // pack-v639: на английской странице — английские название and площадка
 // (titleEn and venue.en отдаёт availability; раньше показывались русские).
@@ -2349,6 +2405,7 @@ function AELITA_fullNameOk(v){
 }
 
 async function submitOrder(){
+  if(!checkoutActive())return;
   const name = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const contact = document.getElementById('f-contact').value.trim();
@@ -2428,6 +2485,7 @@ async function submitOrder(){
     document.getElementById('buy-btn').disabled = false;
     return;
   }
+  if(!checkoutActive(orderToken)){ document.getElementById('buy-btn').disabled = false; return; }
   msgEl.textContent = 'Placing your order…';
 
   try{
@@ -2436,10 +2494,11 @@ async function submitOrder(){
       headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + orderToken},
       body: JSON.stringify(payload)
     });
+    if(!checkoutActive(orderToken)){ document.getElementById('buy-btn').disabled = false; return; }
     if(res.status === 401){
       // Сессия истекла, пока человек заполнял форму. Места за ним ещё
       // держатся — об этом and говорит текст в showAuthExpired().
-      showAuthExpired();
+      showAuthExpired(orderToken);
       document.getElementById('buy-btn').disabled = false;
       return;
     }
@@ -2451,16 +2510,18 @@ async function submitOrder(){
       return;
     }
     const out = await res.json();
-    // pack-v442: телефон запоминаем на этом устройстве — в профиле кабинета
-    // его нет, а вводить его заново при каждой покупке незачем.
-    if(res.ok){ try{ localStorage.setItem(PHONE_KEY, contact); }catch(e){} if(window.AELITA_savePhone) AELITA_savePhone(contact); saveNameToProfile(name, email, orderToken); }
+    if(!checkoutActive(orderToken)){ document.getElementById('buy-btn').disabled = false; return; }
+    if(res.ok && customerDrafts.emailOwner(email) === checkoutOwner){
+      window.AELITA_savePhone?.(contact, orderToken);
+      saveNameToProfile(name, email, orderToken);
+    }
     if(out.zero_amount){
       // pack-v278: скидка (промокод + подарочная карта) покрыла всю
       // сумму — ЮKassa вообще не вызывалась, create-order.js уже
       // материализовал заказ and выслал билеты (см. lib/finalize-order.js).
       // Никакого редиректа and опроса order-status.js не нужно — ответ
       // уже окончательный, синхронный.
-      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      customerDrafts.remove(orderKey);
       ecomPurchase(out.order_id, 0, ecomQty(), (data && data.title) || '');
       if(out.seat_conflict){
         // Редкая гонка — см. finalize-order.js: билет не выдан
@@ -2486,7 +2547,8 @@ async function submitOrder(){
       // pack-v639: на ЮKassa — поля формы оставляем (вернётся «Назад», не
       // заплатив, — не заполнять заново), а места and код убираем: места уже
       // держит заказ, код использован.
-      try{ const d = readDraft(); if(d){ d.seats = []; d.code = null; d.ts = Date.now(); localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } }catch(e){}
+      const d = readDraft();
+      if(d)customerDrafts.write(draftKey, checkoutOwner, {...d, seats: [], code: null});
       draftReady = false;
       // pack-v196: сохраняем order_id/payment_id, чтобы при возврате с
       // ЮKassa опросить РЕАЛЬНЫЙ статус (order-status.js), а не верить
@@ -2495,7 +2557,7 @@ async function submitOrder(){
       // обратно — это тот же таб браузера, не новая сессия.
       // pack-v540: + сумма, число билетов and название — для электронной
       // торговли Метрики после подтверждения оплаты (AELITA_ecomPurchase).
-      try{ sessionStorage.setItem('aelita-order-' + performanceId, JSON.stringify({orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: pickTitle(data), holdUntil: out.hold_expires_at || null})); }catch(e){}
+      customerDrafts.write(orderKey, checkoutOwner, {orderId: out.order_id, paymentId: out.payment_id, amount: out.amount, qty: ecomQty(), title: pickTitle(data), holdUntil: out.hold_expires_at || null});
       if(out.hold_expires_at){
         // pack-v196: раньше человек нигде не видел, что на оплату есть
         // ограниченное время — только README упоминал 10 минут, нигде
@@ -2614,8 +2676,9 @@ async function pollOrderStatus(){
   document.querySelector('.bar').style.display = 'none';
   document.getElementById('form-block').style.display = 'none';
 
-  let stored = null;
-  try{ stored = JSON.parse(sessionStorage.getItem('aelita-order-' + performanceId) || 'null'); }catch(e){}
+  const token = accountToken();
+  const stored = token && checkoutActive() ? customerDrafts.read(orderKey, checkoutOwner, DRAFT_TTL) : null;
+  try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
   if(!stored || !stored.orderId || !stored.paymentId){
     // Пришли на страницу возврата без сохранённых id — например, другая
     // вкладка/устройство, или sessionStorage не пережил переход. Честно
@@ -2624,19 +2687,21 @@ async function pollOrderStatus(){
     leavePaidMode();
     showError('We could not check the payment status automatically. If the money was charged, the tickets will arrive by email within 5 minutes and the order will appear in your account under “My tickets” — you can send the tickets again from there. Not there? Write to us.');
     document.getElementById('err-cabinet').style.display = 'inline-block';
+    document.querySelector('#error-block button').hidden = true;
     return;
   }
 
   const MAX_ATTEMPTS = 15;
-  for(let attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
+  for(let attempt = 0; attempt < MAX_ATTEMPTS && checkoutActive(); attempt++){
     let res, out;
     try{
       res = await apiFetch(`${API_BASE}/order-status?order_id=${encodeURIComponent(stored.orderId)}&payment_id=${encodeURIComponent(stored.paymentId)}`);
       out = res.ok ? await res.json() : null;
     }catch(e){ out = null; }
+    if(!checkoutActive())return;
 
     if(out && out.status === 'paid'){
-      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      customerDrafts.remove(orderKey);
       // pack-v515: цель «билет оплачен» — подтверждённый order-status,
       // не клик. Своей серверной конверсии у билетной системы нет (у
       // _tools/Payments она есть), поэтому хотя бы так.
@@ -2647,14 +2712,14 @@ async function pollOrderStatus(){
       return;
     }
     if(out && out.status === 'seat_conflict'){
-      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      customerDrafts.remove(orderKey);
       try{ if(window.AELITA_track) window.AELITA_track('ticket_purchase', { performance: performanceId, seat_conflict: 1 }); }catch(e){}
       ecomPurchase(stored.orderId, stored.amount, stored.qty, stored.title);
       showSuccess('The payment went through, but the selected seat was taken at the same moment — a rare technical glitch. Your money is safe: an email with details is already in your inbox; we will contact you shortly and offer another seat, and if it does not suit you, we will refund in full.');
       return;
     }
     if(out && out.status === 'canceled'){
-      try{ sessionStorage.removeItem('aelita-order-' + performanceId); }catch(e){}
+      customerDrafts.remove(orderKey);
       leavePaidMode();
       showError('The payment did not go through: the bank declined it or the payment was cancelled. No money was charged — if the bank put a temporary hold on it, the bank will release it. The seats are free again: press “Try again”, choose the seats and, if the bank declined, try another card.');
       return;
@@ -2664,6 +2729,7 @@ async function pollOrderStatus(){
     await new Promise(r => setTimeout(r, 2000));
   }
 
+  if(!checkoutActive())return;
   // Не дождались определённого статуса за отведённое время — не врём
   // ни про успех, ни про провал, честно объясняем and даём контакт.
   showError('The payment is taking longer than usual. If the money was charged, it will not be lost: as soon as the bank confirms the payment, the tickets will arrive by email — usually within 5 minutes.' + holdUntilText(stored) + ' Press “Try again” to check once more; the order will also appear in your account under “My tickets”.');
@@ -2695,8 +2761,8 @@ init();
 function acceptCookies() { if (window.AelitaCookies) window.AelitaCookies.accept(); }
 window.addEventListener('aelita:cookie-choice', function(){ initMetrika(); });
 </script>
-<script src="/assets/phone-prefix.js?v=226"></script>
-<script src="/assets/outage.js?v=226" defer></script>
+<script src="/assets/phone-prefix.js?v=228"></script>
+<script src="/assets/outage.js?v=228" defer></script>
 <script>
 (function(){var dock=document.getElementById('help-dock'),bar=document.querySelector('.bar');if(!dock)return;var anchor=dock.parentNode,next=dock.nextSibling;
 function layout(){dock.classList.toggle('compact',window.scrollY>60);if(bar){document.documentElement.style.setProperty('--checkout-bar-height',bar.getBoundingClientRect().height+'px');var fit=window.innerWidth>=1050&&bar.clientWidth>700;dock.classList.toggle('in-paybar',fit);if(fit&&dock.parentNode!==bar)bar.insertBefore(dock,bar.firstChild);else if(!fit&&dock.parentNode!==anchor)anchor.insertBefore(dock,next);}}window.addEventListener('scroll',layout,{passive:true});window.addEventListener('resize',layout);if(bar&&window.ResizeObserver)new ResizeObserver(layout).observe(bar);layout();

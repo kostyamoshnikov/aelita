@@ -2,8 +2,10 @@
 const $=id=>document.getElementById(id),API='https://api.aelita-production.ru/admin/site-edit',LOCAL='aelita_offline_reminder_rule_local_v1';
 const S={family:'offline',view:null,review:null,opId:null,busy:false,epoch:0,dirty:false};
 const errors={reminder_runtime_not_ready:'Недавний запуск обновлённого таймера не подтверждён. Обновите tickets-remind, дождитесь его запуска и повторите проверку. Правило не применено.',not_authenticated:'Войдите в основную админку.',mail_texts_disabled:'Редактор ещё не включён на сервере.',unknown_action:'Настройки станут доступны после обновления серверной функции.',reminder_rules_not_configured:'Сервер настроек ещё не готов. Нужна проверка обновления функции.',invalid_reminder_rule:'Проверьте интервал (целые часы от 1 до 168) и часовой пояс.',invalid_reminder_rules_file:'Файл настроек повреждён. Нужна сверка; отправитель не применяет такое правило.',reminder_rules_unavailable:'Не удалось прочитать или сохранить настройки. Проверьте связь и повторите.',content_conflict:'Правило изменилось в другой вкладке. Ваши поля сохранены локально. Обновите настройки и сверьте изменения.',reminder_preview_required:'Проверка устарела. Проверьте правило заново.',reminder_preview_changed:'Дата события или тексты письма изменились после проверки. Проверьте правило заново.',reminder_event_changed:'Выбранное событие больше недоступно. Обновите список.',invalid_mail_texts_file:'Не удалось подтвердить сохранённые тексты писем. Проверьте их перед применением правила.',local_base_changed:'Локальный черновик относится к другой ревизии. Скачайте его для сверки.'};
-function localKey(){return S.family==='offline'?LOCAL:LOCAL+'_'+S.family;}
-function token(){try{return localStorage.getItem('aelita_admin_token');}catch{return null;}}
+function localKey(){return LOCAL+':'+editorScope+':'+S.family;}
+function staffScope(){return window.AelitaStaffSession?.adminScope ? window.AelitaStaffSession.adminScope() : 'legacy';}
+const editorScope=staffScope();
+function token(){try{return editorScope&&editorScope===staffScope()?localStorage.getItem('aelita_admin_token'):null;}catch{return null;}}
 function status(text,bad=false){$('nr-status').textContent=text||'';$('nr-status').className=bad?'ed-error':'ed-note';}
 function invalidate(){S.review=null;S.opId=null;$('nr-apply').disabled=true;$('nr-preview').hidden=true;}
 function gate(){S.epoch++;S.view=null;invalidate();$('nr-panel').hidden=true;}
@@ -31,4 +33,5 @@ $('nr-texts').onclick=()=>{const select=$('mt-letter');if(!Array.from(select.opt
 window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token')gate();});window.addEventListener('pagehide',()=>{if(S.view&&S.dirty)backup();});
 $('nr-family').value='offline';$('nr-family').addEventListener('change',()=>{if(S.busy)return;backup();S.epoch++;S.family=$('nr-family').value;S.view=null;invalidate();$('nr-history').hidden=true;run(load);});
 if(token())run(load);
+window.addEventListener('pageshow',e=>{if(e.persisted&&!token())gate();});
 })();

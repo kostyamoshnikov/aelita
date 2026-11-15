@@ -24,8 +24,10 @@
   e.preventDefault();button.disabled=true;
   try{
    if(purpose!=='email'&&form.elements.namedItem('password').value!==form.elements.namedItem('repeat').value)throw Error('Пароли не совпадают.');
-   await call('staff_access_accept',purpose==='email'?{}:{password:form.elements.namedItem('password').value});
-   if(window.AelitaStaffSession)window.AelitaStaffSession.clear();
+   var previous=window.AelitaStaffSession?.read();
+   var accepted=await call('staff_access_accept',purpose==='email'?{}:{password:form.elements.namedItem('password').value});
+   var current=window.AelitaStaffSession?.read();
+   if(current?.crmToken===previous?.crmToken&&(!current?.user?.login||current.user.login===accepted.login))window.AelitaStaffSession?.clear();
    form.reset();form.hidden=true;token=null;done.hidden=false;message(purpose==='email'?'Почта подтверждена. Войдите по своему логину или этой почте.':'Пароль сохранён, почта подтверждена. Теперь можно войти в рабочие разделы.');
   }catch(err){message(err.message);}finally{button.disabled=false;}
  });

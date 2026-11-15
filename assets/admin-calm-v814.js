@@ -27,7 +27,7 @@
   if(first){for(let parent=first.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;first.focus();first.scrollIntoView({block:'center'});return false;}return true;
  }
  window.AelitaWorkUI={validateURLs,urlError};
- function service(){const head=document.querySelector('#dataScreen .data-actions');if(!head||head.querySelector('.calm-service'))return;const details=document.createElement('details');details.className='calm-service';const summary=document.createElement('summary');summary.textContent='Сеанс';details.append(summary);for(const id of ['adminWho','loadedAt','logoutBtn']){const node=document.getElementById(id);if(node)details.append(node);}head.append(details);}
+ function service(){const head=document.querySelector('#dataScreen .data-actions');if(!head||head.querySelector('.calm-service'))return;const details=document.createElement('details');details.className='calm-service';const summary=document.createElement('summary');summary.textContent='Сеанс';details.append(summary);for(const id of ['adminWho','loadedAt','logoutBtn','logoutAllBtn']){const node=document.getElementById(id);if(node)details.append(node);}head.append(details);}
  function fitMenu(d){
   const list=d.querySelector('.adm-menu-list'),trigger=d.querySelector('summary');if(!list||!trigger)return;
   d.classList.remove('flip-l','flip-r','flip-fit');

@@ -18,6 +18,8 @@
 // account.js (см. `var LANG` там).
 (function () {
   var LANG = document.documentElement.lang === 'en' ? 'en' : 'ru';
+  var drafts = window.AelitaCustomerDrafts;
+  var paymentOwner = drafts.owner(drafts.token());
 
   var TEXT = {
     ru: {
@@ -86,11 +88,11 @@
   // id платежа кладём в sessionStorage перед уходом на ЮKassa; вернулся на
   // другом устройстве или в другой вкладке — id нет, экран прежний.
   var PRODUCT_STATUS_POLL = false;
-  var PAY_ID_KEY = 'aelita-last-payment';
+  var PAY_ID_KEY = 'product-payment:' + location.pathname;
   var RETURNED_FROM_PAYMENT = new URLSearchParams(location.search).get('aelita_paid') === '1';
   function rememberPayment(id) {
     if (!id) return;
-    try { sessionStorage.setItem(PAY_ID_KEY, JSON.stringify({ id: String(id), path: location.pathname })); } catch (e) {}
+    drafts.write(PAY_ID_KEY, paymentOwner, { id: String(id) });
   }
   var STATUS_TEXT = {
     ru: {
@@ -106,10 +108,9 @@
   }[LANG];
   if (PRODUCT_STATUS_POLL && RETURNED_FROM_PAYMENT) {
     document.addEventListener('DOMContentLoaded', function () {
-      var stored = null;
-      try { stored = JSON.parse(sessionStorage.getItem(PAY_ID_KEY) || 'null'); } catch (e) {}
+      var stored = drafts.read(PAY_ID_KEY, paymentOwner, 30 * 60 * 1000);
       var box = document.getElementById('paymentReturnMsg');
-      if (!stored || !stored.id || stored.path !== location.pathname || !box) return;
+      if (!stored || !stored.id || !box) return;
       var h = box.querySelector('h2'), p = box.querySelector('p');
       if (!h || !p) return;
       var okH = h.textContent, okP = p.textContent;
@@ -122,12 +123,13 @@
           var r = await fetch('https://api.aelita-production.ru/payments/order-status?payment_id=' + encodeURIComponent(stored.id));
           if (r.ok) st = (await r.json()).status;
         } catch (e) { /* сеть — попробуем ещё раз */ }
-        if (st === 'delivered') { h.textContent = okH; p.textContent = okP; try { sessionStorage.removeItem(PAY_ID_KEY); } catch (e) {} return; }
+        if (paymentOwner !== drafts.owner(drafts.token())) return;
+        if (st === 'delivered') { h.textContent = okH; p.textContent = okP; drafts.remove(PAY_ID_KEY); return; }
         if (st === 'canceled') {
           set(STATUS_TEXT.canceled);
           var form = document.getElementById('joinForm');
           if (form) form.style.display = '';
-          try { sessionStorage.removeItem(PAY_ID_KEY); } catch (e) {}
+          drafts.remove(PAY_ID_KEY);
           return;
         }
         if (Date.now() - started > 60000) { set(STATUS_TEXT.slow); return; }
@@ -297,51 +299,61 @@
     if (el) el.style.display = 'block';
   };
 
-  var DRAFT_KEY = 'aelita_form_draft:' + location.pathname;
+  var draftKey = 'product:' + location.pathname;
+  var loginKey = 'product-login:' + location.pathname;
+  var draftTTL = 30 * 60 * 1000;
+  var hasPaymentForm = Boolean(document.getElementById('j-email') && document.getElementById('j-name'));
+  try {
+    sessionStorage.removeItem('aelita_form_draft:' + location.pathname);
+    sessionStorage.removeItem('aelita-last-payment');
+  } catch (e) {}
 
-  // Раз оплата теперь ВСЕГДА требует входа, человек без аккаунта
-  // заполняет форму (иногда длинную — см. book-concierge), жмёт
-  // «Оплатить» и тут же улетает на /account регистрироваться — без
-  // этого он вернулся бы на чистую форму и вводил всё заново. То же
-  // самое нужно и при 401 ниже (истёкший токен посреди оплаты) — не
-  // только при изначальном отсутствии токена.
-  function saveFormDraft() {
-    try {
-      var data = {};
-      document.querySelectorAll('input[id], textarea[id]').forEach(function (el) {
-        if (el.type === 'password') return; // на этих страницах их нет, но на всякий случай
-        data[el.id] = el.value;
-      });
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-    } catch (e) { /* приватный режим и т.п. — просто не восстановится, форма не сломается */ }
+  function formFields() {
+    return [...document.querySelectorAll('input[id], textarea[id]')].filter(function (el) {
+      return !['password', 'checkbox', 'radio', 'hidden', 'file'].includes(el.type);
+    });
+  }
+
+  function saveFormDraft(forLogin) {
+    if (paymentOwner !== drafts.owner(drafts.token())) return;
+    var fields = Object.fromEntries(formFields().map(function (el) { return [el.id, el.value]; }));
+    if (forLogin && paymentOwner === 'guest') {
+      drafts.write(loginKey, 'guest', { fields: fields, expectedOwner: isValidEmail(fields['j-email']) ? drafts.emailOwner(fields['j-email']) : null });
+    } else {
+      drafts.write(draftKey, paymentOwner, fields);
+    }
   }
 
   function restoreFormDraft() {
-    try {
-      // pack-v246: не восстанавливаем черновик, если человек вернулся
-      // ПОСЛЕ успешной оплаты (метка aelita_paid=1 в return_url) — он
-      // увидит благодарность «мы вас ждали» и тут же снова заполненную
-      // форму, как будто оплата не прошла и надо платить ещё раз.
-      // Черновик при этом стираем: он больше не нужен, а если оставить
-      // — всплывёт при следующем заходе на эту же страницу.
-      if (new URLSearchParams(location.search).get('aelita_paid') === '1') {
-        sessionStorage.removeItem(DRAFT_KEY);
-        return;
+    var fields = null;
+    if (!RETURNED_FROM_PAYMENT) {
+      fields = drafts.read(draftKey, paymentOwner, draftTTL);
+      var handoff = drafts.read(loginKey, 'guest', draftTTL);
+      if (!fields && handoff && (paymentOwner === 'guest' || handoff.expectedOwner === paymentOwner)) {
+        fields = handoff.fields;
       }
-      var raw = sessionStorage.getItem(DRAFT_KEY);
-      if (!raw) return;
-      var data = JSON.parse(raw);
-      Object.keys(data).forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.value = data[id];
-      });
-      sessionStorage.removeItem(DRAFT_KEY);
-    } catch (e) {}
+    }
+    if (fields) formFields().forEach(function (el) {
+      if (Object.hasOwn(fields, el.id)) el.value = fields[el.id];
+    });
+    drafts.remove(draftKey);
+    drafts.remove(loginKey);
   }
-  restoreFormDraft(); // при каждой загрузке страницы — так работает и после регистрации, и просто при возврате назад
+  function checkPaymentOwner() {
+    if (!hasPaymentForm || paymentOwner === drafts.owner(drafts.token())) return;
+    formFields().forEach(function (el) { el.value = ''; });
+    drafts.remove(draftKey);
+    var handoff = drafts.read(loginKey, 'guest', draftTTL);
+    if (paymentOwner !== 'guest' || !handoff || handoff.expectedOwner !== drafts.owner(drafts.token())) drafts.remove(loginKey);
+    drafts.remove(PAY_ID_KEY);
+    location.reload();
+  }
+  if (hasPaymentForm) restoreFormDraft();
+  window.addEventListener('storage', function (e) { if (e.key === drafts.TOKEN_KEY || e.key === null) checkPaymentOwner(); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) checkPaymentOwner(); });
 
   function goToLogin() {
-    saveFormDraft();
+    saveFormDraft(true);
     // pack-v242: раньше всегда вело на /account (RU), даже с EN-страниц
     // — человек создавал аккаунт и терял языковой контекст, возвращаясь
     // на русскую версию (тот же класс бага, что и на workshop-страницах,
@@ -418,8 +430,8 @@
     var emailEl = document.getElementById(opts.emailFieldId || 'j-email');
     var phoneEl = document.getElementById(opts.phoneFieldId || 'j-phone');
 
-    var token = null;
-    try { token = localStorage.getItem('aelita_account_token'); } catch (e) { /* приватный режим и т.п. */ }
+    var token = drafts.token();
+    if (paymentOwner !== drafts.owner(token)) return;
     if (!token && !isGuestCheckout) {
       // Без входа в кабинет оплата на сайте недоступна — не пытаемся
       // вызывать API впустую (он всё равно откажет), сразу ведём
@@ -516,6 +528,10 @@
         headers: headers,
         body: JSON.stringify({ product: product, name: name, email: email, phone: phoneRaw, amount: amount, show: show, comment: comment, return_url: returnUrl.toString(), yandex_client_id: yandexClientId, test: isTest, gift_code: giftCode || undefined, lang: LANG /* З-11 этап 5, ч. 4 (pack-v479) */, gift_to: giftTo, gift_message: giftMessage, gift_recipient_email: giftRecipient }),
       });
+      if (token !== drafts.token()) {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }
+        return;
+      }
       if (res.status === 401) {
         if (isGuestCheckout) {
           // program не требует токена вообще — 401 здесь означает
@@ -530,12 +546,16 @@
           // удалён) — с точки зрения человека это то же самое «нужно
           // войти», а не общая ошибка оплаты. Форму тоже сохраняем —
           // это могло случиться посреди заполнения длинной анкеты.
-          try { localStorage.removeItem('aelita_account_token'); } catch (e) {}
           goToLogin();
+          try { localStorage.removeItem(drafts.TOKEN_KEY); } catch (e) {}
         }
         return;
       }
       var data = await res.json();
+      if (token !== drafts.token()) {
+        if (buttonEl) { buttonEl.disabled = false; buttonEl.textContent = originalText; }
+        return;
+      }
       // З-5 Б: карта покрыла всю сумму — платить нечего, заказ уже
       // выдан сервером. Ведём на тот же экран «Спасибо», что и после ЮKassa.
       if (data && data.zero_amount && data.redirect_url) {

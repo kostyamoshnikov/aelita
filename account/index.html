@@ -31,8 +31,8 @@
 <meta name="twitter:description" content="Вход и регистрация в личном кабинете AELITA PRODUCTION.">
 <meta name="twitter:image" content="https://aelita-production.ru/images/og-default.jpg">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/fonts.css?v=226">
-<link rel="stylesheet" href="/assets/style.css?v=226">
+<link rel="stylesheet" href="/assets/fonts.css?v=228">
+<link rel="stylesheet" href="/assets/style.css?v=228">
 <style>
 body{max-width:100vw}
 .page-header .account-benefit-note{max-width:40rem;margin:18px 0 0;color:var(--sand);font-family:'Inter',system-ui,sans-serif;font-size:1rem;font-weight:300;line-height:1.65;letter-spacing:normal;text-transform:none}
@@ -68,10 +68,10 @@ body{max-width:100vw}
   #code-box .forgot-ok{margin-top:10px}
 .acc-grid.account-entry{grid-template-columns:minmax(0,1fr);max-width:560px;margin:28px auto 0}.account-password-method>summary,.account-password-create>summary{cursor:pointer;min-height:44px;padding:12px 0;color:var(--gold);font:400 1rem/1.5 Inter,sans-serif;letter-spacing:normal;text-transform:none}.account-password-method>.form-box{margin-top:12px}.account-password-create{margin-top:18px}.account-password-create>.form-box{margin-top:12px}.account-entry [hidden]{display:none!important}.account-entry .form-col{gap:14px}.account-entry .form-box>h3{letter-spacing:normal;text-transform:none;font-size:1.2rem}.account-entry .field label{letter-spacing:normal;text-transform:none;font-size:1rem}.account-entry .form-box p.sub{font-size:1rem;line-height:1.6}.account-entry .code-sub{margin:16px 0 0}.account-entry input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=226">
-<script src="/assets/mobile-files-m1.js?v=226"></script>
-<link rel="stylesheet" href="/assets/customer-journey.css?v=226">
-<script src="/assets/customer-journey.js?v=226"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=228">
+<script src="/assets/mobile-files-m1.js?v=228"></script>
+<link rel="stylesheet" href="/assets/customer-journey.css?v=228">
+<script src="/assets/customer-journey.js?v=228"></script>
 </head>
 <body class="customer-journey-page">
 <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -232,9 +232,10 @@ body{max-width:100vw}
   </div>
 </div>
 
-<script src="/assets/analytics-events.js?v=226"></script>
-<script src="/assets/account.js?v=226"></script>
-<script src="/assets/main.js?v=226"></script>
+<script src="/assets/analytics-events.js?v=228"></script>
+<script src="/assets/customer-drafts-v830.js?v=228"></script>
+<script src="/assets/account.js?v=228"></script>
+<script src="/assets/main.js?v=228"></script>
 <script>
   // ?next=/tickets — куда вернуться после входа (например, сюда привёл
   // клик «Оплатить» на странице без авторизации, см. assets/payments.js).
@@ -295,16 +296,36 @@ body{max-width:100vw}
   // заново, по кругу. Теперь «код отправлен на …» (без пароля и без самого
   // кода) хранится 10 минут — столько действует код — и форма открывается
   // сразу на поле для кода.
-  var CODE_DRAFT_KEY = 'aelita_account_code_draft';
-  function saveCodeDraft(d) { try { if (d) { d.at = d.at || Date.now(); localStorage.setItem(CODE_DRAFT_KEY, JSON.stringify(d)); } else localStorage.removeItem(CODE_DRAFT_KEY); } catch (e) {} }
+  var codeDrafts = window.AelitaCustomerDrafts;
+  var CODE_DRAFT_KEY = 'account-code';
+  try { localStorage.removeItem('aelita_account_code_draft'); } catch (e) {}
+  function saveCodeDraft(d) {
+    if (d && !codeDrafts.token()) {
+      d.at = d.at || Date.now();
+      codeDrafts.write(CODE_DRAFT_KEY, 'guest', d, d.at);
+    }
+    else codeDrafts.remove(CODE_DRAFT_KEY);
+  }
   function readCodeDraft() {
-    try {
-      var d = JSON.parse(localStorage.getItem(CODE_DRAFT_KEY) || 'null');
-      var age=d&&Date.now()-Number(d.at);
-      if(d&&typeof d.email==='string'&&/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(d.email)&&['login','register'].indexOf(d.kind)>=0&&age>=0&&age<10*60*1000)return d;
-      localStorage.removeItem(CODE_DRAFT_KEY);
-    } catch (e) {}
+    var d = codeDrafts.read(CODE_DRAFT_KEY, 'guest', 10 * 60 * 1000);
+    if (d && typeof d.email === 'string' && /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(d.email) &&
+      ['login', 'register'].includes(d.kind)) return d;
+    codeDrafts.remove(CODE_DRAFT_KEY);
     return null;
+  }
+  function redirectAfterAuth() {
+    saveCodeDraft(null);
+    if (NEXT_PATH) {
+      var path = new URL(NEXT_PATH).pathname;
+      var key = 'product-login:' + path;
+      var pending = codeDrafts.read(key, 'guest', 30 * 60 * 1000);
+      var owner = codeDrafts.owner(codeDrafts.token());
+      if (pending && owner && owner !== 'guest' && (!pending.expectedOwner || pending.expectedOwner === owner)) {
+        codeDrafts.write('product:' + path, owner, pending.fields);
+      }
+      codeDrafts.remove(key);
+    }
+    location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/');
   }
   var CODE_ALREADY = function (e) { return EN ? 'The code has already been sent to ' + e + ' (check Spam too). Enter it below — no need to request a new one.' : 'Код уже отправлен на ' + e + ' (проверьте и «Спам»). Введите его ниже — новый присылать не нужно.'; };
 
@@ -315,7 +336,7 @@ body{max-width:100vw}
     if (!email || !password) { showErr('loginErr', (EN ? "Enter your email and password." : 'Укажите email и пароль.')); return; }
     window.AELITA_account.login(email, password, {
       buttonEl: document.getElementById('loginBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
+      onSuccess: redirectAfterAuth,
       onError: function (msg) { showErr('loginErr', msg); },
     });
   }
@@ -334,7 +355,8 @@ body{max-width:100vw}
     if (!document.getElementById('reg-consent').checked) { showErr('regErr', (EN ? "Please accept the offer and the personal data processing terms." : 'Отметьте согласие с офертой и обработкой персональных данных.')); return; }
     window.AELITA_account.register(name, email, password, {
       buttonEl: document.getElementById('registerBtn'),
-      onSuccess: function () { location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
+      isCurrent: function () { return email === document.getElementById('reg-email').value.trim(); },
+      onSuccess: redirectAfterAuth,
       // pack-v592: кабинет ещё не создан — ждём код из письма.
       onNeedCode: function (data) {
         REG_PENDING = { email: data.email || email, pendingId: data.pending_id };
@@ -357,9 +379,11 @@ body{max-width:100vw}
     if (!REG_PENDING) { doRegister(); return; }
     var code = document.getElementById('reg-code').value.replace(/\s+/g, '');
     if (!/^\d{6}$/.test(code)) { showErr('regErr', (EN ? "Enter the 6-digit code from the email." : 'Введите 6 цифр из письма.')); return; }
-    window.AELITA_account.confirmRegistration(REG_PENDING.email, code, REG_PENDING.pendingId, {
+    var pending = REG_PENDING;
+    window.AELITA_account.confirmRegistration(pending.email, code, pending.pendingId, {
+      isCurrent: function () { return pending === REG_PENDING && pending.email.toLowerCase() === document.getElementById('reg-email').value.trim().toLowerCase(); },
       buttonEl: document.getElementById('regConfirmBtn'),
-      onSuccess: function () { saveCodeDraft(null); location.href = NEXT_PATH || (EN ? '/en/account/dashboard/' : '/account/dashboard/'); },
+      onSuccess: redirectAfterAuth,
       onError: function (msg, data) {
         if (data && data.error === 'registration_expired') { REG_PENDING = null; saveCodeDraft(null); document.getElementById('reg-code-box').style.display = 'none'; }
         showErr('regErr', msg);
@@ -393,24 +417,40 @@ body{max-width:100vw}
     document.getElementById('code-value').value='';document.getElementById('code-name').value='';document.getElementById('code-consent').checked=false;
     document.getElementById('codeLoginBtn').textContent=EN?'Sign in →':'Войти →';hideErr('codeErr');
   }
+  var entryToken = codeDrafts.token();
+  function onAccountChange() {
+    if (entryToken === codeDrafts.token()) return;
+    entryToken = codeDrafts.token();
+    resetCodeStep();
+    REG_PENDING = null;
+    for (var id of ['login-email', 'login-password', 'reg-name', 'reg-email', 'reg-password', 'reg-code', 'code-email']) {
+      document.getElementById(id).value = '';
+    }
+    document.getElementById('reg-consent').checked = false;
+    document.getElementById('reg-code-box').style.display = 'none';
+  }
+  window.addEventListener('storage', function (event) {
+    if (event.key === codeDrafts.TOKEN_KEY || event.key === null) onAccountChange();
+  });
+  window.addEventListener('pageshow', function (event) { if (event.persisted) onAccountChange(); });
   document.getElementById('code-email').addEventListener('input',function(){if(CODE_EMAIL&&codeEmail()===CODE_EMAIL)return;resetCodeStep();});
   document.getElementById('code-email').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doSendCode();}});
   function doSendCode(){
     if(CODE_SENDING||document.getElementById('codeLoginBtn').disabled)return;
     hideErr('codeErr');var email=codeEmail(),input=document.getElementById('code-email');
     if(!email||!input.validity.valid){showErr('codeErr',EN?'Enter a valid email address.':'Укажите корректный адрес почты.');input.focus();return;}
-    var sequence=++CODE_SEQUENCE;CODE_SENDING=true;
+    var sequence=++CODE_SEQUENCE, token=codeDrafts.token();CODE_SENDING=true;
     window.AELITA_account.requestLoginCode(email,{
       buttonEl:document.getElementById('codeSendBtn'),
       onSuccess:function(){
-        if(sequence!==CODE_SEQUENCE||codeEmail()!==email)return;
+        if(sequence!==CODE_SEQUENCE||codeEmail()!==email||token!==codeDrafts.token())return;
         CODE_EMAIL=email;document.getElementById('code-step2').style.display='block';document.getElementById('code-new').style.display='none';document.getElementById('code-value').value='';
         document.getElementById('codeLoginBtn').textContent=EN?'Sign in →':'Войти →';
         document.getElementById('codeSentOk').textContent=EN?'Code sent to '+email+'. Check Spam too. It is valid for 10 minutes.':'Код отправлен на '+email+'. Проверьте и папку «Спам». Он действует 10 минут.';
         document.getElementById('code-value').focus();saveCodeDraft({kind:'login',email:email});
       },
       onError:function(msg,data){
-        if(sequence!==CODE_SEQUENCE||codeEmail()!==email)return;
+        if(sequence!==CODE_SEQUENCE||codeEmail()!==email||token!==codeDrafts.token())return;
         if(data&&data.error==='code_request_uncertain'){
           CODE_EMAIL=email;document.getElementById('code-step2').style.display='block';
           document.getElementById('codeSentOk').textContent=EN?'If the code has arrived, enter it below. Otherwise retry the request.':'Если код пришёл, введите его ниже. Если письма нет, повторите запрос.';
@@ -434,7 +474,7 @@ body{max-width:100vw}
     }
     window.AELITA_account.loginWithCode(fields,{
       buttonEl:document.getElementById('codeLoginBtn'),isCurrent:function(){return sequence===CODE_SEQUENCE&&email===codeEmail();},
-      onSuccess:function(){saveCodeDraft(null);location.href=NEXT_PATH||(EN?'/en/account/dashboard/':'/account/dashboard/');},
+      onSuccess:redirectAfterAuth,
       onNeedRegistration:function(){var cd=readCodeDraft();if(cd&&cd.kind==='login'){cd.isNew=true;saveCodeDraft(cd);}document.getElementById('code-new').style.display='block';document.getElementById('codeLoginBtn').textContent=EN?'Create account →':'Создать кабинет →';document.getElementById('code-name').focus();},
       onError:function(msg){showErr('codeErr',msg);}
     });

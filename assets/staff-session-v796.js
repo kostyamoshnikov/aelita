@@ -6,16 +6,24 @@
     return memory;
   }
   function set(x){
-    var value={crmToken:x.token||x.crmToken||'',adminToken:x.adminToken||'',user:x.user||null};memory=value;
+    var value={crmToken:x.token||x.crmToken||'',adminToken:x.adminToken||'',user:x.user||null};memory=null;
     try { localStorage.setItem(CRM,value.crmToken);if(value.adminToken)localStorage.setItem(ADMIN,value.adminToken);else localStorage.removeItem(ADMIN);localStorage.setItem(KEY,JSON.stringify(value));sessionStorage.removeItem(KEY); }
-    catch(_){try{[KEY,CRM,ADMIN].forEach(function(k){localStorage.removeItem(k);});}catch(_){}try{sessionStorage.setItem(KEY,JSON.stringify(value));}catch(_){}}
+    catch(_){try{[KEY,CRM,ADMIN].forEach(function(k){localStorage.removeItem(k);});}catch(_){}try{sessionStorage.setItem(KEY,JSON.stringify(value));}catch(_){memory=value;}}
     return value;
   }
   function clear(){memory=null;for(var i=0;i<2;i++){try{var s=i?sessionStorage:localStorage;[KEY,CRM,ADMIN].forEach(function(k){s.removeItem(k);});}catch(_){}}}
-  window.AelitaStaffSession={key:KEY,read:read,set:set,clear:clear};
+  function adminScope(){
+    var token;
+    try{token=localStorage.getItem(ADMIN);}catch(_){return null;}
+    if(!token)return null;
+    if(!token.startsWith('as1_'))return 'legacy';
+    var value=read();
+    return value?.adminToken===token&&value.user?.id ? 'staff:'+value.user.id : null;
+  }
+  window.AelitaStaffSession={key:KEY,read:read,set:set,clear:clear,adminScope:adminScope};
   window.addEventListener('storage',function(e){
-    if(e.key!==KEY)return;
+    if(e.key!==KEY&&e.key!==null)return;
     var old=null,next=null;try{old=e.oldValue&&JSON.parse(e.oldValue);next=e.newValue&&JSON.parse(e.newValue);}catch(_){}
-    if(!next||!old||next.crmToken!==old.crmToken){memory=next;window.dispatchEvent(new CustomEvent('aelita-staff-session-changed'));if(window.location&&typeof window.location.reload==='function')window.location.reload();}
+    if(!next||!old||next.crmToken!==old.crmToken){memory=null;try{sessionStorage.removeItem(KEY);}catch(_){}window.dispatchEvent(new CustomEvent('aelita-staff-session-changed'));if(window.location&&typeof window.location.reload==='function')window.location.reload();}
   });
 }());
