@@ -37,6 +37,10 @@
 .cinema-landing .cinema-questions{padding-left:1.45em;margin:16px 0 20px}
 .cinema-landing .cinema-questions li+li{margin-top:8px}
 .cinema-landing .cinema-series-thumb{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block;margin-bottom:22px}
+.cinema-landing .cinema-poster-frame{margin:0;min-width:0}
+.cinema-landing .cinema-poster-picture{display:block}
+.cinema-landing .cinema-hero-image.cinema-poster,.cinema-landing .cinema-series-thumb.cinema-poster{aspect-ratio:1/1;object-fit:contain;max-height:none}
+.cinema-landing .cinema-poster-caption{margin:10px 0 0;color:var(--cinema-quiet);font-size:.85rem;line-height:1.5;overflow-wrap:anywhere}
 .cinema-notices{margin:64px auto 18px;padding:0}
 @media(max-width:720px){
   .cinema-landing .cinema-hero,.cinema-landing .cinema-grid,.cinema-notices .cinema-grid{grid-template-columns:minmax(0,1fr)}
