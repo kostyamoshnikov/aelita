@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 848,
+  "release": 850,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -1808,8 +1808,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "ffa2f62451ca65ad9c3009ab0f9f7579a5a8b4cea6d743c243ff87656eb48963",
+  "changelog_sha256": "3bbb51afb384d3e5c495aacd66ee8b29521bdee0eef7992af98ea1e1f35a7717",
   "recent_versions": [
+    850,
+    849,
     848,
     847,
     846,
@@ -1817,8 +1819,6 @@
     844,
     843,
     842,
-    841,
-    840,
-    839
+    841
   ]
 }
