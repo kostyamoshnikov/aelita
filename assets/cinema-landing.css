@@ -4,6 +4,8 @@
   --cinema-quiet:var(--sand,#c9b8a3);
   color:var(--bone,#eee4d6);
   padding:clamp(105px,13vw,166px) 0 clamp(64px,11vw,136px);
+  /* Before main.js measures the fixed header, its CSS minimum is 120px. */
+  padding-top:max(clamp(105px,13vw,166px),calc(var(--nav-h,120px) + 16px));
 }
 .cinema-landing h1,.cinema-landing h2,.cinema-landing h3,.cinema-notices h2,.cinema-notices h3{
   font-family:'Montserrat',sans-serif;font-weight:300;letter-spacing:-.04em;line-height:1.03;

@@ -618,11 +618,20 @@ window.AELITA_formMessageClear = function (anchorEl) {
 // а не уходит под неё. Шапка меняет высоту между брейкпоинтами, поэтому
 // меряем, а не прописываем число.
 (function () {
+  var observedNav;
+  var observer = 'ResizeObserver' in window ? new ResizeObserver(setNavH) : null;
   function setNavH() {
     var navs = document.querySelectorAll('nav');
     for (var i = 0; i < navs.length; i++) {
       if (getComputedStyle(navs[i]).position === 'fixed' && navs[i].offsetHeight) {
-        document.documentElement.style.setProperty('--nav-h', navs[i].offsetHeight + 'px');
+        var style = document.documentElement.style;
+        var height = navs[i].offsetHeight + 'px';
+        if (style.getPropertyValue('--nav-h') !== height) style.setProperty('--nav-h', height);
+        if (observer && observedNav !== navs[i]) {
+          observer.disconnect();
+          observedNav = navs[i];
+          observer.observe(observedNav);
+        }
         return;
       }
     }
