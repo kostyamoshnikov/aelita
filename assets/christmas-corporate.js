@@ -49,6 +49,7 @@
     };
     var key = JSON.stringify(values);
     if (!pending || pending.key !== key) pending = { key: key, id: aelitaLeadId() };
+    var conflict = false;
     var label = button.textContent;
     button.textContent = en ? 'Sending…' : 'Отправляем…';
     button.disabled = true;
@@ -58,6 +59,10 @@
       var sent = await window.AELITA_sendLead('Рождественский салон · корпоративный', values, {
         clientId: pending.id,
         website: fields.website.value,
+        onConflict: function () {
+          conflict = true;
+          pending = null;
+        },
       });
       if (!sent) throw new Error('lead_not_sent');
       form.reset();
@@ -65,7 +70,13 @@
       success.hidden = false;
       success.focus();
     } catch (_) {
-      window.AELITA_formMessage(button, AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en);
+      if (conflict) {
+        window.AELITA_formMessage(button,
+          'Не удалось подтвердить заявку. Проверьте поля и отправьте её ещё раз.',
+          'We could not confirm the enquiry. Check the fields and send it again.');
+      } else {
+        window.AELITA_formMessage(button, AELITA_LEAD_FAIL.ru, AELITA_LEAD_FAIL.en);
+      }
     } finally {
       button.textContent = label;
       button.disabled = false;
