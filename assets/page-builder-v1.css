@@ -22,6 +22,16 @@
 .pb-text strong{color:var(--bone);font-weight:500}
 .pb-text a{color:var(--gold);text-decoration:underline;text-decoration-color:rgba(214,181,122,.4);text-underline-offset:3px;overflow-wrap:anywhere}
 .pb-note{font-size:0.875rem;color:var(--sand);opacity:.8;font-style:italic}
+
+.free-online-registration [hidden]{display:none}
+.free-online-registration form{max-width:420px;display:grid;gap:16px}
+.free-online-registration label{display:grid;gap:8px;color:var(--sand);line-height:1.5}
+.free-online-registration :is([data-name],[data-phone]){box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;background:var(--ink);color:var(--bone);border:1px solid var(--sand);font:inherit}
+.free-online-registration .free-online-consent{display:flex;align-items:flex-start;gap:10px}
+.free-online-consent input{margin:3px 0 0;width:18px;height:18px;flex:none;accent-color:var(--gold)}
+.free-online-registration .btn-outline{margin:0;justify-self:start;text-decoration:none;max-width:100%;white-space:normal}
+.free-online-registration [data-check]{margin-top:16px}
+.free-online-registration button:disabled{opacity:.6;cursor:default}
 @media(max-width:900px){.pb-grid{grid-template-columns:minmax(0,1fr);gap:36px}.pb-photo{max-width:340px}.pb-venue .pb-photo,.pb-project .pb-photo,.pb-article .pb-photo{max-width:none}}
 @media(max-width:430px){.pb-hero-in{padding:110px 0 50px}.pb-lead{font-size:1rem}.pb-links a{width:100%;text-align:center}}
 
