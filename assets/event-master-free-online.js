@@ -20,6 +20,8 @@
     invalid_title: 'Проверьте русское и английское названия анонса.',
   };
   const date = new Intl.DateTimeFormat('ru-RU', {dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Moscow'});
+  const mailLabels = {pending: 'ожидают', sending: 'отправляются', sent: 'приняты SMTP',
+    failed: 'отказ', unknown: 'требуют сверки', skipped: 'пропущены'};
 
   function mount(root, { api, selection, isCurrent }) {
     const line = root.querySelector('[role="status"]');
@@ -28,6 +30,16 @@
     const configure = root.querySelector('[data-configure]');
     const open = root.querySelector('[data-open]');
     const close = root.querySelector('[data-close]');
+    const streamPanel = root.querySelector('[data-stream-panel]');
+    const streamLine = root.querySelector('[data-stream-status]');
+    const streamUrl = root.querySelector('[data-stream-url]');
+    const streamEnd = root.querySelector('[data-stream-end]');
+    const streamConfirm = root.querySelector('[data-stream-confirm]');
+    const streamSave = root.querySelector('[data-stream-save]');
+    const providerConfirm = root.querySelector('[data-stream-provider-confirm]');
+    const stopConfirm = root.querySelector('[data-stream-stop-confirm]');
+    const pauseStream = root.querySelector('[data-stream-pause]');
+    const finishStream = root.querySelector('[data-stream-finish]');
     let view = null;
 
     function setActions(state) {
@@ -43,10 +55,33 @@
       line.textContent = '';
       refresh.disabled = false;
       setActions(null);
+      if (streamUrl) streamUrl.value = '';
+      if (streamConfirm) streamConfirm.checked = false;
+      if (providerConfirm) providerConfirm.checked = false;
+      if (stopConfirm) stopConfirm.checked = false;
+      if (streamLine) streamLine.textContent = '';
+      if (streamEnd) streamEnd.value = '';
+      if (streamSave) streamSave.disabled = true;
+      if (pauseStream) pauseStream.hidden = true;
+      if (finishStream) finishStream.hidden = true;
     }
 
     function current(context) {
       return view === context && isCurrent(context.epoch);
+    }
+    function renderStream(context, stream) {
+      context.stream = stream;
+      streamSave.disabled = !stream.enabled || stream.state === 'finished';
+      streamUrl.value = ''; streamConfirm.checked = false;
+      if (providerConfirm) providerConfirm.checked = false;
+      if (stopConfirm) stopConfirm.checked = false;
+      streamEnd.value = stream.accessUntil ? stream.accessUntil.slice(0, 16) : '';
+      const labels = {active: 'Подключение настроено', paused: 'Выдача адреса приостановлена. Для возобновления нужна новая комната', finished: 'Доступ завершён', preparing: 'Подключение ещё не настроено'};
+      streamLine.textContent = (labels[stream.state] || labels.preparing) + ' · версия ' + stream.revision;
+      if (stream.configured && (!stream.providerReady || stream.providerStatus !== 'operator_attested')) streamLine.textContent += ' · требуется проверка комнаты организатором';
+      if (stream.providerStatus === 'manual_action_required') streamLine.textContent += ' · внешнюю комнату нужно проверить и закрыть вручную';
+      if (pauseStream) pauseStream.hidden = !stream.configured || stream.state !== 'active';
+      if (finishStream) finishStream.hidden = !stream.configured || stream.state === 'finished';
     }
 
     function render(context, state) {
@@ -55,11 +90,19 @@
       if (!state.visible) return;
       const p = state.program;
       details.textContent = p ? p.title + ' · ' + date.format(new Date(p.datetime)) + ' МСК · мест: ' + p.onlineCapacity : '';
+      const mail = Object.entries(mailLabels).filter(([key]) => state.mail?.[key] > 0)
+        .map(([key, label]) => label + ' ' + state.mail[key]);
+      if (mail.length) details.textContent += ' · Письма · ' + mail.join(' · ');
       line.textContent = statusText[state.status] || 'Обновите состояние записи.';
       setActions(state);
     }
 
     async function read(context, confirmedChange = false) {
+      context.stream = null;
+      if (streamUrl) streamUrl.value = '';
+      if (streamSave) streamSave.disabled = true;
+      if (pauseStream) pauseStream.hidden = true;
+      if (finishStream) finishStream.hidden = true;
       context.busy = true;
       refresh.disabled = true;
       setActions(null);
@@ -68,6 +111,11 @@
         const state = await api({ action: 'event_master_free_online_status', id: context.id }, context.epoch);
         if (!current(context)) return;
         render(context, state);
+        if (streamPanel && state.visible) {
+          const stream = await api({action: 'event_master_free_online_stream_status', id: context.id}, context.epoch);
+          if (!current(context)) return;
+          renderStream(context, stream);
+        }
       } catch (error) {
         if (!current(context) || error.code === 'superseded') return;
         const last = context.state;
@@ -137,6 +185,42 @@
     configure.onclick = () => void change('configure');
     open.onclick = () => void change('open');
     close.onclick = () => void change('close');
+    if (streamSave) streamSave.onclick = async () => {
+      const context = view;
+      if (!context || !current(context) || context.busy || !context.stream?.enabled || context.stream.state === 'finished') return;
+      if (!streamConfirm.checked || !streamUrl.value || !streamEnd.value) {streamLine.textContent = 'Укажите ссылку, окончание и подтверждение.'; return;}
+      const body = {action: 'event_master_free_online_stream_configure', id: context.id,
+        streamRevision: context.stream.revision, request_id: crypto.randomUUID(), joinUrl: streamUrl.value,
+        accessUntil: streamEnd.value + ':00+03:00', confirmEnd: true, confirmReplace: true,
+        confirmProvider: providerConfirm?.checked === true};
+      streamUrl.value = ''; streamConfirm.checked = false; context.busy = true; streamSave.disabled = true;
+      try {
+        const stream = await api(body, context.epoch);
+        if (!current(context)) return;
+        renderStream(context, stream);
+      } catch (_) {
+        if (current(context)) {context.stream = null; streamLine.textContent = 'Результат не подтверждён. Обновите статус перед повтором.';}
+      } finally {if (current(context)) {context.busy = false; streamSave.disabled = !context.stream || !context.stream.enabled || context.stream.state === 'finished';}}
+    };
+    async function stopStream(state) {
+      const context = view;
+      if (!context || !current(context) || context.busy || !context.stream?.configured) return;
+      if (!stopConfirm?.checked) {streamLine.textContent = 'Подтвердите остановку выдачи адреса.'; return;}
+      const body = {action: 'event_master_free_online_stream_set_state', id: context.id, state,
+        reason: state === 'finished' ? 'finished' : 'operator_pause', streamRevision: context.stream.revision,
+        request_id: crypto.randomUUID(), confirmStop: true};
+      context.busy = true; pauseStream.disabled = true; finishStream.disabled = true; stopConfirm.checked = false;
+      try {
+        const stream = await api(body, context.epoch);
+        if (current(context)) renderStream(context, stream);
+      } catch (_) {
+        if (current(context)) {context.stream = null; pauseStream.hidden = true; finishStream.hidden = true;
+          streamLine.textContent = 'Результат остановки не подтверждён. Обновите статус, не повторяя действие вслепую.';}
+      } finally {if (current(context)) {context.busy = false; pauseStream.disabled = false; finishStream.disabled = false;}}
+    }
+    if (pauseStream) pauseStream.onclick = () => stopStream('paused');
+    if (finishStream) finishStream.onclick = () => stopStream('finished');
+    if (streamPanel) window.addEventListener('pagehide', () => {streamUrl.value = '';});
     clear();
     return { clear, sync };
   }

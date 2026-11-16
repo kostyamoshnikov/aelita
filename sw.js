@@ -10,7 +10,7 @@
 // подключаются с `?v=N` (см. Site/README.md), а версия SW-кэша
 // синхронизирована с этим же N.
 
-const SITE_VERSION = 241;
+const SITE_VERSION = 244;
 const MOBILE_ADDON_VERSION='mobile-m1-editor-e1-events-e2-bot-b1-crm-events-directory-r18b-v744r1b';
 const CACHE_NAME = `aelita-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
 const STATIC_CACHE = `aelita-static-v${SITE_VERSION}-${MOBILE_ADDON_VERSION}`;
@@ -69,6 +69,9 @@ self.addEventListener('fetch', event => {
   if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
     event.respondWith(fetch(request, {cache: 'no-store'}));
     return;
+  }
+  if (/^\/(?:en\/)?free-online-access(?:\/|$)/.test(url.pathname)) {
+    event.respondWith(fetch(request, {cache: 'no-store'})); return;
   }
   // A stale public event catalog must never be used as current ticket data.
   if (url.pathname === '/content/events-v1.json' || url.pathname === '/content/directory-v1.json') {

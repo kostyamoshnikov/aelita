@@ -12,11 +12,12 @@
       unavailable: 'Не удалось обновить список. Повторите попытку.',
       login: 'Войдите заново, чтобы увидеть регистрации.', verify: 'Подтвердите почту в личном кабинете.',
       retry: 'Повторить загрузку', kind: 'Онлайн · бесплатно', when: 'МСК', registered: 'Вы зарегистрированы',
-      past: 'Отмена закрыта после начала события', cancel: 'Отменить запись', keep: 'Сохранить запись',
+      past: 'Отмена сейчас закрыта', cancel: 'Отменить запись', keep: 'Сохранить запись',
       confirmTitle: 'Отменить онлайн-регистрацию?', confirm: 'Место освободится после отмены.',
       sending: 'Отменяем запись…', done: 'Запись отменена. Место освобождено.',
-      inactive: 'Эта запись больше не активна.', closed: 'Событие уже началось. Отмена закрыта.',
+      inactive: 'Эта запись больше не активна.', closed: 'Отмена этой записи сейчас закрыта.',
       uncertain: 'Не удалось подтвердить отмену. Попробуйте ещё раз.',
+      notificationBusy: 'Сейчас обрабатывается уведомление. Запись сохранена; повторите отмену позже.',
     },
     en: {
       title: 'Free online registrations', loading: 'Loading your registrations…',
@@ -24,11 +25,12 @@
       unavailable: 'Could not refresh your registrations. Try again.',
       login: 'Sign in again to see your registrations.', verify: 'Confirm your email address in your account.',
       retry: 'Try loading again', kind: 'Online · free', when: 'Moscow time', registered: 'You are registered',
-      past: 'Cancellation closes when the event starts', cancel: 'Cancel registration', keep: 'Keep registration',
+      past: 'Cancellation is currently closed', cancel: 'Cancel registration', keep: 'Keep registration',
       confirmTitle: 'Cancel this online registration?', confirm: 'Cancelling releases your place.',
       sending: 'Cancelling your registration…', done: 'Registration cancelled. Your place was released.',
-      inactive: 'This registration is no longer active.', closed: 'The event has started. Cancellation is closed.',
+      inactive: 'This registration is no longer active.', closed: 'Cancellation for this registration is currently closed.',
       uncertain: 'Could not confirm cancellation. Try again.',
+      notificationBusy: 'A notification is being processed. Your registration remains active; try cancelling later.',
     },
   };
 
@@ -154,6 +156,10 @@
         main.append(element('strong', 'fo-name', label(row)), when,
           element('span', 'fo-meta', t.kind + (row.canCancel ? ' · ' + t.registered : '')));
         item.append(main);
+        const access = element('a', 'btn-outline fo-button', language === 'en' ? 'Open online access' : 'Открыть онлайн-доступ');
+        access.href = (language === 'en' ? '/en' : '') + '/free-online-access/#event=' + encodeURIComponent(row.eventId) + '&registration=' + encodeURIComponent(row.registrationId);
+        item.append(access);
+
         if (row.canCancel) {
           const button = element('button', 'btn-outline fo-button fo-cancel', t.cancel);
           button.type = 'button';
@@ -216,6 +222,7 @@
         confirmation = t.done;
       } catch (error) {
         if (!ownsResponse() || authError(error.code)) return;
+        if (error.code === 'notification_in_progress') {result.textContent = t.notificationBusy; result.focus(); return;}
         if (error.code === 'cancellation_closed') {
           result.textContent = t.closed;
           rows = rows.map(item => key(item) === id ? {...item, canCancel: false} : item);
