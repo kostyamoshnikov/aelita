@@ -15,7 +15,7 @@
 <title>Билет — AELITA PRODUCTION</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<link rel="stylesheet" href="/assets/style.css?v=245">
+<link rel="stylesheet" href="/assets/style.css?v=246">
 <!-- ТЗ С5: билет на экране телефона. Данные — по подписанной ссылке из
      письма или кабинета (GET /tickets/resend-ticket?t=…); после первого
      открытия страница работает без сети: данные — в localStorage, сама
@@ -39,8 +39,8 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
 .tk-hide{display:none}
 </style>
 <!-- pack-v715: версия для слабовидящих — общий режим сайта (у страницы свой шаблон без main.js; копии собирает _tools/DesignSystem/a11y/build_a11y_standalone.py) -->
-<script src="/assets/a11y.js?v=245"></script>
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=245">
+<script src="/assets/a11y.js?v=246"></script>
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=246">
 </head>
 <body>
 <main class="tk">
@@ -86,6 +86,7 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
   }
   function render(d) {
     var h = '';
+    if(d.transitionPending)h += '<p class="tk-moved">' + (EN ? 'The event schedule is being updated. Keep your ticket and QR code; check the confirmed date again before attending.' : 'Расписание события обновляется. Сохраните билет и QR-код; перед посещением проверьте подтверждённую дату ещё раз.') + '</p>';
     if (d.isTest) h += '<p class="tk-bad">' + esc(T.test) + '</p>';
     h += '<h1 class="tk-title">' + esc(EN ? d.titleEn || d.title : d.title) + '</h1>';
     if (d.datetime) h += '<div class="tk-when">' + esc(when(d.datetime)) + '</div>';
@@ -98,7 +99,7 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
       try {
         var qr = qrcode(0, 'M'); qr.addData(d.qrToken); qr.make();
         h += '<div class="tk-qr">' + qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true }) + '</div>';
-        h += '<p class="tk-meta">' + esc(T.showAtEntrance) + '</p>';
+        if(!d.transitionPending)h += '<p class="tk-meta">' + esc(T.showAtEntrance) + '</p>';
       } catch (e) { /* QR не нарисовался — PDF из письма остаётся */ }
     } else if (d.status !== 'valid') {
       h += '<p class="tk-bad">' + esc(T[d.status] || T.notFound) + '</p>';
@@ -136,6 +137,6 @@ body{max-width:100vw;margin:0;background:#0B0B0D;color:#E8E6E1;font-family:'Inte
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});
 })();
 </script>
-<script src="/assets/outage.js?v=245" defer></script>
+<script src="/assets/outage.js?v=246" defer></script>
 </body>
 </html>
