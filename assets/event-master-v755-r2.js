@@ -11,7 +11,7 @@ function token(){try{return editorScope&&editorScope===staffScope()?localStorage
 const KEY='aelita_event_master_drafts_v830:'+editorScope;
 function status(t,bad=false){$('em-status').textContent=t||'';$('em-status').className=bad?'em-error':'em-ok';}
 function message(e){return (e.code==='managed_page_changed'?'Страница события была изменена отдельно от каталога. Публикация остановлена, чтобы сохранить эти правки.':errors[e.code]||'Не получилось выполнить действие. Повторите после проверки соединения.')+(e.field?' Поле: '+e.field:'');}
-function gate(){S.freeOnlinePanel?.clear();if($('em-crm-show'))$('em-crm-show').hidden=true;S.epoch++;S.review=null;$('em-app').hidden=true;$('em-gate').hidden=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());window.AelitaMobileFiles?.clear();}
+function gate(){S.paidStatus?.clear();S.freeOnlinePanel?.clear();if($('em-crm-show'))$('em-crm-show').hidden=true;S.epoch++;S.review=null;$('em-app').hidden=true;$('em-gate').hidden=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());window.AelitaMobileFiles?.clear();}
 async function api(body,epoch=S.epoch){const t=token();if(!t){gate();throw{code:'not_authenticated'};}let r;try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',Authorization:'Bearer '+t},cache:'no-store',body:JSON.stringify(body)});}catch{throw{code:'github_unreachable'};}if(epoch!==S.epoch||token()!==t)throw{code:'superseded'};let d;try{d=await r.json();}catch{throw{code:'github_unreachable'};}if(epoch!==S.epoch||token()!==t)throw{code:'superseded'};if(r.status===401)gate();if(!r.ok||d.error)throw{code:d.error||'event_master_failed',field:d.field};return d;}
 function freshId(){return 'evt-'+Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');}
 function optionalNumber(id){const value=$(id).value;return value===''?null:Number(value);}
@@ -25,6 +25,18 @@ if (freeOnlineRoot) S.freeOnlinePanel = window.AelitaFreeOnlineMaster?.mount(fre
   },
   isCurrent: epoch => epoch === S.epoch && $('em-select').value === S.id && !!token(),
 });
+
+// ADDON-v880-STAGED: read-only; requires the existing authenticated api().
+const paidStatusRoot = $('em-paid-readonly');
+if (paidStatusRoot && window.AelitaPaidStatusReadOnly) {
+  S.paidStatus = window.AelitaPaidStatusReadOnly.mount(paidStatusRoot, {
+    api,
+    selection() {const id=$('em-select').value;return {id,epoch:S.epoch};},
+    isCurrent(sel) {return sel.epoch===S.epoch && $('em-select').value===sel.id && !!token();}
+  });
+  $('em-select').addEventListener('change', () => S.paidStatus.clear());
+}
+
 function savedOnlineQuota(event){
  if(event?.mode==='online')return event.capacity;
  return event?.mode==='hybrid'?event.onlineCapacity:null;
