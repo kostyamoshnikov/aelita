@@ -112,7 +112,7 @@ button.action:disabled{opacity:.5}
 .help-fab{position:fixed;right:16px;bottom:16px;background:var(--coal);border:1px solid var(--sand);color:var(--bone);border-radius:24px;padding:12px 18px;font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 </style>
 <meta name="robots" content="noindex, follow">
-<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=244">
+<link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=245">
 </head>
 <body>
 <div id="gate">
@@ -166,7 +166,7 @@ button.action:disabled{opacity:.5}
      может не открыться (Cloudflare в РФ замедляют). Где есть встроенный
      BarcodeDetector (Chrome на Android) — сначала он, jsQR — запасной. -->
 <script src="/assets/jsQR-1.4.0.js"></script>
-<script src="/assets/analytics-events.js?v=244"></script>
+<script src="/assets/analytics-events.js?v=245"></script>
 <script>
 // ⚠️ Заполнить после деплоя Gateway (см. _tools/Gateway/README.md) —
 // финальное значение https://api.aelita-production.ru/tickets
@@ -572,6 +572,10 @@ async function runFind(){
 // Без связи — поиск по офлайн-базе: найти можно, а пропуск — отметкой в
 // распечатанном списке (отметить проход без QR может только сервер).
 function findOffline(q){
+  if(paidScheduleRequiresOnline()){
+    findResults.innerHTML = '<div class="fr-msg">Для этого события нужен ответ сервера. Восстановите интернет и повторите поиск: сохранённый список может содержать прежние данные.</div>';
+    return;
+  }
   const nq = String(q).toLowerCase().replace(/ё/g, 'е');
   const norm = (x) => String(x || '').toLowerCase().replace(/ё/g, 'е');
   const hits = (door.tickets || []).filter((t) => norm(t.name).includes(nq) || String(t.num) === q.replace(/\D/g, '')).slice(0, 20)
@@ -860,7 +864,33 @@ async function handleScan(token, fromSearch){
 // без связи, и при связи уходит на сервер. Сервер гасит билет, если он
 // действителен; если нет (чужой показ, возвращён, уже прошёл) — в плашке
 // над сканером появится предупреждение для администратора.
+// pack-v851: an old door list cannot establish the current date/status of a
+// managed paid programme. QR payloads are used only to deny offline access;
+// signature, ownership and entry are still checked by the server.
+function paidScheduleRequiresOnline(token, data){
+  const managed = (id) => /^evt-[a-f0-9]{32}(?:-(?:offline|online))?$/.test(String(id || ''));
+  if(managed(expectedPerformanceId) || managed(data && data.performanceId) || managed(data && data.ticketProgramId)) return true;
+  const payload = payloadOf(String(token || '').trim().replace(/^ref:/, ''));
+  return !!(payload && managed(payload.p));
+}
+
+function paidOnlineHelp(){
+  return '<div class="card warn"><div class="status warn">Нужна проверка с интернетом</div>' +
+    '<div class="detail detail-left">Дата и статус этого события могли измениться. Сохранённый список не подтверждает действительность билета.<br>' +
+    'Восстановите связь и проверьте билет ещё раз. Если ответ на «Пропустить» потерян, сначала сверьте результат с сервером: проход мог уже сохраниться.<br>' +
+    'До подтверждения позовите администратора.</div></div>';
+}
+
+function paidOfflineBlocked(ctx){
+  if(!paidScheduleRequiresOnline(ctx && ctx.token, ctx && ctx.data)) return false;
+  if(ctx && isActive(ctx)) show(paidOnlineHelp());
+  else aside('Нужен ответ сервера — результат проверки или прохода не подтверждён.', true);
+  buzz(false);
+  return true;
+}
+
 function offlineHelp(ctx){
+  if(paidScheduleRequiresOnline(ctx && ctx.token, ctx && ctx.data)) return paidOnlineHelp();
   return '<div class="card warn"><div class="status warn">НЕТ СВЯЗИ — билет не проверить</div>' +
     '<div class="detail detail-left">' +
     '1. Проверьте интернет (Wi-Fi или мобильные данные) и отсканируйте ещё раз.<br>' +
@@ -871,6 +901,7 @@ function offlineHelp(ctx){
 }
 
 function unverifiedPass(ctx){
+  if(paidOfflineBlocked(ctx)) return;
   if(!confirm('Пропустить без проверки? Билет проверится, когда вернётся связь; если он недействителен — администратор увидит предупреждение.')) return;
   const item = enqueue(Object.assign({}, ctx, {data: {name: 'билет без проверки'}}));
   if(item){
@@ -1197,6 +1228,7 @@ async function confirmRedeem(ctx){
   }catch(e){
     if(e instanceof UnauthorizedError) return; // showGate() уже показан из api()
     if(e instanceof NetworkError){
+      if(paidOfflineBlocked(ctx)) return;
       // офлайн — ставим в очередь (проверка этого билета только что прошла
       // на сервере), показываем результат «пропущен, отправим».
       ctx.maybeSent = !!e.timedOut;
@@ -1283,6 +1315,12 @@ function renderDoorBadge(){
   const el = document.getElementById('offline-badge');
   if(!el) return;
   if(!expectedPerformanceId){ el.style.display = 'none'; return; }
+  if(paidScheduleRequiresOnline()){
+    el.textContent = 'Для этого события проверка и отметка прохода доступны с интернетом. Сохранённый список — только справочная информация.';
+    el.style.display = 'block';
+    renderCounter();
+    return;
+  }
   if(!door || door.performanceId !== expectedPerformanceId){ el.textContent = '⏳ Офлайн-база ещё не загружена — без связи билеты не проверить'; el.style.display = 'block'; return; }
   el.textContent = '💾 Офлайн-база: ' + (door.tickets || []).length + ' бил.' + ((door.invites || []).length ? ', ' + door.invites.length + ' пригл.' : '') + ' · обновлена ' + fmtTime(door.at);
   el.style.display = 'block';
@@ -1341,6 +1379,10 @@ async function doorMark(token, unmark, data){
 }
 // → true, если карточка показана (иначе — обычная инструкция «нет связи»).
 async function offlineCheck(token, seq){
+  if(paidScheduleRequiresOnline(token)){
+    if(seq === scanSeq){ show(paidOnlineHelp()); buzz(false); }
+    return true;
+  }
   if(!door || door.performanceId !== expectedPerformanceId || !(window.crypto && crypto.subtle)) return false;
   if(expectedPerformanceId === 'matritsa-2026-11-14' && (!door.formatLockedAt || Date.now() < Date.parse(door.formatLockedAt) || Date.parse(door.at) < Date.parse(door.formatLockedAt))){
     show('<div class="card warn"><div class="status warn">Обновите базу после закрытия перехода в онлайн — 13 ноября, 17:00 МСК. До обновления проверяйте билеты с интернетом.</div></div>');
@@ -1409,6 +1451,7 @@ async function offlineCheck(token, seq){
   return true;
 }
 function offlineRedeem(ctx){
+  if(paidOfflineBlocked(ctx)) return;
   const item = enqueue(ctx);
   buzz(!!item);
   if(item) ctx.queuedId = item.id;
