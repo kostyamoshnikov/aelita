@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 928,
+  "release": 930,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -264,7 +264,7 @@
     },
     {
       "path": "admin/events/index.html",
-      "sha256": "5a6d3b45845b7db7df6ce18bc00cbf3cd40061ea692ee5f4eede2e9a359a4665"
+      "sha256": "b357c4808e4982d2419063068f3e27424f6ec802027af840b10a066fa964713b"
     },
     {
       "path": "admin/index.html",
@@ -388,7 +388,7 @@
     },
     {
       "path": "assets/event-master-v755-r2.js",
-      "sha256": "bbad231810e7e6db898e1fdfa177681327497f7c07f7f339b027fcbdae32fe5d"
+      "sha256": "72ae493c9064ce3d6fcf7399d323f3ebf24b581ab21a474ec37e67909405e425"
     },
     {
       "path": "assets/event-master.css",
@@ -435,6 +435,10 @@
       "sha256": "8dbe76ffea950def2c91bcff06322ff2ff6322fdf91966ea586c9a1c09541038"
     },
     {
+      "path": "assets/paid-notices-v929.js",
+      "sha256": "edbab5b20afdb4f4b51d03e6dd80c3bdd54b090273113a3bfda7889bc6fcedbb"
+    },
+    {
       "path": "assets/paid-status-readonly-v880.js",
       "sha256": "9b17f666e198457781a52aa3bd5dbd5ab5161bb73ca41074df9be9da182ce89d"
     },
@@ -444,7 +448,7 @@
     },
     {
       "path": "assets/paid-transition-v928.js",
-      "sha256": "d74a8af316d88e779c6df883fb6c25009d29bf75d35e20efaafbe78ebfff209f"
+      "sha256": "96b2211815c3cdd23db0457da6d7fbba6e5e6f1c5ddf72bc2dd6bf5dfca82f80"
     },
     {
       "path": "assets/payments.js",
@@ -1824,8 +1828,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "ce58b3fce3fcff75d88cfb4e73964fa30f2bbb29e73330ef4b1a975555d4e18f",
+  "changelog_sha256": "3c2661e94a457ef6649cc3fe2c43fdd88bc6aa4585e9f01e1ddcee2520c95af2",
   "recent_versions": [
+    930,
+    929,
     928,
     927,
     926,
@@ -1833,8 +1839,6 @@
     924,
     923,
     921,
-    920,
-    918,
-    916
+    920
   ]
 }

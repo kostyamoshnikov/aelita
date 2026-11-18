@@ -49,7 +49,15 @@ if(paidFlowRoot&&window.AelitaPaidTransition){
    return paidFlowScope&&id===S.id&&!$('em-app').hidden&&event&&event.mode==='offline'&&event.accessKind==='paid'&&S.connectedAnnouncements.includes(id)?{id,scope:paidFlowScope,epoch:S.epoch,title:event.title}:null;
   },
   isCurrent(c){return c.scope===paidFlowScope&&c.epoch===S.epoch&&c.id===S.id&&$('em-select').value===c.id&&!$('em-app').hidden&&!!token();},
-  onChange(s){if(paidStatusRoot)paidStatusRoot.hidden=!!s.context;S.paidFlowBusy=s.busy;}
+  onChange(s){if(paidStatusRoot)paidStatusRoot.hidden=!!s.context;S.paidFlowBusy=s.busy;
+   if(!s.context||s.snapshot)S.paidFlowSnapshot=s;S.paidNotices?.syncIfChanged();}
+ });
+ const noticeRoot=$('em-paid-notices');
+ if(noticeRoot&&window.AelitaPaidNotices)S.paidNotices=window.AelitaPaidNotices.mount(noticeRoot,{
+  api,journal,
+  context(){const s=S.paidFlowSnapshot,p=s?.snapshot?.paid;return s?.context&&p?.state==='active'?{...s.context,operationId:p.operationId}:null;},
+  isCurrent(c){return c.scope===paidFlowScope&&c.epoch===S.epoch&&c.id===S.id&&$('em-select').value===c.id&&!$('em-app').hidden&&!!token();},
+  onChange(s){S.paidNoticeBusy=s.busy;}
  });
  const capturedToken=token();
  if(capturedToken&&window.crypto?.subtle){
@@ -59,7 +67,7 @@ if(paidFlowRoot&&window.AelitaPaidTransition){
   }).catch(()=>{});
  }
  $('em-select').addEventListener('change',()=>S.paidFlow.clear());
- window.addEventListener('beforeunload',event=>{if(S.paidFlowBusy){event.preventDefault();event.returnValue='';}});
+ window.addEventListener('beforeunload',event=>{if(S.paidFlowBusy||S.paidNoticeBusy){event.preventDefault();event.returnValue='';}});
 }
 
 function savedOnlineQuota(event){
