@@ -11,7 +11,7 @@ function token(){try{return editorScope&&editorScope===staffScope()?localStorage
 const KEY='aelita_event_master_drafts_v830:'+editorScope;
 function status(t,bad=false){$('em-status').textContent=t||'';$('em-status').className=bad?'em-error':'em-ok';}
 function message(e){return (e.code==='managed_page_changed'?'Страница события была изменена отдельно от каталога. Публикация остановлена, чтобы сохранить эти правки.':errors[e.code]||'Не получилось выполнить действие. Повторите после проверки соединения.')+(e.field?' Поле: '+e.field:'');}
-function gate(){S.paidStatus?.clear();S.freeOnlinePanel?.clear();if($('em-crm-show'))$('em-crm-show').hidden=true;S.epoch++;S.review=null;$('em-app').hidden=true;$('em-gate').hidden=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());window.AelitaMobileFiles?.clear();}
+function gate(){S.paidStatus?.clear();S.freeOnlinePanel?.clear();if($('em-crm-show'))$('em-crm-show').hidden=true;S.epoch++;S.review=null;$('em-app').hidden=true;$('em-gate').hidden=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());window.AelitaMobileFiles?.clear();S.paidFlow?.clear();}
 async function api(body,epoch=S.epoch){const t=token();if(!t){gate();throw{code:'not_authenticated'};}let r;try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',Authorization:'Bearer '+t},cache:'no-store',body:JSON.stringify(body)});}catch{throw{code:'github_unreachable'};}if(epoch!==S.epoch||token()!==t)throw{code:'superseded'};let d;try{d=await r.json();}catch{throw{code:'github_unreachable'};}if(epoch!==S.epoch||token()!==t)throw{code:'superseded'};if(r.status===401)gate();if(!r.ok||d.error)throw{code:d.error||'event_master_failed',field:d.field};return d;}
 function freshId(){return 'evt-'+Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');}
 function optionalNumber(id){const value=$(id).value;return value===''?null:Number(value);}
@@ -35,6 +35,31 @@ if (paidStatusRoot && window.AelitaPaidStatusReadOnly) {
     isCurrent(sel) {return sel.epoch===S.epoch && $('em-select').value===sel.id && !!token();}
   });
   $('em-select').addEventListener('change', () => S.paidStatus.clear());
+}
+
+// v928: current-session journal contains technical commands only, never credentials.
+let paidFlowScope=null;
+const paidFlowRoot=$('em-paid-workflow');
+if(paidFlowRoot&&window.AelitaPaidTransition){
+ let journal;try{journal=window.sessionStorage;}catch(_){}
+ S.paidFlow=window.AelitaPaidTransition.mount(paidFlowRoot,{
+  api,journal,
+  context(){
+   const id=$('em-select').value,event=S.events.find(e=>e.id===id);
+   return paidFlowScope&&id===S.id&&!$('em-app').hidden&&event&&event.mode==='offline'&&event.accessKind==='paid'&&S.connectedAnnouncements.includes(id)?{id,scope:paidFlowScope,epoch:S.epoch,title:event.title}:null;
+  },
+  isCurrent(c){return c.scope===paidFlowScope&&c.epoch===S.epoch&&c.id===S.id&&$('em-select').value===c.id&&!$('em-app').hidden&&!!token();},
+  onChange(s){if(paidStatusRoot)paidStatusRoot.hidden=!!s.context;S.paidFlowBusy=s.busy;}
+ });
+ const capturedToken=token();
+ if(capturedToken&&window.crypto?.subtle){
+  window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([editorScope,capturedToken]))).then(bytes=>{
+   if(token()!==capturedToken)return;
+   paidFlowScope=Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');S.paidFlow.sync();
+  }).catch(()=>{});
+ }
+ $('em-select').addEventListener('change',()=>S.paidFlow.clear());
+ window.addEventListener('beforeunload',event=>{if(S.paidFlowBusy){event.preventDefault();event.returnValue='';}});
 }
 
 function savedOnlineQuota(event){
@@ -186,9 +211,9 @@ function fill(e,asset=null,socialAsset=null,scheduleEditing=false){
   $('em-capacity').value='';
  }
  $('em-summary-en').value=e.summaryEn||'';$('em-description-en').value=e.descriptionEn||'';$('em-host').value=e.host?.name||'';ensureOption('em-host-page',e.host?.page);$('em-host-page').value=e.host?.page||'';$('em-duration').value=e.durationMinutes||90;$('em-kind').value=e.kind||'talk';$('em-age').value=e.ageRating||'18+';$('em-access-kind').value=e.accessKind||'paid';$('em-mode').value=e.mode||'offline';$('em-stage').value=e.stage==='announcement'?'announcement':'dated';$('em-seating').value=e.seating||'general';$('em-hall').value=e.hall||'Синий зал';$('em-price-table').value=e.priceTable||'drama';
- $('em-directory-link').href='/admin/directory/'+(S.locked?'?event='+encodeURIComponent(S.id):'');document.querySelectorAll('[data-lock]').forEach(el=>el.disabled=S.locked);updateDraftMode();$('em-locked').hidden=!S.locked;$('em-form').hidden=false;$('em-result').hidden=true;$('em-publish').disabled=true;$('em-select').value=S.locked||S.publishedAnnouncement?S.id:'';imagePreview();mountSocial(e.social);showStep(0);$('em-save-state').textContent='Сохранённые данные. Изменения не внесены.';listDrafts();showCrmLink();S.freeOnlinePanel?.sync();}
+ $('em-directory-link').href='/admin/directory/'+(S.locked?'?event='+encodeURIComponent(S.id):'');document.querySelectorAll('[data-lock]').forEach(el=>el.disabled=S.locked);updateDraftMode();$('em-locked').hidden=!S.locked;$('em-form').hidden=false;$('em-result').hidden=true;$('em-publish').disabled=true;$('em-select').value=S.locked||S.publishedAnnouncement?S.id:'';imagePreview();mountSocial(e.social);showStep(0);$('em-save-state').textContent='Сохранённые данные. Изменения не внесены.';listDrafts();showCrmLink();S.freeOnlinePanel?.sync();S.paidFlow?.sync();}
 async function load(){saveDraft();S.epoch++;S.freeOnlinePanel?.clear();const epoch=S.epoch;status('Загружаем каталог…');try{const d=await api({action:'event_list'},epoch);S.events=[...d.events,...(d.announcements||[])];S.announcementRevision=d.announcementRevision||0;S.announcementPublishing=d.announcementPublishing===true;S.announcementScheduling=d.announcementScheduling===true;S.announcementTermsVersion=d.announcementTermsVersion===1?1:0;S.announcementTickets=d.announcementTickets===true;S.freeOnlineControl=d.freeOnlineControl===true;S.connectedAnnouncements=d.connectedAnnouncements||[];S.scheduling=S.scheduling&&S.announcementScheduling&&!S.connectedAnnouncements.includes(S.id);S.freeEnabled=d.freeAvailable===true;$('em-free-status').textContent=S.freeEnabled?'Бесплатная очная регистрация включена. Публикация анонса оставит запись закрытой.':'Бесплатная регистрация пока выключена: доступны черновик и макет.';if(S.id)updateDraftMode();S.revision=d.revision;$('em-select').replaceChildren(new Option('Выберите событие',''));S.events.forEach(e=>$('em-select').add(new Option((e.stage==='announcement'?(e.datetime?'Дата назначена · ':'Анонс · '):'')+e.title,e.id)));$('em-legacy').replaceChildren();d.legacy.forEach(e=>{const li=document.createElement('li');li.textContent=e.title;$('em-legacy').append(li);});const pages=d.pages||[];for(const [id,kind] of [['em-host-page','person'],['em-venue-page','venue']]){const old=$(id).value;$(id).replaceChildren(new Option('Без ссылки',''));pages.filter(x=>x.kind===kind).forEach(p=>$(id).add(new Option(p.title,'/'+p.page+'/')));ensureOption(id,old);$(id).value=old;}
- $('em-venues').replaceChildren();(d.venues||[]).forEach(v=>$('em-venues').append(new Option(v.name,v.name)));S.venues=d.venues||[];listDrafts();status('Каталог загружен. Создайте событие или выберите опубликованное.');if(S.id&&S.events.some(e=>e.id===S.id))$('em-select').value=S.id;S.freeOnlinePanel?.sync();await openCrmEntry();
+ $('em-venues').replaceChildren();(d.venues||[]).forEach(v=>$('em-venues').append(new Option(v.name,v.name)));S.venues=d.venues||[];listDrafts();status('Каталог загружен. Создайте событие или выберите опубликованное.');if(S.id&&S.events.some(e=>e.id===S.id))$('em-select').value=S.id;S.freeOnlinePanel?.sync();S.paidFlow?.sync();await openCrmEntry();
  }catch(e){if(e.code!=='superseded')status(message(e),true);}}
 function showCrmLink(){
  const panel=$('em-crm-show');if(!panel||!crmBridge)return;
