@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 956,
+  "release": 958,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -252,7 +252,7 @@
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "88be6b39c85f58a9b6070fc3e69ecf25bb9f793aa8db09325867d6a3b0fd33d7"
+      "sha256": "19fff6f0c91aa1a100c11d00903b5eba9825e8fdd47d70b77f34cb16f3e7e5d7"
     },
     {
       "path": "admin/directory/index.html",
@@ -367,8 +367,16 @@
       "sha256": "83529fd2049383f17b5de95222767595a63e967e960ed24f19d9b452472087f0"
     },
     {
+      "path": "assets/crm-christmas-cms-v958.js",
+      "sha256": "752808eb282a8fa512d4d5cd4726efd1e971f33bba8a939b28c538cbde62f8c7"
+    },
+    {
+      "path": "assets/crm-christmas-v957.js",
+      "sha256": "37c8d25c1ec8f0c5385b7a97731c8ad69192e62405e3d6169dcf8c3c08db2c64"
+    },
+    {
       "path": "assets/crm-core-v1.js",
-      "sha256": "0aeb07a558f76c29c8eb1e31f9709eb0fb4690ea9344718f6ae24d60593240ff"
+      "sha256": "c9ba4f5cb833ff0eef843f404cc511b5b623916f4ac0918b6ab4a85c31c6abad"
     },
     {
       "path": "assets/customer-drafts-v830.js",
@@ -1844,8 +1852,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "cfafc3f2b93375db4a33d69d413b93571d0f74ee497f52d56a1c6e010457f91a",
+  "changelog_sha256": "03ad4bf90a0f9899d88d6e67540da4e4b3308b0815eade66328ea358474f5bf6",
   "recent_versions": [
+    958,
+    957,
     956,
     955,
     930,
@@ -1853,8 +1863,6 @@
     928,
     927,
     926,
-    925,
-    924,
-    923
+    925
   ]
 }

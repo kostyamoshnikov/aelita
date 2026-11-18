@@ -13,8 +13,10 @@
  const projectKinds={project:'Проект',event:'Мероприятие'};
  const statuses={open:'Открыта',in_progress:'В работе',done:'Выполнена',cancelled:'Отменена'};
  const eventKinds={promo_issued:'Отмечена выдача промокода',promo_unlinked:'Связь с промокодом снята',created:'Создана карточка',updated:'Изменена карточка',archived:'В архив',restored:'Восстановлена',erased:'Персональные данные удалены',buyer_contact_removed:'Контакты покупателя удалены',backup_purged:'Копия удалена по сроку (30 дней)',note:'Заметка',merged:'Объединение контактов',created_from_source:'Создано из источника',created_from_csv:'Создано из CSV',source_linked:'Связан источник',source_phone_filled:'Телефон заполнен из источника',reassigned:'Сменён ответственный',bulk_reassigned:'Массовое переназначение',backup_created:'Создана резервная копия',backup_checked:'Проверено восстановление',login:'Вход в CRM',logout:'Выход со всех устройств',logout_current:'Выход из CRM',password_changed:'Изменён пароль',password_reset:'Сброшен пароль',bootstrap:'Создан первый владелец',schema_upgraded:'Включены проекты и мероприятия',task_started:'Задача взята в работу',task_completed:'Задача выполнена',task_reopened:'Задача возвращена',task_cancelled:'Задача отменена'};
+ Object.assign(eventKinds,{christmas_prepared:'Подготовлен рождественский заказ',christmas_order_confirm:'Согласована дата рождественского вечера',christmas_order_cancel:'Отменён рождественский заказ',christmas_order_complete:'Рождественский вечер проведён'});
  const fieldNames={name:'имя',emails:'email',phones:'телефон',roles:'тип контакта',city:'город',tags:'метки',organizationIds:'организации',notes:'описание',ownerId:'ответственный',title:'название',description:'описание',status:'статус',priority:'приоритет',dueAt:'срок',contactId:'контакт',organizationId:'организация',dealId:'сделка',pipeline:'воронка',stage:'этап',amountMinor:'плановая сумма',closeDate:'дата',lostReason:'причина отказа',documentLinks:'документы',type:'тип',website:'сайт',projectId:'проект',kind:'тип проекта',startsAt:'начало',endsAt:'окончание',contactIds:'участники',hostContactId:'ведущий',venueOrganizationId:'площадка',sourceRef:'событие каталога',pageUrl:'публичная страница',publicDirectoryId:'связь с публичной карточкой',access:'права доступа'};
  const work=window.AelitaWork;
+ let bootGeneration=0;
  const state={token:'',user:null,tab:'dashboard',offset:0,items:[],lookups:{contacts:[],organizations:[],deals:[],projects:[],staff:[]},filters:{},entity:null,type:null,importItems:[],importCursor:null};
  function currentStaffToken(){
   const shared=window.AelitaStaffSession?.read()?.crmToken;
@@ -46,11 +48,11 @@
  async function api(body){
    const requestToken=state.token;
    let res,data;
-   try{res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',...(requestToken?{Authorization:'Bearer '+requestToken}:{})},body:JSON.stringify(body),cache:'no-store'});}catch{const err=new Error('Нет соединения с сервером CRM. Повторите проверку соединения.');err.code='crm_connection_unavailable';throw err;}
+   try{res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',...(requestToken&&body.action!=='status'?{Authorization:'Bearer '+requestToken}:{})},body:JSON.stringify(body),cache:'no-store'});}catch{const err=new Error('Нет соединения с сервером CRM. Повторите проверку соединения.');err.code='crm_connection_unavailable';throw err;}
    try{data=await res.json();}catch{const err=new Error('Сервер CRM вернул неожиданный ответ (HTTP '+res.status+'). Повторите проверку соединения.');err.code='crm_invalid_response';err.status=res.status;throw err;}
    if(!data||typeof data!=='object'||Array.isArray(data)){const err=new Error('Сервер CRM вернул неожиданный ответ (HTTP '+res.status+').');err.code='crm_invalid_response';err.status=res.status;throw err;}
    if(requestToken!==state.token||requestToken!==currentStaffToken())throw Error('Рабочий сеанс изменился.');
-   if(!res.ok){if(res.status===401&&!['login','password_change','logout','logout_current'].includes(body.action)){if(hasUnsavedWork()){notice('Сеанс истёк. Введённое осталось в форме. Войдите снова, затем повторите сохранение.',true);reauthenticate();}else{clearSession();gate();}}const err=new Error(data.message||'Не удалось выполнить действие. Попробуйте ещё раз.');err.code=data.error;err.details=data.details;err.status=res.status;throw err;}return data;
+   if(!res.ok){if(res.status===401&&!['status','login','password_change','logout','logout_current'].includes(body.action)){if(hasUnsavedWork()){notice('Сеанс истёк. Введённое осталось в форме. Войдите снова, затем повторите сохранение.',true);reauthenticate();}else{clearSession();gate();}}const err=new Error(data.message||'Не удалось выполнить действие. Попробуйте ещё раз.');err.code=data.error;err.details=data.details;err.status=res.status;throw err;}return data;
  }
  function reauthenticate(){
   if(document.getElementById('crm-reauth'))return;
@@ -70,7 +72,8 @@
  window.addEventListener('storage',e=>{if(e.key===KEY&&!window.AelitaStaffSession&&!e.newValue){clearSession(false);gate();}});
 
  async function start(){
-   const r=await api({action:'me'});if(r.accessVersion!==1){clearSession();gate();notice('Раздел недоступен: его возможности отключены в настройках сервера.',true);return;}state.user=r.user;state.importEnabled=r.importEnabled;state.externalAllowed=r.user.access?.externalHistory!==false;state.activityEnabled=r.activityEnabled===true&&state.externalAllowed;state.historyEnabled=r.historyEnabled===true&&state.externalAllowed;state.segmentsEnabled=r.segmentsEnabled===true;state.analyticsEnabled=r.analyticsEnabled===true&&r.analyticsVersion===1;state.indexEnabled=r.indexEnabled===true&&r.indexVersion===1;state.publicDirectoryEnabled=r.publicDirectoryEnabled===true;state.mailEnabled=r.mailEnabled===true;state.productionReady=r.productionVersion===804&&!!production;state.showEventsReady=r.showEventVersion===1&&!!window.AelitaCrmShowEvents;state.entriesReady=r.entryVersion===1&&!!window.AelitaCrmEntries;state.obligationsReady=r.obligationVersion===1&&!!window.AelitaCrmObligations;state.settlementReady=r.settlementVersion===1&&!!window.AelitaCrmSettlement;state.calendarReady=r.calendarVersion===1&&!!window.AelitaCrmCalendar;state.organizationContactsReady=r.organizationContactVersion>=1;if(state.productionReady)orgTypes=production.orgTypes;
+   bootGeneration++;
+   const r=await api({action:'me'});if(r.accessVersion!==1){clearSession();gate();notice('Раздел недоступен: его возможности отключены в настройках сервера.',true);return;}state.user=r.user;state.importEnabled=r.importEnabled;state.externalAllowed=r.user.access?.externalHistory!==false;state.activityEnabled=r.activityEnabled===true&&state.externalAllowed;state.historyEnabled=r.historyEnabled===true&&state.externalAllowed;state.segmentsEnabled=r.segmentsEnabled===true;state.analyticsEnabled=r.analyticsEnabled===true&&r.analyticsVersion===1;state.indexEnabled=r.indexEnabled===true&&r.indexVersion===1;state.publicDirectoryEnabled=r.publicDirectoryEnabled===true;state.mailEnabled=r.mailEnabled===true;state.productionReady=r.productionVersion===804&&!!production;state.showEventsReady=r.showEventVersion===1&&!!window.AelitaCrmShowEvents;state.entriesReady=r.entryVersion===1&&!!window.AelitaCrmEntries;state.obligationsReady=r.obligationVersion===1&&!!window.AelitaCrmObligations;state.settlementReady=r.settlementVersion===1&&!!window.AelitaCrmSettlement;state.calendarReady=r.calendarVersion===1&&!!window.AelitaCrmCalendar;state.christmasCmsReady=r.christmasCmsVersion===1&&!!window.AelitaChristmasCms;state.christmasBookingsReady=r.christmasBookingVersion===1&&r.christmasBookingsEnabled===true&&!!window.AelitaChristmasBookings;state.organizationContactsReady=r.organizationContactVersion>=1;if(state.productionReady)orgTypes=production.orgTypes;
    if(r.user.mustChange){passwordForm(true);return;}
    if(r.identityVersion>=796&&!r.user.emailVerified){emailForm(true);return;}
    state.lookups=await api({action:'lookups'});
@@ -108,11 +111,12 @@
    if(state.find)await showFind(); // pack-v750: поиск из заказа — после входа
    if(state.taskDraft)await showTaskDraft(); // pack-v751: задача из заказа — после входа
  }
- function hasUnsavedWork(){return !!(dialog.open&&dialog.crmDirty?.()||window.AelitaWorkForms?.hasChanges()||$('#view')?.crmWorkbenchDirty?.()||[...root.querySelectorAll('[data-crm-mail-editor]')].some(panel=>panel.crmMailDirty?.()));}
+ function hasUnsavedWork(){return !!(dialog.open&&dialog.crmDirty?.()||window.AelitaWorkForms?.hasChanges()||$('#view')?.crmWorkbenchDirty?.()||$('#christmas-cms-panel')?.crmCmsDirty?.()||[...root.querySelectorAll('[data-crm-mail-editor]')].some(panel=>panel.crmMailDirty?.()));}
  function canCloseEditor(){if(dialog.dataset.forced==='1')return false;if(window.AelitaWorkForms)return AelitaWorkForms.canClose(dialog);return !dialog.crmDirty?.()||confirm('Закрыть форму без сохранения изменений?');}
  async function leaveMail(){
    if(dialog.open){if(!canCloseEditor())return false;dialog.close();}
 
+   if($('#christmas-cms-panel')?.crmCmsBeforeLeave&&!$('#christmas-cms-panel').crmCmsBeforeLeave())return false;
    if(state.tab==='workbench'&&$('#view')?.crmWorkbenchBeforeLeave&&!await $('#view').crmWorkbenchBeforeLeave())return false;
    for(const panel of root.querySelectorAll('[data-crm-mail-editor]')){
      if(panel.crmMailBeforeLeave&&!await panel.crmMailBeforeLeave())return false;
@@ -422,7 +426,7 @@
      }
      if(type==='deals'){
        view.insertAdjacentHTML('beforeend',production.showPanel(x));
-       if(x.show&&state.showEventsReady){
+       if(x.show&&!x.christmas&&state.showEventsReady){
          const panel=document.createElement('section');panel.className='panel production-panel';panel.setAttribute('aria-live','polite');view.append(panel);
          window.AelitaCrmShowEvents.mount(panel,x,{api,mutate,openDialog,dialog,esc,input,canWrite:canWrite(type,x)&&!x.archivedAt,
            canAdmin:state.user.adminAccess&&state.user.emailVerified,isOwner:isOwner(),active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected,
@@ -439,6 +443,12 @@
        '<section class="panel production-panel"><h2>Источник задачи</h2><p><a href="/admin/?lead='+encodeURIComponent(salonLead[1])+'#inbox">Открыть заявку с сайта ↗</a></p></section>');
      if(state.entriesReady&&r.taskSource)$('#view').insertAdjacentHTML('beforeend','<section class="panel production-panel"><h2>Источник задачи</h2>'+
       (r.taskSource.unavailable?'<p class="hint">Источник недоступен.</p>':'<p><a href="'+esc(window.AelitaCrmEntries.linkFor(r.taskSource))+'">Открыть запись общения ↗</a></p>')+'</section>');
+   }
+   if(state.christmasBookingsReady&&((type==='deals'&&x.christmas)||(type==='tasks'&&/^lead:/.test(x.sourceRef||'')&&x.description?.startsWith('Рождество 2026–2027')))){
+     const panel=document.createElement('section');panel.className='panel production-panel';$('#view').append(panel);
+     window.AelitaChristmasBookings.mount(panel,type,x,{api,mutate,lookups:state.lookups,isOwner:isOwner(),
+       canWrite:canWrite('deals',type==='deals'?x:null)&&(type!=='tasks'||canWrite('tasks',x))&&state.user.adminAccess&&state.user.emailVerified,
+       active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected,open:orderId=>guarded(()=>detail('deals',orderId))});
    }
    mountEntries($('#view'),type,x,job,r.related);
    if(type==='organizations'&&x.email&&$('#view [data-mail-choose]'))$('#view > .actions')?.insertAdjacentHTML('beforeend','<button type="button" data-write-organization>Написать организации</button>');
@@ -839,8 +849,16 @@ function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialo
  async function management(){
   if(!isOwner())return;const view=state.backupView||(state.backupView={cursors:[''],page:0}),job={token:state.token};state.opsJob=job;
   const r=await api({action:'backup_list',cursor:view.cursors[view.page]});if(!operationActive(job,'management'))return;view.next=r.next;
-  const last=state.lastOperation;
+  const last=state.lastOperation, existingCms=$('#christmas-cms-panel');
   $('#view').innerHTML='<h1>Управление CRM</h1><section class="panel"><div class="row between"><h2>Резервные копии</h2><button class="primary" data-backup-create '+(state.backupCreateJob?'disabled':'')+'>Создать копию</button></div><p class="hint">Карточки, связи, заметки и история. Сотрудники сохраняются как имена и роли, без паролей. Пробное восстановление проверяет отдельную копию данных. Копии в облаке хранятся 30 дней и удаляются сами; скачанный файл держите на компьютере в России и удалите через 30 дней.</p><p id="backup-progress" role="status"></p>'+(r.items.length?'<div class="backup-list">'+r.items.map(x=>'<article class="backup-card"><h3>Копия от '+esc(date(x.createdAt))+'</h3><p class="meta">'+esc(x.createdBy.name)+' · '+(x.reason==='manual'?'По кнопке владельца':'Перед попыткой переназначения')+'</p><p class="hint">'+esc(backupCounts(x.counts))+'</p><p class="hint">'+(x.bytes/1024).toLocaleString('ru-RU',{maximumFractionDigits:1})+' КиБ</p><p class="'+(x.lastCheck?.verified?'verified':'hint')+'">'+(x.lastCheck?.verified?'Пробное восстановление проверено: '+esc(date(x.lastCheck.checkedAt)):'Пробное восстановление ещё не запускалось')+'</p><div class="actions"><button data-backup-download="'+x.id+'" '+(state.backupDownload?'disabled':'')+'>Скачать JSON</button><button data-backup-check="'+x.id+'" '+(state.backupCheckJob?'disabled':'')+'>Проверить восстановление</button></div></article>').join('')+'</div>':'<p class="empty">Копий пока нет. Создайте первую перед изменением базы.</p>')+'<div class="pages"><span class="hint">Показано '+r.items.length+' из '+r.total+'</span>'+(view.page?'<button data-backup-page="prev">Назад</button>':'')+(r.next?'<button data-backup-page="next">Дальше</button>':'')+'<button data-backup-refresh>Обновить</button></div></section><section class="panel management-section"><h2>Передача ответственности</h2><p class="hint">Выберите прежнего и нового ответственного, проверьте список и передайте выбранные либо все найденные карточки. Перед записью автоматически сохраняется резервная копия.</p><button data-assignment-open>Переназначить карточки</button></section>'+(last?'<section class="panel management-section"><h2>Последний перенос</h2><p>Передано карточек: '+last.changed+'</p><p class="hint">'+Object.entries(last.counts).map(([k,n])=>esc(labels[k])+': '+n).join(' · ')+'</p><div class="actions"><button data-journal-operation="'+last.operationId+'">Показать в журнале</button><button data-backup-download="'+last.backupId+'">Скачать копию до переноса</button></div></section>':'')+'<section class="panel management-section index-panel" id="source-index-panel"></section>';
+  if (state.christmasCmsReady && state.user.emailVerified && state.user.adminAccess) {
+    const panel = existingCms || document.createElement('section');
+    panel.className = 'panel management-section';
+    panel.id = 'christmas-cms-panel';
+    $('#view').prepend(panel);
+    if (!existingCms) window.AelitaChristmasCms.mount(panel, { api, mutate, requestId: rid,
+      active: () => state.tab === 'management' && state.token === job.token && isOwner() && $('#christmas-cms-panel') === panel });
+  }
   await indexOpen();
  }
  async function createBackup(){
@@ -1135,10 +1153,13 @@ function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialo
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_task',(data,err)=>{state.taskDraft=data?{...data}:{err};if(state.user&&$('#view'))guarded(()=>showTaskDraft());});
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_find',(email,err)=>{state.find={email,err};if(state.user&&$('#view'))guarded(showFind);});
  async function boot(){
+  const job=++bootGeneration,token=state.token,shared=currentStaffToken();
+  const current=()=>job===bootGeneration&&token===state.token&&shared===currentStaffToken();
   try{const r=await api({action:'status'});
+   if(!current())return;
    if(!r.enabled||!r.configured){connectionProblem(new Error('CRM ещё не включена или не настроена на сервере. Проверьте aelita-crm и CRM_ENABLED.'));return;}
    if(state.token)await guarded(start);else gate();
-  }catch(err){connectionProblem(err);}
+  }catch(err){if(current())connectionProblem(err);}
  }
  function connectionProblem(err){
   // A transport/configuration failure does not revoke a valid shared login.
