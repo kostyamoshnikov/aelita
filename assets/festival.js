@@ -86,6 +86,14 @@
   // ── 2. Карточки афиши с data-ends (build_afisha.py) ──
   function afisha(t) {
     Array.prototype.forEach.call(document.querySelectorAll('[data-ends]'), function (c) {
+      var reopened = Array.prototype.some.call(c.querySelectorAll('[data-performance-id]'), function (a) {
+        return !!REOPENED[a.getAttribute('data-performance-id')];
+      });
+      if (reopened) {
+        c.classList.remove('fest-gone');
+        c.classList.remove('fest-past');
+        return;
+      }
       if (t < ms(c.getAttribute('data-ends')) || c.classList.contains('fest-gone')) return;
       c.classList.add('fest-gone');
       // На телефоне главная показывает первые три карточки (:nth-child(-n+3)) —
@@ -184,8 +192,8 @@
   }
 
   function eventPage(t, evs) {
-    var passed = evs.filter(function (e) { return t >= ms(e.end); });
-    var upcoming = evs.filter(function (e) { return t < ms(e.end); });
+    var passed = evs.filter(function (e) { return e.end && t >= ms(e.end); });
+    var upcoming = evs.filter(function (e) { return !e.end || t < ms(e.end); });
     var main = document.querySelector('main');
     if (!main) return;
     var hero = main.querySelector(':scope > section, :scope > header, :scope > div') || main.firstElementChild;
@@ -360,9 +368,12 @@
   }
   function pagePrimaryReview(past,eventSlug) {
     var a=document.querySelector('[data-event-review-cta]');if(!a)return;
-    if(!a.__eventBuy)a.__eventBuy={href:a.getAttribute('href'),pid:a.getAttribute('data-performance-id'),text:a.textContent};
+    if(!a.__eventBuy)a.__eventBuy={href:a.getAttribute('href'),pid:a.getAttribute('data-performance-id'),nodes:Array.prototype.slice.call(a.childNodes),past:false};
+    var saved=a.__eventBuy;
+    if(saved.past===past)return;
     if(past){a.href=DATA.reviewsAnchor[eventSlug]||'#fest-reviews';a.textContent=L('Оставить отзыв','Leave a review');a.removeAttribute('data-performance-id');a.classList.remove('fest-gone');}
-    else{a.setAttribute('href',a.__eventBuy.href);a.textContent=a.__eventBuy.text;if(a.__eventBuy.pid)a.setAttribute('data-performance-id',a.__eventBuy.pid);}
+    else{a.setAttribute('href',saved.href);a.replaceChildren.apply(a,saved.nodes);if(saved.pid)a.setAttribute('data-performance-id',saved.pid);}
+    saved.past=past;
   }
   function pageFollowup(past) {
     var main=document.querySelector('main');if(!main)return;
@@ -426,7 +437,12 @@
     try { if (slug === DATA.slug) festivalPage(t); } catch (e) { /* — */ }
     try {
       var evs = DATA.events[slug];
-      if (evs && evs.length) (evs[0].own ? ownEventPage : eventPage)(t, evs);
+      if (evs && evs.length) {
+        // External shows added after the festival share the current lifecycle.
+        // Keep the in-house sales-close/reopen policy on its original records.
+        var dates = !evs[0].own && DATA.lifecycle && DATA.lifecycle[slug];
+        (evs[0].own ? ownEventPage : eventPage)(t, dates && dates.length ? dates : evs);
+      }
     } catch (e) { /* — */ }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply); else apply();
