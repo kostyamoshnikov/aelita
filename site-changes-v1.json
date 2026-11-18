@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 930,
+  "release": 955,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -252,7 +252,7 @@
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "46b8e3bfac2de8fcce0f929b72c730f72074af32830319ee057fea4829f7788f"
+      "sha256": "88be6b39c85f58a9b6070fc3e69ecf25bb9f793aa8db09325867d6a3b0fd33d7"
     },
     {
       "path": "admin/directory/index.html",
@@ -324,7 +324,7 @@
     },
     {
       "path": "art-kvest/index.html",
-      "sha256": "f79d471513741366764f55cf5c125a9a89885ef7cf1dfff9b1205677ecc34b43"
+      "sha256": "fd9644231b702dbb374cfdb0eb46ab768f9bb2f7d71ffe303ed48c4cb5396493"
     },
     {
       "path": "assets/account.js",
@@ -368,7 +368,7 @@
     },
     {
       "path": "assets/crm-core-v1.js",
-      "sha256": "2b2314625f216892a78d4de004dd82ceaf2eeac2e0cfbe3b91330629e036bdce"
+      "sha256": "0aeb07a558f76c29c8eb1e31f9709eb0fb4690ea9344718f6ae24d60593240ff"
     },
     {
       "path": "assets/customer-drafts-v830.js",
@@ -400,7 +400,7 @@
     },
     {
       "path": "assets/festival.js",
-      "sha256": "6e58c097d6f7434028c2f8207cf7369bf80f9f4345ff9f4e72365810761e16ef"
+      "sha256": "fcbe57a5059cd7b7aaf927ba275c5287f268a089c137ff245d3fe9cd6c783162"
     },
     {
       "path": "assets/free-online-access-v846.js",
@@ -488,7 +488,7 @@
     },
     {
       "path": "blue-ocean-strategy/index.html",
-      "sha256": "b3198798039f5438427cc8f2d2bd92c879f6c73a1f9f0a6f5e952932ff0037f1"
+      "sha256": "b53c1a3dedcd28bb0d91576bd533aeedb6ed2d1d9e5fc746d6b088a7a46902d2"
     },
     {
       "path": "book-concierge/index.html",
@@ -520,7 +520,7 @@
     },
     {
       "path": "business-program/index.html",
-      "sha256": "0c7a24bb043cf9ccb506de7b689e47881b4f9e054ec1fd9e14063fa95e329f6b"
+      "sha256": "0ce73a5d067ac8f5e73f89290f5b0a3581e0569a60fc350b71267c0b91fc8c36"
     },
     {
       "path": "business/index.html",
@@ -532,7 +532,7 @@
     },
     {
       "path": "byl/index.html",
-      "sha256": "96159c1394ab128c1336fd0db7d82a77b7c79887f09061b1dd430d16ef51ca3e"
+      "sha256": "0a44701533d1035a40ae43e9610837a406bdf212ef51e6882e4920e491fabec3"
     },
     {
       "path": "collaboration/index.html",
@@ -564,7 +564,7 @@
     },
     {
       "path": "corporate-christmas-salon/index.html",
-      "sha256": "94bd06c7e4e4c9c6e140fb715cc8b94230ea37d00031088f785f783913ff3b8a"
+      "sha256": "85d781146c1c6618a761d167a6ac4ef472208fea0cee7408e5b32f8b2ddc9c18"
     },
     {
       "path": "crave/index.html",
@@ -576,11 +576,27 @@
     },
     {
       "path": "detskaya-programma/index.html",
-      "sha256": "9054281d0799e0ef02405abf303de8376e7bd4a879b5a52ff6fd00c71b71db0d"
+      "sha256": "edf7997c2534747d3a5b515094f9bf18303e898eaf27097bc9a890dde3432473"
     },
     {
       "path": "directory/index.html",
       "sha256": "115ef5126e7663fabd5d0c3ff1ce87f285b64acdc9f090189ba614a4c009c065"
+    },
+    {
+      "path": "documents-pdf/en/press/iov-25-november-2026.docx",
+      "sha256": "78304a699817f02dad0e1ea0631cd241e67f64dfc8bb40fce6ddced8b088446b"
+    },
+    {
+      "path": "documents-pdf/en/press/iov-25-november-2026.pdf",
+      "sha256": "5c367dcf63179d978e9bb448e1d1580471a04b1b2e2d0d49518daf243a0e7442"
+    },
+    {
+      "path": "documents-pdf/press/iov-25-november-2026.docx",
+      "sha256": "d52ddb472bf9ae1491859e59cefd633123b487628bb2d01e81046dfc695c20bc"
+    },
+    {
+      "path": "documents-pdf/press/iov-25-november-2026.pdf",
+      "sha256": "c1ee4110f4317aa12e6df358b4297abcff90cbc30e818c80bee74c6409bf3932"
     },
     {
       "path": "documents/index.html",
@@ -592,7 +608,7 @@
     },
     {
       "path": "dyba-show/index.html",
-      "sha256": "b794a6efc6b016d80317213d4ce3e34b0a89bbe895f9206f824c8a6c1eef3a27"
+      "sha256": "5f7166d78cfcf7019834b6ecc73ea78546327ac2e26304f7c438c04697ba6f79"
     },
     {
       "path": "dyba/index.html",
@@ -600,7 +616,7 @@
     },
     {
       "path": "edinorozhka/index.html",
-      "sha256": "840955aca2f0d6688074b35ec0ba241871de5d0083cdcdc38ce829cc9529da9a"
+      "sha256": "243612cf550160ed0c699044509e013ef92e2ca804cce6ddcb71c8d0f5d9cbcc"
     },
     {
       "path": "ekaterina-ilyina/index.html",
@@ -664,11 +680,11 @@
     },
     {
       "path": "en/art-kvest/index.html",
-      "sha256": "70d84d06a1ec47a0cdd4459f1f4b5e852a92139e05910ba5776508af4d43c215"
+      "sha256": "a89cbd480058ea9e5b06e4fafb9265d5b71bbb780f1da464c4dd41df569b3604"
     },
     {
       "path": "en/blue-ocean-strategy/index.html",
-      "sha256": "1dacf37897c4852564cfd4ab542193244a736334574cfb3f96c963735d3406ca"
+      "sha256": "0e6dc4cc83a622b23a47c39a036c2a3778d89f9ce7f8af656205a133e3519421"
     },
     {
       "path": "en/book-concierge/index.html",
@@ -700,7 +716,7 @@
     },
     {
       "path": "en/business-program/index.html",
-      "sha256": "29bc775b1ad3f99b55ad4cb914e05481eeefee9b8ffe2ea608149db8031f7463"
+      "sha256": "ef05b9f7a6b6b736aa19d0dfa2adf07286ee142fdc2943a605d715fb7a754e95"
     },
     {
       "path": "en/business/index.html",
@@ -712,7 +728,7 @@
     },
     {
       "path": "en/byl/index.html",
-      "sha256": "e37426978679e3d5b4b1b6b68eb11f6e42d0b2b0f65423f199552be84a31ff23"
+      "sha256": "31d8d7bcc67c145bf10a05e303350675b10b92ad52f73c1077bb2c2e8de30c4c"
     },
     {
       "path": "en/collaboration/index.html",
@@ -744,7 +760,7 @@
     },
     {
       "path": "en/corporate-christmas-salon/index.html",
-      "sha256": "9e231f213b2432f45768c8dd4b3d33aebf274c4334031e7b7507c06bae588af2"
+      "sha256": "36197ef546e5e17a24494713ee2286fe56a6188d2862d69c7fc9de8759a00724"
     },
     {
       "path": "en/crave/index.html",
@@ -756,7 +772,7 @@
     },
     {
       "path": "en/detskaya-programma/index.html",
-      "sha256": "db44e9d51663470d41b93979f0818103f7f79adfba20370a8dfa9025d2dfb035"
+      "sha256": "fe2c2cc5066670e766d3001b50903f4dd6304bd02b52c43d37c7bf7b10c16fb6"
     },
     {
       "path": "en/directory/index.html",
@@ -772,7 +788,7 @@
     },
     {
       "path": "en/dyba-show/index.html",
-      "sha256": "fdb871c7bf5fc5b72cf2ed1535207052cd095e1827de2b196061432206dc4d17"
+      "sha256": "8e7b970e6fe24f6625525e3d3f3d44746c838019a9da871f29af81fb885b8ef6"
     },
     {
       "path": "en/dyba/index.html",
@@ -780,7 +796,7 @@
     },
     {
       "path": "en/edinorozhka/index.html",
-      "sha256": "d30132d4eaf74b6a37f310f20d170cf79f85dedadb481b049d0c80bfd72bef94"
+      "sha256": "6d79b3668504e8cc3f80261dca870fd304cfeebd960973cbca886588f8c9b544"
     },
     {
       "path": "en/ekaterina-ilyina/index.html",
@@ -820,11 +836,11 @@
     },
     {
       "path": "en/films/matritsa/index.html",
-      "sha256": "fd101d89f5da9e00f43522e0e0c600cb01c68b37fc97f3ce1b85073cd2b0c1ed"
+      "sha256": "db45f4a38e5a2c8a26c6c347d981f8257327ac8fc471e7820a0a163257dcd725"
     },
     {
       "path": "en/films/oderzhimost/index.html",
-      "sha256": "b8a3789efc5b5bfde88848745f8e8a66292f9deb18ab69e7d3228d47e06916e9"
+      "sha256": "d18e25d1c0f7d329b2afbeb0e4ae18fa78050bf7fc599806979fb29d50fc65fe"
     },
     {
       "path": "en/fotovystavka-ilyina/index.html",
@@ -844,7 +860,7 @@
     },
     {
       "path": "en/godo/index.html",
-      "sha256": "4fcce5285c5f007e971b3ac072f0e3bc20a05c4fc7c7d2662024c5d4f0c1f097"
+      "sha256": "48dd308516ef1d631094fcc936ce54a726a0d01c2deba0c0797eae461838e0cc"
     },
     {
       "path": "en/gogol/index.html",
@@ -868,7 +884,7 @@
     },
     {
       "path": "en/index.html",
-      "sha256": "c8c805c49aaf96a4795d7cb841c43ff877bc7b3dc07291dab7e26b33f945db31"
+      "sha256": "74f43929376cf9c55ea449d4ac5a4ec71b269116e02ee1f43b2038d1ba5ff9c0"
     },
     {
       "path": "en/instruction/index.html",
@@ -876,7 +892,7 @@
     },
     {
       "path": "en/iov/index.html",
-      "sha256": "2885575943f94a62ba963a3b00544f1c70474797ad6a048677415c9ad402ec49"
+      "sha256": "1e9ca879d93aea2604ea8c149e268ab0a2b56aeed3a1243a87845af0533a4aec"
     },
     {
       "path": "en/ivan-sachkov/index.html",
@@ -904,7 +920,7 @@
     },
     {
       "path": "en/kinorazbor-matritsa/index.html",
-      "sha256": "e884371b7daf1be2ef2852ee2554598c1fb49410be7b2cbdd1ad12b0802e9736"
+      "sha256": "180b9cfeb553049b6cd0c923b14f8062367805f130004ad0ac01306544539761"
     },
     {
       "path": "en/konstantin-moshnikov/index.html",
@@ -920,7 +936,7 @@
     },
     {
       "path": "en/kreativnoe-byuro/index.html",
-      "sha256": "83a2628fed9152d59c5500f8438174622c742dcc8db966ed6433c6799133755a"
+      "sha256": "a9672a57d3d6894b7e84b633554d6a75bbf526fa1bd12c18fe93432a35c4b6e3"
     },
     {
       "path": "en/ksenia-shamarina/index.html",
@@ -952,11 +968,11 @@
     },
     {
       "path": "en/lecture-art-goroda/index.html",
-      "sha256": "1abd35d59a2ca842d5afbe0538ef65fd57595feb0c743d5e92649167502dceb1"
+      "sha256": "fecf5b8ebdee8b6dc4df2594fc25e2ca519a0555442801834edc70a596026244"
     },
     {
       "path": "en/lecture-bez-suflera/index.html",
-      "sha256": "4ac82d712ca69a7d462fb144f9995e7f5f6391a3f4706277ae3d0134c2b7ba01"
+      "sha256": "bca845ecf1d7f3f565586560162a56c9ea7c1e1d8b7ffc8b46b8c613502ffa2b"
     },
     {
       "path": "en/lecture-bychkova/index.html",
@@ -972,7 +988,7 @@
     },
     {
       "path": "en/lecture-iskusstvennyy-intellekt/index.html",
-      "sha256": "c32a0c0be61eb0d8c3b162e4400fa0288fb67618f2896d40b6b4a8186198a093"
+      "sha256": "5016a2242e9a7e6a2052f0f6a9b156b2c8227abfa234a6ed28748f5cfda6c763"
     },
     {
       "path": "en/lecture-katya-abdulova/index.html",
@@ -988,7 +1004,7 @@
     },
     {
       "path": "en/lecture-landshafty-realnosti/index.html",
-      "sha256": "d1f54e41b5e3bfa1d77d4708d5b62f0ef94d3f7ba92137156e0dd58adab9399f"
+      "sha256": "8cb741cd23418f2556a2497f6fd7a67718a051f59a72296c1cf5b87a204d8cd7"
     },
     {
       "path": "en/lecture-mikhail-kazmiruk/index.html",
@@ -996,7 +1012,7 @@
     },
     {
       "path": "en/lecture-tanets-v-realnom-mire/index.html",
-      "sha256": "086123b96327b128637aa9dc12398b503dcc8a76872e3b83a7e3fcc70c3022b2"
+      "sha256": "f34ea3403f56e0bb3f9d3795ef91d152dff0dc15a618667a54a369d8754a4bda"
     },
     {
       "path": "en/lecture-tochka-sborki/index.html",
@@ -1024,7 +1040,7 @@
     },
     {
       "path": "en/meydey/index.html",
-      "sha256": "45fe8fa85be35b8eb5c0c6e25221e0f5d8834c2cd2072942414e703f3d1d9132"
+      "sha256": "3846d9d43709d06b88010a0da6fc3374b5d28e492c25bc59f98f7f9996a82ac2"
     },
     {
       "path": "en/mikhail-kazmiruk/index.html",
@@ -1032,27 +1048,27 @@
     },
     {
       "path": "en/mk-dinozavry/index.html",
-      "sha256": "35a08e342e59fbdbec4e4c87b9e066a5ac6a48ee5902fc6b11929a3700bda8f4"
+      "sha256": "b91de9fae8e647ed0aff6116317d3de61cbfcc14fd833ed9b555bf9514cab6d9"
     },
     {
       "path": "en/mk-prokachay-mozg/index.html",
-      "sha256": "39da8c7c295a6318444e19a8db101d69c425c7a44764f7d0f22d25ac407d9921"
+      "sha256": "46e4c483f2a0991c8ed268d39ad58b1b67224800c3b2fe65832e946f26cd634a"
     },
     {
       "path": "en/mk-rospis-gipsa/index.html",
-      "sha256": "f6f94bc708212bcd1213dc9d7e0620b474050cbfd7659d1af19549a1c1dc5432"
+      "sha256": "8164a4eca1d27cd863e4846de251b48f857aab41122d7c2f3c4ac4640c8a4670"
     },
     {
       "path": "en/mk-svecha-iz-voshchiny/index.html",
-      "sha256": "9184508778bf4bb640ccc690a78c69542347ecacd6820f19bb9580ef19f9aab3"
+      "sha256": "f568ac95d0e39741a590ec43fbf50887b823c8bcfd73dc2a31a46ae3629871a0"
     },
     {
       "path": "en/mk-tykovka/index.html",
-      "sha256": "5d8111f5c7fb814f8b4b52dc6cae5f91fa83bcb72347c3e0d21f79ae064debb3"
+      "sha256": "9c476e5729245b6746ca8413da45d7d7ee8bb7ceef7e15ae1d46abbead9239e5"
     },
     {
       "path": "en/mk-volshebnye-kraski/index.html",
-      "sha256": "c31ba3077f05cc5ef43c4f851fe571b55ae1bba480c143bcd3448e6dc7e17903"
+      "sha256": "7bb44a2de337fb2be1f7b745e04c00e9c45a3010f210373fd41454ec65fdf77a"
     },
     {
       "path": "en/molodo-zeleno/index.html",
@@ -1068,7 +1084,7 @@
     },
     {
       "path": "en/mozgi/index.html",
-      "sha256": "8e4e5eabf380c3fc168ec910483e7923a399472a9ff4c014c801f423b980224a"
+      "sha256": "1ce5552305c4ffeda0f251cd26c943d505dc9d7173a20086b7d7b57a80caa5d0"
     },
     {
       "path": "en/oferta/index.html",
@@ -1100,7 +1116,7 @@
     },
     {
       "path": "en/press/index.html",
-      "sha256": "4905c452a6a55bd0e8c31a8cd116537326853861464d8769465292620143eac1"
+      "sha256": "33ab7b2c6699709d87d1cfe57ee463474d8477f3131f1b2b1240b89e6924e7e8"
     },
     {
       "path": "en/privacy/index.html",
@@ -1120,7 +1136,7 @@
     },
     {
       "path": "en/prorochestva/index.html",
-      "sha256": "99319704efc7420fbb51eacff58adae69b893362bc974be2dca8f71bd255edc7"
+      "sha256": "d04a9ce5895768f9fa134d3a75454212b798e8eb524c7bcb9fc43fe14e663528"
     },
     {
       "path": "en/pushkin/index.html",
@@ -1128,7 +1144,7 @@
     },
     {
       "path": "en/puteshestvenniki/index.html",
-      "sha256": "1339c882dbcb0594e1f1433c5065770829fcbb84fa4a2e21b340b1cef426468f"
+      "sha256": "7eb7694ece36792a553dfdffc79b1e70dafa5c1d87639dda724d11b59376bdfa"
     },
     {
       "path": "en/rasyomon/index.html",
@@ -1136,11 +1152,11 @@
     },
     {
       "path": "en/razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "b956af743edb3032b42fcfbe1c31b12ac312f013344a12eb272b285b53607e2c"
+      "sha256": "698b47048f152b422f8c2da020a5e061a929fbf532c4d1a3224b8eb211645eea"
     },
     {
       "path": "en/razgovory-o-kino/index.html",
-      "sha256": "68a3a10dd9376735e51f1cc2ece5e5788ca2cac52d241a17e0294492e10bc1e9"
+      "sha256": "5e9e05aba28f6e30dec89dd19a73e0102642c84bf1c7baf28043551b5101618b"
     },
     {
       "path": "en/rezidents/index.html",
@@ -1148,11 +1164,11 @@
     },
     {
       "path": "en/rozhdestvenskiy-salon-khorosho-chto-ty-est/index.html",
-      "sha256": "c68b57541d6879d01ba737b807d5c1a70742ac337f63d51fe09ce17299bec5b4"
+      "sha256": "1a01808cf2010fe4146dfb5e4b8a3c75a7b0c77d55f736cd16872b31a448c4e6"
     },
     {
       "path": "en/rozovoe-maslo/index.html",
-      "sha256": "8571235dd7dd3d00dd44521dd47ca068cc32f6a530af75646fbd2c9c24335bf4"
+      "sha256": "26e39bdc9800ca7245b78d2b0c825fe0d9b02b0195e2b53b66664654f4575ae4"
     },
     {
       "path": "en/sachkov/index.html",
@@ -1204,11 +1220,11 @@
     },
     {
       "path": "en/tickets/index.html",
-      "sha256": "31b416fcf4400909345a05704a6ef76f2094cc464784c368d3378c014a4f37d9"
+      "sha256": "9d0e9fe08d564444a24fa530c048830c91857995bb6bfa2d3f15f2f79746fc49"
     },
     {
       "path": "en/tochkacuire/index.html",
-      "sha256": "b706400f360808c34dfafeb9c7b585097188514edc7782af99a377626dd05b65"
+      "sha256": "7bde3281ef82b007cb911ded5ddd05a4e1be95264d81e8b16d1ea171b2159f2b"
     },
     {
       "path": "en/tochkacuiri/index.html",
@@ -1308,11 +1324,11 @@
     },
     {
       "path": "films/matritsa/index.html",
-      "sha256": "557f61571d359b58e34b019ca205d44ca2365417490ce652679c0aa032152049"
+      "sha256": "248406e17e1fd465717a8080751b3c64093c63d904b1c2d7b21e04d011b058ee"
     },
     {
       "path": "films/oderzhimost/index.html",
-      "sha256": "f55bb064ee2ebf7b2b9e7ddb589eb3e74c42ecb4323c018fe09b7e270c96ef00"
+      "sha256": "561b38cecbd365d8e7d7ddbd02b95cf95cce286ce0391e7899d302e51080f040"
     },
     {
       "path": "fotovystavka-ilyina/index.html",
@@ -1332,7 +1348,7 @@
     },
     {
       "path": "godo/index.html",
-      "sha256": "edd0b9c743dd6b46d4ecf5255f64469b07054453121fe1ba0bc554ba183bbdd9"
+      "sha256": "36002bd62873852910a645d24175ca2291f6f8f62b27ad677b1511ea9bb8ab66"
     },
     {
       "path": "gogol/index.html",
@@ -1404,7 +1420,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "cd06377e5f2951894b4e14380ce4eada80f402c054535bdc7af4f091b07eacc5"
+      "sha256": "f9baf4ea3c1ca6e54c2ece4b5c584882e7e5c55a1038518f00afb5f23e45b293"
     },
     {
       "path": "instruction/index.html",
@@ -1412,7 +1428,7 @@
     },
     {
       "path": "iov/index.html",
-      "sha256": "c918d3cebaf371fd032ff149be97553c50dbd1c9a3c569959d9b27ea33255d11"
+      "sha256": "2e851390239c22d9b62639afc46f21b415106eb5587da10cf467f229bd5385d9"
     },
     {
       "path": "ivan-sachkov/index.html",
@@ -1440,7 +1456,7 @@
     },
     {
       "path": "kinorazbor-matritsa/index.html",
-      "sha256": "f2d7b06cdff4b8d7b55fc38e00cbc84836d3e375c7d8ac895e00a0de68326f2a"
+      "sha256": "45c2558b73e82f0d7b60439ba84ce2caf25e9963ee5da0842ff21e1a192508d0"
     },
     {
       "path": "konstantin-moshnikov/index.html",
@@ -1456,7 +1472,7 @@
     },
     {
       "path": "kreativnoe-byuro/index.html",
-      "sha256": "f2d983bec7bde25bec670e23b1c195cd06aa655ba9454cdf503c58b961cf4fd1"
+      "sha256": "1e23e19ceeb9e62ea55b49d826fe2345ce4fbb18c4d08098b37204f5c6459020"
     },
     {
       "path": "ksenia-shamarina/index.html",
@@ -1488,11 +1504,11 @@
     },
     {
       "path": "lecture-art-goroda/index.html",
-      "sha256": "916dd281e4da6609878a062c0582e522ef8980546319a14840a6563ada73f0be"
+      "sha256": "24d7a7ce7898f006a533a9b831c73af6222266a58970b8ecdc2f535f48a9eff6"
     },
     {
       "path": "lecture-bez-suflera/index.html",
-      "sha256": "f3dd12419aacc89d817c3f0c5d6ea765f79ae519f7021cac173377c509192587"
+      "sha256": "710601b548bf0085f0a1d7ebdfbdf9096d7e15eacf9fc649373bf4d5743f977f"
     },
     {
       "path": "lecture-bychkova/index.html",
@@ -1508,7 +1524,7 @@
     },
     {
       "path": "lecture-iskusstvennyy-intellekt/index.html",
-      "sha256": "bb48aa186a4b1b92577187274508dca4fc7249e4370044551cc3e0e7d669584a"
+      "sha256": "4d6b9c9aea96732fc95539e01f8296e96654df44f815b41cbbbef5d42f52a805"
     },
     {
       "path": "lecture-katya-abdulova/index.html",
@@ -1524,7 +1540,7 @@
     },
     {
       "path": "lecture-landshafty-realnosti/index.html",
-      "sha256": "19b19de91610da0daacd8e25c7e668add752ff5268ee94f6075b83acfea6072f"
+      "sha256": "279f9b7a30f98958adf19e6071e04038198ad45873531b2317da15c2d5067b33"
     },
     {
       "path": "lecture-mikhail-kazmiruk/index.html",
@@ -1532,7 +1548,7 @@
     },
     {
       "path": "lecture-tanets-v-realnom-mire/index.html",
-      "sha256": "63aca883b407929089d685f2656853efbfd6978e19aee48b4f89220b157f30f3"
+      "sha256": "1c99982ea08a9ff84ec7527b11b1975fed21f894b017ce5f4bd3ef5b5b1020fc"
     },
     {
       "path": "lecture-tochka-sborki/index.html",
@@ -1560,7 +1576,7 @@
     },
     {
       "path": "meydey/index.html",
-      "sha256": "943ee6b298e7b44e7c049f8dd7e23a31d7bc740deb65a8886e3ce1fd8416e2d3"
+      "sha256": "ba131037197f92866e27b5efa105db200b1949379c301c47a43ce8fb53e032a9"
     },
     {
       "path": "mikhail-kazmiruk/index.html",
@@ -1568,27 +1584,27 @@
     },
     {
       "path": "mk-dinozavry/index.html",
-      "sha256": "6b583c2569d4cf8f7a6c4e56e8fba1b55dca033c92fe402bf2640d276354b386"
+      "sha256": "bc2307c8878ea7410cc32e29fc4937170dc8a7c9ea706f3a6b6086e436b3c234"
     },
     {
       "path": "mk-prokachay-mozg/index.html",
-      "sha256": "5339168bface473292c6d3a0ecb514dde3fe2061af5dc9e37271eba4b0333cbf"
+      "sha256": "15ee20b93f7b1622a05e4f7b734536433f66c7a1082f5ec4fb8416c715181fb0"
     },
     {
       "path": "mk-rospis-gipsa/index.html",
-      "sha256": "260f55ffcb6fa50c4f2b8f6bb70c367c66f56aad91722ec63f7ff7512a7501b2"
+      "sha256": "a4fde0378c45a91a772630f87c463227847d82e7514403f7070b94138a2c9b94"
     },
     {
       "path": "mk-svecha-iz-voshchiny/index.html",
-      "sha256": "32443437cba3e175567ede58618b4ecc61d47773c21519c2a5df1be4bca3809e"
+      "sha256": "c4f2c92a87701c7f35ea3bc1d215f1e23de324a0ce6eeea372fd482d11a11df5"
     },
     {
       "path": "mk-tykovka/index.html",
-      "sha256": "d6c4df426ecf59d38f62f6587747a9352c62ac69c856feacd14fb5b3715a7eed"
+      "sha256": "ed2e316c6757cd6112220a493556e4a748d546a580466d4ce541df4389c60104"
     },
     {
       "path": "mk-volshebnye-kraski/index.html",
-      "sha256": "103f2ba2175c090d1d9dcf130e21ff3897c83143c3d9e7e327bcbc8d35fa7f7a"
+      "sha256": "c84794922229fa5908eac8b1305c27f66f0ca18709a972d6f1328843265a34c2"
     },
     {
       "path": "molodo-zeleno/index.html",
@@ -1604,7 +1620,7 @@
     },
     {
       "path": "mozgi/index.html",
-      "sha256": "30d10e4e2980c3b0085fde7126c02902f59eb898751eb4d5cad3207aa2c62e47"
+      "sha256": "7eb7146006d6770e1e8d1cff76e4fde1948e2e7a0dea3ea1f9e32a0cc5336996"
     },
     {
       "path": "oferta/index.html",
@@ -1640,7 +1656,7 @@
     },
     {
       "path": "press/index.html",
-      "sha256": "67fa9a0717d6af106f258ac6e859bec44b411fba5bfc0a7ddfa67b01c2720c07"
+      "sha256": "31afd849b2a24f158779eef762e0bbf7724ad6d4832bddfc01f883c6f4b8ce79"
     },
     {
       "path": "privacy/index.html",
@@ -1660,7 +1676,7 @@
     },
     {
       "path": "prorochestva/index.html",
-      "sha256": "4568e035104124e636489c34a9eb01b575adc4131ed13f57c7f5586b86647b47"
+      "sha256": "ac24e41b2e3522ae6ee8dd628e1075d31e83ab7f26d89354b6a9bd4485589640"
     },
     {
       "path": "pushkin/index.html",
@@ -1668,7 +1684,7 @@
     },
     {
       "path": "puteshestvenniki/index.html",
-      "sha256": "5a7d28b288ee42d6b4fac691d268b640b4e11b64d488bcad1feb6310be61f803"
+      "sha256": "be77d8e4ba8394c9511f527c57be6ac9b155698fc8ea7ae2e9e1606fcb4aa256"
     },
     {
       "path": "rasyomon/index.html",
@@ -1676,11 +1692,11 @@
     },
     {
       "path": "razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "8792ac1537f777e8280b31ee0baa7ce2b0a2f7571801cceb3ffd5a2068f1d255"
+      "sha256": "3601b2e64ce093bd254446d0ce1d1033701a33f1ff2617fa4dfa8d85cb3d491a"
     },
     {
       "path": "razgovory-o-kino/index.html",
-      "sha256": "818b99603072284ffce0bf2fd9fad88af699ef3d96573a83c086c583c2b29ee8"
+      "sha256": "4f5d195f98d7bec1fc3e76e5cd43463a63d9a8c5f1bd28b96956bb99a0d94f10"
     },
     {
       "path": "rezidents/index.html",
@@ -1688,11 +1704,11 @@
     },
     {
       "path": "rozhdestvenskiy-salon-khorosho-chto-ty-est/index.html",
-      "sha256": "5251efda94d0d5413d1a7afc8a2413901640e68dda8cf93a657c8ce665eb54e9"
+      "sha256": "314c5aaf701b8e0defedcff1b0c0c727a45345487f533eb3e7744d7a777eacaa"
     },
     {
       "path": "rozovoe-maslo/index.html",
-      "sha256": "c19136bece3ae707fe1517f334de076420d0aec8b062becd4b691702a2b8db5e"
+      "sha256": "b8c3529b455975db84424b4daa17a290bc01d6f3ce981ca45b132f48788d2285"
     },
     {
       "path": "sachkov/index.html",
@@ -1760,11 +1776,11 @@
     },
     {
       "path": "tickets/index.html",
-      "sha256": "61e20d9cbaad1c78f0a2a0fc41cc382fd57c12660c1aeb519cd48c9087d22f20"
+      "sha256": "61b01aa263be3a7b1e413f0cbd7651f2bb7d2deea99b9e2f9583a131adae0ce3"
     },
     {
       "path": "tochkacuire/index.html",
-      "sha256": "b754eb5c8c82d2f91290d8031d2212bb778f8f77afc2050cca24727af1c6b3c6"
+      "sha256": "3dd63664293b4c102fc6cb5021d1ebcc0d3957c888bc915dee25beb3cac2f9a7"
     },
     {
       "path": "tochkacuiri/index.html",
@@ -1828,8 +1844,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "3c2661e94a457ef6649cc3fe2c43fdd88bc6aa4585e9f01e1ddcee2520c95af2",
+  "changelog_sha256": "114d1dfba64411b11866ca8f6653d3bd0cab19d6c6ac5ebfef06841f130d2e9d",
   "recent_versions": [
+    955,
     930,
     929,
     928,
@@ -1838,7 +1855,6 @@
     925,
     924,
     923,
-    921,
-    920
+    921
   ]
 }

@@ -45,7 +45,10 @@
  function clearSession(clearStored=true){state.find=null;state.taskDraft=null;state.inviteDraft=null;$('#task-draft-bar')?.remove();state.workbenchDraft=null;state.workbenchJob=null;state.calendarFilters=null;state.calendarBack=false;clearDownload();clearTimeout(state.indexTimer);state.indexView=null;state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;state.publicDirectoryEnabled=false;if(state.backupDownload)state.backupDownload.parts.length=0;state.viewJob=null;state.projectView=null;state.projectRefJob=null;state.editorJob=null;state.opsJob=null;state.assignment=null;state.backupDownload=null;state.backupCreateJob=null;state.backupCreateRequestId=null;state.backupCheckJob=null;state.backupCheckRequests={};state.lastOperation=null;state.journalView=null;state.backupView=null;state.token='';state.user=null;state.items=[];state.entity=null;state.staff=[];state.importItems=[];state.activity=null;state.activityEnabled=false;state.export=null;state.csvImport=null;state.followupJob=null;state.lookups={contacts:[],organizations:[],deals:[],projects:[],staff:[]};if(clearStored){window.AelitaStaffSession?.clear();try{localStorage.removeItem(KEY);sessionStorage.removeItem(KEY);}catch{}}if(dialog.open)dialog.close();dialog.innerHTML='';dialog.dataset.forced='';$('#identity').innerHTML='';$('#crm-person').textContent='';}
  async function api(body){
    const requestToken=state.token;
-   let res,data;try{res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',...(requestToken?{Authorization:'Bearer '+requestToken}:{})},body:JSON.stringify(body),cache:'no-store'});data=await res.json();}catch{throw new Error('Нет связи с CRM. Проверьте подключение и повторите действие.');}
+   let res,data;
+   try{res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',...(requestToken?{Authorization:'Bearer '+requestToken}:{})},body:JSON.stringify(body),cache:'no-store'});}catch{const err=new Error('Нет соединения с сервером CRM. Повторите проверку соединения.');err.code='crm_connection_unavailable';throw err;}
+   try{data=await res.json();}catch{const err=new Error('Сервер CRM вернул неожиданный ответ (HTTP '+res.status+'). Повторите проверку соединения.');err.code='crm_invalid_response';err.status=res.status;throw err;}
+   if(!data||typeof data!=='object'||Array.isArray(data)){const err=new Error('Сервер CRM вернул неожиданный ответ (HTTP '+res.status+').');err.code='crm_invalid_response';err.status=res.status;throw err;}
    if(requestToken!==state.token||requestToken!==currentStaffToken())throw Error('Рабочий сеанс изменился.');
    if(!res.ok){if(res.status===401&&!['login','password_change','logout','logout_current'].includes(body.action)){if(hasUnsavedWork()){notice('Сеанс истёк. Введённое осталось в форме. Войдите снова, затем повторите сохранение.',true);reauthenticate();}else{clearSession();gate();}}const err=new Error(data.message||'Не удалось выполнить действие. Попробуйте ещё раз.');err.code=data.error;err.details=data.details;err.status=res.status;throw err;}return data;
  }
@@ -1131,5 +1134,18 @@ function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialo
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_invite',(data,err)=>{state.inviteDraft=data?{...data}:{err};if(state.user&&$('#view'))guarded(showInviteDraft);});
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_task',(data,err)=>{state.taskDraft=data?{...data}:{err};if(state.user&&$('#view'))guarded(()=>showTaskDraft());});
  if(window.AelitaHandoff)AelitaHandoff.receive('crm_find',(email,err)=>{state.find={email,err};if(state.user&&$('#view'))guarded(showFind);});
- api({action:'status'}).then(async r=>{if(!r.enabled||!r.configured){clearSession();gate();notice('CRM ещё не включена или не настроена на сервере. Инструкция находится в отдельном паке.',true);return;}if(state.token)await guarded(start);else gate();}).catch(err=>{clearSession();gate();notice(err.message,true);});
+ async function boot(){
+  try{const r=await api({action:'status'});
+   if(!r.enabled||!r.configured){connectionProblem(new Error('CRM ещё не включена или не настроена на сервере. Проверьте aelita-crm и CRM_ENABLED.'));return;}
+   if(state.token)await guarded(start);else gate();
+  }catch(err){connectionProblem(err);}
+ }
+ function connectionProblem(err){
+  // A transport/configuration failure does not revoke a valid shared login.
+  clearSession(false);state.token=currentStaffToken();gate();notice(err.message,true);
+  const retry=document.createElement('button');retry.type='button';retry.textContent='Проверить соединение с CRM';
+  retry.onclick=async()=>{retry.disabled=true;try{await boot();}finally{if(retry.isConnected)retry.disabled=false;}};
+  root.append(retry);
+ }
+ boot();
 })();
