@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 958,
+  "release": 959,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -252,7 +252,7 @@
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "19fff6f0c91aa1a100c11d00903b5eba9825e8fdd47d70b77f34cb16f3e7e5d7"
+      "sha256": "1e2c3981cd2cac9ebef627c64db29d5f11989c6a4f22d5cd87dbfa2273a63791"
     },
     {
       "path": "admin/directory/index.html",
@@ -356,7 +356,7 @@
     },
     {
       "path": "assets/christmas-corporate.js",
-      "sha256": "f5584d90c8cae13a422f13d610a7e19d92cfb37aafb9aa6cfcf85f88764b6209"
+      "sha256": "f6b5967e86fddf4b047f89ff4fd77647bcc46a0772a918558917dd44db3c3c9b"
     },
     {
       "path": "assets/cinema-landing.css",
@@ -368,7 +368,7 @@
     },
     {
       "path": "assets/crm-christmas-cms-v958.js",
-      "sha256": "752808eb282a8fa512d4d5cd4726efd1e971f33bba8a939b28c538cbde62f8c7"
+      "sha256": "ac967a98c4318a79cf562ef0dcbde579b09c0929251ec22bb940bb05defa9cdb"
     },
     {
       "path": "assets/crm-christmas-v957.js",
@@ -376,7 +376,7 @@
     },
     {
       "path": "assets/crm-core-v1.js",
-      "sha256": "c9ba4f5cb833ff0eef843f404cc511b5b623916f4ac0918b6ab4a85c31c6abad"
+      "sha256": "7f366c46aa7845e6e7f182f17bdbb75ad04de3a5905b03e6d1b729efa6518c31"
     },
     {
       "path": "assets/customer-drafts-v830.js",
@@ -572,7 +572,7 @@
     },
     {
       "path": "corporate-christmas-salon/index.html",
-      "sha256": "85d781146c1c6618a761d167a6ac4ef472208fea0cee7408e5b32f8b2ddc9c18"
+      "sha256": "85cf99a63dc045a9f32f51423d3ab5c88a195e88f694efd04b83e76508d2f8e7"
     },
     {
       "path": "crave/index.html",
@@ -768,7 +768,7 @@
     },
     {
       "path": "en/corporate-christmas-salon/index.html",
-      "sha256": "36197ef546e5e17a24494713ee2286fe56a6188d2862d69c7fc9de8759a00724"
+      "sha256": "054e2e35e5939c8d8da81aa73cec12c311e71f19122fa704356a5ddd4f938824"
     },
     {
       "path": "en/crave/index.html",
@@ -1852,8 +1852,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "03ad4bf90a0f9899d88d6e67540da4e4b3308b0815eade66328ea358474f5bf6",
+  "changelog_sha256": "3c7fc7e7652a49ec9437bf9f013ec1e623b3a0b9405c69d19171a3792e59a72a",
   "recent_versions": [
+    959,
     958,
     957,
     956,
@@ -1862,7 +1863,6 @@
     929,
     928,
     927,
-    926,
-    925
+    926
   ]
 }

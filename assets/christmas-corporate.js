@@ -20,8 +20,8 @@
     var digits = phone.replace(/\D/g, '');
     fields.email.setCustomValidity(email && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)
       ? (en ? 'Enter your full email address.' : 'Укажите полный адрес почты.') : '');
-    var validPhone = !phone || (/^[+0-9 ().-]+$/.test(phone) &&
-      (phone.startsWith('+') ? digits.length >= 7 && digits.length <= 15 : /^[78][0-9]{10}$/.test(digits)));
+    var validPhone = /^[+0-9 ().-]+$/.test(phone) &&
+      (phone.startsWith('+') ? digits.length >= 7 && digits.length <= 15 : /^[78][0-9]{10}$/.test(digits));
     fields.phone.setCustomValidity(validPhone ? '' :
       (en ? 'Enter a phone number with its country code, beginning with +.' : 'Укажите телефон с кодом страны, начиная с +.'));
   }
