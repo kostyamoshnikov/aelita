@@ -4522,7 +4522,7 @@ function leadHandoffStatus(id) {
   return LD_HANDOFF.get(id);
 }
 function renderLeadHandoff(lead) {
-  if (lead.form !== LD_CORPORATE_FORM) return '';
+  if (lead.form !== LD_CORPORATE_FORM && lead.form !== 'Рождество 2026–2027') return '';
   var result = leadHandoffStatus(lead.id);
   if (result && result.id) {
     var href = '/admin/crm/?workTab=tasks&workType=tasks&workRecord=' + encodeURIComponent(result.id);

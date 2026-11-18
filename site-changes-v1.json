@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 955,
+  "release": 956,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -268,7 +268,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "8a8695b4ec4d61027117d6c02b6a58a54c35306963d844e21edba90caa548826"
+      "sha256": "b4cdf439714b6ec11320962d9c0dead85a19a69831a1ddb405df98d69ab63f26"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -584,19 +584,19 @@
     },
     {
       "path": "documents-pdf/en/press/iov-25-november-2026.docx",
-      "sha256": "78304a699817f02dad0e1ea0631cd241e67f64dfc8bb40fce6ddced8b088446b"
+      "sha256": "0290101bfc64b656dad6a8c9b4f6b04e65c0e7fb635102f52864f04c5bc519a3"
     },
     {
       "path": "documents-pdf/en/press/iov-25-november-2026.pdf",
-      "sha256": "5c367dcf63179d978e9bb448e1d1580471a04b1b2e2d0d49518daf243a0e7442"
+      "sha256": "bdc5ccb9e03a6dc1edf516855ee8f6dd2bc0d3aef094f9a0f452709960ba974b"
     },
     {
       "path": "documents-pdf/press/iov-25-november-2026.docx",
-      "sha256": "d52ddb472bf9ae1491859e59cefd633123b487628bb2d01e81046dfc695c20bc"
+      "sha256": "10233632e3a7c33d4fd34ba8d3fafc50f7171f6188c4abd62312d3eddf5c0e28"
     },
     {
       "path": "documents-pdf/press/iov-25-november-2026.pdf",
-      "sha256": "c1ee4110f4317aa12e6df358b4297abcff90cbc30e818c80bee74c6409bf3932"
+      "sha256": "bdc5ccb9e03a6dc1edf516855ee8f6dd2bc0d3aef094f9a0f452709960ba974b"
     },
     {
       "path": "documents/index.html",
@@ -1116,7 +1116,7 @@
     },
     {
       "path": "en/press/index.html",
-      "sha256": "33ab7b2c6699709d87d1cfe57ee463474d8477f3131f1b2b1240b89e6924e7e8"
+      "sha256": "152f1a9b45bf11429474fc04dc2ef933ea2feabf23fe2f63c8f65043d1214869"
     },
     {
       "path": "en/privacy/index.html",
@@ -1656,7 +1656,7 @@
     },
     {
       "path": "press/index.html",
-      "sha256": "31afd849b2a24f158779eef762e0bbf7724ad6d4832bddfc01f883c6f4b8ce79"
+      "sha256": "e3b5823466877ea90c8a58b4d26f43beb2677e5694e965b8320e5a23f762c030"
     },
     {
       "path": "privacy/index.html",
@@ -1844,8 +1844,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "114d1dfba64411b11866ca8f6653d3bd0cab19d6c6ac5ebfef06841f130d2e9d",
+  "changelog_sha256": "cfafc3f2b93375db4a33d69d413b93571d0f74ee497f52d56a1c6e010457f91a",
   "recent_versions": [
+    956,
     955,
     930,
     929,
@@ -1854,7 +1855,6 @@
     926,
     925,
     924,
-    923,
-    921
+    923
   ]
 }
