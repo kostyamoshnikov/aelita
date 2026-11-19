@@ -208,8 +208,10 @@
       ]
     }
   ],
-  "release": 960,
+  "release": 972,
   "removed_files": [
+    "corporate-christmas-salon/index.html",
+    "en/corporate-christmas-salon/index.html",
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
   ],
@@ -504,7 +506,7 @@
     },
     {
       "path": "assets/rozhdestvo-v960/landing.css",
-      "sha256": "1c8a689d264031998189d2defc00201cfaf27ced202120ca4f7eb492a96491b5"
+      "sha256": "6cca3b7d5fab96eb449c8b9550ec4b8420306faf8619c50e6f02ef2a759cbc4b"
     },
     {
       "path": "assets/rozhdestvo-v960/landing.js",
@@ -517,6 +519,22 @@
     {
       "path": "assets/rozhdestvo-v960/reading.webp",
       "sha256": "c30aaf7693042d237d88b80464edac9be8b74201b26cafa45f8488f96af5ebc6"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/salon-evening-v971.webp",
+      "sha256": "f2bb431707f551077aaf5f93ad57095cb29a8ab64b23e898876cf16ae7ccee97"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/salon-letter-v971.webp",
+      "sha256": "a5ebc227c54f58751f0858a01a28e73424125127bc935f2f3e24a5b1b5831bf3"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/salon-portrait-v971.webp",
+      "sha256": "ccafea6bf7ad77ed9412dfee912e8bb181f74e4da1b18771004e77d213949760"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/salon-sparklers-v971.webp",
+      "sha256": "e36e06994d2c8d0b8c4446b5580869d7bf7db26c34fa304a82029879c2c47af4"
     },
     {
       "path": "assets/rozhdestvo-v960/sparklers.webp",
@@ -629,10 +647,6 @@
     {
       "path": "corner/index.html",
       "sha256": "969d89ec5055999021bb395a9a874558a30d693b84b511d24f511c438f6bd891"
-    },
-    {
-      "path": "corporate-christmas-salon/index.html",
-      "sha256": "85cf99a63dc045a9f32f51423d3ab5c88a195e88f694efd04b83e76508d2f8e7"
     },
     {
       "path": "crave/index.html",
@@ -825,10 +839,6 @@
     {
       "path": "en/corner/index.html",
       "sha256": "ada2af903823e0f9ffd4d43cb1ad8017d4e3bca580f7ed2b46e36d43ba30ac24"
-    },
-    {
-      "path": "en/corporate-christmas-salon/index.html",
-      "sha256": "054e2e35e5939c8d8da81aa73cec12c311e71f19122fa704356a5ddd4f938824"
     },
     {
       "path": "en/crave/index.html",
@@ -1232,11 +1242,11 @@
     },
     {
       "path": "en/rozhdestvenskiy-salon-khorosho-chto-ty-est/index.html",
-      "sha256": "1a01808cf2010fe4146dfb5e4b8a3c75a7b0c77d55f736cd16872b31a448c4e6"
+      "sha256": "5d177d04255fccf746193808d336a236cba2f202445b8480a53b7ca977ecc8cc"
     },
     {
       "path": "en/rozhdestvo/index.html",
-      "sha256": "edfb72b785ff7b726847aa87b50b23f1c619d7d43b6aef55faf0845d3294b7f9"
+      "sha256": "8484f14eec761ebdc08eca24743692c9c9352fd22eb181c39eacd187ae49f422"
     },
     {
       "path": "en/rozovoe-maslo/index.html",
@@ -1776,11 +1786,11 @@
     },
     {
       "path": "rozhdestvenskiy-salon-khorosho-chto-ty-est/index.html",
-      "sha256": "314c5aaf701b8e0defedcff1b0c0c727a45345487f533eb3e7744d7a777eacaa"
+      "sha256": "09da27d15b746b4c968e1d422fe8c555d1af5e6895174d96be9b8c35abc905b6"
     },
     {
       "path": "rozhdestvo/index.html",
-      "sha256": "b6be361943c96a6e012f73974545dea315065e4db5ec55ea8b0b844c633d6543"
+      "sha256": "23f96669d939274583033f7b1b1c43b1eb5e99027192b4f9fab60801a4b535d2"
     },
     {
       "path": "rozovoe-maslo/index.html",
@@ -1808,7 +1818,7 @@
     },
     {
       "path": "sitemap.xml",
-      "sha256": "66cacbe3965fcd3234f748889fda7921e3088dcc45c24c9f112f7270e51348bb"
+      "sha256": "67873feaf649e86e8b8ae0077d74b548c946cb2550ce88e692105acd452a0876"
     },
     {
       "path": "stories/index.html",
@@ -1920,17 +1930,17 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "88b579efd9c474f02618bb09ec21718f49a9665267c607d3588584613e3adefe",
+  "changelog_sha256": "0b01c636e90a90f3cc6f6032521e359d1f22b0e3880b66aa15642522adcfecf1",
   "recent_versions": [
-    960,
-    959,
-    958,
-    957,
-    956,
-    955,
-    930,
-    929,
-    928,
-    927
+    972,
+    971,
+    970,
+    968,
+    967,
+    966,
+    965,
+    964,
+    963,
+    962
   ]
 }

@@ -153,7 +153,8 @@ option { color: var(--cream); background: #330d19; }
 @media (max-width: 1120px) {
   .wrap { width: calc(100% - 68px); }
   .programme-layout { grid-template-columns: 1fr 1.15fr; }
-  .programme-photo { display: none; }
+  .programme-photo { grid-column: 1 / -1; }
+  .programme-photo img { aspect-ratio: 16/9; }
   .wonders-gallery { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 760px) {
@@ -188,8 +189,6 @@ option { color: var(--cream); background: #330d19; }
   .gallery { gap: 5px; }
   .audience-layout { grid-template-columns: 1fr; gap: 15px; }
   .audience-items { grid-template-columns: 1fr 1fr; gap: 17px 12px; }
-  .programme-photo { display: block; }
-  .programme-photo img { aspect-ratio: 16/9; }
   .custom-image img { aspect-ratio: 1.45; }
   .footer-layout { grid-template-columns: 1fr; gap: 13px; }
 }
