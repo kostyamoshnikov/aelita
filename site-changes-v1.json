@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 959,
+  "release": 960,
   "removed_files": [
     "images/christmas-salon-poster-v839-1152.webp",
     "images/tarusa-theatre-tour-illustration-v795.png"
@@ -469,6 +469,66 @@
     {
       "path": "assets/reminder-rules-admin.js",
       "sha256": "c6c1b3f0a346c2c12434e0392a8f39b581be8dc9fb76fabcaa2bb5c132c5f09f"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/AELITA_Christmas_Proposal_v8.pdf",
+      "sha256": "8ce34b7820b5e96398ee64c110dc1c8bc0f118c40cf8bbcfe07463d25340bf2a"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/connections.webp",
+      "sha256": "38db0cf671eeae4c473a523fe014e2551034f4b99180cbbe009ce02ceee015e3"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/cover-og.jpg",
+      "sha256": "30d68099c4d1ccc045849b2a9c2f9b193d2a4449aef51e1b7acef1eadc1dd7bc"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/cover.webp",
+      "sha256": "648b1bc2031547db078d681d3a71c69972ccadab70c4cc210ae0532fddf36cdd"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/greeting.webp",
+      "sha256": "fda4e1bceb20c0b96e18c40ec88aef8436fef586241615cb3bd5febf9011c32e"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/guest.webp",
+      "sha256": "923f81ca382e45efeb9b6537eeb451db316aa07b744024cf59c9475d565ec07d"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/hero.webp",
+      "sha256": "5f2870238d0f9d6d4debea5287e924c541fb8eccc343dc4ba07a5f1ad8638cb9"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/invitation.webp",
+      "sha256": "f523ff0397309f21fcd70932fab1de960edddc2e8c1b0aaf0a376ee23a541a2c"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/landing.css",
+      "sha256": "1c8a689d264031998189d2defc00201cfaf27ced202120ca4f7eb492a96491b5"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/landing.js",
+      "sha256": "c7bc4abd01477c62c0022ada53775ceab9f791d3fd9efd18aade8bd8894ff5a7"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/post.webp",
+      "sha256": "1a052b8677ab17982040bb4f3967ecee1d9e8495a2165ca0fc214139dda9dba1"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/reading.webp",
+      "sha256": "c30aaf7693042d237d88b80464edac9be8b74201b26cafa45f8488f96af5ebc6"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/sparklers.webp",
+      "sha256": "5cf8e58ce75d5283f942f127e0696a1b72f3d6a8bba816cbaf3e0733cb3bb49f"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/table.webp",
+      "sha256": "2f0c9974d0f751510c79e94aa34a1e10612b646fc6d63670c57f4874f89a5103"
+    },
+    {
+      "path": "assets/rozhdestvo-v960/ticket.webp",
+      "sha256": "98840d1aa0985e42dc5a1153655cb2076ba4e741f062528e31d00132df07fd3b"
     },
     {
       "path": "assets/section-navigation.js",
@@ -1175,6 +1235,10 @@
       "sha256": "1a01808cf2010fe4146dfb5e4b8a3c75a7b0c77d55f736cd16872b31a448c4e6"
     },
     {
+      "path": "en/rozhdestvo/index.html",
+      "sha256": "edfb72b785ff7b726847aa87b50b23f1c619d7d43b6aef55faf0845d3294b7f9"
+    },
+    {
       "path": "en/rozovoe-maslo/index.html",
       "sha256": "26e39bdc9800ca7245b78d2b0c825fe0d9b02b0195e2b53b66664654f4575ae4"
     },
@@ -1715,6 +1779,10 @@
       "sha256": "314c5aaf701b8e0defedcff1b0c0c727a45345487f533eb3e7744d7a777eacaa"
     },
     {
+      "path": "rozhdestvo/index.html",
+      "sha256": "b6be361943c96a6e012f73974545dea315065e4db5ec55ea8b0b844c633d6543"
+    },
+    {
       "path": "rozovoe-maslo/index.html",
       "sha256": "b8c3529b455975db84424b4daa17a290bc01d6f3ce981ca45b132f48788d2285"
     },
@@ -1740,7 +1808,7 @@
     },
     {
       "path": "sitemap.xml",
-      "sha256": "30ba44c984be3c7289d5a2654a371db773cca8ab566b17455c0064b3ef1ff121"
+      "sha256": "66cacbe3965fcd3234f748889fda7921e3088dcc45c24c9f112f7270e51348bb"
     },
     {
       "path": "stories/index.html",
@@ -1852,8 +1920,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "3c7fc7e7652a49ec9437bf9f013ec1e623b3a0b9405c69d19171a3792e59a72a",
+  "changelog_sha256": "88b579efd9c474f02618bb09ec21718f49a9665267c607d3588584613e3adefe",
   "recent_versions": [
+    960,
     959,
     958,
     957,
@@ -1862,7 +1931,6 @@
     930,
     929,
     928,
-    927,
-    926
+    927
   ]
 }
