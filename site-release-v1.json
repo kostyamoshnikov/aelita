@@ -1,7 +1,7 @@
 {
   "schema": "aelita.site-release/v1",
-  "release": "pack-v972",
-  "manifest_sha256": "97fd83147a82ea4e12d68910b8d128a24c1108ecd17e92d66142a9673a490f97",
+  "release": "pack-v1020-crew-admin",
+  "manifest_sha256": "e2852cc39e594f6f9e2aa82b63c553da12c47999c576a3650b93bbcccb030c0b",
   "files": {
     "404.html": "e04ebfcd90a62aaddac65f84d45d3923a886d343a991876b343ada72c448fdd9",
     "abdulova/index.html": "f4b58a08e6505220b133afac5b5f8614d5d0b63c61c0e3a1499eac92bb4568a2",
@@ -16,7 +16,7 @@
     "admin/directory/index.html": "9b0c45f274146b78508c4516be4ee1060b9b452cd280bed73159934d0d300fc0",
     "admin/editor/index.html": "e1c0103612a1d168fd2b10b580552480a0715e82983dd8b42a093fe23854f2e5",
     "admin/events/index.html": "b357c4808e4982d2419063068f3e27424f6ec802027af840b10a066fa964713b",
-    "admin/index.html": "b4cdf439714b6ec11320962d9c0dead85a19a69831a1ddb405df98d69ab63f26",
+    "admin/index.html": "be5a06bb2ed159c18177203fd5664b7ca230514deaa8e0df3496be2bd850f629",
     "admin/mail-texts/index.html": "618d490cc2368a52dfd679c2cf3fc72013880e443d1082b27763aea9b57a0926",
     "admin/pages/index.html": "401ae6e74884fc9b925bdff7c9581963b4317f2145f70326a52920199e4c3260",
     "admin/promocodes/index.html": "37200ac1371fbfba705e8407e2a8c724280bdde5bc80517bf4d7c45c220c99d1",
@@ -406,7 +406,7 @@
     "security-measures/index.html": "55272e11b323040aa02704399312251f5cf0dffdc982b1892d8a680dc58fa2db",
     "shamarina/index.html": "b27cf6dfed73dd2e54fa23ea9fb557cc542f063cc9563af72f1ae1bba2b6e65d",
     "shop/index.html": "df84a373aafc67d5535efd31af182eb47ddc8115a017929e47b0acc324cb71a0",
-    "site-changes-v1.json": "97fd83147a82ea4e12d68910b8d128a24c1108ecd17e92d66142a9673a490f97",
+    "site-changes-v1.json": "e2852cc39e594f6f9e2aa82b63c553da12c47999c576a3650b93bbcccb030c0b",
     "sitemap.xml": "67873feaf649e86e8b8ae0077d74b548c946cb2550ce88e692105acd452a0876",
     "stories/index.html": "1a96897e10ee4c4f98b42b34bfa4f914fb879a45e23d6c0cac3ce7395115349e",
     "subscribe-confirm/index.html": "10b3eb0ea164c026e4b58c6223a2b06876c093916c7b8f3e9a53066fb5752de0",
@@ -434,7 +434,18 @@
     "workshop-2026-09-13/index.html": "9fcb195479f379bc6b3e7763962f7ec7387402a133aa3ea1e82304daed1951d5",
     "workshop-entrepreneurs/index.html": "d9a7bf19c36c9151d5d2e9fed351ff1430867ddbeeedb930eada063a4136b81c",
     "workshop-main/index.html": "d15ee10fa849a4d7e26f04f8f592924a4f3d8e602d9e8451686c8a0742f1e491",
-    "yulia-bychkova/index.html": "b1ab229d950c6598b2c8c6c777091be75be4549246d9256926acc27d2ab94629"
+    "yulia-bychkova/index.html": "b1ab229d950c6598b2c8c6c777091be75be4549246d9256926acc27d2ab94629",
+    "admin/crew-ops/index.html": "f3bb1e3800d621d86f7a89784b40de764d330b7bc946348fb248cb93b569c4fc",
+    "admin/social-posts/index.html": "f359e11d9c41483d60bd4c35db450068bbb10b644196fda63b4638d6d6a8c6cc",
+    "assets/admin-ai-v1020.css": "12e67f5afe00b7e609f4c69e7a5ddade43959dae06aec520c015ae4fbed85a3f",
+    "assets/admin-touch-statistics-v1011.js": "db28a543455045edced93735ee09daa745f025bc20ef15dd53095fce62feddbb",
+    "assets/admin-xlsx-v1020.js": "8fb3e3d940e6f324e2273eeab190c58ee7cdab5e74b095f81ae1c1a75078a7e5",
+    "assets/crew-ai-pilot-v1020.js": "b456bc778415c549292c3a363f974015733c3c12ef0722c9f89ee4c4682bd24b",
+    "assets/crew-ops-v1020.css": "6f524432da543508b967ca374ceb84d28b4b951ae82f0d7ade17ee3ef1eab1ee",
+    "assets/crew-ops-v1020.js": "20d47267dac262684387f05579821b94f862a8ae3dd78ffbc91d7350d366a5c2",
+    "assets/crew-site-editor-v1020.css": "48f2354f9aef0197e175fa3529b7cba69328cb810f1e31691da78df07d05e6c4",
+    "assets/social-posts-v1018.css": "c4f668ab28a812fb51c15da0f3bbb7a21921f686bf2f16d55b49da9d817d86aa",
+    "assets/social-posts-v1018.js": "80580e8734ac240cf7d67136ce2f5dfdfee3e168dd517673eb6fd59a62878d6b"
   },
   "deleted": [
     "corporate-christmas-salon/index.html",

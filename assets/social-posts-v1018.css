@@ -1,0 +1,23 @@
+.social-fields{padding:0;border:0;margin:0;min-width:0}
+.social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}
+.social-grid input,.social-grid select,.social-fields textarea,#social-ai-form textarea{min-width:0;max-width:100%;width:100%}
+#social-ai-facts{min-width:0;gap:.45rem 1rem;margin:0 0 1rem}
+#social-ai-facts label{display:flex;align-items:baseline;gap:.55rem}
+#social-ai-facts input{width:auto;flex:none}
+.social-fields details,.social-fields details .social-grid,#social-ai-panel form{margin-top:1rem}
+.social-fields summary,#social-ai-panel summary{cursor:pointer;color:var(--gold);padding:.65rem 0;min-height:44px}
+#social-ai-panel summary{font-size:1.14rem}
+.social-queue{list-style:none;padding:0;margin:0}
+.social-queue>li,.social-copy{padding:.9rem 0;border-top:1px solid rgba(214,181,122,.26);min-width:0;overflow-wrap:anywhere}
+.social-copy h3,.social-queue h3{margin:0 0 .4rem;font-size:1rem}
+.social-copy pre{font:inherit;white-space:pre-wrap;margin:0 0 .65rem;overflow-wrap:anywhere}
+.social-queue p{margin:.35rem 0}
+.social-queue button{margin-top:.45rem}
+.social-queue-actions{margin-top:.65rem}
+.social-delivery{padding:.35rem 0}
+.social-delivery a{color:var(--gold)}
+.social-delivery .ed-actions{margin:.15rem 0 .4rem}
+#social-status{scroll-margin-top:1rem}
+#social-queue-pages[hidden]{display:none}
+#social-campaign-sources[hidden]{display:none}
+@media(max-width:560px){.social-grid{grid-template-columns:minmax(0,1fr)}}

@@ -1,0 +1,11 @@
+/* One marker for controls that run a model or open its settings. */
+[data-ai-feature]::before{
+  content:"✦";
+  display:inline-block;
+  color:var(--gold,#d6b57a);
+  font-family:Arial,sans-serif;
+  font-weight:700;
+  line-height:1;
+  margin-inline-end:.45em;
+}
+button[data-ai-feature]:not(.ed-quiet)::before{color:inherit}

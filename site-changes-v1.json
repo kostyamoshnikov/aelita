@@ -253,6 +253,10 @@
       "sha256": "e82703bf0bf1ed6c9cbd5bd672fb4e1405cb6ae2b73f1b148ab4b2afd14f2789"
     },
     {
+      "path": "admin/crew-ops/index.html",
+      "sha256": "f3bb1e3800d621d86f7a89784b40de764d330b7bc946348fb248cb93b569c4fc"
+    },
+    {
       "path": "admin/crm/index.html",
       "sha256": "1e2c3981cd2cac9ebef627c64db29d5f11989c6a4f22d5cd87dbfa2273a63791"
     },
@@ -270,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "b4cdf439714b6ec11320962d9c0dead85a19a69831a1ddb405df98d69ab63f26"
+      "sha256": "be5a06bb2ed159c18177203fd5664b7ca230514deaa8e0df3496be2bd850f629"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -287,6 +291,10 @@
     {
       "path": "admin/site-nav/index.html",
       "sha256": "fda169de93181c6643744c8622207ac19c0917bc0259c79f9699ff2536fdbb4d"
+    },
+    {
+      "path": "admin/social-posts/index.html",
+      "sha256": "f359e11d9c41483d60bd4c35db450068bbb10b644196fda63b4638d6d6a8c6cc"
     },
     {
       "path": "admin/team/index.html",
@@ -333,12 +341,24 @@
       "sha256": "39ee3b9180e61b98f3c4b2e24abb805d35b930d19147668f0083d0e106d26a79"
     },
     {
+      "path": "assets/admin-ai-v1020.css",
+      "sha256": "12e67f5afe00b7e609f4c69e7a5ddade43959dae06aec520c015ae4fbed85a3f"
+    },
+    {
       "path": "assets/admin-calm-v814.css",
       "sha256": "b04e1cb3280f5ca3d06398d20ff3623512bf272933ba4a54f8a254b08f16ffac"
     },
     {
       "path": "assets/admin-calm-v814.js",
       "sha256": "904ee5d04e49c322acd7848a3d2ea660dc0a13baf2613def8a0b9f4b55c35536"
+    },
+    {
+      "path": "assets/admin-touch-statistics-v1011.js",
+      "sha256": "db28a543455045edced93735ee09daa745f025bc20ef15dd53095fce62feddbb"
+    },
+    {
+      "path": "assets/admin-xlsx-v1020.js",
+      "sha256": "8fb3e3d940e6f324e2273eeab190c58ee7cdab5e74b095f81ae1c1a75078a7e5"
     },
     {
       "path": "assets/attendance-v740.js",
@@ -367,6 +387,22 @@
     {
       "path": "assets/cookie-consent.js",
       "sha256": "83529fd2049383f17b5de95222767595a63e967e960ed24f19d9b452472087f0"
+    },
+    {
+      "path": "assets/crew-ai-pilot-v1020.js",
+      "sha256": "b456bc778415c549292c3a363f974015733c3c12ef0722c9f89ee4c4682bd24b"
+    },
+    {
+      "path": "assets/crew-ops-v1020.css",
+      "sha256": "6f524432da543508b967ca374ceb84d28b4b951ae82f0d7ade17ee3ef1eab1ee"
+    },
+    {
+      "path": "assets/crew-ops-v1020.js",
+      "sha256": "20d47267dac262684387f05579821b94f862a8ae3dd78ffbc91d7350d366a5c2"
+    },
+    {
+      "path": "assets/crew-site-editor-v1020.css",
+      "sha256": "48f2354f9aef0197e175fa3529b7cba69328cb810f1e31691da78df07d05e6c4"
     },
     {
       "path": "assets/crm-christmas-cms-v958.js",
@@ -555,6 +591,14 @@
     {
       "path": "assets/site-editor-v1.js",
       "sha256": "595bb99702917baba60a7bb84092d2680d626465bc8aa0ad5bc996a47ac465d4"
+    },
+    {
+      "path": "assets/social-posts-v1018.css",
+      "sha256": "c4f668ab28a812fb51c15da0f3bbb7a21921f686bf2f16d55b49da9d817d86aa"
+    },
+    {
+      "path": "assets/social-posts-v1018.js",
+      "sha256": "80580e8734ac240cf7d67136ce2f5dfdfee3e168dd517673eb6fd59a62878d6b"
     },
     {
       "path": "assets/staff-access-v796.js",

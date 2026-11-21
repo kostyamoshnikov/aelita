@@ -1,0 +1,17 @@
+#crew-ops [hidden]{display:none!important}
+.crew-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem 1rem;align-items:end}
+.crew-grid label,.crew-field label,.crew-grid input,.crew-grid select{min-width:0;max-width:100%}
+.crew-nav{gap:.5rem;flex-wrap:wrap;margin:0 0 1rem}
+.crew-nav button[aria-pressed=true]{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.crew-items{padding:0;margin:0;list-style:none;overflow-wrap:anywhere}
+.crew-items li,.crew-edit-row{border-top:1px solid rgba(214,181,122,.24);padding:.7rem 0}
+.crew-items h3,.crew-items p{margin:0 0 .3rem}
+.crew-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.crew-meta{color:var(--sand);font-size:.9rem}
+.crew-edit-row input,.crew-edit-row textarea{min-width:0;width:100%;max-width:100%}
+.crew-edit-row button{margin-top:.45rem}
+.crew-check{display:flex;gap:.5rem;align-items:center;min-height:40px}
+.crew-field{min-width:0}
+#crew-project-note a,#crew-social{color:var(--gold)}
+#crew-import-section summary{cursor:pointer;color:var(--gold);min-height:44px;padding:.65rem 0}
+@media(max-width:560px){.crew-grid{grid-template-columns:minmax(0,1fr)}}
