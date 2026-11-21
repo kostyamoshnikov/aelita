@@ -71,10 +71,10 @@ h1{font-family:'Montserrat',sans-serif;font-weight:200;font-size:clamp(22px,4vw,
 @media(max-width:600px){.data-actions{width:100%}.data-actions .loaded-at{flex:0 0 100%}.data-actions .btn-small{flex:1 1 0;text-align:center}}
 /* pack-v611: заголовок раздела отдельно, действия — строкой под ним, вторичные — в «Ещё ▾» */
 p.sec-title{overflow-wrap:anywhere}
-p.sec-title .mini-btn,.sec-actions .mini-btn,.sec-actions .btn-small{margin:0!important;vertical-align:middle!important}
+.sec-actions .mini-btn,.sec-actions .btn-small{margin:0}
 .editor-box .inv-tools .btn-small{margin:0}
 .sec-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
-.sec-actions:not(:has(> :not([hidden]))){display:none}
+.subscription-test-actions{margin:0 0 18px}
 .adm-menu{position:relative;display:inline-block}
 .adm-menu>summary{list-style:none;cursor:pointer}
 .adm-menu>summary::-webkit-details-marker{display:none}
@@ -676,7 +676,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <p id="participants-selected" role="status"></p>
         <button type="button" class="mini-btn" id="participants-unselect" hidden>Снять выделение</button>
       </div>
-      <div id="participants-list"></div><button type="button" class="mini-btn" id="participants-more" hidden>Показать ещё 200</button>
+      <div id="participants-list"></div><button type="button" class="mini-btn" id="participants-more" aria-controls="participants-list" hidden>Показать ещё 200</button>
     </section>
     <p class="sec-title">Статистика</p>
     <div class="statistics-controls"><label>Период <select id="statisticsDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label><button type="button" class="mini-btn" id="statisticsReload">Обновить</button></div>
@@ -697,7 +697,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 
     <div class="links-row" id="adminLinks"></div>
 
-    <p class="sec-title">Клиенты (<span id="cust-count">0</span>) <button class="mini-btn" id="openAddCustomerBtn" style="margin-left:12px;vertical-align:middle">+ Клиент</button></p>
+    <p class="sec-title">Клиенты (<span id="cust-count">0</span>)</p>
+    <div class="sec-actions"><button type="button" class="mini-btn" id="openAddCustomerBtn">Добавить клиента</button></div>
     <div class="filter-row admin-list-filters">
       <label class="admin-filter admin-filter-query">Поиск по имени или почте<input type="search" class="search ym-disable-keys" id="custSearch"></label>
       <label class="admin-filter">Сортировка<select class="search" id="custSort"><option value="date">Новые</option><option value="spent">Больше потратили</option><option value="purchases">Больше покупок</option></select></label>
@@ -725,29 +726,35 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
          выручка деньгами и картами, возвраты, промокоды, график по дням,
          список зрителей для площадки (Excel и PDF). Тестовые заказы не
          считаются. Данные — Admin/tickets-orders.js ?view=sales. -->
-    <p class="sec-title sec-gap">Продажи по показам <button class="mini-btn" id="salesReloadBtn">Обновить</button></p>
+    <p class="sec-title sec-gap">Продажи по показам</p>
+    <div class="sec-actions"><button type="button" class="mini-btn" id="salesReloadBtn">Обновить</button></div>
     <div id="salesBlock"><div class="empty-state">Загружаем…</div></div>
 
     <!-- pack-v576 (ТЗ Н1): скорость шагов покупки по замерам страницы
          (Tickets/lib/perf-log.js, Admin/tickets-orders.js ?view=perf).
          Пусто, пока на странице покупки выключен PERF_LOG. -->
-    <p class="sec-title sec-gap">Скорость покупки
-      <select id="perfDays" class="mini-btn" aria-label="Период скорости покупки" hidden><option value="1">сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option></select>
-      <button class="mini-btn" id="perfReloadBtn" hidden>Обновить</button></p>
-    <div id="perfBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
+    <p class="sec-title sec-gap">Скорость покупки</p>
+    <div class="statistics-controls">
+      <label for="perfDays">Период <select id="perfDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option></select></label>
+      <button type="button" class="mini-btn" id="perfReloadBtn">Обновить</button>
+    </div>
+    <div id="perfBlock"><p class="empty-state">Нажмите «Обновить», чтобы получить замеры.</p></div>
 
     <!-- pack-v719: посещаемость по собственному счётчику без cookie — считает всех
          посетителей, а не только нажавших «Принять» (Метрика). Только счётчики:
          ни IP, ни устройств, ни визитов по людям. Tickets/lib/site-hits.js,
          Admin/tickets-orders.js ?view=hits. -->
-    <p class="sec-title sec-gap">Посещаемость сайта
-      <select id="hitsDays" class="mini-btn" aria-label="Период посещаемости"><option value="1">сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select>
-      <button class="mini-btn" id="hitsReloadBtn" type="button">Обновить</button></p>
-    <div id="hitsBlock"><div class="empty-state">Нажмите «Обновить».</div></div>
+    <p class="sec-title sec-gap">Посещаемость сайта</p>
+    <div class="statistics-controls">
+      <label for="hitsDays">Период <select id="hitsDays"><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option></select></label>
+      <button type="button" class="mini-btn" id="hitsReloadBtn">Обновить</button>
+    </div>
+    <div id="hitsBlock"><p class="empty-state">Нажмите «Обновить», чтобы получить посещаемость.</p></div>
 
     <p class="sec-title" style="margin-top:56px">Промокоды</p>
     <div class="editor-box"><p class="editor-note">Создайте один код или загрузите список, задайте скидку, срок и показы.</p><a class="btn-small" href="/admin/promocodes/">Открыть промокоды →</a></div>
-    <p class="sec-title" style="margin-top:56px">Заказы билетов (<span id="ord-count">0</span>) <button class="mini-btn" id="ordersCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button></p>
+    <p class="sec-title sec-gap">Заказы билетов (<span id="ord-count">0</span>)</p>
+    <div class="sec-actions"><button type="button" class="mini-btn" id="ordersCsvBtn">Скачать Excel</button></div>
     <div class="filter-row admin-list-filters">
       <label class="admin-filter admin-filter-query">Имя, почта или номер заказа<input type="search" class="search ym-disable-keys" id="ordSearch"></label>
       <label class="admin-filter">Показ<select class="search" id="ordPerfFilter">
@@ -795,7 +802,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
          сертификат, подписки, программки) и не оплатил — на каком шаге
          и почему. Данные — _tools/Shared/lib/checkout-log.js, отдаёт
          та же функция tickets-orders (поле checkouts). Хранятся 30 дней. -->
-    <p class="sec-title" style="margin-top:56px">Незавершённые заказы (<span id="co-count">0</span>) <button class="mini-btn" id="checkoutsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button></p>
+    <p class="sec-title sec-gap">Незавершённые заказы (<span id="co-count">0</span>)</p>
+    <div class="sec-actions"><button type="button" class="mini-btn" id="checkoutsCsvBtn">Скачать Excel</button></div>
     <div class="filter-row admin-list-filters">
       <label class="admin-filter admin-filter-query">Имя, почта, телефон или спектакль<input type="search" class="search ym-disable-keys" id="coSearch"></label>
       <label class="admin-filter">Этап<select class="search" id="coStageFilter">
@@ -814,7 +822,18 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 
     <!-- pack-v542. Подписки AELITA COMMUNITY: _tools/Admin/subscriptions.js
          (маршрут /admin/subscriptions). Счета компаний — выпуск 4 ТЗ, позже. -->
-    <p class="sec-title" style="margin-top:56px">Подписки (<span id="sub-count">0</span>) <button class="mini-btn" id="subsCsvBtn" style="margin-left:12px;vertical-align:middle">Скачать Excel</button> <button class="mini-btn" id="subsResetTestBtn" data-adm-secondary style="margin-left:6px;vertical-align:middle">Сбросить тестовые</button> <button class="mini-btn" id="subsManualBtn">+ Оплата переводом / наличными</button></p>
+    <p class="sec-title sec-gap">Подписки (<span id="sub-count">0</span>)</p>
+    <div class="sec-actions">
+      <button type="button" class="mini-btn" id="subsCsvBtn">Скачать Excel</button>
+      <button type="button" class="mini-btn" id="subsManualBtn">Оплата переводом или наличными</button>
+    </div>
+    <details class="adm-record-more subscription-test-actions">
+      <summary class="mini-btn">Тестовые подписки</summary>
+      <div class="adm-record-panel">
+        <button type="button" class="mini-btn btn-ghost" id="subsResetTestBtn" aria-describedby="subsTestStatus">Сбросить тестовые</button>
+        <p id="subsTestStatus" class="adm-action-status" role="status"></p>
+      </div>
+    </details>
     <details id="subscription-materials-editor" class="ai-panel" data-adm-index="Материалы подписки">
       <summary>Материалы подписок</summary>
       <p>Ссылки увидят участники выбранного потока в оплаченный период.</p>
@@ -873,7 +892,8 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
          тот же паттерн, что у «Заказы билетов» с кнопкой CSV чуть выше
          и у «Клиенты» с кнопкой «+ Клиент» — действие в конце
          заголовочной строки раздела, а не отдельный второй раздел. -->
-    <p class="sec-title" style="margin-top:56px">Подарочные карты (<span id="gc-count">0</span>) <button class="mini-btn" id="openAddGiftcardBtn" style="margin-left:12px;vertical-align:middle">+ Выпустить карту</button></p>
+    <p class="sec-title sec-gap">Подарочные карты (<span id="gc-count">0</span>)</p>
+    <div class="sec-actions"><button type="button" class="mini-btn" id="openAddGiftcardBtn">Выпустить карту</button></div>
     <div class="filter-row admin-list-filters">
       <label class="admin-filter admin-filter-query">Код карты, имя или почта<input type="search" class="search ym-disable-keys" id="gcSearch"></label>
     </div>
@@ -1323,6 +1343,15 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <div id="refundsBlock" class="adm-record-list"><div class="empty-state">Загружаем…</div></div>
 
     <p class="sec-title sec-gap">Текущий образ сайта</p>
+    <section class="editor-box" aria-labelledby="sitePublicationHeading" data-adm-index="Пакет на сайте">
+      <h3 id="sitePublicationHeading">Пакет на сайте</h3>
+      <p id="sitePublicationStatus" class="editor-note work-action-status" role="status" aria-live="polite">Нажмите «Проверить пакет».</p>
+      <button type="button" class="mini-btn" id="sitePublicationRefresh" aria-describedby="sitePublicationStatus" data-minimum-release="pack-v1030">Проверить пакет</button>
+      <details class="adm-more">
+        <summary>Что проверяется</summary>
+        <p>Сверяем номер пакета и контрольную сумму описи с опубликованным отчётом. Все файлы проверяет команда <code>~/deploy_aelita.sh check</code> в Termux.</p>
+      </details>
+    </section>
     <div class="editor-box snapshot-box" id="siteSnapshotBox">
       <p class="snapshot-lead">Сохраните состояние сайта перед следующей доработкой и пришлите ZIP вместе с актуальным паком.</p>
       <details class="adm-more"><summary>Что попадёт в образ</summary><p>Страницы, изображения и файлы сайта; каталоги событий, короткие ссылки, переносы и отмены, управление продажей, баннер и опубликованные отзывы. База клиентов, заказы и секреты сервера не включаются. Исходники берутся из текущей ветки репозитория; публикация всех файлов на сайте отдельно не подтверждается.</p></details>
@@ -3885,7 +3914,7 @@ document.getElementById('ordersCsvBtn').addEventListener('click', function () {
   invSave(xlsxBlob([{ name: 'Заказы', title: 'Заказы билетов', rows: rows, widths: [14, 30, 26, 28, 18, 14, 18, 18, 9, 10, 11] }]), 'aelita-orders.xlsx');
 });
 
-var statisticsJob=0;
+var statisticsJob=0, statisticsReportsPeriod=null;
 function statisticsTable(title,rows,columns){
   var data=(Array.isArray(rows)?rows:[]).map(function(row){
     return Array.isArray(row)?{key:row[0],n:row[1]}:row;
@@ -3907,8 +3936,26 @@ async function statisticsDetailsOpen(el,offset){var anchor=el.closest('.statisti
 document.addEventListener('click',function(e){var el=e.target.closest('[data-stat-details]');if(el)statisticsDetailsOpen(el,0);});
 async function loadStatistics(){
   statisticsDetailJob++;document.getElementById('statistics-details-v815')?.remove();
-  if(!getToken()||!ADMIN_ORDERS_URL)return;var token=getToken(),seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value),button=document.getElementById('statisticsReload');button.disabled=true;document.getElementById('overviewReload').disabled=true;['statisticsFees','overviewFees'].forEach(function(id){document.getElementById(id).hidden=true;});['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Загружаем статистику…';});['statisticsPeriod','overviewPeriod'].forEach(function(id){document.getElementById(id).textContent='Период: '+days+' дн. · загрузка';});
-  try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(seq!==statisticsJob||token!==getToken())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
+  var token=getToken();
+  if(!token||!ADMIN_ORDERS_URL)return;
+  var seq=++statisticsJob,days=Number(document.getElementById('statisticsDays').value);
+  var current=()=>seq===statisticsJob&&token===getToken();
+  var reloadButtons=['statisticsReload','overviewReload'].map(id=>document.getElementById(id));
+  reloadButtons.forEach(button=>button.disabled=true);
+  ['statisticsFees','overviewFees'].forEach(id=>document.getElementById(id).hidden=true);
+  ['statisticsTiles','overviewStatistics'].forEach(id=>document.getElementById(id).textContent='Загружаем статистику…');
+  ['statisticsPeriod','overviewPeriod'].forEach(id=>document.getElementById(id).textContent='Период: '+days+' дн. · загрузка');
+  document.getElementById('statisticsReport').replaceChildren();
+
+  // Keep manual report selections while refreshing the same overview period.
+  if(statisticsReportsPeriod?.token!==token||statisticsReportsPeriod.days!==days){
+    document.getElementById('perfDays').value=String(Math.min(days,30));
+    document.getElementById('hitsDays').value=String(days);
+    statisticsReportsPeriod={token,days};
+  }
+  loadPerf();
+  loadHits();
+  try{var res=await fetch(ADMIN_ORDERS_URL+'?view=statistics&days='+days,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),d=await res.json();if(!current())return;if(!res.ok)throw Error('Статистика недоступна. Обновите данные позже.');var v=d.current;
     var period='Период: '+(v.from||'')+' — '+(v.to||'')+' · сравнение: '+(d.previous.from||'')+' — '+(d.previous.to||'')+' · Москва';
     document.getElementById('statisticsPeriod').textContent=period;document.getElementById('overviewPeriod').textContent=period;
     var changeFormat=new Intl.NumberFormat('ru-RU',{signDisplay:'exceptZero',maximumFractionDigits:2});
@@ -3937,8 +3984,14 @@ async function loadStatistics(){
     var graph=v.visits?'<section class="statistics-section"><h2 data-adm-index="Посещения по дням">Посещения по дням</h2>'+('<div class="statistics-chart">'+daysData.map(function(x){return '<div><time>'+escapeHtml(x.day.slice(5))+'</time><meter min="0" max="'+max+'" value="'+x.entries+'">'+x.entries+'</meter><b>'+x.entries+'</b></div>';}).join('')+'</div></section>'):'<p class="statistics-period">За период нет посещений.</p>';
     document.getElementById('statisticsReport').innerHTML=graph+statisticsTable('Источники',v.refs,[['key','Домен'],['n','Просмотры']])+statisticsTable('UTM',v.utm,[['key','Метка'],['n','Просмотры']])+statisticsTable('Популярные страницы',v.pages,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Воронка по показам',v.funnel,[['title','Показ'],['page','Страница'],['selection','Выбор'],['contacts','Контакты'],['payment_click','Нажатие оплаты'],['code_sent','Код отправлен'],['code_verified','Код подтверждён'],['provider','Переход к оплате'],['confirmed','Подтверждение на экране'],['paid','Оплачено (сервер)']])+'<p class="acc-hint">Это события действий с согласившихся на аналитику устройств, а не уникальные люди. Исторический этап «Оплата» не смешивается с новым переходом к провайдеру. Оплаченные заказы сервер считает отдельно.</p>'+statisticsTable('Этапы: устройство, язык и формат',v.funnelBreakdown,[['title','Показ'],['stage','Этап'],['device','Устройство'],['language','Язык'],['attendance','Формат'],['count','События']])+statisticsTable('Продажи по дням',v.salesByDay,[['day','Дата'],['orders','Заказы'],['revenue','Выручка, ₽']])+statisticsTable('Промокоды',v.promos,[['key','Код'],['count','Заказы']])+statisticsTable('Английская версия',v.langs&&v.langs.en?[{language:'EN',views:v.langs.en}]:[],[['language','Язык'],['views','Просмотры']])+statisticsTable('404 · битые адреса',v.notFound,[['key','Адрес'],['n','Просмотры']])+statisticsTable('Новые подписчики',v.newSubscribers?[{count:v.newSubscribers}]:[],[['count','Подтвердили подписку']]);
     if (window.AELITA_adminSectionIndex) window.AELITA_adminSectionIndex();
-    document.getElementById('perfDays').value=String(Math.min(days,30));document.getElementById('hitsDays').value=String(days);loadPerf();loadHits();
-  }catch(e){if(seq===statisticsJob){document.getElementById('statisticsReport').textContent=e.message;['statisticsTiles','overviewStatistics'].forEach(function(id){document.getElementById(id).textContent='Не удалось загрузить данные за выбранный период. Нажмите «Обновить».';});}}finally{if(seq===statisticsJob){button.disabled=false;document.getElementById('overviewReload').disabled=false;}}
+  }catch(e){
+    if(current()){
+      ['statisticsTiles','overviewStatistics'].forEach(id=>document.getElementById(id).innerHTML='<p class="empty-state" role="status">Не удалось загрузить статистику. Нажмите «Обновить».</p>');
+      ['statisticsPeriod','overviewPeriod'].forEach(id=>document.getElementById(id).textContent='Период: '+days+' дн.');
+    }
+  }finally{
+    if(seq===statisticsJob)reloadButtons.forEach(button=>button.disabled=false);
+  }
 }
 document.getElementById('statisticsReload').onclick=loadStatistics;document.getElementById('overviewReload').onclick=loadStatistics;
 function changeStatisticsDays(e){document.getElementById('statisticsDays').value=e.target.value;document.getElementById('overviewDays').value=e.target.value;return loadStatistics();}
@@ -7668,18 +7721,36 @@ document.getElementById('manualPayConfirmBtn').addEventListener('click', async f
   loadSubscriptions();
 });
 
+var subsTestReset=null;
 document.getElementById('subsResetTestBtn').addEventListener('click', async function () {
+  if (subsTestReset) return;
   if (!window.confirm('Удалить ВСЕ тестовые подписки? Боевые не затрагиваются.')) return;
-  var r = await subsPost({ action: 'reset_test' });
-  if (r.stale) return;
-  admActionStatus(document.getElementById('subsActionStatus'), r.ok ? 'Удалено тестовых подписок: ' + r.data.deleted : r.uncertain ? 'Результат запроса неизвестен. Обновите подписки перед повтором.' : errorMessage(r.data), !r.ok);
-  loadSubscriptions();
+  var button=this, status=document.getElementById('subsTestStatus'), job={};
+  subsTestReset=job;
+  button.disabled=true;
+  admActionStatus(status,'Сбрасываем тестовые подписки…');
+  try {
+    var r=await subsPost({action:'reset_test'});
+    if (r.stale||subsTestReset!==job) return;
+    var message=r.ok?'Удалено тестовых подписок: '+r.data.deleted
+      :r.uncertain?'Результат запроса неизвестен. Обновите подписки перед повтором.'
+      :errorMessage(r.data);
+    admActionStatus(status,message,!r.ok);
+    loadSubscriptions();
+  } finally {
+    if (subsTestReset===job){
+      subsTestReset=null;
+      button.disabled=false;
+    }
+  }
 });
 window.addEventListener('aelita-staff-session-changed', function () {
   ++SUBS_LIST_JOB;
   clearSubscriptionLists();
   SUBS_ACTIONS_BUSY.clear();
-  for (var id of ['subsActionStatus', 'invoiceActionStatus']) admActionStatus(document.getElementById(id), '');
+  for (var id of ['subsActionStatus', 'invoiceActionStatus', 'subsTestStatus']) admActionStatus(document.getElementById(id), '');
+  subsTestReset=null;
+  document.getElementById('subsResetTestBtn').disabled=false;
   for (var id of ['mp-name', 'mp-email', 'mp-phone', 'mp-note']) document.getElementById(id).value = '';
   document.getElementById('manualPayModal').classList.remove('open');
   document.getElementById('manualPayCancelBtn').disabled = false;
@@ -7795,6 +7866,7 @@ var ADM_TAB_LOADERS = {
   invites: [function () { loadInviteEvents(); }], // pack-v587
   staff: [function () { loadStaffShows(); }], // pack-v621
   events: [function () { loadEvents(); }],
+  site: [function () { window.AELITA_SiteSnapshot?.refreshPublication?.(); }],
   money: [function () { loadGiftCards(); }, function () { loadSubscriptions(); }],
   ai: [function () { if (window.AelitaAiPilotAdmin) window.AelitaAiPilotAdmin.load(); }],
   news: [function () { loadNewsletter(); }], // pack-v726
@@ -8133,10 +8205,10 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
-<link rel="stylesheet" href="/assets/event-participants-v819.css?v=249-v1026">
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=249-v1030">
 <script src="/assets/participants-view-v819.js?v=249"></script>
-<script src="/assets/participant-person-v820.js?v=249-v1012"></script>
-<script src="/assets/event-participants-v819.js?v=249-v1026"></script>
+<script src="/assets/participant-person-v820.js?v=249-v1030"></script>
+<script src="/assets/event-participants-v819.js?v=249-v1030"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
@@ -8172,10 +8244,11 @@ startStaffAdmin();
   function init() {
     var c = document.getElementById('content');
     if (!c || document.getElementById('admNav')) return;
-    secActions(c);
     var cur = 'overview';
     Array.prototype.slice.call(c.children).forEach(function (el) {
       if (el.matches && el.matches('p.sec-title')) {
+        el.setAttribute('role', 'heading');
+        el.setAttribute('aria-level', '2');
         var g = groupOf((el.textContent || '').trim());
         if (g) cur = g;
       }
@@ -8258,26 +8331,6 @@ startStaffAdmin();
       if (el && window.MutationObserver) new MutationObserver(badge).observe(el, { childList: true, characterData: true, subtree: true });
     });
     badge();
-  }
-  function secActions(c) {
-    Array.prototype.slice.call(c.querySelectorAll(':scope > p.sec-title')).forEach(function (t) {
-      t.setAttribute('role', 'heading');
-      t.setAttribute('aria-level', '2');
-      var controls = Array.from(t.querySelectorAll(':scope > button, :scope > select'));
-      if (!controls.length) return;
-      var row = document.createElement('div');
-      row.className = 'sec-actions';
-      var more = controls.filter(function (control) { return control.hasAttribute('data-adm-secondary'); });
-      controls.filter(function (control) { return !more.includes(control); }).forEach(function (control) { row.appendChild(control); });
-      if (more.length) {
-        var d = document.createElement('details');
-        d.className = 'adm-menu';
-        d.innerHTML = '<summary class="mini-btn">Ещё ▾</summary><div class="adm-menu-list"></div>';
-        more.forEach(function (b) { d.lastChild.appendChild(b); });
-        row.appendChild(d);
-      }
-      t.parentNode.insertBefore(row, t.nextSibling);
-    });
   }
   // Меню «Ещё ▾»: закрыть после выбора и по щелчку мимо.
   document.addEventListener('click', function (e) {
@@ -8501,7 +8554,7 @@ startStaffAdmin();
 </script>
 <link rel="stylesheet" href="/assets/attendance-v740.css">
 <script src="/assets/matrix-online-admin.js?v=249"></script>
-<script src="/assets/admin-snapshot.js?v=249"></script>
+<script src="/assets/admin-snapshot.js?v=249-v1030"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=249">
 <script src="/assets/ai-pilot-v741.js?v=249-v1018"></script>
 <script src="/assets/ai-pilot-admin-v741.js?v=249"></script>

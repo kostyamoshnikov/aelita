@@ -66,7 +66,16 @@
  }
  function navPins(){try{const x=JSON.parse(localStorage.getItem('aelita-crm-pins:'+state.user.id)||'[]');return Array.isArray(x)?x.filter(k=>Object.hasOwn(labels,k)).slice(0,4):[];}catch{return state.navPins||[];}}
  function tabs(){const names=['dashboard',...(state.calendarReady&&['deals','tasks'].some(canRead)?['calendar']:[]),'projects','contacts','organizations','tasks','deals','journal',...((state.analyticsEnabled||isOwner())?['analytics']:[]),...(workbenchAllowed()?['workbench']:[]),...(canSegments()?['segments']:[]),...(isOwner()?['management','team']:[])];return '<div class="crm-navbox"><button type="button" class="crm-scroll prev" data-crm-scroll="-1" aria-label="Разделы левее" hidden>‹</button><nav class="tabs" aria-label="Разделы CRM">'+work.orderTabs('crm',names,navPins()).filter(canRead).map(t=>'<button data-tab="'+t+'" aria-current="'+(state.tab===t)+'">'+labels[t]+'</button>').join('')+'</nav><button type="button" class="crm-scroll next" data-crm-scroll="1" aria-label="Разделы правее" hidden>›</button></div>';}
- function shell(){const focusedTab=root.contains(document.activeElement)&&document.activeElement.matches('.crm-navbox [data-tab]');root.innerHTML=tabs()+'<details class="crm-nav-settings"><summary>Избранные разделы</summary><p class="hint">До 4 разделов рядом с обзором.</p><div data-nav-pins></div></details><div id="view"></div>';const pinBox=root.querySelector('[data-nav-pins]'),available=[...root.querySelectorAll('.tabs [data-tab]')].map(b=>b.dataset.tab).filter(k=>k!=='dashboard');pinBox.innerHTML=available.map(k=>'<label><input type="checkbox" data-pin-tab="'+k+'" '+(navPins().includes(k)?'checked':'')+'> '+labels[k]+'</label>').join('');pinBox.onchange=e=>{if(!e.target.matches('[data-pin-tab]'))return;const pins=[...pinBox.querySelectorAll(':checked')].map(x=>x.dataset.pinTab);if(pins.length>4){e.target.checked=false;notice('Можно закрепить до 4 разделов');return;}state.navPins=pins;try{localStorage.setItem('aelita-crm-pins:'+state.user.id,JSON.stringify(pins));}catch{}const nav=root.querySelector('.tabs'),nodes=new Map([...nav.querySelectorAll('[data-tab]')].map(x=>[x.dataset.tab,x]));for(const key of work.orderTabs('crm',available,pins))if(nodes.has(key))nav.append(nodes.get(key));initTabScroll();};$('#crm-person').textContent=(/^(аэлита\s*продакшен|aelita\s*production)$/i.test(String(state.user.name||'').trim())?'':state.user.name+' · ')+roles[state.user.role];$('#identity').innerHTML='<button class="crm-password-wide" data-email>Почта</button><button class="crm-password-wide" data-password>Пароль</button><details class="crm-header-more"><summary>Аккаунт</summary><div class="crm-header-menu"><button type="button" data-email>Почта</button><button type="button" data-password>Пароль</button><button type="button" data-logout-all>Выйти на всех устройствах</button></div></details><button data-logout>Выйти</button>';initTabScroll();if(focusedTab)root.querySelector('.crm-navbox [aria-current=true]')?.focus({preventScroll:true});mountWorkSearch();}
+ function shell(){const focusedTab=root.contains(document.activeElement)&&document.activeElement.matches('.crm-navbox [data-tab]');root.innerHTML=tabs()+'<details class="crm-nav-settings"><summary>Избранные разделы</summary><p class="hint">До 4 разделов рядом с обзором.</p><div data-nav-pins></div></details><div id="view"></div>';const pinBox=root.querySelector('[data-nav-pins]'),available=[...root.querySelectorAll('.tabs [data-tab]')].map(b=>b.dataset.tab).filter(k=>k!=='dashboard');pinBox.innerHTML=available.map(k=>'<label><input type="checkbox" data-pin-tab="'+k+'" '+(navPins().includes(k)?'checked':'')+'> '+labels[k]+'</label>').join('');pinBox.onchange=e=>{if(!e.target.matches('[data-pin-tab]'))return;const pins=[...pinBox.querySelectorAll(':checked')].map(x=>x.dataset.pinTab);if(pins.length>4){e.target.checked=false;notice('Можно закрепить до 4 разделов');return;}state.navPins=pins;try{localStorage.setItem('aelita-crm-pins:'+state.user.id,JSON.stringify(pins));}catch{}const nav=root.querySelector('.tabs'),nodes=new Map([...nav.querySelectorAll('[data-tab]')].map(x=>[x.dataset.tab,x]));for(const key of work.orderTabs('crm',available,pins))if(nodes.has(key))nav.append(nodes.get(key));initTabScroll();};renderAccount();initTabScroll();if(focusedTab)root.querySelector('.crm-navbox [aria-current=true]')?.focus({preventScroll:true});mountWorkSearch();}
+ function renderAccount(){
+   const name=String(state.user.name||'').trim();
+   const displayName=/^(аэлита\s*продакшен|aelita\s*production)$/i.test(name)?'':name;
+   $('#crm-person').textContent=[displayName,roles[state.user.role]].filter(Boolean).join(' · ');
+   $('#identity').innerHTML='<details class="crm-header-more"><summary>Аккаунт</summary><div class="crm-header-menu">'+
+     '<button type="button" data-email>Почта</button><button type="button" data-password>Пароль</button>'+
+     '<button type="button" data-logout-all>Выйти на всех устройствах</button></div></details>'+
+     '<button type="button" data-logout>Выйти</button>';
+ }
  function initTabScroll(){
    const box=root.querySelector('.crm-navbox'),nav=box?.querySelector('.tabs');
    if(!nav)return;
@@ -345,7 +354,7 @@
    }
    state.filters=filters;state.offset=offset;state.items=r.items;
    const count='Показано '+r.items.length+' из '+r.total+(offset?' · с '+(offset+1):'');
-   const body=t==='deals'&&r.items.length?'<div class="board" aria-label="Сделки по этапам">'+Object.entries(stages).map(([key,label])=>'<section class="column"><h2>'+label+'</h2>'+r.items.filter(x=>x.stage===key).map(x=>card(x,t)).join('')+'</section>').join('')+'</div>':'<div class="list">'+r.items.map(x=>card(x,t)).join('')+'</div>';
+   const body=t==='deals'&&r.items.length?'<p class="hint crm-board-hint" id="crm-board-hint">Листайте доску в стороны, чтобы увидеть все этапы.</p><div class="board" tabindex="0" role="region" aria-label="Сделки по этапам" aria-describedby="crm-board-hint">'+Object.entries(stages).map(([key,label])=>'<section class="column"><h2>'+label+'</h2>'+r.items.filter(x=>x.stage===key).map(x=>card(x,t)).join('')+'</section>').join('')+'</div>':'<div class="list">'+r.items.map(x=>card(x,t)).join('')+'</div>';
    const empty='<p class="empty">'+(activeListFilter(filters)?'По этим условиям записей нет. Измените или сбросьте фильтры.':(canWrite()?'Пока нет записей. Создайте первую карточку.':'Пока нет записей.'))+'</p>';
    $('#view').innerHTML=listHeading(t,r.total)+toolbar()+'<p id="crm-list-feedback" class="hint crm-list-feedback" role="status" tabindex="-1">'+esc((view.warning?view.warning+' ':'')+count)+'</p>'+(r.items.length?body:empty)+'<div class="pages"><span class="hint">'+esc(count)+'</span>'+(offset?'<button data-prev>Назад</button>':'')+(r.next!==null?'<button data-next="'+r.next+'">Дальше</button>':'')+'<button data-refresh>Обновить</button></div>';
    markWorkRoute(t);
@@ -472,6 +481,54 @@
    host.querySelector('h1').after(panel);
    return render;
  }
+ function recordHeader(type,row){
+   const active=!row.mergedInto;
+   const writable=active&&canWrite();
+   const primary=(writable?'<button type="button" class="primary" data-edit>Редактировать</button>':'')+
+     (type==='contacts'&&active?'<button type="button" data-orders-admin>Заказы в админке</button>':'')+
+     (canWrite('tasks')&&active?'<button type="button" data-context-task>Добавить задачу</button>':'');
+   const secondary=(writable?'<button type="button" data-archive>'+(row.archivedAt?'Восстановить':'В архив')+'</button>':'')+
+     (isOwner()&&type==='contacts'&&!row.archivedAt?'<button type="button" data-merge>Объединить контакт</button>':'')+
+     (isOwner()&&type==='contacts'&&active&&row.name!=='Удалённый контакт'?'<button type="button" class="danger" data-erase>Удалить персональные данные</button>':'');
+   return '<div class="crm-record-header"><div class="actions crm-record-back"><button type="button" data-back-list>← '+labels[type]+'</button></div>'+
+     '<h1>'+esc(row.name||row.title)+'</h1><div class="actions crm-record-actions">'+primary+'</div>'+
+     (secondary?'<details class="crm-record-more"><summary>Другие действия</summary><div class="actions">'+secondary+'</div></details>':'')+'</div>';
+ }
+ function contactField(label,buttonLabel,values){
+   const entries=(values||[]).filter(value=>typeof value==='string'&&value.trim());
+   return '<dt>'+label+'</dt><dd class="crm-contact-values">'+(entries.length?entries.map(value=>
+     '<div class="crm-contact-value"><span data-contact-value>'+esc(value)+'</span>'+
+     '<div class="actions crm-copy-actions"><button type="button" data-copy-contact aria-label="'+buttonLabel+': '+esc(value)+'">'+buttonLabel+'</button>'+
+     '<span role="status" data-copy-status></span></div>'+
+     '<input type="text" class="ym-disable-keys" data-copy-fallback readonly hidden inputmode="none" aria-label="'+label+' для ручного копирования"></div>'
+   ).join(''):'—')+'</dd>';
+ }
+ async function copyContact(button){
+   const token=state.token;
+   const current=()=>button.isConnected&&token&&token===state.token&&token===currentStaffToken();
+   if(!current()||button.hasAttribute('aria-busy'))return;
+   const row=button.closest('.crm-contact-value');
+   const value=row.querySelector('[data-contact-value]').textContent;
+   const status=row.querySelector('[data-copy-status]');
+   const fallback=row.querySelector('[data-copy-fallback]');
+   button.setAttribute('aria-busy','true');
+   status.textContent='';
+   fallback.hidden=true;
+   fallback.value='';
+   try{
+     await navigator.clipboard.writeText(value);
+     if(current())status.textContent='Скопировано';
+   }catch{
+     if(!current())return;
+     status.textContent='Скопируйте выделенное значение.';
+     fallback.value=value;
+     fallback.hidden=false;
+     fallback.focus();
+     fallback.select();
+   }finally{
+     button.removeAttribute('aria-busy');
+   }
+ }
  async function detail(type,id){if(!await leaveMail())return;rememberList();state.analyticsView=null;state.segmentView=null;state.segmentEditor=null;state.relationship=null;state.directoryJob=null;state.directoryEditor=null;
    if(type==='projects')return projectDetail(id);
    state.projectView=null;state.projectRefJob=null;const job={token:state.token};state.viewJob=job;
@@ -481,14 +538,15 @@
    const r=await api({action:'get',type,id});if(state.viewJob!==job||state.token!==job.token)return;if(state.tab!==type){state.tab=type;state.offset=0;state.filters={};shell();}state.entity=r.entity;state.type=type;const x=r.entity;markWorkRoute(type,id);
    if(type==='deals'&&x.show)work.write('recent:show',{id},{actor:state.user.id,durable:true});
    let rows=[];
-   if(type==='contacts')rows=[['Email',x.emails.join('\n')],['Телефон',x.phones.join('\n')],['Город',x.city],['Тип контакта',x.roles.map(k=>contactRoles[k]).join(', ')],['Метки',x.tags.join(', ')],['Описание',x.notes]];
+   if(type==='contacts')rows=[['Город',x.city],['Тип контакта',x.roles.map(k=>contactRoles[k]).join(', ')],['Метки',x.tags.join(', ')],['Описание',x.notes]];
    if(type==='organizations')rows=[['Тип',orgTypes[x.type]],['Город',x.city],['Сайт',x.website],['Описание',x.notes]];
    if(type==='tasks')rows=[['Статус',statuses[x.status]],['Срок (Москва)',date(x.dueAt)],['Приоритет',x.priority==='high'?'Высокий':'Обычный'],['Описание',x.description],...(x.buyerContact?[['Контакты покупателя',[x.buyerContact.name,x.buyerContact.email,x.buyerContact.accountEmail&&'кабинет: '+x.buyerContact.accountEmail,x.buyerContact.phone].filter(Boolean).join(' · ')+' — удалятся '+date(x.buyerContact.expiresAt)]]:[])];
    if(type==='deals')rows=[['Воронка',pipelines[x.pipeline]],['Этап',stages[x.stage]],['Плановая сумма',money(x.amountMinor)],['Плановая дата',x.closeDate],['Причина отказа',x.lostReason],['Описание',x.description]];
    const organizationContacts=type==='organizations'&&state.organizationContactsReady?window.AelitaOrgChannels.detail(x):'';
-   const fields='<dl>'+rows.map(([k,v])=>'<dt>'+k+'</dt><dd>'+esc(v||'—')+'</dd>').join('')+organizationContacts+'<dt>Наш ответственный сотрудник</dt><dd>'+esc(who(x.ownerId))+'</dd></dl>';
+   const contacts=type==='contacts'?contactField('Электронная почта','Копировать почту',x.emails)+contactField('Телефон','Копировать телефон',x.phones):'';
+   const fields='<dl>'+contacts+rows.map(([k,v])=>'<dt>'+k+'</dt><dd>'+esc(v||'—')+'</dd>').join('')+organizationContacts+'<dt>Наш ответственный сотрудник</dt><dd>'+esc(who(x.ownerId))+'</dd></dl>';
    const relations=(x.effectiveProjectId||x.projectId?link('projects',x.effectiveProjectId||x.projectId):'')+(x.organizationIds||[]).map(id=>link('organizations',id)).join('')+(x.contactId?link('contacts',x.contactId):'')+(x.organizationId?link('organizations',x.organizationId):'')+(x.dealId?link('deals',x.dealId):'')+Object.entries(r.related).filter(([t])=>t!=='projects'||!['tasks','deals'].includes(type)).map(([t,items])=>items.length?'<p class="hint">'+labels[t]+'</p>'+items.map(y=>'<button class="name-link" data-open="'+esc(y.id)+'" data-type="'+t+'">'+esc(y.label)+'</button>').join(''):'').join('');
-   $('#view').innerHTML='<div class="actions"><button data-back-list>← '+labels[type]+'</button>'+(canWrite()&&!x.mergedInto?'<button data-edit>Редактировать</button><button data-archive>'+(x.archivedAt?'Восстановить':'В архив')+'</button>':'')+(isOwner()&&type==='contacts'&&!x.archivedAt?'<button data-merge>Объединить контакт</button>':'')+(type==='contacts'&&!x.mergedInto?'<button data-orders-admin>Заказы в админке</button>':'')+(isOwner()&&type==='contacts'&&!x.mergedInto&&x.name!=='Удалённый контакт'?'<button class="danger" data-erase>Удалить персональные данные</button>':'')+(canWrite('tasks')&&!x.mergedInto?'<button data-context-task>Добавить задачу</button>':'')+'</div><h1>'+esc(x.name||x.title)+'</h1>'+(x.mergedInto?'<p class="password-note">Карточка объединена. '+link(type,x.mergedInto)+'</p>':'')+(type==='contacts'?'<section class="panel contact-summary-panel" id="contact-context" aria-live="polite"><p class="hint">Загружаем сводку…</p></section>':'')+'<div class="detail"><section class="panel">'+fields+'<h2>Связи</h2>'+(relations||'<p class="muted">Пока нет связей.</p>')+(x.documentLinks?.length?'<h2>Документы</h2>'+x.documentLinks.map(u=>'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(u)+'</a></p>').join(''):'')+(x.externalRefs?.length?'<h2>Источники</h2>'+x.externalRefs.map(s=>'<p class="source">'+esc({leads:'Заявка сайта',subscribers:'Подписчик',accounts:'Личный кабинет',invitations:'Пригласительный'}[s.source]||s.source)+' · '+esc(s.label||s.key)+'</p>').join('')+'<p class="hint">Связь с источником не создаёт разрешение на рассылку. Это копия контактных полей на момент переноса.</p>':'')+'</section><section class="panel"><h2>'+(type==='contacts'?'Заметки и история карточки':'История')+'</h2>'+(canWrite()&&!x.mergedInto&&!(type==='organizations'&&state.productionReady)&&!state.entriesReady?'<form id="note" class="inline-form"><label for="note-text">Добавить заметку</label><textarea class="ym-disable-keys" id="note-text" name="text" maxlength="4000" required></textarea><button>Сохранить заметку</button></form>':'')+(type==='contacts'?'<details class="history-extra"><summary>История только этой карточки</summary>':'')+'<div id="history"></div>'+(type==='contacts'?'</details>':'')+'</section></div>';
+   $('#view').innerHTML=recordHeader(type,x)+(x.mergedInto?'<p class="password-note">Карточка объединена. '+link(type,x.mergedInto)+'</p>':'')+(type==='contacts'?'<section class="panel contact-summary-panel" id="contact-context" aria-live="polite"><p class="hint">Загружаем сводку…</p></section>':'')+'<div class="detail"><section class="panel">'+fields+'<h2>Связи</h2>'+(relations||'<p class="muted">Пока нет связей.</p>')+(x.documentLinks?.length?'<h2>Документы</h2>'+x.documentLinks.map(u=>'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(u)+'</a></p>').join(''):'')+(x.externalRefs?.length?'<h2>Источники</h2>'+x.externalRefs.map(s=>'<p class="source">'+esc({leads:'Заявка сайта',subscribers:'Подписчик',accounts:'Личный кабинет',invitations:'Пригласительный'}[s.source]||s.source)+' · '+esc(s.label||s.key)+'</p>').join('')+'<p class="hint">Связь с источником не создаёт разрешение на рассылку. Это копия контактных полей на момент переноса.</p>':'')+'</section><section class="panel"><h2>'+(type==='contacts'?'Заметки и история карточки':'История')+'</h2>'+(canWrite()&&!x.mergedInto&&!(type==='organizations'&&state.productionReady)&&!state.entriesReady?'<form id="note" class="inline-form"><label for="note-text">Добавить заметку</label><textarea class="ym-disable-keys" id="note-text" name="text" maxlength="4000" required></textarea><button>Сохранить заметку</button></form>':'')+(type==='contacts'?'<details class="history-extra"><summary>История только этой карточки</summary>':'')+'<div id="history"></div>'+(type==='contacts'?'</details>':'')+'</section></div>';
    let refreshShow=null,showView=null;
    if(type==='deals'&&x.show){
      const docs=$('#view .detail .panel h2:last-of-type');
@@ -496,12 +554,12 @@
      refreshShow=showWorkPanel($('#view'),x,r.showWork);
    }
    if(type==='organizations'){
-     const actions=$('#view').querySelector('.actions');
+     const actions=$('#view .crm-record-actions');
      if(canWrite('contacts')&&!x.archivedAt&&!x.mergedInto){const add=document.createElement('button');add.type='button';add.textContent='Добавить контактное лицо';add.onclick=()=>guarded(()=>edit('contacts',{organizationIds:[x.id]}));actions.append(add);}
      if(x.mergedInto){const link=document.createElement('button');link.textContent='Открыть основную организацию';link.onclick=()=>guarded(()=>detail('organizations',x.mergedInto));actions.append(link);}
      if(x.mergedFrom?.length){const section=document.createElement('details');section.className='panel';const summary=document.createElement('summary');summary.textContent='История объединённых организаций';section.append(summary);for(const id of x.mergedFrom){const button=document.createElement('button');button.textContent='Прежняя карточка, заметки и письма';button.onclick=()=>guarded(()=>detail('organizations',id));section.append(button);}$('#view').append(section);}
    }
-   if(state.calendarBack)$('#view').querySelector('.actions').insertAdjacentHTML('afterbegin','<button type="button" data-tab="calendar">← Календарь</button>');
+   if(state.calendarBack)$('#view .crm-record-back').insertAdjacentHTML('afterbegin','<button type="button" data-tab="calendar">← Календарь</button>');
    if(state.productionReady){
      const view=$('#view');
      if(type==='contacts')view.insertAdjacentHTML('beforeend',production.rolesPanel(type,x));
@@ -522,7 +580,7 @@
    }
    if(['contacts','organizations'].includes(type))$('#view').insertAdjacentHTML('beforeend',publicDirectoryPanel(type,x));
    if(type==='tasks'){
-     $('#view').insertAdjacentHTML('afterbegin',taskActions(x));
+     $('#view .crm-record-header').insertAdjacentHTML('beforeend',taskActions(x));
      const salonLead = /^lead:([0-9a-z-]{8,64})$/.exec(x.sourceRef || '');
      if(salonLead&&state.user.adminAccess&&state.user.emailVerified)$('#view').insertAdjacentHTML('beforeend',
        '<section class="panel production-panel"><h2>Источник задачи</h2><p><a href="/admin/?lead='+encodeURIComponent(salonLead[1])+'#inbox">Открыть заявку с сайта ↗</a></p></section>');
@@ -536,7 +594,7 @@
        active:()=>state.viewJob===job&&state.token===job.token&&panel.isConnected,open:orderId=>guarded(()=>detail('deals',orderId))});
    }
    mountEntries($('#view'),type,x,job,r.related);
-   if(type==='organizations'&&x.email&&$('#view [data-mail-choose]'))$('#view > .actions')?.insertAdjacentHTML('beforeend','<button type="button" data-write-organization>Написать организации</button>');
+   if(type==='organizations'&&x.email&&$('#view [data-mail-choose]'))$('#view .crm-record-actions').insertAdjacentHTML('beforeend','<button type="button" data-write-organization>Написать организации</button>');
    mountObligations($('#view'),type,x,job);
    refreshShow?.(showView);
    if(state.settlementReady&&type==='deals'&&x.show&&(isOwner()||state.user.adminAccess&&x.showEvent)){
@@ -1106,11 +1164,114 @@ function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialo
  function analyticsRenderProgress(v){if(!analyticsActive(v)||!$('#analytics-progress'))return;const run=v.run,phase={metadata:'Выбираем кампании',planning:'Готовим список источников',scan:'Читаем источники',verify:'Повторно проверяем записи',verify_lists:'Проверяем состав источников',ready:'Готово'}[run?.phase]||'Готовим отчёт';$('#analytics-progress').className=v.error||['incomplete','stale'].includes(run?.status)?'bad':'hint';$('#analytics-progress').textContent=v.error||(run?.status==='ready'?'Отчёт готов. Начало расчёта: '+date(run.createdAt)+' · МСК. Проверен: '+date(run.completedAt)+' · МСК.'+(run.sourceIndex?' Источники по фоновому индексу: '+date(run.sourceIndex.startedAt)+' — '+date(run.sourceIndex.completedAt)+' · МСК.'+(run.sourceIndex.refreshIssue?' '+run.sourceIndex.refreshIssue.message:''):''):run&&run.status!=='running'?(run.issue?.message||'Не удалось получить полный отчёт. Начните заново.'):v.busy||run?phase+' · прочитано '+(run?.progress.processed||0)+' из '+(run?.progress.total||0)+' · повторно проверено '+(run?.progress.verified||0):'');$('#analytics-filters fieldset').disabled=v.busy;$('#analytics-controls').innerHTML=(v.busy&&run?'<button data-analytics-stop>Остановить после текущего шага</button>':'')+(!v.busy&&run?.status==='running'?'<button data-analytics-continue>Продолжить расчёт</button>':'');}
  async function analyticsStart(v){if(!analyticsActive(v)||v.busy)return;const form=$('#analytics-filters'),d=new FormData(form),kind=String(d.get('kind')),f={fromDate:String(d.get('fromDate')||''),toDate:String(d.get('toDate')||'')};for(const k of ['projectId','ownerId','performanceId','campaignQuery'])if(d.has(k))f[k]=String(d.get(k)||'');if(d.has('includeArchived'))f.includeArchived=true;const generation=++v.generation;v.run=null;v.error='';v.busy=true;v.auto=false;v.exportJob=null;$('#analytics-result').innerHTML='';analyticsRenderProgress(v);try{const r=await api({action:'analytics_start',kind,filters:f,request_id:rid()});if(!analyticsActive(v)||v.generation!==generation)return;v.run=r.run;v.busy=false;if(r.run.status==='ready')await analyticsRenderResult(v);else await analyticsContinue(v);}catch(err){if(analyticsActive(v)&&v.generation===generation){v.error=err.message;v.busy=false;analyticsRenderProgress(v);}}}
  async function analyticsContinue(v){if(!analyticsActive(v)||v.busy||v.run?.status!=='running')return;const generation=v.generation;v.busy=true;v.auto=true;v.error='';analyticsRenderProgress(v);try{while(analyticsActive(v)&&v.generation===generation&&v.auto&&v.run.status==='running'){const revision=v.run.revision;let r;try{r=await api({action:'analytics_step',runId:v.run.id,base_revision:revision,request_id:rid()});}catch(err){if(!analyticsActive(v)||v.generation!==generation)return;const status=await api({action:'analytics_status',runId:v.run.id});if(status.run.revision<=revision)throw err;r=status;}if(!analyticsActive(v)||v.generation!==generation)return;v.run=r.run;analyticsRenderProgress(v);}if(analyticsActive(v)&&v.generation===generation&&v.run.status==='ready')await analyticsRenderResult(v);}catch(err){if(analyticsActive(v)&&v.generation===generation){v.error=err.message;v.run=null;$('#analytics-result').innerHTML='';}}finally{if(analyticsActive(v)&&v.generation===generation){v.busy=false;v.auto=false;analyticsRenderProgress(v);}}}
- async function analyticsRenderResult(v){if(!analyticsActive(v)||v.run?.status!=='ready')return;const r=v.run.report;v.tableId=r.tables[0]?.id||'';v.offset=0;const quality=Object.entries(r.quality||{}).filter(([,n])=>n>0);$('#analytics-result').innerHTML='<div class="stats analytics-metrics '+(r.summary.length===4?'analytics-metrics-four':'')+'">'+r.summary.map(x=>'<article class="stat"><strong>'+analyticsValue(x.value,x.type)+'</strong><span>'+esc(x.label)+'</span>'+(x.detail?'<p class="hint">'+esc(x.detail)+'</p>':'')+'</article>').join('')+'</div>'+(quality.length?'<section class="analytics-quality"><h2>Полнота данных</h2><ul>'+quality.map(([k,n])=>'<li>'+esc(analyticsQuality[k]||k)+': '+n+'</li>').join('')+'</ul></section>':'')+'<details class="analytics-notes"><summary>Как рассчитан отчёт</summary>'+r.notes.map(n=>'<p class="hint">'+esc(n)+'</p>').join('')+'<p class="hint">Данные источников читаются последовательно. Это не общая транзакция всех систем; для обновления сформируйте новый отчёт.</p></details><div class="actions analytics-tables">'+r.tables.map(t=>'<button data-analytics-table="'+t.id+'">'+esc(t.label)+' · '+t.total+'</button>').join('')+'</div><div class="actions">'+(v.options.exportAllowed?'<button data-analytics-export>Скачать эту таблицу CSV</button>':'<p class="hint">Выгрузка отчётов CSV доступна владельцу.</p>')+'</div><p id="analytics-export-status" role="status" aria-live="polite"></p><div id="analytics-table"></div>';if(v.settlementShow&&v.run.kind==='events'&&v.run.filters.performanceId===v.settlementPerformance){
+ async function analyticsRenderResult(v){if(!analyticsActive(v)||v.run?.status!=='ready')return;const r=v.run.report;v.tableId=r.tables[0]?.id||'';v.offset=0;v.tablePosition=null;const quality=Object.entries(r.quality||{}).filter(([,n])=>n>0);$('#analytics-result').innerHTML='<div class="stats analytics-metrics '+(r.summary.length===4?'analytics-metrics-four':'')+'">'+r.summary.map(x=>'<article class="stat"><strong>'+analyticsValue(x.value,x.type)+'</strong><span>'+esc(x.label)+'</span>'+(x.detail?'<p class="hint">'+esc(x.detail)+'</p>':'')+'</article>').join('')+'</div>'+(quality.length?'<section class="analytics-quality"><h2>Полнота данных</h2><ul>'+quality.map(([k,n])=>'<li>'+esc(analyticsQuality[k]||k)+': '+n+'</li>').join('')+'</ul></section>':'')+'<details class="analytics-notes"><summary>Как рассчитан отчёт</summary>'+r.notes.map(n=>'<p class="hint">'+esc(n)+'</p>').join('')+'<p class="hint">Данные источников читаются последовательно. Это не общая транзакция всех систем; для обновления сформируйте новый отчёт.</p></details><div class="actions analytics-tables">'+r.tables.map(t=>'<button data-analytics-table="'+t.id+'">'+esc(t.label)+' · '+t.total+'</button>').join('')+'</div><div class="actions">'+(v.options.exportAllowed?'<button data-analytics-export>Скачать эту таблицу CSV</button>':'<p class="hint">Выгрузка отчётов CSV доступна владельцу.</p>')+'</div><p id="analytics-export-status" role="status" aria-live="polite"></p><div id="analytics-table" tabindex="-1"></div>';if(v.settlementShow&&v.run.kind==='events'&&v.run.filters.performanceId===v.settlementPerformance){
    const a=document.createElement('a');a.href='/admin/crm/?show='+encodeURIComponent(v.settlementShow)+'&run='+encodeURIComponent(v.run.id);a.textContent='Вернуться к сверке с этим отчётом ↗';$('#analytics-result').prepend(a);
   }await analyticsPage(v);analyticsRenderProgress(v);}
- async function analyticsPage(v){if(!analyticsActive(v)||v.run?.status!=='ready')return;const tableId=v.tableId,offset=v.offset,generation=v.generation;try{const r=await api({action:'analytics_page',runId:v.run.id,tableId,offset});if(!analyticsActive(v)||v.generation!==generation||v.tableId!==tableId||v.offset!==offset)return;if(r.reportDigest!==v.run.report.digest)throw Error('Версия отчёта изменилась. Сформируйте заново.');for(const b of root.querySelectorAll('[data-analytics-table]'))b.setAttribute('aria-pressed',String(b.dataset.analyticsTable===tableId));$('#analytics-table').innerHTML='<p class="hint">Прокрутите таблицу вбок, чтобы увидеть все столбцы.</p><div class="analytics-table-scroll" tabindex="0" role="region" aria-label="Таблица отчёта: можно прокрутить по горизонтали"><table class="analytics-data" style="min-width:'+Math.max(680,r.columns.length*170)+'px"><thead><tr>'+r.columns.map(c=>'<th scope="col">'+esc(c.label)+'</th>').join('')+'</tr></thead><tbody>'+r.items.map(row=>'<tr>'+r.columns.map(c=>'<td>'+analyticsValue(row[c.key],c.type)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'+(!r.items.length?'<p class="empty">По этим условиям записей нет.</p>':'')+'<div class="pages"><span class="hint">Показано '+r.items.length+' из '+r.total+(offset?' · с '+(offset+1):'')+'</span>'+(offset?'<button data-analytics-page="'+Math.max(0,offset-50)+'">Назад</button>':'')+(r.next!==null?'<button data-analytics-page="'+r.next+'">Дальше</button>':'')+'</div>';}catch(err){if(analyticsActive(v)&&v.generation===generation){v.error=err.message;v.run=null;$('#analytics-result').innerHTML='';analyticsRenderProgress(v);}}}
- async function analyticsExport(v){if(!analyticsActive(v)||v.run?.status!=='ready'||v.exportJob)return;const job={id:v.run.id,tableId:v.tableId,generation:v.generation},parts=[];v.exportJob=job;const active=()=>analyticsActive(v)&&v.exportJob===job&&v.generation===job.generation&&v.tableId===job.tableId;const button=$('[data-analytics-export]');button.disabled=true;let offset=0,filename='report.csv';try{do{const r=await api({action:'analytics_export',runId:job.id,tableId:job.tableId,offset});if(!active())return;if(r.reportDigest!==v.run.report.digest)throw Error('Версия отчёта изменилась. Выгрузка отменена.');parts.push(r.csv);filename=r.filename;offset=r.next;$('#analytics-export-status').textContent='Подготовлено '+r.processed+' из '+r.total+' строк';}while(offset!==null);if(!active())return;deliverFile(new Blob(parts,{type:'text/csv;charset=utf-8'}),filename,$('#analytics-export-status'));$('#analytics-export-status').textContent='CSV готов: выгружена вся таблица.';}catch(err){if(active()){$('#analytics-export-status').textContent='Выгрузка не завершена: '+err.message;if(err.code==='analytics_changed'){v.run=null;$('#analytics-result').innerHTML='';v.error=err.message;analyticsRenderProgress(v);}}}finally{parts.length=0;if(v.exportJob===job)v.exportJob=null;if(button.isConnected)button.disabled=false;}}
+ async function analyticsPage(v){
+   if(!analyticsActive(v)||v.run?.status!=='ready')return;
+   const {tableId,offset,generation,run}=v;
+   const table=run.report.tables.find(item=>item.id===tableId),host=$('#analytics-table');
+   if(!table||!host)return;
+   const previousTable=host.querySelector('.analytics-table-scroll');
+   if(v.tablePosition?.tableId===tableId){
+     if(previousTable)v.tablePosition.left=previousTable.scrollLeft;
+   }else{
+     v.tablePosition={tableId,left:0};
+   }
+   const left=v.tablePosition.left;
+   if(host.contains(document.activeElement))host.focus({preventScroll:true});
+   const job={};
+   v.pageJob=job;
+   const current=()=>analyticsActive(v)&&v.pageJob===job&&v.generation===generation&&v.run===run&&host.isConnected;
+   for(const button of root.querySelectorAll('[data-analytics-table]'))button.setAttribute('aria-pressed',String(button.dataset.analyticsTable===tableId));
+   host.innerHTML='<p class="hint" role="status">Загружаем таблицу…</p>';
+   try{
+     const result=await api({action:'analytics_page',runId:run.id,tableId,offset});
+     if(!current())return;
+     if(result.reportDigest!==run.report.digest){
+       const error=new Error('Версия отчёта изменилась. Сформируйте заново.');
+       error.code='analytics_changed';
+       throw error;
+     }
+     host.innerHTML=analyticsTableView(result,table.label,offset);
+     const scroll=host.querySelector('.analytics-table-scroll');
+     if(scroll){
+       scroll.scrollLeft=left;
+       if(document.activeElement===host)scroll.focus({preventScroll:true});
+     }
+   }catch(error){
+     if(!current())return;
+     if(analyticsReportUnavailable(error)){
+       discardAnalyticsReport(v,error);
+       return;
+     }
+     host.innerHTML='<p class="bad" role="status">'+esc(error.message||'Не удалось загрузить таблицу.')+'</p><button type="button" data-analytics-retry>Обновить таблицу</button>';
+     if(document.activeElement===host)host.querySelector('[data-analytics-retry]').focus({preventScroll:true});
+   }
+ }
+ function analyticsReportUnavailable(error){
+   return [401,403,404].includes(error.status)||['analytics_changed','analytics_expired','analytics_not_ready','analytics_disabled'].includes(error.code);
+ }
+ function discardAnalyticsReport(view,error){
+   view.error=error.message;
+   view.run=null;
+   view.exportJob=null;
+   clearDownload();
+   $('#analytics-result').replaceChildren();
+   analyticsRenderProgress(view);
+ }
+ function analyticsTableView(result,label,offset){
+   if(!result.items.length)return '<p class="empty" role="status">По этим условиям записей нет.</p>';
+   const heads=result.columns.map(column=>'<th scope="col">'+esc(column.label)+'</th>').join('');
+   const rows=result.items.map(row=>'<tr>'+result.columns.map((column,i)=>{
+     const value=analyticsValue(row[column.key],column.type);
+     return i===0?'<th scope="row">'+value+'</th>':'<td>'+value+'</td>';
+   }).join('')+'</tr>').join('');
+   return '<p class="hint" id="analytics-scroll-hint">Прокрутите таблицу в стороны. Первый столбец остаётся на месте.</p>'+
+     '<div class="analytics-table-scroll" tabindex="0" role="region" aria-label="'+esc(label)+'" aria-describedby="analytics-scroll-hint">'+
+     '<table class="analytics-data" style="min-width:'+Math.max(520,result.columns.length*152)+'px"><thead><tr>'+heads+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
+     '<div class="pages"><span class="hint">Показано '+result.items.length+' из '+result.total+(offset?' · с '+(offset+1):'')+'</span>'+
+     (offset?'<button type="button" data-analytics-page="'+Math.max(0,offset-50)+'">Назад</button>':'')+
+     (result.next!==null?'<button type="button" data-analytics-page="'+result.next+'">Дальше</button>':'')+'</div>';
+ }
+ async function analyticsExport(v){
+   if(!analyticsActive(v)||v.run?.status!=='ready'||v.exportJob)return;
+   const button=$('[data-analytics-export]'),status=$('#analytics-export-status');
+   const {run,tableId,generation}=v;
+   const parts=[],job={};
+   v.exportJob=job;
+   const current=()=>analyticsActive(v)&&v.exportJob===job&&v.run===run&&v.generation===generation&&v.tableId===tableId&&status.isConnected;
+   button.disabled=true;
+   status.textContent='Готовим CSV…';
+   let offset=0,filename='report.csv';
+   try{
+     do{
+       const result=await api({action:'analytics_export',runId:run.id,tableId,offset});
+       if(!current())return;
+       if(result.reportDigest!==run.report.digest){
+         const error=new Error('Версия отчёта изменилась. Сформируйте заново.');
+         error.code='analytics_changed';
+         throw error;
+       }
+       parts.push(result.csv);
+       filename=result.filename;
+       offset=result.next;
+       status.textContent='Подготовлено '+result.processed+' из '+result.total+' строк';
+     }while(offset!==null);
+     deliverFile(new Blob(parts,{type:'text/csv;charset=utf-8'}),filename,status);
+     status.textContent='CSV готов: выгружена вся таблица.';
+   }catch(error){
+     if(!current())return;
+     if(analyticsReportUnavailable(error))discardAnalyticsReport(v,error);
+     else status.textContent='Выгрузка не завершена: '+error.message;
+   }finally{
+     parts.length=0;
+     if(v.exportJob===job){
+       v.exportJob=null;
+       if(button.isConnected)button.disabled=false;
+     }
+   }
+ }
 
  async function guarded(fn){try{await fn();}catch(err){notice(err.message,true);}}
  root.addEventListener('click',e=>{
@@ -1118,12 +1279,27 @@ function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialo
    if(!b&&!e.defaultPrevented&&!e.target.closest('a,input,select,textarea,label,summary,[role=button],[contenteditable]')&&!window.getSelection()?.toString())
      b=e.target.closest('.record')?.querySelector(':scope > h3 > button[data-open]');
    if(!b)return;guarded(async()=>{
+   if(b.hasAttribute('data-copy-contact'))return copyContact(b);
    if(b.hasAttribute('data-index-check'))return indexCheck();
    if(b.hasAttribute('data-index-refresh'))return indexRefresh(false);
    if(b.hasAttribute('data-index-rebuild'))return indexRefresh(true);
    if(b.hasAttribute('data-analytics-stop')){if(state.analyticsView)state.analyticsView.auto=false;return;}
    if(b.hasAttribute('data-analytics-continue'))return analyticsContinue(state.analyticsView);
-   if(b.hasAttribute('data-analytics-table')){clearDownload();const v=state.analyticsView;if(v){v.tableId=b.dataset.analyticsTable;v.offset=0;v.exportJob=null;return analyticsPage(v);}return;}
+   if(b.hasAttribute('data-analytics-table')){
+     const v=state.analyticsView;
+     if(!analyticsActive(v)||v.run?.status!=='ready')return;
+     if(v.tableId!==b.dataset.analyticsTable){
+       clearDownload();
+       v.exportJob=null;
+       const exportButton=$('[data-analytics-export]');
+       if(exportButton)exportButton.disabled=false;
+       $('#analytics-export-status').textContent='';
+     }
+     v.tableId=b.dataset.analyticsTable;
+     v.offset=0;
+     return analyticsPage(v);
+   }
+   if(b.hasAttribute('data-analytics-retry'))return analyticsPage(state.analyticsView);
    if(b.hasAttribute('data-analytics-page')){const v=state.analyticsView;if(v){v.offset=Number(b.dataset.analyticsPage);return analyticsPage(v);}return;}
    if(b.hasAttribute('data-analytics-export'))return analyticsExport(state.analyticsView);
    if(b.hasAttribute('data-analytics-all-time')){const f=$('#analytics-filters');f.fromDate.value='';f.toDate.value='';f.dispatchEvent(new Event('input',{bubbles:true}));return;}

@@ -249,30 +249,31 @@ dialog h2{font-size:1.375rem}
 .task-draft-bar{margin:12px 0;padding:10px 14px;border:1px solid var(--gold);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .task-buyer{margin:14px 0 0;padding:12px 14px;border:1px solid var(--line)}.task-buyer p{margin:4px 0}.task-buyer .eyebrow{margin:0 0 6px}
 
-/* pack-v759 · shared header rhythm; compact identity below the brand */
+/* Account controls and the employee name can wrap independently. */
 body>header{min-height:80px;box-sizing:border-box;padding:12px max(24px,calc((100vw - 1240px)/2));position:relative;align-items:center;gap:12px;flex-wrap:nowrap}
 #identity{display:flex;align-items:center;flex-wrap:nowrap;margin-left:auto;gap:8px}
-#identity .crm-person{position:absolute;left:max(24px,calc((100vw - 1240px)/2));bottom:6px;font-size:0.625rem;max-width:45%;margin:0}
 #identity button,#identity summary{min-height:44px;white-space:nowrap;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
-.crm-header-more{display:none}
 .crm-header-more summary{cursor:pointer;list-style:none;padding:0 10px;border:1px solid var(--line);border-radius:6px}
+.crm-header-more summary::-webkit-details-marker{display:none}
 .crm-header-more[open] .crm-header-menu{position:absolute;inset-inline-end:18px;top:calc(100% - 4px);z-index:20;display:grid;gap:4px;width:min(238px,calc(100% - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:8px}
 #identity .crm-header-menu button{justify-content:flex-start;width:100%;white-space:normal;text-align:start}
 .crm-header-more summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-@media(max-width:600px){body>header{padding-inline:16px}.brand{font-size:0.8125rem;letter-spacing:.2em}.brand span{font-size:0.5rem}.crm-password-wide{display:none!important}.crm-header-more{display:block}#identity .crm-person{left:16px;max-width:58%;font-size:0.5625rem}#identity{gap:0}#identity button{padding-inline:8px;font-size:0.625rem}}
+@media(max-width:600px){body>header{padding-inline:16px}.brand{font-size:0.8125rem;letter-spacing:.2em}.brand span{font-size:0.5rem}}
 
 /* pack-v760: intrinsic brand/identity layout, no absolute baseline offsets. */
 body>header{padding:10px 28px;align-items:center;min-height:80px}
 .crm-brand-block{min-width:0;flex:1}.brand{display:inline-flex;flex-direction:column;justify-content:center;min-height:44px}
-.crm-brand-block .crm-person{position:static!important;max-width:100%!important;font:400 .6875rem/1.25 'Inter',sans-serif;color:var(--sand);margin:2px 0 0;overflow-wrap:anywhere}
+.crm-brand-block .crm-person{font:400 .875rem/1.4 'Inter',sans-serif;color:var(--sand);margin:2px 0 0;overflow-wrap:anywhere}
+.crm-brand-block .crm-person:empty,#identity:empty{display:none}
 #identity{flex:0 0 auto;max-width:none;margin:0;align-self:center}
 .crm-navbox{position:relative;min-width:0;margin-bottom:22px}.crm-navbox .tabs{margin:0;padding:0 0 12px;scroll-padding-inline:44px;scrollbar-width:none}.crm-navbox .tabs::-webkit-scrollbar{display:none}
 .crm-scroll{position:absolute;top:0;bottom:12px;width:44px;min-width:44px;padding:0;z-index:2;background:var(--ink);border:0;font-size:1.5rem;letter-spacing:0}.crm-scroll.prev{left:0;background:linear-gradient(to left,transparent,var(--ink) 65%)}.crm-scroll.next{right:0;background:linear-gradient(to right,transparent,var(--ink) 65%)}.crm-scroll[hidden]{display:none!important}
 @media(max-width:600px){
   body>header{padding-inline:18px}
-  .crm-brand-block .crm-person{font-size:.8125rem;line-height:1.35}
-  #identity{gap:6px}
-  #identity button,#identity summary{font-size:.8125rem}
+  body>header:has(.crm-brand-block){flex-wrap:wrap}
+  .crm-brand-block{flex:1 1 8rem}
+  #identity{flex:0 1 auto;flex-wrap:wrap;max-width:100%;gap:8px}
+  #identity button,#identity summary{font-size:.875rem}
   .crm-navbox .tabs button{white-space:nowrap}
 }
 @media(max-width:360px){
@@ -375,3 +376,45 @@ dialog.crm-picker::backdrop{background:rgb(0 0 0 / .65)}
   #filters .crm-filter-actions > button{flex:1 1 auto}
 }
 @media(max-width:420px){#filters :is(.filter-fields,label.check){min-width:0}#filters .filter-fields{display:grid;grid-template-columns:minmax(0,1fr)}}
+
+.crm-record-header{display:grid;gap:12px;min-width:0;margin:16px 0 22px}
+.crm-record-header h1{margin:0;overflow-wrap:anywhere}
+.crm-record-header .actions,.crm-copy-actions{margin:0;gap:8px}
+.crm-record-actions:empty{display:none}
+.crm-record-more summary{display:inline-flex;align-items:center;padding:8px 12px;min-height:44px;border:1px solid var(--line);border-radius:6px;cursor:pointer}
+.crm-record-more[open] .actions{margin-top:8px}
+.detail dd.crm-contact-values{display:grid;gap:10px;white-space:normal}
+.crm-contact-value{display:grid;gap:6px;min-width:0;overflow-wrap:anywhere}
+.crm-contact-value + .crm-contact-value{padding-top:10px;border-top:1px solid var(--line)}
+.crm-copy-actions [role=status]{font-size:.875rem;color:var(--sand)}
+.crm-copy-actions [role=status]:empty{position:absolute;width:1px;height:1px;overflow:hidden}
+.crm-contact-value input{max-width:100%;width:100%;margin:0}
+.crm-board-hint{margin:14px 0 4px}
+.crm-board-hint + .board{margin-top:0;overscroll-behavior-inline:contain;overflow-wrap:anywhere}
+.board:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#analytics-table{min-width:0;margin-block:12px}
+.analytics-table-scroll{margin-block-start:8px;overscroll-behavior-inline:contain}
+.analytics-table-scroll:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.analytics-data{border-collapse:separate;border-spacing:0}
+.analytics-data :is(th,td){overflow-wrap:anywhere}
+.analytics-data tr>:first-child{
+  position:sticky;
+  inset-inline-start:0;
+  width:10rem;
+  min-width:7rem;
+  max-width:10rem;
+  border-inline-end:1px solid var(--line);
+}
+.analytics-data thead tr>:first-child{z-index:2}
+.analytics-data th[scope=row]{top:auto;font-weight:400;color:var(--bone)}
+.analytics-data tbody tr:last-child th[scope=row]{border-bottom:0}
+@media(max-width:600px){
+  .crm-record-header .actions > button{min-width:0;white-space:normal}
+  .crm-record-actions>.primary{flex-basis:100%}
+  .crm-brand-block .crm-team-link{min-height:44px}
+  .analytics-data tr>:first-child{width:7rem;max-width:7rem}
+}
+@media(max-width:420px){
+  .crm-copy-actions{display:grid;grid-template-columns:minmax(0,1fr)}
+  .crm-record-header .actions > button{max-width:100%;overflow-wrap:anywhere}
+}

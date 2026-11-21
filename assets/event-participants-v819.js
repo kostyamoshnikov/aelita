@@ -66,7 +66,7 @@
   $('#participants-updated').textContent=data?.generatedLabel?'Данные обновлены '+data.generatedLabel:'';
   $('#participants-ended').hidden=!(eventGroup==='current'&&state?.label==='Состоялось');
  }
- function render(){
+ function render(appendFrom=0){
   if(!data)return;
   const f=filters(),rows=V.select(data,f),t=data.totals;
   paintEvent(data.event);
@@ -82,11 +82,16 @@
   $('#participants-warnings').innerHTML=warnings.length?'<ul>'+warnings.map(w=>'<li>'+esc(w)+'</li>').join('')+'</ul>'+(t.possibleDuplicates||t.identityConflicts||t.responseConflicts?'<button type="button" class="mini-btn" data-participant-review>Сверить</button>':''):'';
   $('#participants-warnings').hidden=!warnings.length;
   $('#participants-scope').textContent='В списке '+V.people(Math.min(limit,rows.length))+(rows.length>limit?' из '+rows.length:'')+'. '+V.scope(f)+'.';
-  $('#participants-list').innerHTML=rows.slice(0,limit).map(r=>{
+  const list=$('#participants-list'),more=$('#participants-more');
+  const cards=rows.slice(appendFrom,limit).map(r=>{
    const tags=V.basisTags(r).map(tag=>'<span class="participant-basis'+(!tag.active?' participant-basis-inactive':'')+'">'+esc(tag.label)+(tag.notes.length?' <small>'+esc((tag.active?'Есть действующее основание. ':'')+tag.notes.join('; '))+'</small>':'')+'</span>').join('');
    return '<article class="participant-card"><div class="participant-row-head"><label class="participant-pick"><input type="checkbox" aria-label="Выбрать: '+esc(r.name)+'" data-participant-id="'+r.id+'" '+(selected.has(r.id)?'checked':'')+'></label><button type="button" class="participant-name" data-participant-person="'+r.id+'" aria-label="Открыть участника: '+esc(r.name)+'">'+esc(r.name)+'</button></div><div class="participant-badges">'+tags+'</div><p><strong>'+modes[r.mode]+'</strong> · '+esc(V.stateLabel(r,f))+'</p>'+(r.possibleDuplicate?'<p class="participant-issue">Возможное совпадение. Сравните основания.</p>':'')+(r.modeConflict?'<p class="participant-issue">В источниках указаны разные форматы участия.</p>':'')+(r.identityConflict?'<p class="participant-issue">Уточнённые имена расходятся.</p>':'')+'<p class="hint">'+esc(r.arrivalLabel)+'</p>'+(r.declined&&r.arrivalLabel==='Вошёл по QR'?'<p class="participant-issue">Есть и отказ, и отметка входа. Сверьте участие.</p>':'')+'<details><summary>Основания · '+r.sources.length+'</summary><ul>'+r.sources.map(s=>'<li>'+esc(V.sourceLabel(s))+'</li>').join('')+'</ul></details></article>';
-  }).join('')||'<p class="empty-state">'+(data.partial?'Доступных данных для этого списка недостаточно. Проверьте предупреждения.':f.search||f.basis&&f.basis!=='all'||f.mode!=='all'||f.status!=='expected'?'По этим условиям участников нет. Измените фильтры.':'Действующих участников пока нет.')+'</p>';
-  $('#participants-more').hidden=rows.length<=limit;renderActions(rows);
+  }).join('');
+  if(appendFrom)list.insertAdjacentHTML('beforeend',cards);
+  else list.innerHTML=cards||'<p class="empty-state">'+(data.partial?'Доступных данных для этого списка недостаточно. Проверьте предупреждения.':f.search||f.basis&&f.basis!=='all'||f.mode!=='all'||f.status!=='expected'?'По этим условиям участников нет. Измените фильтры.':'Действующих участников пока нет.')+'</p>';
+  const focusNext=appendFrom&&document.activeElement===more;
+  more.hidden=rows.length<=limit;renderActions(rows);
+  if(focusNext&&rows[appendFrom])list.querySelector('[data-participant-person="'+rows[appendFrom].id+'"]')?.focus();
  }
  function clearView(message){
   data=null;selected.clear();$('#participants-list').textContent=message;paintEvent(null);
@@ -197,7 +202,16 @@
  root.addEventListener('click',e=>{
   const group=e.target.closest('[data-event-group]');if(group){if(!busy&&group.dataset.eventGroup!==eventGroup)load(undefined,group.dataset.eventGroup);return;}
   if(e.target.closest('[data-participant-review]')){if(usable()){$('#participants-status').value='review';$('#participants-mode').value='all';if($('#participants-basis'))$('#participants-basis').value='all';$('#participants-search').value='';clearArtifacts();limit=200;render();$('#participants-status').focus();}return;}
-  const button=e.target.closest('[data-participant-person]');if(button&&!button.disabled){person?.open(button.dataset.participantPerson,button);return;}const mode=e.target.closest('[data-participant-mode]');if(mode&&!mode.disabled){clearArtifacts();$('#participants-mode').value=mode.dataset.participantMode;$('#participants-status').value='expected';limit=200;render();}const op=e.target.closest('[data-participant-operation]');if(op)decide(op.dataset.participantOperation);});
+  const button=e.target.closest('[data-participant-person]');
+  if(button&&!button.disabled){person?.open(button.dataset.participantPerson,button);return;}
+  const mode=e.target.closest('[data-participant-mode]');
+  if(mode&&!mode.disabled){
+   const key=mode.dataset.participantMode,restoreFocus=document.activeElement===mode;
+   clearArtifacts();$('#participants-mode').value=key;$('#participants-status').value='expected';limit=200;render();
+   if(restoreFocus)$('[data-participant-mode="'+key+'"]')?.focus({preventScroll:true});
+  }
+  const op=e.target.closest('[data-participant-operation]');if(op)decide(op.dataset.participantOperation);
+ });
  $('#participants-list').onchange=e=>{const id=e.target.dataset.participantId;if(id){e.target.checked?selected.add(id):selected.delete(id);renderActions();}};
  $('#participants-unselect').onclick=()=>{
   selected.clear();
@@ -205,7 +219,10 @@
   renderActions();
   ($('#participants-list').querySelector('[data-participant-id]')||$('#participants-search')).focus();
  };
- $('#participants-more').onclick=()=>{limit+=200;render();};
+ $('#participants-more').onclick=()=>{
+  if(!usable()||$('#participants-more').hidden)return;
+  const shown=limit;limit+=200;render(shown);
+ };
  $('#participants-copy').onclick=async()=>{
   if(!usable())return;
   const ctx={job,token:dataToken},f=filters(),text=V.copy(data,f),count=V.select(data,f).length;

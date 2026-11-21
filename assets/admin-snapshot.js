@@ -61,6 +61,104 @@
     return 'AELITA_CURRENT_IMAGE_'+fields.year+'-'+fields.month+'-'+fields.day+'_'+fields.hour+fields.minute+fields.second+'_MSK_'+commit.slice(0,8)+'.zip';
   }
   function abortCheck(signal){if(signal&&signal.aborted)throw new DOMException('Aborted','AbortError');}
+  const releaseManifestPath = 'site-changes-v1.json';
+  let publicationRefresh = null;
+
+  function releaseNumber(value) {
+    return /^(?:pack-v)?([1-9][0-9]*)$/.exec(String(value))?.[1];
+  }
+
+  async function readPublishedRelease(request, signal, minimumRelease) {
+    const options = {cache:'no-store', credentials:'omit', redirect:'error', signal};
+    // An older service worker can still be controlling this freshly loaded admin page.
+    const check = '?check=' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    const expected = releaseNumber(minimumRelease);
+    const response = await request('/site-release-v1.json' + check, options);
+    if (response.status === 404) return expected ? {status:'missing', expected} : {status:'missing'};
+    if (!response.ok) return {status:'http', code:response.status};
+    const receipt = await response.json().catch(() => null);
+    const number = releaseNumber(receipt?.release);
+    const hash = receipt?.manifest_sha256;
+    if (receipt?.schema !== 'aelita.site-release/v1' || !number || typeof hash !== 'string'
+        || !/^[a-f0-9]{64}$/.test(hash) || receipt.files?.[releaseManifestPath] !== hash) {
+      return {status:'invalid'};
+    }
+    if (expected && Number(number) < Number(expected)) {
+      return {status:'pending', number, expected};
+    }
+    if (!globalThis.crypto?.subtle) return {status:'unverified', number};
+    const manifest = await request('/' + releaseManifestPath + check, options);
+    if (!manifest.ok) return {status:'manifest_http', number, code:manifest.status};
+    const bytes = new Uint8Array(await manifest.arrayBuffer());
+    if (await digest(bytes) !== hash) return {status:'mismatch', number};
+    let document;
+    try {
+      document = JSON.parse(new TextDecoder().decode(bytes));
+    } catch {
+      return {status:'invalid'};
+    }
+    if (document?.schema !== 'aelita.site-changes/v1' || releaseNumber(document.release) !== number) {
+      return {status:'mismatch', number};
+    }
+    return {status:'matched', number};
+  }
+
+  function publicationMessage(result) {
+    const pack = result.number ? 'v' + result.number : '';
+    switch (result.status) {
+      case 'matched': return 'В опубликованном отчёте указан пакет ' + pack + '. Опись совпала.';
+      case 'unverified': return 'В отчёте указан пакет ' + pack + '. Браузер не смог сверить опись.';
+      case 'pending': return 'Пакет админки v' + result.expected + '. Сайт пока отдаёт отчёт ' + pack + '.';
+      case 'missing': return 'Отчёт о публикации' + (result.expected ? ' пакета v' + result.expected : '') + ' пока недоступен.';
+      case 'invalid': return 'Не удалось прочитать формат отчёта или описи.';
+      case 'http': return 'Не удалось получить свежий отчёт (HTTP ' + result.code + ').';
+      case 'manifest_http': return result.code === 404 ? 'Опись пакета ' + pack + ' пока недоступна.'
+        : 'В отчёте указан пакет ' + pack + '. При чтении описи сайт вернул HTTP ' + result.code + '.';
+      case 'mismatch': return 'Отчёт указывает пакет ' + pack + ', но опубликованная опись отличается.';
+      default: return 'Связь с сайтом прервалась. Свежий статус не подтверждён.';
+    }
+  }
+
+  function mountPublication() {
+    const button = document.getElementById('sitePublicationRefresh');
+    const status = document.getElementById('sitePublicationStatus');
+    if (!button || !status) return null;
+    let active = null;
+    const session = () => typeof getToken === 'function' ? getToken() : '';
+    async function refresh() {
+      const token = session();
+      if (!token || active?.token === token) return;
+      active?.controller.abort();
+      const controller = new AbortController();
+      const job = {token, controller};
+      const current = () => active === job && session() === token;
+      active = job;
+      button.disabled = true;
+      status.textContent = 'Проверяем опубликованный отчёт…';
+      const timer = setTimeout(() => controller.abort(), 12000);
+      try {
+        const result = await readPublishedRelease(fetch, controller.signal, button.dataset.minimumRelease);
+        if (current()) status.textContent = publicationMessage(result);
+      } catch {
+        if (current()) status.textContent = publicationMessage({status:'network'});
+      } finally {
+        clearTimeout(timer);
+        if (active === job) {
+          active = null;
+          button.disabled = false;
+        }
+      }
+    }
+    window.addEventListener('aelita-staff-session-changed', () => {
+      active?.controller.abort();
+      active = null;
+      button.disabled = false;
+      status.textContent = 'Нажмите «Проверить пакет».';
+    });
+    button.addEventListener('click', refresh);
+    return refresh;
+  }
+
   async function build(call,signal,onProgress){
     if(!globalThis.crypto||!crypto.subtle)throw new Error('snapshot_crypto_unavailable');
     var plan=await call({action:'snapshot_start'},signal);
@@ -119,6 +217,7 @@
   }
   function mount(){
     if(typeof document==='undefined')return;
+    publicationRefresh=mountPublication();
     var button=document.getElementById('siteSnapshotBtn');if(!button)return;
     var cancel=document.getElementById('siteSnapshotCancel'),status=document.getElementById('siteSnapshotStatus'),progress=document.getElementById('siteSnapshotProgress'),link=document.getElementById('siteSnapshotDownload');
     var active=null,url=null;
@@ -151,5 +250,6 @@
     });
     cancel.addEventListener('click',function(){if(active)active.abort();});
   }
-  return {Zip,build,mount,digest,safePath};
+  function refreshPublication(){return publicationRefresh?.();}
+  return {Zip,build,mount,digest,safePath,readPublishedRelease,refreshPublication};
 });

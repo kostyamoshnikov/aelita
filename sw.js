@@ -70,6 +70,11 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(request, {cache: 'no-store'}));
     return;
   }
+  // Publication checks must reach the network. A cached receipt can attest an old release.
+  if (url.pathname === '/site-release-v1.json' || url.pathname === '/site-changes-v1.json') {
+    event.respondWith(fetch(request, {cache: 'no-store'}));
+    return;
+  }
   if (/^\/(?:en\/)?free-online-access(?:\/|$)/.test(url.pathname)) {
     event.respondWith(fetch(request, {cache: 'no-store'})); return;
   }

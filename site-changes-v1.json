@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1027,
+  "release": 1030,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -258,7 +258,7 @@
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "90aaa37e9920b22b48c0d80a36db27f765d946d7e78ecf88ef099fb1b9f79d86"
+      "sha256": "73fc372370cbf8ae055057efbf2be5a4ee239af88e475cb307be5a167d90dbf8"
     },
     {
       "path": "admin/directory/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "9c0929235407afe6a93657a7a8f70f1e590a8f4bcaa7055b8b64b496327d1c4d"
+      "sha256": "2fe54f39729157ab5f6a5fb16b27805d6d31adf782b9511a16c992c6c4c86429"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -353,6 +353,10 @@
       "sha256": "57039685427166725599922ff5f609e5f0861afebca793e47f39ebcc3901964e"
     },
     {
+      "path": "assets/admin-snapshot.js",
+      "sha256": "eb393b9e6199c43d8cb815e2dc7707bab813cd73559c49f79651ebc22f49c6e1"
+    },
+    {
       "path": "assets/admin-touch-statistics-v1011.css",
       "sha256": "283a89d2c6f75cbfbaf5747b520e08ce6f079b6239e8d4b0bc99e5ad00aa1641"
     },
@@ -422,11 +426,11 @@
     },
     {
       "path": "assets/crm-core-v1.css",
-      "sha256": "df84bb19c48c431b156fedae921850ead8bc506ae34a0ce5de349cf2b5f8b262"
+      "sha256": "87e652b496250e660e193f10cd721975a39c807ace68edf878572f55e590b719"
     },
     {
       "path": "assets/crm-core-v1.js",
-      "sha256": "2b004d1a35d2ddd1e2c26c2bf50a70936b464cc43edc4914fdfc32ea5ef92e4e"
+      "sha256": "c07347d4c015c4707197a1405b17a275bd56c49c40f7346b3c3b0b0320f2a631"
     },
     {
       "path": "assets/crm-workbench-v814.js",
@@ -462,11 +466,11 @@
     },
     {
       "path": "assets/event-participants-v819.css",
-      "sha256": "5655a0d075d2a26acb6c840662c19a8721fe6637d70388374daf8b69ef4f02d0"
+      "sha256": "bce3364494494673c8f4b52bedac6fb60824f73d47cccce80944f00e6ae2f64c"
     },
     {
       "path": "assets/event-participants-v819.js",
-      "sha256": "a8d16a03efe4476fc48daa502f2e60c52b1396b291c5074fb4ae014faeec3ab6"
+      "sha256": "fb169b78a12fbf2a34db220aa7ba2246f23def6efe2cc09ece4b07c1d55d8b2a"
     },
     {
       "path": "assets/festival.js",
@@ -534,7 +538,7 @@
     },
     {
       "path": "assets/participant-person-v820.js",
-      "sha256": "b60dfb2ca72d1b49f67c46273de7adbff799f099a4d0b38591d6fa240513e6da"
+      "sha256": "7200e506800b4a3ce97556d39094af6867a1343e3590f7a19f31acf3c694b878"
     },
     {
       "path": "assets/payments.js",
@@ -1934,7 +1938,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "2d032ce097c19424d4375cd2e256e5befacff4a99edafd9160b9b77aacea4374"
+      "sha256": "94faf3cb2b593e09b336a75d9d5f93c65a756ffbef8421daf500f2b28fe6cb07"
     },
     {
       "path": "tarusa-theatre-tour/index.html",
@@ -2030,17 +2034,17 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "e95b07bb379a5a3a55a388c8ae3561d57a17ea029c07b88b2a6286fc61fd007a",
+  "changelog_sha256": "b76de2f8af040555a0583cff394afe3d32a726682b26f1ea9750244ae9f2338e",
   "recent_versions": [
+    1030,
+    1029,
+    1028,
     1027,
     1026,
     1025,
     1024,
     1023,
     1022,
-    1021,
-    1020,
-    1019,
-    1018
+    1021
   ]
 }
