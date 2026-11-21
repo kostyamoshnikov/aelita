@@ -12,7 +12,16 @@
   function clean(el){window.AelitaWorkForms?.clean(el);}
   function message(text,bad=false){const el=dialog.querySelector('[data-person-message]');el.textContent=text;el.classList.toggle('error',bad);}
   function rowValue(row,kind){return JSON.stringify(kind==='identity'?row.identity:row.response);}
-  function fill(row,kind){const f=form(kind);if(kind==='identity')for(const p of parts)f.elements.namedItem(p).value=row.identity?.[p]||'';else f.elements.namedItem('response').value=row.response||'unknown';baselines[kind]=rowValue(row,kind);clean(f);}
+  function fill(row,kind){
+   const f=form(kind);
+   if(kind==='identity')for(const p of parts)f.elements.namedItem(p).value=row.identity?.[p]||'';
+   else {
+    f.elements.namedItem('response').value=row.response||'unknown';
+    const conflict=dialog.querySelector('[data-person-response-conflict]');
+    if(conflict)conflict.hidden=row.response!=='conflict';
+   }
+   baselines[kind]=rowValue(row,kind);clean(f);
+  }
   function heading(row){
    dialog.querySelector('h2').textContent=row.name;
    dialog.querySelector('[data-person-original]').textContent='В исходных документах: '+row.originalNames.join('; ');
@@ -83,7 +92,42 @@
   function setup(){
    if(dialog)return;
    dialog=document.createElement('dialog');dialog.id='participants-person-dialog';dialog.setAttribute('data-work-managed-close','');dialog.setAttribute('aria-labelledby','participants-person-title');
-   dialog.innerHTML='<div class="participant-person-head"><h2 id="participants-person-title"></h2><button type="button" class="mini-btn" data-person-close aria-label="Закрыть карточку участника">×</button></div><p data-person-message role="status" aria-live="polite"></p><section class="person-contacts" aria-label="Контакты" data-work-untracked><h3>Контакты</h3><div data-person-contacts aria-live="polite"></div></section><p class="hint" data-person-original></p><h3>Основания участия</h3><ul data-person-source></ul><form data-person-form="identity"><h3>Имя в списке участников</h3><p class="hint">Заполняйте только известные части имени. Фамилия не определяется автоматически; исходные документы сохраняются.</p><label>Фамилия<input class="ym-disable-keys" name="lastName" autocomplete="off" maxlength="80"></label><label>Имя<input class="ym-disable-keys" name="firstName" autocomplete="off" maxlength="80"></label><label>Отчество — если известно<input class="ym-disable-keys" name="middleName" autocomplete="off" maxlength="80"></label><div class="participants-actions"><button type="submit" class="mini-btn">Сохранить имя</button><button type="button" class="mini-btn" data-person-reset="identity">Вернуть имя из документов</button></div></form><form data-person-form="response"><h3>Ответ об участии</h3><p class="hint">Отмечайте ответ, который человек сообщил вам. Отказ исключает его из ожидаемых зрителей и сохраняет билет или приглашение.</p><label>Ответ участника<select name="response"><option value="unknown">Пока не подтвердил</option><option value="confirmed">Подтвердил участие</option><option value="declined">Отказался</option><option value="conflict" disabled>Ответы требуют сверки</option></select></label><div class="participants-actions"><button type="submit" class="mini-btn">Сохранить ответ</button><button type="button" class="mini-btn" data-person-reset="response">Вернуть ответ из источника</button></div></form><details><summary>История имени и ответов</summary><ol data-person-history></ol></details>';
+   dialog.innerHTML=`
+    <div class="participant-person-head">
+     <h2 id="participants-person-title"></h2>
+     <button type="button" class="mini-btn" data-person-close aria-label="Закрыть карточку участника">×</button>
+    </div>
+    <p data-person-message role="status" aria-live="polite"></p>
+    <form data-person-form="response">
+     <fieldset class="person-response">
+      <legend>Ответ об участии</legend>
+      <div class="person-response-options">
+       <label><input type="radio" name="response" value="unknown">Пока не подтвердил</label>
+       <label><input type="radio" name="response" value="confirmed">Подтвердил участие</label>
+       <label><input type="radio" name="response" value="declined">Отказался</label>
+      </div>
+      <input type="radio" name="response" value="conflict" hidden disabled>
+      <p data-person-response-conflict class="hint" hidden>Ответы в источниках расходятся. Уточните ответ участника.</p>
+      <p class="hint">Отказ убирает человека из ожидаемых зрителей. Билет и приглашение сохраняются.</p>
+      <div class="participants-actions">
+       <button type="submit" class="mini-btn">Сохранить ответ</button>
+       <button type="button" class="mini-btn" data-person-reset="response">Вернуть ответ из источника</button>
+      </div>
+     </fieldset>
+    </form>
+    <section class="person-contacts" aria-label="Контакты" data-work-untracked>
+     <h3>Контакты</h3><div data-person-contacts aria-live="polite"></div>
+    </section>
+    <p class="hint" data-person-original></p>
+    <h3>Основания участия</h3><ul data-person-source></ul>
+    <form data-person-form="identity">
+     <h3>Имя в списке участников</h3><p class="hint">Заполняйте только известные части имени. Фамилия не определяется автоматически; исходные документы сохраняются.</p>
+     <label>Фамилия<input class="ym-disable-keys" name="lastName" autocomplete="off" maxlength="80"></label>
+     <label>Имя<input class="ym-disable-keys" name="firstName" autocomplete="off" maxlength="80"></label>
+     <label>Отчество — если известно<input class="ym-disable-keys" name="middleName" autocomplete="off" maxlength="80"></label>
+     <div class="participants-actions"><button type="submit" class="mini-btn">Сохранить имя</button><button type="button" class="mini-btn" data-person-reset="identity">Вернуть имя из документов</button></div>
+    </form>
+    <details><summary>История имени и ответов</summary><ol data-person-history></ol></details>`;
    document.body.append(dialog);
    dialog.querySelector('[data-person-close]').onclick=close;
    dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
@@ -96,7 +140,7 @@
    if(saving||!current||!hooks.canEdit())return;const f=form(kind),id=current.id,epoch=generation;
    const input=kind==='identity'?{identity:Object.fromEntries(parts.map(p=>[p,f.elements.namedItem(p).value]))}:{response:f.elements.namedItem('response').value};
    if(!reset&&kind==='identity'&&!input.identity.lastName.trim()&&!input.identity.firstName.trim()){message('Укажите известное имя или фамилию.',true);f.elements.namedItem('firstName').focus();return;}
-   if(!reset&&kind==='response'&&input.response==='conflict'){message('Уточните ответ и выберите один из вариантов.',true);return;}
+   if(!reset&&kind==='response'&&!['unknown','confirmed','declined'].includes(input.response)){message('Уточните ответ и выберите один из вариантов.',true);return;}
    if(reset&&!confirm('Вернуть '+(kind==='identity'?'имя из документов':'ответ из источника')+' для «'+current.name+'»?'))return;
    saving=true;forms().forEach(x=>x.dataset.workBusy='1');dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=true);message('Сохраняем…');
    try{
@@ -107,12 +151,12 @@
     contexts[kind]=ctx;if(rowValue(row,other)===baselines[other])contexts[other]=ctx;
     current=row;heading(row);fill(row,kind);loadContacts(row);message(kind==='identity'?'Имя сохранено.':'Ответ сохранён.');
    }catch(e){if(epoch!==generation)return;message(e.message,true);if(e.code==='participants_bad_identity')focusError=true;}
-   finally{if(epoch!==generation)return;saving=false;forms().forEach(x=>delete x.dataset.workBusy);dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=false);dialog.querySelector('option[value=conflict]').disabled=true;window.AelitaWorkForms?.refresh();if(focusError){focusError=false;form('identity').elements.namedItem('lastName').focus();}}
+   finally{if(epoch!==generation)return;saving=false;forms().forEach(x=>delete x.dataset.workBusy);dialog.querySelectorAll('button,input,select').forEach(x=>x.disabled=false);const conflict=dialog.querySelector('input[name=response][value=conflict]');if(conflict)conflict.disabled=true;window.AelitaWorkForms?.refresh();if(focusError){focusError=false;form('identity').elements.namedItem('lastName').focus();}}
   }
   function open(id,trigger){
    setup();if(dialog.open&&!close())return false;
    const row=hooks.row(id);if(!row)return false;current=row;returnFocus=trigger;
-   const ctx=hooks.context();contexts={identity:ctx,response:ctx};heading(row);fill(row,'identity');fill(row,'response');message(hooks.canEdit()?'Изменения относятся только к списку этого события.':'Источники загружены не полностью. Просмотр доступен; для правки обновите участников.');dialog.querySelectorAll('form input,form select,form button').forEach(x=>x.disabled=!hooks.canEdit());dialog.showModal();dialog.querySelector('[data-person-close]').focus();loadContacts(row);return true;
+   const ctx=hooks.context();contexts={identity:ctx,response:ctx};heading(row);fill(row,'identity');fill(row,'response');message(hooks.canEdit()?'Изменения относятся только к списку этого события.':'Источники загружены не полностью. Просмотр доступен; для правки обновите участников.');const editable=hooks.canEdit();dialog.querySelectorAll('form input,form select,form button').forEach(x=>x.disabled=!editable||x.type==='radio'&&x.value==='conflict');dialog.showModal();dialog.querySelector('[data-person-close]').focus();loadContacts(row);return true;
   }
   function reset(){++generation;clearContacts();current=null;contexts={};baselines={};returnFocus=null;saving=false;focusError=false;if(dialog){forms().forEach(clean);dialog.querySelectorAll('input,select').forEach(x=>x.value='');if(dialog.open)dialog.close();dialog.remove();dialog=null;}}
   return{open,close,reset,active:()=>!!dialog?.open};

@@ -32,7 +32,7 @@
    (order.contractRef?'<p>Договор: '+esc(order.contractRef)+'. Условия зафиксированы при подтверждении '+esc(local(order.confirmedAt).replace('T',' '))+' МСК.</p>':'')+
    (order.contentRevision?'<p>Редакция предложения: '+esc(order.contentRevision.version)+'.</p>':'')+
    '<p class="hint">Подтверждение даты не отмечает получение оплаты. Площадка резервируется целиком, включая подготовку и демонтаж.</p>';
-  if(!canWrite||['completed','canceled'].includes(order.status)){host.innerHTML=summary;mountReference();return;}
+  if(!canWrite||['completed','canceled'].includes(order.status)){host.innerHTML=summary;mountReference();mountQr();return;}
   const venues=lookups.organizations.filter(x=>!x.archived&&(x.venueEligible||['venue','theatre'].includes(x.type)));
   host.innerHTML=summary+'<form data-christmas-form><h3>'+(order.status==='confirmed'?'Перенести вечер':'Подтвердить дату и условия')+'</h3><label>Площадка<select class="ym-disable-keys" name="venueOrganizationId" required>'+option(venues,row.show.venueOrganizationId)+'</select></label><div class="form-grid">'+
    field('startLocal','Начало · Москва','datetime-local',local(p.confirmedAt),'required min="2026-12-01T00:00" max="2027-01-31T23:59"')+
@@ -49,6 +49,13 @@
   const close=host.querySelector('[data-close-form]');
   bind(close,()=>close.elements.operation.value,()=>({id:row.id,base_revision:row.revision,reason:close.elements.reason.value}));
   mountReference();
+  mountQr();
+
+  function mountQr(){
+   if(!ctx.qrReady||!ctx.isOwner||!global.AelitaChristmasQR||!['confirmed','completed'].includes(order.status))return;
+   const panel=document.createElement('section');panel.className='crm-christmas-qr';host.append(panel);
+   global.AelitaChristmasQR.mount(panel,row,{api,mutate,active});
+  }
 
   function mountReference(){
    if(!ctx.isOwner||!terms)return;

@@ -11,6 +11,14 @@
     events:'Мастер событий', 'mail-texts':'Тексты писем', pages:'Новые страницы',
     promocodes:'Промокоды', 'site-nav':'Меню, подвал, главная и афиша', 'social-posts':'Публикации в соцсетях', 'crew-ops':'Работа команды CREW'
   };
+  const subsections = {
+    'crew-ops': {
+      projects: 'Проекты', tasks: 'Задачи', schedule: 'Расписание', people: 'Участники', import: 'Перенос данных',
+    },
+    'social-posts': {
+      draft: 'Редактор публикации', ai: 'Черновики с ИИ', preview: 'Предпросмотр', queue: 'Очередь и история',
+    },
+  };
   const actionable = 'button, a[href], summary, input:not([type=hidden]):not([type=password]), select, textarea, [role=button], [role=tab], [onclick]';
   const idPattern = /^u_[a-f0-9]{24}$/;
   const keyPattern = /^(\d{4}-\d{2}-\d{2}):(u_[a-f0-9]{24}):[a-z0-9-]+$/;
@@ -92,7 +100,11 @@
       return session?.crmToken && idPattern.test(session.user?.id || '') ? session.user.id : '';
     };
     const labels = () => root.AelitaWork?.tabs || {};
-    function section() {
+    function section(control) {
+      if (Object.hasOwn(subsections, surface)) {
+        const name = control.closest('[data-admin-touch-section]')?.dataset.adminTouchSection;
+        return Object.hasOwn(subsections[surface], name) ? surface + '.' + name : surface;
+      }
       if (surface !== 'admin' && surface !== 'crm') return surface;
       const selected = surface === 'admin'
         ? document.querySelector('#admNav [data-adm-tab-btn].on')?.dataset.admTabBtn
@@ -101,7 +113,8 @@
     }
     function label(sectionName) {
       const [area, tab] = sectionName.split('.');
-      return (surfaces[area] || 'Рабочий раздел') + (labels()[area]?.[tab] ? ' · ' + labels()[area][tab] : '');
+      const subsection = subsections[area]?.[tab] || labels()[area]?.[tab];
+      return (surfaces[area] || 'Рабочий раздел') + (subsection ? ' · ' + subsection : '');
     }
     let storageFailed = false;
     let renderTimer;
@@ -151,10 +164,19 @@
         table.append(heading, body);
         const scroll = node('div');
         scroll.className = 'touch-statistics-table';
+        scroll.tabIndex = 0;
+        scroll.setAttribute('role', 'region');
+        scroll.setAttribute('aria-label', 'Таблица действий по разделам');
         scroll.append(table);
         details.push(scroll);
       }
+      const previous = output.querySelector('.touch-statistics-table');
+      const scrollLeft = previous?.scrollLeft || 0;
+      const hadFocus = previous && document.activeElement === previous;
       output.replaceChildren(...details);
+      const scroll = output.querySelector('.touch-statistics-table');
+      if (hadFocus) (scroll || panel.querySelector('select')).focus({preventScroll: true});
+      if (scroll) scroll.scrollLeft = scrollLeft;
     }
     function refresh() {
       if (!panels.some(panel => panel.open)) return;
@@ -179,7 +201,7 @@
           control.matches(':disabled')) return;
       const current = actor();
       if (!current) return;
-      try { record(root.localStorage, current, instance, section(), inputKind(event)); }
+      try { record(root.localStorage, current, instance, section(control), inputKind(event)); }
       catch (_) { storageFailed = true; }
       refresh();
     }, true);

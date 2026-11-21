@@ -9,14 +9,14 @@
 <link rel="stylesheet" href="/assets/admin-ai-v1020.css?v=249">
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/assets/fonts.css?v=249">
-  <link rel="stylesheet" href="/assets/crew-site-editor-v1020.css?v=249">
+  <link rel="stylesheet" href="/assets/site-editor-v1.css?v=249">
   <link rel="stylesheet" href="/assets/admin-calm-v814.css?v=249">
 <link rel="stylesheet" href="/assets/social-posts-v1018.css?v=249-v1020a">
   <script defer src="/assets/staff-session-v796.js?v=249"></script>
-  <script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1020"></script>
+  <script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1021"></script>
   <script defer src="/assets/work-forms-v818.js?v=249"></script>
-  <script defer src="/assets/crew-ai-pilot-v1020.js?v=249-v1018"></script>
-  <script defer src="/assets/social-posts-v1018.js?v=249-v1020a"></script>
+  <script defer src="/assets/ai-pilot-v741.js?v=249-v1018"></script>
+  <script defer src="/assets/social-posts-v1018.js?v=249-v1027"></script>
 </head>
 <body>
   <header class="ed-header">
@@ -25,11 +25,11 @@
   </header>
   <main class="ed-wrap">
     <h1>Публикации в соцсетях</h1>
-    <p class="ed-note"><a href="/admin/crew-ops/">Настройки проектов CREW</a></p>
+    <p class="ed-note"><a href="/admin/crew-ops/">Настройки проектов</a></p>
     <p id="social-gate" hidden><a href="/admin/">Войдите в админку</a>, чтобы открыть очередь.</p>
     <p id="social-status" role="status" aria-live="polite"></p>
     <div id="social-app" hidden>
-      <form id="social-form" class="ed-card">
+      <form id="social-form" class="ed-card" data-admin-touch-section="draft">
         <h2 id="social-form-title">Новая публикация</h2>
         <fieldset id="social-fields" class="social-fields">
           <div class="social-grid">
@@ -39,7 +39,7 @@
             <label>Режим
               <select id="social-mode">
                 <option value="auto">Автоматически по расписанию</option>
-                <option value="manual">Напомнить администраторам в Telegram</option>
+                <option value="manual">После подтверждения в админке</option>
               </select>
             </label>
           </div>
@@ -49,7 +49,7 @@
           <label>Instagram<textarea id="social-instagram" class="ym-disable-keys" rows="4" maxlength="2200"></textarea></label>
           <div id="social-campaign-sources" class="ed-actions" hidden aria-label="Привязка к каталогу событий"></div>
           <label>Публичная HTTPS-ссылка на фото<input id="social-photo" class="ym-disable-keys" type="url" inputmode="url" maxlength="1500"></label>
-          <p class="ed-note">Фото обязательно для Instagram. Подпись Telegram с фото вмещает до 1 024 символов.</p>
+          <p class="ed-note">Фото обязательно для Instagram. Для ВКонтакте используйте фото с настроенного медиадомена. Подпись Telegram с фото вмещает до 1 024 символов.</p>
           <details>
             <summary>Ссылка в тексте Telegram</summary>
             <div class="social-grid">
@@ -62,9 +62,10 @@
           <button id="social-preview" type="submit" disabled>Проверить публикацию</button>
           <button id="social-edit-close" type="button" class="ed-quiet" hidden>Закрыть редактирование</button>
         </div>
+        <p id="social-form-status" role="status" tabindex="-1"></p>
       </form>
 
-      <details class="ed-card" id="social-ai-panel">
+      <details class="ed-card" id="social-ai-panel" data-admin-touch-section="ai">
         <summary data-ai-feature>Подготовить черновик с ИИ</summary>
         <form id="social-ai-form">
           <div class="social-grid">
@@ -92,16 +93,17 @@
         </form>
       </details>
 
-      <section class="ed-card" id="social-review" tabindex="-1" aria-labelledby="social-review-title" hidden>
+      <section class="ed-card" id="social-review" tabindex="-1" aria-labelledby="social-review-title" data-admin-touch-section="preview" hidden>
         <h2 id="social-review-title">Перед планированием</h2>
         <div id="social-review-body"></div>
         <div class="ed-actions">
           <button type="button" id="social-schedule">Запланировать публикацию</button>
           <button type="button" id="social-review-close" class="ed-quiet">Вернуться к тексту</button>
         </div>
+        <p id="social-review-status" role="status" tabindex="-1"></p>
       </section>
 
-      <section class="ed-card" aria-labelledby="social-queue-title">
+      <section class="ed-card" aria-labelledby="social-queue-title" data-admin-touch-section="queue">
         <h2 id="social-queue-title">Очередь проекта</h2>
         <p id="social-worker-status" class="ed-note" role="status"></p>
         <div class="social-grid">

@@ -34,6 +34,7 @@
   const time = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Moscow' });
   const queueViews = { queue: 'В очереди', review: 'Требуют сверки', history: 'История', all: 'Все публикации' };
   let draftId = '', review = null, projects = [], listRequest = 0, queuePage = 1;
+  let senderStatusRequest = 0;
   let dirty = false, busy = false, editing = null, aiChannel = '', aiDraftId = '', campaignSources = {};
 
   function token() {
@@ -51,6 +52,11 @@
   function status(id, text, error = false) {
     $(id).textContent = text;
     $(id).classList.toggle('ed-error', error);
+  }
+
+  function actionError(id, message) {
+    status(id, message, true);
+    $(id).focus();
   }
 
   function errorMessage(error) {
@@ -82,7 +88,7 @@
   }
 
   function mode(value) {
-    return value === 'auto' ? 'Автоматически' : 'Напоминание в Telegram';
+    return value === 'auto' ? 'Автоматически' : 'Подтверждение в админке';
   }
 
   function snapshot() {
@@ -110,6 +116,7 @@
     review = null;
     $('review').hidden = true;
     $('review-body').replaceChildren();
+    status('review-status', '');
   }
 
   function renderReview(data) {
@@ -167,7 +174,7 @@
     campaignSources = { ...(post.sources || {}) };
     showSourceBindings();
     dirty = copy;
-    status('status', copy ? 'Тексты скопированы в новый черновик. Выберите для него дату.' : 'После правок откройте новый предпросмотр.');
+    status('form-status', copy ? 'Тексты скопированы в новый черновик. Выберите для него дату.' : 'После правок откройте новый предпросмотр.');
     $('label').focus();
   }
 
@@ -258,6 +265,10 @@
       });
       actions.append(cancel);
     }
+    if (post.awaitingApproval) actions.append(queueButton('Подтвердить отправку', button => {
+      if (!window.confirm('Подтвердить отправку «' + (post.label || 'Публикация без названия') + '»?')) return;
+      queueChange(button, { action:'social_approve', id:post.id, revision:post.revision }, 'Публикация подтверждена. Запись ждёт отправки в очереди.');
+    }));
     if (texts.length) actions.append(queueButton('Скопировать в черновик', () => fillPost(post, true)));
     if (actions.childElementCount) li.append(actions);
     return li;
@@ -288,12 +299,26 @@
   }
 
   async function loadWorkerStatus() {
+    const job = ++senderStatusRequest;
+    const current = () => job === senderStatusRequest && activeToken === token();
     try {
-      const { worker } = await api({ action:'social_worker_status' });
-      status('worker-status', worker
-        ? 'Последняя проверка очереди · ' + date(worker.checkedAt) + (worker.notifyConfigured ? '' : '. Получатели ручных подтверждений не заданы.')
-        : 'Очередь ещё не получала проверку от отправителя.');
-    } catch (_) { status('worker-status','Статус отправителя недоступен.'); }
+      const { sender } = await api({ action:'social_sender_status' });
+      if (!current()) return;
+      const checkedTime = Date.parse(sender?.checkedAt);
+      if (!Number.isFinite(checkedTime)) {
+        status('worker-status', 'Первый запуск отправителя ещё не зарегистрирован. Записи сохраняются в очереди.');
+        return;
+      }
+      const checked = date(sender.checkedAt);
+      if (Date.now() - checkedTime >= 5 * 60_000) {
+        status('worker-status', 'Отправитель давно не проверял очередь. Последняя проверка — ' + checked + '.', true);
+        return;
+      }
+      const ready = sender?.platforms?.map(id => channels.find(channel => channel.id === id)?.label).filter(Boolean) || [];
+      status('worker-status', !sender.enabled ? 'Таймер работает. Отправка выключена. Проверено — ' + checked + '.' :
+        ready.length ? 'Отправка включена для площадок: ' + ready.join(', ') + '. Проверено — ' + checked + '.' :
+        'Таймер работает. Ключи площадок пока не заданы. Проверено — ' + checked + '.');
+    } catch (_) { if (current()) status('worker-status','Статус отправителя недоступен. Обновите очередь, чтобы повторить проверку.', true); }
   }
 
   function registerWorkGuard() {
@@ -380,7 +405,11 @@
   registerWorkGuard();
   if (!window.AelitaWorkForms) window.addEventListener('aelita-work-forms-ready', registerWorkGuard, { once: true });
 
-  $('form').addEventListener('input', () => { dirty = true; closeReview(); });
+  $('form').addEventListener('input', () => {
+    dirty = true;
+    closeReview();
+    if ($('form-status').classList.contains('ed-error')) status('form-status', '');
+  });
   function showFirstPage() {
     queuePage = 1;
     $('queue').replaceChildren();
@@ -396,7 +425,7 @@
   $('edit-close').addEventListener('click', () => {
     if (dirty && !window.confirm('Закрыть редактирование без сохранения?')) return;
     resetDraft();
-    status('status', '');
+    status('form-status', '');
     $('label').focus();
   });
   $('form').addEventListener('submit', async event => {
@@ -405,13 +434,13 @@
     const post = snapshot();
     closeReview();
     setBusy(true);
-    status('status', 'Проверяем дату, тексты и площадки…');
+    status('form-status', 'Проверяем дату, тексты и площадки…');
     try {
       const data = await api({ action: 'social_preview', post });
       review = { post, preview: data.preview };
-      status('status', '');
+      status('form-status', '');
       renderReview(data);
-    } catch (error) { status('status', errorMessage(error), true); }
+    } catch (error) { actionError('form-status', errorMessage(error)); }
     finally { setBusy(false); }
   });
 
@@ -419,18 +448,19 @@
     if (busy || !review) return;
     setBusy(true);
     const wasEditing = !!editing;
-    status('status', wasEditing ? 'Сохраняем изменения…' : 'Добавляем публикацию в очередь…');
+    status('review-status', wasEditing ? 'Сохраняем изменения…' : 'Добавляем публикацию в очередь…');
     try {
       await api({ action: 'social_schedule', ...review });
       resetDraft();
       if (!wasEditing) { $('queue-view').value = 'queue'; queuePage = 1; }
-      status('status', wasEditing ? 'Изменения публикации сохранены.' : 'Публикация добавлена в очередь.');
-      $('status').setAttribute('tabindex', '-1');
-      $('status').focus();
+      status('form-status', wasEditing ? 'Изменения публикации сохранены.' : 'Публикация добавлена в очередь.');
+      $('form-status').focus();
       loadQueue();
     } catch (error) {
-      status('status', messages[error.code] || 'Ответ очереди потерян. Проверьте список или повторите планирование с этого предпросмотра.', true);
-      if (['destination_changed', 'preview_required', 'schedule_passed', 'invalid_project', 'post_conflict', 'post_locked','campaign_source_changed'].includes(error.code)) closeReview();
+      const message = messages[error.code] || 'Ответ очереди потерян. Проверьте список или повторите планирование с этого предпросмотра.';
+      const expired = ['destination_changed', 'preview_required', 'schedule_passed', 'invalid_project', 'post_conflict', 'post_locked','campaign_source_changed'].includes(error.code);
+      if (expired) closeReview();
+      actionError(expired ? 'form-status' : 'review-status', message);
     } finally { setBusy(false); }
   });
 

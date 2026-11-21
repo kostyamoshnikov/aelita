@@ -11,14 +11,14 @@
   <link rel="manifest" href="/admin/team/manifest.webmanifest">
   <link rel="icon" href="/admin/team/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="/admin/team/icon-192.png">
-  <link rel="stylesheet" href="/assets/fonts.css?v=246">
-  <link rel="stylesheet" href="/assets/team-v1.css?v=246">
-  <link rel="stylesheet" href="/assets/work-navigation-v812.css?v=246">
-  <script src="/assets/staff-session-v796.js?v=246" defer></script>
-  <script src="/assets/work-navigation-v812.js?v=246" defer></script>
-  <script src="/assets/team-work-v812.js?v=246" defer></script>
-  <script src="/assets/team-v1.js?v=246" defer></script>
-<link rel="stylesheet" href="/assets/admin-calm-v814.css?v=246"><script defer src="/assets/work-forms-v818.js?v=246"></script><script defer src="/assets/admin-calm-v814.js?v=246"></script></head>
+  <link rel="stylesheet" href="/assets/fonts.css?v=249">
+  <link rel="stylesheet" href="/assets/team-v1.css?v=249">
+  <link rel="stylesheet" href="/assets/work-navigation-v812.css?v=249">
+  <script src="/assets/staff-session-v796.js?v=249" defer></script>
+  <script src="/assets/work-navigation-v812.js?v=249" defer></script>
+  <script src="/assets/team-work-v812.js?v=249" defer></script>
+  <script src="/assets/team-v1.js?v=249" defer></script>
+<link rel="stylesheet" href="/assets/admin-calm-v814.css?v=249"><script defer src="/assets/work-forms-v818.js?v=249"></script><script defer src="/assets/admin-calm-v814.js?v=249"></script><script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1021"></script><link rel="stylesheet" href="/assets/admin-touch-statistics-v1011.css?v=249-v1021"></head>
 <body>
   <main class="team">
     <header class="team-header">
@@ -34,12 +34,22 @@
         <span><strong>CRM</strong><small>Контакты, проекты и задачи</small></span>
         <span aria-hidden="true">→</span>
       </a>
+      <a href="/admin/crew-ops/" class="team-link" data-crew-area="admin">
+        <span><strong>Работа команды CREW</strong><small>Задачи и расписание проектов</small></span>
+        <span aria-hidden="true">→</span>
+      </a>
       <a href="/admin/bot/" class="team-link" data-crew-area="bot">
         <span><strong>Админка бота</strong><small>Ответы и сведения о событиях</small></span>
         <span aria-hidden="true">→</span>
       </a>
     </nav>
     <div id="team-work"></div>
+    <details id="touch-statistics" class="touch-statistics" data-admin-touch-report>
+      <summary>Касания в админке</summary>
+      <p>Действия вашей учётной записи в этом браузере. Учитываются нажатия на элементы интерфейса. Сохраняются только числа по разделам за последние 30 дней.</p>
+      <label>Период <select><option value="1">Сегодня</option><option value="7" selected>7 дней</option><option value="30">30 дней</option></select></label>
+      <div data-admin-touch-output></div>
+    </details>
     <section class="team-install" aria-label="Установка">
       <a id="team-apk" class="team-link" href="/admin/team/AELITA-CREW.apk" download="AELITA-CREW-1.1.0.apk"><span><strong>Скачать AELITA CREW для Android</strong><small>Android 7.0 и новее · APK</small></span><span aria-hidden="true">↓</span></a>
       <button id="team-install" type="button" hidden aria-controls="team-instructions" aria-expanded="false">Установить приложение</button>

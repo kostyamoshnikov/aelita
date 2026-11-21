@@ -8,27 +8,26 @@
   <title>Работа команды · Аэлита Продакшен</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/assets/fonts.css?v=249">
-  <link rel="stylesheet" href="/assets/crew-site-editor-v1020.css?v=249">
+  <link rel="stylesheet" href="/assets/site-editor-v1.css?v=249">
   <link rel="stylesheet" href="/assets/admin-calm-v814.css?v=249">
   <link rel="stylesheet" href="/assets/crew-ops-v1020.css?v=249">
   <script defer src="/assets/staff-session-v796.js?v=249"></script>
-  <script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1020"></script>
+  <script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1021"></script>
   <script defer src="/assets/work-forms-v818.js?v=249"></script>
   <script defer src="/assets/mobile-files-m1.js?v=249"></script>
   <script defer src="/assets/admin-xlsx-v1020.js?v=249"></script>
-  <script defer src="/assets/crew-ops-v1020.js?v=249"></script>
+  <script defer src="/assets/crew-ops-v1020.js?v=249-v1023"></script>
 </head>
 <body>
   <header class="ed-header"><a class="ed-brand" href="/">АЭЛИТА<small>ПРОДАКШЕН</small></a><a class="ed-back" href="/admin/">← Админка</a></header>
   <main class="ed-wrap" id="crew-ops">
     <h1>Работа команды CREW</h1>
     <p id="crew-gate" hidden><a href="/admin/">Войдите в админку</a>, чтобы открыть рабочие проекты.</p>
-    <p id="crew-status" role="status" aria-live="polite"></p>
     <div id="crew-app" hidden>
-      <section class="ed-card" aria-label="Выбор проекта">
+      <section class="ed-card" aria-label="Выбор проекта" data-admin-touch-section="projects">
         <div class="crew-grid">
           <label>Проекты<select id="crew-scope"><option value="active">Текущие</option><option value="archive">Архив</option></select></label>
-          <label>Выбранный проект<select id="crew-project"></select></label>
+          <label>Выбранный проект<select id="crew-project" disabled></select></label>
         </div>
         <p id="crew-project-note" class="ed-note"></p>
         <div class="ed-actions">
@@ -37,14 +36,16 @@
           <button id="crew-export" type="button" class="ed-quiet" disabled>Скачать Excel</button>
           <a id="crew-social" href="/admin/social-posts/" hidden>Очередь публикаций</a>
         </div>
+        <p id="crew-status" role="status"></p>
+        <button id="crew-project-retry" class="ed-quiet" type="button" hidden>Повторить загрузку</button>
       </section>
       <div id="crew-work" hidden>
         <nav class="ed-actions crew-nav" aria-label="Разделы проекта">
-          <button type="button" data-crew-pane="tasks" aria-pressed="true">Задачи</button>
-          <button type="button" data-crew-pane="schedule" aria-pressed="false">Расписание</button>
-          <button type="button" data-crew-pane="people" aria-pressed="false">Участники</button>
+          <button type="button" data-crew-pane="tasks" data-admin-touch-section="tasks" aria-pressed="true">Задачи</button>
+          <button type="button" data-crew-pane="schedule" data-admin-touch-section="schedule" aria-pressed="false">Расписание</button>
+          <button type="button" data-crew-pane="people" data-admin-touch-section="people" aria-pressed="false">Участники</button>
         </nav>
-        <section id="crew-panel-tasks" class="ed-card">
+        <section id="crew-panel-tasks" class="ed-card" data-admin-touch-section="tasks">
           <h2>Задачи</h2>
           <div class="crew-grid">
             <label>Показывать<select id="crew-tasks-view"><option value="open">В работе и к выполнению</option><option value="overdue">Просроченные</option><option value="done">Завершённые и отменённые</option><option value="all">Все задачи</option></select></label>
@@ -58,7 +59,7 @@
             <button id="crew-task-next" type="button" class="ed-quiet">Вперёд</button>
           </nav>
         </section>
-        <section id="crew-panel-schedule" class="ed-card" hidden>
+        <section id="crew-panel-schedule" class="ed-card" data-admin-touch-section="schedule" hidden>
           <h2>Расписание <small>МСК</small></h2>
           <div class="crew-grid">
             <label>День<select id="crew-schedule-day"></select></label>
@@ -67,14 +68,14 @@
           <p id="crew-schedule-status" role="status"></p>
           <ol id="crew-schedule-list" class="crew-items"></ol>
         </section>
-        <section id="crew-panel-people" class="ed-card" hidden>
+        <section id="crew-panel-people" class="ed-card" data-admin-touch-section="people" hidden>
           <h2>Участники</h2>
           <button id="crew-people-edit" type="button" class="ed-quiet">Править участников</button>
           <p id="crew-people-status" role="status"></p>
           <ul id="crew-people-list" class="crew-items"></ul>
         </section>
       </div>
-      <details class="ed-card" id="crew-import-section" hidden>
+      <details class="ed-card" id="crew-import-section" data-admin-touch-section="import" hidden>
         <summary>Перенести данные CREW</summary>
         <p class="ed-note">Выберите JSON, подготовленный выгрузкой CREW. Проекты, участники, задачи и расписание добавляются при проверке. Строки старых публикаций сохраняются в истории для копирования.</p>
         <label>Файл переноса<input type="file" id="crew-import-file" accept=".json,application/json"></label>

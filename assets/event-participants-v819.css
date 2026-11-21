@@ -74,3 +74,85 @@
 .person-contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .65rem; }
 .person-contact-feedback { font-size: .9rem; }
 .person-contact [readonly]:not([hidden]) { margin-top: .35rem; min-height: 44px; }
+
+#participants-person-dialog .person-response {
+  min-width: 0;
+  margin: 0;
+  padding: .65rem .85rem .85rem;
+  border: 1px solid rgba(214,181,122,.28);
+  border-radius: .5rem;
+}
+.person-response legend { padding-inline: .25rem; font-size: 1.05rem; }
+.person-response-options { display: flex; flex-wrap: wrap; gap: .4rem; }
+#participants-person-dialog .person-response-options label {
+  flex: 1 1 9rem;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: .35rem .55rem;
+  gap: .5rem;
+  border: 1px solid rgba(214,181,122,.28);
+  border-radius: .35rem;
+  font: inherit;
+  cursor: pointer;
+}
+#participants-person-dialog .person-response-options input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--gold,#d6b57a);
+}
+#participants-person-dialog .person-response-options label:has(input:checked) {
+  border-color: var(--gold,#d6b57a);
+}
+
+#eventParticipants [hidden] { display: none; }
+#eventParticipants .participant-refresh { align-items: flex-start; flex-direction: column; }
+#eventParticipants :is(.participant-refresh p, #participants-export-message, #participants-selected):empty { display: none; }
+#eventParticipants :is(.participant-refresh p, #participants-export-message, #participants-selected) { margin: 0; line-height: 1.45; }
+#eventParticipants :is(#participants-message, #participants-export-message).error { color: #f3aa9f; }
+.participant-exports { margin-block: .7rem 1rem; }
+.participant-exports .participants-actions { margin-block: 0 .4rem; }
+.participant-exports #participants-download { margin-top: .35rem; }
+.participants-selection { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .65rem; }
+.participants-selection:not(:has(#participants-unselect[hidden])) { margin-block: .75rem .5rem; }
+.participants-decisions > summary { line-height: 1.45; padding-block: .65rem; }
+.participants-resolution { display: grid; gap: .35rem; width: min(100%,24rem); margin-block: .65rem .5rem; }
+.participants-resolution select { width: 100%; min-height: 44px; }
+#eventParticipants :is(.participants-actions, .participant-exports, .participants-selection, .participants-decisions) .mini-btn,
+#participants-copy-dialog .mini-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+#participants-copy-dialog {
+  box-sizing: border-box;
+  padding: 1rem;
+  color: var(--text,#e5e0d5);
+  background: var(--bg,#101013);
+  border: 1px solid rgba(214,181,122,.4);
+  border-radius: .6rem;
+}
+#participants-copy-dialog::backdrop { background: rgba(0,0,0,.75); }
+#participants-copy-dialog textarea {
+  box-sizing: border-box;
+  height: min(14rem,42vh);
+  min-height: 6rem;
+  font: inherit;
+  margin-block: 0 .65rem;
+}
+@media (max-width: 540px) {
+  #eventParticipants .participant-totals {
+    grid-template-columns: repeat(auto-fit,minmax(min(7rem,100%),1fr));
+    gap: .45rem;
+  }
+  #eventParticipants .participant-totals button { gap: .25rem; padding: .65rem; }
+  #eventParticipants .participant-totals strong { font-size: 1.45rem; }
+  #eventParticipants .participant-card { padding: .65rem; }
+  #participants-person-dialog { padding: .8rem; }
+}

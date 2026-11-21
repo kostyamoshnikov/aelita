@@ -17,6 +17,24 @@
     const saved=[...new Set(pins)].filter(k=>k!==home&&allowed.includes(k)).slice(0,4);
     return [...new Set([home,...saved,...(priority[area]||[]),...allowed])].filter(k=>allowed.includes(k));
   }
+  function revealNavItem(rail, item) {
+    if (!item || !rail.clientWidth) return;
+    const left = rail.getBoundingClientRect().left + rail.clientLeft;
+    const right = left + rail.clientWidth;
+    const bounds = item.getBoundingClientRect();
+    if (bounds.left < left) rail.scrollLeft += bounds.left - left;
+    else if (bounds.right > right) rail.scrollLeft += bounds.right - right;
+  }
+  function stepNav(rail, direction) {
+    if (!rail.clientWidth) return;
+    const left = rail.getBoundingClientRect().left + rail.clientLeft;
+    const right = left + rail.clientWidth;
+    const items = [...rail.children];
+    const target = direction > 0
+      ? items.find(item => item.getBoundingClientRect().right > right + 1)
+      : items.reverse().find(item => item.getBoundingClientRect().left < left - 1);
+    if (target) revealNavItem(rail, target);
+  }
   function prioritizeSections(container,spec){
     const chunks=[];let chunk;
     for(const node of [...container.children]){
@@ -175,7 +193,7 @@
     el.append(select,button('Сбросить фильтры',()=>{select.value='';reset();}),details,feedback);
     render();
   }
-  const api={read,write,filters,tabs,tabValid,tabUrl,recordValid,recordUrl,recordSection,parseRecent,canPin,score,norm,phone,escape,mountPresets,orderTabs,prioritizeSections,mountNavPins};
+  const api={read,write,filters,tabs,tabValid,tabUrl,recordValid,recordUrl,recordSection,parseRecent,canPin,score,norm,phone,escape,mountPresets,orderTabs,prioritizeSections,mountNavPins,revealNavItem,stepNav};
   if(typeof module==='object'&&module.exports)module.exports=api;
   else root.AelitaWork=api;
 })(typeof window==='object'?window:globalThis);

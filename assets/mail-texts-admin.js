@@ -12,10 +12,10 @@
     invalid_mail_texts_file: 'Файл текстов в хранилище повреждён — нужна сверка.', test_mail_unavailable: 'Почта команды (MAIL_TO) не настроена у функции — пример отправить некуда.',
     github_unreachable: 'Нет связи с сервером. Проверьте интернет и повторите.', item_not_in_revision: 'Эта версия не найдена.',
   };
-  const S = { doc: null, catalog: null, id: null, lang: 'ru', dirty: false, busy: false, edit:0 };
+  const S = { doc: null, catalog: null, id: null, lang: 'ru', dirty: false, busy: false, edit:0, previewJob:0 };
   const token = () => { try { return localStorage.getItem('aelita_admin_token'); } catch { return null; } };
   const status = (t, bad) => { const s = $('mt-status'); s.textContent = t || ''; s.className = bad ? 'ed-error' : ''; };
-  function gate() { $('mt-gate').hidden = false; $('mt-app').hidden = true; }
+  function gate() { hidePreview(); $('mt-gate').hidden = false; $('mt-app').hidden = true; }
   async function api(body) {
     const t = token(); if (!t) { gate(); throw { code: 'not_authenticated' }; }
     let r; try { r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + t }, cache: 'no-store', body: JSON.stringify(body) }); } catch { throw { code: 'github_unreachable' }; }
@@ -36,7 +36,7 @@
     if (v.trim()) L[S.id][S.lang][f] = v; else delete L[S.id][S.lang][f];
     if (!Object.keys(L[S.id][S.lang]).length) delete L[S.id][S.lang];
     if (!Object.keys(L[S.id]).length) delete L[S.id];
-    S.edit++;S.dirty = true; $('mt-save').disabled = false; $('mt-state').textContent = 'Есть несохранённые изменения'; $('mt-sample').hidden = true;
+    S.edit++;S.dirty = true; $('mt-save').disabled = false; $('mt-state').textContent = 'Есть несохранённые изменения'; hidePreview();
   }
   function render() {
     const c = S.catalog[S.id];
@@ -59,7 +59,7 @@
       wrap.appendChild(hint); wrap.appendChild(reset); box.appendChild(wrap); count();
     }
     document.querySelectorAll('[data-lang]').forEach((b) => { const on = b.dataset.lang === S.lang; b.setAttribute('aria-selected', on); b.classList.toggle('ed-quiet', !on); });
-    $('mt-sample').hidden = true;
+    hidePreview();
   }
   function mark(field) {
     document.querySelectorAll('.pb-bad').forEach((x) => x.classList.remove('pb-bad'));
@@ -77,17 +77,56 @@
     sel.value = S.id; $('mt-test').hidden = !d.testTo;
     $('mt-gate').hidden = true; $('mt-app').hidden = false; S.dirty = false; $('mt-save').disabled = true; $('mt-state').textContent = 'Изменений нет'; render(); status('');
   }
-  async function preview(test) {
-    if (S.busy) return;const current={id:S.id,lang:S.lang,edit:S.edit}; S.busy = true; mark(null);
+  function hidePreview() {
+    ++S.previewJob;
+    $('mt-sample').hidden = true;
+    $('mt-preview-status').textContent = '';
+  }
+  async function preview(language) {
+    if (!S.doc || S.busy) return;
+    hidePreview();
+    const job = S.previewJob, id = S.id, output = $('mt-preview-status');
+    output.className = '';
+    output.textContent = 'Собираем пример…';
     try {
-      const d = await api({ action: test ? 'mail_texts_test' : 'mail_texts_preview', doc: S.doc, id: S.id, lang: S.lang });
-      if(current.id!==S.id||current.lang!==S.lang||current.edit!==S.edit)return;
-      if(test)status(d.state==='accepted'?'SMTP принял тест на один адрес почты команды. Доставка не подтверждена.':'Исход теста неизвестен. Не повторяйте вслепую.',d.state!=='accepted');
-      else { $('mt-sample').hidden = false; $('mt-sample').querySelector('.mt-subj').textContent = 'Тема: ' + d.subject; $('mt-sample').querySelector('pre').textContent = d.text; status(''); }
-    } catch (e) { status(msg(e), true); mark(e.field); } finally { S.busy = false; }
+      const d = await api({ action:'mail_texts_preview', doc:S.doc, id, lang:language });
+      if (job !== S.previewJob) return;
+      const sample = $('mt-sample');
+      $('mt-sample-lang').textContent = language === 'en' ? 'Английский пример' : 'Русский пример';
+      sample.querySelector('.mt-subj').textContent = 'Тема: ' + d.subject;
+      sample.querySelector('pre').textContent = d.text;
+      sample.hidden = false;
+      output.textContent = 'Пример готов.';
+    } catch (e) {
+      if (job !== S.previewJob) return;
+      output.className = 'ed-error';
+      output.textContent = msg(e);
+    }
+  }
+  async function sendTest() {
+    if (!S.doc || S.busy || $('mt-test').hidden) return;
+    hidePreview();
+    const current = {id:S.id,lang:S.lang,edit:S.edit};
+    S.busy = true;
+    $('mt-test').disabled = true;
+    mark(null);
+    status('Отправляем пример на почту команды…');
+    try {
+      const d = await api({action:'mail_texts_test',doc:S.doc,id:current.id,lang:current.lang});
+      const language = current.lang === 'en' ? 'английский' : 'русский';
+      status(d.state === 'accepted'
+        ? 'SMTP принял '+language+' пример на один адрес почты команды. Доставка не подтверждена.'
+        : 'Исход теста неизвестен. Проверьте почту команды перед повтором.',d.state !== 'accepted');
+    } catch (e) {
+      status(msg(e), true);
+      if (current.id === S.id && current.lang === S.lang && current.edit === S.edit) mark(e.field);
+    } finally {
+      S.busy = false;
+      $('mt-test').disabled = false;
+    }
   }
   async function save() {
-    if (S.busy) return;const edit=S.edit,ownDoc=S.doc,locked=[...document.querySelectorAll('#mt-app input,#mt-app textarea,#mt-app select,#mt-app button')].map(el=>({el,disabled:el.disabled})); S.busy = true;locked.forEach(({el})=>el.disabled=true); $('mt-save').disabled = true; mark(null); status('Сохраняем…');
+    if (S.busy) return;hidePreview();const edit=S.edit,ownDoc=S.doc,locked=[...document.querySelectorAll('#mt-app input,#mt-app textarea,#mt-app select,#mt-app button')].map(el=>({el,disabled:el.disabled})); S.busy = true;locked.forEach(({el})=>el.disabled=true); $('mt-save').disabled = true; mark(null); status('Сохраняем…');
     try { const d = await api({ action: 'mail_texts_save', doc: S.doc }); if(S.doc!==ownDoc)return;S.doc.revision = d.revision; S.dirty = S.edit!==edit; $('mt-state').textContent = S.dirty?'Предыдущие изменения сохранены; новые ещё не сохранены':'Сохранено · ревизия ' + d.revision; status('Сохранено. Письма начнут уходить с новым текстом в течение минуты.'); }
     catch (e) { status(msg(e), true); mark(e.field); $('mt-save').disabled = false; } finally { S.busy = false;locked.forEach(({el,disabled})=>el.disabled=disabled);$('mt-save').disabled=!S.dirty; }
   }
@@ -112,9 +151,12 @@
     if (!token()) return gate();
     $('mt-letter').onchange = () => { S.id = $('mt-letter').value; render(); };
     document.querySelectorAll('[data-lang]').forEach((b) => { b.onclick = () => { S.lang = b.dataset.lang; render(); }; });
-    $('mt-preview').onclick = () => preview(false); $('mt-test').onclick = () => preview(true);
+    $('mt-preview').onclick = () => preview('ru');
+    $('mt-preview-en').onclick = () => preview('en');
+    $('mt-test').onclick = sendTest;
     $('mt-save').onclick = save; $('mt-history').onclick = history; $('mt-history-close').onclick = () => $('mt-history-dialog').close();
     window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+    window.addEventListener('aelita-staff-session-changed',gate);
     load().catch((e) => status(msg(e), true));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();

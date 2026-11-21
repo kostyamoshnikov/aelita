@@ -1,30 +1,54 @@
 (function(){
  'use strict';
  document.documentElement.classList.add('admin-calm');
- const menus=new Set();let scheduled=false;
+ const menus=new Set(), fieldErrors=new WeakMap();let scheduled=false, errorId=0;
+ function openFieldGroups(field){
+  for(let parent=field.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
+ }
+ function focusField(field){
+  openFieldGroups(field);
+  field.focus({preventScroll:true});
+  field.scrollIntoView({block:'center'});
+ }
  function urlError(form,path,message){
   let field;
-  if(path?.startsWith('socialLinks.'))field=[...form.querySelectorAll('[data-social-row] input[type=url]')].filter(x=>x.value.trim())[Number(path.split('.')[1])];
+  if(typeof path!=='string'||!path)return false;
+  if(path.startsWith('socialLinks.'))field=[...form.querySelectorAll('[data-social-row] input[type=url]')].filter(x=>x.value.trim())[Number(path.split('.')[1])];
   else{const names={'venueDetails.riderUrl':'v_riderUrl','show.contractUrl':'s_contractUrl','show.riderUrl':'s_riderUrl','show.pressKitUrl':'s_pressKitUrl'};field=form.elements.namedItem(names[path]||path);}
   if(!field?.focus)return false;
-  markError(field,message);for(let parent=field.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;field.focus();field.scrollIntoView({block:'center'});return true;
+  markError(field,message);focusField(field);return true;
  }
  function markError(field,message){
-  field.setAttribute('aria-invalid','true');let note=field.parentElement.querySelector('.work-field-error');
-  if(!note){note=document.createElement('span');note.className='work-field-error';note.id='work-error-'+Math.random().toString(36).slice(2);field.after(note);}
-  note.textContent=message;field.setAttribute('aria-describedby',[...new Set((field.getAttribute('aria-describedby')||'').split(/\s+/).filter(x=>x&&!x.startsWith('work-error-')).concat(note.id))].join(' '));
+  let entry=fieldErrors.get(field);
+  if(!entry){
+   const note=document.createElement('span');note.className='work-field-error';note.id='work-error-'+(++errorId);
+   entry={note,previousInvalid:field.getAttribute('aria-invalid')};fieldErrors.set(field,entry);field.after(note);
+   const description=field.getAttribute('aria-describedby')?.trim();
+   field.setAttribute('aria-describedby',description?description+' '+note.id:note.id);
+  }
+  field.setAttribute('aria-invalid','true');entry.note.textContent=message;
+ }
+ function clearError(field){
+  const entry=fieldErrors.get(field);
+  if(!entry)return;
+  const descriptions=(field.getAttribute('aria-describedby')||'').split(/\s+/).filter(id=>id&&id!==entry.note.id);
+  if(descriptions.length)field.setAttribute('aria-describedby',descriptions.join(' '));
+  else field.removeAttribute('aria-describedby');
+  if(entry.previousInvalid===null)field.removeAttribute('aria-invalid');
+  else field.setAttribute('aria-invalid',entry.previousInvalid);
+  entry.note.remove();fieldErrors.delete(field);
  }
  function validateURLs(form){
   if(form.id!=='entity-form'&&!form.hasAttribute('data-https-urls'))return true;
   let first;
   for(const field of form.querySelectorAll('input[type=url],textarea[name=documentLinks]')){
-   field.removeAttribute('aria-invalid');field.parentElement.querySelector('.work-field-error')?.remove();
+   clearError(field);
    if(field.matches(':disabled'))continue;const lines=field.tagName==='TEXTAREA'?field.value.split(/\r?\n/):[field.value];
    for(const value of lines){if(!value.trim())continue;let valid=false;try{const u=new URL(value.trim());valid=u.protocol==='https:'&&!u.username&&!u.password&&!!u.hostname;}catch{}
     if(!valid){markError(field,'Укажите полный адрес https://… без логина и пароля.');first??=field;break;}
    }
   }
-  if(first){for(let parent=first.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;first.focus();first.scrollIntoView({block:'center'});return false;}return true;
+  if(first){focusField(first);return false;}return true;
  }
  window.AelitaWorkUI={validateURLs,urlError};
  function service(){const head=document.querySelector('#dataScreen .data-actions');if(!head||head.querySelector('.calm-service'))return;const details=document.createElement('details');details.className='calm-service';const summary=document.createElement('summary');summary.textContent='Сеанс';details.append(summary);for(const id of ['adminWho','loadedAt','logoutBtn','logoutAllBtn']){const node=document.getElementById(id);if(node)details.append(node);}head.append(details);}
@@ -47,8 +71,8 @@
  function viewport(){document.documentElement.classList.toggle('work-keyboard',!!window.visualViewport&&visualViewport.height<innerHeight*.72);document.documentElement.style.setProperty('--work-vh',(window.visualViewport?.height||innerHeight)+'px');for(const d of menus)if(d.open)fitMenu(d);}
  window.visualViewport?.addEventListener('resize',viewport);window.visualViewport?.addEventListener('scroll',viewport);window.addEventListener('resize',viewport);window.addEventListener('scroll',()=>{for(const d of menus)if(d.open)fitMenu(d);},{passive:true});
  // Validation is limited to CRM URL fields; other editors keep their own URL policy.
- document.addEventListener('input',e=>{if(e.target.hasAttribute?.('aria-invalid')){const note=e.target.parentElement.querySelector('.work-field-error');if(note){e.target.setAttribute('aria-describedby',(e.target.getAttribute('aria-describedby')||'').split(/\s+/).filter(id=>id!==note.id).join(' '));note.remove();}e.target.removeAttribute('aria-invalid');}},true);
- document.addEventListener('submit',e=>{if(e.target.id==='entity-form'&&!validateURLs(e.target)){e.preventDefault();e.stopImmediatePropagation();}},true);
+ document.addEventListener('input',e=>clearError(e.target),true);
+ document.addEventListener('invalid',e=>{if(e.target.form?.id==='entity-form')openFieldGroups(e.target);},true);
  window.AelitaWorkCanLeave=()=>{if(window.AelitaCrmCanLeave&&!AelitaCrmCanLeave())return false;return window.AelitaWorkForms?.canLeave()!==false;};
  window.AelitaWorkBack=()=>{
   const d=[...document.querySelectorAll('dialog[open]')].at(-1);

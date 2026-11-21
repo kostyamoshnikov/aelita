@@ -49,32 +49,42 @@
     if (r.totals) { var d = document.createElement('p'); d.className = 'ai-note'; d.textContent = '7 дней: ' + r.totals.views + ' просмотров · ' + r.totals.entries + ' входов · ' + r.totals.notFoundViews + ' просмотров «Не найдено». Это не уникальные посетители.'; parent.appendChild(d); }
   }
   function runner(options) {
-    var job = null, active = false;
+    var job = null, active = false, session = '';
     var status = options.status, lang = options.lang || 'ru';
     function say(text, bad) { status.textContent = text; status.classList.toggle('ai-error', !!bad); }
     function busy(v) { active = v; options.submit.disabled = v; if (options.cancel) options.cancel.hidden = !v; }
     async function send(body) {
       if (active) return;
+      session = options.token();
+      if (!session) { say(message('not_authenticated', lang), true); return; }
       busy(true); options.result.replaceChildren(); say(lang === 'en' ? 'Adding to the test queue…' : 'Добавляем в тестовую очередь…');
       try {
-        var data = await api(Object.assign({ action: 'ai_ask', requestId: crypto.randomUUID(), lang: lang }, body), options.token());
+        var data = await api(Object.assign({ action: 'ai_ask', requestId: crypto.randomUUID(), lang: lang }, body), session);
+        if (session !== options.token()) return;
         job = data.job;
         var until = Date.now() + 15 * 60000;
         while (job && ['queued', 'running'].includes(job.status) && Date.now() < until) {
           say(job.status === 'running' ? (lang === 'en' ? 'The model is working…' : 'Модель готовит ответ…') : (lang === 'en' ? 'Waiting in the queue. One request runs at a time.' : 'Ожидаем в очереди. Одновременно выполняется один запрос.'));
           await new Promise(function (resolve) { setTimeout(resolve, 2000); });
-          data = await api({ action: 'ai_poll', id: job.id }, options.token()); job = data.job;
+          if (session !== options.token()) return;
+          data = await api({ action: 'ai_poll', id: job.id }, session);
+          if (session !== options.token()) return;
+          job = data.job;
         }
-        if (job.status === 'done') { options.done ? options.done(job.result) : render(options.result, job.result); say(job.result.fallback ? (lang === 'en' ? 'Template draft. The model did not respond. Review before using.' : 'Черновик по шаблону. Модель не ответила. Проверьте текст перед использованием.') : (lang === 'en' ? 'Ready. Check the source links.' : 'Готово. Проверьте сведения по ссылкам.')); }
+        if (job.status === 'done') { options.done ? options.done(job.result) : render(options.result, job.result); say(job.result.fallback ? (lang === 'en' ? 'Template draft. The model did not respond. Review before using.' : 'Черновик по шаблону. Модель не ответила. Проверьте текст перед использованием.') : (options.readyMessage || (lang === 'en' ? 'Ready. Check the source links.' : 'Готово. Проверьте сведения по ссылкам.'))); }
         else if (job.status === 'error') say(message(job.error, lang), true);
         else say(job.status === 'canceled' ? (lang === 'en' ? 'Canceled.' : 'Запрос отменён.') : (lang === 'en' ? 'The request has expired.' : 'Время ожидания истекло.'), false);
-      } catch (e) { say(message(e.code, lang), true); }
+      } catch (e) { if (session === options.token()) say(message(e.code, lang), true); }
       finally { busy(false); job = null; }
     }
     if (options.cancel) options.cancel.addEventListener('click', async function () {
-      if (!job) return;
-      try { var d = await api({ action: 'ai_cancel', id: job.id }, options.token()); job = d.job; say(lang === 'en' ? 'Canceled.' : 'Запрос отменён.'); }
-      catch (e) { say(message(e.code, lang), true); }
+      if (!job || session !== options.token()) return;
+      var requestedJob = job.id, requestedSession = session;
+      try {
+        var d = await api({ action: 'ai_cancel', id: requestedJob }, requestedSession);
+        if (requestedSession !== options.token() || job?.id !== requestedJob) return;
+        job = d.job; say(lang === 'en' ? 'Canceled.' : 'Запрос отменён.');
+      } catch (e) { if (requestedSession === options.token() && job?.id === requestedJob) say(message(e.code, lang), true); }
     });
     return { send: send };
   }

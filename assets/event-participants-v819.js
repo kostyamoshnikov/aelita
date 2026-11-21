@@ -32,6 +32,7 @@
  }
  function clearArtifacts(){
   if(url)URL.revokeObjectURL(url);url=null;
+  exportStatus('');
   const link=$('#participants-download');link.hidden=true;link.removeAttribute('href');link.removeAttribute('download');link.textContent='';
   const dialog=document.getElementById('participants-copy-dialog');if(dialog){dialog.querySelector('textarea').value='';if(dialog.open)dialog.close();}
  }
@@ -40,11 +41,16 @@
   retryWrite=null;catalogEvents=[];eventGroup='current';pickerSignature='';person?.reset();clearArtifacts();$('#participants-event').replaceChildren();clearView('Выберите событие, чтобы увидеть участников.');if($('#participants-timing'))$('#participants-timing').hidden=true;lock(false);status(message,!!message);
  }
  function status(message,bad=false){$('#participants-message').textContent=message;$('#participants-message').classList.toggle('error',bad);}
+ function exportStatus(message,bad=false){const el=$('#participants-export-message');el.textContent=message;el.classList.toggle('error',bad);}
  function lock(value){busy=value;root.classList.toggle('participants-stale',!ready);for(const b of root.querySelectorAll('[data-participant-operation],#participants-reload,#participants-event,#participants-list input,#participants-list button,[data-event-group],#participants-basis,#participants-mode,#participants-status,#participants-search,#participants-sort,#participants-more,[data-participant-mode],[data-participant-review]'))b.disabled=value;renderActions();}
- function renderActions(){
+ function renderActions(rows=data?V.select(data,filters()):[]){
   if($('#participants-basis'))$('#participants-basis').disabled=busy||!ready||data?.basisVersion!==1;
-  for(const id of ['participants-copy','participants-csv','participants-pdf'])$('#'+id).disabled=busy||!ready||!data||!V.select(data,filters()).length;
-  const n=selected.size;$('#participants-selected').textContent='Выбрано для решения: '+n;
+  for(const id of ['participants-copy','participants-csv','participants-pdf'])$('#'+id).disabled=busy||!ready||!rows.length;
+  const n=selected.size,offscreen=n-rows.slice(0,limit).filter(row=>selected.has(row.id)).length;
+  $('#participants-selected').textContent=n?'Выбрано для решения: '+n+(offscreen?' · вне показанного списка: '+offscreen:''):'';
+  $('#participants-unselect').hidden=!n;
+  $('#participants-unselect').disabled=busy;
+  for(const input of root.querySelectorAll('[data-participant-id]'))input.disabled=busy||!ready;
   for(const b of root.querySelectorAll('[data-participant-operation]'))b.disabled=busy||!ready||!data?.canEdit||n<(b.dataset.participantOperation==='merge'||b.dataset.participantOperation==='distinct'?2:1);
   for(const b of root.querySelectorAll('[data-participant-person]'))b.disabled=busy||!ready||data?.detailsVersion!==820;
  }
@@ -80,23 +86,29 @@
    const tags=V.basisTags(r).map(tag=>'<span class="participant-basis'+(!tag.active?' participant-basis-inactive':'')+'">'+esc(tag.label)+(tag.notes.length?' <small>'+esc((tag.active?'Есть действующее основание. ':'')+tag.notes.join('; '))+'</small>':'')+'</span>').join('');
    return '<article class="participant-card"><div class="participant-row-head"><label class="participant-pick"><input type="checkbox" aria-label="Выбрать: '+esc(r.name)+'" data-participant-id="'+r.id+'" '+(selected.has(r.id)?'checked':'')+'></label><button type="button" class="participant-name" data-participant-person="'+r.id+'" aria-label="Открыть участника: '+esc(r.name)+'">'+esc(r.name)+'</button></div><div class="participant-badges">'+tags+'</div><p><strong>'+modes[r.mode]+'</strong> · '+esc(V.stateLabel(r,f))+'</p>'+(r.possibleDuplicate?'<p class="participant-issue">Возможное совпадение. Сравните основания.</p>':'')+(r.modeConflict?'<p class="participant-issue">В источниках указаны разные форматы участия.</p>':'')+(r.identityConflict?'<p class="participant-issue">Уточнённые имена расходятся.</p>':'')+'<p class="hint">'+esc(r.arrivalLabel)+'</p>'+(r.declined&&r.arrivalLabel==='Вошёл по QR'?'<p class="participant-issue">Есть и отказ, и отметка входа. Сверьте участие.</p>':'')+'<details><summary>Основания · '+r.sources.length+'</summary><ul>'+r.sources.map(s=>'<li>'+esc(V.sourceLabel(s))+'</li>').join('')+'</ul></details></article>';
   }).join('')||'<p class="empty-state">'+(data.partial?'Доступных данных для этого списка недостаточно. Проверьте предупреждения.':f.search||f.basis&&f.basis!=='all'||f.mode!=='all'||f.status!=='expected'?'По этим условиям участников нет. Измените фильтры.':'Действующих участников пока нет.')+'</p>';
-  $('#participants-more').hidden=rows.length<=limit;renderActions();
+  $('#participants-more').hidden=rows.length<=limit;renderActions(rows);
  }
  function clearView(message){
   data=null;selected.clear();$('#participants-list').textContent=message;paintEvent(null);
   $('#participants-totals').replaceChildren();$('#participants-attendance').textContent='';$('#participants-scope').textContent='';$('#participants-warnings').hidden=true;$('#participants-warnings').textContent='';$('#participants-more').hidden=true;
  }
- function periodOf(event){return T?.status(event,Date.now()).group||'current';}
+ function periodOf(event,now=Date.now()){return T?.status(event,now).group||'current';}
  function displayPicker(keep){
   const pick=$('#participants-event'), now=Date.now();
-  const visible=catalogEvents.filter(e=>!T||T.status(e,now).group===eventGroup||e.ref===keep);
-  const choices=(T?T.sorted(visible,now):visible).map(e=>[e.ref,T?T.label(e,now):e.title+' · '+(e.when||'Дата уточняется')]);
+  const events=catalogEvents.filter(e=>periodOf(e,now)===eventGroup);
+  const retained=catalogEvents.find(e=>e.ref===keep&&periodOf(e,now)!==eventGroup);
+  const choices=(T?T.sorted(events,now):events).map(e=>[e.ref,T?T.label(e,now):e.title+' · '+(e.when||'Дата уточняется')]);
+  if(retained)choices.unshift([retained.ref,'Открытое событие · '+T.label(retained,now)]);
+  const placeholder=choices.length?'Выберите событие':eventGroup==='past'?'Прошедших событий пока нет':'Актуальных событий пока нет';
   const signature=JSON.stringify([eventGroup,choices]);
-  if(signature!==pickerSignature){pick.replaceChildren();pickerSignature=signature;}else{pick.value=keep||'';return;}
-  for(const [ref,label] of choices){const option=document.createElement('option');option.value=ref;option.textContent=label;pick.append(option);}
-  if(!visible.length){const option=document.createElement('option');option.value='';option.textContent=eventGroup==='past'?'Прошедших событий пока нет':'Актуальных событий пока нет';pick.append(option);}
-  pick.value=keep||'';
-  for(const button of root.querySelectorAll('[data-event-group]'))button.setAttribute('aria-pressed',String(button.dataset.eventGroup===eventGroup));
+  if(signature!==pickerSignature){
+   const prompt=document.createElement('option');prompt.value='';prompt.textContent=placeholder;prompt.disabled=true;
+   pick.replaceChildren(prompt);pickerSignature=signature;
+   for(const [ref,text] of choices){const option=document.createElement('option');option.value=ref;option.textContent=text;pick.append(option);}
+   for(const button of root.querySelectorAll('[data-event-group]'))button.setAttribute('aria-pressed',String(button.dataset.eventGroup===eventGroup));
+  }
+  const selection=choices.some(([ref])=>ref===keep)?keep:'';
+  if(pick.value!==selection)pick.value=selection;
  }
  function updateUrl(ref){
   const u=new URL(location.href);if(ref)u.searchParams.set('workEvent',ref);else u.searchParams.delete('workEvent');
@@ -119,7 +131,8 @@
    if(explicit&&(!validRef(explicit)||!explicitEvent)){
     displayPicker('');clearView('Выберите другое событие.');throw Error('Запрошенное событие отсутствует в доступном списке.');
    }
-   eventGroup=requestedGroup||(explicitEvent?periodOf(explicitEvent):priorEvent?periodOf(priorEvent):eventGroup);
+   if(requestedGroup)eventGroup=requestedGroup;
+   else if(explicitEvent&&explicitEvent.ref!==prior)eventGroup=periodOf(explicitEvent);
    const available=catalogEvents.filter(e=>periodOf(e)===eventGroup),ordered=T?T.sorted(available,Date.now()):available;
    const chosen=explicitEvent||[priorEvent,remembered].find(e=>e&&periodOf(e)===eventGroup)||ordered[0];
    const ref=chosen?.ref||'';
@@ -186,23 +199,36 @@
   if(e.target.closest('[data-participant-review]')){if(usable()){$('#participants-status').value='review';$('#participants-mode').value='all';if($('#participants-basis'))$('#participants-basis').value='all';$('#participants-search').value='';clearArtifacts();limit=200;render();$('#participants-status').focus();}return;}
   const button=e.target.closest('[data-participant-person]');if(button&&!button.disabled){person?.open(button.dataset.participantPerson,button);return;}const mode=e.target.closest('[data-participant-mode]');if(mode&&!mode.disabled){clearArtifacts();$('#participants-mode').value=mode.dataset.participantMode;$('#participants-status').value='expected';limit=200;render();}const op=e.target.closest('[data-participant-operation]');if(op)decide(op.dataset.participantOperation);});
  $('#participants-list').onchange=e=>{const id=e.target.dataset.participantId;if(id){e.target.checked?selected.add(id):selected.delete(id);renderActions();}};
+ $('#participants-unselect').onclick=()=>{
+  selected.clear();
+  for(const input of $('#participants-list').querySelectorAll('[data-participant-id]:checked'))input.checked=false;
+  renderActions();
+  ($('#participants-list').querySelector('[data-participant-id]')||$('#participants-search')).focus();
+ };
  $('#participants-more').onclick=()=>{limit+=200;render();};
  $('#participants-copy').onclick=async()=>{
   if(!usable())return;
   const ctx={job,token:dataToken},f=filters(),text=V.copy(data,f),count=V.select(data,f).length;
-  try{await navigator.clipboard.writeText(text);if(current(ctx))status('Скопирован список: '+count+' человек · '+V.scope(f)+'.');}
-  catch{if(!current(ctx))return;let dialog=document.getElementById('participants-copy-dialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='participants-copy-dialog';dialog.setAttribute('data-work-untracked','');dialog.innerHTML='<h2>Скопировать список</h2><p>Выделите текст и скопируйте его.</p><textarea readonly class="ym-disable-keys" aria-label="Список участников" rows="14"></textarea><button type="button">Закрыть</button>';document.body.append(dialog);dialog.querySelector('button').onclick=()=>dialog.close();}dialog.querySelector('textarea').value=text;dialog.showModal();dialog.querySelector('textarea').select();}
+  try{await navigator.clipboard.writeText(text);if(current(ctx))exportStatus('Скопирован список: '+V.people(count)+' · '+V.scope(f)+'.');}
+  catch{if(!current(ctx))return;let dialog=document.getElementById('participants-copy-dialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='participants-copy-dialog';dialog.setAttribute('aria-labelledby','participants-copy-title');dialog.setAttribute('data-work-untracked','');dialog.innerHTML='<h2 id="participants-copy-title">Скопировать список</h2><p>Выделите текст и скопируйте его.</p><textarea readonly class="ym-disable-keys" aria-label="Список участников" rows="14"></textarea><button type="button" class="mini-btn">Закрыть</button>';document.body.append(dialog);dialog.querySelector('button').onclick=()=>dialog.close();}dialog.querySelector('textarea').value=text;dialog.showModal();dialog.querySelector('textarea').select();}
  };
- $('#participants-csv').onclick=()=>{if(usable())download(new Blob([V.csv(data,filters())],{type:'text/csv;charset=utf-8'}),'aelita-participants.csv');};
+ $('#participants-csv').onclick=()=>{if(usable()){download(new Blob([V.csv(data,filters())],{type:'text/csv;charset=utf-8'}),'aelita-participants.csv');exportStatus('CSV подготовлен.');}};
  $('#participants-pdf').onclick=async()=>{
   if(!usable())return;
   const ctx={job,token:dataToken},f=filters(),ref=data.event.ref;
-  lock(true);clearArtifacts();status('Готовим PDF…');
+  lock(true);clearArtifacts();exportStatus('Готовим PDF…');
   const abort=new AbortController();controller=abort;const timer=setTimeout(()=>abort.abort(),20000);
   try{
    const q=new URLSearchParams({view:'participants',ref,format:'pdf',snapshot:data.snapshot,...f}),r=await request(ADMIN_ORDERS_URL+'?'+q,{signal:abort.signal},ctx),blob=await r.blob();
-   ensure(ctx);download(blob,'aelita-participants.pdf');status('PDF подготовлен: '+V.scope(f)+' · '+V.people(V.select(data,f).length)+'.');
-  }catch(e){failed(e,ctx);}finally{clearTimeout(timer);if(current(ctx))lock(false);}
+   ensure(ctx);download(blob,'aelita-participants.pdf');exportStatus('PDF подготовлен: '+V.scope(f)+' · '+V.people(V.select(data,f).length)+'.');
+  }catch(e){
+   if(!current(ctx))return;
+   if(e.status===401||e.status===403||e.code==='not_authenticated'){failed(e,ctx);return;}
+   if(e.status===409||e.code==='participants_changed'){
+    ready=false;exportStatus('Состав изменился. Обновите участников перед выгрузкой.',true);
+   }else if(e.name==='AbortError'||e.name==='TypeError')exportStatus('Не удалось подключиться. Повторите выгрузку PDF.',true);
+   else exportStatus(e.status>=500?'Не удалось подготовить PDF. Повторите выгрузку.':e.message,true);
+  }finally{clearTimeout(timer);if(current(ctx))lock(false);}
  };
  window.addEventListener('aelita-staff-session-changed',()=>reset('Сеанс изменился. Обновите участников.'));
  window.addEventListener('storage',e=>{if(e.key===null||e.key==='aelita_admin_token'||e.key==='aelita_staff_session_v1')reset('Сеанс изменился. Обновите участников.');});

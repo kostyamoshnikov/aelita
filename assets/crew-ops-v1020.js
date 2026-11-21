@@ -99,12 +99,14 @@
     return /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? value.split('-').reverse().join('.') : value || '';
   }
 
-  function startDialog(title, contents) {
+  function startDialog(section, title, contents) {
+    const dialog = $('dialog');
+    dialog.dataset.adminTouchSection = section;
     $('dialog-title').textContent = title;
     $('dialog-body').replaceChildren(contents);
     status('dialog-status','');
     draftDirty = false;
-    if (!$('dialog').open) $('dialog').showModal();
+    if (!dialog.open) dialog.showModal();
   }
 
   function closeDialog() {
@@ -114,26 +116,34 @@
     $('dialog').close();
   }
 
-  function editor(title, controls, save, label = 'Сохранить') {
+  function editor(section, title, controls, save, label = 'Сохранить') {
     ++dialogSeq;
     const form = el('form',null,'crew-field');
     const footer = el('div',null,'ed-actions');
     const submit = el('button',label); submit.type = 'submit';
-    footer.append(submit); form.append(...controls, footer);
+    const feedback = el('p');
+    feedback.setAttribute('role','alert');
+    feedback.tabIndex = -1;
+    footer.append(submit); form.append(...controls, feedback, footer);
     form.addEventListener('input', () => { draftDirty = true; });
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (saving) return;
       saving = true; submit.disabled = true;
+      feedback.textContent = '';
       try {
         await save(form);
         draftDirty = false;
         ++dialogSeq;
         $('dialog').close();
-      } catch (err) { status('dialog-status',errorText(err),true); }
+      } catch (err) {
+        feedback.className = 'ed-error';
+        feedback.textContent = errorText(err);
+        feedback.focus();
+      }
       finally { saving = false; submit.disabled = false; }
     });
-    startDialog(title,form);
+    startDialog(section,title,form);
     return form;
   }
 
@@ -146,16 +156,24 @@
     $('export').disabled = true;
     $('social').hidden = true;
     $('edit-project').hidden = true;
+    $('project-retry').hidden = true;
+    $('project').disabled = true;
+    $('project').replaceChildren();
     status('status','Загружаем проекты…');
     try {
       const scope = $('scope').value;
       const { projects } = await api('crew_projects',{ scope });
       if (ticket !== seq) return;
       $('project').replaceChildren(...projects.map(project => new Option(project.name,project.id)));
+      $('project').disabled = !projects.length;
       if (projects.some(project => project.id === preferred)) $('project').value = preferred;
       if (projects.length) await loadProject();
-      else status('status','Архив пока пуст.');
-    } catch (err) { if (ticket === seq) status('status',errorText(err),true); }
+      else status('status',scope === 'archive' ? 'Архив пока пуст.' : 'Текущих проектов пока нет.');
+    } catch (err) {
+      if (ticket !== seq) return;
+      status('status',errorText(err),true);
+      $('project-retry').hidden = false;
+    }
   }
 
   async function loadProject() {
@@ -165,6 +183,8 @@
     ++paneSeq;
     taskPage = 1; current = null; day = null;
     $('work').hidden = true;
+    $('project-note').textContent = '';
+    $('project-retry').hidden = true;
     $('edit-project').hidden = true;
     $('social').hidden = true;
     $('export').disabled = true;
@@ -186,7 +206,11 @@
       }
       if (pane === 'tasks' && !result.project.tasks || pane === 'schedule' && !result.project.schedule) pane = 'people';
       switchPane(pane);
-    } catch (err) { if (ticket === seq) status('status',errorText(err),true); }
+    } catch (err) {
+      if (ticket !== seq) return;
+      status('status',errorText(err),true);
+      $('project-retry').hidden = false;
+    }
   }
 
   function switchPane(next) {
@@ -232,7 +256,7 @@
     const owner = current;
     if (!owner) return;
     const job = ++dialogSeq;
-    startDialog('Задача CREW',el('p','Загружаем карточку…'));
+    startDialog('tasks','Задача CREW',el('p','Загружаем карточку…'));
     try {
       const data = await api('crew_task',{project:owner.project.id,id});
       if (job !== dialogSeq || current !== owner) return;
@@ -289,7 +313,7 @@
       const item=check(name,'assignee',task?.assignees.includes(name)); item.querySelector('input').value=name; names.append(item);
     }
     if (names.childElementCount === 1) names.append(el('p','У проекта пока нет участников с уникальными именами.'));
-    editor(task ? 'Редактирование задачи' : 'Новая задача', [
+    editor('tasks', task ? 'Редактирование задачи' : 'Новая задача', [
       input('Название','title',task?.title,{ required:true,max:3000 }),
       input('Описание','description',task?.description,{ type:'textarea',max:30000 }),
       select('Приоритет','priority',owner.priorities,task?.priority || 'Средний'),
@@ -306,7 +330,7 @@
   function commentTask(task) {
     if (!current || current.project.archived) return;
     const commentId='W'+crypto.randomUUID();
-    editor('Комментарий к задаче',[input('Комментарий','text','',{type:'textarea',required:true,max:2200})],async form=>{
+    editor('tasks','Комментарий к задаче',[input('Комментарий','text','',{type:'textarea',required:true,max:2200})],async form=>{
       await api('crew_task_comment',{project:task.project,id:task.id,commentId,text:field(form,'text').value});
       status('task-status','Комментарий сохранён в задаче «'+task.title+'».');
     });
@@ -314,7 +338,7 @@
 
   function projectEditor(project) {
     const id=project?.id || 'P'+crypto.randomUUID();
-    editor(project ? 'Настройки проекта' : 'Новый проект', [
+    editor('projects', project ? 'Настройки проекта' : 'Новый проект', [
       input('Название','name',project?.name,{required:true,max:140}),input('Даты или период','dates',project?.dates,{max:140}),
       check('Задачи','tasks',project?.tasks ?? true),check('Расписание','schedule',project?.schedule ?? true),
       check('Публикации в соцсетях','posts',project?.posts ?? false),check('В архиве','archived',project?.archived ?? false),
@@ -360,7 +384,7 @@
     const owner=current;
     if (!owner || owner.project.archived) return;
     const fields=repeatRows(owner.participants,[['name','Имя',{required:true,max:120}],['role','Роль в проекте',{max:100}]],'Добавить участника',500);
-    editor('Участники проекта',[fields.wrapper],async()=>{
+    editor('people','Участники проекта',[fields.wrapper],async()=>{
       await api('crew_members_save',{project:owner.project.id,baseRevision:owner.membersRevision,members:fields.values()});
       await loadProject();
     });
@@ -402,7 +426,7 @@
       ['start','Начало',{type:'time'}],['end','Окончание',{type:'time'}],
       ['what','Что',{required:true,max:260}],['who','Участники',{max:260}],['where','Место',{max:200}],['note','Примечание',{max:1200}]
     ],'Добавить строку',150);
-    editor(existing?'Расписание дня':'Новый день',[dateField,fields.wrapper],async form=>{
+    editor('schedule',existing?'Расписание дня':'Новый день',[dateField,fields.wrapper],async form=>{
       const target=field(form,'day').value;
       const events=fields.values();
       if (!existing && selected.days.includes(target)) throw {code:'crew_project_conflict'};
@@ -423,7 +447,10 @@
 
   async function exportProject() {
     const owner=current;
-    if (!owner) return;
+    const control=$('export');
+    if (!owner || control.disabled) return;
+    control.disabled=true;
+    status('status','Готовим Excel…');
     try {
       const data=await api('crew_export',{project:owner.project.id});
       if (current!==owner || actor!==token()) return;
@@ -434,7 +461,12 @@
         {name:'Публикации',title:data.project.name+' · Публикации',rows:[['Название','Срок UTC','Состояние','Telegram','ВКонтакте','Instagram'],...(data.posts||[]).map(p=>[p.label,p.scheduledAt,p.status,p.telegram,p.vk,p.instagram])]}
       ]);
       saveFile(book,'aelita-crew-'+owner.project.id+'.xlsx');
-    } catch (err) { status('status',errorText(err),true); }
+      status('status','Файл Excel подготовлен.');
+    } catch (err) {
+      if (current===owner && actor===token()) status('status',errorText(err),true);
+    } finally {
+      if (current===owner && actor===token()) control.disabled=false;
+    }
   }
 
   $('gate').hidden=!!actor;
@@ -443,6 +475,10 @@
   $('import-section').hidden=false;
   $('scope').addEventListener('change',()=>listProjects());
   $('project').addEventListener('change',loadProject);
+  $('project-retry').addEventListener('click',()=>{
+    if ($('project').value) loadProject();
+    else listProjects();
+  });
   $('close').addEventListener('click',closeDialog);
   $('dialog').addEventListener('cancel',event=>{event.preventDefault();closeDialog();});
   $('new-project').addEventListener('click',()=>projectEditor());

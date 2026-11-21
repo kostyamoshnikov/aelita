@@ -130,6 +130,11 @@ h2 { font: 400 clamp(2.15rem, 3.85vw, 4.15rem)/1.02 var(--serif); letter-spacing
 .enquiry > p { margin-top: 13px; }
 .enquiry-form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-top: 19px; }
 .enquiry-form label, .draft label { display: grid; gap: 6px; color: #f9e9d4; }
+.enquiry-form .consent-row { display: flex; align-items: flex-start; gap: 10px; font-size: .88rem; line-height: 1.5; }
+.enquiry-form .consent-row input[type="checkbox"] { width: 20px; height: 20px; min-width: 20px; min-height: 20px; flex: 0 0 20px; margin-top: 3px; padding: 0; accent-color: #d9ac7c; }
+.enquiry-form .consent-row a { text-decoration: underline; }
+.request-receipt { padding: 13px 16px; margin-top: 16px; border: 1px solid #d9ac7c; color: #fff1d9; background: #320d17; line-height: 1.65; }
+
 input, select, textarea {
   color: var(--cream); background: rgba(28,7,13,.55); border: 1px solid #c79978;
   border-radius: 0; width: 100%; min-width: 0; min-height: 46px; padding: 8px 11px;

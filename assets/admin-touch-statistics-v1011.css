@@ -1,0 +1,31 @@
+.touch-statistics {
+  margin: 16px 0;
+  padding: 0 14px 14px;
+  border: 1px solid #514735;
+  border-radius: 10px;
+  color: inherit;
+}
+.touch-statistics > summary {
+  display: list-item;
+  min-height: 44px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+.touch-statistics p { margin: 8px 0; }
+.touch-statistics label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.touch-statistics select {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #514735;
+  border-radius: 6px;
+  background: #17151a;
+  color: #f6efdf;
+}
+.touch-statistics-table { max-width: 100%; overflow-x: auto; }
+.touch-statistics-table:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.touch-statistics table { width: 100%; min-width: 32rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.touch-statistics th, .touch-statistics td { padding: 8px; border-bottom: 1px solid #514735; text-align: right; }
+.touch-statistics th:first-child { text-align: left; }
+.touch-statistics thead th { font-size: .85rem; }
