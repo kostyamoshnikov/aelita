@@ -84,17 +84,27 @@
      prev.hidden=nav.scrollLeft<=1;
      next.hidden=nav.scrollWidth-nav.clientWidth-nav.scrollLeft<=1;
    };
+   const revealCurrent=()=>{
+     const focused=document.activeElement;
+     work.revealNavItem(nav,nav.contains(focused)?focused:nav.querySelector('[aria-current=true]'));
+     update();
+   };
+   const step=(button,direction)=>{
+     const hadFocus=document.activeElement===button;
+     const target=work.stepNav(nav,direction);
+     update();
+     if(hadFocus&&button.hidden)target?.focus({preventScroll:true});
+   };
    nav.onscroll=update;
    nav.onfocusin=event=>work.revealNavItem(nav,event.target);
-   prev.onclick=()=>work.stepNav(nav,-1);
-   next.onclick=()=>work.stepNav(nav,1);
+   prev.onclick=()=>step(prev,-1);
+   next.onclick=()=>step(next,1);
    state.navObserver?.disconnect();
    if(window.ResizeObserver){
-     state.navObserver=new ResizeObserver(update);
+     state.navObserver=new ResizeObserver(revealCurrent);
      state.navObserver.observe(nav);
    }
-   work.revealNavItem(nav,nav.querySelector('[aria-current=true]'));
-   update();
+   revealCurrent();
  }
  window.addEventListener('aelita-staff-session-changed',()=>{clearSession(false);gate();});
  window.addEventListener('storage',e=>{if(e.key===KEY&&!window.AelitaStaffSession&&!e.newValue){clearSession(false);gate();}});

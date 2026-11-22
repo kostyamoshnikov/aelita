@@ -21,3 +21,7 @@
 #social-queue-pages[hidden]{display:none}
 #social-campaign-sources[hidden]{display:none}
 @media(max-width:560px){.social-grid{grid-template-columns:minmax(0,1fr)}}
+.social-connections form{margin-block-start:14px}
+.social-connections form>label{display:block;margin-block-start:.7rem}
+.social-connections summary{cursor:pointer}
+.social-connections [role=status]:empty{display:none}

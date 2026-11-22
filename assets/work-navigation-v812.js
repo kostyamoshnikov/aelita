@@ -30,10 +30,15 @@
     const left = rail.getBoundingClientRect().left + rail.clientLeft;
     const right = left + rail.clientWidth;
     const items = [...rail.children];
-    const target = direction > 0
-      ? items.find(item => item.getBoundingClientRect().right > right + 1)
-      : items.reverse().find(item => item.getBoundingClientRect().left < left - 1);
-    if (target) revealNavItem(rail, target);
+    if (direction < 0) items.reverse();
+    for (const item of items) {
+      const bounds = item.getBoundingClientRect();
+      if (bounds.right <= bounds.left) continue;
+      const distance = direction > 0 ? bounds.right - right : left - bounds.left;
+      if (distance <= 1) continue;
+      rail.scrollLeft += direction > 0 ? distance : -distance;
+      return item;
+    }
   }
   function prioritizeSections(container,spec){
     const chunks=[];let chunk;

@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1030,
+  "release": 1032,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -258,7 +258,7 @@
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "73fc372370cbf8ae055057efbf2be5a4ee239af88e475cb307be5a167d90dbf8"
+      "sha256": "7975a6106d02c3cac5d1d8755e16fcac38112bdacc4ef45395d5b2c2cd6e8ff5"
     },
     {
       "path": "admin/directory/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "2fe54f39729157ab5f6a5fb16b27805d6d31adf782b9511a16c992c6c4c86429"
+      "sha256": "d76fbf52fe058e90d70fb4fe48655792a67f654a0cfbc072fa86bfe4fdbec558"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -294,7 +294,7 @@
     },
     {
       "path": "admin/social-posts/index.html",
-      "sha256": "f3ef06cd71c955c4940339ab81c48db5401573d73cc46f4770f57e8d42c2e670"
+      "sha256": "2c95707f72cbdbc16c9af0aeeacb23db350a99834e8b0d469035b50310623f44"
     },
     {
       "path": "admin/team/index.html",
@@ -426,11 +426,11 @@
     },
     {
       "path": "assets/crm-core-v1.css",
-      "sha256": "87e652b496250e660e193f10cd721975a39c807ace68edf878572f55e590b719"
+      "sha256": "b612f0b89ee6b9951284fec73e078a9d9e5ea8ac7f910b3a6d88c7406e531b2f"
     },
     {
       "path": "assets/crm-core-v1.js",
-      "sha256": "c07347d4c015c4707197a1405b17a275bd56c49c40f7346b3c3b0b0320f2a631"
+      "sha256": "8a806c1f58280488676186ca31f72fdcdb210032a6fc439d024f22512324bccc"
     },
     {
       "path": "assets/crm-workbench-v814.js",
@@ -646,11 +646,11 @@
     },
     {
       "path": "assets/social-posts-v1018.css",
-      "sha256": "c4f668ab28a812fb51c15da0f3bbb7a21921f686bf2f16d55b49da9d817d86aa"
+      "sha256": "69cd6014b6bb27b5d19f84f15e58dea4005f6bcb0440c0e0571cc780982fe5f8"
     },
     {
       "path": "assets/social-posts-v1018.js",
-      "sha256": "2782833e349484135821ca02d191b866f028645788d8dbe25e5fa7184572888b"
+      "sha256": "8475b9967567a3828612305f4f5d877bc2222e1910f4ecc711a1db8e0b9b23b2"
     },
     {
       "path": "assets/staff-access-v796.js",
@@ -674,7 +674,7 @@
     },
     {
       "path": "assets/work-navigation-v812.js",
-      "sha256": "0c9ed882cf24c36f9c0946942ece8050a4f8b3d931d03081c28f520bbd2e24c6"
+      "sha256": "19e4d90e641c914b98ee978f5fac0f5ae846b07b03ed7005c9641f32dc1317b3"
     },
     {
       "path": "blue-ocean-strategy/index.html",
@@ -2034,8 +2034,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "b76de2f8af040555a0583cff394afe3d32a726682b26f1ea9750244ae9f2338e",
+  "changelog_sha256": "8f580a4d625f4c03eae6bc2a80f6c329540c506a7d0c46d86441b6f2b66506b1",
   "recent_versions": [
+    1032,
+    1031,
     1030,
     1029,
     1028,
@@ -2043,8 +2045,6 @@
     1026,
     1025,
     1024,
-    1023,
-    1022,
-    1021
+    1023
   ]
 }

@@ -11,6 +11,17 @@
   const fieldIds = { project: 'project', label: 'label', localTime: 'date', mode: 'mode', textTg: 'telegram',
     textVk: 'vk', textIg: 'instagram', photoUrl: 'photo', linkText: 'link-text', linkUrl: 'link-url' };
   const messages = {
+    social_owner_required: 'Подключать соцсети может владелец админки.',
+    social_links_unavailable: 'Хранилище подключений пока недоступно.',
+    bad_social_destination: 'Проверьте имя канала или числовой ID.',
+    bad_social_token: 'Проверьте, что токен скопирован целиком.',
+    social_provider_unavailable: 'Площадка не ответила. Попробуйте ещё раз.',
+    social_provider_denied: 'Площадка отклонила доступ. Проверьте токен, аккаунт и право публикации.',
+    social_link_changed: 'Подключение уже изменилось. Повторите действие с актуальными настройками.',
+    social_link_disconnected: 'Площадка отключена. Подключите её снова или уберите текст для этой площадки.',
+    social_link_missing: 'Для одной из выбранных площадок ещё нет подключения. Откройте «Подключить соцсети» или уберите текст для этой площадки.',
+    social_vk_photo_access: 'У токена ВКонтакте нет доступа к фотографиям. Обновите токен или уберите фото.',
+    social_sender_not_ready: 'Таймер отправителя ещё не подтвердил готовность. Проверьте строку статуса в очереди.',
     not_authenticated: 'Войдите в админку снова.',
     social_not_configured: 'Очередь AELITA CREW ещё не подключена к админке.',
     crew_upgrade_required: 'Для доступа к очереди нужно обновить веб-приложение AELITA CREW.',
@@ -35,6 +46,7 @@
   const queueViews = { queue: 'В очереди', review: 'Требуют сверки', history: 'История', all: 'Все публикации' };
   let draftId = '', review = null, projects = [], listRequest = 0, queuePage = 1;
   let senderStatusRequest = 0;
+  let connectionProjects = [], connectionBusy = false, connectionVersion = '';
   let dirty = false, busy = false, editing = null, aiChannel = '', aiDraftId = '', campaignSources = {};
 
   function token() {
@@ -202,7 +214,7 @@
   function deliveryRow(post, channel) {
     const slot = post.delivery?.channels?.[channel.id];
     const state = post.publishedAt?.[channel.id] ? 'Опубликовано' : {
-      sending: 'Идёт отправка', review: 'Требуется сверка', ready: 'Повтор разрешён'
+      sending: 'Идёт отправка', review: 'Требуется сверка', ready: 'Повтор разрешён', skipped:'Отменено'
     }[slot?.state] || 'Ожидает отправки';
     const item = node('div', null, 'social-delivery');
     item.append(node('p', channel.label + ' · ' + state));
@@ -214,17 +226,24 @@
     if (slot?.state === 'review' && post.status === 'pending') {
       const note = slot.reason === 'event_changed' ? 'Событие изменилось. Подготовьте новый текст по текущему каталогу.' :
         slot.reason === 'destination_unconfigured' ? 'Сначала укажите аккаунт площадки в настройках проекта или воркера.' :
+        slot.reason === 'connection_changed' ? 'Подключение изменилось. Сверьте аккаунт и создайте публикацию на нужную площадку.' :
         slot.reason === 'destination_changed' ? 'Адрес проекта изменился. Сверьте настройки AELITA CREW.' :
         slot.reason === 'invalid_media' ? 'Площадке требуется фото.' : 'Проверьте площадку перед выбором действия.';
       item.append(node('p', note, 'ed-note'));
       const actions = node('div', null, 'ed-actions');
+      if (slot.reason === 'connection_changed') {
+        actions.append(queueButton('Отменить отправку сюда', button => queueChange(button,
+          { action:'social_resolve', id:post.id, platform:channel.id, attempt:slot.attempt, decision:'skip' }, 'Отправка на эту площадку отменена.')));
+        item.append(actions);
+        return item;
+      }
       function resolve(decision, button) {
         const existing = decision === 'published';
         if (!window.confirm(existing ? 'Публикация в ' + channel.label + ' уже есть и вы её проверили?' :
           'Вы проверили ' + channel.label + ' и убедились, что публикации там нет?')) return;
         const success = existing ? 'Отметка об отправке сохранена.' : post.mode === 'auto'
-          ? 'Повтор для площадки разрешён. Запись подхватит таймер CREW.'
-          : 'Повтор для площадки разрешён. Откройте карточку публикации в CREW и подтвердите отправку.';
+          ? 'Повтор для площадки разрешён. Запись подхватит таймер.'
+          : 'Повтор для площадки разрешён. Если публикация уже подтверждена, её подхватит таймер.';
         queueChange(button, { action:'social_resolve', id:post.id, platform:channel.id, attempt:slot.attempt, decision }, success);
       }
       actions.append(queueButton('Отметить опубликованной', button => resolve('published', button)));
@@ -319,6 +338,78 @@
         ready.length ? 'Отправка включена для площадок: ' + ready.join(', ') + '. Проверено — ' + checked + '.' :
         'Таймер работает. Ключи площадок пока не заданы. Проверено — ' + checked + '.');
     } catch (_) { if (current()) status('worker-status','Статус отправителя недоступен. Обновите очередь, чтобы повторить проверку.', true); }
+  }
+
+  const connectionFields = {
+    telegram:['Канал', '@имя_канала или ID', 'Бот должен быть администратором канала с правом публикации. Токен выдаёт @BotFather.'],
+    vk:['ID сообщества', 'Числовой ID', 'Нужен пользовательский токен ВКонтакте с доступом к стене. Для постов с фото нужен доступ к фотографиям.'],
+    instagram:['ID аккаунта', 'Числовой ID', 'Нужен токен Meta с правом публикации в профессиональном аккаунте, привязанном к странице Facebook.']
+  };
+
+  function currentConnection() {
+    const project = connectionProjects.find(item => item.id === $('connect-project').value);
+    const platform = $('connect-platform').value;
+    return { project, platform, row:project?.connections?.[platform] };
+  }
+
+  function renderConnection() {
+    const { project, platform, row } = currentConnection();
+    const [label, placeholder, help] = connectionFields[platform];
+    $('connect-label').textContent = label;
+    $('connect-destination').placeholder = placeholder;
+    $('connect-destination').value = row?.destination || project?.targets?.[channels.find(channel => channel.id === platform).target] || '';
+    $('connect-token').value = '';
+    $('connect-help').textContent = help;
+    $('connect-current').textContent = row?.connected ? 'Подключено · ' + row.label : row ? 'Отключено' : '';
+    $('connect-save').textContent = row?.connected ? 'Проверить и обновить' : 'Проверить и подключить';
+    $('connect-save').disabled = !project || connectionBusy;
+    $('connect-check').hidden = !row?.connected;
+    $('connect-disconnect').hidden = !row?.connected;
+    $('connect-disconnect').disabled = connectionBusy;
+    connectionVersion = row?.revision || '';
+  }
+
+  async function loadConnections(preferredProject = $('project').value) {
+    try {
+      const data = await api({ action:'social_connection_list' });
+      connectionProjects = data.projects;
+      const previous = $('connect-project').value || preferredProject;
+      $('connect-project').replaceChildren(...connectionProjects.map(project => new Option(project.name, project.id)));
+      if (connectionProjects.some(project => project.id === previous)) $('connect-project').value = previous;
+      $('connections').hidden = !connectionProjects.length;
+      renderConnection();
+    } catch (error) {
+      if (error.code !== 'social_owner_required' && !$('connections').hidden) status('connect-status', errorMessage(error), true);
+    }
+  }
+
+  async function changeConnection(action) {
+    const { project, platform, row } = currentConnection();
+    if (!project || connectionBusy || action !== 'save' && !row?.connected) return;
+    if (action === 'disconnect' && !window.confirm('Отключить ' + row.label + '? Запланированные для этого подключения записи потребуют сверки.')) return;
+    const fields = ['connect-project','connect-platform','connect-destination','connect-token','connect-save','connect-check','connect-disconnect'];
+    const payload = { action:'social_connection_' + action, project:project.id, platform, version:connectionVersion };
+    if (action === 'save') Object.assign(payload, { destination:$('connect-destination').value, token:$('connect-token').value });
+    $('connect-token').value = '';
+    connectionBusy = true;
+    for (const field of fields) $(field).disabled = true;
+    status('connect-status', action === 'disconnect' ? 'Отключаем площадку…' : 'Проверяем доступ…');
+    try {
+      const result = await api(payload);
+      project.connections = result.connections;
+      if (action !== 'check' && project.id === $('project').value) closeReview();
+      const messages = { disconnect:'Площадка отключена.', check:'Доступ подтверждён · ', save:'Подключено · ' };
+      status('connect-status', messages[action] + (action === 'disconnect' ? '' : result.connections[platform].label));
+      if (action === 'save') await loadProjects(dirty || editing || busy ? $('project').value : project.id);
+      loadWorkerStatus();
+    } catch (error) {
+      if (error.code === 'social_link_changed') await loadConnections(project.id);
+      status('connect-status', errorMessage(error), true);
+    } finally {
+      connectionBusy = false;
+      for (const field of fields) $(field).disabled = false;
+      renderConnection();
+    }
   }
 
   function registerWorkGuard() {
@@ -417,6 +508,16 @@
     loadQueue();
   }
   $('project').addEventListener('change', showFirstPage);
+  $('connect-form').addEventListener('submit', event => { event.preventDefault(); changeConnection('save'); });
+  $('connect-check').addEventListener('click', () => changeConnection('check'));
+  $('connect-disconnect').addEventListener('click', () => changeConnection('disconnect'));
+  for (const id of ['connect-project', 'connect-platform']) $(id).addEventListener('change', () => {
+    renderConnection();
+    status('connect-status', '');
+  });
+  $('connections').addEventListener('toggle', () => {
+    if (!$('connections').open) $('connect-token').value = '';
+  });
   $('queue-view').addEventListener('change', showFirstPage);
   $('queue-prev').addEventListener('click', () => { if (queuePage > 1) { queuePage--; loadQueue(); } });
   $('queue-next').addEventListener('click', () => { if (!$('queue-next').disabled) { queuePage++; loadQueue(); } });
@@ -458,24 +559,24 @@
       loadQueue();
     } catch (error) {
       const message = messages[error.code] || 'Ответ очереди потерян. Проверьте список или повторите планирование с этого предпросмотра.';
-      const expired = ['destination_changed', 'preview_required', 'schedule_passed', 'invalid_project', 'post_conflict', 'post_locked','campaign_source_changed'].includes(error.code);
+      const expired = ['destination_changed', 'preview_required', 'schedule_passed', 'invalid_project', 'post_conflict', 'post_locked','campaign_source_changed','social_link_changed','social_link_disconnected','social_vk_photo_access'].includes(error.code);
       if (expired) closeReview();
       actionError(expired ? 'form-status' : 'review-status', message);
     } finally { setBusy(false); }
   });
 
-  async function loadProjects() {
+  async function loadProjects(preferredProject = $('project').value) {
     $('reload').disabled = true;
     try {
       const data = await api({ action: 'social_projects' });
       projects = data.projects;
       status('status', '');
       $('project').replaceChildren(...projects.map(project => new Option(project.name, project.id)));
-      const requested = new URLSearchParams(location.search).get('project');
+      const requested = preferredProject || new URLSearchParams(location.search).get('project');
       if (requested && projects.some(project => project.id === requested)) $('project').value = requested;
       $('preview').disabled = !projects.length;
       if (projects.length) { status('queue-status', ''); await loadQueue(); }
-      else status('queue-status', 'Включите публикации в настройках проекта CREW.');
+      else status('queue-status', 'Подключите площадку в этом разделе или включите публикации в настройках проекта CREW.');
     } catch (error) {
       status('queue-status', errorMessage(error), true);
       if (error.code === 'not_authenticated') { $('app').hidden = true; $('gate').hidden = false; }
@@ -485,6 +586,7 @@
   }
 
   loadProjects();
+  loadConnections();
   loadWorkerStatus();
   initAi();
 })();

@@ -542,7 +542,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
 <link rel="stylesheet" href="/assets/delivery-admin-v1.css?v=249"><script defer src="/assets/delivery-admin-v1.js?v=249"></script>
 <script defer src="/assets/commercial-admin-v1.js?v=249"></script><script src="/assets/staff-session-v796.js?v=249"></script><script defer src="/assets/crm-show-events-v1.js?v=249"></script>
 <link rel="stylesheet" href="/assets/work-navigation-v812.css?v=249-v1022">
-<script src="/assets/work-navigation-v812.js?v=249-v1022"></script>
+<script src="/assets/work-navigation-v812.js?v=249-v1031"></script>
 <script src="/assets/work-event-time-v829.js?v=249"></script>
 <link rel="stylesheet" href="/assets/section-navigation.css?v=249">
 <script src="/assets/section-navigation.js?v=249" defer></script>
@@ -1346,7 +1346,7 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     <section class="editor-box" aria-labelledby="sitePublicationHeading" data-adm-index="Пакет на сайте">
       <h3 id="sitePublicationHeading">Пакет на сайте</h3>
       <p id="sitePublicationStatus" class="editor-note work-action-status" role="status" aria-live="polite">Нажмите «Проверить пакет».</p>
-      <button type="button" class="mini-btn" id="sitePublicationRefresh" aria-describedby="sitePublicationStatus" data-minimum-release="pack-v1030">Проверить пакет</button>
+      <button type="button" class="mini-btn" id="sitePublicationRefresh" aria-describedby="sitePublicationStatus" data-minimum-release="pack-v1032">Проверить пакет</button>
       <details class="adm-more">
         <summary>Что проверяется</summary>
         <p>Сверяем номер пакета и контрольную сумму описи с опубликованным отчётом. Все файлы проверяет команда <code>~/deploy_aelita.sh check</code> в Termux.</p>
@@ -8272,7 +8272,12 @@ startStaffAdmin();
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'adm-hs ' + dir; b.textContent = dir === 'next' ? '›' : '‹';
       b.setAttribute('aria-label', dir === 'next' ? 'Листать вправо' : 'Листать влево');
-      b.addEventListener('click', function () { AelitaWork.stepNav(nav, dir === 'next' ? 1 : -1); });
+      b.addEventListener('click', function () {
+        var hadFocus = document.activeElement === b;
+        var target = AelitaWork.stepNav(nav, dir === 'next' ? 1 : -1);
+        upd();
+        if (hadFocus && !box.classList.contains('can-' + dir)) target?.focus({preventScroll:true});
+      });
       box.appendChild(b);
     });
     function upd() {
@@ -8281,12 +8286,14 @@ startStaffAdmin();
       box.classList.toggle('can-next', max - nav.scrollLeft > 1);
     }
     function revealActive() {
-      AelitaWork.revealNavItem(nav, nav.querySelector('.on'));
+      var focused = document.activeElement;
+      AelitaWork.revealNavItem(nav, nav.contains(focused) ? focused : nav.querySelector('.on'));
       upd();
     }
     nav.addEventListener('scroll', upd, { passive: true });
     nav.addEventListener('focusin', function (event) { AelitaWork.revealNavItem(nav, event.target); });
-    window.addEventListener('resize', upd);
+    if (window.ResizeObserver) new ResizeObserver(revealActive).observe(nav);
+    else window.addEventListener('resize', revealActive);
     c.insertBefore(box, c.firstChild);
     var index = document.createElement('nav');
     index.className = 'section-nav-bar'; index.id = 'admSectionIndex'; index.setAttribute('data-section-nav',''); index.setAttribute('data-section-track',''); index.setAttribute('data-section-stack','.adm-navbox');
@@ -8324,7 +8331,7 @@ startStaffAdmin();
         applyWorkRefundFilters();
       }
     });
-    requestAnimationFrame(function(){var active=nav.querySelector('.on');if(active)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);upd();});
+    requestAnimationFrame(revealActive);
     // Счётчик «Входящих»: новые заявки сайта и бота + отзывы на модерации.
     ['ld-new', 'ap-new', 'rv-pending'].forEach(function (id) {
       var el = document.getElementById(id);
