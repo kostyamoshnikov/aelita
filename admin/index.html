@@ -3124,7 +3124,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (c) c.addEventListener('click', perfCancel);
   var sb = document.getElementById('paSalesBtn');
   if (sb) sb.addEventListener('click', perfSalesToggle);
-  if (sel) sel.addEventListener('change', perfSalesBtnState);
+  if (sel) sel.addEventListener('change', function () { perfSalesBtnState(); });
   // pack-v734: ссылки с UTM, QR, переходы; черновик рассылки «Старт продаж»
   if (sel) sel.addEventListener('change', perfLinksState);
   var lb = document.getElementById('paLinksBtn');

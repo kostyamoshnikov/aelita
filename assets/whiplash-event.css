@@ -1,0 +1,115 @@
+/* Whiplash cover and format selection. */
+.whiplash-cover {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background: var(--ink, #0b0b0d);
+  border-bottom: 1px solid var(--cinema-rule);
+}
+.whiplash-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.whiplash-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+  padding-top: clamp(24px, 4vw, 56px);
+}
+.whiplash-summary .cinema-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+.whiplash-age {
+  color: var(--cinema-quiet);
+}
+.whiplash-formats h2 {
+  font-size: clamp(1.4rem, 2.3vw, 1.95rem);
+  margin-bottom: 14px;
+}
+.whiplash-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.whiplash-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 8px;
+  padding: clamp(12px, 2vw, 24px);
+  border: 1px solid var(--cinema-rule);
+  background: var(--coal, #171619);
+}
+.whiplash-option h3 {
+  margin: 0;
+  font-size: clamp(1.16rem, 2vw, 1.65rem);
+  line-height: 1.16;
+}
+.whiplash-option .whiplash-format-details {
+  margin: 0 0 auto;
+  color: var(--cinema-quiet);
+  font-size: .875rem;
+}
+.whiplash-price {
+  margin: 4px 0 0;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.whiplash-option .whiplash-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 44px;
+  padding-top: 4px;
+  border-top: 1px solid var(--cinema-rule);
+  line-height: 1.35;
+  text-decoration: none;
+}
+.whiplash-buy[href]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.whiplash-option:has(.whiplash-buy[href]:hover),
+.whiplash-option:has(.whiplash-buy:focus-visible) {
+  border-color: var(--gold);
+}
+.whiplash-option .whiplash-buy[aria-disabled="true"] {
+  color: var(--cinema-quiet);
+}
+@media (min-width: 541px) {
+  .whiplash-cover {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .whiplash-cover::before {
+    content: '';
+    position: absolute;
+    inset: -28px;
+    z-index: -1;
+    background: linear-gradient(90deg, #0b0b0d99, transparent, #0b0b0d99),
+      url('/images/whiplash-poster-v839-480.webp') center / cover;
+    filter: blur(24px);
+    opacity: .34;
+  }
+  .whiplash-cover .cinema-poster-picture {
+    width: clamp(350px, 46vw, 500px);
+  }
+}
+@media (max-width: 850px) {
+  .whiplash-summary {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 360px) {
+  .whiplash-options {
+    grid-template-columns: 1fr;
+  }
+}

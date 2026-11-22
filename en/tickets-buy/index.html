@@ -385,6 +385,7 @@ body.checkout-complete #steps,body.checkout-complete #step2-sum{display:none!imp
 
   <div id="error-block" style="display:none" class="error-box">
     <p id="error-text">Could not load the performance.</p>
+    <a class="retry-btn err-cabinet" id="err-online">Buy an online ticket</a>
     <button class="retry-btn" onclick="init()">Try again</button>
     <a class="retry-btn" style="text-decoration:none;display:inline-block" href="mailto:aelita.production@yandex.ru">Write to us</a>
     <a class="retry-btn err-cabinet" id="err-cabinet" href="/en/account/dashboard/">My tickets in the account</a>
@@ -722,6 +723,8 @@ async function apiFetch(url, opts){
 
 const params = new URLSearchParams(location.search);
 const performanceId = params.get('performance');
+const linkedAttendance = params.get('attendance');
+const hasLinkedAttendance = linkedAttendance === 'online' || linkedAttendance === 'offline';
 let selectedSeats = []; // [{row, seat, price}]
 let quantity = 1;
 let data = null;
@@ -1297,6 +1300,7 @@ function showError(text){
   document.getElementById('error-block').style.display = 'block';
   if(typeof helpAlert === 'function') helpAlert();
   document.getElementById('err-cabinet').style.display = 'none';
+  document.getElementById('err-online').style.display = 'none';
   document.querySelector('#error-block button').hidden = false;
   document.getElementById('form-block').style.display = 'none';
   document.querySelector('.bar').style.display = 'none';
@@ -1456,7 +1460,6 @@ async function init(){
     return;
   }
   data = freshData;
-  if(window.AelitaCustomerJourney)window.AelitaCustomerJourney.purchase(data);
   if(data.error === 'performance_canceled'){ showError('This performance has been cancelled; ticket sales are closed.'); return; }
   // pack-v640: показ уже прошёл (старые ссылки, QR на афишах) — не «закрыты», а «прошёл» and куда идти.
   if(data.error === 'sales_closed' && data.datetime && Date.parse(data.datetime) < Date.now()){ showError('This show has already taken place — thank you to everyone who came! Upcoming events are on the listings page: aelita-production.ru/en/tickets'); return; }
@@ -1465,7 +1468,24 @@ async function init(){
   if(data.error){ showError('Performance not found — sales may not be open yet, or the link is out of date.'); return; }
 
   // pack-v592 (ревью 07.10 Б1): вместимость свободной рассадки исчерпана.
-  window.AelitaAttendance.mount(data, (readDraft() || {}).attendanceMode || params.get('attendance'), () => {
+  if(params.get('attendance') === 'offline' && data.left === 0 &&
+      window.AelitaAttendance.supported(data) && !data.attendance.dedicated){
+    showError('In-person tickets are sold out. Online tickets are still available.');
+    const onlineLink = document.getElementById('err-online');
+    onlineLink.href = '?' + new URLSearchParams({performance: performanceId, attendance: 'online'});
+    onlineLink.style.display = 'inline-block';
+    return;
+  }
+  const desiredAttendance = hasLinkedAttendance ? params.get('attendance') : (readDraft() || {}).attendanceMode;
+  window.AelitaAttendance.mount(data, desiredAttendance, () => {
+    if(hasLinkedAttendance){
+      const url = new URL(location.href);
+      const mode = window.AelitaAttendance.mode();
+      url.searchParams.set('attendance', mode);
+      params.set('attendance', mode);
+      history.replaceState(history.state, '', url);
+      syncCheckoutLanguage();
+    }
     if(typeof data.left === 'number' && quantity > data.left) quantity = Math.max(1, data.left);
     document.getElementById('qty-val').textContent = quantity;
     updateTotal(); saveDraft();
@@ -1492,6 +1512,7 @@ async function init(){
   document.getElementById('meta').textContent = [dt, [vn.name, vn.city || ((vn.address||'').match(/Kaluga/i)||[])[0] || vn.address].filter(Boolean).join(', '), data.ageRating].filter(Boolean).join(' · ');
 
   window.AelitaAttendance.meta(data);
+  if(window.AelitaCustomerJourney)window.AelitaCustomerJourney.purchase(data);
   goStep(1, {silent:true});
   if(data.seating === 'assigned'){
     // pack-v739 (заказчик 30.10): плашку «Идёт дополнительная проверка
@@ -2032,11 +2053,15 @@ function renderTitle(d, fallback){
     const a = document.createElement('a'); a.href = path.endsWith('/') ? path : path + '/'; a.textContent = text; el.appendChild(a);
   } else el.textContent = text;
 }
-// EN/RU в шапке — на тот же показ на другом языке (только номер показа, без меток and параметров оплаты).
-(function(){
-  const a = document.getElementById('lang-switch'), id = new URLSearchParams(location.search).get('performance');
-  if (a && id) a.href = a.getAttribute('href').split('?')[0] + '?performance=' + encodeURIComponent(id);
-}());
+// Keep the show and chosen format when switching interface language.
+function syncCheckoutLanguage(){
+  const link = document.getElementById('lang-switch');
+  if(!link || !performanceId) return;
+  const query = new URLSearchParams({performance: performanceId});
+  if(hasLinkedAttendance) query.set('attendance', params.get('attendance'));
+  link.href = link.getAttribute('href').split('?')[0] + '?' + query;
+}
+syncCheckoutLanguage();
 function pickVenue(d){
   const v = (d && d.venue) || {};
   const en = document.documentElement.lang === 'en' && v.en ? v.en : null;

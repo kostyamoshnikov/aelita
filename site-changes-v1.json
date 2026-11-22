@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1040,
+  "release": 1043,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "cea41ff4bdf75b310acdc9611f4a07bb78d8bed1a9eb280e2270162f79f3c078"
+      "sha256": "a0cd453c1c69feb0bf9b1d8f08b38234478a5858d75cc37b9458a67fa7f4b7f8"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -679,6 +679,10 @@
     {
       "path": "assets/ticket-program-public.js",
       "sha256": "1dc966d6b3fac5cca1abff4d04420ec33025309f44d1ed5af589f2cca1413eb6"
+    },
+    {
+      "path": "assets/whiplash-event.css",
+      "sha256": "9fe2a7800328a8c2b4da76c43873d2b0b9758b93f3db3320a29dca33dfdeb377"
     },
     {
       "path": "assets/work-navigation-v812.css",
@@ -1346,7 +1350,7 @@
     },
     {
       "path": "en/razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "3321eff73ebd03d356b91668cdb928463ef88f8177c3bb80f9074cf572b2374f"
+      "sha256": "5f3c9fd6cb30df1ccb06965a36abae5e0df3d919babb3f99758ecab0b00169ef"
     },
     {
       "path": "en/razgovory-o-kino/index.html",
@@ -1414,7 +1418,7 @@
     },
     {
       "path": "en/tickets-buy/index.html",
-      "sha256": "927d0700b497dacc53fb2a070531a6d4991688fcf16d71a8d010f4df612eb90e"
+      "sha256": "79bf2be0642aa28f24fb5d11a493d963b8847d6d049cafad950193bcb9316d2c"
     },
     {
       "path": "en/tickets/index.html",
@@ -1890,7 +1894,7 @@
     },
     {
       "path": "razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "d45865d6808ad16a24cc5b0603c916e649dc5f32d179f24599588ba4df645cf8"
+      "sha256": "184afc7071b6813c3b38de1c6046d5a127c376d7163dc7c0a5e5a146338586df"
     },
     {
       "path": "razgovory-o-kino/index.html",
@@ -1970,7 +1974,7 @@
     },
     {
       "path": "tickets-buy/index.html",
-      "sha256": "989fa4a7fda53ae2c31c46394fa59d6583c99cd50fab0990b3f0eb77af3a8ab4"
+      "sha256": "01f8a09c648714de655bbf1feccd7e7918eda98380af8f466d50acd8c3f6d69f"
     },
     {
       "path": "tickets-scan/index.html",
@@ -2046,17 +2050,17 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "c4a2f99a9a269bfc80fb18b22a400946caf42b461274b9a8f2ddccbe77f65a8c",
+  "changelog_sha256": "b017ccdd3e6c3310b8b5f7dc49d733f25d921f7226da1b8e88d5871d253c2bb4",
   "recent_versions": [
+    1043,
+    1042,
+    1041,
     1040,
     1039,
     1038,
     1037,
     1036,
     1035,
-    1034,
-    1033,
-    1032,
-    1031
+    1034
   ]
 }
