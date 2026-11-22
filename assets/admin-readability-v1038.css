@@ -1,0 +1,195 @@
+/* Shared typography for the working pages under /admin/. */
+.admin-readable {
+  --admin-text-size: 1rem;
+  --admin-support-size: .875rem;
+  --admin-target-size: 44px;
+}
+
+html.admin-readable body {
+  font-size: var(--admin-text-size);
+}
+
+html.admin-readable body :is(button, input[type="button"], input[type="submit"], input[type="reset"]):not(:where(#ba-preview-buttons *, #ba-sim-buttons *)) {
+  box-sizing: border-box;
+  min-inline-size: var(--admin-target-size);
+  min-block-size: var(--admin-target-size);
+  max-inline-size: 100%;
+  font-size: var(--admin-text-size);
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable body :is(button, a[href], summary, input, select, textarea):focus-visible {
+  outline: 2px solid var(--a11y-fg, var(--gold, #d6b57a));
+  outline-offset: 2px;
+}
+
+html.admin-readable body :is(
+  a.mini-btn, a.btn-small, a.ed-button, a.button, a.team-action,
+  a.nav-back, a.ed-back, a.crm-team-link, .work-links a
+):not([hidden]) {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-inline-size: var(--admin-target-size);
+  min-block-size: var(--admin-target-size);
+  max-inline-size: 100%;
+  font-size: var(--admin-text-size);
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable #admNav > button,
+html.admin-readable #root .crm-navbox .tabs > button,
+html.admin-readable #admSectionIndex .section-nav-rail > a,
+html.admin-readable body :is(.crew-nav, .project-sections, .ba-tabs, .nl2-tabs, .team-sections)
+  > :is(a, button) {
+  box-sizing: border-box;
+  min-inline-size: var(--admin-target-size);
+  min-block-size: var(--admin-target-size);
+  font: 600 var(--admin-text-size)/1.35 Inter, system-ui, sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable :is(#admNav, #admSectionIndex, #root .crm-navbox)
+  :is([aria-current], :focus-visible) {
+  outline-offset: -3px;
+}
+
+.admin-readable #admNav .badge {
+  padding-inline: .4em;
+  font-size: var(--admin-support-size);
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+html.admin-readable body :is(.adm-hs, .crm-scroll, .section-nav-arrow, [data-dialog-close]) {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+html.admin-readable body :is(.data-actions, .crm-active-filters, .adm-record-actions)
+  :is(.mini-btn, .btn-small, button),
+html.admin-readable #identity :is(button, summary),
+html.admin-readable .ed-bottom :is(#ed-export, #ed-reset),
+html.admin-readable #csv-form input[type="file"] {
+  font-size: var(--admin-text-size);
+}
+
+html.admin-readable body summary {
+  box-sizing: border-box;
+  min-block-size: var(--admin-target-size);
+  align-content: center;
+  font-size: var(--admin-text-size);
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable body :is(.work-nav-settings, .crm-nav-settings, .ed-picker) summary,
+html.admin-readable body .ba-tools-toggle {
+  font-size: var(--admin-text-size);
+}
+
+html.admin-readable body .sec-title {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+html.admin-readable body :is(.gate label, .ed-wrap label, .admin-filter, .participants-controls label),
+html.admin-readable body #root :is(label, .field > span),
+html.admin-readable body #editor :is(label, .field > span),
+html.admin-readable #eventParticipants .participants-controls label {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: var(--admin-text-size);
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable body :is(
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="hidden"]),
+  textarea, select
+) {
+  box-sizing: border-box;
+  min-block-size: var(--admin-target-size);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-size: var(--admin-text-size);
+  line-height: 1.45;
+}
+
+html.admin-readable body :is(
+  .hint, .ed-help, .err, .form-error, .loaded-at, .adm-who, .editor-note,
+  .work-action-status, .work-field-error, .work-form-status, .team-link small,
+  .ba-button-row p, .ba-map-path, .ba-file-button
+) {
+  font-size: var(--admin-support-size);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+html.admin-readable :is(.record .meta, .detail dt, .activity-record small, .tk-open-go),
+html.admin-readable #identity span,
+html.admin-readable #ba-preview-target {
+  font-size: var(--admin-support-size);
+}
+
+html.admin-readable body :is(.work-table-scroll, .crm-list-scroll, .participants-table) :is(th, td) {
+  font-size: .9375rem;
+  line-height: 1.45;
+}
+
+.admin-readable .gate .pw-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.admin-readable .gate .pw-row input {
+  flex: 1 1 10rem;
+  padding-inline: 1rem;
+}
+
+.admin-readable .gate .pw-toggle {
+  position: static;
+  padding-inline: .75rem;
+}
+
+.admin-readable .gate .btn,
+.admin-readable .gate .pw-toggle {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.admin-readable .nav-in {
+  flex-wrap: wrap;
+  gap: .25rem .75rem;
+}
+
+.admin-readable .ba-tools-toggle:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (max-width: 600px) {
+  .admin-readable :is(.ed-bottom, .ed-actions, .crm-editor-actions) {
+    gap: .5rem;
+  }
+
+  html.admin-readable body .ed-header .ed-back {
+    white-space: normal;
+  }
+}

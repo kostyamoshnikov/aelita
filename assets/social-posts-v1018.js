@@ -22,6 +22,8 @@
     social_link_missing: 'Для одной из выбранных площадок ещё нет подключения. Откройте «Подключить соцсети» или уберите текст для этой площадки.',
     social_vk_photo_access: 'У токена ВКонтакте нет доступа к фотографиям. Обновите токен или уберите фото.',
     social_sender_not_ready: 'Таймер отправителя ещё не подтвердил готовность. Проверьте строку статуса в очереди.',
+    social_sender_link_waiting: 'Отправитель ещё не проверил это подключение. Подождите до следующего запуска таймера и нажмите «Запланировать» снова.',
+    social_sender_link_unreadable: 'Отправитель не может прочитать сохранённый токен. Подключение нужно проверить до планирования.',
     not_authenticated: 'Войдите в админку снова.',
     social_not_configured: 'Очередь AELITA CREW ещё не подключена к админке.',
     crew_upgrade_required: 'Для доступа к очереди нужно обновить веб-приложение AELITA CREW.',
@@ -45,7 +47,7 @@
   const time = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Moscow' });
   const queueViews = { queue: 'В очереди', review: 'Требуют сверки', history: 'История', all: 'Все публикации' };
   let draftId = '', review = null, projects = [], listRequest = 0, queuePage = 1;
-  let senderStatusRequest = 0;
+  let senderStatusRequest = 0, senderStatusTimer = 0;
   let connectionProjects = [], connectionBusy = false, connectionVersion = '';
   let dirty = false, busy = false, editing = null, aiChannel = '', aiDraftId = '', campaignSources = {};
 
@@ -278,6 +280,8 @@
     const actions = node('div', null, 'ed-actions social-queue-actions');
     if (post.editable && Date.parse(post.scheduledAt) > Date.now()) {
       actions.append(queueButton('Редактировать', () => fillPost(post)));
+    }
+    if (post.cancellable ?? post.editable) {
       const cancel = queueButton('Отменить публикацию', button => {
         if (!window.confirm('Отменить «' + (post.label || 'Публикация без названия') + '»?')) return;
         queueChange(button, { action: 'social_cancel', id: post.id, revision: post.revision }, 'Публикация отменена. Запись доступна в истории.');
@@ -318,10 +322,12 @@
   }
 
   async function loadWorkerStatus() {
+    clearTimeout(senderStatusTimer);
+    const project = $('project').value;
     const job = ++senderStatusRequest;
-    const current = () => job === senderStatusRequest && activeToken === token();
+    const current = () => job === senderStatusRequest && activeToken === token() && project === $('project').value;
     try {
-      const { sender } = await api({ action:'social_sender_status' });
+      const { sender } = await api({ action:'social_sender_status', ...(project ? {project} : {}) });
       if (!current()) return;
       const checkedTime = Date.parse(sender?.checkedAt);
       if (!Number.isFinite(checkedTime)) {
@@ -329,8 +335,28 @@
         return;
       }
       const checked = date(sender.checkedAt);
-      if (Date.now() - checkedTime >= 5 * 60_000) {
+      const age = Date.now() - checkedTime;
+      if (age < 0 || age >= 5 * 60_000) {
         status('worker-status', 'Отправитель давно не проверял очередь. Последняя проверка — ' + checked + '.', true);
+        return;
+      }
+      if (project && sender.connectionStatus) {
+        const connectionStatus = sender.connectionStatus;
+        const legacy = sender.legacyPlatforms ?? (sender.enabled ? sender.platforms || [] : []);
+        const ready = channels.filter(channel => Object.hasOwn(connectionStatus,channel.id)
+          ? connectionStatus[channel.id] === 'ready'
+          : legacy.includes(channel.id)).map(channel => channel.label);
+        const waiting = channels.filter(channel => connectionStatus[channel.id] === 'waiting').map(channel => channel.label);
+        const blocked = channels.filter(channel => connectionStatus[channel.id] === 'unreadable').map(channel => channel.label);
+        const notes = ['Таймер работает. Проверено — ' + checked + '.'];
+        if (ready.length) notes.push('Готовы к отправке: ' + ready.join(', ') + '.');
+        if (blocked.length) notes.push('Отправитель не может прочитать подключение: ' + blocked.join(', ') + '. Очередь для этих площадок ждёт.');
+        if (waiting.length) {
+          notes.push('Ожидают проверки таймером: ' + waiting.join(', ') + '.');
+        }
+        if (waiting.length || blocked.length) senderStatusTimer = setTimeout(loadWorkerStatus, 30_000);
+        if (!ready.length && !blocked.length && !waiting.length) notes.push('У проекта пока нет готовых подключений.');
+        status('worker-status', notes.join(' '), blocked.length > 0);
         return;
       }
       const ready = sender?.platforms?.map(id => channels.find(channel => channel.id === id)?.label).filter(Boolean) || [];
@@ -401,7 +427,7 @@
       const messages = { disconnect:'Площадка отключена.', check:'Доступ подтверждён · ', save:'Подключено · ' };
       status('connect-status', messages[action] + (action === 'disconnect' ? '' : result.connections[platform].label));
       if (action === 'save') await loadProjects(dirty || editing || busy ? $('project').value : project.id);
-      loadWorkerStatus();
+      else loadWorkerStatus();
     } catch (error) {
       if (error.code === 'social_link_changed') await loadConnections(project.id);
       status('connect-status', errorMessage(error), true);
@@ -507,7 +533,7 @@
     $('queue-pages').hidden = true;
     loadQueue();
   }
-  $('project').addEventListener('change', showFirstPage);
+  $('project').addEventListener('change', () => { showFirstPage(); loadWorkerStatus(); });
   $('connect-form').addEventListener('submit', event => { event.preventDefault(); changeConnection('save'); });
   $('connect-check').addEventListener('click', () => changeConnection('check'));
   $('connect-disconnect').addEventListener('click', () => changeConnection('disconnect'));
@@ -521,7 +547,10 @@
   $('queue-view').addEventListener('change', showFirstPage);
   $('queue-prev').addEventListener('click', () => { if (queuePage > 1) { queuePage--; loadQueue(); } });
   $('queue-next').addEventListener('click', () => { if (!$('queue-next').disabled) { queuePage++; loadQueue(); } });
-  $('reload').addEventListener('click', () => { loadWorkerStatus(); if (projects.length) loadQueue(); else loadProjects(); });
+  $('reload').addEventListener('click', () => {
+    if (projects.length) { loadWorkerStatus(); loadQueue(); }
+    else loadProjects();
+  });
   $('review-close').addEventListener('click', () => { closeReview(); $('preview').focus(); });
   $('edit-close').addEventListener('click', () => {
     if (dirty && !window.confirm('Закрыть редактирование без сохранения?')) return;
@@ -574,6 +603,7 @@
       $('project').replaceChildren(...projects.map(project => new Option(project.name, project.id)));
       const requested = preferredProject || new URLSearchParams(location.search).get('project');
       if (requested && projects.some(project => project.id === requested)) $('project').value = requested;
+      loadWorkerStatus();
       $('preview').disabled = !projects.length;
       if (projects.length) { status('queue-status', ''); await loadQueue(); }
       else status('queue-status', 'Подключите площадку в этом разделе или включите публикации в настройках проекта CREW.');
@@ -587,6 +617,5 @@
 
   loadProjects();
   loadConnections();
-  loadWorkerStatus();
   initAi();
 })();

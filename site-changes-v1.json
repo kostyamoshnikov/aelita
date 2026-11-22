@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1032,
+  "release": 1038,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -246,59 +246,59 @@
     },
     {
       "path": "admin/access/index.html",
-      "sha256": "84e04bdd76861d7e8a6ae852ac1c80f6bea7e0fd93ddb742e25e0ca8be33dc9c"
+      "sha256": "f8f8b866ae2df14fe5495748f8a14c4e629325a58c3796f1ee4b65d210932c98"
     },
     {
       "path": "admin/bot/index.html",
-      "sha256": "e687ad1086a1c0b1f7e0e06539d262bb56fd091639aa1fa98072afc00e31dd54"
+      "sha256": "04b18bb0fd3b5d0572ae29c4a19098793ee6d0b685fdd4c03ae279dd82fcc32b"
     },
     {
       "path": "admin/crew-ops/index.html",
-      "sha256": "36e97128219ea4f4ae1e38cf7a61292f173e5522072c8a5683cd7151b5570fcf"
+      "sha256": "08f6b12cda8da7c5a5123eca6a8a8198cc6beb3e4d3529dba8b06cc1c71af8c9"
     },
     {
       "path": "admin/crm/index.html",
-      "sha256": "7975a6106d02c3cac5d1d8755e16fcac38112bdacc4ef45395d5b2c2cd6e8ff5"
+      "sha256": "a24221abf42996e62d0fc4fb59731fd6aff11c0537db70dc1cb3e0888ae8285c"
     },
     {
       "path": "admin/directory/index.html",
-      "sha256": "f511ff81469ad54131a20001715d93a9c015edd94769fc20a0bd331a04fe0aeb"
+      "sha256": "c592b732f6982cb234c23c600e26708486231f723c203c756a6bab0f1d8d7fa8"
     },
     {
       "path": "admin/editor/index.html",
-      "sha256": "1e91fd858a87b1e25c433d7db2d19dc686f71e6fad40a44789e0907fc1300db9"
+      "sha256": "04f2b40e9eec1e7f6578eee00003093fa83cbf7e9e971fb537eb248df4469179"
     },
     {
       "path": "admin/events/index.html",
-      "sha256": "6831cb4a61bc6c1d31ea8c11121429dde1669f2897371db166bd23b6144ca20b"
+      "sha256": "d9171fc0e17fb7d762b08c122b3775f15f9319c31e5c4981328be14f3132a646"
     },
     {
       "path": "admin/index.html",
-      "sha256": "d76fbf52fe058e90d70fb4fe48655792a67f654a0cfbc072fa86bfe4fdbec558"
+      "sha256": "cea41ff4bdf75b310acdc9611f4a07bb78d8bed1a9eb280e2270162f79f3c078"
     },
     {
       "path": "admin/mail-texts/index.html",
-      "sha256": "5a47f9aa9c614babec444f404f323f27907a4d2f00a65366ddcdf46f5fe56164"
+      "sha256": "0262c3867445d8d5f1043a638515ea1897f5e967496c480c912f378dabdfcea6"
     },
     {
       "path": "admin/pages/index.html",
-      "sha256": "09040b47a1c955e9a40434c014148d449f594160957d62df5d83217f61a3fc66"
+      "sha256": "7ec1ba8f64cc0d33f573b2c1538c76350d3ac3d76c20e8ac97979eb4084f246f"
     },
     {
       "path": "admin/promocodes/index.html",
-      "sha256": "1d961b435178425235513d4b6d9ca8b2c3b5e5027dc3c29ebfa0a695013caf09"
+      "sha256": "8c6b151615908815fd0a7d3d8f0803ae8882d6ce0c749e89c58ef41cc3a1fff2"
     },
     {
       "path": "admin/site-nav/index.html",
-      "sha256": "72d383218e7062442fd1075acc75a0c78f8a2bc185bf52f0505a3e7846cddc71"
+      "sha256": "f438ffa91a9cfbfc63b9c1ff4547319983f3a7d40948200f13ba9319d0b31760"
     },
     {
       "path": "admin/social-posts/index.html",
-      "sha256": "2c95707f72cbdbc16c9af0aeeacb23db350a99834e8b0d469035b50310623f44"
+      "sha256": "0d48909e9bf99f87de65166ffc84934c2b9acc07ab0b03258cdf6e147c75431a"
     },
     {
       "path": "admin/team/index.html",
-      "sha256": "7a685dd9ec5b9de697b3c9c5c127f6e5490dc10518bf1d212787c9b22ad2425f"
+      "sha256": "5dcbd5bad7f92557807feed3efb47496b6ae3d5ebb795f189f53ad2dc3d093aa"
     },
     {
       "path": "ai-test/index.html",
@@ -353,6 +353,10 @@
       "sha256": "57039685427166725599922ff5f609e5f0861afebca793e47f39ebcc3901964e"
     },
     {
+      "path": "assets/admin-readability-v1038.css",
+      "sha256": "51928cccac59aee4cc3367309ec8ae75e4f6b9293b660944394f3b19ff4ff5b4"
+    },
+    {
       "path": "assets/admin-snapshot.js",
       "sha256": "eb393b9e6199c43d8cb815e2dc7707bab813cd73559c49f79651ebc22f49c6e1"
     },
@@ -375,6 +379,10 @@
     {
       "path": "assets/attendance-v740.js",
       "sha256": "34165d69f6ce26d30e420153b8ce70cd1a826acea1f37c963a72070876266495"
+    },
+    {
+      "path": "assets/bot-admin.css",
+      "sha256": "e30210e573f44f9da3e0128e84a9a025b47058239f85c7c5c76da729eaf919d8"
     },
     {
       "path": "assets/bot-admin.js",
@@ -650,7 +658,7 @@
     },
     {
       "path": "assets/social-posts-v1018.js",
-      "sha256": "8475b9967567a3828612305f4f5d877bc2222e1910f4ecc711a1db8e0b9b23b2"
+      "sha256": "3e0755fed53992ed63e9600afb09551e9c61f02dd1820146fdfca47253b14acf"
     },
     {
       "path": "assets/staff-access-v796.js",
@@ -786,7 +794,7 @@
     },
     {
       "path": "documents/index.html",
-      "sha256": "de7ce92a80809c226dd130f067116085bee5a4b71bf0c8965830f3c5fe64dfd2"
+      "sha256": "31d3627d983175f3a917bf76e3d9a097142c9a99ad9271788186621ebd8fc364"
     },
     {
       "path": "dom-arhitektora/index.html",
@@ -962,7 +970,7 @@
     },
     {
       "path": "en/documents/index.html",
-      "sha256": "fc55a0129ae7816dfed1a8da86bfd415de04995a81d595ddc48473d989a69427"
+      "sha256": "220f97baa6bd8df21aa65ee7febcc83fc8a73a4ac7c651877ea70ddf99af93c4"
     },
     {
       "path": "en/dom-arhitektora/index.html",
@@ -1006,7 +1014,7 @@
     },
     {
       "path": "en/faq/index.html",
-      "sha256": "3016824af496aa69d9b774a719c4784da6aa4d6518eb411101aa3acca7294ae5"
+      "sha256": "4fce95541fd6746424c4f39fa292c08623069102da9faf5ef5ea6b42ba051060"
     },
     {
       "path": "en/festival-team/index.html",
@@ -1402,7 +1410,7 @@
     },
     {
       "path": "en/tickets-buy/index.html",
-      "sha256": "5d8978732cb7c038a5f474125ae9dbd57629362581cf6c788396108c7a46a206"
+      "sha256": "927d0700b497dacc53fb2a070531a6d4991688fcf16d71a8d010f4df612eb90e"
     },
     {
       "path": "en/tickets/index.html",
@@ -1498,7 +1506,7 @@
     },
     {
       "path": "faq/index.html",
-      "sha256": "c32f09453607d047fb4fb6bc09cdc7f92b9b6a1dd78f254c7409fc9d6f7d62f3"
+      "sha256": "1ea43adbf453586d844f68707b25dac661b80e81d489bcedf521eebc955d261e"
     },
     {
       "path": "festival-team/index.html",
@@ -1958,7 +1966,7 @@
     },
     {
       "path": "tickets-buy/index.html",
-      "sha256": "e2d8c2da42c0e83aa3bc3e218606aceb5de41e386eda128e6f166a88e5f64c1f"
+      "sha256": "989fa4a7fda53ae2c31c46394fa59d6583c99cd50fab0990b3f0eb77af3a8ab4"
     },
     {
       "path": "tickets-scan/index.html",
@@ -2034,17 +2042,17 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "8f580a4d625f4c03eae6bc2a80f6c329540c506a7d0c46d86441b6f2b66506b1",
+  "changelog_sha256": "b05f19e56d5463e1da6d9dbc69fc7fb951df3ca79b3af91da42ddd721c7daa93",
   "recent_versions": [
+    1038,
+    1037,
+    1036,
+    1035,
+    1034,
+    1033,
     1032,
     1031,
     1030,
-    1029,
-    1028,
-    1027,
-    1026,
-    1025,
-    1024,
-    1023
+    1029
   ]
 }

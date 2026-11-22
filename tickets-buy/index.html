@@ -448,6 +448,7 @@ body.checkout-complete #steps,body.checkout-complete #step2-sum{display:none!imp
       <input class="ym-disable-keys" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
       <div class="field-hint"><a href="#" onclick="sendLoginCode(true);return false">Прислать код ещё раз</a><span id="acct-code-cancel" hidden> · <a href="#" onclick="cancelLogin();return false">Отмена</a></span></div>
     </div>
+    <p class="field-hint"><a href="/faq/#payment" target="_blank" rel="noopener">Безопасная оплата и возврат</a></p>
     <div class="checkout-consents"><label class="cb-item" style="margin:6px 0 4px"><input type="checkbox" id="pdConsent"><span>Согласен(на) на <a href="/consent" style="color:var(--gold)">обработку персональных данных</a></span></label><label class="cb-item" id="checkout-news-row"><input type="checkbox" id="newsletterConsent"><span>Присылать анонсы и новости AELITA PRODUCTION (<a href="/consent#rassylka">правила рассылки</a>)</span></label></div>
   </div>
   <div class="msg" id="msg"></div>
@@ -1562,7 +1563,7 @@ function renderWaitlist(st){
   for(let i = 1; i <= 4; i++){ const o = document.createElement('option'); o.value = i; o.textContent = i + (i === 1 ? ' место' : ' места'); sel.appendChild(o); }
   const lab = document.createElement('label');
   const cb = document.createElement('input'); cb.type = 'checkbox';
-  lab.append(cb, ' Согласен(на) на обработку персональных данных — ', Object.assign(document.createElement('a'), {href:'/privacy/', target:'_blank', textContent:'политика'}));
+  lab.append(cb, ' Согласен(на) на обработку данных для листа ожидания и писем о свободных местах. ', Object.assign(document.createElement('a'), {href:'/consent/', target:'_blank', rel:'noopener', textContent:'текст согласия'}));
   const b = document.createElement('button'); b.type = 'button'; b.className = 'zoom-btn'; b.textContent = 'Встать в очередь';
   const msg = document.createElement('p');
   b.onclick = async () => {

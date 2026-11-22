@@ -29,3 +29,48 @@
 .ba-flow-neighbors{display:flex;flex-wrap:wrap;gap:8px}.ba-flow-neighbors p{flex-basis:100%}.ba-flow-neighbors button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
 
 .ba-code-block-preview{margin:8px 0;padding:12px;border:1px solid currentColor;border-radius:4px;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:rgba(128,128,128,.12)}
+
+.ba-tools.ed-bottom {
+  padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+}
+.ba-tools-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 7px 12px;
+  border: 1px solid #77674b;
+  color: var(--gold);
+  cursor: pointer;
+  list-style: none;
+}
+.ba-tools-toggle::-webkit-details-marker { display: none; }
+.ba-tools-toggle::after {
+  content: "";
+  flex: 0 0 8px;
+  height: 8px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(-135deg);
+}
+.ba-tools[open] .ba-tools-toggle::after { transform: rotate(45deg); }
+.ba-tools:not([open]) :is(.ba-tools-hide, .ba-tools-content),
+.ba-tools[open] .ba-tools-show { display: none; }
+.ba-tools-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -3px;
+}
+.ba-tools-content {
+  max-height: 45vh;
+  max-height: 45dvh;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: 10px 3px 3px;
+}
+.ba-tools-content .ed-actions > :is(button, label) {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ba-tools-content .ba-file-button input { max-width: 100%; }
