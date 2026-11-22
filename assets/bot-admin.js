@@ -1,4 +1,4 @@
-import {mountFlow} from './bot-flow-v1.mjs?v=196';
+import {mountFlow,searchFlow} from './bot-flow-v1.mjs?v=196&rev=1039';
 import {legacyPlain,screenView,TEMPLATE_VARIABLES,currentEvent,renderTemplate,eventId,afishaAnnouncements,renderAfisha,normalizeEntities,editEntities,richSegments,ENTITY_TYPES,safeURL,validateTemplateEntities} from './bot-admin-domain.mjs?v=196';
 import {createSimulation,scenarioMap} from './bot-simulator-v1.mjs?v=196';
 const $=id=>document.getElementById(id),API='https://api.aelita-production.ru/admin/inbox';
@@ -9,11 +9,87 @@ const editorScope=staffScope();
 function token(){try{return editorScope&&editorScope===staffScope()?localStorage.getItem('aelita_admin_token'):null;}catch{return null;}}
 const LOCAL='aelita_bot_editor_local_v830:'+editorScope;
 function id(prefix='web:'){return prefix+Array.from(crypto.getRandomValues(new Uint8Array(12)),x=>x.toString(16).padStart(2,'0')).join('');}
-function status(text,bad=false){$('ba-status').textContent=text||'';$('ba-status').className=bad?'ba-error':'ba-ok';}
+const pendingMessage = 'Выполняется…';
+const lockedControls = new Set();
+let actionFeedback = null;
+function feedback(id,text,bad=false){
+ const output=$(id);
+ output.textContent=text||'';
+ output.classList?.toggle('ba-error',bad);
+ output.classList?.toggle('ba-ok',!bad);
+}
+function status(text,bad=false){feedback(actionFeedback||'ba-status',text,bad);}
+function draftState(){
+ if(!S.view)return;
+ const text=dirtyText()?'Есть несохранённые правки в этой вкладке.'
+  :S.view.stale?'Есть новая публикация. Ваш черновик сохранён.'
+  :S.view.dirty?'В черновике есть неопубликованные изменения.'
+  :'Черновик совпадает с опубликованной версией.';
+ if($('ba-dirty').textContent!==text)$('ba-dirty').textContent=text;
+}
 function gate(){S.epoch++;S.review=null;S.view=null;S.events=null;S.previewEvents=null;$('ba-app').hidden=true;$('ba-gate').hidden=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());window.AelitaMobileFiles?.clear();}
 async function api(action,body={}){const t=token(),epoch=S.epoch;if(!t){gate();throw{code:'not_authenticated'};}let r;try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8',Authorization:'Bearer '+t},cache:'no-store',body:JSON.stringify({action,editorVersion:9,...body,...(!['bot_admin_read','bot_admin_export'].includes(action)?{opId:body.opId||id()}: {})}),signal:AbortSignal.timeout(20000)});}catch{throw{code:'bot_storage_unavailable'};}if(token()!==t||epoch!==S.epoch)throw{code:'superseded'};let d;try{d=await r.json();}catch{throw{code:'bot_storage_unavailable'};}if(token()!==t||epoch!==S.epoch)throw{code:'superseded'};if(r.status===401)gate();if(!r.ok||d.error)throw{code:d.error||'bot_storage_unavailable'};return d;}
-function busy(value){S.busy=value;document.querySelectorAll('#ba-app button,#ba-app select,#ba-app textarea,#ba-app input,dialog button,dialog input,dialog select').forEach(el=>el.disabled=value);if(!value&&S.view){syncRich();$('ba-members').hidden=!S.view.rights.members;$('ba-publish').disabled=!S.review;$('ba-save-text').disabled=S.view.content.screens[S.screen].dynamic&&S.screen!=='afisha'||S.baselineEntities.length&&!(S.view.capabilities?.contentRuntime>=4);if(S.screen==='afisha'&&!(S.view.capabilities?.contentRuntime>=3)){$('ba-afisha-mode').disabled=true;$('ba-save-text').disabled=true;}}}
-async function run(fn){if(S.busy)return;busy(true);try{await fn();}catch(e){if(e.code!=='superseded'){if(['event_source_changed','preview_required','publication_conflict','bot_runtime_not_ready'].includes(e.code))S.review=null;if(['unknown_variable','invalid_variable','rendered_text_too_long'].includes(e.code))$('ba-text').focus();if(['event_required','invalid_event_button','event_not_found'].includes(e.code))$('ba-event').focus();const text=errors[e.code]||'Не удалось выполнить действие. Повторите после проверки соединения.';status(text,true);for(const [dialog,out]of [['ba-button-dialog','ba-button-status'],['ba-review-dialog','ba-publish-status'],['ba-members-dialog','ba-member-status']])if($(dialog).open)$(out).textContent=text;}}finally{busy(false);}}
+function busy(value){
+ S.busy=value;
+ if(value){
+  const scopes=['#ba-app','dialog[open]:not(#ba-diag-dialog)'];
+  const selector=scopes.map(scope=>scope+' :is(button,select,textarea,input)').join(',');
+  for(const control of document.querySelectorAll(selector)){
+   if(control.disabled)continue;
+   lockedControls.add(control);
+   control.disabled=true;
+  }
+  return;
+ }
+ for(const control of lockedControls)control.disabled=false;
+ lockedControls.clear();
+ if(!S.view)return;
+ $('ba-members').hidden=!S.view.rights.members;
+ $('ba-publish').disabled=!S.review;
+ $('ba-save-text').disabled=current().dynamic&&S.screen!=='afisha';
+ $('ba-afisha-mode').disabled=S.screen==='afisha'&&!(S.view.capabilities?.contentRuntime>=3);
+ if($('ba-afisha-mode').disabled)$('ba-save-text').disabled=true;
+ syncRich();
+}
+function errorField(error){
+ if(error.field)return error.field;
+ if(['unknown_variable','invalid_variable','rendered_text_too_long'].includes(error.code))return 'ba-text';
+ if(['event_required','invalid_event_button','event_not_found'].includes(error.code))return 'ba-event';
+ return null;
+}
+async function run(fn,output,form){
+ if(S.busy)return;
+ const trigger=document.activeElement;
+ let focusOnError;
+ actionFeedback=output||null;
+ if(form)form.dataset.saving='1';
+ busy(true);
+ if(output)status(pendingMessage);
+ try{
+  await fn();
+ }catch(e){
+  if(e.code!=='superseded'){
+   if(['event_source_changed','preview_required','publication_conflict','bot_runtime_not_ready'].includes(e.code))S.review=null;
+   focusOnError=errorField(e);
+   const text=errors[e.code]||'Не удалось выполнить действие. Повторите после проверки соединения.';
+   const dialogOutput=[['ba-button-dialog','ba-button-status'],['ba-review-dialog','ba-publish-status'],['ba-members-dialog','ba-member-status']].find(([id])=>$(id).open)?.[1];
+   feedback(dialogOutput||output||'ba-status',text,true);
+  }
+ }finally{
+  if(form)delete form.dataset.saving;
+  busy(false);
+  if(output&&$(output).textContent===pendingMessage)feedback(output,'');
+  actionFeedback=null;
+  if(focusOnError){
+   const field=$(focusOnError);
+   if(['ba-button-label','ba-target-url','ba-member-id'].includes(focusOnError))field.setAttribute('aria-invalid','true');
+   field.closest?.('details')?.setAttribute('open','');
+   field.focus();
+  }else if(trigger?.isConnected&&!trigger.disabled&&document.activeElement===document.body){
+   trigger.focus({preventScroll:true});
+  }
+ }
+}
 function current(){return S.view.content.screens[S.screen];}
 const formatNames={bold:'Жирный',italic:'Курсив',underline:'Подчёркивание',strikethrough:'Зачёркивание',spoiler:'Спойлер',code:'Моноширинный',pre:'Блок кода',blockquote:'Цитата',text_link:'Ссылка'};
 function setRichContent(node,text,entities=[],onLink=null){
@@ -47,24 +123,60 @@ function formatSelection(type){
 for(const type of ENTITY_TYPES)$('ba-rich-'+type).onclick=()=>run(()=>formatSelection(type));
 $('ba-rich-clear').onclick=()=>run(()=>{S.entities=[];markTextChanged();});
 function local(){try{return JSON.parse(sessionStorage.getItem(LOCAL)||'null');}catch{return null;}}
-function saveLocal(){if(!S.view||!token()||current().dynamic&&S.screen!=='afisha')return;try{sessionStorage.setItem(LOCAL,JSON.stringify({screen:S.screen,lang:S.lang,text:$('ba-text').value,entities:S.entities,version:S.view.version,baseVersion:S.view.baseVersion,draftRevision:S.view.draftRevision,template:$('ba-template').checked,eventId:$('ba-event').value,...(S.screen==='afisha'?{afishaMode:$('ba-afisha-mode').value}:{}),at:new Date().toISOString()}));}catch{status('Не удалось сохранить текст в этой вкладке. Скопируйте его перед закрытием.',true);}}
+function saveLocal(){
+ if(!S.view||!token()||current().dynamic&&S.screen!=='afisha')return false;
+ try{
+  sessionStorage.setItem(LOCAL,JSON.stringify({screen:S.screen,lang:S.lang,text:$('ba-text').value,entities:S.entities,version:S.view.version,baseVersion:S.view.baseVersion,draftRevision:S.view.draftRevision,template:$('ba-template').checked,eventId:$('ba-event').value,...(S.screen==='afisha'?{afishaMode:$('ba-afisha-mode').value}:{}),at:new Date().toISOString()}));
+  return true;
+ }catch{
+  feedback(actionFeedback||'ba-text-status','Не удалось создать локальную копию. Текст остался в редакторе.',true);
+  return false;
+ }
+}
 function removeLocal(){try{sessionStorage.removeItem(LOCAL);}catch{}$('ba-local').hidden=true;}
 function offerLocal(){const d=local();$('ba-local').hidden=!d;if(d)$('ba-local-note').textContent=(S.view?.content.screens[d.screen]?.label||'Раздел')+' · '+(d.lang==='en'?'English':'Русский')+' · '+new Date(d.at).toLocaleString('ru-RU');}
 function dirtyText(){if(!S.view)return false;if(S.screen==='afisha')return $('ba-afisha-mode').value!==S.baselineMode||$('ba-afisha-mode').value==='custom'&&$('ba-text').value!==S.baseline;return !current().dynamic&&($('ba-text').value!==S.baseline||$('ba-template').checked!==S.baselineTemplate||$('ba-event').value!==S.baselineEvent||JSON.stringify(S.entities)!==JSON.stringify(S.baselineEntities));}
 function optionList(select,items,selected){select.replaceChildren();items.forEach(([label,value])=>select.add(new Option(label,value)));select.value=selected;}
-function button(text,fn,quiet=true){const b=document.createElement('button');b.type='button';b.textContent=text;if(quiet)b.className='ed-quiet';b.onclick=()=>run(fn);return b;}
+function button(text,fn,quiet=true,output){
+ const b=document.createElement('button');b.type='button';b.textContent=text;
+ if(quiet)b.className='ed-quiet';
+ b.onclick=()=>run(fn,output);
+ return b;
+}
+function renderScreenChoices(){
+ if(!S.view)return;
+ const query=$('ba-screen-search').value.trim();
+ const matching=query?new Set(searchFlow(S.view.content,query)):null;
+ const screens=Object.values(S.view.content.screens);
+ const items=screens.filter(screen=>!matching||matching.has(screen.id)||screen.id===S.screen);
+ optionList($('ba-screen'),items.map(screen=>[screen.label,screen.id]),S.screen);
+ $('ba-search-count').textContent=matching
+  ?(matching.size?'Найдено разделов: '+matching.size+'.':'Совпадений нет.')
+   +(!matching.has(S.screen)?' Текущий раздел остаётся в списке.':'')
+  :'';
+}
+function changeContext(key,id){
+ const control=$(id),next=control.value;
+ control.value=S[key];
+ if(!S.view||next===S[key])return;
+ return run(async()=>{
+  await saveText();
+  S[key]=next;
+  paint(S.view);
+  status('Открыт раздел «'+current().label+'» · '+(S.lang==='en'?'English':'Русский')+'.');
+ },'ba-selector-status');
+}
 function paint(v){
  S.view=v;S.previewEvents=null;if(!v.content.screens[S.screen])S.screen='welcome';S.review=null;$('ba-publish').disabled=true;
- optionList($('ba-screen'),Object.values(v.content.screens).map(s=>[s.label,s.id]),S.screen);$('ba-lang').value=S.lang;
+ renderScreenChoices();$('ba-lang').value=S.lang;
  $('ba-version').textContent='Версия '+v.version+(v.publishedAt?' · '+new Date(v.publishedAt).toLocaleString('ru-RU'):' · исходное содержание');
- $('ba-dirty').textContent=v.stale?'Есть новая публикация. Ваш черновик сохранён.':v.dirty?'В черновике есть неопубликованные изменения.':'Черновик совпадает с опубликованной версией.';
  const s=current(),l=s.locales[S.lang];$('ba-title').textContent=s.label;$('ba-translation').hidden=S.lang!=='en'||l.translationOf>=s.locales.ru.revision;$('ba-translation-ok').hidden=S.lang!=='en';$('ba-dynamic').hidden=!s.dynamic;$('ba-text-label').hidden=s.dynamic;
  S.baselineTemplate=!!l.template;S.baselineEvent=s.eventId||'';$('ba-template').checked=S.baselineTemplate;$('ba-data-settings').hidden=s.dynamic;eventChoices(S.baselineEvent);optionList($('ba-variable'),Object.entries(TEMPLATE_VARIABLES).map(([k,label])=>[label+' · {{'+k+'}}',k]),'event.title');
  const afisha=s.id==='afisha',ann=afisha?afishaAnnouncements(v.content,S.lang):null;S.baselineMode=ann===null?'legacy':ann===''?'none':'custom';$('ba-afisha-mode').value=S.baselineMode;$('ba-afisha-mode-label').hidden=!afisha;$('ba-afisha-server-note').hidden=!afisha||v.capabilities?.contentRuntime>=3;
  S.baseline=afisha?ann||'':l.format==='Markdown'?legacyPlain(l.text):l.text;S.baselineEntities=JSON.parse(JSON.stringify(l.entities||[]));S.entities=JSON.parse(JSON.stringify(S.baselineEntities));S.richText=S.baseline;$('ba-text').value=S.baseline;$('ba-text').maxLength=afisha?1200:4000;$('ba-text-caption').textContent=afisha?'Анонсы без даты':'Сообщение посетителю';$('ba-text-label').hidden=s.dynamic&&(!afisha||S.baselineMode!=='custom');$('ba-save-text').disabled=s.dynamic&&!afisha;$('ba-save-text').textContent=afisha?'Сохранить анонсы в черновик':'Сохранить текст в черновик';$('ba-text-hint').textContent=afisha?'Свой текст — до 1200 знаков, без подстановок. RU и EN меняются отдельно. Даты, цены и ссылки событий берутся из каталога.':'До 4000 знаков. Выделения и ссылки задаются ниже. Поля {{…}} можно выделять целиком; макет показывает результат с текущими данными. Локальная копия сохраняется в этой вкладке.';
  $('ba-current-media').textContent=l.media?(l.media.type==='photo'?'К разделу прикреплено фото.':'Прикреплён файл: '+(l.media.name||'документ')):'Вложение не выбрано.';
  optionList($('ba-asset'),[['Выберите материал',''],...v.assets.map((a,i)=>[a.name|| (a.type==='photo'?'Фотография '+(i+1):'Документ '+(i+1)),String(i)])],'');
- syncRich();renderButtons();showTab(S.tab);offerLocal();
+ syncRich();renderButtons();showTab(S.tab);offerLocal();draftState();
 }
 function showTab(tab){S.tab=tab;for(const t of ['text','menu','media'])$('ba-'+t+'-pane').hidden=t!==tab;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===tab)));}
 async function saveText(){trackRichText();if(!dirtyText())return;saveLocal();if(S.screen==='afisha'){if(!(S.view.capabilities?.contentRuntime>=3))throw{code:'bot_runtime_not_ready'};const mode=$('ba-afisha-mode').value;if(!['legacy','custom','none'].includes(mode))throw{code:'invalid_announcements'};if(mode==='custom'&&!$('ba-text').value.trim())throw{code:'invalid_announcements'};const v=await api('bot_admin_change',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,patch:{kind:'announcements',screen:'afisha',lang:S.lang,text:mode==='legacy'?null:mode==='none'?'':$('ba-text').value}});removeLocal();paint(v);status('Анонсы сохранены в черновик. Публикация отдельно.');return;}const text=$('ba-text').value,template=$('ba-template').checked,event=$('ba-event').value;
@@ -78,7 +190,7 @@ function eventChoices(selected=''){
  const options=[['Без привязки к событию',''],...(S.events?.events||[]).map(e=>[e.ru.title+' · '+e.ru.status,e.id])];if(selected&&!options.some(x=>x[1]===selected))options.push(['Выбрано: '+selected+' · загрузите события',selected]);optionList($('ba-event'),options,selected);eventNote();
 }
 function eventNote(){const e=S.events?.events.find(e=>e.id===$('ba-event').value);$('ba-event-facts').textContent=e?renderTemplate('{{event.date}} · {{event.time}} {{event.timezone}}\n{{event.city}} · {{event.venue}}\n{{event.format}} · {{event.price}} · {{event.status}}',currentEvent(e),S.lang)+(S.lang==='en'&&e.en.fallbackFields?.length?'\nЧасть названий и адресов получена на языке источника. Проверьте английский макет.':''):$('ba-event').value?'Загрузите события, чтобы проверить актуальные данные.':'Событие не выбрано. Название компании и ссылка сайта доступны без него.';}
-function markTextChanged(){trackRichText();syncRich();saveLocal();S.review=null;$('ba-publish').disabled=true;$('ba-dirty').textContent='Текст или поля изменены. Сохраните черновик перед проверкой.';}
+function markTextChanged(){trackRichText();syncRich();saveLocal();S.review=null;$('ba-publish').disabled=true;draftState();}
 async function loadEvents(){await saveText();const d=await api('bot_admin_events');S.events=d.catalog;eventChoices(current().eventId||'');status('Данные событий загружены. Перед публикацией источник проверится ещё раз.');}
 function insertVariable(){if(S.entities.length&&!(S.view.capabilities?.contentRuntime>=5)){status(errors.bot_runtime_not_ready,true);return;}
  const key=$('ba-variable').value;if(!Object.hasOwn(TEMPLATE_VARIABLES,key))return;if(key.startsWith('event.')&&!$('ba-event').value){status(errors.event_required,true);return;}
@@ -89,11 +201,12 @@ async function withSaved(fn){await saveText();await fn();}
 async function patch(p){const v=await api('bot_admin_change',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,patch:p});paint(v);status('Изменение сохранено в черновик.');return v;}
 function renderButtons(){
  const root=$('ba-buttons');root.replaceChildren();const list=current().locales[S.lang].buttons;
+ const menuButton=(label,fn)=>button(label,fn,true,'ba-menu-status');
  for(const [i,b]of list.entries()){
   const article=document.createElement('article');article.className='ba-button-row';const h=document.createElement('h3');h.textContent=(i+1)+'. '+b.label+(b.visible?'':' · скрыта');const p=document.createElement('p');p.textContent=b.kind==='screen'?'Раздел: '+S.view.content.screens[b.target].label:b.kind==='url'?b.target:b.kind==='event'?(b.target==='buy'?'Покупка из связанного события':'Страница связанного события'):b.kind==='language'?'Смена языка':'Существующий сценарий бота';const controls=document.createElement('div');controls.className='ed-actions';
-  controls.append(button('Изменить',()=>withSaved(()=>openButton(b))),button(b.visible?'Скрыть':'Показать',()=>withSaved(()=>patch({kind:'button_toggle',screen:S.screen,lang:S.lang,buttonId:b.id,visible:!b.visible}))));
-  if(i)controls.append(button('Выше',()=>withSaved(()=>patch({kind:'button_move',screen:S.screen,lang:S.lang,buttonId:b.id,delta:-1}))));if(i+1<list.length)controls.append(button('Ниже',()=>withSaved(()=>patch({kind:'button_move',screen:S.screen,lang:S.lang,buttonId:b.id,delta:1}))));
-  controls.append(button('Удалить',()=>withSaved(async()=>{if(confirm('Удалить кнопку «'+b.label+'» из черновика?'))await patch({kind:'button_remove',screen:S.screen,lang:S.lang,buttonId:b.id});})));article.append(h,p,controls);root.append(article);
+  controls.append(menuButton('Изменить',()=>withSaved(()=>openButton(b))),menuButton(b.visible?'Скрыть':'Показать',()=>withSaved(()=>patch({kind:'button_toggle',screen:S.screen,lang:S.lang,buttonId:b.id,visible:!b.visible}))));
+  if(i)controls.append(menuButton('Выше',()=>withSaved(()=>patch({kind:'button_move',screen:S.screen,lang:S.lang,buttonId:b.id,delta:-1}))));if(i+1<list.length)controls.append(menuButton('Ниже',()=>withSaved(()=>patch({kind:'button_move',screen:S.screen,lang:S.lang,buttonId:b.id,delta:1}))));
+  controls.append(menuButton('Удалить',()=>withSaved(async()=>{if(confirm('Удалить кнопку «'+b.label+'» из черновика?'))await patch({kind:'button_remove',screen:S.screen,lang:S.lang,buttonId:b.id});})));article.append(h,p,controls);root.append(article);
  }
  if(!list.length)root.textContent='Кнопок пока нет. В дочернем разделе бот добавит выход в главное меню.';
 }
@@ -101,10 +214,28 @@ const routeNames={back:'Главное меню',contact:'Написать на�
 function targetKind(){const kind=$('ba-button-kind').value;$('ba-target-screen-label').hidden=kind!=='screen';$('ba-target-url-label').hidden=kind!=='url';$('ba-target-route-label').hidden=kind!=='route';$('ba-target-event-label').hidden=kind!=='event';}
 function openButton(b=null){S.button=b?{...b}:null;$('ba-button-status').textContent='';$('ba-button-label').value=b?.label||'';$('ba-button-kind').value=b?.kind||'screen';$('ba-button-visible').checked=b?.visible??true;
  optionList($('ba-target-screen'),Object.values(S.view.content.screens).map(s=>[s.label,s.id]),b?.kind==='screen'?b.target:'welcome');
- optionList($('ba-target-route'),S.view.content.routes.map(r=>[routeNames[r]||S.view.content.screens[r]?.label||'Существующее действие',r]),b?.kind==='route'?b.target:S.view.content.routes[0]);$('ba-target-url').value=b?.kind==='url'?b.target:'';$('ba-target-event').value=b?.kind==='event'?b.target:'details';targetKind();$('ba-button-dialog').showModal();}
-async function saveButton(){const kind=$('ba-button-kind').value,target=kind==='screen'?$('ba-target-screen').value:kind==='url'?$('ba-target-url').value:kind==='language'?'toggle':kind==='event'?$('ba-target-event').value:$('ba-target-route').value,label=$('ba-button-label').value;
+ optionList($('ba-target-route'),S.view.content.routes.map(r=>[routeNames[r]||S.view.content.screens[r]?.label||'Существующее действие',r]),b?.kind==='route'?b.target:S.view.content.routes[0]);$('ba-target-url').value=b?.kind==='url'?b.target:'';$('ba-target-event').value=b?.kind==='event'?b.target:'details';
+ $('ba-button-visibility').hidden=!b;
+ targetKind();$('ba-button-dialog').showModal();
+ for(const id of ['ba-button-label','ba-target-url'])$(id).removeAttribute?.('aria-invalid');
+ window.AelitaWorkForms?.clean($('ba-button-form'));
+ $('ba-button-label').focus();
+}
+async function saveButton(){
+ const kind=$('ba-button-kind').value,label=$('ba-button-label').value.trim();
+ if(!label)throw{code:'invalid_button',field:'ba-button-label'};
+ let target=kind==='screen'?$('ba-target-screen').value:kind==='language'?'toggle':kind==='event'?$('ba-target-event').value:$('ba-target-route').value;
+ if(kind==='url'){
+  try{target=safeURL($('ba-target-url').value);}
+  catch{throw{code:'invalid_url',field:'ba-target-url'};}
+ }
  if(S.button)await patch({kind:'button_edit',screen:S.screen,lang:S.lang,buttonId:S.button.id,label,targetKind:kind,target,visible:$('ba-button-visible').checked});
- else await patch({kind:'button_add',screen:S.screen,lang:S.lang,button:{id:id('b').slice(0,13),label,kind,target}});$('ba-button-dialog').close();}
+ else await patch({kind:'button_add',screen:S.screen,lang:S.lang,button:{id:id('b').slice(0,13),label,kind,target}});
+ window.AelitaWorkForms?.clean($('ba-button-form'));
+ $('ba-button-dialog').close();
+ feedback('ba-button-status','');
+ feedback('ba-menu-status','Кнопка сохранена в черновик.');
+}
 function preview(){
  const id=$('ba-preview-screen').value,lang=$('ba-preview-lang').value,binding=S.view.content.screens[id].eventId,event=binding?S.previewEvents?.events.find(e=>e.id===binding):null;if(binding&&!event)throw{code:'event_source_unavailable'};const s=screenView(S.view.content,id,lang,event?currentEvent(event):null);$('ba-preview-text').textContent=s.dynamic?(afishaAnnouncements(S.view.content,lang)!==null?renderAfisha(S.view.content,S.previewEvents,lang):'Афиша обновляется из каталога; прежние анонсы можно посмотреть в макете Telegram.'):s.format==='Markdown'?legacyPlain(s.text):s.text||'Перевод пока не заполнен.';
  if(s.entities?.length)setRichContent($('ba-preview-text'),s.text,s.entities,note=>$('ba-preview-target').textContent=note);$('ba-preview-media').hidden=!s.media;$('ba-preview-media').textContent=s.media?(s.media.type==='photo'?'Фотография':s.media.name||'Прикреплённый документ'):'';$('ba-preview-buttons').replaceChildren();$('ba-preview-target').textContent='';
@@ -161,29 +292,117 @@ function renderScenarioMap(){
  }
 }
 function openScenarioMap(){if(dirtyText()){status('Сначала сохраните текущий текст в черновик, затем откройте карту разделов.',true);return;}if(!S.view)return;$('ba-map-lang').value=S.lang;$('ba-map-filter').value='all';renderScenarioMap();$('ba-map-dialog').showModal();}
-async function review(){await saveText();const v=await api('bot_admin_preview',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion});S.view=v;S.previewEvents=v.eventCatalog||null;S.review={id:v.reviewId,opId:id()};optionList($('ba-preview-screen'),Object.values(v.content.screens).map(s=>[s.label,s.id]),S.screen);$('ba-preview-lang').value=S.lang;$('ba-changes').replaceChildren();v.changes.forEach(x=>{const li=document.createElement('li');li.textContent=x.label;$('ba-changes').append(li);});$('ba-publish-status').textContent='';$('ba-publish').disabled=false;preview();$('ba-review-dialog').showModal();}
+async function review(){
+ await saveText();
+ const v=await api('bot_admin_preview',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion});
+ S.review=null;
+ S.view=v;S.previewEvents=v.eventCatalog||null;
+ optionList($('ba-preview-screen'),Object.values(v.content.screens).map(s=>[s.label,s.id]),S.screen);
+ $('ba-preview-lang').value=S.lang;
+ $('ba-changes').replaceChildren();
+ for(const change of v.changes){
+  const li=document.createElement('li');li.textContent=change.label;$('ba-changes').append(li);
+ }
+ feedback('ba-publish-status','');
+ preview();
+ S.review={id:v.reviewId,opId:id()};
+ $('ba-review-dialog').showModal();
+}
 async function publish(){if(!S.review)return;const r=S.review;const v=await api('bot_admin_publish',{reviewId:r.id,opId:r.opId});paint(v);$('ba-review-dialog').close();status('Опубликована версия '+v.publishedVersion+'. Меню бота обновится при следующем открытии; кэш обновляется до 30 секунд.');}
 function saveFile(data,name){window.AelitaMobileFiles?.save(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),name,{guardToken:token()});}
 async function exportDraft(){await saveText();saveFile(await api('bot_admin_export'),'AELITA_bot_draft.json');status('Черновик подготовлен. Ссылка повторного скачивания появится рядом с кнопкой.');}
 function history(){const root=$('ba-history-list');root.replaceChildren();for(const h of S.view.history.filter(h=>Number.isSafeInteger(h.version)).concat([{version:0,at:null}])){const a=document.createElement('article'),p=document.createElement('p');p.textContent='Версия '+h.version+(h.at?' · '+new Date(h.at).toLocaleString('ru-RU'):' · исходное содержание');a.append(p,button('Перенести в черновик',()=>withSaved(async()=>{if(!confirm('Перенести выбранную версию в черновик? Текущий черновик можно предварительно скачать.'))return;const v=await api('bot_admin_restore',{version:h.version,draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion});paint(v);$('ba-history-dialog').close();status('Версия перенесена в черновик. Проверьте макет перед публикацией.');})));root.append(a);}$('ba-history-dialog').showModal();}
 const roleNames={owner:'Владелец',editor:'Редактор',sender:'Рассылки',viewer:'Просмотр'};
-function members(){const root=$('ba-member-list');root.replaceChildren();for(const m of S.view.members||[]){const a=document.createElement('article'),p=document.createElement('p');p.textContent=m.id+' · '+roleNames[m.role]+(m.anchored?' · закреплён в настройках':'');a.append(p);if(!m.anchored)a.append(button('Отозвать доступ',async()=>{if(!confirm('Отозвать доступ у Telegram ID '+m.id+'?'))return;const v=await api('bot_admin_member',{memberId:m.id,role:null});paint(v);members();}));root.append(a);}$('ba-member-status').textContent='';$('ba-members-dialog').showModal();}
-$('ba-refresh').onclick=()=>run(async()=>{if(dirtyText())saveLocal();paint(await api('bot_admin_read'));status('Каталог обновлён. Несохранённый текст можно восстановить из локальной копии.');});
-$('ba-screen').onchange=()=>{const next=$('ba-screen').value;run(async()=>{await saveText();S.screen=next;paint(S.view);});};$('ba-lang').onchange=()=>{const next=$('ba-lang').value;run(async()=>{await saveText();S.lang=next;paint(S.view);});};
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$('ba-text').onbeforeinput=e=>{const field=$('ba-text');S.editRange={start:field.selectionStart,end:field.selectionEnd,type:e.inputType||''};};$('ba-text').oninput=markTextChanged;$('ba-template').onchange=()=>{if($('ba-template').checked&&S.entities.length&&!(S.view.capabilities?.contentRuntime>=5)){$('ba-template').checked=false;status(errors.bot_runtime_not_ready,true);return;}markTextChanged();};$('ba-event').onchange=()=>{eventNote();markTextChanged();};$('ba-load-events').onclick=()=>run(loadEvents);$('ba-insert-variable').onclick=insertVariable;
+function members(){
+ const dialog=$('ba-members-dialog'),root=$('ba-member-list');
+ root.replaceChildren();
+ for(const member of S.view.members||[]){
+  const article=document.createElement('article'),note=document.createElement('p');
+  note.textContent=member.id+' · '+roleNames[member.role]+(member.anchored?' · закреплён в настройках':'');
+  article.append(note);
+  if(!member.anchored)article.append(button('Отозвать доступ',async()=>{
+   if(!confirm('Отозвать доступ у Telegram ID '+member.id+'?'))return;
+   const v=await api('bot_admin_member',{memberId:member.id,role:null});
+   paint(v);members();status('Роль отозвана.');
+  },true,'ba-member-status'));
+  root.append(article);
+ }
+ if(dialog.open)return;
+ $('ba-member-id').value='';
+ $('ba-member-id').removeAttribute?.('aria-invalid');
+ $('ba-member-role').value='editor';
+ feedback('ba-member-status','');
+ dialog.showModal();
+ window.AelitaWorkForms?.clean($('ba-member-form'));
+ $('ba-member-id').focus();
+}
+$('ba-refresh').onclick=()=>run(async()=>{
+ const unsaved=dirtyText();
+ if(unsaved&&!saveLocal())return;
+ paint(await api('bot_admin_read'));
+ status(unsaved?'Каталог обновлён. Несохранённые правки можно восстановить из локальной копии.':'Каталог обновлён.');
+});
+$('ba-screen-search').oninput=renderScreenChoices;
+$('ba-screen').onchange=()=>changeContext('screen','ba-screen');
+$('ba-lang').onchange=()=>changeContext('lang','ba-lang');
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$('ba-text').onbeforeinput=e=>{const field=$('ba-text');S.editRange={start:field.selectionStart,end:field.selectionEnd,type:e.inputType||''};};$('ba-text').oninput=markTextChanged;$('ba-template').onchange=()=>{if($('ba-template').checked&&S.entities.length&&!(S.view.capabilities?.contentRuntime>=5)){$('ba-template').checked=false;status(errors.bot_runtime_not_ready,true);return;}markTextChanged();};$('ba-event').onchange=()=>{eventNote();markTextChanged();};$('ba-load-events').onclick=()=>run(loadEvents,'ba-text-status');$('ba-insert-variable').onclick=insertVariable;
 $('ba-sim-open').onclick=()=>run(openSimulation);$('ba-sim-home').onclick=()=>{if(S.simulation){S.simulation.reset('welcome');$('ba-sim-result').textContent='';renderSimulation();}};$('ba-sim-load').onclick=()=>run(simLoadEvents);$('ba-sim-dialog').onclose=()=>{S.simulation=null;};
 $('ba-afisha-mode').onchange=()=>{$('ba-text-label').hidden=$('ba-afisha-mode').value!=='custom';markTextChanged();};
 $('ba-map-open').onclick=()=>run(openScenarioMap);$('ba-map-lang').onchange=renderScenarioMap;$('ba-map-filter').onchange=renderScenarioMap;
-$('ba-save-text').onclick=()=>run(saveText);$('ba-review').onclick=()=>run(review);$('ba-publish').onclick=()=>run(publish);$('ba-export').onclick=()=>run(exportDraft);$('ba-history').onclick=()=>run(()=>withSaved(async()=>history()));$('ba-members').onclick=()=>run(()=>withSaved(async()=>members()));
+$('ba-save-text').onclick=()=>run(async()=>{
+ if(!dirtyText()){status('Текст уже сохранён в черновике.');return;}
+ await saveText();
+},'ba-text-status');
+$('ba-review').onclick=()=>run(review,'ba-tools-status');$('ba-publish').onclick=()=>run(publish);$('ba-export').onclick=()=>run(exportDraft,'ba-tools-status');$('ba-history').onclick=()=>run(()=>withSaved(async()=>history()));$('ba-members').onclick=()=>run(()=>withSaved(async()=>members()));
 $('ba-name').onclick=()=>run(()=>withSaved(async()=>{const value=prompt('Название раздела',current().label);if(value!==null)await patch({kind:'label',screen:S.screen,label:value});}));$('ba-translation-ok').onclick=()=>run(()=>withSaved(()=>patch({kind:'translation_checked',screen:S.screen,lang:S.lang})));
-$('ba-add-button').onclick=()=>run(()=>withSaved(async()=>openButton()));$('ba-button-kind').onchange=targetKind;$('ba-button-save').onclick=()=>run(saveButton);$('ba-add-screen').onclick=()=>run(()=>withSaved(async()=>{const label=prompt('Название нового раздела');if(label===null)return;const newId=id('s').slice(0,13);const v=await api('bot_admin_change',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,patch:{kind:'screen_add',id:newId,label}});S.screen=newId;paint(v);}));
-$('ba-use-asset').onclick=()=>run(()=>withSaved(async()=>{const a=S.view.assets[Number($('ba-asset').value)];if($('ba-asset').value===''||!a)throw{code:'invalid_media'};await patch({kind:'media',screen:S.screen,lang:S.lang,media:a});}));$('ba-remove-asset').onclick=()=>run(()=>withSaved(()=>patch({kind:'media',screen:S.screen,lang:S.lang,media:null})));
+$('ba-add-button').onclick=()=>run(()=>withSaved(async()=>openButton()));$('ba-button-kind').onchange=targetKind;
+for(const id of ['ba-button-label','ba-target-url','ba-member-id']){
+ const field=$(id);
+ field.oninput=()=>field.removeAttribute('aria-invalid');
+}
+$('ba-button-form').onsubmit=event=>{
+ event.preventDefault();
+ return run(saveButton,'ba-button-status',event.currentTarget);
+};$('ba-add-screen').onclick=()=>run(()=>withSaved(async()=>{const label=prompt('Название нового раздела');if(label===null)return;const newId=id('s').slice(0,13);const v=await api('bot_admin_change',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,patch:{kind:'screen_add',id:newId,label}});S.screen=newId;paint(v);}));
+$('ba-use-asset').onclick=()=>run(()=>withSaved(async()=>{
+ const asset=S.view.assets[Number($('ba-asset').value)];
+ if($('ba-asset').value===''||!asset)throw{code:'invalid_media',field:'ba-asset'};
+ await patch({kind:'media',screen:S.screen,lang:S.lang,media:asset});
+}),'ba-media-status');
+$('ba-remove-asset').onclick=()=>run(()=>withSaved(()=>patch({kind:'media',screen:S.screen,lang:S.lang,media:null})),'ba-media-status');
 $('ba-import').onchange=()=>run(async()=>{const file=$('ba-import').files[0];try{if(!file||file.size>200*1024)throw{code:'invalid_import'};let data;try{data=JSON.parse(await file.text());}catch{throw{code:'invalid_import'};}await saveText();const v=await api('bot_admin_import',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,import:data});paint(v);status('Черновик импортирован. Проверьте его перед публикацией.');}finally{$('ba-import').value='';}});
 $('ba-reset').onclick=()=>run(()=>withSaved(async()=>{if(!confirm('Сбросить ваш черновик к опубликованной версии? Сначала можно скачать его.'))return;const v=await api('bot_admin_reset',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion});paint(v);status('Черновик сброшен. Публикация не изменилась.');}));
-$('ba-member-save').onclick=()=>run(async()=>{const memberId=$('ba-member-id').value.trim(),role=$('ba-member-role').value;if(!/^[1-9][0-9]{0,15}$/.test(memberId))throw{code:'invalid_member'};if(!confirm('Дать Telegram ID '+memberId+' роль «'+roleNames[role]+'»?'))return;const v=await api('bot_admin_member',{memberId,role});paint(v);members();$('ba-member-status').textContent='Роль сохранена.';});
-$('ba-preview-screen').onchange=preview;$('ba-preview-lang').onchange=preview;
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-$('ba-local-restore').onclick=()=>run(async()=>{const d=local();if(!d||!S.view.content.screens[d.screen])throw{code:'invalid_import'};if(d.version!==S.view.version||d.baseVersion!==undefined&&d.baseVersion!==S.view.baseVersion)throw{code:'local_base_changed'};if(d.eventId)eventId(d.eventId);S.screen=d.screen;S.lang=d.lang==='en'?'en':'ru';paint(S.view);$('ba-text').value=String(d.text||'');S.richText=$('ba-text').value;S.entities=normalizeEntities(S.richText,d.entities||[]);if(d.screen==='afisha'){if(!['legacy','custom','none'].includes(d.afishaMode))throw{code:'invalid_import'};$('ba-afisha-mode').value=d.afishaMode;$('ba-text-label').hidden=d.afishaMode!=='custom';}$('ba-template').checked=!!d.template;eventChoices(d.eventId||'');syncRich();showTab('text');status('Локальный текст восстановлен. Сохраните его в черновик.');});$('ba-local-download').onclick=()=>{const d=local();if(d)saveFile(d,'AELITA_bot_unsaved_text.json');};$('ba-local-remove').onclick=removeLocal;
+$('ba-member-form').onsubmit=event=>{
+ event.preventDefault();
+ const form=event.currentTarget;
+ return run(async()=>{
+  const memberId=$('ba-member-id').value.trim(),role=$('ba-member-role').value;
+  if(!/^[1-9][0-9]{0,15}$/.test(memberId))throw{code:'invalid_member',field:'ba-member-id'};
+  if(!confirm('Дать Telegram ID '+memberId+' роль «'+roleNames[role]+'»?'))return;
+  const v=await api('bot_admin_member',{memberId,role});
+  paint(v);members();
+  $('ba-member-id').value='';
+  $('ba-member-role').value='editor';
+  window.AelitaWorkForms?.clean(form);
+  status('Роль сохранена.');
+ },'ba-member-status',form);
+};
+function updateReviewPreview(){
+ feedback('ba-publish-status','');
+ try{preview();}
+ catch(e){
+  S.review=null;
+  $('ba-publish').disabled=true;
+  feedback('ba-publish-status',errors[e.code]||'Не удалось открыть макет. Проверьте черновик заново.',true);
+ }
+}
+$('ba-preview-screen').onchange=updateReviewPreview;
+$('ba-preview-lang').onchange=updateReviewPreview;
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
+ if(b.dataset.close==='ba-flow-dialog'&&!canCloseFlow())return;
+ $(b.dataset.close).close();
+});
+$('ba-local-restore').onclick=()=>run(async()=>{const d=local();if(!d||!S.view.content.screens[d.screen])throw{code:'invalid_import'};if(d.version!==S.view.version||d.baseVersion!==undefined&&d.baseVersion!==S.view.baseVersion)throw{code:'local_base_changed'};if(d.eventId)eventId(d.eventId);S.screen=d.screen;S.lang=d.lang==='en'?'en':'ru';paint(S.view);$('ba-text').value=String(d.text||'');S.richText=$('ba-text').value;S.entities=normalizeEntities(S.richText,d.entities||[]);if(d.screen==='afisha'){if(!['legacy','custom','none'].includes(d.afishaMode))throw{code:'invalid_import'};$('ba-afisha-mode').value=d.afishaMode;$('ba-text-label').hidden=d.afishaMode!=='custom';}$('ba-template').checked=!!d.template;eventChoices(d.eventId||'');syncRich();showTab('text');draftState();status('Локальный текст восстановлен. Сохраните его в черновик.');});$('ba-local-download').onclick=()=>{const d=local();if(d)saveFile(d,'AELITA_bot_unsaved_text.json');};$('ba-local-remove').onclick=removeLocal;
 window.addEventListener('pagehide',()=>{if(dirtyText())saveLocal();});window.addEventListener('focus',()=>{if(!token())gate();});window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token')gate();});
 (async()=>{if(!token()){gate();return;}$('ba-app').hidden=false;busy(true);try{paint(await api('bot_admin_read'));status('Выберите раздел для редактирования.');}catch(e){status(errors[e.code]||'Не удалось загрузить редактор. Проверьте подключение и обновите страницу.',true);}finally{busy(false);}
 function registerWorkGuard(){window.AelitaWorkForms?.register('bot-admin.js',{dirty:()=>!!(dirtyText()),busy:()=>!!(S.busy),visible:()=>!!(!!S.view)});}if(window.AelitaWorkForms)registerWorkGuard();else window.addEventListener('aelita-work-forms-ready',registerWorkGuard,{once:true});
@@ -191,10 +410,21 @@ window.addEventListener('pageshow',e=>{if(e.persisted&&!token())gate();});
 })();
 
 let flowEditor=null;
+function canCloseFlow(){
+ if(!flowEditor?.isSaving())return true;
+ feedback('ba-flow-status','Дождитесь результата сохранения в конструкторе.');
+ return false;
+}
+$('ba-flow-dialog').oncancel=event=>{if(!canCloseFlow())event.preventDefault();};
+window.addEventListener('beforeunload',event=>{
+ if(!S.busy&&!flowEditor?.isSaving())return;
+ event.preventDefault();
+ event.returnValue='';
+});
 function openFlow(){
  if(dirtyText()){status('Сначала сохраните текущий текст и оформление в черновик.',true);return;}
- if(!S.view)return;flowEditor?.destroy();
- flowEditor=mountFlow($('ba-flow-root'),{view:S.view,lang:S.lang,screen:S.screen,newOperation:()=>id('layout:'),canSaveLayout:S.view.rights.edit,loadLayout:()=>S.view.capabilities?.flowLayout===1?api('bot_admin_layout_get',{layoutVersion:1}):Promise.reject({code:'flow_layout_unavailable'}),saveLayout:op=>api('bot_admin_layout_save',{layoutVersion:1,revision:op.revision,positions:op.positions,opId:op.id}),local:{read:()=>{try{return JSON.parse(sessionStorage.getItem('aelita_bot_flow_local_v1')||'null');}catch{return null;}},write:d=>{try{sessionStorage.setItem('aelita_bot_flow_local_v1',JSON.stringify(d));}catch{status('Не удалось сохранить локальное расположение. Скачайте его файлом.',true);}},clear:()=>{try{sessionStorage.removeItem('aelita_bot_flow_local_v1');}catch{}}},download:d=>saveFile(d,'AELITA_bot_flow_layout.json'),newId:()=>id('s').slice(0,13),error:e=>errors[e.code]||'Не удалось сохранить. Обновите каталог; черновик сохранён.',change:(snapshot,patch)=>api('bot_admin_change',{baseVersion:snapshot.baseVersion,draftRevision:snapshot.draftRevision,patch}),changed:v=>{S.view=v;if(!$('ba-flow-dialog').open)paint(v);S.review=null;$('ba-publish').disabled=true;},edit:(screen,lang,tab)=>{S.screen=screen;S.lang=lang;paint(S.view);showTab(tab);$('ba-flow-dialog').close();},simulate:(screen,lang)=>{S.screen=screen;S.lang=lang;paint(S.view);$('ba-flow-dialog').close();openSimulation();}});
+ if(!S.view)return;flowEditor?.destroy();feedback('ba-flow-status','');
+ flowEditor=mountFlow($('ba-flow-root'),{view:S.view,lang:S.lang,screen:S.screen,newOperation:()=>id('layout:'),onSaving:value=>{if(!value)feedback('ba-flow-status','');},canSaveLayout:S.view.rights.edit,loadLayout:()=>S.view.capabilities?.flowLayout===1?api('bot_admin_layout_get',{layoutVersion:1}):Promise.reject({code:'flow_layout_unavailable'}),saveLayout:op=>api('bot_admin_layout_save',{layoutVersion:1,revision:op.revision,positions:op.positions,opId:op.id}),local:{read:()=>{try{return JSON.parse(sessionStorage.getItem('aelita_bot_flow_local_v1')||'null');}catch{return null;}},write:d=>{try{sessionStorage.setItem('aelita_bot_flow_local_v1',JSON.stringify(d));}catch{status('Не удалось сохранить локальное расположение. Скачайте его файлом.',true);}},clear:()=>{try{sessionStorage.removeItem('aelita_bot_flow_local_v1');}catch{}}},download:d=>saveFile(d,'AELITA_bot_flow_layout.json'),newId:()=>id('s').slice(0,13),error:e=>errors[e.code]||'Не удалось сохранить. Обновите каталог; черновик сохранён.',change:(snapshot,patch)=>api('bot_admin_change',{baseVersion:snapshot.baseVersion,draftRevision:snapshot.draftRevision,patch}),changed:v=>{S.view=v;if(!$('ba-flow-dialog').open)paint(v);S.review=null;$('ba-publish').disabled=true;},edit:(screen,lang,tab)=>{S.screen=screen;S.lang=lang;paint(S.view);showTab(tab);$('ba-flow-dialog').close();},simulate:(screen,lang)=>{S.screen=screen;S.lang=lang;paint(S.view);$('ba-flow-dialog').close();openSimulation();}});
  $('ba-flow-dialog').showModal();
 }
 $('ba-flow-open').onclick=()=>run(openFlow);

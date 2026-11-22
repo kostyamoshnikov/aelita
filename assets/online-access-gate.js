@@ -35,9 +35,6 @@
       recover:'Восстановить доступ через кабинет', recovered:'Выберите свой билет или приглашение:', none:'Подходящий онлайн-доступ не найден. Проверьте почту в кабинете или откройте последнее письмо с приглашением.',
       login:'Войти для восстановления доступа', refresh:'Проверить ещё раз', start:'Начало', release:'Ссылка откроется', item:invitation?'Пригласительный №':'Билет '
     };
-    if (kind === 'program') T.scheduled = en
-      ? 'Your access is confirmed. The meeting link will open at the start.'
-      : 'Доступ подтверждён. Ссылка на встречу появится в момент начала.';
     var status = document.getElementById('stream-status'), when = document.getElementById('stream-when');
     var link = document.getElementById('stream-join'), refresh = document.getElementById('stream-refresh'), title = document.getElementById('stream-title');
     var controls = document.createElement('div'); controls.id = 'stream-recovery'; controls.className = 'online-access-recovery ym-hide-content'; refresh.after(controls);
@@ -88,7 +85,9 @@
         if (title && (data.title || data.titleEn)) title.textContent = en ? data.titleEn || data.title : data.title;
         if (data.eventRef && data.document && /^(tickets|invitations):[A-Za-z0-9_-]{1,150}$/.test(data.eventRef) && /^[A-Za-z0-9_:-]{1,180}$/.test(data.document)) remember({kind:kind,eventRef:data.eventRef,document:String(data.document)});
         if (data.state === 'ready') { var url = telemost(data.joinUrl); if (!url) throw Error('unexpected_url'); link.href = url; link.hidden = false; }
-        status.textContent = T[data.state];
+        status.textContent = kind === 'program' && data.state === 'scheduled' && Date.parse(data.releaseAt) === Date.parse(data.startsAt)
+          ? (en ? 'Your access is confirmed. The meeting link will open at the start.' : 'Доступ подтверждён. Ссылка на встречу появится в момент начала.')
+          : T[data.state];
       } catch (_) { if (!hidden && stamp === seq && owner === session()) { clear(); status.textContent = T.error; recoveryControls(); } }
       finally { if (stamp === seq) refresh.disabled = false; }
     }

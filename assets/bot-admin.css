@@ -74,3 +74,38 @@
   overflow-wrap: anywhere;
 }
 .ba-tools-content .ba-file-button input { max-width: 100%; }
+
+.ba-section-search {
+  margin: 1rem 0;
+  max-width: 36rem;
+}
+.ba-section-search label { margin-block: 0 .4rem; }
+.ba-section-search input { width: 100%; }
+.ba-section-search .ed-note { margin-block: .4rem 0; }
+
+.ba-draft-state,
+.ba-feedback:not(:empty) {
+  margin-block: .6rem;
+  padding: .55rem .8rem;
+  border-inline-start: 2px solid var(--gold);
+  background: var(--work-surface, #18181b);
+  color: var(--bone);
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.ba-feedback:empty,
+.ba-section-search .ed-note:empty { margin: 0; }
+.ba-feedback.ba-error:not(:empty) {
+  border-color: #ffc2b5;
+  color: #ffc2b5;
+}
+.ba-edit-dialog .ed-dialog-head {
+  position: sticky;
+  top: -.75rem;
+  z-index: 1;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-block: .75rem;
+  background: var(--ink);
+}

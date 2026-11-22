@@ -78,6 +78,7 @@ export function mountFlow(root,options){
  let focusLinks=false,selectedEdge=null;
  let positions={},base={},revision=0,remote=null,ready=false,loading=false,moving=false,zoom=1,operation=null,suppress=false,drag=null,scene=null,beforeArrange=null;
  const copy=x=>JSON.parse(JSON.stringify(x)),ids=()=>Object.keys(view.content.screens),clean=p=>layoutPositions(p,ids()),same=(a,b)=>JSON.stringify(clean(a))===JSON.stringify(clean(b)),dirty=()=>!same(positions,base);
+ function setSaving(value){pending=value;options.onSaving?.(value);}
  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const note=node('p');note.setAttribute('role','status');
  const tools=node('div');tools.className='ba-flow-tools';
@@ -112,7 +113,7 @@ export function mountFlow(root,options){
  const saveLayout=action('Сохранить расположение',async()=>{
   if(options.canSaveLayout===false)throw{code:'bot_access_denied'};if(!ready||!options.saveLayout)throw{code:'flow_layout_unavailable'};if(!dirty())return;
   const payload=clean(positions);operation??={id:options.newOperation(),revision,positions:copy(payload)};
-  pending=true;renderControls();try{const d=await options.saveLayout(copy(operation));if(!alive)return;accept(d);options.local?.clear();render();note.textContent=d.alreadyApplied?'Операция уже учтена. Загружено текущее сохранённое расположение.':'Расположение сохранено. Содержание и публикация бота не менялись.';}finally{pending=false;if(alive)renderControls();}
+  setSaving(true);renderControls();try{const d=await options.saveLayout(copy(operation));if(!alive)return;accept(d);options.local?.clear();render();note.textContent=d.alreadyApplied?'Операция уже учтена. Загружено текущее сохранённое расположение.':'Расположение сохранено. Содержание и публикация бота не менялись.';}finally{setSaving(false);if(alive)renderControls();}
  });
  const loadSaved=action('Взять сохранённое расположение',async()=>{await load(true);});
  action('Автоматическая раскладка',()=>{positions={};changed();render();note.textContent='Автоматическая раскладка в этой вкладке. Для сохранения нажмите «Сохранить расположение».';});
@@ -138,7 +139,7 @@ export function mountFlow(root,options){
   saveLayout.disabled=pending||loading||!ready||!dirty()||options.canSaveLayout===false;loadSaved.disabled=pending||loading||!options.loadLayout;restore.disabled=pending||loading||!options.local?.read();download.disabled=pending||!options.download;moveMode.disabled=pending||loading;importFile.disabled=pending||loading;x.disabled=y.disabled=pending||loading;
   arrange.disabled=pending||loading;undoArrange.disabled=pending||loading||beforeArrange===null;fit.disabled=pending||loading;search.disabled=pending;
  }
- async function mutate(patch){pending=true;for(const b of root.querySelectorAll('button,select,input'))b.disabled=true;try{const next=await options.change(view,patch);options.changed(next);if(!alive)return;view=next;beforeArrange=null;render();}finally{pending=false;if(alive){for(const b of root.querySelectorAll('button,select,input'))b.disabled=false;renderControls();}}}
+ async function mutate(patch){setSaving(true);for(const b of root.querySelectorAll('button,select,input'))b.disabled=true;try{const next=await options.change(view,patch);options.changed(next);if(!alive)return;view=next;beforeArrange=null;render();}finally{setSaving(false);if(alive){for(const b of root.querySelectorAll('button,select,input'))b.disabled=false;renderControls();}}}
  function renderSearch(){
   searchResults.replaceChildren();const ids=searchFlow(view.content,search.value),summary=node('p',search.value.trim()?'Найдено шагов: '+ids.length+'.':'Поиск по RU/EN: выберите результат, чтобы показать исходный шаг.');summary.setAttribute('role','status');searchResults.append(summary);
   for(const id of ids){const b=node('button',view.content.screens[id].label);b.type='button';b.className='ed-quiet';b.setAttribute('aria-pressed',String(id===source));b.disabled=pending;b.onclick=()=>{if(!alive||pending||!view.content.screens[id])return;source=id;selected='';picking=false;if(zoom<.5)setZoom(1);render();centerStep();viewport.scrollIntoView?.({block:'nearest'});scene.groups.get(id)?.focus?.({preventScroll:true});};searchResults.append(b);}
@@ -171,5 +172,5 @@ export function mountFlow(root,options){
   }geometry();viewport.append(canvas);scene={canvas,groups};
  }
  language.onchange=()=>{lang=language.value;selected='';target='';render();};sources.onchange=()=>{source=sources.value;selected='';render();};buttons.onchange=()=>{selected=buttons.value;render();};targets.onchange=()=>{target=targets.value;render();};
- render();const loaded=options.loadLayout?load():Promise.resolve();return{ready:loaded,destroy:()=>{alive=false;drag=null;},get:()=>({view,source,target,selected,lang,positions:copy(positions),revision,dirty:dirty(),moving,zoom,focusLinks}),};
+ render();const loaded=options.loadLayout?load():Promise.resolve();return{ready:loaded,isSaving:()=>pending,destroy:()=>{alive=false;drag=null;},get:()=>({view,source,target,selected,lang,positions:copy(positions),revision,dirty:dirty(),moving,zoom,focusLinks}),};
 }

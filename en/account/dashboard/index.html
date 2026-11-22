@@ -875,7 +875,7 @@ body{max-width:100vw}
     return '<div class="att-tickets">' + (o.onlineTickets || []).map(function (x) {
       var s = '<div class="att-ticket"><p>' + (en ? 'Ticket ' : 'Билет ') + escapeHtml(x.ticketNumber) + ' · ' + (x.mode === 'online' ? (en ? 'Online' : 'Онлайн') : (en ? 'Offline' : 'Офлайн')) + '</p>';
       if (x.mode === 'online') {
-        if (x.accessUrl && /^https:\/\/aelita-production\.ru\/(en\/)?matrix-online\/#access=/.test(x.accessUrl)) s += '<a class="contract-btn tk-main" href="' + escapeHtml(x.accessUrl) + '">' + (en ? 'Open stream page' : 'Перейти к трансляции') + '</a>';
+        if (x.accessUrl && /^https:\/\/aelita-production\.ru\/(en\/)?(?:matrix-online|event-online)\/#access=/.test(x.accessUrl)) s += '<a class="contract-btn tk-main" href="' + escapeHtml(x.accessUrl) + '">' + (en ? 'Open stream page' : 'Перейти к трансляции') + '</a>';
         s += '<small>' + (en ? 'We will email the link one day before, one hour before and at the start.' : 'Пришлём ссылку за сутки, за час и в момент начала.') + '</small>';
       } else if (x.canSwitch && x.switchRef) {
         s += '<button type="button" class="contract-btn" data-switch-ref="' + escapeHtml(x.switchRef) + '" onclick="switchMatrixOnline(this)">' + (en ? 'Change to online' : 'Перейти в онлайн') + '</button><small>' + (en ? 'Until ' : 'До ') + escapeHtml(fmtDateTime(x.switchUntil)) + (en ? ' MSK. One-way change, at no extra cost.' : ' МСК. Без доплаты, без обратного переключения.') + '</small>';
@@ -1028,7 +1028,7 @@ body{max-width:100vw}
     if (n.o) {
       var o = n.o, place = [o.venue, o.venueAddress].filter(Boolean).join(', ');
       var onlineList = o.onlineTickets || [], allOnline = onlineList.length > 0 && onlineList.every(function (x) { return x.mode === 'online'; });
-      var onlinePages = onlineList.filter(function (x) { return x.mode === 'online' && /^https:\/\/aelita-production\.ru\/(en\/)?matrix-online\/#access=/.test(x.accessUrl || ''); });
+      var onlinePages = onlineList.filter(function (x) { return x.mode === 'online' && /^https:\/\/aelita-production\.ru\/(en\/)?(?:matrix-online|event-online)\/#access=/.test(x.accessUrl || ''); });
       var formatLabel = onlineList.length ? (allOnline ? (LANG === 'en' ? 'Online stream' : 'Онлайн-трансляция') : (LANG === 'en' ? 'See ticket formats below' : 'Форматы билетов — ниже')) : t.freeSeating;
       html += '<h3>' + escapeHtml(o.title) + '</h3><p class="acc-next-when">' + escapeHtml(fmtDateTime(o.datetime)) + (place ? ' · ' + escapeHtml(place) : '') + '</p>' +
         '<p class="acc-hint">' + escapeHtml(o.seats && o.seats.length ? o.seats.map(function (k) { return t.seat(k); }).join('; ') : formatLabel) + ' · ' + o.ticketsCount + ' ' + t.ticketsWord(o.ticketsCount) + '</p>' +
