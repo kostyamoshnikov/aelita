@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1047,
+  "release": 1048,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -250,7 +250,7 @@
     },
     {
       "path": "admin/bot/index.html",
-      "sha256": "9d52dbc55a9b5eb504874ebf7a61a6eedb153d7b7f3d8c817b89e7e640bcf158"
+      "sha256": "6dac45ce5f3019cf13f32fd31d7472582fab4b2c2f2546d35137f725272ebd37"
     },
     {
       "path": "admin/crew-ops/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "cb3a8b66a2afae92ad79b3e8672f903642d4bc1602cd81623dc02a0c668d3d50"
+      "sha256": "bd6c6dcbfb76b437f56bb633c4b3ef67414757ec667c59b80a55ace93f8d026f"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -294,7 +294,7 @@
     },
     {
       "path": "admin/social-posts/index.html",
-      "sha256": "52f5bf17554069924c4c5bcd489537dafafae02e40066b1314e0fdfd0fc6b84b"
+      "sha256": "f8bfdfa20f28573b9ccacb4bafd64b27fbaf4c023b6be67dc30e47506911aa7c"
     },
     {
       "path": "admin/team/index.html",
@@ -386,7 +386,7 @@
     },
     {
       "path": "assets/bot-admin.js",
-      "sha256": "b09844bbdc8b346968aae779d03988dc6b61b7e2924f7e139ec67448f3fbec51"
+      "sha256": "f2623f12aa5e0e234a704bad00d67b0507b4c984bf440820d11cdf005b367a7f"
     },
     {
       "path": "assets/bot-flow-v1.mjs",
@@ -666,7 +666,7 @@
     },
     {
       "path": "assets/social-posts-v1018.js",
-      "sha256": "3e0755fed53992ed63e9600afb09551e9c61f02dd1820146fdfca47253b14acf"
+      "sha256": "b9c67b041cdbad07eb782d4edd5866bf390a3ebc7c3282b9536e82891c3adb1d"
     },
     {
       "path": "assets/staff-access-v796.js",
@@ -2054,8 +2054,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "dd359e3032cc7e60349c390db3d9640b8163114dca51dae03fedbeb417a4269c",
+  "changelog_sha256": "c7ca9bdccbf3516e7b547adbc9f3b0d9ffeba4deb2cf3bfbc8ff5bd056732808",
   "recent_versions": [
+    1048,
     1047,
     1046,
     1045,
@@ -2064,7 +2065,6 @@
     1042,
     1041,
     1040,
-    1039,
-    1038
+    1039
   ]
 }

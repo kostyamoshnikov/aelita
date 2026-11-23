@@ -16,7 +16,7 @@
   <script defer src="/assets/admin-touch-statistics-v1011.js?v=249-v1021"></script>
   <script defer src="/assets/work-forms-v818.js?v=249"></script>
   <script defer src="/assets/ai-pilot-v741.js?v=249-v1018"></script>
-  <script defer src="/assets/social-posts-v1018.js?v=249-v1033"></script>
+  <script defer src="/assets/social-posts-v1018.js?v=249-v1048"></script>
 <link rel="stylesheet" href="/assets/admin-readability-v1038.css?v=249-v1047"></head>
 <body>
   <header class="ed-header">
@@ -29,9 +29,11 @@
     <p id="social-gate" hidden><a href="/admin/">Войдите в админку</a>, чтобы открыть очередь.</p>
     <p id="social-status" role="status" aria-live="polite"></p>
     <div id="social-app" hidden>
-      <details class="ed-card social-connections" id="social-connections" hidden>
+      <details class="ed-card social-connections" id="social-connections">
         <summary>Подключить соцсети</summary>
-        <form id="social-connect-form" data-work-untracked>
+        <p id="social-connect-availability" class="ed-note" role="status">Проверяем доступ к настройкам…</p>
+        <form id="social-connect-form" data-work-untracked hidden>
+          <p class="ed-note">Выберите проект и площадку. Возьмите токен по инструкции ниже, затем нажмите «Проверить и подключить».</p>
           <div class="social-grid">
             <label>Проект<select id="social-connect-project" required></select></label>
             <label>Площадка<select id="social-connect-platform">
@@ -40,14 +42,16 @@
               <option value="instagram">Instagram</option>
             </select></label>
           </div>
+          <p class="ed-note"><strong>Где взять токен</strong></p>
+          <p id="social-connect-help" class="ed-note"></p>
+          <p class="ed-note"><a id="social-connect-docs" target="_blank" rel="noopener noreferrer">Инструкция площадки ↗</a></p>
           <p id="social-connect-current" class="ed-note"></p>
           <label><span id="social-connect-label">Канал</span>
             <input id="social-connect-destination" class="ym-disable-keys" maxlength="40" autocomplete="off" spellcheck="false" required>
           </label>
           <label>Токен доступа
-            <input id="social-connect-token" class="ym-disable-keys" type="password" maxlength="2048" autocomplete="off" spellcheck="false" required>
+            <input id="social-connect-token" class="ym-disable-keys" type="password" maxlength="2048" autocomplete="off" spellcheck="false" required aria-describedby="social-connect-help">
           </label>
-          <p id="social-connect-help" class="ed-note"></p>
           <div class="ed-actions">
             <button id="social-connect-save" type="submit">Проверить и подключить</button>
             <button id="social-connect-check" type="button" class="ed-quiet" hidden>Проверить доступ</button>

@@ -177,6 +177,8 @@ function paint(v){
  $('ba-current-media').textContent=l.media?(l.media.type==='photo'?'К разделу прикреплено фото.':'Прикреплён файл: '+(l.media.name||'документ')):'Вложение не выбрано.';
  optionList($('ba-asset'),[['Выберите материал',''],...v.assets.map((a,i)=>[a.name|| (a.type==='photo'?'Фотография '+(i+1):'Документ '+(i+1)),String(i)])],'');
  syncRich();renderButtons();showTab(S.tab);offerLocal();draftState();
+ $('ba-workspace').hidden=false;
+ $('ba-history').hidden=false;
 }
 function showTab(tab){S.tab=tab;for(const t of ['text','menu','media'])$('ba-'+t+'-pane').hidden=t!==tab;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===tab)));}
 async function saveText(){trackRichText();if(!dirtyText())return;saveLocal();if(S.screen==='afisha'){if(!(S.view.capabilities?.contentRuntime>=3))throw{code:'bot_runtime_not_ready'};const mode=$('ba-afisha-mode').value;if(!['legacy','custom','none'].includes(mode))throw{code:'invalid_announcements'};if(mode==='custom'&&!$('ba-text').value.trim())throw{code:'invalid_announcements'};const v=await api('bot_admin_change',{draftRevision:S.view.draftRevision,baseVersion:S.view.baseVersion,patch:{kind:'announcements',screen:'afisha',lang:S.lang,text:mode==='legacy'?null:mode==='none'?'':$('ba-text').value}});removeLocal();paint(v);status('Анонсы сохранены в черновик. Публикация отдельно.');return;}const text=$('ba-text').value,template=$('ba-template').checked,event=$('ba-event').value;
@@ -341,7 +343,7 @@ $('ba-refresh').onclick=()=>run(async()=>{
  if(unsaved&&!saveLocal())return;
  paint(await api('bot_admin_read'));
  status(unsaved?'Каталог обновлён. Несохранённые правки можно восстановить из локальной копии.':'Каталог обновлён.');
-});
+},'ba-status');
 $('ba-screen-search').oninput=renderScreenChoices;
 $('ba-screen').onchange=()=>changeContext('screen','ba-screen');
 $('ba-lang').onchange=()=>changeContext('lang','ba-lang');
@@ -404,7 +406,14 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
 });
 $('ba-local-restore').onclick=()=>run(async()=>{const d=local();if(!d||!S.view.content.screens[d.screen])throw{code:'invalid_import'};if(d.version!==S.view.version||d.baseVersion!==undefined&&d.baseVersion!==S.view.baseVersion)throw{code:'local_base_changed'};if(d.eventId)eventId(d.eventId);S.screen=d.screen;S.lang=d.lang==='en'?'en':'ru';paint(S.view);$('ba-text').value=String(d.text||'');S.richText=$('ba-text').value;S.entities=normalizeEntities(S.richText,d.entities||[]);if(d.screen==='afisha'){if(!['legacy','custom','none'].includes(d.afishaMode))throw{code:'invalid_import'};$('ba-afisha-mode').value=d.afishaMode;$('ba-text-label').hidden=d.afishaMode!=='custom';}$('ba-template').checked=!!d.template;eventChoices(d.eventId||'');syncRich();showTab('text');draftState();status('Локальный текст восстановлен. Сохраните его в черновик.');});$('ba-local-download').onclick=()=>{const d=local();if(d)saveFile(d,'AELITA_bot_unsaved_text.json');};$('ba-local-remove').onclick=removeLocal;
 window.addEventListener('pagehide',()=>{if(dirtyText())saveLocal();});window.addEventListener('focus',()=>{if(!token())gate();});window.addEventListener('storage',e=>{if(e.key==='aelita_admin_token')gate();});
-(async()=>{if(!token()){gate();return;}$('ba-app').hidden=false;busy(true);try{paint(await api('bot_admin_read'));status('Выберите раздел для редактирования.');}catch(e){status(errors[e.code]||'Не удалось загрузить редактор. Проверьте подключение и обновите страницу.',true);}finally{busy(false);}
+(async()=>{
+ if(!token()){gate();return;}
+ $('ba-app').hidden=false;
+ status('Подключаем редактор…');
+ await run(async()=>{
+  paint(await api('bot_admin_read'));
+  status('Выберите раздел для редактирования.');
+ });
 function registerWorkGuard(){window.AelitaWorkForms?.register('bot-admin.js',{dirty:()=>!!(dirtyText()),busy:()=>!!(S.busy),visible:()=>!!(!!S.view)});}if(window.AelitaWorkForms)registerWorkGuard();else window.addEventListener('aelita-work-forms-ready',registerWorkGuard,{once:true});
 window.addEventListener('pageshow',e=>{if(e.persisted&&!token())gate();});
 })();

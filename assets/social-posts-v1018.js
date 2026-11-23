@@ -367,9 +367,21 @@
   }
 
   const connectionFields = {
-    telegram:['Канал', '@имя_канала или ID', 'Бот должен быть администратором канала с правом публикации. Токен выдаёт @BotFather.'],
-    vk:['ID сообщества', 'Числовой ID', 'Нужен пользовательский токен ВКонтакте с доступом к стене. Для постов с фото нужен доступ к фотографиям.'],
-    instagram:['ID аккаунта', 'Числовой ID', 'Нужен токен Meta с правом публикации в профессиональном аккаунте, привязанном к странице Facebook.']
+    telegram: {
+      label: 'Канал', placeholder: '@имя_канала или числовой ID',
+      help: 'Возьмите токен бота в @BotFather. Добавьте бота в администраторы нужного канала и дайте ему право «Публикация сообщений». Введите имя канала с @ или его числовой ID.',
+      docs: 'https://core.telegram.org/bots/features#botfather'
+    },
+    vk: {
+      label: 'ID сообщества', placeholder: 'Числовой ID',
+      help: 'Получите в приложении VK пользовательский токен администратора или редактора сообщества с доступом к стене. Для постов с фото добавьте доступ к фотографиям. Введите числовой ID сообщества.',
+      docs: 'https://github.com/VKCOM/vk-api-schema/blob/master/wall/methods.json'
+    },
+    instagram: {
+      label: 'ID аккаунта', placeholder: 'Числовой ID',
+      help: 'В приложении Meta выберите Instagram API с входом через Facebook. Подготовьте токен с правом instagram_content_publish для профессионального аккаунта, связанного со страницей Facebook. Введите числовой ID аккаунта Instagram.',
+      docs: 'https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/v21.0/'
+    }
   };
 
   function currentConnection() {
@@ -380,12 +392,13 @@
 
   function renderConnection() {
     const { project, platform, row } = currentConnection();
-    const [label, placeholder, help] = connectionFields[platform];
+    const { label, placeholder, help, docs } = connectionFields[platform];
     $('connect-label').textContent = label;
     $('connect-destination').placeholder = placeholder;
     $('connect-destination').value = row?.destination || project?.targets?.[channels.find(channel => channel.id === platform).target] || '';
     $('connect-token').value = '';
     $('connect-help').textContent = help;
+    $('connect-docs').href = docs;
     $('connect-current').textContent = row?.connected ? 'Подключено · ' + row.label : row ? 'Отключено' : '';
     $('connect-save').textContent = row?.connected ? 'Проверить и обновить' : 'Проверить и подключить';
     $('connect-save').disabled = !project || connectionBusy;
@@ -396,16 +409,31 @@
   }
 
   async function loadConnections(preferredProject = $('project').value) {
+    const form = $('connect-form');
+    const availability = $('connect-availability');
+    form.hidden = true;
+    $('connect-token').value = '';
+    availability.hidden = false;
+    status('connect-availability', 'Проверяем доступ к настройкам…');
     try {
       const data = await api({ action:'social_connection_list' });
       connectionProjects = data.projects;
+      if (!connectionProjects.length) {
+        status('connect-availability', 'Нет активных проектов. Проверьте проекты в настройках CREW.');
+        return;
+      }
       const previous = $('connect-project').value || preferredProject;
       $('connect-project').replaceChildren(...connectionProjects.map(project => new Option(project.name, project.id)));
       if (connectionProjects.some(project => project.id === previous)) $('connect-project').value = previous;
-      $('connections').hidden = !connectionProjects.length;
       renderConnection();
+      form.hidden = false;
+      availability.hidden = true;
     } catch (error) {
-      if (error.code !== 'social_owner_required' && !$('connections').hidden) status('connect-status', errorMessage(error), true);
+      connectionProjects = [];
+      const message = error.code === 'social_owner_required'
+        ? 'Для привязки войдите с персональной учётной записью владельца админки.'
+        : errorMessage(error);
+      status('connect-availability', message, true);
     }
   }
 
@@ -541,6 +569,7 @@
     renderConnection();
     status('connect-status', '');
   });
+  if (location.hash === '#social-connections') $('connections').open = true;
   $('connections').addEventListener('toggle', () => {
     if (!$('connections').open) $('connect-token').value = '';
   });
