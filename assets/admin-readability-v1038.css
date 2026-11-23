@@ -193,3 +193,78 @@ html.admin-readable body :is(.work-table-scroll, .crm-list-scroll, .participants
     white-space: normal;
   }
 }
+
+/* One control palette across the admin shells. Color overrides take precedence
+   over the older per-section button rules. Preview content keeps its own skin. */
+html.admin-readable {
+  --admin-control-surface: #19191d;
+  --admin-control-primary: #303036;
+  --admin-control-selected: #27282c;
+  --admin-control-text: #f0efed;
+  --admin-control-line: #686871;
+  --admin-control-active-line: #a3a3ad;
+  --admin-control-alert-text: #f2b3a7;
+  --admin-control-alert-line: #a8746d;
+}
+
+html.admin-readable:not(.a11y) body :is(
+  button, input[type="button"], input[type="submit"], input[type="reset"],
+  a.btn, a.btn-small, a.mini-btn, a.button, a.ed-button, a.ed-back, a.nav-back,
+  a.team-action, a.crm-team-link, .work-links a, .section-nav-rail a, .ba-tools-toggle
+):not(:where(#ba-preview-buttons *, #ba-sim-buttons *)) {
+  background: var(--admin-button-bg, var(--admin-control-surface)) !important;
+  color: var(--admin-button-text, var(--admin-control-text)) !important;
+  border-color: var(--admin-button-line, var(--admin-control-line)) !important;
+  border-radius: .375rem;
+}
+
+html.admin-readable body :is(button, a, input):where(
+  .btn, .primary, [type="submit"], a.ed-button, .dl-dialog button,
+  #ed-preview, #ed-publish, #em-check, #em-publish, #di-check, #di-publish,
+  #pb-check, #pb-publish, #sn-check, #sn-publish, #mt-save, #ba-save, #ba-publish
+) {
+  --admin-button-bg: var(--admin-control-primary);
+}
+
+html.admin-readable body :is(button, a, input, summary):where(
+  [aria-pressed="true"], [aria-selected="true"], [aria-current]:not([aria-current="false"]),
+  .on, .active, .is-active, .ba-tools[open] > .ba-tools-toggle
+) {
+  --admin-button-bg: var(--admin-control-selected);
+  --admin-button-line: var(--admin-control-active-line);
+}
+
+html.admin-readable body :where(.danger:is(button, a), .mini-btn-danger, .btn-danger, .ed-danger) {
+  --admin-button-text: var(--admin-control-alert-text);
+  --admin-button-line: var(--admin-control-alert-line);
+}
+
+html.admin-readable body :where(.adm-copy, .adm-who-btn, .attn li button) {
+  --admin-button-bg: transparent;
+}
+
+html.admin-readable:not(.a11y) body :is(button, a[href], summary, input, select, textarea):focus-visible {
+  outline-color: var(--admin-control-text);
+}
+
+@media (hover: hover) {
+  html.admin-readable:not(.a11y) body :is(button, input[type="button"], input[type="submit"],
+    input[type="reset"], a.ed-button, a.btn-small, a.mini-btn, .section-nav-rail a, .ba-tools-toggle
+  ):not(:where([disabled], [aria-disabled="true"], #ba-preview-buttons *, #ba-sim-buttons *)):hover {
+    --admin-button-line: var(--admin-control-active-line);
+  }
+}
+
+html.admin-readable .ed-filters.ba-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: .5rem;
+}
+
+html.admin-readable .ba-tabs > button {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding-inline: .5rem;
+}

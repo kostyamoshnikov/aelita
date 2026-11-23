@@ -188,7 +188,7 @@
   function groupEditor(form,type){
     const groups={
       contacts:[['Контакт',['name','emails','phones','city','tags']],['Связи',['organizationIds']],['Описание',['notes']]],
-      organizations:[['Организация',['name','type','city','website']],['Описание',['notes']]],
+      organizations:[['Организация',['name','type','city','physicalAddress','website']],['Описание',['notes']]],
       tasks:[['Задача',['title','status','priority','description']],['Срок и связи',['dueAt','contactId','organizationId','dealId','projectId']]],
       deals:[['Договорённость',['title','pipeline','stage','amountRub','closeDate','lostReason','description']],['Связи',['contactId','organizationId','projectId']],['Документы',['documentLinks']]],
       projects:[['Проект или событие',['title','kind','status','city']],['Даты и место',['startsAt','endsAt','venueOrganizationId']],['Описание',['description']]]
