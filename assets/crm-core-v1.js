@@ -62,7 +62,26 @@
  }
  function gate(){
    root.innerHTML='<section class="panel gate"><div class="eyebrow">Только для команды</div><h1>Вход в CRM</h1><p class="muted">Единый вход в CRM и админку. Используйте логин или подтверждённую почту сотрудника.</p><form id="login"><label for="crm-login">Логин или электронная почта</label><input class="ym-disable-keys" id="crm-login" name="login" autocomplete="username" maxlength="254" required><label for="crm-password">Пароль</label><input class="ym-disable-keys" id="crm-password" name="password" type="password" autocomplete="current-password" maxlength="256" required><p id="login-error" class="form-error" role="alert"></p><button class="primary">Войти</button></form><p class="hint"><a href="/admin/">Вернуться в админку</a></p></section>';
-   $('#login').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,btn=f.querySelector('button');btn.disabled=true;$('#login-error').textContent='';try{const r=await api({action:'login',login:f.elements.namedItem('login').value,password:f.elements.namedItem('password').value});state.token=r.token;if(window.AelitaStaffSession)window.AelitaStaffSession.set(r);else try{localStorage.setItem(KEY,r.token);}catch{}state.user=r.user;await start();}catch(err){$('#login-error')&&($('#login-error').textContent=err.message);}finally{btn.disabled=false;}};
+   $('#login').onsubmit=async e=>{
+     e.preventDefault();
+     const form=e.currentTarget,button=form.querySelector('button'),error=form.querySelector('#login-error');
+     if(!form.isConnected||button.disabled)return;
+     button.disabled=true;
+     error.textContent='';
+     try{
+       const r=await api({action:'login',login:form.elements.namedItem('login').value,password:form.elements.namedItem('password').value});
+       if(!form.isConnected)return;
+       state.token=r.token;
+       if(window.AelitaStaffSession)window.AelitaStaffSession.set(r);
+       else try{localStorage.setItem(KEY,r.token);}catch{}
+       state.user=r.user;
+       await start();
+     }catch(err){
+       if(form.isConnected)error.textContent=err.message;
+     }finally{
+       if(form.isConnected)button.disabled=false;
+     }
+   };
  }
  function navPins(){try{const x=JSON.parse(localStorage.getItem('aelita-crm-pins:'+state.user.id)||'[]');return Array.isArray(x)?x.filter(k=>Object.hasOwn(labels,k)).slice(0,4):[];}catch{return state.navPins||[];}}
  function tabs(){const names=['dashboard',...(state.calendarReady&&['deals','tasks'].some(canRead)?['calendar']:[]),'projects','contacts','organizations','tasks','deals','journal',...((state.analyticsEnabled||isOwner())?['analytics']:[]),...(workbenchAllowed()?['workbench']:[]),...(canSegments()?['segments']:[]),...(isOwner()?['management','team']:[])];return '<div class="crm-navbox"><button type="button" class="crm-scroll prev" data-crm-scroll="-1" aria-label="Разделы левее" hidden>‹</button><nav class="tabs" aria-label="Разделы CRM">'+work.orderTabs('crm',names,navPins()).filter(canRead).map(t=>'<button data-tab="'+t+'" aria-current="'+(state.tab===t)+'">'+labels[t]+'</button>').join('')+'</nav><button type="button" class="crm-scroll next" data-crm-scroll="1" aria-label="Разделы правее" hidden>›</button></div>';}
@@ -772,23 +791,39 @@ async function showInviteDraft(){
  const draft=state.inviteDraft;if(!draft||!state.user)return;
  if(draft.err){state.inviteDraft=null;return openDialog('Гость в CRM','<p>Данные не переданы. Вернитесь к пригласительному и нажмите кнопку ещё раз.</p>');}
  if(!isOwner()||!state.importEnabled)return openDialog('Гость в CRM','<p>Для переноса нужен владелец CRM и включённый импорт контактов.</p>');
- openDialog('Гость в CRM','<p>Проверяем пригласительный…</p>');
+ if(draft.loading&&ownsDialog(draft.loading))return;
+ openDialog('Гость в CRM','<p role="status">Проверяем пригласительный…</p>');
+ const loading=dialog.firstElementChild;
+ draft.loading=loading;
+ const current=()=>state.inviteDraft===draft&&ownsDialog(loading);
  try{
   const p=await api({action:'source_preview',source:'invitations',key:draft.key}),item=p.items[0];
-  if(state.inviteDraft!==draft)return;
+  if(!current())return;
   if(!item?.eligible)throw new Error('В пригласительном нет доступных контактных данных.');
   const found=item.emails.length?await api({action:'find_email',email:item.emails[0]}):{items:[],total:0};
+  if(!current())return;
   if(found.total>20)throw new Error('Слишком много совпадений. Уточните контакт в CRM.');
   openDialog('Добавить гостя в CRM','<p><b>'+esc(item.name)+'</b> · '+esc(item.emails.join(', '))+'</p><p>'+esc(item.sourceLabel)+'</p><p class="hint">Сохраним связь с пригласительным. Подписка на рассылку не включается.'+(!item.emails.length?' Почты нет: совпадение по имени не проверяется.':'')+'</p><form id="invite-crm-form">'+(found.items.length?'<label>Контакт с этой почтой<select name="contactId">'+found.items.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+(c.archived?' · в архиве':'')+'</option>').join('')+'</select></label>':'<p>Создадим новый контакт.</p>')+'<p class="form-error" role="alert"></p><button class="primary">'+(found.items.length?'Связать с контактом':'Создать контакт')+'</button></form>');
   $('#invite-crm-form').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,btn=f.querySelector('button');btn.disabled=true;try{const out=await mutate('source_import',{source:'invitations',items:[{key:item.key,digest:item.digest}],...(f.contactId?{contactId:f.contactId.value}: {})});const id=out.created[0]||out.linked[0];if(!id)throw new Error('Контакт не связан: проверьте совпадения в CRM.');state.inviteDraft=null;dialog.close();state.tab='contacts';shell();await detail('contacts',id);notice(out.created.length?'Гость добавлен в CRM':'Пригласительный связан с контактом');}catch(err){f.querySelector('.form-error').textContent=err.message;btn.disabled=false;}};
- }catch(err){openDialog('Гость в CRM','<p class="error">'+esc(err.message)+'</p><button data-invite-retry>Повторить</button>');}
+ }catch(err){
+  if(current())openDialog('Гость в CRM','<p class="error">'+esc(err.message)+'</p><button data-invite-retry>Повторить</button>');
+ }finally{
+  if(draft.loading===loading)delete draft.loading;
+ }
 }
 async function showFind(){
   const f=state.find;if(!f||!state.user)return;
   if(f.err){state.find=null;openDialog('Поиск по почте из заказа','<p>'+esc(window.AelitaHandoff?AelitaHandoff.reason(f.err):'Адрес не передан.')+'</p>');return;}
-  openDialog('Поиск по почте из заказа','<p class="hint">Ищем точное совпадение адреса <b>'+esc(f.email)+'</b> среди доступных вам контактов…</p>');
-  let r;try{r=await api({action:'find_email',email:f.email});}catch(err){if(state.find===f)openDialog('Поиск по почте из заказа','<p class="error">'+esc(err.message)+'</p>');state.find=null;return;}
-  if(state.find!==f)return;state.find=null;
+  if(f.loading&&ownsDialog(f.loading))return;
+  openDialog('Поиск по почте из заказа','<p class="hint" role="status">Ищем точное совпадение адреса <b>'+esc(f.email)+'</b> среди доступных вам контактов…</p>');
+  const loading=dialog.firstElementChild;
+  f.loading=loading;
+  let r,error;
+  try{r=await api({action:'find_email',email:f.email});}catch(err){error=err;}
+  if(state.find!==f||f.loading!==loading)return;
+  state.find=null;
+  if(!ownsDialog(loading))return;
+  if(error){openDialog('Поиск по почте из заказа','<p class="error">'+esc(error.message)+'</p>');return;}
   const row=c=>'<li><button data-find-open="'+esc(c.id)+'">'+esc(c.name)+(c.city?' · '+esc(c.city):'')+(c.archived?' · в архиве':'')+'</button></li>';
   const head='<p>Адрес: <b>'+esc(f.email)+'</b> (точное совпадение).</p>';
   if(!r.items.length)return openDialog('Поиск по почте из заказа',head+'<p>Среди доступных вам контактов такого адреса нет. Карточку не создаём автоматически: если человек нужен в CRM, добавьте его в «Контактах».</p>');
@@ -806,9 +841,36 @@ async function showTaskDraft(again=false){
  const d=state.taskDraft;if(!d||!state.user)return;
  if(d.err){state.taskDraft=null;return openDialog('Задача из заказа','<p>'+esc(window.AelitaHandoff?AelitaHandoff.reason(d.err):'Данные не переданы.')+'</p>');}
  if(!canWrite('tasks'))return openDialog('Задача из заказа','<p>У вас нет права создавать задачи в CRM. Попросите владельца CRM открыть доступ к разделу «Задачи» или передайте покупку коллеге.</p>');
- if(!again&&!d.checked){openDialog('Задача из заказа','<p class="hint">Проверяем, нет ли уже задачи по этой покупке…</p>');let r;try{r=await api({action:'task_source_status',sourceRef:d.sourceRef});}catch(err){return openDialog('Задача из заказа','<p class="error">'+esc(err.message)+'</p><div class="actions"><button data-task-retry>Попробовать ещё раз</button></div>');}if(state.taskDraft!==d)return;if(r.items.length||r.hidden){d.seen=r.items.length+r.hidden;return taskExisting(d,r);}d.checked=true;}
+ if(d.loading&&ownsDialog(d.loading))return;
  if(again)d.again=true;
- if(d.matches===undefined){d.matches=null;if(d.email){try{d.matches=(await api({action:'find_email',email:d.email})).items;}catch{d.matches=null;}}if(state.taskDraft!==d)return;}
+ const checkStatus=!again&&!d.checked,lookupContact=d.matches===undefined&&d.email;
+ if(checkStatus||lookupContact){
+   const message=checkStatus?'Проверяем, нет ли уже задачи по этой покупке…':'Ищем контакт по почте из заказа…';
+   openDialog('Задача из заказа','<p class="hint" role="status">'+message+'</p>');
+   const loading=dialog.firstElementChild;
+   d.loading=loading;
+   const current=()=>state.taskDraft===d&&ownsDialog(loading);
+   try{
+     if(checkStatus){
+       const r=await api({action:'task_source_status',sourceRef:d.sourceRef});
+       if(!current())return;
+       if(r.items.length||r.hidden){d.seen=r.items.length+r.hidden;return taskExisting(d,r);}
+       d.checked=true;
+     }
+     if(lookupContact){
+       let matches=null;
+       try{matches=(await api({action:'find_email',email:d.email})).items;}catch{}
+       if(!current())return;
+       d.matches=matches;
+     }
+   }catch(err){
+     if(current())openDialog('Задача из заказа','<p class="error">'+esc(err.message)+'</p><div class="actions"><button data-task-retry>Попробовать ещё раз</button></div>');
+     return;
+   }finally{
+     if(d.loading===loading)delete d.loading;
+   }
+ }
+ if(d.matches===undefined)d.matches=null;
  const m=d.matches||[],pick=d.contactId!==undefined?d.contactId:(m.length===1?m[0].id:(m.length?null:''));
  const contacts=(d.email?(d.matches===null?'<p class="hint">Контакты по почте сейчас не проверить — можно сохранить без связи и связать потом.</p>':!m.length?'<p class="hint">Среди доступных вам контактов адреса '+esc(d.email)+' нет. Контакт не создаётся автоматически.</p>':m.length>1?'<p class="hint">С этим адресом несколько контактов — выберите нужный или сохраните без связи.</p>':''):'<p class="hint">В заказе нет почты — задача сохранится без связи с контактом.</p>')
   +'<fieldset class="task-contact"><legend>Контакт</legend>'+m.map(c=>'<label><input type="radio" name="contactId" value="'+esc(c.id)+'"'+(pick===c.id?' checked':'')+'> '+esc(c.name)+(c.archived?' · в архиве':'')+'</label>').join('')+'<label><input type="radio" name="contactId" value=""'+(pick===''?' checked':'')+'> Без связи с контактом</label></fieldset>';
@@ -839,6 +901,7 @@ function taskDraftBar(){$('#task-draft-bar')?.remove();if(!state.taskDraft||!$('
 async function checkTaskDraft(){const d=state.taskDraft;if(!d)return;const err=$('#td-error');let r;try{r=await api({action:'task_source_status',sourceRef:d.sourceRef});}catch(e){if(err)err.textContent='Проверить не удалось: '+e.message+' Попробуйте ещё раз.';return;}
  if(state.taskDraft!==d)return;if(r.items.length&&!d.again){state.taskDraft=null;return openDialog('Задача создана','<p>Задача сохранилась, повторять не нужно.</p><ul class="find-list">'+r.items.map(t=>'<li><button data-task-open="'+esc(t.id)+'">'+esc(t.title)+'</button></li>').join('')+'</ul>');}
  if(err)err.textContent='Задача не найдена — можно нажать «Создать задачу» ещё раз: повтор безопасен, вторая не появится.';}
+function ownsDialog(content){return dialog.open&&dialog.firstElementChild===content;}
 function openDialog(title,body){dialog.dataset.forced='';let changed=false;dialog.crmDirty=()=>changed;dialog.oninput=dialog.onchange=()=>{changed=true;};dialog.innerHTML='<div class="row between"><h2 id="editor-title">'+title+'</h2><button type="button" data-dialog-close aria-label="Закрыть">×</button></div>'+body;if(!dialog.open)dialog.showModal();queueMicrotask(()=>{for(const form of dialog.querySelectorAll('form'))window.AelitaWorkForms?.clean(form);});}
  async function edit(type,row={}){
    if(dialog.open&&!canCloseEditor())return;

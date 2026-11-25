@@ -122,7 +122,7 @@ body{max-width:100vw}
 .acc-nav a{color:var(--sand);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
 @media(hover:hover){.acc-nav a:hover{color:var(--gold);border-color:var(--gold)}}
 .acc-nav a[hidden]{display:none}
-.acc-section[id],#settings{scroll-margin-top:96px}
+.acc-section[id],#settings,#mail-settings{scroll-margin-top:96px}
 .acc-next{background:var(--coal);border:1px solid rgba(214,181,122,.35);padding:24px 26px;margin-bottom:8px}
 .acc-next h3{font-family:'Montserrat',sans-serif;font-weight:400;text-transform:none;font-size:1.125rem;letter-spacing:.02em;color:var(--bone);margin:6px 0 6px}
 .acc-next-k{font-family:'Montserrat',sans-serif;font-size:0.6875rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0}
@@ -494,8 +494,12 @@ body{max-width:100vw}
       // pack-v566 — кабинет без пароля (создан входом по коду)
       codeNeeded: 'Введите код из письма — нажмите «Прислать код».',
       // pack-v575 (ТЗ С8) — настройки писем
-      remindersLabel: 'Напоминать о показах и встречах накануне',
-      remindersHint: 'Билеты, чеки, возвраты и письма об изменении показа приходят всегда.',
+      remindersTitle: 'Настройки напоминаний',
+      remindersVerify: 'Подтвердите почту, чтобы изменить настройки',
+      remindersUnavailable: 'Не удалось загрузить настройки напоминаний.',
+      remindersRetry: 'Обновить страницу',
+      remindersLabel: 'Присылать напоминания о показах и встречах',
+      remindersHint: 'Переключатель управляет напоминаниями и письмом с просьбой об отзыве. Билеты, чеки, возвраты и письма об изменении показа приходят в любом случае.',
       remindersOn: 'Сохранено: напоминания будут приходить.',
       remindersOff: 'Сохранено: напоминаний больше не будет.',
       codePlaceholder: 'Код из письма (6 цифр)',
@@ -563,8 +567,12 @@ body{max-width:100vw}
       showQrAtEntrance: 'Show the QR at the entrance',
       passwordNeededForEmail: 'To change the address, enter your current password.',
       codeNeeded: 'Enter the code from the email — tap “Send code”.',
-      remindersLabel: 'Remind me about performances and events the day before',
-      remindersHint: 'Tickets, receipts, refunds and emails about changes to a performance always come.',
+      remindersTitle: 'Reminder settings',
+      remindersVerify: 'Confirm your email to change these settings',
+      remindersUnavailable: 'Could not load reminder settings.',
+      remindersRetry: 'Reload the page',
+      remindersLabel: 'Send me reminders about performances and events',
+      remindersHint: 'This controls reminders and emails asking for feedback. You still receive tickets, receipts, refund updates and messages about changes to your event.',
       remindersOn: 'Saved: reminders will come.',
       remindersOff: 'Saved: no more reminders.',
       codePlaceholder: 'Code from the email (6 digits)',
@@ -1182,12 +1190,27 @@ body{max-width:100vw}
         '<button class="contract-btn" id="vf-confirm" onclick="onVerifyConfirm(this)">' + escapeHtml(t.verifyConfirmBtn) + '</button>' +
       '</div><p class="acc-hint" id="vf-message" role="status" aria-live="polite"></p>';
   }
+  function afterVerifyEmail() {
+    if (lastAccountData) {
+      var session = currentSession();
+      var account = lastAccountData;
+      window.AELITA_account.me().then(function (data) {
+        if (currentSession() !== session || lastAccountData !== account) return;
+        account.emailVerified = data ? data.emailVerified : true;
+        account.mailPrefs = data && data.mailPrefs;
+        renderMailPrefs(account.mailPrefs, account.emailVerified);
+      });
+    }
+    loadTicketOrders();
+    loadEventRegistrations();
+    freeOnlineCabinet?.reload();
+  }
   function onVerifySend(btn) {
     var msgEl = document.getElementById('vf-message');
     window.AELITA_account.updateProfile({ verifyEmail: 'send' }, {
       buttonEl: btn,
       onSuccess: function (data) {
-        if (data && data.emailVerified) { loadTicketOrders(); loadEventRegistrations(); freeOnlineCabinet?.reload(); return; }
+        if (data && data.emailVerified) { afterVerifyEmail(); return; }
         msgEl.textContent = t.codeSent;
         var inp = document.getElementById('vf-code'); if (inp) inp.focus();
       },
@@ -1200,7 +1223,7 @@ body{max-width:100vw}
     if (!/^\d{6}$/.test(code)) { msgEl.textContent = t.verifyNeedCode; return; }
     window.AELITA_account.updateProfile({ verifyEmailCode: code }, {
       buttonEl: btn,
-      onSuccess: function () { msgEl.textContent = t.verifyDone; loadTicketOrders(); loadEventRegistrations(); freeOnlineCabinet?.reload(); },
+      onSuccess: function () { msgEl.textContent = t.verifyDone; afterVerifyEmail(); },
       onError: function (m) { msgEl.textContent = m; },
     });
   }
@@ -1463,28 +1486,54 @@ body{max-width:100vw}
 
   // pack-v575 (ТЗ С8): переключатель напоминаний — под формой профиля,
   // сохраняется сразу при нажатии (без кнопки «Сохранить»).
-  function renderMailPrefs(prefs) {
+  function renderMailPrefs(prefs, verified) {
     var form = document.getElementById('profile-form');
-    if (!form || document.getElementById('mp-box')) return;
+    if (!form) return;
+    var previous = document.getElementById('mail-settings');
+    if (previous) previous.remove();
     var box = document.createElement('div');
-    box.id = 'mp-box';
+    box.id = 'mail-settings';
     box.className = 'mp-box';
+    var title = document.createElement('h3');
+    title.textContent = t.remindersTitle;
+    var hint = document.createElement('p');
+    hint.className = 'acc-hint';
+    box.appendChild(title);
+    form.insertAdjacentElement('afterend', box);
+    if (verified !== true) {
+      var verify = document.createElement('a');
+      verify.href = '#tickets';
+      verify.textContent = t.remindersVerify;
+      hint.appendChild(verify);
+      box.appendChild(hint);
+      return;
+    }
+    if (!prefs || typeof prefs.reminders !== 'boolean') {
+      hint.textContent = t.remindersUnavailable;
+      hint.setAttribute('role', 'status');
+      var retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'contract-btn';
+      retry.textContent = t.remindersRetry;
+      retry.addEventListener('click', function () { location.reload(); });
+      box.appendChild(hint);
+      box.appendChild(retry);
+      return;
+    }
     var label = document.createElement('label');
     label.className = 'cb-item';
     var cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.id = 'mp-reminders';
-    cb.checked = prefs.reminders !== false;
+    cb.checked = prefs.reminders;
     var span = document.createElement('span');
     span.textContent = t.remindersLabel;
     label.appendChild(cb); label.appendChild(span);
-    var hint = document.createElement('p');
-    hint.className = 'acc-hint';
     hint.textContent = t.remindersHint;
     var msg = document.createElement('div');
     msg.id = 'mp-message';
+    msg.setAttribute('role', 'status');
     box.appendChild(label); box.appendChild(hint); box.appendChild(msg);
-    form.insertAdjacentElement('afterend', box);
     cb.addEventListener('change', function () {
       var want = cb.checked;
       cb.disabled = true;
@@ -1501,9 +1550,17 @@ body{max-width:100vw}
     location.href = '/en/account';
   }
 
+  function signInForDashboard() {
+    var account = '/en/account/';
+    if (/^#(my-events|mail-settings|buys|subscriptions)$/.test(location.hash)) {
+      account += '?next=' + encodeURIComponent(account + 'dashboard/' + location.hash);
+    }
+    location.href = account;
+  }
+
   (async function init() {
     if (!window.AELITA_account || !window.AELITA_account.isLoggedIn()) {
-      location.href = '/en/account';
+      signInForDashboard();
       return;
     }
     var entrySession=currentSession();
@@ -1522,7 +1579,7 @@ body{max-width:100vw}
       // сообщение из onError выше), и уводить со страницы не нужно —
       // просто остаёмся здесь с сообщением об ошибке. Реально уводим
       // на /account только если me() сама уже стёрла токен (401).
-      if (!window.AELITA_account.isLoggedIn()) location.href = '/en/account';
+      if (!window.AELITA_account.isLoggedIn()) signInForDashboard();
       return;
     }
     lastAccountData = data;
@@ -1547,7 +1604,7 @@ body{max-width:100vw}
     if (data.hasPassword === false) enableCodeConfirm();
     var ed = readEmailDraft();
     if (ed && EMAIL_CHANGE_ENABLED) { showNewEmailCode(ed.to, true); document.getElementById('pf-message').textContent = ''; }
-    if (window.AELITA_account.mailPrefsEnabled && window.AELITA_account.mailPrefsEnabled()) renderMailPrefs(data.mailPrefs || { reminders: true });
+    renderMailPrefs(data.mailPrefs, data.emailVerified);
     document.getElementById('acc-since').textContent = fmtDate(data.createdAt);
     renderPurchases(data.purchases);
     customerEvents=window.AelitaCustomerEvents.create({
@@ -1567,7 +1624,17 @@ body{max-width:100vw}
     syncNav();
     if (location.hash && document.getElementById(location.hash.slice(1))) requestAnimationFrame(function () { document.getElementById(location.hash.slice(1)).scrollIntoView({block:'start'}); });
     // подписки показывает subscription.js позже — ссылка в навигации появится вместе с разделом
-    try { new MutationObserver(syncNav).observe(document.getElementById('subscriptions'), { attributes: true, attributeFilter: ['hidden'] }); } catch (e) { /* старый браузер — ссылка просто видна */ }
+    var subscriptions = document.getElementById('subscriptions');
+    var followSubscriptionLink = location.hash === '#subscriptions' && subscriptions.hidden;
+    try {
+      new MutationObserver(function () {
+        syncNav();
+        if (followSubscriptionLink && !subscriptions.hidden) {
+          followSubscriptionLink = false;
+          if (location.hash === '#subscriptions') subscriptions.scrollIntoView({block:'start'});
+        }
+      }).observe(subscriptions, { attributes: true, attributeFilter: ['hidden'] });
+    } catch (e) { /* старый браузер — ссылка просто видна */ }
   })();
   // pack-v694: ссылка на скрытый раздел (нет подписок) не ведёт в пустоту.
   function syncNav() {

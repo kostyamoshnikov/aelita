@@ -78,14 +78,7 @@
   },
   "isAccessibleForFree": false,
   "typicalAgeRange": "18+",
-  "maximumPhysicalAttendeeCapacity": 50,
-  "offers": {
-    "@type": "Offer",
-    "url": "https://aelita-production.ru/tickets-buy/?performance=matritsa-2026-11-14",
-    "price": 1000,
-    "priceCurrency": "RUB",
-    "availability": "https://schema.org/InStock"
-  }
+  "maximumPhysicalAttendeeCapacity": 50
 }
 </script>
 <link rel="stylesheet" href="/assets/mobile-priority-m1.css?v=249">
@@ -127,20 +120,20 @@
         <p class="mx-credit">С <a href="/katya-abdulova/">Катей Абдуловой</a></p>
       </div>
       <div class="mx-actions hero-btns">
-        <p class="mx-past-note" data-event-past hidden>Событие состоялось — спасибо всем, кто был с нами! Оставьте отзыв ниже.</p>
-        <a class="mx-buy" data-event-review-cta href="/tickets-buy/?performance=matritsa-2026-11-14" data-performance-id="matritsa-2026-11-14">Купить билет · 1 000 ₽</a>
+        <p class="mx-past-note" data-event-past>Событие состоялось — спасибо всем, кто был с нами! Оставьте отзыв ниже.</p>
+        <a class="mx-buy" data-event-review-cta href="#audience-reviews">Оставить отзыв</a>
         <a class="mx-more" href="#about">О киноразборе <span aria-hidden="true">↓</span></a>
       </div>
       <div class="mx-place" id="afisha">
         <p>Офлайн · <a href="/kreativnoe-byuro/">«Креативное бюро»</a></p>
         <p>Калуга, Билибина, 33</p>
         <p>Онлайн · Яндекс Телемост</p>
-        <p class="mx-online-note" data-event-before>Формат участия — при покупке билета.</p>
+        <p class="mx-online-note" data-event-before hidden>Формат участия — при покупке билета.</p>
       </div>
     </div>
   </div>
 </header>
-<section class="mx-online-details" id="online-format" data-event-before>
+<section class="mx-online-details" id="online-format" data-event-before hidden>
   <div class="wrap">
     <h2>Как участвовать онлайн</h2>
     <p>Выберите «Онлайн» при покупке билета. Киноразбор пройдёт в Яндекс Телемосте 14 ноября в 17:00 МСК.</p>
@@ -150,7 +143,7 @@
 </section>
 <section class="mx-invitation" aria-labelledby="invitation-title"><div class="wrap mx-invitation-grid"><div><h2 id="invitation-title">Приглашение от Кати</h2><p>Катя Абдулова приглашает на киноразбор всех четырёх фильмов «Матрицы».</p><p class="mx-invitation-note">39 секунд · на русском · доступны английские субтитры</p></div><figure><video controls playsinline preload="none" width="720" height="1280" poster="/images/matrix-katya-invitation-v760.jpg" aria-label="Приглашение от Кати"><source src="/images/matrix-katya-invitation-v760.mp4" type="video/mp4"><track kind="subtitles" src="/images/matrix-katya-invitation-v760.en.vtt" srclang="en" label="English"><a href="/images/matrix-katya-invitation-v760.mp4">Скачать приглашение</a></video></figure></div></section>
 <!-- customer:event:BEGIN -->
-<section class="customer-section own-pad" data-event-before><div class="wrap"><div class="journey-info"><h2>Что важно перед покупкой</h2><dl><dt>Начало</dt><dd>14.11.2026 · 17:00 МСК</dd><dt>Окончание</dt><dd>20:00</dd><dt>Подготовка</dt><dd>Требования к предварительному просмотру фильмов или другой подготовке не опубликованы. Уточните до покупки, если это важно для вас.</dd><dt>Запись</dt><dd>Наличие записи и её предоставление участникам не подтверждены. Не рассчитывайте на получение записи.</dd></dl><div class="journey-actions"><a href="/kreativnoe-byuro/#address">Адрес, вход и маршрут</a><a href="mailto:aelita.production@yandex.ru">Уточнить условия участия</a><a href="/ticket-refund/">Возврат и изменения</a></div></div></div></section>
+<section class="customer-section own-pad" data-event-before hidden><div class="wrap"><div class="journey-info"><h2>Что важно перед покупкой</h2><dl><dt>Начало</dt><dd>14.11.2026 · 17:00 МСК</dd><dt>Окончание</dt><dd>20:00</dd><dt>Подготовка</dt><dd>Требования к предварительному просмотру фильмов или другой подготовке не опубликованы. Уточните до покупки, если это важно для вас.</dd><dt>Запись</dt><dd>Наличие записи и её предоставление участникам не подтверждены. Не рассчитывайте на получение записи.</dd></dl><div class="journey-actions"><a href="/kreativnoe-byuro/#address">Адрес, вход и маршрут</a><a href="mailto:aelita.production@yandex.ru">Уточнить условия участия</a><a href="/ticket-refund/">Возврат и изменения</a></div></div></div></section>
 <!-- customer:event:END -->
 <section id="about">
   <div class="wrap">
@@ -205,7 +198,7 @@
   </div>
 </section>
 
-<section data-event-before class="online-preparation" aria-label="Подготовка к подключению"><h2>Подготовьтесь к подключению</h2><ol><li>Заранее установите или обновите <a href="https://360.yandex.ru/telemost/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=kinorazbor-matritsa" target="_blank" rel="noopener noreferrer">Яндекс Телемост</a>.</li><li>Войдите в свой аккаунт Яндекса. Если аккаунта ещё нет — пожалуйста, зарегистрируйтесь.</li><li>Проверьте звук и интернет. Подключитесь за 10–15 минут до начала.</li></ol><p>С телефона откройте ссылку в приложении Телемост. С компьютера можно подключиться через приложение или поддерживаемый браузер. После перехода проверьте выбранные звук и микрофон.</p><p>Открывайте событие через свою персональную страницу доступа. Вход в Яндекс не заменяет эту ссылку.</p></section><div class="wrap"><p class="mx-head-cta"><a class="mx-more" href="/razgovory-o-kino/">Разговоры о кино с Катей Абдуловой <span aria-hidden="true">→</span></a></p></div>
+<section data-event-before hidden class="online-preparation" aria-label="Подготовка к подключению"><h2>Подготовьтесь к подключению</h2><ol><li>Заранее установите или обновите <a href="https://360.yandex.ru/telemost/?utm_source=aelita_site&amp;utm_medium=referral&amp;utm_campaign=site&amp;utm_content=kinorazbor-matritsa" target="_blank" rel="noopener noreferrer">Яндекс Телемост</a>.</li><li>Войдите в свой аккаунт Яндекса. Если аккаунта ещё нет — пожалуйста, зарегистрируйтесь.</li><li>Проверьте звук и интернет. Подключитесь за 10–15 минут до начала.</li></ol><p>С телефона откройте ссылку в приложении Телемост. С компьютера можно подключиться через приложение или поддерживаемый браузер. После перехода проверьте выбранные звук и микрофон.</p><p>Открывайте событие через свою персональную страницу доступа. Вход в Яндекс не заменяет эту ссылку.</p></section><div class="wrap"><p class="mx-head-cta"><a class="mx-more" href="/razgovory-o-kino/">Разговоры о кино с Катей Абдуловой <span aria-hidden="true">→</span></a></p></div>
 </main>
 
 <footer>
@@ -335,6 +328,6 @@
     });
   }
 </script>
-<script src="/assets/festival.js?v=249-1ec8eaba35b1" defer></script>
+<script src="/assets/festival.js?v=249-8cccf9d30775" defer></script>
 </body>
 </html>

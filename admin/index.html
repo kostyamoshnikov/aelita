@@ -1406,6 +1406,47 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
     </div>
       <p class="sec-title sec-gap" data-ai-feature>ИИ · Тест</p>
     <section class="ai-scope" id="ai-admin-root" aria-label="Тестовый ИИ Аэлита Продакшен">
+      <section class="ai-box" data-adm-index="Поиск с ИИ" aria-labelledby="ai-discovery-title">
+        <h2 id="ai-discovery-title">Поиск с ИИ</h2>
+        <p class="ai-note">Открытые публикации, отзывы зрителей и организации, которым могут подойти наши спектакли или культурные программы.</p>
+        <form id="ai-discovery-form" data-work-untracked>
+          <div class="ai-grid">
+            <div>
+              <label for="ai-discovery-mode">Что искать</label>
+              <select id="ai-discovery-mode">
+                <option value="all">Упоминания, отзывы и потенциальные заказчики</option>
+                <option value="mentions">Упоминания</option>
+                <option value="reviews">Отзывы</option>
+                <option value="prospects">Потенциальные заказчики</option>
+              </select>
+            </div>
+            <div>
+              <label for="ai-discovery-topic">Проект, город или тип заказа</label>
+              <input id="ai-discovery-topic" class="ym-disable-keys" maxlength="180" autocomplete="off" placeholder="Например, «Точка Кюри» или Калуга">
+            </div>
+            <div>
+              <label for="ai-discovery-days">Дата публикации</label>
+              <select id="ai-discovery-days" aria-describedby="ai-discovery-period-help">
+                <option value="0">Любая дата</option>
+                <option value="7">Последние 7 дней</option>
+                <option value="30">Последние 30 дней</option>
+                <option value="90">Последние 90 дней</option>
+                <option value="365">Последние 365 дней</option>
+              </select>
+              <p class="ai-note" id="ai-discovery-period-help">Фильтр использует дату из поисковой выдачи. Результаты без даты доступны в режиме «Любая дата».</p>
+            </div>
+          </div>
+          <div class="ai-actions">
+            <button id="ai-discovery-submit" type="submit">Запустить поиск</button>
+            <button id="ai-discovery-cancel" type="button" class="ai-secondary" hidden>Убрать из очереди</button>
+          </div>
+        </form>
+        <p id="ai-discovery-status" class="ai-status" role="status"></p>
+        <div class="ai-actions" id="ai-discovery-export-actions" hidden>
+          <button id="ai-discovery-export" type="button" class="ai-secondary">Скачать находки CSV</button>
+        </div>
+        <div id="ai-discovery-results"></div>
+      </section>
       <div class="ai-box">
         <p class="ai-eyebrow">АЭЛИТА ПРОДАКШЕН · GLM PILOT</p>
         <h2>Настройки закрытого пилота</h2>
@@ -8573,8 +8614,9 @@ startStaffAdmin();
 <script src="/assets/matrix-online-admin.js?v=249"></script>
 <script src="/assets/admin-snapshot.js?v=249-v1030"></script>
 <link rel="stylesheet" href="/assets/ai-pilot-v741.css?v=249">
-<script src="/assets/ai-pilot-v741.js?v=249-v1018"></script>
+<script src="/assets/ai-pilot-v741.js?v=249-v1053"></script>
 <script src="/assets/ai-pilot-admin-v741.js?v=249"></script>
+<script src="/assets/ai-discovery-v1052.js?v=249-v1053"></script>
 <script src="/assets/subscription-materials-admin.js?v=249"></script>
 <script>
 if (window.mountSubscriptionMaterials) window.mountSubscriptionMaterials(
