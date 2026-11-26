@@ -36,6 +36,13 @@ class CloudflareHtmlTest(unittest.TestCase):
     def test_exact_origin(self):
         self.assertEqual(cf.restore_body(self.edge, self.expected), self.origin)
 
+    def test_mailto_subject_is_preserved(self):
+        address_with_subject = ADDRESS + b"?subject=Community"
+        target = bytes([91, *(char ^ 91 for char in address_with_subject)]).hex().encode()
+        edge = self.edge.replace(b"#" + ADDRESS_HASH, b"#" + target, 1)
+        origin = self.origin.replace(b"mailto:" + ADDRESS, b"mailto:" + address_with_subject, 1)
+        self.assertEqual(cf.restore_body(edge, cf.sha256(origin)), origin)
+
     def test_other_content_and_analytics_account_fail(self):
         variants = [
             self.edge.replace(b"<body>", b"<body>changed", 1),

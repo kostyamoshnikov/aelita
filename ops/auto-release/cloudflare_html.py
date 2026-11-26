@@ -21,13 +21,14 @@ PROTECTED_TEXT = re.compile(
 )
 PROTECTED_LINK = re.compile(rb'href="/cdn-cgi/l/email-protection#([a-f0-9]+)"')
 EMAIL = re.compile(rb"[A-Za-z0-9_+.!%-]+@[A-Za-z0-9.-]+\.[A-Za-z0-9-]+")
+MAILTO_QUERY = re.compile(rb"[-A-Za-z0-9%._~+&=]*")
 
 
 def sha256(body):
     return hashlib.sha256(body).hexdigest()
 
 
-def decode_address(payload):
+def decode_address(payload, allow_query=False):
     try:
         encoded = bytes.fromhex(payload.decode("ascii"))
     except ValueError:
@@ -35,7 +36,10 @@ def decode_address(payload):
     if len(encoded) < 2:
         return None
     decoded = bytes(char ^ encoded[0] for char in encoded[1:])
-    return decoded if EMAIL.fullmatch(decoded) else None
+    address, separator, query = decoded.partition(b"?")
+    if not EMAIL.fullmatch(address) or (separator and (not allow_query or not MAILTO_QUERY.fullmatch(query))):
+        return None
+    return decoded
 
 
 def restore_text(match):
@@ -43,7 +47,7 @@ def restore_text(match):
 
 
 def restore_link(match):
-    decoded = decode_address(match[1])
+    decoded = decode_address(match[1], allow_query=True)
     return b'href="mailto:' + decoded + b'"' if decoded else match[0]
 
 
