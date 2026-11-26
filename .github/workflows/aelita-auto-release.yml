@@ -22,7 +22,9 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
       - name: Check the launcher
-        run: python3 ops/auto-release/release.py self-test
+        run: |
+          python3 ops/auto-release/release.py self-test
+          python3 -m unittest discover -s ops/auto-release
       - name: Check the release request
         id: candidate
         env:

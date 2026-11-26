@@ -13,6 +13,8 @@ import zipfile
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
+import cloudflare_html
+
 REPO = "kostyamoshnikov/aelita"
 PARTS = ("core", "deploy")
 S3_KEYS = ("YC_S3_KEY_ID", "YC_S3_SECRET")
@@ -203,6 +205,10 @@ def apply_pack(root, request):
 
     cloud = phone.s3_snapshot
     show_plan = phone.show_plan
+    verify = phone.ds.site_changes.verify_public
+    phone.ds.site_changes.verify_public = lambda get, receipt=None, **options: cloudflare_html.verify_public(
+        verify, get, receipt, **options
+    )
     phone.s3_snapshot = checked_cloud
     phone.show_plan = checked_plan
     phone.ask_yes_default = check_live_and_confirm
