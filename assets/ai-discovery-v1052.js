@@ -12,6 +12,7 @@
   const exportActions = document.getElementById('ai-discovery-export-actions');
   const exportButton = document.getElementById('ai-discovery-export');
   const labels = { mentions: 'Упоминания', reviews: 'Отзывы', prospects: 'Потенциальные заказчики' };
+  const signals = { request: 'Публичный запрос', hypothesis: 'Гипотеза для проверки' };
   let requested = 'all';
   let requestedDays = 0;
   let exportRows = [];
@@ -25,8 +26,8 @@
 
   exportButton.addEventListener('click', () => {
     if (!searchToken || searchToken !== window.getToken() || !exportRows.length) return;
-    const headers = ['Категория', 'Заголовок', 'Дата публикации', 'Источник', 'Пояснение ИИ', 'Фрагмент выдачи'];
-    const table = [headers, ...exportRows.map(item => [labels[item.kind], item.title, item.date, item.url, item.reason, item.excerpt])];
+    const headers = ['Категория', 'Заголовок', 'Дата публикации', 'Источник', 'Пояснение ИИ', 'Фрагмент выдачи', 'Организация', 'Тип сигнала', 'Цитата из выдачи'];
+    const table = [headers, ...exportRows.map(item => [labels[item.kind], item.title, item.date, item.url, item.reason, item.excerpt, item.organization, signals[item.signal], item.evidence])];
     const csv = '\uFEFF' + table.map(row => row.map(csvCell).join(';')).join('\r\n') + '\r\n';
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const filename = 'AELITA-search-results.csv';
@@ -70,6 +71,9 @@
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         card.append(link, node('p', url.hostname + (item.date ? ' · ' + item.date : '')));
+        if (item.organization && signals[item.signal] && item.evidence) {
+          card.append(node('p', item.organization + ' · ' + signals[item.signal]), node('blockquote', item.evidence));
+        }
         card.append(node('p', item.reason));
         if (item.excerpt) {
           const evidence = document.createElement('details');

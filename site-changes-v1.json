@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1062,
+  "release": 1064,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "9c40417445787449546fd2138c947c560efe0f22d6bf891db9c2d3a229b94f65"
+      "sha256": "a8f40b256bc67180fa330677602660e3ae91126e7ca12e224d549fb8c915104e"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -374,7 +374,7 @@
     },
     {
       "path": "assets/ai-discovery-v1052.js",
-      "sha256": "a59b8c61579bd3d2deac2b4f46253cd81498c10704ba0df755b7accd0a5c2c6b"
+      "sha256": "1ab21a66ec7c55f49226c023028650faeb46427b7f06470420c5fce526e97ce0"
     },
     {
       "path": "assets/ai-pilot-v741.js",
@@ -415,6 +415,10 @@
     {
       "path": "assets/cookie-consent.js",
       "sha256": "83529fd2049383f17b5de95222767595a63e967e960ed24f19d9b452472087f0"
+    },
+    {
+      "path": "assets/creative-profiles-v1064.css",
+      "sha256": "d0c9067576dc5e589a091cefd9fb21211210ce1f3727191834a322ebfd3497d3"
     },
     {
       "path": "assets/crew-ops-v1020.css",
@@ -1625,6 +1629,30 @@
       "sha256": "37f9b0c7f49b3d1b223cf0ba16c481de4dd1c2d3d08251c42afa341f626144c6"
     },
     {
+      "path": "images/creative-profiles-v1064/andrei-moguchy.webp",
+      "sha256": "b823b8f4bccd2ef1e8033e1aa5437b36df7f9b76ed2767d4c9a5800c6e70f45e"
+    },
+    {
+      "path": "images/creative-profiles-v1064/igor-domashkevich.webp",
+      "sha256": "36c729b33c5d0fa6a9c1ce7299b8e5f20285578d7bc506193868bb5686ec89e2"
+    },
+    {
+      "path": "images/creative-profiles-v1064/malton.webp",
+      "sha256": "4473f298c721a4088caa9020278dd4e3c70de9caa409262e8ba0902c8728b507"
+    },
+    {
+      "path": "images/creative-profiles-v1064/mikhail-kazmiruk.webp",
+      "sha256": "0d8c5d5abfc69a79abf65f4e139509642055cd8a69908a6e1b04c57c27417979"
+    },
+    {
+      "path": "images/creative-profiles-v1064/sergey-ryabov.webp",
+      "sha256": "e9d03d25ec308fea01925714fe09ac9e662f7cee72cfd09920a24b47534229a5"
+    },
+    {
+      "path": "images/creative-profiles-v1064/tamara-vekhova.webp",
+      "sha256": "2b0e673b525918cec8dba6addcb5dac61261d99eea8da2452a38261e493403c6"
+    },
+    {
       "path": "images/whiplash-poster-og-v839.jpg",
       "sha256": "8995e557460a2e9f5073df1e99be9447c65b94b233daa0d9edec9a418c3a6d41"
     },
@@ -1893,6 +1921,30 @@
       "sha256": "0f0402abdea7bd4980a6c35e580f0b8f06a91c24b6d68e2d8b31348b06a18f00"
     },
     {
+      "path": "profiles/andrei-moguchy/index.html",
+      "sha256": "60c90acdd062529be716407ca0d28731db38a80860b00342ceabcc9f275c3492"
+    },
+    {
+      "path": "profiles/igor-domashkevich/index.html",
+      "sha256": "59c1da38cbf09cea5e974d5e33a349f2772c539b14fefd37b7fe989315192517"
+    },
+    {
+      "path": "profiles/malton/index.html",
+      "sha256": "79da18abc84b8e188ca5f5861397512cb372927958e6acbfafc77e3916f71c20"
+    },
+    {
+      "path": "profiles/mikhail-kazmiruk/index.html",
+      "sha256": "10360a16907a05c6a0201c8e5007e26f4073c79d83df8b8203b788e02366d420"
+    },
+    {
+      "path": "profiles/sergey-ryabov/index.html",
+      "sha256": "62df449e9d6ec26be4acd048a81b9a33fcc809a07e99a221ac0a64dbf62da403"
+    },
+    {
+      "path": "profiles/tamara-vekhova/index.html",
+      "sha256": "606667112dfae4bb9d84d3daad9b26f67d358ed5099382e27c69d47013c53dda"
+    },
+    {
       "path": "programs/index.html",
       "sha256": "3607b8e8f8a37cac92da7873eeb87389f197f617eb21923d8081b0c9412d8569"
     },
@@ -2074,8 +2126,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "3bd74065277c1919bae92ac093b48d11633bbcd8d473fc0263fe654d019c9734",
+  "changelog_sha256": "d8d248bb1a6c437c913e1df7f9e93c876daa0cee183a6801de926baabf6cd6b3",
   "recent_versions": [
+    1064,
+    1063,
     1062,
     1061,
     1060,
@@ -2083,8 +2137,6 @@
     1058,
     1057,
     1056,
-    1055,
-    1054,
-    1053
+    1055
   ]
 }
