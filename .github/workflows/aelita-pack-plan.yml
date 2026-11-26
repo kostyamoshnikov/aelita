@@ -1,0 +1,27 @@
+name: AELITA pack plan
+
+on:
+  push:
+    branches:
+      - ops/site-preflight
+    paths:
+      - .github/workflows/aelita-pack-plan.yml
+      - ops/site-preflight/**
+
+permissions:
+  contents: read
+
+jobs:
+  site-plan:
+    name: Verify the candidate and show the site plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Read the candidate branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Read the latest published branch
+        run: git fetch --no-tags --depth=1 origin refs/heads/main
+      - name: Verify candidate files and report changes
+        run: python3 ops/site-preflight/site_preflight.py check ops/site-preflight/candidate . FETCH_HEAD
