@@ -60,6 +60,8 @@ jobs:
       - name: Publish using the existing AELITA release process
         env:
           AELITA_RELEASE_BUCKET: ${{ vars.AELITA_RELEASE_BUCKET }}
+          AELITA_RELEASE_S3_KEY_ID: ${{ secrets.AELITA_RELEASE_S3_KEY_ID }}
+          AELITA_RELEASE_S3_SECRET: ${{ secrets.AELITA_RELEASE_S3_SECRET }}
           YC_S3_KEY_ID: ${{ secrets.AELITA_YC_S3_KEY_ID }}
           YC_S3_SECRET: ${{ secrets.AELITA_YC_S3_SECRET }}
           GITHUB_TOKEN: ${{ secrets.AELITA_GITHUB_PAGES_TOKEN }}

@@ -16,6 +16,7 @@ from pathlib import Path
 REPO = "kostyamoshnikov/aelita"
 PARTS = ("core", "deploy")
 S3_KEYS = ("YC_S3_KEY_ID", "YC_S3_SECRET")
+RELEASE_S3_KEYS = ("AELITA_RELEASE_S3_KEY_ID", "AELITA_RELEASE_S3_SECRET")
 BOOTSTRAP = "_tools/SiteDeploy/termux/deploy_aelita.sh"
 CONFIRM = "Выложить? Enter — да, n — нет: "
 MONEY_CONFIRM = "Обновить и денежные? y — да, Enter — нет: "
@@ -31,12 +32,14 @@ def request_at(path):
 
 def validate_request(request):
     fields = {"version", "core_sha256", "deploy_sha256", "money"}
-    if not isinstance(request, dict) or set(request) != fields:
+    if not isinstance(request, dict) or set(request) - {"bot"} != fields:
         raise ReleaseError("Неверные поля запроса на выкладку.")
     if type(request["version"]) is not int or request["version"] <= 0:
         raise ReleaseError("Неверная версия пака.")
     if type(request["money"]) is not bool:
         raise ReleaseError("Денежный режим задаётся явно через money.")
+    if request.get("bot", "auto") not in ("auto", "manual"):
+        raise ReleaseError("Для бота укажите auto или manual.")
     for part in PARTS:
         digest = request[f"{part}_sha256"]
         if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
@@ -48,12 +51,13 @@ def transfer_parts(directory, request, upload=False):
     bucket = os.environ.get("AELITA_RELEASE_BUCKET", "")
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,61}[a-z0-9]", bucket):
         raise ReleaseError("Нужен закрытый бакет AELITA_RELEASE_BUCKET.")
-    require_keys(S3_KEYS)
+    access_key, secret_key = RELEASE_S3_KEYS if any(os.environ.get(name) for name in RELEASE_S3_KEYS) else S3_KEYS
+    require_keys((access_key, secret_key))
     s3_env = {
         "HOME": os.environ["HOME"],
         "PATH": os.environ["PATH"],
-        "AWS_ACCESS_KEY_ID": os.environ["YC_S3_KEY_ID"],
-        "AWS_SECRET_ACCESS_KEY": os.environ["YC_S3_SECRET"],
+        "AWS_ACCESS_KEY_ID": os.environ[access_key],
+        "AWS_SECRET_ACCESS_KEY": os.environ[secret_key],
         "AWS_DEFAULT_REGION": "ru-central1",
         "AWS_EC2_METADATA_DISABLED": "true",
         "AWS_PAGER": "",
@@ -126,7 +130,7 @@ def require_current_site(candidate):
     require_current_version(receipt["release"], candidate, "Сайт")
 
 
-def require_idle_cloud(phone):
+def require_idle_cloud(phone, state):
     # An existing Termux upload may be waiting for its report.
     storage = phone.fs.mb.S3(phone.fs.BUCKET, *phone.fs.read_key())
     uploaded, archive, _ = storage.request("HEAD", phone.fs.ARCHIVE_KEY)
@@ -137,6 +141,10 @@ def require_idle_cloud(phone):
         raise ReleaseError("Последняя облачная выкладка ещё не подтверждена.")
     if parsedate_to_datetime(archive["last-modified"]) > parsedate_to_datetime(report["last-modified"]):
         raise ReleaseError("Облако ещё не выдало отчёт по последнему запуску. Проверьте Termux doctor.")
+    archive_etag = archive.get("etag", "").strip('"')
+    report_etag = str((state.get("report") or {}).get("archiveEtag") or "").strip('"')
+    if not archive_etag or archive_etag != report_etag:
+        raise ReleaseError("Последний облачный отчёт относится к другому архиву. Проверьте Termux doctor.")
 
 
 def apply_pack(root, request):
@@ -150,6 +158,9 @@ def apply_pack(root, request):
         raise ReleaseError("У пака нет разрешения на полную выкладку.")
     if any((plan.get("manual") or {}).values()):
         raise ReleaseError("В этом выпуске есть ручные шаги. Используйте Termux.")
+    if request.get("bot") == "manual":
+        plan = {**plan, "workers": []}
+        phone.load_vj = lambda: plan
     if plan.get("workers"):
         require_keys(["CLOUDFLARE_API_TOKEN"])
 
@@ -174,8 +185,8 @@ def apply_pack(root, request):
     def check_live_and_confirm(prompt):
         if prompt != CONFIRM:
             return requires_operator()
-        checked_cloud()
-        require_idle_cloud(phone)
+        _, current, _ = checked_cloud()
+        require_idle_cloud(phone, current)
         require_current_site(version)
         require_current_version(phone.live_site_version(), int(plan["site_version"]), "Сайт")
         if plan.get("workers"):
@@ -216,9 +227,9 @@ def deploy(request, local_archives=None):
         if local_archives is not None:
             print(f"pack-v{request['version']}: целостность и штатный план проверены.")
             return 0
-        config = {**os.environ, "HOME": str(home), "AELITA_HOME": str(home),
-                  "AELITA_DL": str(home / "storage/shared/Download"),
-                  "GITHUB_REPO": REPO, "GITHUB_BRANCH": "main"}
+        config = {key: value for key, value in os.environ.items() if key not in RELEASE_S3_KEYS}
+        config.update(HOME=str(home), AELITA_HOME=str(home), AELITA_DL=str(home / "storage/shared/Download"),
+                      GITHUB_REPO=REPO, GITHUB_BRANCH="main")
         # Production logs can contain internal metadata. Only publish stage
         # outcomes to the public repository.
         result = subprocess.run(
@@ -228,14 +239,16 @@ def deploy(request, local_archives=None):
         )
         history = home / ".aelita_deploys.json"
         if history.is_file():
-            publish_summary(history)
+            publish_summary(history, request.get("bot") == "manual")
         if result.returncode:
             raise ReleaseError("Штатная выкладка не подтверждена. Сверьте версии через Termux doctor.")
         return 0
 
 
-def stage(archives, version, money):
+def stage(archives, version, money, manual_bot=False):
     request = {"version": version, "money": money}
+    if manual_bot:
+        request["bot"] = "manual"
     for part in PARTS:
         with (archives / f"AELITA_{part}-v{version}.zip").open("rb") as source:
             request[f"{part}_sha256"] = hashlib.file_digest(source, "sha256").hexdigest()
@@ -253,14 +266,15 @@ def stage(archives, version, money):
     return 0
 
 
-def publish_summary(history):
+def publish_summary(history, manual_bot=False):
     records = json.loads(history.read_text(encoding="utf-8"))
     if not isinstance(records, list) or not records or not isinstance(records[-1], dict):
         return
     last = records[-1]
     print("Функции:", last.get("functions") or "без новой записи")
     print("Сайт:", last.get("site") or "без новой записи")
-    print("Бот:", (last.get("workers") or {}).get("aelita-bot") or "без новой записи")
+    bot_status = "ручная выкладка через Termux" if manual_bot else (last.get("workers") or {}).get("aelita-bot")
+    print("Бот:", bot_status or "без новой записи")
     if last.get("checks"):
         print("Проверки:", "/".join(map(str, last["checks"])))
 
@@ -272,7 +286,9 @@ def self_test():
         path.write_text(json.dumps(draft))
         if request_at(path) != draft:
             raise ReleaseError("Проверка запроса не пройдена.")
-        for changes in ({"version": True}, {"money": "false"}, {"core_sha256": "../release.zip"}):
+        if validate_request({**draft, "bot": "manual"})["bot"] != "manual":
+            raise ReleaseError("Не принят ручной режим бота.")
+        for changes in ({"version": True}, {"money": "false"}, {"core_sha256": "../release.zip"}, {"bot": "skip"}):
             path.write_text(json.dumps({**draft, **changes}))
             try:
                 request_at(path)
@@ -301,6 +317,7 @@ def main():
     command.add_argument("archives", type=Path)
     command.add_argument("version", type=int)
     command.add_argument("--money", action="store_true")
+    command.add_argument("--manual-bot", action="store_true")
     command = modes.add_parser("_apply")
     command.add_argument("root", type=Path)
     command.add_argument("data")
@@ -312,7 +329,7 @@ def main():
         if args.mode == "_apply":
             return apply_pack(args.root, json.loads(args.data))
         if args.mode == "stage":
-            return stage(args.archives, args.version, args.money)
+            return stage(args.archives, args.version, args.money, args.manual_bot)
         request = request_at(args.request)
         if args.mode == "validate":
             print(f"Запрос для pack-v{request['version']} проверен.")
