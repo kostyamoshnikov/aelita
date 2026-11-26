@@ -1,0 +1,61 @@
+name: AELITA site preflight
+
+on:
+  push:
+    branches:
+      - ops/site-preflight
+    paths:
+      - .github/workflows/aelita-site-preflight.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-site:
+    name: Check the published site release
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Read sources from the test branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Verify the release manifest and file hashes
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          receipt = json.loads((root / "site-release-v1.json").read_bytes())
+          if receipt.get("schema") != "aelita.site-release/v1" or receipt.get("release") != "pack-v1066":
+              raise SystemExit("Expected the published pack-v1066 receipt")
+
+          files = receipt.get("files", {})
+          if not files or files.get("site-changes-v1.json") != receipt.get("manifest_sha256"):
+              raise SystemExit("The file index and changes manifest do not agree")
+
+          for name, expected in files.items():
+              relative = PurePosixPath(name)
+              if relative.is_absolute() or ".." in relative.parts or "\\" in name:
+                  raise SystemExit(f"Invalid path in the release manifest: {name}")
+              path = root / relative
+              if not path.resolve().is_relative_to(root) or not path.is_file():
+                  raise SystemExit(f"Release file is missing or outside the checkout: {name}")
+              with path.open("rb") as content:
+                  actual = hashlib.file_digest(content, "sha256").hexdigest()
+              if actual != expected:
+                  raise SystemExit(f"SHA-256 mismatch: {name}")
+
+          print(f"{receipt['release']}: verified {len(files)} files in the repository")
+          PY
+      - name: Compare the deployed receipt with the repository
+        run: |
+          public_receipt=$(mktemp)
+          curl --fail --silent --show-error --max-time 35 \
+            https://aelita-production.ru/site-release-v1.json \
+            --output "$public_receipt"
+          cmp site-release-v1.json "$public_receipt"
+          rm -f "$public_receipt"
+          echo "The published receipt matches the repository"
