@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1064,
+  "release": 1066,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -274,7 +274,7 @@
     },
     {
       "path": "admin/index.html",
-      "sha256": "a8f40b256bc67180fa330677602660e3ae91126e7ca12e224d549fb8c915104e"
+      "sha256": "c8b14937cba9de6779cb8ac5b83973920c7a1be18f60d31b1822036f4f5bb27d"
     },
     {
       "path": "admin/mail-texts/index.html",
@@ -490,11 +490,11 @@
     },
     {
       "path": "assets/event-participants-v819.css",
-      "sha256": "bce3364494494673c8f4b52bedac6fb60824f73d47cccce80944f00e6ae2f64c"
+      "sha256": "e2f5e34a2caa7152a424625a3bfabd682e5f44a55560d9c9c360293a44322bba"
     },
     {
       "path": "assets/event-participants-v819.js",
-      "sha256": "fb169b78a12fbf2a34db220aa7ba2246f23def6efe2cc09ece4b07c1d55d8b2a"
+      "sha256": "49f8cbb8ba7a4d4cdb7758dff63370f883485ddbea5777138e86d58bfeb63277"
     },
     {
       "path": "assets/festival.js",
@@ -694,7 +694,7 @@
     },
     {
       "path": "assets/whiplash-event.css",
-      "sha256": "9fe2a7800328a8c2b4da76c43873d2b0b9758b93f3db3320a29dca33dfdeb377"
+      "sha256": "006d03d31b73edc0b740f05eb70a9dfb673d5d08db9e0436bb847e137f2a65a1"
     },
     {
       "path": "assets/work-navigation-v812.css",
@@ -1066,7 +1066,7 @@
     },
     {
       "path": "en/films/oderzhimost/index.html",
-      "sha256": "7ccba83aa1f8ac8832d9e58af76499af64088a729440c350fa670ed15fd3a6fd"
+      "sha256": "8723ea6d425d3c9d7282bdcc6b40c96075165523ab83881828352ec99717171b"
     },
     {
       "path": "en/fotovystavka-ilyina/index.html",
@@ -1378,11 +1378,11 @@
     },
     {
       "path": "en/razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "b45d82b6953127a82e8bb4c6427765a16836ae06c9b8b057f430ff616362cc60"
+      "sha256": "b102b8f69e1a838b800c2839a96de66f3da6007eb3a1b9d93884d21becf71380"
     },
     {
       "path": "en/razgovory-o-kino/index.html",
-      "sha256": "72f070debdb5f6016ee5c13d2ea77e78b6e140522381cf466ef0268fe45443cc"
+      "sha256": "80f3a864e6d57c55c85fa354c805487de198e3aa6926d42b2d7442e7977710d3"
     },
     {
       "path": "en/rezidents/index.html",
@@ -1450,7 +1450,7 @@
     },
     {
       "path": "en/tickets/index.html",
-      "sha256": "ef699625acd6b0934f1b10fd95ca1cbeb58715f91e589dcae07b722aa600d104"
+      "sha256": "37269bafc383a77b6c1c26de6a830590b45f40884cc3b848ee4c08e20eefca62"
     },
     {
       "path": "en/tochkacuire/index.html",
@@ -1558,7 +1558,7 @@
     },
     {
       "path": "films/oderzhimost/index.html",
-      "sha256": "0f69ce65380ebdc4f4cf8ce07c2b5aad72164a7f599353b38591424b1d61b2db"
+      "sha256": "e1a3b6932f5587cde7763665365f8cb7d3b7c92a1f365ea17ba57f593f415615"
     },
     {
       "path": "fotovystavka-ilyina/index.html",
@@ -1970,11 +1970,11 @@
     },
     {
       "path": "razgovor-o-kino-oderzhimost/index.html",
-      "sha256": "be938b937379ebdd888dd1039faf5198de1486eb626893ba66b0fcf2e52214b7"
+      "sha256": "b5855c406d1f1f451b40ba8b9e4ca98c4558e8a19824edba1e43773aa479754e"
     },
     {
       "path": "razgovory-o-kino/index.html",
-      "sha256": "7370806ade1fff270535d2e1908d301c1d5ac9103ed136bd2f0c5db50bb6db3b"
+      "sha256": "848d169c79224fe8f4797545529f80ebf788e0142ffced67c6e2d317b18a0c16"
     },
     {
       "path": "rezidents/index.html",
@@ -2058,7 +2058,7 @@
     },
     {
       "path": "tickets/index.html",
-      "sha256": "f713f15c7edd1838e80ae7f18b80a4777d94e56e643e2d336e4fbec777a0b170"
+      "sha256": "034a7f132c6dd231a2fa024341c3f0129c8e272194380774e89ca91c7030ffc6"
     },
     {
       "path": "tochkacuire/index.html",
@@ -2126,8 +2126,10 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "d8d248bb1a6c437c913e1df7f9e93c876daa0cee183a6801de926baabf6cd6b3",
+  "changelog_sha256": "3bc759539939459300d078612c9aea550de487169340e4d44b5a7efb134d42ae",
   "recent_versions": [
+    1066,
+    1065,
     1064,
     1063,
     1062,
@@ -2135,8 +2137,6 @@
     1060,
     1059,
     1058,
-    1057,
-    1056,
-    1055
+    1057
   ]
 }

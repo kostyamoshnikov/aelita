@@ -171,3 +171,20 @@
   #participants-person-dialog .person-response-options label { flex-basis: 100%; }
   .person-contact-actions { align-items: stretch; flex-direction: column; }
 }
+
+#eventParticipants .participant-search {
+  grid-column: 1 / -1;
+}
+.participant-filter-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.participant-filter-result #participants-scope {
+  margin: 0;
+}
+#eventParticipants #participants-reset-filters {
+  min-height: 44px;
+}

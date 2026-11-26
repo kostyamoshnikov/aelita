@@ -5,7 +5,14 @@
  const $=s=>root.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let data=null,job=0,busy=false,ready=false,selected=new Set(),limit=200,url=null,wantedRef=null,controller=null,loading=null,dataToken='',retryWrite=null;
  let catalogEvents=[],eventGroup='current',pickerSignature='';
- const filterIds=['participants-basis','participants-mode','participants-status','participants-search','participants-sort'];
+ const filterDefaults={
+  'participants-basis':'all',
+  'participants-mode':'all',
+  'participants-status':'expected',
+  'participants-search':'',
+  'participants-sort':'name'
+ };
+ const filterIds=Object.keys(filterDefaults),resetFilters=$('#participants-reset-filters');
  const validRef=ref=>/^(tickets|events|invites):[A-Za-z0-9_-]{1,120}$/.test(ref||'');
  const modes=V.modeLabel,filters=()=>({...(data?.basisVersion===1?{basis:$('#participants-basis')?.value||'all'}:{}),mode:$('#participants-mode').value,status:$('#participants-status').value,search:$('#participants-search').value.trim().slice(0,200),sort:$('#participants-sort').value});
  const errors={participants_changed:'Данные изменились у другого сотрудника или в источнике. Обновите список.',participants_source_unavailable:'Один из источников недоступен. Решение не сохранено.',not_authenticated:'Сеанс завершён. Войдите в админку снова.',participants_bad_selection:'Проверьте выбранные строки.',participants_bad_identity:'Проверьте имя и фамилию: до 80 символов в каждом поле, без ссылок и служебных знаков.',participants_bad_response:'Выберите ответ участника.',participants_unknown_person:'Участник больше не найден. Обновите список.',participants_bad_filter:'Сервер пока не поддерживает эти условия. Обновите данные.'};
@@ -46,6 +53,7 @@
  function renderActions(rows=data?V.select(data,filters()):[]){
   if($('#participants-basis'))$('#participants-basis').disabled=busy||!ready||data?.basisVersion!==1;
   for(const id of ['participants-copy','participants-csv','participants-pdf'])$('#'+id).disabled=busy||!ready||!rows.length;
+  if(resetFilters)resetFilters.disabled=busy||!ready||filterIds.every(id=>!$('#'+id)||$('#'+id).value===filterDefaults[id]);
   const n=selected.size,offscreen=n-rows.slice(0,limit).filter(row=>selected.has(row.id)).length;
   $('#participants-selected').textContent=n?'Выбрано для решения: '+n+(offscreen?' · вне показанного списка: '+offscreen:''):'';
   $('#participants-unselect').hidden=!n;
@@ -81,7 +89,8 @@
   if(data.basisVersion!==1)warnings.push('Чтобы фильтровать по основаниям, обновите серверные функции.');
   $('#participants-warnings').innerHTML=warnings.length?'<ul>'+warnings.map(w=>'<li>'+esc(w)+'</li>').join('')+'</ul>'+(t.possibleDuplicates||t.identityConflicts||t.responseConflicts?'<button type="button" class="mini-btn" data-participant-review>Сверить</button>':''):'';
   $('#participants-warnings').hidden=!warnings.length;
-  $('#participants-scope').textContent='В списке '+V.people(Math.min(limit,rows.length))+(rows.length>limit?' из '+rows.length:'')+'. '+V.scope(f)+'.';
+  const shown=rows.length>limit?' Показано '+limit+'.':'';
+  $('#participants-scope').textContent='По фильтрам: '+V.people(rows.length)+'.'+shown+' '+V.scope(f)+'.';
   const list=$('#participants-list'),more=$('#participants-more');
   const cards=rows.slice(appendFrom,limit).map(r=>{
    const tags=V.basisTags(r).map(tag=>'<span class="participant-basis'+(!tag.active?' participant-basis-inactive':'')+'">'+esc(tag.label)+(tag.notes.length?' <small>'+esc((tag.active?'Есть действующее основание. ':'')+tag.notes.join('; '))+'</small>':'')+'</span>').join('');
@@ -199,6 +208,15 @@
  };
  $('#participants-reload').onclick=()=>load($('#participants-event').value||undefined);
  for(const id of filterIds)$('#'+id)?.addEventListener(id==='participants-search'?'input':'change',()=>{clearArtifacts();limit=200;render();});
+ resetFilters?.addEventListener('click',()=>{
+  if(!usable())return;
+  for(const id of filterIds){
+   const input=$('#'+id);
+   if(input)input.value=filterDefaults[id];
+  }
+  clearArtifacts();limit=200;render();
+  $('#participants-search').focus();
+ });
  root.addEventListener('click',e=>{
   const group=e.target.closest('[data-event-group]');if(group){if(!busy&&group.dataset.eventGroup!==eventGroup)load(undefined,group.dataset.eventGroup);return;}
   if(e.target.closest('[data-participant-review]')){if(usable()){$('#participants-status').value='review';$('#participants-mode').value='all';if($('#participants-basis'))$('#participants-basis').value='all';$('#participants-search').value='';clearArtifacts();limit=200;render();$('#participants-status').focus();}return;}

@@ -643,13 +643,16 @@ html body .checkout-consents .cb-item{font-size:0.75rem!important}
         <li>Совпадения имён требуют сверки. Участники без имени учитываются отдельно.</li></ul>
       </details>
       <div class="participants-controls">
+        <label class="participant-search">Поиск по имени или документу<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label>
         <label>Основание участия<select id="participants-basis" class="search" disabled><option value="all">Все основания</option><option value="ticket">По билетам</option><option value="invite">По пригласительным</option><option value="registration">По регистрациям</option></select></label>
         <label>Формат участия<select id="participants-mode" class="search"><option value="all">Все форматы</option><option value="offline">В зале</option><option value="online">Онлайн</option><option value="unknown">Формат не указан</option></select></label>
         <label>Статус участников<select id="participants-status" class="search"><option value="expected">Ожидаемые участники</option><option value="confirmed">Подтвердили участие</option><option value="declined">Отказались</option><option value="unconfirmed">Пока не подтвердили</option><option value="review">Требуют сверки</option><option value="arrived">Вошли по QR в зал</option><option value="pending">Ожидают оплаты</option><option value="team">Ведущие и команда</option><option value="inactive">Недействующие основания</option><option value="all">Все записи</option></select></label>
-        <label>Имя, фамилия или документ<input type="search" id="participants-search" maxlength="200" class="search ym-disable-keys" autocomplete="off"></label>
         <label>Сортировка<select id="participants-sort" class="search"><option value="name">По имени в списке (А–Я)</option><option value="family">По фамилии</option><option value="mode">По формату участия</option></select></label>
       </div>
-      <p id="participants-scope" role="status"></p>
+      <div class="participant-filter-result">
+        <p id="participants-scope" role="status"></p>
+        <button type="button" class="mini-btn" id="participants-reset-filters" disabled>Сбросить фильтры</button>
+      </div>
       <div class="participant-exports">
         <div class="participants-actions" role="group" aria-label="Выгрузка списка участников">
           <button type="button" class="mini-btn" id="participants-copy" disabled>Скопировать список</button>
@@ -8255,10 +8258,10 @@ if (CO_MAIL_FOCUS && !getToken()) {
 startStaffAdmin();
 </script>
 
-<link rel="stylesheet" href="/assets/event-participants-v819.css?v=249-v1030">
+<link rel="stylesheet" href="/assets/event-participants-v819.css?v=249-ux1">
 <script src="/assets/participants-view-v819.js?v=249"></script>
 <script src="/assets/participant-person-v820.js?v=249-v1030"></script>
-<script src="/assets/event-participants-v819.js?v=249-v1030"></script>
+<script src="/assets/event-participants-v819.js?v=249-ux1"></script>
 <script>
 // pack-v610: меню разделов админки. Разделы — по заголовкам .sec-title внутри
 // #content; показывается один раздел, выбранный запоминается (localStorage,
