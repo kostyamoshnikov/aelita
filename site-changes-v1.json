@@ -208,7 +208,7 @@
       ]
     }
   ],
-  "release": 1066,
+  "release": 1067,
   "removed_files": [
     "corporate-christmas-salon/index.html",
     "en/corporate-christmas-salon/index.html",
@@ -1110,7 +1110,7 @@
     },
     {
       "path": "en/index.html",
-      "sha256": "2a805e8a580ddf5bd094d4878e5882c1816a61f473853e81ccf3ac89e50686b1"
+      "sha256": "446e45144e63c8c1d2ac0a434decbedbf049501f6274616ac67c54bf05f94827"
     },
     {
       "path": "en/instruction/index.html",
@@ -1674,7 +1674,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "e8a6e4caa965b0cf4770ff549b4de9f85072e746cc196279d3973664def17fe2"
+      "sha256": "10208a172782ac98cfa3c0e6a29f9b76f4918ff6322a76b29a05de834a6b9e66"
     },
     {
       "path": "instruction/index.html",
@@ -2126,8 +2126,9 @@
     }
   ],
   "changelog": "CHANGELOG_RECENT.md",
-  "changelog_sha256": "3bc759539939459300d078612c9aea550de487169340e4d44b5a7efb134d42ae",
+  "changelog_sha256": "c08063542d94d2972f0464edee2c5ef3460182403a4d0e1920a6427415eec78d",
   "recent_versions": [
+    1067,
     1066,
     1065,
     1064,
@@ -2136,7 +2137,6 @@
     1061,
     1060,
     1059,
-    1058,
-    1057
+    1058
   ]
 }

@@ -129,6 +129,15 @@ section.hm-up{padding:72px 0 96px}
 .up-buy{margin-top:auto;align-self:flex-start;position:relative;display:inline-flex;align-items:center;padding-top:14px;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);text-decoration:none}
 .up-buy.up-off{color:var(--sand);cursor:default} /* pack-v691: показ отменён — надпись вместо ссылки */
 .up-buy::before{content:"";position:absolute;top:0;left:0;width:38px;height:1px;background:var(--gold)}
+a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]){
+  box-sizing:border-box;justify-content:center;min-height:48px;max-width:100%;
+  padding:12px 18px;border:1px solid var(--gold);background:var(--gold);color:var(--ink);
+  font-weight:600;letter-spacing:.1em;line-height:1.35;text-align:center
+}
+a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"])::before{content:none}
+a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]):focus-visible{outline:2px solid var(--ink);outline-offset:-4px}
+@media(hover:hover){a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]):hover{background:var(--bone);border-color:var(--bone)}}
+@media(max-width:600px){a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]){align-self:stretch}}
 .up-next{position:absolute;right:-26px;top:0;margin-top:calc((100% - 56px) / 3 * .3125 - 26px);width:52px;height:52px;border-radius:50%;border:1px solid rgba(214,181,122,.7);background:rgba(11,11,13,.75);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;padding:0;transition:background .3s}
 .up-next .ar{margin:0}
 .up-next.back .ar{transform:rotate(180deg)}
