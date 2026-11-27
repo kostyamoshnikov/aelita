@@ -140,6 +140,7 @@ a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]):focus-v
 @media(max-width:600px){a.up-buy[href*="/tickets-buy/"]:not(.up-off):not([aria-disabled="true"]){align-self:stretch}}
 /* Афиша с названием внутри изображения. */
 .up-card--poster .up-badge{margin-top:0}
+.up-card--poster>.event-clock[data-clock-state^="upcoming:"]{display:none}
 a.up-buy.up-buy--poster{margin:0 0 22px}
 a.up-buy.up-buy--poster[href]:not([aria-disabled="true"]){
   box-sizing:border-box;display:flex;align-self:stretch;justify-self:stretch;
